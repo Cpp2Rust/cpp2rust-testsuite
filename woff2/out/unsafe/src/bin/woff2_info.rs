@@ -998,7 +998,7 @@ pub unsafe fn ReadFontCollection_19(
                 .resize_with(__a0, || <woff2_Font>::default())
         };
         let font: *mut woff2_Font =
-            &mut (*font_collection).fonts[(0_u64) as usize] as *mut woff2_Font;
+            &mut (&mut (*font_collection)).fonts[(0_u64) as usize] as *mut woff2_Font;
         (*font).flavor = (*font_collection).flavor;
         return (unsafe {
             let _file: *mut woff2_Buffer = (&mut file as *mut woff2_Buffer);
@@ -1236,7 +1236,7 @@ pub unsafe fn WriteFontCollection_26(
     if (((*font_collection).flavor) != (woff2_kTtcFontFlavor)) {
         return (unsafe {
             let _font: *const woff2_Font =
-                &(*font_collection).fonts[(0_u64) as usize] as *const woff2_Font;
+                &(&(*font_collection)).fonts[(0_u64) as usize] as *const woff2_Font;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = dst;
             let _dst_size: u64 = dst_size;
@@ -1294,7 +1294,8 @@ pub unsafe fn WriteFontCollection_26(
     }
     let mut i: u64 = 0_u64;
     'loop_: while ((i) < ((*font_collection).fonts.len() as u64)) {
-        let font: *const woff2_Font = &(*font_collection).fonts[(i) as usize] as *const woff2_Font;
+        let font: *const woff2_Font =
+            &(&(*font_collection)).fonts[(i) as usize] as *const woff2_Font;
         (unsafe {
             let _val: u32 = (offset as u32);
             let _offset: *mut u64 = (&mut offset_table as *mut u64);

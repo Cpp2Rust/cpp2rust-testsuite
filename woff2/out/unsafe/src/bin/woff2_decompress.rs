@@ -1179,7 +1179,7 @@ pub unsafe fn StoreLoca_24(
     let mut offset: u64 = 0_u64;
     let mut i: u64 = 0_u64;
     'loop_: while ((i) < ((*loca_values).len() as u64)) {
-        let mut value: u32 = (*loca_values)[(i) as usize];
+        let mut value: u32 = (&(*loca_values))[(i) as usize];
         if (index_format != 0) {
             offset = (unsafe {
                 let _dst: *mut u8 = dst;
@@ -1734,7 +1734,8 @@ pub unsafe fn ReconstructGlyf_25(
                 2_u64,
             );
             if ((!(unsafe {
-                let _value: *mut i16 = (&mut (*info).x_mins[(i as u64) as usize] as *mut i16);
+                let _value: *mut i16 =
+                    (&mut (&mut (*info)).x_mins[(i as u64) as usize] as *mut i16);
                 x_min_buf.ReadS16(_value)
             }) as i64)
                 != 0)
@@ -1768,7 +1769,7 @@ pub unsafe fn FindTable_26(
     mut tag: u32,
 ) -> *mut woff2_Table {
     'loop_: for table in 0..((*tables).len()) {
-        let mut table = (*tables)[table].clone();
+        let mut table = (&(*tables))[table].clone();
         if (((*table).tag) == (tag)) {
             return table;
         }
@@ -1862,7 +1863,7 @@ pub unsafe fn ReconstructTransformedHmtx_28(
                 return false;
             }
         } else {
-            lsb = (*x_mins)[(i as u64) as usize];
+            lsb = (&(*x_mins))[(i as u64) as usize];
         }
         {
             let a0_clone = lsb.clone();
@@ -1883,7 +1884,7 @@ pub unsafe fn ReconstructTransformedHmtx_28(
                 return false;
             }
         } else {
-            lsb = (*x_mins)[(i as u64) as usize];
+            lsb = (&(*x_mins))[(i as u64) as usize];
         }
         {
             let a0_clone = lsb.clone();
@@ -1962,7 +1963,7 @@ pub unsafe fn ReadTableDirectory_30(
     let mut src_offset: u32 = 0_u32;
     let mut i: u64 = 0_u64;
     'loop_: while ((i) < (num_tables)) {
-        let mut table: *mut woff2_Table = (&mut (*tables)[(i) as usize] as *mut woff2_Table);
+        let mut table: *mut woff2_Table = (&mut (&mut (*tables))[(i) as usize] as *mut woff2_Table);
         let mut flag_byte: u8 = 0_u8;
         if ((!(unsafe {
             let _value: *mut u8 = (&mut flag_byte as *mut u8);
@@ -2130,9 +2131,13 @@ pub unsafe fn Tables_34(
 ) -> Vec<*mut woff2_Table> {
     let mut tables: Vec<*mut woff2_Table> = Vec::new();
     if (((*hdr).header_version as i64) != 0) {
-        'loop_: for index in 0..((*hdr).ttc_fonts[(font_index) as usize].table_indices.len()) {
-            let mut index = (*hdr).ttc_fonts[(font_index) as usize].table_indices[index].clone();
-            tables.push((&mut (*hdr).tables[(index as u64) as usize] as *mut woff2_Table));
+        'loop_: for index in 0..((&mut (*hdr)).ttc_fonts[(font_index) as usize]
+            .table_indices
+            .len())
+        {
+            let mut index =
+                (&mut (*hdr)).ttc_fonts[(font_index) as usize].table_indices[index].clone();
+            tables.push((&mut (&mut (*hdr)).tables[(index as u64) as usize] as *mut woff2_Table));
         }
     } else {
         'loop_: for table in 0..((*hdr).tables.len()) {
@@ -2153,7 +2158,7 @@ pub unsafe fn ReconstructFont_35(
     let mut dest_offset: u64 = (unsafe { (*out).Size() });
     let mut table_entry: [u8; 12] = [0_u8; 12];
     let mut info: *mut woff2_WOFF2FontInfo =
-        (&mut (*metadata).font_infos[(font_index) as usize] as *mut woff2_WOFF2FontInfo);
+        (&mut (&mut (*metadata)).font_infos[(font_index) as usize] as *mut woff2_WOFF2FontInfo);
     let mut tables: Vec<*mut woff2_Table> = (unsafe {
         let _hdr: *mut woff2_WOFF2Header = hdr;
         let _font_index: u64 = font_index;
@@ -2186,7 +2191,7 @@ pub unsafe fn ReconstructFont_35(
     }
     let mut font_checksum: u32 = (*metadata).header_checksum;
     if ((*hdr).header_version != 0) {
-        font_checksum = (*hdr).ttc_fonts[(font_index) as usize].header_checksum;
+        font_checksum = (&mut (*hdr)).ttc_fonts[(font_index) as usize].header_checksum;
     }
     let mut loca_checksum: u32 = 0_u32;
     let mut i: u64 = 0_u64;
@@ -2581,7 +2586,7 @@ pub unsafe fn ReadWOFF2Header_36(
         let mut i: u32 = 0_u32;
         'loop_: while ((i) < (num_fonts)) {
             let ttc_font: *mut woff2_TtcFont =
-                &mut (*hdr).ttc_fonts[(i as u64) as usize] as *mut woff2_TtcFont;
+                &mut (&mut (*hdr)).ttc_fonts[(i as u64) as usize] as *mut woff2_TtcFont;
             let mut num_tables: u32 = 0_u32;
             if ((((!(unsafe {
                 let _buf: *mut woff2_Buffer = (&mut file as *mut woff2_Buffer);
@@ -2621,9 +2626,9 @@ pub unsafe fn ReadWOFF2Header_36(
                 {
                     return false;
                 }
-                (*ttc_font).table_indices[(j as u64) as usize] = (table_idx as u16);
+                (&mut (*ttc_font)).table_indices[(j as u64) as usize] = (table_idx as u16);
                 let table: *const woff2_Table =
-                    &(*hdr).tables[(table_idx as u64) as usize] as *const woff2_Table;
+                    &(&mut (*hdr)).tables[(table_idx as u64) as usize] as *const woff2_Table;
                 if (((*table).tag) == (woff2_kLocaTableTag)) {
                     loca_idx = table_idx;
                 }
@@ -2725,9 +2730,9 @@ pub unsafe fn WriteHeaders_37(
             let mut ttc_font = (*hdr).ttc_fonts.as_mut_ptr().add(ttc_font);
             let mut sorted_index_by_tag: BTreeMap<u32, Box<u16>> = BTreeMap::new();
             'loop_: for table_index in 0..((*ttc_font).table_indices.len()) {
-                let mut table_index = (*ttc_font).table_indices[table_index].clone();
+                let mut table_index = (&(*ttc_font)).table_indices[table_index].clone();
                 (*sorted_index_by_tag
-                    .entry((*hdr).tables[(table_index as u64) as usize].tag)
+                    .entry((&mut (*hdr)).tables[(table_index as u64) as usize].tag)
                     .or_default()
                     .as_mut()) = table_index;
             }
@@ -2735,7 +2740,8 @@ pub unsafe fn WriteHeaders_37(
             'loop_: for i in
                 UnsafeMapIterator::begin(&sorted_index_by_tag as *const BTreeMap<u32, Box<u16>>)
             {
-                (*ttc_font).table_indices[(index.postfix_inc() as u64) as usize] = *i.second();
+                (&mut (*ttc_font)).table_indices[(index.postfix_inc() as u64) as usize] =
+                    *i.second();
             }
         }
     } else {
@@ -2809,7 +2815,7 @@ pub unsafe fn WriteHeaders_37(
         let mut i: u64 = 0_u64;
         'loop_: while ((i) < ((*hdr).ttc_fonts.len() as u64)) {
             let ttc_font: *mut woff2_TtcFont =
-                &mut (*hdr).ttc_fonts[(i) as usize] as *mut woff2_TtcFont;
+                &mut (&mut (*hdr)).ttc_fonts[(i) as usize] as *mut woff2_TtcFont;
             offset_table = (unsafe {
                 let _dst: *mut u8 = result;
                 let _offset: u64 = offset_table;
@@ -2826,9 +2832,9 @@ pub unsafe fn WriteHeaders_37(
             })
             .clone();
             'loop_: for table_index in 0..((*ttc_font).table_indices.len()) {
-                let table_index = (*ttc_font).table_indices[table_index].clone();
-                let mut tag: u32 = (*hdr).tables[(table_index as u64) as usize].tag;
-                (*(*metadata).font_infos[(i) as usize]
+                let table_index = (&(*ttc_font)).table_indices[table_index].clone();
+                let mut tag: u32 = (&mut (*hdr)).tables[(table_index as u64) as usize].tag;
+                (*(&mut (*metadata)).font_infos[(i) as usize]
                     .table_entry_by_tag
                     .entry(tag)
                     .or_default()
@@ -2864,7 +2870,7 @@ pub unsafe fn WriteHeaders_37(
         });
         let mut i: u16 = 0_u16;
         'loop_: while ((i as i32) < ((*hdr).num_tables as i32)) {
-            (*(*metadata).font_infos[(0_u64) as usize]
+            (*(&mut (*metadata)).font_infos[(0_u64) as usize]
                 .table_entry_by_tag
                 .entry(sorted_tables[(i as u64) as usize].tag)
                 .or_default()

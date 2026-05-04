@@ -998,7 +998,7 @@ pub unsafe fn ReadFontCollection_19(
                 .resize_with(__a0, || <woff2_Font>::default())
         };
         let font: *mut woff2_Font =
-            &mut (*font_collection).fonts[(0_u64) as usize] as *mut woff2_Font;
+            &mut (&mut (*font_collection)).fonts[(0_u64) as usize] as *mut woff2_Font;
         (*font).flavor = (*font_collection).flavor;
         return (unsafe {
             let _file: *mut woff2_Buffer = (&mut file as *mut woff2_Buffer);
@@ -1236,7 +1236,7 @@ pub unsafe fn WriteFontCollection_26(
     if (((*font_collection).flavor) != (woff2_kTtcFontFlavor)) {
         return (unsafe {
             let _font: *const woff2_Font =
-                &(*font_collection).fonts[(0_u64) as usize] as *const woff2_Font;
+                &(&(*font_collection)).fonts[(0_u64) as usize] as *const woff2_Font;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = dst;
             let _dst_size: u64 = dst_size;
@@ -1294,7 +1294,8 @@ pub unsafe fn WriteFontCollection_26(
     }
     let mut i: u64 = 0_u64;
     'loop_: while ((i) < ((*font_collection).fonts.len() as u64)) {
-        let font: *const woff2_Font = &(*font_collection).fonts[(i) as usize] as *const woff2_Font;
+        let font: *const woff2_Font =
+            &(&(*font_collection)).fonts[(i) as usize] as *const woff2_Font;
         (unsafe {
             let _val: u32 = (offset as u32);
             let _offset: *mut u64 = (&mut offset_table as *mut u64);
@@ -1598,7 +1599,7 @@ pub unsafe fn ReadGlyph_32(mut data: *const u8, mut len: u64, mut glyph: *mut wo
                 as u16);
             {
                 let __a0 = (num_points as u64) as usize;
-                (*glyph).contours[(i as u64) as usize]
+                (&mut (*glyph)).contours[(i as u64) as usize]
                     .resize_with(__a0, || <woff2_Glyph_Point>::default())
             };
             last_point_index = point_index;
@@ -1625,11 +1626,11 @@ pub unsafe fn ReadGlyph_32(mut data: *const u8, mut len: u64, mut glyph: *mut wo
         let mut i: i32 = 0;
         'loop_: while ((i) < (num_contours as i32)) {
             {
-                let __a0 = (*glyph).contours[(i as u64) as usize].len() as u64 as usize;
+                let __a0 = (&mut (*glyph)).contours[(i as u64) as usize].len() as u64 as usize;
                 flags[(i as u64) as usize].resize_with(__a0, || <u8>::default())
             };
             let mut j: u64 = 0_u64;
-            'loop_: while ((j) < ((*glyph).contours[(i as u64) as usize].len() as u64)) {
+            'loop_: while ((j) < ((&mut (*glyph)).contours[(i as u64) as usize].len() as u64)) {
                 if ((flag_repeat as i32) == (0)) {
                     if !(unsafe {
                         let _value: *mut u8 = (&mut flag as *mut u8);
@@ -1649,7 +1650,7 @@ pub unsafe fn ReadGlyph_32(mut data: *const u8, mut len: u64, mut glyph: *mut wo
                     flag_repeat.postfix_dec();
                 }
                 flags[(i as u64) as usize][(j) as usize] = flag;
-                (*glyph).contours[(i as u64) as usize][(j) as usize].on_curve =
+                (&mut (*glyph)).contours[(i as u64) as usize][(j) as usize].on_curve =
                     (((flag as i32) & (woff2_kFLAG_ONCURVE)) != 0);
                 j.prefix_inc();
             }
@@ -1665,7 +1666,7 @@ pub unsafe fn ReadGlyph_32(mut data: *const u8, mut len: u64, mut glyph: *mut wo
         let mut i: i32 = 0;
         'loop_: while ((i) < (num_contours as i32)) {
             let mut j: u64 = 0_u64;
-            'loop_: while ((j) < ((*glyph).contours[(i as u64) as usize].len() as u64)) {
+            'loop_: while ((j) < ((&mut (*glyph)).contours[(i as u64) as usize].len() as u64)) {
                 let mut flag: u8 = flags[(i as u64) as usize][(j) as usize];
                 if (((flag as i32) & (woff2_kFLAG_XSHORT)) != 0) {
                     let mut x_delta: u8 = 0_u8;
@@ -1680,7 +1681,7 @@ pub unsafe fn ReadGlyph_32(mut data: *const u8, mut len: u64, mut glyph: *mut wo
                     } else {
                         -1_i32
                     };
-                    (*glyph).contours[(i as u64) as usize][(j) as usize].x =
+                    (&mut (*glyph)).contours[(i as u64) as usize][(j) as usize].x =
                         ((prev_x) + ((sign) * (x_delta as i32)));
                 } else {
                     let mut x_delta: i16 = 0_i16;
@@ -1692,10 +1693,10 @@ pub unsafe fn ReadGlyph_32(mut data: *const u8, mut len: u64, mut glyph: *mut wo
                             return false;
                         }
                     }
-                    (*glyph).contours[(i as u64) as usize][(j) as usize].x =
+                    (&mut (*glyph)).contours[(i as u64) as usize][(j) as usize].x =
                         ((prev_x) + (x_delta as i32));
                 }
-                prev_x = (*glyph).contours[(i as u64) as usize][(j) as usize].x;
+                prev_x = (&mut (*glyph)).contours[(i as u64) as usize][(j) as usize].x;
                 j.prefix_inc();
             }
             i.prefix_inc();
@@ -1704,7 +1705,7 @@ pub unsafe fn ReadGlyph_32(mut data: *const u8, mut len: u64, mut glyph: *mut wo
         let mut i: i32 = 0;
         'loop_: while ((i) < (num_contours as i32)) {
             let mut j: u64 = 0_u64;
-            'loop_: while ((j) < ((*glyph).contours[(i as u64) as usize].len() as u64)) {
+            'loop_: while ((j) < ((&mut (*glyph)).contours[(i as u64) as usize].len() as u64)) {
                 let mut flag: u8 = flags[(i as u64) as usize][(j) as usize];
                 if (((flag as i32) & (woff2_kFLAG_YSHORT)) != 0) {
                     let mut y_delta: u8 = 0_u8;
@@ -1719,7 +1720,7 @@ pub unsafe fn ReadGlyph_32(mut data: *const u8, mut len: u64, mut glyph: *mut wo
                     } else {
                         -1_i32
                     };
-                    (*glyph).contours[(i as u64) as usize][(j) as usize].y =
+                    (&mut (*glyph)).contours[(i as u64) as usize][(j) as usize].y =
                         ((prev_y) + ((sign) * (y_delta as i32)));
                 } else {
                     let mut y_delta: i16 = 0_i16;
@@ -1731,10 +1732,10 @@ pub unsafe fn ReadGlyph_32(mut data: *const u8, mut len: u64, mut glyph: *mut wo
                             return false;
                         }
                     }
-                    (*glyph).contours[(i as u64) as usize][(j) as usize].y =
+                    (&mut (*glyph)).contours[(i as u64) as usize][(j) as usize].y =
                         ((prev_y) + (y_delta as i32));
                 }
-                prev_y = (*glyph).contours[(i as u64) as usize][(j) as usize].y;
+                prev_y = (&mut (*glyph)).contours[(i as u64) as usize][(j) as usize].y;
                 j.prefix_inc();
             }
             i.prefix_inc();
@@ -2119,11 +2120,11 @@ pub unsafe fn WriteNormalizedLoca_42(
     };
     (*loca_table).length = ((((num_glyphs) + (1)) * (glyph_sz)) as u32);
     let mut glyf_dst: *mut u8 = if (num_glyphs != 0) {
-        (&mut (*glyf_table).buffer[(0_u64) as usize] as *mut u8)
+        (&mut (&mut (*glyf_table)).buffer[(0_u64) as usize] as *mut u8)
     } else {
         Default::default()
     };
-    let mut loca_dst: *mut u8 = (&mut (*loca_table).buffer[(0_u64) as usize] as *mut u8);
+    let mut loca_dst: *mut u8 = (&mut (&mut (*loca_table)).buffer[(0_u64) as usize] as *mut u8);
     let mut glyf_offset: u32 = 0_u32;
     let mut loca_offset: u64 = 0_u64;
     let mut i: i32 = 0;
@@ -2190,14 +2191,14 @@ pub unsafe fn WriteNormalizedLoca_42(
         (*glyf_table).buffer.resize_with(__a0, || <u8>::default())
     };
     (*glyf_table).data = if (glyf_offset != 0) {
-        (&mut (*glyf_table).buffer[(0_u64) as usize] as *mut u8)
+        (&mut (&mut (*glyf_table)).buffer[(0_u64) as usize] as *mut u8)
     } else {
         Default::default()
     }
     .cast_const();
     (*glyf_table).length = glyf_offset;
     (*loca_table).data = if (loca_offset != 0) {
-        (&mut (*loca_table).buffer[(0_u64) as usize] as *mut u8)
+        (&mut (&mut (*loca_table)).buffer[(0_u64) as usize] as *mut u8)
     } else {
         Default::default()
     }
@@ -2223,7 +2224,7 @@ pub unsafe fn MakeEditableBuffer_43(mut font: *mut woff2_Font, mut tableTag: i32
         let __a0 = (sz as u64) as usize;
         (*table).buffer.resize_with(__a0, || <u8>::default())
     };
-    let mut buf: *mut u8 = (&mut (*table).buffer[(0_u64) as usize] as *mut u8);
+    let mut buf: *mut u8 = (&mut (&mut (*table)).buffer[(0_u64) as usize] as *mut u8);
     {
         if ((*table).length as u64) != 0 {
             ::std::ptr::copy_nonoverlapping(
@@ -2308,14 +2309,14 @@ pub unsafe fn NormalizeGlyphs_44(mut font: *mut woff2_Font) -> bool {
         }) {
             return false;
         }
-        (*head_table).buffer[(51_u64) as usize] = 1_u8;
+        (&mut (*head_table)).buffer[(51_u64) as usize] = 1_u8;
     }
     return true;
 }
 pub unsafe fn NormalizeOffsets_45(mut font: *mut woff2_Font) -> bool {
     let mut offset: u32 = (((12) + ((16) * ((*font).num_tables as i32))) as u32);
     'loop_: for tag in 0..((unsafe { (*font.cast_const()).OutputOrderedTags() }).len()) {
-        let mut tag = (unsafe { (*font.cast_const()).OutputOrderedTags() })[tag].clone();
+        let mut tag = (unsafe { (&(*font.cast_const())).OutputOrderedTags() })[tag].clone();
         let table: *mut woff2_Font_Table =
             &mut (*(*font).tables.entry(tag).or_default().as_mut()) as *mut woff2_Font_Table;
         (*table).offset = offset;
@@ -2377,7 +2378,7 @@ pub unsafe fn FixChecksums_47(mut font: *mut woff2_Font) -> bool {
     if (((*head_table).length) < (12_u32)) {
         return false;
     }
-    let mut head_buf: *mut u8 = (&mut (*head_table).buffer[(0_u64) as usize] as *mut u8);
+    let mut head_buf: *mut u8 = (&mut (&mut (*head_table)).buffer[(0_u64) as usize] as *mut u8);
     let mut offset: u64 = 8_u64;
     (unsafe {
         let _val: u32 = 0_u32;
@@ -2434,7 +2435,7 @@ pub unsafe fn MarkTransformed_48(mut font: *mut woff2_Font) -> bool {
         return false;
     }
     let mut head_flags: i32 = ((*(*head_table).data.offset((16) as isize)) as i32);
-    (*head_table).buffer[(16_u64) as usize] = (((head_flags) | (8)) as u8);
+    (&mut (*head_table)).buffer[(16_u64) as usize] = (((head_flags) | (8)) as u8);
     return true;
 }
 pub unsafe fn NormalizeWithoutFixingChecksums_49(mut font: *mut woff2_Font) -> bool {
@@ -2469,7 +2470,7 @@ pub unsafe fn NormalizeFontCollection_51(mut font_collection: *mut woff2_FontCol
     if (((*font_collection).fonts.len() as u64) == (1_u64)) {
         return (unsafe {
             let _font: *mut woff2_Font =
-                (&mut (*font_collection).fonts[(0_u64) as usize] as *mut woff2_Font);
+                (&mut (&mut (*font_collection)).fonts[(0_u64) as usize] as *mut woff2_Font);
             NormalizeFont_50(_font)
         });
     }
@@ -2496,7 +2497,7 @@ pub unsafe fn NormalizeFontCollection_51(mut font_collection: *mut woff2_FontCol
     'loop_: for font in 0..((*font_collection).fonts.len()) {
         let mut font = (*font_collection).fonts.as_mut_ptr().add(font);
         'loop_: for tag in 0..((unsafe { (*font).OutputOrderedTags() }).len()) {
-            let mut tag = (unsafe { (*font).OutputOrderedTags() })[tag].clone();
+            let mut tag = (unsafe { (&(*font)).OutputOrderedTags() })[tag].clone();
             let table: *mut woff2_Font_Table =
                 &mut (*(*font).tables.entry(tag).or_default().as_mut()) as *mut woff2_Font_Table;
             if (unsafe { (*table).IsReused() }) {
@@ -2541,18 +2542,19 @@ pub unsafe fn WriteBytes_52(mut out: *mut Vec<u8>, mut data: *const u8, mut len:
         if len != 0 {
             ::std::ptr::copy_nonoverlapping(
                 (data as *const u8 as *const ::libc::c_void),
-                ((&mut (*out)[(offset) as usize] as *mut u8) as *mut u8 as *mut ::libc::c_void),
+                ((&mut (&mut (*out))[(offset) as usize] as *mut u8) as *mut u8
+                    as *mut ::libc::c_void),
                 len as usize,
             )
         }
-        ((&mut (*out)[(offset) as usize] as *mut u8) as *mut u8 as *mut ::libc::c_void)
+        ((&mut (&mut (*out))[(offset) as usize] as *mut u8) as *mut u8 as *mut ::libc::c_void)
     };
 }
 pub unsafe fn WriteBytes_53(mut out: *mut Vec<u8>, in_: *const Vec<u8>) {
     let mut i: u64 = 0_u64;
     'loop_: while ((i) < ((*in_).len() as u64)) {
         {
-            let a0_clone = (*in_)[(i) as usize].clone();
+            let a0_clone = (&(*in_))[(i) as usize].clone();
             (*out).push(a0_clone)
         };
         i.prefix_inc();
@@ -2748,12 +2750,12 @@ impl woff2_GlyfEncoder {
         });
     }
     unsafe fn ShouldWriteSimpleGlyphBbox(&mut self, glyph: *const woff2_Glyph) -> bool {
-        if ((*glyph).contours.is_empty()) || ((*glyph).contours[(0_u64) as usize].is_empty()) {
+        if ((*glyph).contours.is_empty()) || ((&(*glyph)).contours[(0_u64) as usize].is_empty()) {
             return ((((*glyph).x_min != 0) || ((*glyph).y_min != 0)) || ((*glyph).x_max != 0))
                 || ((*glyph).y_max != 0);
         }
-        let mut x_min: i16 = ((*glyph).contours[(0_u64) as usize][(0_u64) as usize].x as i16);
-        let mut y_min: i16 = ((*glyph).contours[(0_u64) as usize][(0_u64) as usize].y as i16);
+        let mut x_min: i16 = ((&(*glyph)).contours[(0_u64) as usize][(0_u64) as usize].x as i16);
+        let mut y_min: i16 = ((&(*glyph)).contours[(0_u64) as usize][(0_u64) as usize].y as i16);
         let mut x_max: i16 = x_min;
         let mut y_max: i16 = y_min;
         'loop_: for contour in 0..((*glyph).contours.len()) {
@@ -2815,7 +2817,7 @@ impl woff2_GlyfEncoder {
         'loop_: while ((i) < (num_contours)) {
             (unsafe {
                 let _out: *mut Vec<u8> = (&mut self.n_points_stream_ as *mut Vec<u8>);
-                let _value: i32 = ((*glyph).contours[(i as u64) as usize].len() as u64 as i32);
+                let _value: i32 = ((&(*glyph)).contours[(i as u64) as usize].len() as u64 as i32);
                 Write255UShort_1(_out, _value)
             });
             i.postfix_inc();
@@ -2824,16 +2826,17 @@ impl woff2_GlyfEncoder {
         let mut lastY: i32 = 0;
         let mut i: i32 = 0;
         'loop_: while ((i) < (num_contours)) {
-            let mut num_points: i32 = ((*glyph).contours[(i as u64) as usize].len() as u64 as i32);
+            let mut num_points: i32 =
+                ((&(*glyph)).contours[(i as u64) as usize].len() as u64 as i32);
             let mut j: i32 = 0;
             'loop_: while ((j) < (num_points)) {
-                let mut x: i32 = (*glyph).contours[(i as u64) as usize][(j as u64) as usize].x;
-                let mut y: i32 = (*glyph).contours[(i as u64) as usize][(j as u64) as usize].y;
+                let mut x: i32 = (&(*glyph)).contours[(i as u64) as usize][(j as u64) as usize].x;
+                let mut y: i32 = (&(*glyph)).contours[(i as u64) as usize][(j as u64) as usize].y;
                 let mut dx: i32 = ((x) - (lastX));
                 let mut dy: i32 = ((y) - (lastY));
                 (unsafe {
                     let _on_curve: bool =
-                        (*glyph).contours[(i as u64) as usize][(j as u64) as usize].on_curve;
+                        (&(*glyph)).contours[(i as u64) as usize][(j as u64) as usize].on_curve;
                     let _x: i32 = dx;
                     let _y: i32 = dy;
                     self.WriteTriplet(_on_curve, _x, _y)
@@ -3039,7 +3042,8 @@ pub unsafe fn TransformGlyfAndLocaTables_56(mut font: *mut woff2_Font) -> bool {
     if ((head_table) == (Default::default())) || (((*head_table).length) < (52_u32)) {
         return false;
     }
-    (*transformed_glyf).buffer[(7_u64) as usize] = (*(*head_table).data.offset((51) as isize));
+    (&mut (*transformed_glyf)).buffer[(7_u64) as usize] =
+        (*(*head_table).data.offset((51) as isize));
     (*transformed_glyf).tag = ((woff2_kGlyfTableTag) ^ (2155905152_u32));
     (*transformed_glyf).length = ((*transformed_glyf).buffer.len() as u64 as u32).clone();
     (*transformed_glyf).data = (*transformed_glyf).buffer.as_mut_ptr().cast_const();
@@ -3477,7 +3481,7 @@ pub unsafe fn ComputeUncompressedLength_66(font_collection: *const woff2_FontCol
     if (((*font_collection).flavor) != (woff2_kTtcFontFlavor)) {
         return (unsafe {
             let _font: *const woff2_Font =
-                &(*font_collection).fonts[(0_u64) as usize] as *const woff2_Font;
+                &(&(*font_collection)).fonts[(0_u64) as usize] as *const woff2_Font;
             ComputeUncompressedLength_65(_font)
         });
     }
@@ -3645,7 +3649,7 @@ pub unsafe fn ConvertTTFToWOFF2_73(
     'loop_: for font in 0..(font_collection.fonts.len()) {
         let mut font = font_collection.fonts.as_ptr().add(font);
         'loop_: for tag in 0..((unsafe { (*font).OutputOrderedTags() }).len()) {
-            let tag = (unsafe { (*font).OutputOrderedTags() })[tag].clone();
+            let tag = (unsafe { (&(*font)).OutputOrderedTags() })[tag].clone();
             let original: *const woff2_Font_Table =
                 ((*font).tables.get(&tag).expect("out of range!").as_ref()
                     as *const woff2_Font_Table);
@@ -3715,7 +3719,7 @@ pub unsafe fn ConvertTTFToWOFF2_73(
     'loop_: for font in 0..(font_collection.fonts.len()) {
         let mut font = font_collection.fonts.as_ptr().add(font);
         'loop_: for tag in 0..((unsafe { (*font).OutputOrderedTags() }).len()) {
-            let tag = (unsafe { (*font).OutputOrderedTags() })[tag].clone();
+            let tag = (unsafe { (&(*font)).OutputOrderedTags() })[tag].clone();
             let src_table: *const woff2_Font_Table =
                 ((*font).tables.get(&tag).expect("out of range!").as_ref()
                     as *const woff2_Font_Table);
