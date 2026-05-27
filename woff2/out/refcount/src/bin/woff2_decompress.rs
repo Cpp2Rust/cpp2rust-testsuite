@@ -7,32 +7,32 @@ use std::io::{Read, Seek, Write};
 use std::os::fd::AsFd;
 use std::rc::{Rc, Weak};
 thread_local!(
-    pub static woff2_kGlyfTableTag: Value<u32> = Rc::new(RefCell::new(1735162214_u32));
+    pub static kGlyfTableTag_0: Value<u32> = Rc::new(RefCell::new(1735162214_u32));
 );
 thread_local!(
-    pub static woff2_kHeadTableTag: Value<u32> = Rc::new(RefCell::new(1751474532_u32));
+    pub static kHeadTableTag_1: Value<u32> = Rc::new(RefCell::new(1751474532_u32));
 );
 thread_local!(
-    pub static woff2_kLocaTableTag: Value<u32> = Rc::new(RefCell::new(1819239265_u32));
+    pub static kLocaTableTag_2: Value<u32> = Rc::new(RefCell::new(1819239265_u32));
 );
 thread_local!(
-    pub static woff2_kDsigTableTag: Value<u32> = Rc::new(RefCell::new(1146308935_u32));
+    pub static kDsigTableTag_3: Value<u32> = Rc::new(RefCell::new(1146308935_u32));
 );
 thread_local!(
-    pub static woff2_kCffTableTag: Value<u32> = Rc::new(RefCell::new(1128678944_u32));
+    pub static kCffTableTag_4: Value<u32> = Rc::new(RefCell::new(1128678944_u32));
 );
 thread_local!(
-    pub static woff2_kHmtxTableTag: Value<u32> = Rc::new(RefCell::new(1752003704_u32));
+    pub static kHmtxTableTag_5: Value<u32> = Rc::new(RefCell::new(1752003704_u32));
 );
 thread_local!(
-    pub static woff2_kHheaTableTag: Value<u32> = Rc::new(RefCell::new(1751672161_u32));
+    pub static kHheaTableTag_6: Value<u32> = Rc::new(RefCell::new(1751672161_u32));
 );
 thread_local!(
-    pub static woff2_kMaxpTableTag: Value<u32> = Rc::new(RefCell::new(1835104368_u32));
+    pub static kMaxpTableTag_7: Value<u32> = Rc::new(RefCell::new(1835104368_u32));
 );
 thread_local!();
 thread_local!(
-    pub static woff2_kKnownTags: Value<Box<[u32]>> = Rc::new(RefCell::new(Box::new([
+    pub static kKnownTags_8: Value<Box<[u32]>> = Rc::new(RefCell::new(Box::new([
         ((((((('c' as u8) as i32) << 24) | ((('m' as u8) as i32) << 16))
             | ((('a' as u8) as i32) << 8))
             | (('p' as u8) as i32)) as u32),
@@ -436,7 +436,7 @@ impl Clone for woff2_Buffer {
     }
 }
 impl ByteRepr for woff2_Buffer {}
-pub fn Size255UShort_0(value: u16) -> u64 {
+pub fn Size255UShort_9(value: u16) -> u64 {
     let value: Value<u16> = Rc::new(RefCell::new(value));
     let result: Value<u64> = Rc::new(RefCell::new(3_u64));
     if (((*value.borrow()) as i32) < 253) {
@@ -448,7 +448,7 @@ pub fn Size255UShort_0(value: u16) -> u64 {
     }
     return (*result.borrow());
 }
-pub fn Write255UShort_1(out: Ptr<Vec<u8>>, value: i32) {
+pub fn Write255UShort_10(out: Ptr<Vec<u8>>, value: i32) {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
     let value: Value<i32> = Rc::new(RefCell::new(value));
     if ((*value.borrow()) < 253) {
@@ -465,7 +465,7 @@ pub fn Write255UShort_1(out: Ptr<Vec<u8>>, value: i32) {
         (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push((((*value.borrow()) & 255) as u8)));
     }
 }
-pub fn Store255UShort_2(val: i32, offset: Ptr<u64>, dst: Ptr<u8>) {
+pub fn Store255UShort_11(val: i32, offset: Ptr<u64>, dst: Ptr<u8>) {
     let val: Value<i32> = Rc::new(RefCell::new(val));
     let offset: Value<Ptr<u64>> = Rc::new(RefCell::new(offset));
     let dst: Value<Ptr<u8>> = Rc::new(RefCell::new(dst));
@@ -473,7 +473,7 @@ pub fn Store255UShort_2(val: i32, offset: Ptr<u64>, dst: Ptr<u8>) {
     ({
         let _out: Ptr<Vec<u8>> = (packed.as_pointer());
         let _value: i32 = (*val.borrow());
-        Write255UShort_1(_out, _value)
+        Write255UShort_10(_out, _value)
     });
     'loop_: for mut packed_byte in packed.as_pointer() as Ptr<u8> {
         let packed_byte: Value<u8> = Rc::new(RefCell::new(packed_byte.read().clone()));
@@ -483,20 +483,20 @@ pub fn Store255UShort_2(val: i32, offset: Ptr<u64>, dst: Ptr<u8>) {
             .write(__rhs);
     }
 }
-pub fn Read255UShort_3(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
+pub fn Read255UShort_12(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
     let buf: Value<Ptr<woff2_Buffer>> = Rc::new(RefCell::new(buf));
     let value: Value<Ptr<u32>> = Rc::new(RefCell::new(value));
     thread_local!(
-        static kWordCode: Value<i32> = Rc::new(RefCell::new(253));
+        static kWordCode_13: Value<i32> = Rc::new(RefCell::new(253));
     );
     thread_local!(
-        static kOneMoreByteCode2: Value<i32> = Rc::new(RefCell::new(254));
+        static kOneMoreByteCode2_14: Value<i32> = Rc::new(RefCell::new(254));
     );
     thread_local!(
-        static kOneMoreByteCode1: Value<i32> = Rc::new(RefCell::new(255));
+        static kOneMoreByteCode1_15: Value<i32> = Rc::new(RefCell::new(255));
     );
     thread_local!(
-        static kLowestUCode: Value<i32> = Rc::new(RefCell::new(253));
+        static kLowestUCode_16: Value<i32> = Rc::new(RefCell::new(253));
     );
     let code: Value<u8> = Rc::new(RefCell::new(0_u8));
     if !({
@@ -505,7 +505,7 @@ pub fn Read255UShort_3(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
     }) {
         return false;
     }
-    if (((*code.borrow()) as i32) == (*kWordCode.with(Value::clone).borrow())) {
+    if (((*code.borrow()) as i32) == (*kWordCode_13.with(Value::clone).borrow())) {
         let result: Value<u16> = Rc::new(RefCell::new(0_u16));
         if !({
             let _value: Ptr<u16> = (result.as_pointer());
@@ -516,7 +516,7 @@ pub fn Read255UShort_3(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
         let __rhs = ((*result.borrow()) as u32);
         (*value.borrow()).write(__rhs);
         return true;
-    } else if (((*code.borrow()) as i32) == (*kOneMoreByteCode1.with(Value::clone).borrow())) {
+    } else if (((*code.borrow()) as i32) == (*kOneMoreByteCode1_15.with(Value::clone).borrow())) {
         let result: Value<u8> = Rc::new(RefCell::new(0_u8));
         if !({
             let _value: Ptr<u8> = (result.as_pointer());
@@ -525,10 +525,10 @@ pub fn Read255UShort_3(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
             return false;
         }
         let __rhs =
-            ((((*result.borrow()) as i32) + (*kLowestUCode.with(Value::clone).borrow())) as u32);
+            ((((*result.borrow()) as i32) + (*kLowestUCode_16.with(Value::clone).borrow())) as u32);
         (*value.borrow()).write(__rhs);
         return true;
-    } else if (((*code.borrow()) as i32) == (*kOneMoreByteCode2.with(Value::clone).borrow())) {
+    } else if (((*code.borrow()) as i32) == (*kOneMoreByteCode2_14.with(Value::clone).borrow())) {
         let result: Value<u8> = Rc::new(RefCell::new(0_u8));
         if !({
             let _value: Ptr<u8> = (result.as_pointer());
@@ -537,7 +537,7 @@ pub fn Read255UShort_3(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
             return false;
         }
         let __rhs = ((((*result.borrow()) as i32)
-            + ((*kLowestUCode.with(Value::clone).borrow()) * 2)) as u32);
+            + ((*kLowestUCode_16.with(Value::clone).borrow()) * 2)) as u32);
         (*value.borrow()).write(__rhs);
         return true;
     } else {
@@ -547,7 +547,7 @@ pub fn Read255UShort_3(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
     }
     panic!("ub: non-void function does not return a value")
 }
-pub fn ReadBase128_4(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
+pub fn ReadBase128_17(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
     let buf: Value<Ptr<woff2_Buffer>> = Rc::new(RefCell::new(buf));
     let value: Value<Ptr<u32>> = Rc::new(RefCell::new(value));
     let result: Value<u32> = Rc::new(RefCell::new(0_u32));
@@ -577,7 +577,7 @@ pub fn ReadBase128_4(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
     }
     return false;
 }
-pub fn Base128Size_5(n: u64) -> u64 {
+pub fn Base128Size_18(n: u64) -> u64 {
     let n: Value<u64> = Rc::new(RefCell::new(n));
     let size: Value<u64> = Rc::new(RefCell::new(1_u64));
     'loop_: while ((*n.borrow()) >= 128_u64) {
@@ -586,14 +586,14 @@ pub fn Base128Size_5(n: u64) -> u64 {
     }
     return (*size.borrow());
 }
-pub fn StoreBase128_6(len: u64, offset: Ptr<u64>, dst: Ptr<u8>) {
+pub fn StoreBase128_19(len: u64, offset: Ptr<u64>, dst: Ptr<u8>) {
     let len: Value<u64> = Rc::new(RefCell::new(len));
     let offset: Value<Ptr<u64>> = Rc::new(RefCell::new(offset));
     let dst: Value<Ptr<u8>> = Rc::new(RefCell::new(dst));
     let size: Value<u64> = Rc::new(RefCell::new(
         ({
             let _n: u64 = (*len.borrow());
-            Base128Size_5(_n)
+            Base128Size_18(_n)
         }),
     ));
     let i: Value<u64> = Rc::new(RefCell::new(0_u64));
@@ -616,19 +616,19 @@ pub fn StoreBase128_6(len: u64, offset: Ptr<u64>, dst: Ptr<u8>) {
     }
 }
 thread_local!(
-    pub static woff2_kWoff2Signature: Value<u32> = Rc::new(RefCell::new(2001684018_u32));
+    pub static kWoff2Signature_20: Value<u32> = Rc::new(RefCell::new(2001684018_u32));
 );
 thread_local!(
-    pub static woff2_kWoff2FlagsTransform: Value<u32> = Rc::new(RefCell::new(((1 << 8) as u32)));
+    pub static kWoff2FlagsTransform_21: Value<u32> = Rc::new(RefCell::new(((1 << 8) as u32)));
 );
 thread_local!(
-    pub static woff2_kTtcFontFlavor: Value<u32> = Rc::new(RefCell::new(1953784678_u32));
+    pub static kTtcFontFlavor_22: Value<u32> = Rc::new(RefCell::new(1953784678_u32));
 );
 thread_local!(
-    pub static woff2_kSfntHeaderSize: Value<u64> = Rc::new(RefCell::new(12_u64));
+    pub static kSfntHeaderSize_23: Value<u64> = Rc::new(RefCell::new(12_u64));
 );
 thread_local!(
-    pub static woff2_kSfntEntrySize: Value<u64> = Rc::new(RefCell::new(16_u64));
+    pub static kSfntEntrySize_24: Value<u64> = Rc::new(RefCell::new(16_u64));
 );
 #[derive(Default)]
 pub struct woff2_Point {
@@ -722,7 +722,7 @@ impl Clone for woff2_Table {
     }
 }
 impl ByteRepr for woff2_Table {}
-pub fn Log2Floor_7(n: u32) -> i32 {
+pub fn Log2Floor_25(n: u32) -> i32 {
     let n: Value<u32> = Rc::new(RefCell::new(n));
     return if ((*n.borrow()) == 0_u32) {
         -1_i32
@@ -730,7 +730,7 @@ pub fn Log2Floor_7(n: u32) -> i32 {
         (31 ^ (*n.borrow()).leading_zeros() as i32)
     };
 }
-pub fn ComputeULongSum_8(buf: Ptr<u8>, size: u64) -> u32 {
+pub fn ComputeULongSum_26(buf: Ptr<u8>, size: u64) -> u32 {
     let buf: Value<Ptr<u8>> = Rc::new(RefCell::new(buf));
     let size: Value<u64> = Rc::new(RefCell::new(size));
     let checksum: Value<u32> = Rc::new(RefCell::new(0_u32));
@@ -770,7 +770,7 @@ pub fn ComputeULongSum_8(buf: Ptr<u8>, size: u64) -> u32 {
     }
     return (*checksum.borrow());
 }
-pub fn CollectionHeaderSize_9(header_version: u32, num_fonts: u32) -> u64 {
+pub fn CollectionHeaderSize_27(header_version: u32, num_fonts: u32) -> u64 {
     let header_version: Value<u32> = Rc::new(RefCell::new(header_version));
     let num_fonts: Value<u32> = Rc::new(RefCell::new(num_fonts));
     let size: Value<u64> = Rc::new(RefCell::new(0_u64));
@@ -787,7 +787,7 @@ pub fn CollectionHeaderSize_9(header_version: u32, num_fonts: u32) -> u64 {
     return (*size.borrow());
 }
 thread_local!(
-    pub static woff2_kDefaultMaxSize: Value<u64> =
+    pub static kDefaultMaxSize_28: Value<u64> =
         Rc::new(RefCell::new((((128 * 1024) * 1024) as u64)));
 );
 pub trait woff2_WOFF2Out {
@@ -795,21 +795,21 @@ pub trait woff2_WOFF2Out {
     fn Write_AnyPtr_u64_u64(&self, buf: AnyPtr, offset: u64, n: u64) -> bool;
     fn Size(&self) -> u64;
 }
-pub fn Round4_10(value: u64) -> u64 {
+pub fn Round4_29(value: u64) -> u64 {
     let value: Value<u64> = Rc::new(RefCell::new(value));
     if ((<u64>::MAX as u64).wrapping_sub((*value.borrow())) < 3_u64) {
         return (*value.borrow());
     }
     return (((*value.borrow()).wrapping_add(3_u64)) & (!3 as u64));
 }
-pub fn Round4_11(value: u32) -> u32 {
+pub fn Round4_30(value: u32) -> u32 {
     let value: Value<u32> = Rc::new(RefCell::new(value));
     if ((<u32>::MAX as u32).wrapping_sub((*value.borrow())) < 3_u32) {
         return (*value.borrow());
     }
     return (((*value.borrow()).wrapping_add(3_u32)) & (!3 as u32));
 }
-pub fn StoreU32_12(dst: Ptr<u8>, offset: u64, x: u32) -> u64 {
+pub fn StoreU32_31(dst: Ptr<u8>, offset: u64, x: u32) -> u64 {
     let dst: Value<Ptr<u8>> = Rc::new(RefCell::new(dst));
     let offset: Value<u64> = Rc::new(RefCell::new(offset));
     let x: Value<u32> = Rc::new(RefCell::new(x));
@@ -831,7 +831,7 @@ pub fn StoreU32_12(dst: Ptr<u8>, offset: u64, x: u32) -> u64 {
         .write(__rhs);
     return (*offset.borrow()).wrapping_add(4_u64);
 }
-pub fn Store16_13(dst: Ptr<u8>, offset: u64, x: i32) -> u64 {
+pub fn Store16_32(dst: Ptr<u8>, offset: u64, x: i32) -> u64 {
     let dst: Value<Ptr<u8>> = Rc::new(RefCell::new(dst));
     let offset: Value<u64> = Rc::new(RefCell::new(offset));
     let x: Value<i32> = Rc::new(RefCell::new(x));
@@ -845,7 +845,7 @@ pub fn Store16_13(dst: Ptr<u8>, offset: u64, x: i32) -> u64 {
         .write(__rhs);
     return (*offset.borrow()).wrapping_add(2_u64);
 }
-pub fn StoreU32_14(val: u32, offset: Ptr<u64>, dst: Ptr<u8>) {
+pub fn StoreU32_33(val: u32, offset: Ptr<u64>, dst: Ptr<u8>) {
     let val: Value<u32> = Rc::new(RefCell::new(val));
     let offset: Value<Ptr<u64>> = Rc::new(RefCell::new(offset));
     let dst: Value<Ptr<u8>> = Rc::new(RefCell::new(dst));
@@ -866,7 +866,7 @@ pub fn StoreU32_14(val: u32, offset: Ptr<u64>, dst: Ptr<u8>) {
         .offset(((*offset.borrow()).with_mut(|__v| __v.postfix_inc())) as isize)
         .write(__rhs);
 }
-pub fn Store16_15(val: i32, offset: Ptr<u64>, dst: Ptr<u8>) {
+pub fn Store16_34(val: i32, offset: Ptr<u64>, dst: Ptr<u8>) {
     let val: Value<i32> = Rc::new(RefCell::new(val));
     let offset: Value<Ptr<u64>> = Rc::new(RefCell::new(offset));
     let dst: Value<Ptr<u8>> = Rc::new(RefCell::new(dst));
@@ -879,7 +879,7 @@ pub fn Store16_15(val: i32, offset: Ptr<u64>, dst: Ptr<u8>) {
         .offset(((*offset.borrow()).with_mut(|__v| __v.postfix_inc())) as isize)
         .write(__rhs);
 }
-pub fn StoreBytes_16(data: Ptr<u8>, len: u64, offset: Ptr<u64>, dst: Ptr<u8>) {
+pub fn StoreBytes_35(data: Ptr<u8>, len: u64, offset: Ptr<u64>, dst: Ptr<u8>) {
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<u64> = Rc::new(RefCell::new(len));
     let offset: Value<Ptr<u64>> = Rc::new(RefCell::new(offset));
@@ -900,61 +900,61 @@ pub fn StoreBytes_16(data: Ptr<u8>, len: u64, offset: Ptr<u64>, dst: Ptr<u8>) {
 }
 thread_local!();
 thread_local!(
-    pub static woff2_kGlyfOnCurve: Value<i32> = Rc::new(RefCell::new((1 << 0)));
+    pub static kGlyfOnCurve_36: Value<i32> = Rc::new(RefCell::new((1 << 0)));
 );
 thread_local!(
-    pub static woff2_kGlyfXShort: Value<i32> = Rc::new(RefCell::new((1 << 1)));
+    pub static kGlyfXShort_37: Value<i32> = Rc::new(RefCell::new((1 << 1)));
 );
 thread_local!(
-    pub static woff2_kGlyfYShort: Value<i32> = Rc::new(RefCell::new((1 << 2)));
+    pub static kGlyfYShort_38: Value<i32> = Rc::new(RefCell::new((1 << 2)));
 );
 thread_local!(
-    pub static woff2_kGlyfRepeat: Value<i32> = Rc::new(RefCell::new((1 << 3)));
+    pub static kGlyfRepeat_39: Value<i32> = Rc::new(RefCell::new((1 << 3)));
 );
 thread_local!(
-    pub static woff2_kGlyfThisXIsSame: Value<i32> = Rc::new(RefCell::new((1 << 4)));
+    pub static kGlyfThisXIsSame_40: Value<i32> = Rc::new(RefCell::new((1 << 4)));
 );
 thread_local!(
-    pub static woff2_kGlyfThisYIsSame: Value<i32> = Rc::new(RefCell::new((1 << 5)));
+    pub static kGlyfThisYIsSame_41: Value<i32> = Rc::new(RefCell::new((1 << 5)));
 );
 thread_local!(
-    pub static woff2_kOverlapSimple: Value<i32> = Rc::new(RefCell::new((1 << 6)));
+    pub static kOverlapSimple_42: Value<i32> = Rc::new(RefCell::new((1 << 6)));
 );
 thread_local!(
-    pub static woff2_FLAG_ARG_1_AND_2_ARE_WORDS: Value<i32> = Rc::new(RefCell::new((1 << 0)));
+    pub static FLAG_ARG_1_AND_2_ARE_WORDS_43: Value<i32> = Rc::new(RefCell::new((1 << 0)));
 );
 thread_local!(
-    pub static woff2_FLAG_WE_HAVE_A_SCALE: Value<i32> = Rc::new(RefCell::new((1 << 3)));
+    pub static FLAG_WE_HAVE_A_SCALE_44: Value<i32> = Rc::new(RefCell::new((1 << 3)));
 );
 thread_local!(
-    pub static woff2_FLAG_MORE_COMPONENTS: Value<i32> = Rc::new(RefCell::new((1 << 5)));
+    pub static FLAG_MORE_COMPONENTS_45: Value<i32> = Rc::new(RefCell::new((1 << 5)));
 );
 thread_local!(
-    pub static woff2_FLAG_WE_HAVE_AN_X_AND_Y_SCALE: Value<i32> = Rc::new(RefCell::new((1 << 6)));
+    pub static FLAG_WE_HAVE_AN_X_AND_Y_SCALE_46: Value<i32> = Rc::new(RefCell::new((1 << 6)));
 );
 thread_local!(
-    pub static woff2_FLAG_WE_HAVE_A_TWO_BY_TWO: Value<i32> = Rc::new(RefCell::new((1 << 7)));
+    pub static FLAG_WE_HAVE_A_TWO_BY_TWO_47: Value<i32> = Rc::new(RefCell::new((1 << 7)));
 );
 thread_local!(
-    pub static woff2_FLAG_WE_HAVE_INSTRUCTIONS: Value<i32> = Rc::new(RefCell::new((1 << 8)));
+    pub static FLAG_WE_HAVE_INSTRUCTIONS_48: Value<i32> = Rc::new(RefCell::new((1 << 8)));
 );
 thread_local!(
-    pub static woff2_FLAG_OVERLAP_SIMPLE_BITMAP: Value<i32> = Rc::new(RefCell::new((1 << 0)));
+    pub static FLAG_OVERLAP_SIMPLE_BITMAP_49: Value<i32> = Rc::new(RefCell::new((1 << 0)));
 );
 thread_local!(
-    pub static woff2_kCheckSumAdjustmentOffset: Value<u64> = Rc::new(RefCell::new(8_u64));
+    pub static kCheckSumAdjustmentOffset_50: Value<u64> = Rc::new(RefCell::new(8_u64));
 );
 thread_local!(
-    pub static woff2_kEndPtsOfContoursOffset: Value<u64> = Rc::new(RefCell::new(10_u64));
+    pub static kEndPtsOfContoursOffset_51: Value<u64> = Rc::new(RefCell::new(10_u64));
 );
 thread_local!(
-    pub static woff2_kCompositeGlyphBegin: Value<u64> = Rc::new(RefCell::new(10_u64));
+    pub static kCompositeGlyphBegin_52: Value<u64> = Rc::new(RefCell::new(10_u64));
 );
 thread_local!(
-    pub static woff2_kDefaultGlyphBuf: Value<u64> = Rc::new(RefCell::new(5120_u64));
+    pub static kDefaultGlyphBuf_53: Value<u64> = Rc::new(RefCell::new(5120_u64));
 );
 thread_local!(
-    pub static woff2_kMaxPlausibleCompressionRatio: Value<f32> =
+    pub static kMaxPlausibleCompressionRatio_54: Value<f32> =
         Rc::new(RefCell::new((1.0E+2 as f32)));
 );
 #[derive(Default)]
@@ -1051,7 +1051,7 @@ impl Clone for woff2_RebuildMetadata {
     }
 }
 impl ByteRepr for woff2_RebuildMetadata {}
-pub fn WithSign_17(flag: i32, baseval: i32) -> i32 {
+pub fn WithSign_55(flag: i32, baseval: i32) -> i32 {
     let flag: Value<i32> = Rc::new(RefCell::new(flag));
     let baseval: Value<i32> = Rc::new(RefCell::new(baseval));
     return if (((*flag.borrow()) & 1) != 0) {
@@ -1060,7 +1060,7 @@ pub fn WithSign_17(flag: i32, baseval: i32) -> i32 {
         -(*baseval.borrow())
     };
 }
-pub fn _SafeIntAddition_18(a: i32, b: i32, result: Ptr<i32>) -> bool {
+pub fn _SafeIntAddition_56(a: i32, b: i32, result: Ptr<i32>) -> bool {
     let a: Value<i32> = Rc::new(RefCell::new(a));
     let b: Value<i32> = Rc::new(RefCell::new(b));
     let result: Value<Ptr<i32>> = Rc::new(RefCell::new(result));
@@ -1075,7 +1075,7 @@ pub fn _SafeIntAddition_18(a: i32, b: i32, result: Ptr<i32>) -> bool {
     (*result.borrow()).write(__rhs);
     return true;
 }
-pub fn TripletDecode_19(
+pub fn TripletDecode_57(
     flags_in: Ptr<u8>,
     in_: Ptr<u8>,
     in_size: u64,
@@ -1133,7 +1133,7 @@ pub fn TripletDecode_19(
                         .offset((*triplet_index.borrow()) as isize)
                         .read()) as i32)
                 };
-                WithSign_17(_flag, _baseval)
+                WithSign_55(_flag, _baseval)
             });
         } else if (((*flag.borrow()) as i32) < 20) {
             (*dx.borrow_mut()) = ({
@@ -1144,7 +1144,7 @@ pub fn TripletDecode_19(
                         .offset((*triplet_index.borrow()) as isize)
                         .read()) as i32)
                 };
-                WithSign_17(_flag, _baseval)
+                WithSign_55(_flag, _baseval)
             });
             (*dy.borrow_mut()) = 0;
         } else if (((*flag.borrow()) as i32) < 84) {
@@ -1157,12 +1157,12 @@ pub fn TripletDecode_19(
             (*dx.borrow_mut()) = ({
                 let _flag: i32 = ((*flag.borrow()) as i32);
                 let _baseval: i32 = ((1 + ((*b0.borrow()) & 48)) + ((*b1.borrow()) >> 4));
-                WithSign_17(_flag, _baseval)
+                WithSign_55(_flag, _baseval)
             });
             (*dy.borrow_mut()) = ({
                 let _flag: i32 = (((*flag.borrow()) as i32) >> 1);
                 let _baseval: i32 = ((1 + (((*b0.borrow()) & 12) << 2)) + ((*b1.borrow()) & 15));
-                WithSign_17(_flag, _baseval)
+                WithSign_55(_flag, _baseval)
             });
         } else if (((*flag.borrow()) as i32) < 120) {
             let b0: Value<i32> = Rc::new(RefCell::new((((*flag.borrow()) as i32) - 84)));
@@ -1174,7 +1174,7 @@ pub fn TripletDecode_19(
                         .offset((*triplet_index.borrow()) as isize)
                         .read()) as i32)
                 };
-                WithSign_17(_flag, _baseval)
+                WithSign_55(_flag, _baseval)
             });
             (*dy.borrow_mut()) = ({
                 let _flag: i32 = (((*flag.borrow()) as i32) >> 1);
@@ -1184,7 +1184,7 @@ pub fn TripletDecode_19(
                         .offset(((*triplet_index.borrow()).wrapping_add(1_u32)) as isize)
                         .read()) as i32)
                 };
-                WithSign_17(_flag, _baseval)
+                WithSign_55(_flag, _baseval)
             });
         } else if (((*flag.borrow()) as i32) < 124) {
             let b2: Value<i32> = Rc::new(RefCell::new(
@@ -1201,7 +1201,7 @@ pub fn TripletDecode_19(
                         << 4);
                     _lhs + ((*b2.borrow()) >> 4)
                 };
-                WithSign_17(_flag, _baseval)
+                WithSign_55(_flag, _baseval)
             });
             (*dy.borrow_mut()) = ({
                 let _flag: i32 = (((*flag.borrow()) as i32) >> 1);
@@ -1211,7 +1211,7 @@ pub fn TripletDecode_19(
                         .offset(((*triplet_index.borrow()).wrapping_add(2_u32)) as isize)
                         .read()) as i32)
                 };
-                WithSign_17(_flag, _baseval)
+                WithSign_55(_flag, _baseval)
             });
         } else {
             (*dx.borrow_mut()) = ({
@@ -1223,7 +1223,7 @@ pub fn TripletDecode_19(
                     + (((*in_.borrow())
                         .offset(((*triplet_index.borrow()).wrapping_add(1_u32)) as isize)
                         .read()) as i32));
-                WithSign_17(_flag, _baseval)
+                WithSign_55(_flag, _baseval)
             });
             (*dy.borrow_mut()) = ({
                 let _flag: i32 = (((*flag.borrow()) as i32) >> 1);
@@ -1234,7 +1234,7 @@ pub fn TripletDecode_19(
                     + (((*in_.borrow())
                         .offset(((*triplet_index.borrow()).wrapping_add(3_u32)) as isize)
                         .read()) as i32));
-                WithSign_17(_flag, _baseval)
+                WithSign_55(_flag, _baseval)
             });
         }
         let rhs_0 = (*triplet_index.borrow()).wrapping_add((*n_data_bytes.borrow()));
@@ -1243,7 +1243,7 @@ pub fn TripletDecode_19(
             let _a: i32 = (*x.borrow());
             let _b: i32 = (*dx.borrow());
             let _result: Ptr<i32> = (x.as_pointer());
-            _SafeIntAddition_18(_a, _b, _result)
+            _SafeIntAddition_56(_a, _b, _result)
         }) {
             return false;
         }
@@ -1251,7 +1251,7 @@ pub fn TripletDecode_19(
             let _a: i32 = (*y.borrow());
             let _b: i32 = (*dy.borrow());
             let _result: Ptr<i32> = (y.as_pointer());
-            _SafeIntAddition_18(_a, _b, _result)
+            _SafeIntAddition_56(_a, _b, _result)
         }) {
             return false;
         }
@@ -1267,7 +1267,7 @@ pub fn TripletDecode_19(
     (*in_bytes_consumed.borrow()).write(__rhs);
     return true;
 }
-pub fn StorePoints_20(
+pub fn StorePoints_58(
     n_points: u32,
     points: Ptr<woff2_Point>,
     n_contours: u32,
@@ -1286,7 +1286,7 @@ pub fn StorePoints_20(
     let dst_size: Value<u64> = Rc::new(RefCell::new(dst_size));
     let glyph_size: Value<Ptr<u64>> = Rc::new(RefCell::new(glyph_size));
     let flag_offset: Value<u32> = Rc::new(RefCell::new(
-        (((((*woff2_kEndPtsOfContoursOffset.with(Value::clone).borrow())
+        (((((*kEndPtsOfContoursOffset_51.with(Value::clone).borrow())
             .wrapping_add((((2_u32).wrapping_mul((*n_contours.borrow()))) as u64)))
         .wrapping_add(2_u64))
         .wrapping_add(((*instruction_length.borrow()) as u64))) as u32),
@@ -1302,13 +1302,13 @@ pub fn StorePoints_20(
         let point: Ptr<woff2_Point> = (*points.borrow()).offset((*i.borrow()) as isize);
         let flag: Value<i32> = Rc::new(RefCell::new(
             if (*(*point.upgrade().deref()).on_curve.borrow()) {
-                (*woff2_kGlyfOnCurve.with(Value::clone).borrow())
+                (*kGlyfOnCurve_36.with(Value::clone).borrow())
             } else {
                 0
             },
         ));
         if (*has_overlap_bit.borrow()) && ((*i.borrow()) == 0_u32) {
-            (*flag.borrow_mut()) |= (*woff2_kOverlapSimple.with(Value::clone).borrow());
+            (*flag.borrow_mut()) |= (*kOverlapSimple_42.with(Value::clone).borrow());
         }
         let dx: Value<i32> = Rc::new(RefCell::new({
             let _lhs = (*(*point.upgrade().deref()).x.borrow());
@@ -1319,11 +1319,11 @@ pub fn StorePoints_20(
             _lhs - (*last_y.borrow())
         }));
         if ((*dx.borrow()) == 0) {
-            (*flag.borrow_mut()) |= (*woff2_kGlyfThisXIsSame.with(Value::clone).borrow());
+            (*flag.borrow_mut()) |= (*kGlyfThisXIsSame_40.with(Value::clone).borrow());
         } else if ((*dx.borrow()) > -256_i32) && ((*dx.borrow()) < 256) {
-            (*flag.borrow_mut()) |= ((*woff2_kGlyfXShort.with(Value::clone).borrow())
+            (*flag.borrow_mut()) |= ((*kGlyfXShort_37.with(Value::clone).borrow())
                 | (if ((*dx.borrow()) > 0) {
-                    (*woff2_kGlyfThisXIsSame.with(Value::clone).borrow())
+                    (*kGlyfThisXIsSame_40.with(Value::clone).borrow())
                 } else {
                     0
                 }));
@@ -1334,11 +1334,11 @@ pub fn StorePoints_20(
             (*x_bytes.borrow_mut()) = rhs_0;
         }
         if ((*dy.borrow()) == 0) {
-            (*flag.borrow_mut()) |= (*woff2_kGlyfThisYIsSame.with(Value::clone).borrow());
+            (*flag.borrow_mut()) |= (*kGlyfThisYIsSame_41.with(Value::clone).borrow());
         } else if ((*dy.borrow()) > -256_i32) && ((*dy.borrow()) < 256) {
-            (*flag.borrow_mut()) |= ((*woff2_kGlyfYShort.with(Value::clone).borrow())
+            (*flag.borrow_mut()) |= ((*kGlyfYShort_38.with(Value::clone).borrow())
                 | (if ((*dy.borrow()) > 0) {
-                    (*woff2_kGlyfThisYIsSame.with(Value::clone).borrow())
+                    (*kGlyfThisYIsSame_41.with(Value::clone).borrow())
                 } else {
                     0
                 }));
@@ -1352,7 +1352,7 @@ pub fn StorePoints_20(
             let rhs_0 = ((((*dst.borrow())
                 .offset(((*flag_offset.borrow()).wrapping_sub(1_u32)) as isize)
                 .read()) as i32)
-                | (*woff2_kGlyfRepeat.with(Value::clone).borrow())) as u8;
+                | (*kGlyfRepeat_39.with(Value::clone).borrow())) as u8;
             (*dst.borrow())
                 .offset(((*flag_offset.borrow()).wrapping_sub(1_u32)) as isize)
                 .write(rhs_0);
@@ -1429,7 +1429,7 @@ pub fn StorePoints_20(
                 let _dst: Ptr<u8> = (*dst.borrow()).clone();
                 let _offset: u64 = ((*x_offset.borrow()) as u64);
                 let _x: i32 = (*dx.borrow());
-                Store16_13(_dst, _offset, _x)
+                Store16_32(_dst, _offset, _x)
             }) as i32);
             (*x_offset.borrow_mut()) = __rhs;
         }
@@ -1454,7 +1454,7 @@ pub fn StorePoints_20(
                 let _dst: Ptr<u8> = (*dst.borrow()).clone();
                 let _offset: u64 = ((*y_offset.borrow()) as u64);
                 let _x: i32 = (*dy.borrow());
-                Store16_13(_dst, _offset, _x)
+                Store16_32(_dst, _offset, _x)
             }) as i32);
             (*y_offset.borrow_mut()) = __rhs;
         }
@@ -1465,7 +1465,7 @@ pub fn StorePoints_20(
     (*glyph_size.borrow()).write(__rhs);
     return true;
 }
-pub fn ComputeBbox_21(n_points: u32, points: Ptr<woff2_Point>, dst: Ptr<u8>) {
+pub fn ComputeBbox_59(n_points: u32, points: Ptr<woff2_Point>, dst: Ptr<u8>) {
     let n_points: Value<u32> = Rc::new(RefCell::new(n_points));
     let points: Value<Ptr<woff2_Point>> = Rc::new(RefCell::new(points));
     let dst: Value<Ptr<u8>> = Rc::new(RefCell::new(dst));
@@ -1540,32 +1540,32 @@ pub fn ComputeBbox_21(n_points: u32, points: Ptr<woff2_Point>, dst: Ptr<u8>) {
         let _dst: Ptr<u8> = (*dst.borrow()).clone();
         let _offset: u64 = (*offset.borrow());
         let _x: i32 = (*x_min.borrow());
-        Store16_13(_dst, _offset, _x)
+        Store16_32(_dst, _offset, _x)
     });
     (*offset.borrow_mut()) = __rhs;
     let __rhs = ({
         let _dst: Ptr<u8> = (*dst.borrow()).clone();
         let _offset: u64 = (*offset.borrow());
         let _x: i32 = (*y_min.borrow());
-        Store16_13(_dst, _offset, _x)
+        Store16_32(_dst, _offset, _x)
     });
     (*offset.borrow_mut()) = __rhs;
     let __rhs = ({
         let _dst: Ptr<u8> = (*dst.borrow()).clone();
         let _offset: u64 = (*offset.borrow());
         let _x: i32 = (*x_max.borrow());
-        Store16_13(_dst, _offset, _x)
+        Store16_32(_dst, _offset, _x)
     });
     (*offset.borrow_mut()) = __rhs;
     let __rhs = ({
         let _dst: Ptr<u8> = (*dst.borrow()).clone();
         let _offset: u64 = (*offset.borrow());
         let _x: i32 = (*y_max.borrow());
-        Store16_13(_dst, _offset, _x)
+        Store16_32(_dst, _offset, _x)
     });
     (*offset.borrow_mut()) = __rhs;
 }
-pub fn SizeOfComposite_22(
+pub fn SizeOfComposite_60(
     composite_stream: woff2_Buffer,
     size: Ptr<u64>,
     have_instructions: Ptr<bool>,
@@ -1577,10 +1577,10 @@ pub fn SizeOfComposite_22(
         Rc::new(RefCell::new(({ (*composite_stream.borrow()).offset() })));
     let we_have_instructions: Value<bool> = Rc::new(RefCell::new(false));
     let flags: Value<u16> = Rc::new(RefCell::new(
-        ((*woff2_FLAG_MORE_COMPONENTS.with(Value::clone).borrow()) as u16),
+        ((*FLAG_MORE_COMPONENTS_45.with(Value::clone).borrow()) as u16),
     ));
     'loop_: while ((((*flags.borrow()) as i32)
-        & (*woff2_FLAG_MORE_COMPONENTS.with(Value::clone).borrow()))
+        & (*FLAG_MORE_COMPONENTS_45.with(Value::clone).borrow()))
         != 0)
     {
         if ((!({
@@ -1593,13 +1593,13 @@ pub fn SizeOfComposite_22(
         }
         let rhs_0 = (((*we_have_instructions.borrow()) as i32)
             | (((((*flags.borrow()) as i32)
-                & (*woff2_FLAG_WE_HAVE_INSTRUCTIONS.with(Value::clone).borrow()))
+                & (*FLAG_WE_HAVE_INSTRUCTIONS_48.with(Value::clone).borrow()))
                 != 0) as i32))
             != 0;
         (*we_have_instructions.borrow_mut()) = rhs_0;
         let arg_size: Value<u64> = Rc::new(RefCell::new(2_u64));
         if ((((*flags.borrow()) as i32)
-            & (*woff2_FLAG_ARG_1_AND_2_ARE_WORDS.with(Value::clone).borrow()))
+            & (*FLAG_ARG_1_AND_2_ARE_WORDS_43.with(Value::clone).borrow()))
             != 0)
         {
             let rhs_0 = (*arg_size.borrow()).wrapping_add(4_u64);
@@ -1608,22 +1608,19 @@ pub fn SizeOfComposite_22(
             let rhs_0 = (*arg_size.borrow()).wrapping_add(2_u64);
             (*arg_size.borrow_mut()) = rhs_0;
         }
-        if ((((*flags.borrow()) as i32)
-            & (*woff2_FLAG_WE_HAVE_A_SCALE.with(Value::clone).borrow()))
+        if ((((*flags.borrow()) as i32) & (*FLAG_WE_HAVE_A_SCALE_44.with(Value::clone).borrow()))
             != 0)
         {
             let rhs_0 = (*arg_size.borrow()).wrapping_add(2_u64);
             (*arg_size.borrow_mut()) = rhs_0;
         } else if ((((*flags.borrow()) as i32)
-            & (*woff2_FLAG_WE_HAVE_AN_X_AND_Y_SCALE
-                .with(Value::clone)
-                .borrow()))
+            & (*FLAG_WE_HAVE_AN_X_AND_Y_SCALE_46.with(Value::clone).borrow()))
             != 0)
         {
             let rhs_0 = (*arg_size.borrow()).wrapping_add(4_u64);
             (*arg_size.borrow_mut()) = rhs_0;
         } else if ((((*flags.borrow()) as i32)
-            & (*woff2_FLAG_WE_HAVE_A_TWO_BY_TWO.with(Value::clone).borrow()))
+            & (*FLAG_WE_HAVE_A_TWO_BY_TWO_47.with(Value::clone).borrow()))
             != 0)
         {
             let rhs_0 = (*arg_size.borrow()).wrapping_add(8_u64);
@@ -1644,7 +1641,7 @@ pub fn SizeOfComposite_22(
     (*have_instructions.borrow()).write(__rhs);
     return true;
 }
-pub fn Pad4_23(out: PtrDyn<dyn woff2_WOFF2Out>) -> bool {
+pub fn Pad4_61(out: PtrDyn<dyn woff2_WOFF2Out>) -> bool {
     let out: Value<PtrDyn<dyn woff2_WOFF2Out>> = Rc::new(RefCell::new(out));
     let zeroes: Value<Box<[u8]>> = Rc::new(RefCell::new(Box::new([0_u8, 0_u8, 0_u8])));
     if (((({ (*(*out.borrow()).upgrade().deref()).Size() }).wrapping_add(3_u64)
@@ -1656,7 +1653,7 @@ pub fn Pad4_23(out: PtrDyn<dyn woff2_WOFF2Out>) -> bool {
     let pad_bytes: Value<u32> = Rc::new(RefCell::new(
         ((({
             let _value: u64 = ({ (*(*out.borrow()).upgrade().deref()).Size() });
-            Round4_10(_value)
+            Round4_29(_value)
         })
         .wrapping_sub(({ (*(*out.borrow()).upgrade().deref()).Size() }))) as u32),
     ));
@@ -1673,7 +1670,7 @@ pub fn Pad4_23(out: PtrDyn<dyn woff2_WOFF2Out>) -> bool {
     }
     return true;
 }
-pub fn StoreLoca_24(
+pub fn StoreLoca_62(
     loca_values: Ptr<Vec<u32>>,
     index_format: i32,
     checksum: Ptr<u32>,
@@ -1718,7 +1715,7 @@ pub fn StoreLoca_24(
                 let _dst: Ptr<u8> = (*dst.borrow()).clone();
                 let _offset: u64 = (*offset.borrow());
                 let _x: u32 = (*value.borrow());
-                StoreU32_12(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, _x)
             });
             (*offset.borrow_mut()) = __rhs;
         } else {
@@ -1726,7 +1723,7 @@ pub fn StoreLoca_24(
                 let _dst: Ptr<u8> = (*dst.borrow()).clone();
                 let _offset: u64 = (*offset.borrow());
                 let _x: i32 = (((*value.borrow()) >> 1) as i32);
-                Store16_13(_dst, _offset, _x)
+                Store16_32(_dst, _offset, _x)
             });
             (*offset.borrow_mut()) = __rhs;
         }
@@ -1735,7 +1732,7 @@ pub fn StoreLoca_24(
     let __rhs = ({
         let _buf: Ptr<u8> = ((loca_content.as_pointer() as Ptr<u8>).offset(0_u64 as isize));
         let _size: u64 = (*loca_content.borrow()).len() as u64;
-        ComputeULongSum_8(_buf, _size)
+        ComputeULongSum_26(_buf, _size)
     });
     (*checksum.borrow()).write(__rhs);
     if ((!({
@@ -1750,7 +1747,7 @@ pub fn StoreLoca_24(
     }
     return true;
 }
-pub fn ReconstructGlyf_25(
+pub fn ReconstructGlyf_63(
     data: Ptr<u8>,
     glyf_table: Ptr<woff2_Table>,
     glyf_checksum: Ptr<u32>,
@@ -1767,7 +1764,7 @@ pub fn ReconstructGlyf_25(
     let info: Value<Ptr<woff2_WOFF2FontInfo>> = Rc::new(RefCell::new(info));
     let out: Value<PtrDyn<dyn woff2_WOFF2Out>> = Rc::new(RefCell::new(out));
     thread_local!(
-        static kNumSubStreams: Value<i32> = Rc::new(RefCell::new(7));
+        static kNumSubStreams_64: Value<i32> = Rc::new(RefCell::new(7));
     );
     let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
         (*data.borrow()).clone(),
@@ -1777,7 +1774,7 @@ pub fn ReconstructGlyf_25(
     )));
     let version: Value<u16> = <Value<u16>>::default();
     let substreams: Value<Vec<(Value<Ptr<u8>>, Value<u64>)>> = Rc::new(RefCell::new(
-        (0..((*kNumSubStreams.with(Value::clone).borrow()) as u64) as usize)
+        (0..((*kNumSubStreams_64.with(Value::clone).borrow()) as u64) as usize)
             .map(|_| <(Value<Ptr<u8>>, Value<u64>)>::default())
             .collect::<Vec<_>>(),
     ));
@@ -1803,7 +1800,7 @@ pub fn ReconstructGlyf_25(
     }
     let has_overlap_bitmap: Value<bool> = Rc::new(RefCell::new(
         ((((*flags.borrow()) as i32)
-            & (*woff2_FLAG_OVERLAP_SIMPLE_BITMAP.with(Value::clone).borrow()))
+            & (*FLAG_OVERLAP_SIMPLE_BITMAP_49.with(Value::clone).borrow()))
             != 0),
     ));
     if ((((!({
@@ -1843,7 +1840,7 @@ pub fn ReconstructGlyf_25(
         return false;
     }
     let offset: Value<u32> = Rc::new(RefCell::new(
-        (((2 + (*kNumSubStreams.with(Value::clone).borrow())) * 4) as u32),
+        (((2 + (*kNumSubStreams_64.with(Value::clone).borrow())) * 4) as u32),
     ));
     if ((({
         let _lhs = (*offset.borrow());
@@ -1856,7 +1853,7 @@ pub fn ReconstructGlyf_25(
         return false;
     }
     let i: Value<i32> = Rc::new(RefCell::new(0));
-    'loop_: while ((*i.borrow()) < (*kNumSubStreams.with(Value::clone).borrow())) {
+    'loop_: while ((*i.borrow()) < (*kNumSubStreams_64.with(Value::clone).borrow())) {
         let substream_size: Value<u32> = <Value<u32>>::default();
         if ((!({
             let _value: Ptr<u32> = (substream_size.as_pointer());
@@ -2042,7 +2039,7 @@ pub fn ReconstructGlyf_25(
         return false;
     }
     let glyph_buf_size: Value<u64> = Rc::new(RefCell::new(
-        (*woff2_kDefaultGlyphBuf.with(Value::clone).borrow()),
+        (*kDefaultGlyphBuf_53.with(Value::clone).borrow()),
     ));
     let glyph_buf: Value<Option<Value<Box<[u8]>>>> = Rc::new(RefCell::new(
         Ptr::alloc_array(
@@ -2093,7 +2090,7 @@ pub fn ReconstructGlyf_25(
                 let _composite_stream: woff2_Buffer = (*composite_stream.borrow()).clone();
                 let _size: Ptr<u64> = (composite_size.as_pointer());
                 let _have_instructions: Ptr<bool> = (have_instructions.as_pointer());
-                SizeOfComposite_22(_composite_stream, _size, _have_instructions)
+                SizeOfComposite_60(_composite_stream, _size, _have_instructions)
             }) as i64)
                 != 0)
             {
@@ -2103,7 +2100,7 @@ pub fn ReconstructGlyf_25(
                 if ((!({
                     let _buf: Ptr<woff2_Buffer> = (glyph_stream.as_pointer());
                     let _value: Ptr<u32> = (instruction_size.as_pointer());
-                    Read255UShort_3(_buf, _value)
+                    Read255UShort_12(_buf, _value)
                 }) as i64)
                     != 0)
                 {
@@ -2127,7 +2124,7 @@ pub fn ReconstructGlyf_25(
                 let _dst: Ptr<u8> = (*glyph_buf.borrow()).as_pointer();
                 let _offset: u64 = (*glyph_size.borrow());
                 let _x: i32 = ((*n_contours.borrow()) as i32);
-                Store16_13(_dst, _offset, _x)
+                Store16_32(_dst, _offset, _x)
             });
             (*glyph_size.borrow_mut()) = __rhs;
             if ((!({
@@ -2161,7 +2158,7 @@ pub fn ReconstructGlyf_25(
                     let _dst: Ptr<u8> = (*glyph_buf.borrow()).as_pointer();
                     let _offset: u64 = (*glyph_size.borrow());
                     let _x: i32 = ((*instruction_size.borrow()) as i32);
-                    Store16_13(_dst, _offset, _x)
+                    Store16_32(_dst, _offset, _x)
                 });
                 (*glyph_size.borrow_mut()) = __rhs;
                 if ((!({
@@ -2188,7 +2185,7 @@ pub fn ReconstructGlyf_25(
                 if ((!({
                     let _buf: Ptr<woff2_Buffer> = (n_points_stream.as_pointer());
                     let _value: Ptr<u32> = (n_points_contour.as_pointer());
-                    Read255UShort_3(_buf, _value)
+                    Read255UShort_12(_buf, _value)
                 }) as i64)
                     != 0)
                 {
@@ -2245,7 +2242,7 @@ pub fn ReconstructGlyf_25(
                 let _n_points: u32 = (*total_n_points.borrow());
                 let _result: Ptr<woff2_Point> = (*points.borrow()).as_pointer();
                 let _in_bytes_consumed: Ptr<u64> = (triplet_bytes_consumed.as_pointer());
-                TripletDecode_19(
+                TripletDecode_57(
                     _flags_in,
                     _in,
                     _in_size,
@@ -2278,7 +2275,7 @@ pub fn ReconstructGlyf_25(
             if ((!({
                 let _buf: Ptr<woff2_Buffer> = (glyph_stream.as_pointer());
                 let _value: Ptr<u32> = (instruction_size.as_pointer());
-                Read255UShort_3(_buf, _value)
+                Read255UShort_12(_buf, _value)
             }) as i64)
                 != 0)
             {
@@ -2308,7 +2305,7 @@ pub fn ReconstructGlyf_25(
                 let _dst: Ptr<u8> = (*glyph_buf.borrow()).as_pointer();
                 let _offset: u64 = (*glyph_size.borrow());
                 let _x: i32 = ((*n_contours.borrow()) as i32);
-                Store16_13(_dst, _offset, _x)
+                Store16_32(_dst, _offset, _x)
             });
             (*glyph_size.borrow_mut()) = __rhs;
             if (*have_bbox.borrow()) {
@@ -2328,11 +2325,10 @@ pub fn ReconstructGlyf_25(
                     let _n_points: u32 = (*total_n_points.borrow());
                     let _points: Ptr<woff2_Point> = (*points.borrow()).as_pointer();
                     let _dst: Ptr<u8> = (*glyph_buf.borrow()).as_pointer();
-                    ComputeBbox_21(_n_points, _points, _dst)
+                    ComputeBbox_59(_n_points, _points, _dst)
                 });
             }
-            (*glyph_size.borrow_mut()) =
-                (*woff2_kEndPtsOfContoursOffset.with(Value::clone).borrow());
+            (*glyph_size.borrow_mut()) = (*kEndPtsOfContoursOffset_51.with(Value::clone).borrow());
             let end_point: Value<i32> = Rc::new(RefCell::new(-1_i32));
             let contour_ix: Value<u32> = Rc::new(RefCell::new(0_u32));
             'loop_: while ((*contour_ix.borrow()) < ((*n_contours.borrow()) as u32)) {
@@ -2349,7 +2345,7 @@ pub fn ReconstructGlyf_25(
                     let _dst: Ptr<u8> = (*glyph_buf.borrow()).as_pointer();
                     let _offset: u64 = (*glyph_size.borrow());
                     let _x: i32 = (*end_point.borrow());
-                    Store16_13(_dst, _offset, _x)
+                    Store16_32(_dst, _offset, _x)
                 });
                 (*glyph_size.borrow_mut()) = __rhs;
                 (*contour_ix.borrow_mut()).prefix_inc();
@@ -2358,7 +2354,7 @@ pub fn ReconstructGlyf_25(
                 let _dst: Ptr<u8> = (*glyph_buf.borrow()).as_pointer();
                 let _offset: u64 = (*glyph_size.borrow());
                 let _x: i32 = ((*instruction_size.borrow()) as i32);
-                Store16_13(_dst, _offset, _x)
+                Store16_32(_dst, _offset, _x)
             });
             (*glyph_size.borrow_mut()) = __rhs;
             if ((!({
@@ -2392,7 +2388,7 @@ pub fn ReconstructGlyf_25(
                 let _dst: Ptr<u8> = (*glyph_buf.borrow()).as_pointer();
                 let _dst_size: u64 = (*glyph_buf_size.borrow());
                 let _glyph_size: Ptr<u64> = (glyph_size.as_pointer());
-                StorePoints_20(
+                StorePoints_58(
                     _n_points,
                     _points,
                     _n_contours,
@@ -2430,7 +2426,7 @@ pub fn ReconstructGlyf_25(
         }
         if ((!({
             let _out: PtrDyn<dyn woff2_WOFF2Out> = (*out.borrow()).clone();
-            Pad4_23(_out)
+            Pad4_61(_out)
         }) as i64)
             != 0)
         {
@@ -2440,7 +2436,7 @@ pub fn ReconstructGlyf_25(
             ({
                 let _buf: Ptr<u8> = (*glyph_buf.borrow()).as_pointer();
                 let _size: u64 = (*glyph_size.borrow());
-                ComputeULongSum_8(_buf, _size)
+                ComputeULongSum_26(_buf, _size)
             }),
         );
         (*glyf_checksum.borrow()).write(rhs_0);
@@ -2486,7 +2482,7 @@ pub fn ReconstructGlyf_25(
             ((*(*(*info.borrow()).upgrade().deref()).index_format.borrow()) as i32);
         let _checksum: Ptr<u32> = (*loca_checksum.borrow()).clone();
         let _out: PtrDyn<dyn woff2_WOFF2Out> = (*out.borrow()).clone();
-        StoreLoca_24(_loca_values, _index_format, _checksum, _out)
+        StoreLoca_62(_loca_values, _index_format, _checksum, _out)
     }) as i64)
         != 0)
     {
@@ -2502,7 +2498,7 @@ pub fn ReconstructGlyf_25(
         .borrow_mut()) = __rhs;
     return true;
 }
-pub fn FindTable_26(tables: Ptr<Vec<Ptr<woff2_Table>>>, tag: u32) -> Ptr<woff2_Table> {
+pub fn FindTable_65(tables: Ptr<Vec<Ptr<woff2_Table>>>, tag: u32) -> Ptr<woff2_Table> {
     let tables: Value<Ptr<Vec<Ptr<woff2_Table>>>> = Rc::new(RefCell::new(tables));
     let tag: Value<u32> = Rc::new(RefCell::new(tag));
     'loop_: for mut table in (*tables.borrow()).to_strong().as_pointer() as Ptr<Ptr<woff2_Table>> {
@@ -2516,7 +2512,7 @@ pub fn FindTable_26(tables: Ptr<Vec<Ptr<woff2_Table>>>, tag: u32) -> Ptr<woff2_T
     }
     return Ptr::<woff2_Table>::null();
 }
-pub fn ReadNumHMetrics_27(data: Ptr<u8>, data_size: u64, num_hmetrics: Ptr<u16>) -> bool {
+pub fn ReadNumHMetrics_66(data: Ptr<u8>, data_size: u64, num_hmetrics: Ptr<u16>) -> bool {
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let data_size: Value<u64> = Rc::new(RefCell::new(data_size));
     let num_hmetrics: Value<Ptr<u16>> = Rc::new(RefCell::new(num_hmetrics));
@@ -2537,7 +2533,7 @@ pub fn ReadNumHMetrics_27(data: Ptr<u8>, data_size: u64, num_hmetrics: Ptr<u16>)
     }
     return true;
 }
-pub fn ReconstructTransformedHmtx_28(
+pub fn ReconstructTransformedHmtx_67(
     transformed_buf: Ptr<u8>,
     transformed_size: u64,
     num_glyphs: u16,
@@ -2672,7 +2668,7 @@ pub fn ReconstructTransformedHmtx_28(
                     .read()) as i32);
                 let _offset: Ptr<u64> = (dst_offset.as_pointer());
                 let _dst: Ptr<u8> = (*dst.borrow()).clone();
-                Store16_15(_val, _offset, _dst)
+                Store16_34(_val, _offset, _dst)
             });
         }
         ({
@@ -2681,14 +2677,14 @@ pub fn ReconstructTransformedHmtx_28(
                 .read()) as i32);
             let _offset: Ptr<u64> = (dst_offset.as_pointer());
             let _dst: Ptr<u8> = (*dst.borrow()).clone();
-            Store16_15(_val, _offset, _dst)
+            Store16_34(_val, _offset, _dst)
         });
         (*i.borrow_mut()).postfix_inc();
     }
     let __rhs = ({
         let _buf: Ptr<u8> = ((hmtx_table.as_pointer() as Ptr<u8>).offset(0_u64 as isize));
         let _size: u64 = ((*hmtx_output_size.borrow()) as u64);
-        ComputeULongSum_8(_buf, _size)
+        ComputeULongSum_26(_buf, _size)
     });
     (*checksum.borrow()).write(__rhs);
     if ((!({
@@ -2703,7 +2699,7 @@ pub fn ReconstructTransformedHmtx_28(
     }
     return true;
 }
-pub fn Woff2Uncompress_29(
+pub fn Woff2Uncompress_68(
     dst_buf: Ptr<u8>,
     dst_size: u64,
     src_buf: Ptr<u8>,
@@ -2734,7 +2730,7 @@ pub fn Woff2Uncompress_29(
     }
     return true;
 }
-pub fn ReadTableDirectory_30(
+pub fn ReadTableDirectory_69(
     file: Ptr<woff2_Buffer>,
     tables: Ptr<Vec<woff2_Table>>,
     num_tables: u64,
@@ -2769,25 +2765,25 @@ pub fn ReadTableDirectory_30(
                 return false;
             }
         } else {
-            (*tag.borrow_mut()) = (*woff2_kKnownTags.with(Value::clone).borrow())
+            (*tag.borrow_mut()) = (*kKnownTags_8.with(Value::clone).borrow())
                 [(((*flag_byte.borrow()) as i32) & 63) as usize];
         }
         let flags: Value<u32> = Rc::new(RefCell::new(0_u32));
         let xform_version: Value<u8> = Rc::new(RefCell::new(
             (((((*flag_byte.borrow()) as i32) >> 6) & 3) as u8),
         ));
-        if ((*tag.borrow()) == (*woff2_kGlyfTableTag.with(Value::clone).borrow()))
-            || ((*tag.borrow()) == (*woff2_kLocaTableTag.with(Value::clone).borrow()))
+        if ((*tag.borrow()) == (*kGlyfTableTag_0.with(Value::clone).borrow()))
+            || ((*tag.borrow()) == (*kLocaTableTag_2.with(Value::clone).borrow()))
         {
             if (((*xform_version.borrow()) as i32) == 0) {
                 let rhs_0 = (((*flags.borrow()) as u32)
-                    | (*woff2_kWoff2FlagsTransform.with(Value::clone).borrow()))
+                    | (*kWoff2FlagsTransform_21.with(Value::clone).borrow()))
                     as u32;
                 (*flags.borrow_mut()) = rhs_0;
             }
         } else if (((*xform_version.borrow()) as i32) != 0) {
             let rhs_0 = (((*flags.borrow()) as u32)
-                | (*woff2_kWoff2FlagsTransform.with(Value::clone).borrow()))
+                | (*kWoff2FlagsTransform_21.with(Value::clone).borrow()))
                 as u32;
             (*flags.borrow_mut()) = rhs_0;
         }
@@ -2796,26 +2792,24 @@ pub fn ReadTableDirectory_30(
         if ((!({
             let _buf: Ptr<woff2_Buffer> = (*file.borrow()).clone();
             let _value: Ptr<u32> = (dst_length.as_pointer());
-            ReadBase128_4(_buf, _value)
+            ReadBase128_17(_buf, _value)
         }) as i64)
             != 0)
         {
             return false;
         }
         let transform_length: Value<u32> = Rc::new(RefCell::new((*dst_length.borrow())));
-        if (((*flags.borrow()) & (*woff2_kWoff2FlagsTransform.with(Value::clone).borrow()))
-            != 0_u32)
-        {
+        if (((*flags.borrow()) & (*kWoff2FlagsTransform_21.with(Value::clone).borrow())) != 0_u32) {
             if ((!({
                 let _buf: Ptr<woff2_Buffer> = (*file.borrow()).clone();
                 let _value: Ptr<u32> = (transform_length.as_pointer());
-                ReadBase128_4(_buf, _value)
+                ReadBase128_17(_buf, _value)
             }) as i64)
                 != 0)
             {
                 return false;
             }
-            if (((((*tag.borrow()) == (*woff2_kLocaTableTag.with(Value::clone).borrow()))
+            if (((((*tag.borrow()) == (*kLocaTableTag_2.with(Value::clone).borrow()))
                 && ((*transform_length.borrow()) != 0)) as i64)
                 != 0)
             {
@@ -2848,7 +2842,7 @@ pub fn ReadTableDirectory_30(
     }
     return true;
 }
-pub fn StoreOffsetTable_31(result: Ptr<u8>, offset: u64, flavor: u32, num_tables: u16) -> u64 {
+pub fn StoreOffsetTable_70(result: Ptr<u8>, offset: u64, flavor: u32, num_tables: u16) -> u64 {
     let result: Value<Ptr<u8>> = Rc::new(RefCell::new(result));
     let offset: Value<u64> = Rc::new(RefCell::new(offset));
     let flavor: Value<u32> = Rc::new(RefCell::new(flavor));
@@ -2857,14 +2851,14 @@ pub fn StoreOffsetTable_31(result: Ptr<u8>, offset: u64, flavor: u32, num_tables
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = (*offset.borrow());
         let _x: u32 = (*flavor.borrow());
-        StoreU32_12(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, _x)
     });
     (*offset.borrow_mut()) = __rhs;
     let __rhs = ({
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = (*offset.borrow());
         let _x: i32 = ((*num_tables.borrow()) as i32);
-        Store16_13(_dst, _offset, _x)
+        Store16_32(_dst, _offset, _x)
     });
     (*offset.borrow_mut()) = __rhs;
     let max_pow2: Value<u32> = Rc::new(RefCell::new(0_u32));
@@ -2880,14 +2874,14 @@ pub fn StoreOffsetTable_31(result: Ptr<u8>, offset: u64, flavor: u32, num_tables
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = (*offset.borrow());
         let _x: i32 = ((*output_search_range.borrow()) as i32);
-        Store16_13(_dst, _offset, _x)
+        Store16_32(_dst, _offset, _x)
     });
     (*offset.borrow_mut()) = __rhs;
     let __rhs = ({
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = (*offset.borrow());
         let _x: i32 = ((*max_pow2.borrow()) as i32);
-        Store16_13(_dst, _offset, _x)
+        Store16_32(_dst, _offset, _x)
     });
     (*offset.borrow_mut()) = __rhs;
     let __rhs = ({
@@ -2895,12 +2889,12 @@ pub fn StoreOffsetTable_31(result: Ptr<u8>, offset: u64, flavor: u32, num_tables
         let _offset: u64 = (*offset.borrow());
         let _x: i32 =
             ((((*num_tables.borrow()) as i32) << 4) - ((*output_search_range.borrow()) as i32));
-        Store16_13(_dst, _offset, _x)
+        Store16_32(_dst, _offset, _x)
     });
     (*offset.borrow_mut()) = __rhs;
     return (*offset.borrow());
 }
-pub fn StoreTableEntry_32(result: Ptr<u8>, offset: u32, tag: u32) -> u64 {
+pub fn StoreTableEntry_71(result: Ptr<u8>, offset: u32, tag: u32) -> u64 {
     let result: Value<Ptr<u8>> = Rc::new(RefCell::new(result));
     let offset: Value<u32> = Rc::new(RefCell::new(offset));
     let tag: Value<u32> = Rc::new(RefCell::new(tag));
@@ -2908,36 +2902,36 @@ pub fn StoreTableEntry_32(result: Ptr<u8>, offset: u32, tag: u32) -> u64 {
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = ((*offset.borrow()) as u64);
         let _x: u32 = (*tag.borrow());
-        StoreU32_12(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, _x)
     }) as u32);
     (*offset.borrow_mut()) = __rhs;
     let __rhs = (({
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = ((*offset.borrow()) as u64);
         let _x: u32 = 0_u32;
-        StoreU32_12(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, _x)
     }) as u32);
     (*offset.borrow_mut()) = __rhs;
     let __rhs = (({
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = ((*offset.borrow()) as u64);
         let _x: u32 = 0_u32;
-        StoreU32_12(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, _x)
     }) as u32);
     (*offset.borrow_mut()) = __rhs;
     let __rhs = (({
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = ((*offset.borrow()) as u64);
         let _x: u32 = 0_u32;
-        StoreU32_12(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, _x)
     }) as u32);
     (*offset.borrow_mut()) = __rhs;
     return ((*offset.borrow()) as u64);
 }
-pub fn ComputeOffsetToFirstTable_33(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
+pub fn ComputeOffsetToFirstTable_72(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
     let offset: Value<u64> = Rc::new(RefCell::new(
-        (*woff2_kSfntHeaderSize.with(Value::clone).borrow()).wrapping_add(
-            (*woff2_kSfntEntrySize.with(Value::clone).borrow())
+        (*kSfntHeaderSize_23.with(Value::clone).borrow()).wrapping_add(
+            (*kSfntEntrySize_24.with(Value::clone).borrow())
                 .wrapping_mul(((*(*hdr.upgrade().deref()).num_tables.borrow()) as u64)),
         ),
     ));
@@ -2946,17 +2940,17 @@ pub fn ComputeOffsetToFirstTable_33(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
             let _header_version: u32 = (*(*hdr.upgrade().deref()).header_version.borrow());
             let _num_fonts: u32 =
                 ((*(*hdr.upgrade().deref()).ttc_fonts.borrow()).len() as u64 as u32);
-            CollectionHeaderSize_9(_header_version, _num_fonts)
+            CollectionHeaderSize_27(_header_version, _num_fonts)
         })
         .wrapping_add(
-            (*woff2_kSfntHeaderSize.with(Value::clone).borrow())
+            (*kSfntHeaderSize_23.with(Value::clone).borrow())
                 .wrapping_mul((*(*hdr.upgrade().deref()).ttc_fonts.borrow()).len() as u64),
         );
         'loop_: for mut ttc_font in
             (*hdr.upgrade().deref()).ttc_fonts.as_pointer() as Ptr<woff2_TtcFont>
         {
             let rhs_0 = (((*offset.borrow()) as u64).wrapping_add(
-                (*woff2_kSfntEntrySize.with(Value::clone).borrow()).wrapping_mul(
+                (*kSfntEntrySize_24.with(Value::clone).borrow()).wrapping_mul(
                     (*(*ttc_font.upgrade().deref()).table_indices.borrow()).len() as u64,
                 ),
             )) as u64;
@@ -2965,7 +2959,7 @@ pub fn ComputeOffsetToFirstTable_33(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
     }
     return (*offset.borrow());
 }
-pub fn Tables_34(hdr: Ptr<woff2_WOFF2Header>, font_index: u64) -> Vec<Ptr<woff2_Table>> {
+pub fn Tables_73(hdr: Ptr<woff2_WOFF2Header>, font_index: u64) -> Vec<Ptr<woff2_Table>> {
     let hdr: Value<Ptr<woff2_WOFF2Header>> = Rc::new(RefCell::new(hdr));
     let font_index: Value<u64> = Rc::new(RefCell::new(font_index));
     let tables: Value<Vec<Ptr<woff2_Table>>> = Rc::new(RefCell::new(Vec::new()));
@@ -2993,7 +2987,7 @@ pub fn Tables_34(hdr: Ptr<woff2_WOFF2Header>, font_index: u64) -> Vec<Ptr<woff2_
     }
     return (*tables.borrow_mut()).clone();
 }
-pub fn ReconstructFont_35(
+pub fn ReconstructFont_74(
     transformed_buf: Ptr<u8>,
     transformed_buf_size: u32,
     metadata: Ptr<woff2_RebuildMetadata>,
@@ -3023,21 +3017,21 @@ pub fn ReconstructFont_35(
         ({
             let _hdr: Ptr<woff2_WOFF2Header> = (*hdr.borrow()).clone();
             let _font_index: u64 = (*font_index.borrow());
-            Tables_34(_hdr, _font_index)
+            Tables_73(_hdr, _font_index)
         }),
     ));
     let glyf_table: Value<Ptr<woff2_Table>> = Rc::new(RefCell::new(
         ({
             let _tables: Ptr<Vec<Ptr<woff2_Table>>> = (tables.as_pointer());
-            let _tag: u32 = (*woff2_kGlyfTableTag.with(Value::clone).borrow());
-            FindTable_26(_tables, _tag)
+            let _tag: u32 = (*kGlyfTableTag_0.with(Value::clone).borrow());
+            FindTable_65(_tables, _tag)
         }),
     ));
     let loca_table: Value<Ptr<woff2_Table>> = Rc::new(RefCell::new(
         ({
             let _tables: Ptr<Vec<Ptr<woff2_Table>>> = (tables.as_pointer());
-            let _tag: u32 = (*woff2_kLocaTableTag.with(Value::clone).borrow());
-            FindTable_26(_tables, _tag)
+            let _tag: u32 = (*kLocaTableTag_2.with(Value::clone).borrow());
+            FindTable_65(_tables, _tag)
         }),
     ));
     if ((({
@@ -3053,11 +3047,11 @@ pub fn ReconstructFont_35(
         if ((({
             let _lhs = ({
                 let _lhs = (*(*(*glyf_table.borrow()).upgrade().deref()).flags.borrow());
-                _lhs & (*woff2_kWoff2FlagsTransform.with(Value::clone).borrow())
+                _lhs & (*kWoff2FlagsTransform_21.with(Value::clone).borrow())
             });
             _lhs != ({
                 let _lhs = (*(*(*loca_table.borrow()).upgrade().deref()).flags.borrow());
-                _lhs & (*woff2_kWoff2FlagsTransform.with(Value::clone).borrow())
+                _lhs & (*kWoff2FlagsTransform_21.with(Value::clone).borrow())
             })
         }) as i64)
             != 0)
@@ -3128,7 +3122,7 @@ pub fn ReconstructFont_35(
         }
         if {
             let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-            _lhs == (*woff2_kHheaTableTag.with(Value::clone).borrow())
+            _lhs == (*kHheaTableTag_6.with(Value::clone).borrow())
         } {
             if !({
                 let _data: Ptr<u8> = (*transformed_buf.borrow())
@@ -3137,7 +3131,7 @@ pub fn ReconstructFont_35(
                 let _num_hmetrics: Ptr<u16> = ((*(*info.borrow()).upgrade().deref())
                     .num_hmetrics
                     .as_pointer());
-                ReadNumHMetrics_27(_data, _data_size, _num_hmetrics)
+                ReadNumHMetrics_66(_data, _data_size, _num_hmetrics)
             }) {
                 return false;
             }
@@ -3147,13 +3141,13 @@ pub fn ReconstructFont_35(
             if {
                 let _lhs = ({
                     let _lhs = (*(*table.upgrade().deref()).flags.borrow());
-                    _lhs & (*woff2_kWoff2FlagsTransform.with(Value::clone).borrow())
+                    _lhs & (*kWoff2FlagsTransform_21.with(Value::clone).borrow())
                 });
-                _lhs != (*woff2_kWoff2FlagsTransform.with(Value::clone).borrow())
+                _lhs != (*kWoff2FlagsTransform_21.with(Value::clone).borrow())
             } {
                 if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*woff2_kHeadTableTag.with(Value::clone).borrow())
+                    _lhs == (*kHeadTableTag_1.with(Value::clone).borrow())
                 } {
                     if ((((*(*table.upgrade().deref()).src_length.borrow()) < 12_u32) as i64) != 0)
                     {
@@ -3164,7 +3158,7 @@ pub fn ReconstructFont_35(
                             .offset((*(*table.upgrade().deref()).src_offset.borrow()) as isize);
                         let _offset: u64 = 8_u64;
                         let _x: u32 = 0_u32;
-                        StoreU32_12(_dst, _offset, _x)
+                        StoreU32_31(_dst, _offset, _x)
                     });
                 }
                 (*(*table.upgrade().deref()).dst_offset.borrow_mut()) =
@@ -3173,7 +3167,7 @@ pub fn ReconstructFont_35(
                     let _buf: Ptr<u8> = (*transformed_buf.borrow())
                         .offset((*(*table.upgrade().deref()).src_offset.borrow()) as isize);
                     let _size: u64 = ((*(*table.upgrade().deref()).src_length.borrow()) as u64);
-                    ComputeULongSum_8(_buf, _size)
+                    ComputeULongSum_26(_buf, _size)
                 });
                 if ((!({
                     let _buf: AnyPtr = ((*transformed_buf.borrow())
@@ -3190,15 +3184,15 @@ pub fn ReconstructFont_35(
             } else {
                 if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*woff2_kGlyfTableTag.with(Value::clone).borrow())
+                    _lhs == (*kGlyfTableTag_0.with(Value::clone).borrow())
                 } {
                     (*(*table.upgrade().deref()).dst_offset.borrow_mut()) =
                         ((*dest_offset.borrow()) as u32);
                     let loca_table: Value<Ptr<woff2_Table>> = Rc::new(RefCell::new(
                         ({
                             let _tables: Ptr<Vec<Ptr<woff2_Table>>> = (tables.as_pointer());
-                            let _tag: u32 = (*woff2_kLocaTableTag.with(Value::clone).borrow());
-                            FindTable_26(_tables, _tag)
+                            let _tag: u32 = (*kLocaTableTag_2.with(Value::clone).borrow());
+                            FindTable_65(_tables, _tag)
                         }),
                     ));
                     if ((!({
@@ -3210,7 +3204,7 @@ pub fn ReconstructFont_35(
                         let _loca_checksum: Ptr<u32> = (loca_checksum.as_pointer());
                         let _info: Ptr<woff2_WOFF2FontInfo> = (*info.borrow()).clone();
                         let _out: PtrDyn<dyn woff2_WOFF2Out> = (*out.borrow()).clone();
-                        ReconstructGlyf_25(
+                        ReconstructGlyf_63(
                             _data,
                             _glyf_table,
                             _glyf_checksum,
@@ -3226,12 +3220,12 @@ pub fn ReconstructFont_35(
                     }
                 } else if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*woff2_kLocaTableTag.with(Value::clone).borrow())
+                    _lhs == (*kLocaTableTag_2.with(Value::clone).borrow())
                 } {
                     (*checksum.borrow_mut()) = (*loca_checksum.borrow());
                 } else if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*woff2_kHmtxTableTag.with(Value::clone).borrow())
+                    _lhs == (*kHmtxTableTag_5.with(Value::clone).borrow())
                 } {
                     (*(*table.upgrade().deref()).dst_offset.borrow_mut()) =
                         ((*dest_offset.borrow()) as u32);
@@ -3248,7 +3242,7 @@ pub fn ReconstructFont_35(
                             (*(*info.borrow()).upgrade().deref()).x_mins.as_pointer();
                         let _checksum: Ptr<u32> = (checksum.as_pointer());
                         let _out: PtrDyn<dyn woff2_WOFF2Out> = (*out.borrow()).clone();
-                        ReconstructTransformedHmtx_28(
+                        ReconstructTransformedHmtx_67(
                             _transformed_buf,
                             _transformed_size,
                             _num_glyphs,
@@ -3293,19 +3287,19 @@ pub fn ReconstructFont_35(
             let _dst: Ptr<u8> = (table_entry.as_pointer() as Ptr<u8>);
             let _offset: u64 = 0_u64;
             let _x: u32 = (*checksum.borrow());
-            StoreU32_12(_dst, _offset, _x)
+            StoreU32_31(_dst, _offset, _x)
         });
         ({
             let _dst: Ptr<u8> = (table_entry.as_pointer() as Ptr<u8>);
             let _offset: u64 = 4_u64;
             let _x: u32 = (*(*table.upgrade().deref()).dst_offset.borrow());
-            StoreU32_12(_dst, _offset, _x)
+            StoreU32_31(_dst, _offset, _x)
         });
         ({
             let _dst: Ptr<u8> = (table_entry.as_pointer() as Ptr<u8>);
             let _offset: u64 = 8_u64;
             let _x: u32 = (*(*table.upgrade().deref()).dst_length.borrow());
-            StoreU32_12(_dst, _offset, _x)
+            StoreU32_31(_dst, _offset, _x)
         });
         if ((!({
             let _buf: AnyPtr = ((table_entry.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any();
@@ -3331,13 +3325,13 @@ pub fn ReconstructFont_35(
             ({
                 let _buf: Ptr<u8> = (table_entry.as_pointer() as Ptr<u8>);
                 let _size: u64 = 12_u64;
-                ComputeULongSum_8(_buf, _size)
+                ComputeULongSum_26(_buf, _size)
             }),
         );
         (*font_checksum.borrow_mut()) = rhs_0;
         if ((!({
             let _out: PtrDyn<dyn woff2_WOFF2Out> = (*out.borrow()).clone();
-            Pad4_23(_out)
+            Pad4_61(_out)
         }) as i64)
             != 0)
         {
@@ -3359,8 +3353,8 @@ pub fn ReconstructFont_35(
     let head_table: Value<Ptr<woff2_Table>> = Rc::new(RefCell::new(
         ({
             let _tables: Ptr<Vec<Ptr<woff2_Table>>> = (tables.as_pointer());
-            let _tag: u32 = (*woff2_kHeadTableTag.with(Value::clone).borrow());
-            FindTable_26(_tables, _tag)
+            let _tag: u32 = (*kHeadTableTag_1.with(Value::clone).borrow());
+            FindTable_65(_tables, _tag)
         }),
     ));
     if !(*head_table.borrow()).is_null() {
@@ -3379,7 +3373,7 @@ pub fn ReconstructFont_35(
             let _dst: Ptr<u8> = (checksum_adjustment.as_pointer() as Ptr<u8>);
             let _offset: u64 = 0_u64;
             let _x: u32 = (2981146554_u32 as u32).wrapping_sub((*font_checksum.borrow()));
-            StoreU32_12(_dst, _offset, _x)
+            StoreU32_31(_dst, _offset, _x)
         });
         if ((!({
             let _buf: AnyPtr = ((checksum_adjustment.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any();
@@ -3397,7 +3391,7 @@ pub fn ReconstructFont_35(
     }
     return true;
 }
-pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header>) -> bool {
+pub fn ReadWOFF2Header_75(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header>) -> bool {
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let length: Value<u64> = Rc::new(RefCell::new(length));
     let hdr: Value<Ptr<woff2_WOFF2Header>> = Rc::new(RefCell::new(hdr));
@@ -3409,7 +3403,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
     if (((((!({
         let _value: Ptr<u32> = (signature.as_pointer());
         (*file.borrow()).ReadU32(_value)
-    })) || ((*signature.borrow()) != (*woff2_kWoff2Signature.with(Value::clone).borrow())))
+    })) || ((*signature.borrow()) != (*kWoff2Signature_20.with(Value::clone).borrow())))
         || (!({
             let _value: Ptr<u32> = ((*(*hdr.borrow()).upgrade().deref()).flavor.as_pointer());
             (*file.borrow()).ReadU32(_value)
@@ -3519,7 +3513,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
         let _tables: Ptr<Vec<woff2_Table>> =
             ((*(*hdr.borrow()).upgrade().deref()).tables.as_pointer());
         let _num_tables: u64 = ((*(*(*hdr.borrow()).upgrade().deref()).num_tables.borrow()) as u64);
-        ReadTableDirectory_30(_file, _tables, _num_tables)
+        ReadTableDirectory_69(_file, _tables, _num_tables)
     }) as i64)
         != 0)
     {
@@ -3546,7 +3540,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
         .borrow_mut()) = 0_u32;
     if {
         let _lhs = (*(*(*hdr.borrow()).upgrade().deref()).flavor.borrow());
-        _lhs == (*woff2_kTtcFontFlavor.with(Value::clone).borrow())
+        _lhs == (*kTtcFontFlavor_22.with(Value::clone).borrow())
     } {
         if ((!({
             let _value: Ptr<u32> = ((*(*hdr.borrow()).upgrade().deref())
@@ -3569,7 +3563,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
         if ((((!({
             let _buf: Ptr<woff2_Buffer> = (file.as_pointer());
             let _value: Ptr<u32> = (num_fonts.as_pointer());
-            Read255UShort_3(_buf, _value)
+            Read255UShort_12(_buf, _value)
         })) || (!((*num_fonts.borrow()) != 0))) as i64)
             != 0)
         {
@@ -3589,7 +3583,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
             if ((((!({
                 let _buf: Ptr<woff2_Buffer> = (file.as_pointer());
                 let _value: Ptr<u32> = (num_tables.as_pointer());
-                Read255UShort_3(_buf, _value)
+                Read255UShort_12(_buf, _value)
             })) || (!((*num_tables.borrow()) != 0))) as i64)
                 != 0)
             {
@@ -3616,7 +3610,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
                 if ((!({
                     let _buf: Ptr<woff2_Buffer> = (file.as_pointer());
                     let _value: Ptr<u32> = (table_idx.as_pointer());
-                    Read255UShort_3(_buf, _value)
+                    Read255UShort_12(_buf, _value)
                 }) as i64)
                     != 0)
                     || ({
@@ -3634,13 +3628,13 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
                         .offset(((*table_idx.borrow()) as u64) as isize);
                 if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*woff2_kLocaTableTag.with(Value::clone).borrow())
+                    _lhs == (*kLocaTableTag_2.with(Value::clone).borrow())
                 } {
                     (*loca_idx.borrow_mut()) = (*table_idx.borrow());
                 }
                 if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*woff2_kGlyfTableTag.with(Value::clone).borrow())
+                    _lhs == (*kGlyfTableTag_0.with(Value::clone).borrow())
                 } {
                     (*glyf_idx.borrow_mut()) = (*table_idx.borrow());
                 }
@@ -3662,7 +3656,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
     let first_table_offset: Value<u64> = Rc::new(RefCell::new(
         ({
             let _hdr: Ptr<woff2_WOFF2Header> = (*hdr.borrow()).clone();
-            ComputeOffsetToFirstTable_33(_hdr)
+            ComputeOffsetToFirstTable_72(_hdr)
         }),
     ));
     (*(*(*hdr.borrow()).upgrade().deref())
@@ -3688,7 +3682,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
                     .compressed_length
                     .borrow()) as u64),
             );
-            Round4_10(_value)
+            Round4_29(_value)
         }),
     ));
     let dst_offset: Value<u64> = Rc::new(RefCell::new((*first_table_offset.borrow())));
@@ -3707,7 +3701,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
         }
         (*src_offset.borrow_mut()) = (({
             let _value: u32 = (*meta_offset.borrow()).wrapping_add((*meta_length.borrow()));
-            Round4_11(_value)
+            Round4_30(_value)
         }) as u64);
         if ((((*src_offset.borrow()) > (<u32>::MAX as u64)) as i64) != 0) {
             return false;
@@ -3719,7 +3713,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
         }
         (*src_offset.borrow_mut()) = (({
             let _value: u32 = (*priv_offset.borrow()).wrapping_add((*priv_length.borrow()));
-            Round4_11(_value)
+            Round4_30(_value)
         }) as u64);
         if ((((*src_offset.borrow()) > (<u32>::MAX as u64)) as i64) != 0) {
             return false;
@@ -3728,7 +3722,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
     if ((((*src_offset.borrow())
         != ({
             let _value: u64 = (*length.borrow());
-            Round4_10(_value)
+            Round4_29(_value)
         })) as i64)
         != 0)
     {
@@ -3736,7 +3730,7 @@ pub fn ReadWOFF2Header_36(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
     }
     return true;
 }
-pub fn WriteHeaders_37(
+pub fn WriteHeaders_76(
     data: Ptr<u8>,
     length: u64,
     metadata: Ptr<woff2_RebuildMetadata>,
@@ -3752,7 +3746,7 @@ pub fn WriteHeaders_37(
         0_u8;
         ({
             let _hdr: Ptr<woff2_WOFF2Header> = (*hdr.borrow()).clone();
-            ComputeOffsetToFirstTable_33(_hdr)
+            ComputeOffsetToFirstTable_72(_hdr)
         }) as usize
     ]));
     let sorted_tables: Value<Vec<woff2_Table>> = Rc::new(RefCell::new(
@@ -3809,14 +3803,14 @@ pub fn WriteHeaders_37(
             let _dst: Ptr<u8> = (*result.borrow()).clone();
             let _offset: u64 = (*offset.borrow());
             let _x: u32 = (*(*(*hdr.borrow()).upgrade().deref()).flavor.borrow());
-            StoreU32_12(_dst, _offset, _x)
+            StoreU32_31(_dst, _offset, _x)
         });
         (*offset.borrow_mut()) = __rhs;
         let __rhs = ({
             let _dst: Ptr<u8> = (*result.borrow()).clone();
             let _offset: u64 = (*offset.borrow());
             let _x: u32 = (*(*(*hdr.borrow()).upgrade().deref()).header_version.borrow());
-            StoreU32_12(_dst, _offset, _x)
+            StoreU32_31(_dst, _offset, _x)
         });
         (*offset.borrow_mut()) = __rhs;
         let __rhs = ({
@@ -3824,7 +3818,7 @@ pub fn WriteHeaders_37(
             let _offset: u64 = (*offset.borrow());
             let _x: u32 =
                 ((*(*(*hdr.borrow()).upgrade().deref()).ttc_fonts.borrow()).len() as u64 as u32);
-            StoreU32_12(_dst, _offset, _x)
+            StoreU32_31(_dst, _offset, _x)
         });
         (*offset.borrow_mut()) = __rhs;
         let offset_table: Value<u64> = Rc::new(RefCell::new((*offset.borrow())));
@@ -3837,7 +3831,7 @@ pub fn WriteHeaders_37(
                 let _dst: Ptr<u8> = (*result.borrow()).clone();
                 let _offset: u64 = (*offset.borrow());
                 let _x: u32 = 0_u32;
-                StoreU32_12(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, _x)
             });
             (*offset.borrow_mut()) = __rhs;
             (*i.borrow_mut()).postfix_inc();
@@ -3847,21 +3841,21 @@ pub fn WriteHeaders_37(
                 let _dst: Ptr<u8> = (*result.borrow()).clone();
                 let _offset: u64 = (*offset.borrow());
                 let _x: u32 = 0_u32;
-                StoreU32_12(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, _x)
             });
             (*offset.borrow_mut()) = __rhs;
             let __rhs = ({
                 let _dst: Ptr<u8> = (*result.borrow()).clone();
                 let _offset: u64 = (*offset.borrow());
                 let _x: u32 = 0_u32;
-                StoreU32_12(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, _x)
             });
             (*offset.borrow_mut()) = __rhs;
             let __rhs = ({
                 let _dst: Ptr<u8> = (*result.borrow()).clone();
                 let _offset: u64 = (*offset.borrow());
                 let _x: u32 = 0_u32;
-                StoreU32_12(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, _x)
             });
             (*offset.borrow_mut()) = __rhs;
         }
@@ -3885,7 +3879,7 @@ pub fn WriteHeaders_37(
                 let _dst: Ptr<u8> = (*result.borrow()).clone();
                 let _offset: u64 = (*offset_table.borrow());
                 let _x: u32 = ((*offset.borrow()) as u32);
-                StoreU32_12(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, _x)
             });
             (*offset_table.borrow_mut()) = __rhs;
             (*(*ttc_font.upgrade().deref()).dst_offset.borrow_mut()) = ((*offset.borrow()) as u32);
@@ -3895,7 +3889,7 @@ pub fn WriteHeaders_37(
                 let _flavor: u32 = (*(*ttc_font.upgrade().deref()).flavor.borrow());
                 let _num_tables: u16 =
                     ((*(*ttc_font.upgrade().deref()).table_indices.borrow()).len() as u64 as u16);
-                StoreOffsetTable_31(_result, _offset, _flavor, _num_tables)
+                StoreOffsetTable_70(_result, _offset, _flavor, _num_tables)
             });
             (*offset.borrow_mut()) = __rhs;
             'loop_: for table_index in
@@ -3929,7 +3923,7 @@ pub fn WriteHeaders_37(
                     let _result: Ptr<u8> = (*result.borrow()).clone();
                     let _offset: u32 = ((*offset.borrow()) as u32);
                     let _tag: u32 = (*tag.borrow());
-                    StoreTableEntry_32(_result, _offset, _tag)
+                    StoreTableEntry_71(_result, _offset, _tag)
                 });
                 (*offset.borrow_mut()) = __rhs;
             }
@@ -3939,7 +3933,7 @@ pub fn WriteHeaders_37(
                 ));
                 let _size: u64 = (*offset.borrow())
                     .wrapping_sub(((*(*ttc_font.upgrade().deref()).dst_offset.borrow()) as u64));
-                ComputeULongSum_8(_buf, _size)
+                ComputeULongSum_26(_buf, _size)
             });
             (*(*ttc_font.upgrade().deref()).header_checksum.borrow_mut()) = __rhs;
             (*i.borrow_mut()).postfix_inc();
@@ -3957,7 +3951,7 @@ pub fn WriteHeaders_37(
             let _offset: u64 = (*offset.borrow());
             let _flavor: u32 = (*(*(*hdr.borrow()).upgrade().deref()).flavor.borrow());
             let _num_tables: u16 = (*(*(*hdr.borrow()).upgrade().deref()).num_tables.borrow());
-            StoreOffsetTable_31(_result, _offset, _flavor, _num_tables)
+            StoreOffsetTable_70(_result, _offset, _flavor, _num_tables)
         });
         (*offset.borrow_mut()) = __rhs;
         let i: Value<u16> = Rc::new(RefCell::new(0_u16));
@@ -3996,7 +3990,7 @@ pub fn WriteHeaders_37(
                     .deref())
                 .tag
                 .borrow());
-                StoreTableEntry_32(_result, _offset, _tag)
+                StoreTableEntry_71(_result, _offset, _tag)
             });
             (*offset.borrow_mut()) = __rhs;
             (*i.borrow_mut()).prefix_inc();
@@ -4017,11 +4011,11 @@ pub fn WriteHeaders_37(
         .borrow_mut()) = ({
         let _buf: Ptr<u8> = ((output.as_pointer() as Ptr<u8>).offset(0_u64 as isize));
         let _size: u64 = (*output.borrow()).len() as u64;
-        ComputeULongSum_8(_buf, _size)
+        ComputeULongSum_26(_buf, _size)
     });
     return true;
 }
-pub fn ComputeWOFF2FinalSize_38(data: Ptr<u8>, length: u64) -> u64 {
+pub fn ComputeWOFF2FinalSize_77(data: Ptr<u8>, length: u64) -> u64 {
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let length: Value<u64> = Rc::new(RefCell::new(length));
     let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
@@ -4040,7 +4034,7 @@ pub fn ComputeWOFF2FinalSize_38(data: Ptr<u8>, length: u64) -> u64 {
     }
     return ((*total_length.borrow()) as u64);
 }
-pub fn ConvertWOFF2ToTTF_39(
+pub fn ConvertWOFF2ToTTF_78(
     result: Ptr<u8>,
     result_length: u64,
     data: Ptr<u8>,
@@ -4060,10 +4054,10 @@ pub fn ConvertWOFF2ToTTF_39(
         let _length: u64 = (*length.borrow());
         let _out: PtrDyn<dyn woff2_WOFF2Out> =
             ((out.as_pointer()).to_strong() as Value<dyn woff2_WOFF2Out>).as_pointer_dyn();
-        ConvertWOFF2ToTTF_40(_data, _length, _out)
+        ConvertWOFF2ToTTF_79(_data, _length, _out)
     });
 }
-pub fn ConvertWOFF2ToTTF_40(data: Ptr<u8>, length: u64, out: PtrDyn<dyn woff2_WOFF2Out>) -> bool {
+pub fn ConvertWOFF2ToTTF_79(data: Ptr<u8>, length: u64, out: PtrDyn<dyn woff2_WOFF2Out>) -> bool {
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let length: Value<u64> = Rc::new(RefCell::new(length));
     let out: Value<PtrDyn<dyn woff2_WOFF2Out>> = Rc::new(RefCell::new(out));
@@ -4074,7 +4068,7 @@ pub fn ConvertWOFF2ToTTF_40(data: Ptr<u8>, length: u64, out: PtrDyn<dyn woff2_WO
         let _data: Ptr<u8> = (*data.borrow()).clone();
         let _length: u64 = (*length.borrow());
         let _hdr: Ptr<woff2_WOFF2Header> = (hdr.as_pointer());
-        ReadWOFF2Header_36(_data, _length, _hdr)
+        ReadWOFF2Header_75(_data, _length, _hdr)
     }) {
         return false;
     }
@@ -4084,7 +4078,7 @@ pub fn ConvertWOFF2ToTTF_40(data: Ptr<u8>, length: u64, out: PtrDyn<dyn woff2_WO
         let _metadata: Ptr<woff2_RebuildMetadata> = (metadata.as_pointer());
         let _hdr: Ptr<woff2_WOFF2Header> = (hdr.as_pointer());
         let _out: PtrDyn<dyn woff2_WOFF2Out> = (*out.borrow()).clone();
-        WriteHeaders_37(_data, _length, _metadata, _hdr, _out)
+        WriteHeaders_76(_data, _length, _metadata, _hdr, _out)
     }) {
         return false;
     }
@@ -4092,9 +4086,7 @@ pub fn ConvertWOFF2ToTTF_40(data: Ptr<u8>, length: u64, out: PtrDyn<dyn woff2_WO
         (((*(*hdr.borrow()).uncompressed_size.borrow()) as f32) / ((*length.borrow()) as f32)),
     ));
     if ((*compression_ratio.borrow())
-        > (*woff2_kMaxPlausibleCompressionRatio
-            .with(Value::clone)
-            .borrow()))
+        > (*kMaxPlausibleCompressionRatio_54.with(Value::clone).borrow()))
     {
         eprintln!(
             "Implausible compression ratio {:.1}",
@@ -4118,7 +4110,7 @@ pub fn ConvertWOFF2ToTTF_40(data: Ptr<u8>, length: u64, out: PtrDyn<dyn woff2_WO
         let _dst_size: u64 = ((*(*hdr.borrow()).uncompressed_size.borrow()) as u64);
         let _src_buf: Ptr<u8> = (*src_buf.borrow()).clone();
         let _src_size: u64 = ((*(*hdr.borrow()).compressed_length.borrow()) as u64);
-        Woff2Uncompress_29(_dst_buf, _dst_size, _src_buf, _src_size)
+        Woff2Uncompress_68(_dst_buf, _dst_size, _src_buf, _src_size)
     }) as i64)
         != 0)
     {
@@ -4134,7 +4126,7 @@ pub fn ConvertWOFF2ToTTF_40(data: Ptr<u8>, length: u64, out: PtrDyn<dyn woff2_WO
             let _hdr: Ptr<woff2_WOFF2Header> = (hdr.as_pointer());
             let _font_index: u64 = (*i.borrow());
             let _out: PtrDyn<dyn woff2_WOFF2Out> = (*out.borrow()).clone();
-            ReconstructFont_35(
+            ReconstructFont_74(
                 _transformed_buf,
                 _transformed_buf_size,
                 _metadata,
@@ -4163,7 +4155,7 @@ impl woff2_WOFF2StringOut {
         let mut this = Self {
             buf_: Rc::new(RefCell::new((*buf.borrow()).clone())),
             max_size_: Rc::new(RefCell::new(
-                (*woff2_kDefaultMaxSize.with(Value::clone).borrow()),
+                (*kDefaultMaxSize_28.with(Value::clone).borrow()),
             )),
             offset_: Rc::new(RefCell::new(0_u64)),
         };
@@ -4369,7 +4361,7 @@ impl woff2_WOFF2StringOut {
     }
 }
 impl woff2_WOFF2MemoryOut {}
-pub fn GetFileContent_41(filename: Vec<u8>) -> Vec<u8> {
+pub fn GetFileContent_80(filename: Vec<u8>) -> Vec<u8> {
     let filename: Value<Vec<u8>> = Rc::new(RefCell::new(filename));
     let ifs: Value<::std::fs::File> = Rc::new(RefCell::new(
         ::std::fs::File::open((filename.as_pointer() as Ptr<u8>).to_string())
@@ -4383,7 +4375,7 @@ pub fn GetFileContent_41(filename: Vec<u8>) -> Vec<u8> {
         __buf
     };
 }
-pub fn SetFileContents_42(filename: Vec<u8>, start: Ptr<u8>, end: Ptr<u8>) {
+pub fn SetFileContents_81(filename: Vec<u8>, start: Ptr<u8>, end: Ptr<u8>) {
     let filename: Value<Vec<u8>> = Rc::new(RefCell::new(filename));
     let start: Value<Ptr<u8>> = Rc::new(RefCell::new(start));
     let end: Value<Ptr<u8>> = Rc::new(RefCell::new(end));
@@ -4465,7 +4457,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
     let input: Value<Vec<u8>> = Rc::new(RefCell::new(
         ({
             let _filename: Vec<u8> = (*filename.borrow()).clone();
-            GetFileContent_41(_filename)
+            GetFileContent_80(_filename)
         }),
     ));
     let raw_input: Value<Ptr<u8>> = Rc::new(RefCell::new(
@@ -4479,15 +4471,15 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
                     ({
                         let _data: Ptr<u8> = (*raw_input.borrow()).clone();
                         let _length: u64 = ((*input.borrow()).len() - 1) as u64;
-                        ComputeWOFF2FinalSize_38(_data, _length)
+                        ComputeWOFF2FinalSize_77(_data, _length)
                     }),
                 ));
                 (if __tmp_0.as_pointer().read()
-                    <= woff2_kDefaultMaxSize.with(Value::clone).as_pointer().read()
+                    <= kDefaultMaxSize_28.with(Value::clone).as_pointer().read()
                 {
                     __tmp_0.as_pointer()
                 } else {
-                    woff2_kDefaultMaxSize.with(Value::clone).as_pointer()
+                    kDefaultMaxSize_28.with(Value::clone).as_pointer()
                 }
                 .read())
             }) as usize
@@ -4506,7 +4498,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             let _length: u64 = ((*input.borrow()).len() - 1) as u64;
             let _out: PtrDyn<dyn woff2_WOFF2Out> =
                 ((out.as_pointer()).to_strong() as Value<dyn woff2_WOFF2Out>).as_pointer_dyn();
-            ConvertWOFF2ToTTF_40(_data, _length, _out)
+            ConvertWOFF2ToTTF_79(_data, _length, _out)
         }),
     ));
     if (*ok.borrow()) {
@@ -4515,7 +4507,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             let _start: Ptr<u8> = (output.as_pointer() as Ptr<u8>);
             let _end: Ptr<u8> = (output.as_pointer() as Ptr<u8>)
                 .offset((({ (*out.borrow()).Size() }) as i64) as isize);
-            SetFileContents_42(_filename, _start, _end)
+            SetFileContents_81(_filename, _start, _end)
         });
     }
     return if (*ok.borrow()) { 0 } else { 1 };
