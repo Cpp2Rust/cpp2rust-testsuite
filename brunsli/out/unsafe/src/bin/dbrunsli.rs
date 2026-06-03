@@ -3659,7 +3659,9 @@ pub unsafe fn DecodeVarint_144(
         'switch: {
             let __match_cond = ((*s).stage as i32);
             match __match_cond {
-                v if v == (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION as i32) => {
+                __v if __v
+                    == (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION as i32) =>
+                {
                     if (((*s).i) >= (max_bits)) {
                         (*s).stage = (brunsli_internal_dec_VarintState_Stage::INIT).clone();
                         return true;
@@ -3685,7 +3687,7 @@ pub unsafe fn DecodeVarint_144(
                     (*s).stage = (brunsli_internal_dec_VarintState_Stage::READ_DATA).clone();
                     continue 'loop_;
                 }
-                v if v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
+                __v if __v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
                     if !(unsafe {
                         let _br: *mut brunsli_BrunsliBitReader = br;
                         let _n_bits: u64 = 1_u64;
@@ -3735,7 +3737,9 @@ pub unsafe fn DecodeLimitedVarint_145(
         'switch: {
             let __match_cond = ((*s).stage as i32);
             match __match_cond {
-                v if v == (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION as i32) => {
+                __v if __v
+                    == (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION as i32) =>
+                {
                     if (((*s).i) < (max_symbols)) {
                         if !(unsafe {
                             let _br: *mut brunsli_BrunsliBitReader = br;
@@ -3758,7 +3762,7 @@ pub unsafe fn DecodeLimitedVarint_145(
                     (*s).stage = (brunsli_internal_dec_VarintState_Stage::INIT).clone();
                     return true;
                 }
-                v if v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
+                __v if __v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
                     if !(unsafe {
                         let _br: *mut brunsli_BrunsliBitReader = br;
                         let _n_bits: u64 = 2_u64;
@@ -3808,7 +3812,9 @@ pub unsafe fn DecodeLimitedVarint_146(
         'switch: {
             let __match_cond = ((*s).stage as i32);
             match __match_cond {
-                v if v == (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION as i32) => {
+                __v if __v
+                    == (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION as i32) =>
+                {
                     if (((*s).i) < (max_symbols)) {
                         if !(unsafe {
                             let _br: *mut brunsli_BrunsliBitReader = br;
@@ -3831,7 +3837,7 @@ pub unsafe fn DecodeLimitedVarint_146(
                     (*s).stage = (brunsli_internal_dec_VarintState_Stage::INIT).clone();
                     return true;
                 }
-                v if v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
+                __v if __v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
                     if !(unsafe {
                         let _br: *mut brunsli_BrunsliBitReader = br;
                         let _n_bits: u64 = 8_u64;
@@ -3942,7 +3948,7 @@ pub unsafe fn ProcessMetaData_149(
         'switch: {
             let __match_cond = (*state).stage;
             match __match_cond {
-                v if v == (brunsli_internal_dec_MetadataState_Stage::READ_MARKER as u64) => {
+                __v if __v == (brunsli_internal_dec_MetadataState_Stage::READ_MARKER as u64) => {
                     (*state).marker = (*data.offset((pos.postfix_inc()) as isize));
                     if (((*state).marker as i32) == (217)) {
                         (*jpg).tail_data = Vec::new();
@@ -3981,7 +3987,7 @@ pub unsafe fn ProcessMetaData_149(
                         (brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_HI as u64).clone();
                     continue 'loop_;
                 }
-                v if v == (brunsli_internal_dec_MetadataState_Stage::READ_TAIL as u64) => {
+                __v if __v == (brunsli_internal_dec_MetadataState_Stage::READ_TAIL as u64) => {
                     (unsafe {
                         let _dst: *mut Vec<u8> = (&mut (*jpg).tail_data as *mut Vec<u8>);
                         let _begin: *const u8 = data.offset((pos) as isize);
@@ -3991,7 +3997,7 @@ pub unsafe fn ProcessMetaData_149(
                     pos = len;
                     continue 'loop_;
                 }
-                v if v == (brunsli_internal_dec_MetadataState_Stage::READ_CODE as u64) => {
+                __v if __v == (brunsli_internal_dec_MetadataState_Stage::READ_CODE as u64) => {
                     let code: u8 = (*data.offset((pos.postfix_inc()) as isize));
                     (*jpg).app_data.push(
                         (unsafe {
@@ -4004,13 +4010,13 @@ pub unsafe fn ProcessMetaData_149(
                         (brunsli_internal_dec_MetadataState_Stage::READ_MARKER as u64).clone();
                     continue 'loop_;
                 }
-                v if v == (brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_HI as u64) => {
+                __v if __v == (brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_HI as u64) => {
                     (*state).length_hi = (*data.offset((pos.postfix_inc()) as isize));
                     (*state).stage =
                         (brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_LO as u64).clone();
                     continue 'loop_;
                 }
-                v if v == (brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_LO as u64) => {
+                __v if __v == (brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_LO as u64) => {
                     let lo: u8 = (*data.offset((pos.postfix_inc()) as isize));
                     let mut marker_len: u64 =
                         (((((*state).length_hi as i32) << (8_u32)) + (lo as i32)) as u64);
@@ -4052,7 +4058,7 @@ pub unsafe fn ProcessMetaData_149(
                     } as u64);
                     continue 'loop_;
                 }
-                v if v == (brunsli_internal_dec_MetadataState_Stage::READ_MULTIBYTE as u64) => {
+                __v if __v == (brunsli_internal_dec_MetadataState_Stage::READ_MULTIBYTE as u64) => {
                     let mut chunk_size: u64 = {
                         let mut __tmp_1 = (len).wrapping_sub(pos);
                         (*if *&(*state).remaining_multibyte_length <= *&mut __tmp_1 {
@@ -4098,7 +4104,7 @@ pub unsafe fn DecodeHuffmanCode_150(
         'switch: {
             let __match_cond = ((*js).stage as i32);
             match __match_cond {
-                v if v
+                __v if __v
                     == (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_LAST
                         as i32) =>
                 {
@@ -4122,7 +4128,7 @@ pub unsafe fn DecodeHuffmanCode_150(
                             .clone();
                     continue 'loop_;
                 }
-                v if v
+                __v if __v
                     == (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_SIMPLE
                         as i32) =>
                 {
@@ -4270,7 +4276,7 @@ pub unsafe fn DecodeHuffmanCode_150(
                     };
                     continue 'loop_;
                 }
-                v if v
+                __v if __v
                     == (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_MAX_LEN
                         as i32) =>
                 {
@@ -4304,7 +4310,7 @@ pub unsafe fn DecodeHuffmanCode_150(
                         (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_COUNT).clone();
                     continue 'loop_;
                 }
-                v if v
+                __v if __v
                     == (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_COUNT
                         as i32) =>
                 {
@@ -4357,7 +4363,7 @@ pub unsafe fn DecodeHuffmanCode_150(
                             .clone();
                     continue 'loop_;
                 }
-                v if v
+                __v if __v
                     == (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_PERMUTATION
                         as i32) =>
                 {
@@ -4392,7 +4398,7 @@ pub unsafe fn DecodeHuffmanCode_150(
                         (brunsli_internal_dec_JpegInternalsState_Stage::HUFFMAN_UPDATE).clone();
                     continue 'loop_;
                 }
-                v if v
+                __v if __v
                     == (brunsli_internal_dec_JpegInternalsState_Stage::HUFFMAN_UPDATE as i32) =>
                 {
                     if (*(((*jpg).huffman_code).last_mut().unwrap())).is_last {
@@ -4430,7 +4436,7 @@ pub unsafe fn DecodeScanInfo_151(
     'loop_: while true {
         'switch: {
             let __match_cond = ((*js).stage as i32);
-            match __match_cond { v if v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMMON as i32 ) )  => { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) as usize ] as *mut brunsli_JPEGScanInfo ) ;
+            match __match_cond { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMMON as i32 ) )  => { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) as usize ] as *mut brunsli_JPEGScanInfo ) ;
  ;
  ;
  if ! ( unsafe { let _br: *mut brunsli_BrunsliBitReader  = br ; let _n_bits: u64  = 22_u64 ; BrunsliBitReaderCanRead_134 ( _br , _n_bits , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
@@ -4443,7 +4449,7 @@ pub unsafe fn DecodeScanInfo_151(
  ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMPONENT ).clone() ;
  ;
  continue 'loop_ ;
- }, v if v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMPONENT as i32 ) )  => { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) as usize ] as *mut brunsli_JPEGScanInfo ) ;
+ }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMPONENT as i32 ) )  => { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) as usize ] as *mut brunsli_JPEGScanInfo ) ;
  ;
  ;
  if ( ( ( * js ) . j  ) < ( ( * si  ) . num_components  ) ) { if ! ( unsafe { let _br: *mut brunsli_BrunsliBitReader  = br ; let _n_bits: u64  = 6_u64 ; BrunsliBitReaderCanRead_134 ( _br , _n_bits , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
@@ -4455,14 +4461,14 @@ pub unsafe fn DecodeScanInfo_151(
  ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_CONTINUATION ).clone() ;
  } ;
  continue 'loop_ ;
- }, v if v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_CONTINUATION as i32 ) )  => { if ! ( unsafe { let _br: *mut brunsli_BrunsliBitReader  = br ; let _n_bits: u64  = 1_u64 ; BrunsliBitReaderCanRead_134 ( _br , _n_bits , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
+ }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_CONTINUATION as i32 ) )  => { if ! ( unsafe { let _br: *mut brunsli_BrunsliBitReader  = br ; let _n_bits: u64  = 1_u64 ; BrunsliBitReaderCanRead_134 ( _br , _n_bits , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
  } if ( ( unsafe { let _br: *mut brunsli_BrunsliBitReader  = br ; let _n_bits: u32  = 1_u32 ; BrunsliBitReaderRead_126 ( _br , _n_bits , ) } )  != 0 ) { ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_DATA ).clone() ;
  } else { ( * js ) . last_block_idx   = 0  ;
  ( * js ) . last_num   = 0  ;
  ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_CONTINUATION ).clone() ;
  } ;
  continue 'loop_ ;
- }, v if v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_DATA as i32 ) )  => { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) as usize ] as *mut brunsli_JPEGScanInfo ) ;
+ }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_DATA as i32 ) )  => { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) as usize ] as *mut brunsli_JPEGScanInfo ) ;
  ;
  ;
  if ! ( unsafe { let _s: *mut brunsli_internal_dec_VarintState  = ( & mut ( * js ) . varint  as *mut brunsli_internal_dec_VarintState ) ; let _br: *mut brunsli_BrunsliBitReader  = br ; let _max_bits: u64  = 28_u64 ; DecodeVarint_144 ( _s , _br , _max_bits , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
@@ -4475,7 +4481,7 @@ pub unsafe fn DecodeScanInfo_151(
  } ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_CONTINUATION ).clone() ;
  ;
  continue 'loop_ ;
- }, v if v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_CONTINUATION as i32 ) )  => { if ! ( unsafe { let _br: *mut brunsli_BrunsliBitReader  = br ; let _n_bits: u64  = 1_u64 ; BrunsliBitReaderCanRead_134 ( _br , _n_bits , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
+ }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_CONTINUATION as i32 ) )  => { if ! ( unsafe { let _br: *mut brunsli_BrunsliBitReader  = br ; let _n_bits: u64  = 1_u64 ; BrunsliBitReaderCanRead_134 ( _br , _n_bits , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
  } if ( ( unsafe { let _br: *mut brunsli_BrunsliBitReader  = br ; let _n_bits: u32  = 1_u32 ; BrunsliBitReaderRead_126 ( _br , _n_bits , ) } )  != 0 ) { ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_DATA ).clone() ;
  } else { ( unsafe { ( ( | | { if ( ( ( * js ) . last_num  ) > ( 0 ) ) { let mut info : brunsli_JPEGScanInfo_ExtraZeroRunInfo = <brunsli_JPEGScanInfo_ExtraZeroRunInfo >::default() ;
  ;
@@ -4493,7 +4499,7 @@ pub unsafe fn DecodeScanInfo_151(
  } return brunsli_BrunsliStatus::BRUNSLI_OK ;
  } ;
  continue 'loop_ ;
- }, v if v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_DATA as i32 ) )  => { if ! ( unsafe { let _s: *mut brunsli_internal_dec_VarintState  = ( & mut ( * js ) . varint  as *mut brunsli_internal_dec_VarintState ) ; let _br: *mut brunsli_BrunsliBitReader  = br ; let _max_bits: u64  = 28_u64 ; DecodeVarint_144 ( _s , _br , _max_bits , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
+ }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_DATA as i32 ) )  => { if ! ( unsafe { let _s: *mut brunsli_internal_dec_VarintState  = ( & mut ( * js ) . varint  as *mut brunsli_internal_dec_VarintState ) ; let _br: *mut brunsli_BrunsliBitReader  = br ; let _max_bits: u64  = 28_u64 ; DecodeVarint_144 ( _s , _br , _max_bits , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
  } let mut block_idx : i32 = ( ( ( * js ) . last_block_idx  ) + ( ( ( ( * js ) . varint  . value  as i32 ) ) ) ) ;
  ;
  ;
@@ -5540,7 +5546,7 @@ pub unsafe fn DecodeHeader_177(
         'switch: {
             let __match_cond = (*hs).stage;
             match __match_cond {
-                v if v == (brunsli_internal_dec_HeaderState_Stage::READ_TAG as u64) => {
+                __v if __v == (brunsli_internal_dec_HeaderState_Stage::READ_TAG as u64) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _section: *mut brunsli_internal_dec_SectionState =
@@ -5568,7 +5574,7 @@ pub unsafe fn DecodeHeader_177(
                         (brunsli_internal_dec_HeaderState_Stage::ENTER_SECTION as u64).clone();
                     break 'switch;
                 }
-                v if v == (brunsli_internal_dec_HeaderState_Stage::ENTER_SECTION as u64) => {
+                __v if __v == (brunsli_internal_dec_HeaderState_Stage::ENTER_SECTION as u64) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _section: *mut brunsli_internal_dec_SectionState =
@@ -5586,7 +5592,7 @@ pub unsafe fn DecodeHeader_177(
                         (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG as u64).clone();
                     break 'switch;
                 }
-                v if v == (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG as u64) => {
+                __v if __v == (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG as u64) => {
                     if (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         IsAtSectionBoundary_175(_state)
@@ -5627,7 +5633,9 @@ pub unsafe fn DecodeHeader_177(
                         (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_VALUE as u64).clone();
                     break 'switch;
                 }
-                v if v == (brunsli_internal_dec_HeaderState_Stage::ITEM_ENTER_SECTION as u64) => {
+                __v if __v
+                    == (brunsli_internal_dec_HeaderState_Stage::ITEM_ENTER_SECTION as u64) =>
+                {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _val: *mut u64 = (&mut (*hs).remaining_skip_length as *mut u64);
@@ -5644,7 +5652,9 @@ pub unsafe fn DecodeHeader_177(
                         (brunsli_internal_dec_HeaderState_Stage::ITEM_SKIP_CONTENTS as u64).clone();
                     break 'switch;
                 }
-                v if v == (brunsli_internal_dec_HeaderState_Stage::ITEM_SKIP_CONTENTS as u64) => {
+                __v if __v
+                    == (brunsli_internal_dec_HeaderState_Stage::ITEM_SKIP_CONTENTS as u64) =>
+                {
                     let mut bytes_skipped: u64 = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _len: u64 = (*hs).remaining_skip_length;
@@ -5664,7 +5674,7 @@ pub unsafe fn DecodeHeader_177(
                         (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG as u64).clone();
                     break 'switch;
                 }
-                v if v == (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_VALUE as u64) => {
+                __v if __v == (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_VALUE as u64) => {
                     let mut value: u64 = 0_u64;
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
@@ -5683,7 +5693,7 @@ pub unsafe fn DecodeHeader_177(
                         (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG as u64).clone();
                     break 'switch;
                 }
-                v if v == (brunsli_internal_dec_HeaderState_Stage::FINALE as u64) => {
+                __v if __v == (brunsli_internal_dec_HeaderState_Stage::FINALE as u64) => {
                     let has_version: bool = ((((*hs).section.tags_met)
                         & ((1_u32) << (kBrunsliHeaderVersionCompTag_41 as i32)))
                         != 0);
@@ -6838,7 +6848,9 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
     }
     'loop_: while true {
         switch!(match ((*js).stage as i32) {
-            v if v == (brunsli_internal_dec_JpegInternalsState_Stage::ITERATE_MARKERS as i32) => {
+            __v if __v
+                == (brunsli_internal_dec_JpegInternalsState_Stage::ITERATE_MARKERS as i32) =>
+            {
                 if (((*js).i) >= ((*jpg).marker_order.len() as u64)) {
                     (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::DONE).clone();
                 } else if (((&mut (*jpg)).marker_order[((*js).i) as usize] as i32) == (255)) {
@@ -6850,7 +6862,7 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                 };
                 continue 'loop_;
             }
-            v if v
+            __v if __v
                 == (brunsli_internal_dec_JpegInternalsState_Stage::READ_INTERMARKER_LENGTH
                     as i32) =>
             {
@@ -6879,7 +6891,7 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                     (brunsli_internal_dec_JpegInternalsState_Stage::READ_INTERMARKER_DATA).clone();
                 continue 'loop_;
             }
-            v if v
+            __v if __v
                 == (brunsli_internal_dec_JpegInternalsState_Stage::READ_INTERMARKER_DATA
                     as i32) =>
             {
@@ -7023,7 +7035,7 @@ pub unsafe fn DecodeQuantDataSection_186(
     }
     'loop_: while true {
         switch!(match ((*qs).stage as i32) {
-            v if v == (brunsli_internal_dec_QuantDataState_Stage::READ_STOCK as i32) => {
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::READ_STOCK as i32) => {
                 if (((*qs).i) >= ((*jpg).quant.len() as u64)) {
                     std::mem::swap(&mut Vec::new(), &mut (*qs).predictor);
                     (*qs).i = 0_u64;
@@ -7078,7 +7090,7 @@ pub unsafe fn DecodeQuantDataSection_186(
                 };
                 continue 'loop_;
             }
-            v if v == (brunsli_internal_dec_QuantDataState_Stage::READ_Q_FACTOR as i32) => {
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::READ_Q_FACTOR as i32) => {
                 if !(unsafe {
                     let _br: *mut brunsli_BrunsliBitReader = br;
                     let _n_bits: u64 = 6_u64;
@@ -7114,7 +7126,7 @@ pub unsafe fn DecodeQuantDataSection_186(
                     (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_IS_ZERO).clone();
                 continue 'loop_;
             }
-            v if v == (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_IS_ZERO as i32) => {
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_IS_ZERO as i32) => {
                 if (((*qs).j) >= (kDCTBlockSize_3 as u64)) {
                     (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::UPDATE).clone();
                     continue 'loop_;
@@ -7150,7 +7162,7 @@ pub unsafe fn DecodeQuantDataSection_186(
                 };
                 continue 'loop_;
             }
-            v if v == (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_SIGN as i32) => {
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_SIGN as i32) => {
                 if !(unsafe {
                     let _br: *mut brunsli_BrunsliBitReader = br;
                     let _n_bits: u64 = 1_u64;
@@ -7182,7 +7194,7 @@ pub unsafe fn DecodeQuantDataSection_186(
                 (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF).clone();
                 continue 'loop_;
             }
-            v if v == (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF as i32) => {
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF as i32) => {
                 if !(unsafe {
                     let _s: *mut brunsli_internal_dec_VarintState =
                         (&mut (*qs).vs as *mut brunsli_internal_dec_VarintState);
@@ -7208,7 +7220,7 @@ pub unsafe fn DecodeQuantDataSection_186(
                 (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::APPLY_DIFF).clone();
                 continue 'loop_;
             }
-            v if v == (brunsli_internal_dec_QuantDataState_Stage::APPLY_DIFF as i32) => {
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::APPLY_DIFF as i32) => {
                 let k: i32 = (kJPEGNaturalOrder_13[((*qs).j) as usize] as i32);
                 let quant_value: i32 =
                     (((&mut (*qs)).predictor[(k as u64) as usize] as i32) + ((*qs).delta));
@@ -7249,7 +7261,7 @@ pub unsafe fn DecodeQuantDataSection_186(
                     (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_IS_ZERO).clone();
                 continue 'loop_;
             }
-            v if v == (brunsli_internal_dec_QuantDataState_Stage::UPDATE as i32) => {
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::UPDATE as i32) => {
                 if (((&mut (*jpg)).quant[((*qs).i) as usize].precision)
                     < ((*qs).data_precision as i32))
                 {
@@ -7982,7 +7994,7 @@ pub unsafe fn DecodeOriginalJpg_192(
         'switch: {
             let __match_cond = (*fs).stage;
             match __match_cond {
-                v if v == (brunsli_internal_dec_FallbackState_Stage::READ_TAG as u64) => {
+                __v if __v == (brunsli_internal_dec_FallbackState_Stage::READ_TAG as u64) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _section: *mut brunsli_internal_dec_SectionState =
@@ -8010,7 +8022,7 @@ pub unsafe fn DecodeOriginalJpg_192(
                         (brunsli_internal_dec_FallbackState_Stage::ENTER_SECTION as u64).clone();
                     break 'switch;
                 }
-                v if v == (brunsli_internal_dec_FallbackState_Stage::ENTER_SECTION as u64) => {
+                __v if __v == (brunsli_internal_dec_FallbackState_Stage::ENTER_SECTION as u64) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _section: *mut brunsli_internal_dec_SectionState =
@@ -8035,7 +8047,7 @@ pub unsafe fn DecodeOriginalJpg_192(
                         (brunsli_internal_dec_FallbackState_Stage::READ_CONTENTS as u64).clone();
                     break 'switch;
                 }
-                v if v == (brunsli_internal_dec_FallbackState_Stage::READ_CONTENTS as u64) => {
+                __v if __v == (brunsli_internal_dec_FallbackState_Stage::READ_CONTENTS as u64) => {
                     let mut chunk_size: u64 = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         GetBytesAvailable_166(_state)
@@ -8132,7 +8144,7 @@ pub unsafe fn ParseSection_193(
         'switch: {
             let __match_cond = (*sh).stage;
             match __match_cond {
-                v if v == (brunsli_internal_dec_SectionHeaderState_Stage::READ_TAG as u64) => {
+                __v if __v == (brunsli_internal_dec_SectionHeaderState_Stage::READ_TAG as u64) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _section: *mut brunsli_internal_dec_SectionState =
@@ -8176,7 +8188,9 @@ pub unsafe fn ParseSection_193(
                         (brunsli_internal_dec_SectionHeaderState_Stage::READ_VALUE as u64).clone();
                     continue 'loop_;
                 }
-                v if v == (brunsli_internal_dec_SectionHeaderState_Stage::READ_VALUE as u64) => {
+                __v if __v
+                    == (brunsli_internal_dec_SectionHeaderState_Stage::READ_VALUE as u64) =>
+                {
                     let mut sink: u64 = 0_u64;
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
@@ -8195,7 +8209,9 @@ pub unsafe fn ParseSection_193(
                         (brunsli_internal_dec_SectionHeaderState_Stage::DONE as u64).clone();
                     continue 'loop_;
                 }
-                v if v == (brunsli_internal_dec_SectionHeaderState_Stage::ENTER_SECTION as u64) => {
+                __v if __v
+                    == (brunsli_internal_dec_SectionHeaderState_Stage::ENTER_SECTION as u64) =>
+                {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _section: *mut brunsli_internal_dec_SectionState =
@@ -8294,7 +8310,7 @@ pub unsafe fn ProcessSection_195(
     'switch: {
         let __match_cond = (*s).section.tag;
         match __match_cond {
-            v if v == (kBrunsliMetaDataTag_32 as u64) => {
+            __v if __v == (kBrunsliMetaDataTag_32 as u64) => {
                 let mut status: brunsli_BrunsliStatus = (unsafe {
                     let _state: *mut brunsli_internal_dec_State = state;
                     let _jpg: *mut brunsli_JPEGData = jpg;
@@ -8309,7 +8325,7 @@ pub unsafe fn ProcessSection_195(
                 }
                 break 'switch;
             }
-            v if v == (kBrunsliJPEGInternalsTag_33 as u64) => {
+            __v if __v == (kBrunsliJPEGInternalsTag_33 as u64) => {
                 let mut status: brunsli_BrunsliStatus = (unsafe {
                     let _state: *mut brunsli_internal_dec_State = state;
                     let _jpg: *mut brunsli_JPEGData = jpg;
@@ -8324,7 +8340,7 @@ pub unsafe fn ProcessSection_195(
                 }
                 break 'switch;
             }
-            v if v == (kBrunsliQuantDataTag_34 as u64) => {
+            __v if __v == (kBrunsliQuantDataTag_34 as u64) => {
                 if !(unsafe {
                     let _state: *const brunsli_internal_dec_State = (state).cast_const();
                     let _tag: u32 = (kBrunsliJPEGInternalsTag_33 as u32);
@@ -8351,7 +8367,7 @@ pub unsafe fn ProcessSection_195(
                 }
                 break 'switch;
             }
-            v if v == (kBrunsliHistogramDataTag_35 as u64) => {
+            __v if __v == (kBrunsliHistogramDataTag_35 as u64) => {
                 if !(unsafe {
                     let _state: *const brunsli_internal_dec_State = (state).cast_const();
                     let _tag: u32 = (kBrunsliJPEGInternalsTag_33 as u32);
@@ -8378,7 +8394,7 @@ pub unsafe fn ProcessSection_195(
                 }
                 break 'switch;
             }
-            v if v == (kBrunsliDCDataTag_36 as u64) => {
+            __v if __v == (kBrunsliDCDataTag_36 as u64) => {
                 if !(unsafe {
                     let _state: *const brunsli_internal_dec_State = (state).cast_const();
                     let _tag: u32 = (kBrunsliHistogramDataTag_35 as u32);
@@ -8434,7 +8450,7 @@ pub unsafe fn ProcessSection_195(
                 }
                 break 'switch;
             }
-            v if v == (kBrunsliACDataTag_37 as u64) => {
+            __v if __v == (kBrunsliACDataTag_37 as u64) => {
                 if !(unsafe {
                     let _state: *const brunsli_internal_dec_State = (state).cast_const();
                     let _tag: u32 = (kBrunsliDCDataTag_36 as u32);
@@ -8661,7 +8677,7 @@ pub unsafe fn DoProcessJpeg_197(
         'switch: {
             let __match_cond = (*state).stage;
             match __match_cond {
-                v if v == brunsli_internal_dec_Stage::SIGNATURE => {
+                __v if __v == brunsli_internal_dec_Stage::SIGNATURE => {
                     (*state).stage = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         VerifySignature_176(_state)
@@ -8669,7 +8685,7 @@ pub unsafe fn DoProcessJpeg_197(
                     .clone();
                     break 'switch;
                 }
-                v if v == brunsli_internal_dec_Stage::HEADER => {
+                __v if __v == brunsli_internal_dec_Stage::HEADER => {
                     (*state).stage = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _jpg: *mut brunsli_JPEGData = jpg;
@@ -8678,7 +8694,7 @@ pub unsafe fn DoProcessJpeg_197(
                     .clone();
                     break 'switch;
                 }
-                v if v == brunsli_internal_dec_Stage::FALLBACK => {
+                __v if __v == brunsli_internal_dec_Stage::FALLBACK => {
                     (*state).stage = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _jpg: *mut brunsli_JPEGData = jpg;
@@ -8687,7 +8703,7 @@ pub unsafe fn DoProcessJpeg_197(
                     .clone();
                     break 'switch;
                 }
-                v if v == brunsli_internal_dec_Stage::SECTION => {
+                __v if __v == brunsli_internal_dec_Stage::SECTION => {
                     (*state).stage = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         ParseSection_193(_state)
@@ -8695,7 +8711,7 @@ pub unsafe fn DoProcessJpeg_197(
                     .clone();
                     break 'switch;
                 }
-                v if v == brunsli_internal_dec_Stage::SECTION_BODY => {
+                __v if __v == brunsli_internal_dec_Stage::SECTION_BODY => {
                     (*state).stage = (unsafe {
                         let _state: *mut brunsli_internal_dec_State = state;
                         let _jpg: *mut brunsli_JPEGData = jpg;
@@ -8704,7 +8720,7 @@ pub unsafe fn DoProcessJpeg_197(
                     .clone();
                     break 'switch;
                 }
-                v if v == brunsli_internal_dec_Stage::DONE => {
+                __v if __v == brunsli_internal_dec_Stage::DONE => {
                     if (((*state).pos) != ((*state).len)) {
                         (*state).stage = (unsafe {
                             let _state: *mut brunsli_internal_dec_State = state;
@@ -8717,7 +8733,7 @@ pub unsafe fn DoProcessJpeg_197(
                     }
                     return brunsli_BrunsliStatus::BRUNSLI_OK;
                 }
-                v if v == brunsli_internal_dec_Stage::ERROR => {
+                __v if __v == brunsli_internal_dec_Stage::ERROR => {
                     return (*(*state).internal.as_deref_mut().unwrap()).result;
                 }
                 _ => {
@@ -9131,7 +9147,7 @@ impl brunsli_BrunsliDecoder {
         'switch: {
             let __match_cond = serialization_status;
             match __match_cond {
-                v if v == brunsli_internal_dec_SerializationStatus::DONE => {
+                __v if __v == brunsli_internal_dec_SerializationStatus::DONE => {
                     if !((parse_status as i32) == (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
                         (unsafe {
                             let _f: *const u8 = b"brunsli_decode.cc\0".as_ptr();
@@ -9143,7 +9159,7 @@ impl brunsli_BrunsliDecoder {
                     };
                     return brunsli_BrunsliDecoder_Status::DONE;
                 }
-                v if v == brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT => {
+                __v if __v == brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT => {
                     if !((parse_status as i32)
                         == (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32))
                     {
@@ -9157,7 +9173,7 @@ impl brunsli_BrunsliDecoder {
                     };
                     return brunsli_BrunsliDecoder_Status::NEEDS_MORE_INPUT;
                 }
-                v if v == brunsli_internal_dec_SerializationStatus::NEEDS_MORE_OUTPUT => {
+                __v if __v == brunsli_internal_dec_SerializationStatus::NEEDS_MORE_OUTPUT => {
                     if !((*available_out) == (0_u64)) {
                         (unsafe {
                             let _f: *const u8 = b"brunsli_decode.cc\0".as_ptr();
@@ -9169,7 +9185,7 @@ impl brunsli_BrunsliDecoder {
                     };
                     return brunsli_BrunsliDecoder_Status::NEEDS_MORE_OUTPUT;
                 }
-                v if v == brunsli_internal_dec_SerializationStatus::ERROR => {
+                __v if __v == brunsli_internal_dec_SerializationStatus::ERROR => {
                     return brunsli_BrunsliDecoder_Status::ERROR;
                 }
                 _ => {
@@ -9709,14 +9725,14 @@ pub unsafe fn ReadSimpleCode_219(
     'switch: {
         let __match_cond = num_symbols;
         match __match_cond {
-            v if v == 1_u64 => {
+            __v if __v == 1_u64 => {
                 (*table.offset((0) as isize)) = brunsli_HuffmanCode {
                     bits: 0_u8,
                     value: symbols[(0) as usize],
                 };
                 break 'switch;
             }
-            v if v == 2_u64 => {
+            __v if __v == 2_u64 => {
                 if ((symbols[(0) as usize] as i32) > (symbols[(1) as usize] as i32)) {
                     (unsafe {
                         let _i: u64 = 0_u64;
@@ -9739,7 +9755,7 @@ pub unsafe fn ReadSimpleCode_219(
                 table_size = 2_u64;
                 break 'switch;
             }
-            v if v == 3_u64 => {
+            __v if __v == 3_u64 => {
                 if ((symbols[(1) as usize] as i32) > (symbols[(2) as usize] as i32)) {
                     (unsafe {
                         let _i: u64 = 1_u64;
@@ -9770,7 +9786,7 @@ pub unsafe fn ReadSimpleCode_219(
                 table_size = 4_u64;
                 break 'switch;
             }
-            v if v == 4_u64 => {
+            __v if __v == 4_u64 => {
                 let mut i: u64 = 0_u64;
                 'loop_: while ((i) < (3_u64)) {
                     let mut j: u64 = (i).wrapping_add(1_u64);
@@ -9809,7 +9825,7 @@ pub unsafe fn ReadSimpleCode_219(
                 table_size = 4_u64;
                 break 'switch;
             }
-            v if v == 5_u64 => {
+            __v if __v == 5_u64 => {
                 if ((symbols[(2) as usize] as i32) > (symbols[(3) as usize] as i32)) {
                     (unsafe {
                         let _i: u64 = 2_u64;
@@ -12583,7 +12599,7 @@ pub unsafe fn SerializeSection_259(
     'switch: {
         let __match_cond = (marker as i32);
         match __match_cond {
-            v if v == 192 || v == 193 || v == 194 || v == 201 || v == 202 => {
+            __v if __v == 192 || __v == 193 || __v == 194 || __v == 201 || __v == 202 => {
                 return (unsafe {
                     let _result: bool = (unsafe {
                         let _jpg: *const brunsli_JPEGData = jpg;
@@ -12600,7 +12616,7 @@ pub unsafe fn SerializeSection_259(
                     })(_result)
                 });
             }
-            v if v == 196 => {
+            __v if __v == 196 => {
                 return (unsafe {
                     let _result: bool = (unsafe {
                         let _jpg: *const brunsli_JPEGData = jpg;
@@ -12616,14 +12632,14 @@ pub unsafe fn SerializeSection_259(
                     })(_result)
                 });
             }
-            v if v == 208
-                || v == 209
-                || v == 210
-                || v == 211
-                || v == 212
-                || v == 213
-                || v == 214
-                || v == 215 =>
+            __v if __v == 208
+                || __v == 209
+                || __v == 210
+                || __v == 211
+                || __v == 212
+                || __v == 213
+                || __v == 214
+                || __v == 215 =>
             {
                 return (unsafe {
                     let _result: bool = (unsafe {
@@ -12640,7 +12656,7 @@ pub unsafe fn SerializeSection_259(
                     })(_result)
                 });
             }
-            v if v == 217 => {
+            __v if __v == 217 => {
                 return (unsafe {
                     let _result: bool = (unsafe {
                         let _jpg: *const brunsli_JPEGData = jpg;
@@ -12656,7 +12672,7 @@ pub unsafe fn SerializeSection_259(
                     })(_result)
                 });
             }
-            v if v == 218 => {
+            __v if __v == 218 => {
                 return (unsafe {
                     let _jpg: *const brunsli_JPEGData = jpg;
                     let _parsing_state: *const brunsli_internal_dec_State = parsing_state;
@@ -12664,7 +12680,7 @@ pub unsafe fn SerializeSection_259(
                     EncodeScan_258(_jpg, _parsing_state, _state)
                 });
             }
-            v if v == 219 => {
+            __v if __v == 219 => {
                 return (unsafe {
                     let _result: bool = (unsafe {
                         let _jpg: *const brunsli_JPEGData = jpg;
@@ -12680,7 +12696,7 @@ pub unsafe fn SerializeSection_259(
                     })(_result)
                 });
             }
-            v if v == 221 => {
+            __v if __v == 221 => {
                 return (unsafe {
                     let _result: bool = (unsafe {
                         let _jpg: *const brunsli_JPEGData = jpg;
@@ -12696,22 +12712,22 @@ pub unsafe fn SerializeSection_259(
                     })(_result)
                 });
             }
-            v if v == 224
-                || v == 225
-                || v == 226
-                || v == 227
-                || v == 228
-                || v == 229
-                || v == 230
-                || v == 231
-                || v == 232
-                || v == 233
-                || v == 234
-                || v == 235
-                || v == 236
-                || v == 237
-                || v == 238
-                || v == 239 =>
+            __v if __v == 224
+                || __v == 225
+                || __v == 226
+                || __v == 227
+                || __v == 228
+                || __v == 229
+                || __v == 230
+                || __v == 231
+                || __v == 232
+                || __v == 233
+                || __v == 234
+                || __v == 235
+                || __v == 236
+                || __v == 237
+                || __v == 238
+                || __v == 239 =>
             {
                 return (unsafe {
                     let _result: bool = (unsafe {
@@ -12729,7 +12745,7 @@ pub unsafe fn SerializeSection_259(
                     })(_result)
                 });
             }
-            v if v == 254 => {
+            __v if __v == 254 => {
                 return (unsafe {
                     let _result: bool = (unsafe {
                         let _jpg: *const brunsli_JPEGData = jpg;
@@ -12745,7 +12761,7 @@ pub unsafe fn SerializeSection_259(
                     })(_result)
                 });
             }
-            v if v == 255 => {
+            __v if __v == 255 => {
                 return (unsafe {
                     let _result: bool = (unsafe {
                         let _jpg: *const brunsli_JPEGData = jpg;
@@ -12867,7 +12883,7 @@ pub unsafe fn SerializeJpeg_206(
     });
     'loop_: while true {
         switch!(match ((*ss).stage as i32) {
-            v if v == (brunsli_internal_dec_SerializationState_Stage::INIT as i32) => {
+            __v if __v == (brunsli_internal_dec_SerializationState_Stage::INIT as i32) => {
                 let mut can_start_serialization: bool =
                     (((*state).stage) == (brunsli_internal_dec_Stage::DONE));
                 if (unsafe {
@@ -12949,7 +12965,9 @@ pub unsafe fn SerializeJpeg_206(
                     (brunsli_internal_dec_SerializationState_Stage::SERIALIZE_SECTION).clone();
                 break;
             }
-            v if v == (brunsli_internal_dec_SerializationState_Stage::SERIALIZE_SECTION as i32) => {
+            __v if __v
+                == (brunsli_internal_dec_SerializationState_Stage::SERIALIZE_SECTION as i32) =>
+            {
                 if (((*ss).section_index) >= ((*jpg).marker_order.len() as u64)) {
                     (*ss).stage = (brunsli_internal_dec_SerializationState_Stage::DONE).clone();
                     break;
@@ -13032,7 +13050,7 @@ pub unsafe fn SerializeJpeg_206(
                 (*ss).section_index.prefix_inc();
                 break;
             }
-            v if v == (brunsli_internal_dec_SerializationState_Stage::DONE as i32) => {
+            __v if __v == (brunsli_internal_dec_SerializationState_Stage::DONE as i32) => {
                 if !(*ss).output_queue.is_empty() {
                     return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_OUTPUT;
                 } else {

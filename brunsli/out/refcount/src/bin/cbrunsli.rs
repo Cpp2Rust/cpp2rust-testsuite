@@ -11093,7 +11093,7 @@ pub fn StoreHuffmanTreeToBitMask_215(
         'switch: {
             let __match_cond = (*ix.borrow());
             match __match_cond {
-                v if v == 16_u64 => {
+                __v if __v == 16_u64 => {
                     ({
                         let _n_bits: u64 = 2_u64;
                         let _bits: u64 = (((*huffman_tree_extra_bits.borrow())
@@ -11104,7 +11104,7 @@ pub fn StoreHuffmanTreeToBitMask_215(
                     });
                     break 'switch;
                 }
-                v if v == 17_u64 => {
+                __v if __v == 17_u64 => {
                     ({
                         let _n_bits: u64 = 3_u64;
                         let _bits: u64 = (((*huffman_tree_extra_bits.borrow())
@@ -15104,7 +15104,7 @@ pub fn ReadJpeg_195(
         'switch: {
             let __match_cond = (*marker.borrow());
             match __match_cond {
-                v if v == 192 || v == 193 || v == 194 => {
+                __v if __v == 192 || __v == 193 || __v == 194 => {
                     (*is_progressive.borrow_mut()) = ((*marker.borrow()) == 194);
                     (*ok.borrow_mut()) = ({
                         let _data: Ptr<u8> = (*data.borrow()).clone();
@@ -15117,7 +15117,7 @@ pub fn ReadJpeg_195(
                     (*found_sof.borrow_mut()) = true;
                     break 'switch;
                 }
-                v if v == 196 => {
+                __v if __v == 196 => {
                     (*ok.borrow_mut()) = ({
                         let _data: Ptr<u8> = (*data.borrow()).clone();
                         let _len: u64 = (*len.borrow());
@@ -15132,21 +15132,21 @@ pub fn ReadJpeg_195(
                     });
                     break 'switch;
                 }
-                v if v == 208
-                    || v == 209
-                    || v == 210
-                    || v == 211
-                    || v == 212
-                    || v == 213
-                    || v == 214
-                    || v == 215 =>
+                __v if __v == 208
+                    || __v == 209
+                    || __v == 210
+                    || __v == 211
+                    || __v == 212
+                    || __v == 213
+                    || __v == 214
+                    || __v == 215 =>
                 {
                     break 'switch;
                 }
-                v if v == 217 => {
+                __v if __v == 217 => {
                     break 'switch;
                 }
-                v if v == 218 => {
+                __v if __v == 218 => {
                     if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode::JPEG_READ_ALL as i32)) {
                         (*ok.borrow_mut()) = ({
                             let _data: Ptr<u8> = (*data.borrow()).clone();
@@ -15174,7 +15174,7 @@ pub fn ReadJpeg_195(
                     }
                     break 'switch;
                 }
-                v if v == 219 => {
+                __v if __v == 219 => {
                     (*ok.borrow_mut()) = ({
                         let _data: Ptr<u8> = (*data.borrow()).clone();
                         let _len: u64 = (*len.borrow());
@@ -15184,7 +15184,7 @@ pub fn ReadJpeg_195(
                     });
                     break 'switch;
                 }
-                v if v == 221 => {
+                __v if __v == 221 => {
                     (*ok.borrow_mut()) = ({
                         let _data: Ptr<u8> = (*data.borrow()).clone();
                         let _len: u64 = (*len.borrow());
@@ -15195,22 +15195,22 @@ pub fn ReadJpeg_195(
                     });
                     break 'switch;
                 }
-                v if v == 224
-                    || v == 225
-                    || v == 226
-                    || v == 227
-                    || v == 228
-                    || v == 229
-                    || v == 230
-                    || v == 231
-                    || v == 232
-                    || v == 233
-                    || v == 234
-                    || v == 235
-                    || v == 236
-                    || v == 237
-                    || v == 238
-                    || v == 239 =>
+                __v if __v == 224
+                    || __v == 225
+                    || __v == 226
+                    || __v == 227
+                    || __v == 228
+                    || __v == 229
+                    || __v == 230
+                    || __v == 231
+                    || __v == 232
+                    || __v == 233
+                    || __v == 234
+                    || __v == 235
+                    || __v == 236
+                    || __v == 237
+                    || __v == 238
+                    || __v == 239 =>
                 {
                     if (((*mode.borrow()) as i32)
                         != (brunsli_JpegReadMode::JPEG_READ_TABLES as i32))
@@ -15225,7 +15225,7 @@ pub fn ReadJpeg_195(
                     }
                     break 'switch;
                 }
-                v if v == 254 => {
+                __v if __v == 254 => {
                     if (((*mode.borrow()) as i32)
                         != (brunsli_JpegReadMode::JPEG_READ_TABLES as i32))
                     {
