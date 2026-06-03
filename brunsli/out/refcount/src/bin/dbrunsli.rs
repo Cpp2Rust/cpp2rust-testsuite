@@ -17913,7 +17913,7 @@ pub fn ReadFileInternal_263(file: Ptr<::std::fs::File>, content: Ptr<Vec<u8>>) -
         _lhs < ((*(*content.borrow()).upgrade().deref()).len() - 1) as u64
     } {
         let bytes_read: Value<u64> = Rc::new(RefCell::new({
-            let __a0 = ((if (*read_pos.borrow())
+            let __a0 = ((if (*read_pos.borrow()) as usize
                 >= (*((*content.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>)
                     .upgrade()
                     .deref())

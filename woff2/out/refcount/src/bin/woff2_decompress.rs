@@ -4215,14 +4215,14 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
                     (*self.buf_.borrow()).with_mut(|__v: &mut Vec<u8>| {
                         __v.resize(
                             (*(*self.buf_.borrow()).upgrade().deref()).len()
-                                + ((*offset.borrow()).wrapping_add((*n.borrow()))).wrapping_sub(
+                                + (((*offset.borrow()).wrapping_add((*n.borrow()))).wrapping_sub(
                                     ((*(*self.buf_.borrow()).upgrade().deref()).len() - 1) as u64,
-                                ),
+                                )) as usize,
                             0_u8,
                         )
                     });
                     (*self.buf_.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(0));
-                    (*(*self.buf_.borrow()).upgrade().deref())
+                    (*(*self.buf_.borrow()).upgrade().deref()).clone()
                 };
             }
             {
