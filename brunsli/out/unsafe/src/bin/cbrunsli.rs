@@ -3595,13 +3595,12 @@ pub unsafe fn Base128Size_145(mut val: u64) -> u64 {
 }
 pub unsafe fn EncodeBase128_146(mut val: u64, mut data: *mut u8) -> u64 {
     let mut len: u64 = 0_u64;
-    'loop_: loop {
+    let mut __do_while = true;
+    'loop_: while __do_while || ((val) > (0_u64)) {
+        __do_while = false;
         (*data.offset((len.postfix_inc()) as isize)) =
             ((((val) & (127_u64)) | ((if ((val) >= (128_u64)) { 128 } else { 0 }) as u64)) as u8);
         val >>= 7;
-        if !((val) > (0_u64)) {
-            break;
-        }
     }
     return len;
 }
@@ -5588,7 +5587,7 @@ pub unsafe fn EncodeSection_179(
                 .unwrap()
                 .into_raw_fd(),
         )
-        .write_all(&([(&[marker] as &[u8])].concat()));
+        .write_all(&([(&[marker] as &[u8]), (b" size " as &[u8])].concat()));
         write!(
             std::fs::File::from_raw_fd(
                 std::io::stderr()
@@ -5597,7 +5596,7 @@ pub unsafe fn EncodeSection_179(
                     .unwrap()
                     .into_raw_fd(),
             ),
-            " size {:} too large for {:} bytes base128 number.\n",
+            "{:} too large for {:} bytes base128 number.\n",
             section_size,
             section_size_bytes,
         );
@@ -10517,7 +10516,9 @@ pub unsafe fn RefineDCTBlock_245(
                 }
                 in_zero_run = true;
             }
-            'loop_: loop {
+            let mut __do_while = true;
+            'loop_: while __do_while || ((k) <= (Se)) {
+                __do_while = false;
                 let mut thiscoef: i16 =
                     (*coeffs.offset((kJPEGNaturalOrder_13[(k) as usize]) as isize));
                 if ((thiscoef as i32) != (0)) {
@@ -10541,9 +10542,6 @@ pub unsafe fn RefineDCTBlock_245(
                     }
                 }
                 k.postfix_inc();
-                if !((k) <= (Se)) {
-                    break;
-                }
             }
             if (s != 0) {
                 if ((k) > (Se)) {
@@ -11042,16 +11040,13 @@ pub unsafe fn FixupIndexes_248(mut jpg: *mut brunsli_JPEGData) -> bool {
                     .unwrap()
                     .into_raw_fd(),
             )
-            .write_all(&([(&[(*c).quant_idx] as &[u8])].concat()));
-            write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
-                " not found.\n",
+            .write_all(
+                &([
+                    (&[(*c).quant_idx] as &[u8]),
+                    (b" not found." as &[u8]),
+                    (&[b'\n'] as &[u8]),
+                ]
+                .concat()),
             );
             (*jpg).error = (brunsli_JPEGReadError::QUANT_TABLE_NOT_FOUND).clone();
             return false;
@@ -11155,7 +11150,9 @@ pub unsafe fn ReadJpeg_195(
         (*jpg).padding_bits.resize_with(__a0, || <i32>::default())
     };
     let mut is_progressive: bool = false;
-    'loop_: loop {
+    let mut __do_while = true;
+    'loop_: while __do_while || ((marker) != (217)) {
+        __do_while = false;
         let mut num_skipped: u64 = (unsafe {
             let _data: *const u8 = data;
             let _len: u64 = len;
@@ -11365,9 +11362,6 @@ pub unsafe fn ReadJpeg_195(
         }
         (*jpg).marker_order.push((marker as u8));
         if ((mode as i32) == (brunsli_JpegReadMode::JPEG_READ_HEADER as i32)) && (found_sof) {
-            break;
-        }
-        if !((marker) != (217)) {
             break;
         }
     }

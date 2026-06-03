@@ -552,7 +552,7 @@ impl Ord for woff2_Table {
         unsafe {
             if self.lt(other) {
                 std::cmp::Ordering::Less
-            } else if other.lt(other) {
+            } else if other.lt(self) {
                 std::cmp::Ordering::Greater
             } else {
                 std::cmp::Ordering::Equal
@@ -567,7 +567,7 @@ impl PartialOrd for woff2_Table {
 }
 impl PartialEq for woff2_Table {
     fn eq(&self, other: &Self) -> bool {
-        unsafe { !(self.lt(other)) && !(other.lt(other)) }
+        unsafe { !(self.lt(other)) && !(other.lt(self)) }
     }
 }
 impl Eq for woff2_Table {}

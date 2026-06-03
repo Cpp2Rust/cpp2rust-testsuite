@@ -4434,7 +4434,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
                             .iter()
                             .take((*filename.borrow()).len() - 1)
                             .rposition(|&x| {
-                                Ptr::from_string_literal(".")
+                                Ptr::from_string_literal(b".")
                                     .to_c_string_iterator()
                                     .position(|ch| ch == x)
                                     .is_some()
@@ -4450,7 +4450,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         }
         .clone();
         __tmp2.pop();
-        __tmp2.extend(Ptr::from_string_literal(".ttf").to_c_string_iterator());
+        __tmp2.extend(Ptr::from_string_literal(b".ttf").to_c_string_iterator());
         __tmp2.push(0);
         __tmp2
     }));

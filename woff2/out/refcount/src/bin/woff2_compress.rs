@@ -4706,7 +4706,7 @@ impl woff2_WOFF2Params {
     pub fn woff2_WOFF2Params() -> Self {
         let mut this = Self {
             extended_metadata: Rc::new(RefCell::new(
-                Ptr::from_string_literal("")
+                Ptr::from_string_literal(b"")
                     .to_c_string_iterator()
                     .chain(std::iter::once(0))
                     .collect::<Vec<u8>>(),
@@ -5100,7 +5100,7 @@ pub fn MaxWOFF2CompressedSize_104(data: Ptr<u8>, length: u64) -> u64 {
         let _data: Ptr<u8> = (*data.borrow()).clone();
         let _length: u64 = (*length.borrow());
         let _extended_metadata: Value<Vec<u8>> = Rc::new(RefCell::new(
-            Ptr::from_string_literal("")
+            Ptr::from_string_literal(b"")
                 .to_c_string_iterator()
                 .chain(std::iter::once(0))
                 .collect::<Vec<u8>>(),
@@ -5825,7 +5825,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
                             .iter()
                             .take((*filename.borrow()).len() - 1)
                             .rposition(|&x| {
-                                Ptr::from_string_literal(".")
+                                Ptr::from_string_literal(b".")
                                     .to_c_string_iterator()
                                     .position(|ch| ch == x)
                                     .is_some()
@@ -5841,7 +5841,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         }
         .clone();
         __tmp2.pop();
-        __tmp2.extend(Ptr::from_string_literal(".woff2").to_c_string_iterator());
+        __tmp2.extend(Ptr::from_string_literal(b".woff2").to_c_string_iterator());
         __tmp2.push(0);
         __tmp2
     }));

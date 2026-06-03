@@ -10131,12 +10131,11 @@ pub unsafe fn ReplicateValue_222(
     mut end: i32,
     mut code: brunsli_HuffmanCode,
 ) {
-    'loop_: loop {
+    let mut __do_while = true;
+    'loop_: while __do_while || ((end) > (0)) {
+        __do_while = false;
         end -= step;
         (*table.offset((end) as isize)) = code;
-        if !((end) > (0)) {
-            break;
-        }
     }
 }
 pub unsafe fn NextTableBitSize_223(count: *const u16, mut len: u64, mut root_bits: u64) -> u64 {
@@ -10219,7 +10218,9 @@ pub unsafe fn BuildHuffmanTable_218(
     symbol = 0_u64;
     code.bits = 1_u8;
     step = 2;
-    'loop_: loop {
+    let mut __do_while = true;
+    'loop_: while __do_while || ((code.bits.prefix_inc() as u64) <= (table_bits)) {
+        __do_while = false;
         'loop_: while (((*count.offset((code.bits) as isize)) as i32) != (0)) {
             code.value = (*sorted.offset((symbol.postfix_inc()) as isize));
             (unsafe {
@@ -10238,9 +10239,6 @@ pub unsafe fn BuildHuffmanTable_218(
             (*count.offset((code.bits) as isize)).prefix_dec();
         }
         step <<= 1;
-        if !((code.bits.prefix_inc() as u64) <= (table_bits)) {
-            break;
-        }
     }
     'loop_: while ((total_size) != (table_size)) {
         {

@@ -2044,7 +2044,7 @@ thread_local!();
 pub fn PrintTag_51(tag: i32) -> Vec<u8> {
     let tag: Value<i32> = Rc::new(RefCell::new(tag));
     if ((((*tag.borrow()) as u32) & 2155905152_u32) != 0) {
-        return Ptr::from_string_literal("_xfm")
+        return Ptr::from_string_literal(b"_xfm")
             .to_c_string_iterator()
             .chain(std::iter::once(0))
             .collect::<Vec<u8>>();
@@ -2098,7 +2098,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
                             .iter()
                             .take((*filename.borrow()).len() - 1)
                             .rposition(|&x| {
-                                Ptr::from_string_literal(".")
+                                Ptr::from_string_literal(b".")
                                     .to_c_string_iterator()
                                     .position(|ch| ch == x)
                                     .is_some()
@@ -2114,7 +2114,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         }
         .clone();
         __tmp2.pop();
-        __tmp2.extend(Ptr::from_string_literal(".woff2").to_c_string_iterator());
+        __tmp2.extend(Ptr::from_string_literal(b".woff2").to_c_string_iterator());
         __tmp2.push(0);
         __tmp2
     }));
