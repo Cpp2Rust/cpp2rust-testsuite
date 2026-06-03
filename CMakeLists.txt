@@ -37,11 +37,11 @@ foreach(_prog IN LISTS CPP2RUST_PROGRAMS)
   )
 
   add_custom_target("check-${_prog}"
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target "build-${_prog}" > /dev/null 2>&1
     COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/scripts/${_prog}-test.sh"
             ${CMAKE_BINARY_DIR}
             ${CMAKE_CURRENT_SOURCE_DIR}
             ${CPP2RUST_MODELS}
-    DEPENDS "build-${_prog}"
     USES_TERMINAL
   )
 

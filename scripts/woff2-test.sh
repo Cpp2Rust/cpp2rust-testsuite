@@ -30,7 +30,7 @@ done
 # Run original binaries
 pids=()
 for f in "$TMP_DIR"/original/*.ttf; do
-  "$SRC_DIR/src/woff2_compress" "$f" &
+  "$SRC_DIR/src/woff2_compress" "$f" &> /dev/null &
   pids+=($!)
 done
 wait_all "${pids[@]}" || { echo "FAIL: cpp woff2_compress"; exit 1; }
@@ -61,7 +61,7 @@ for model in "${MODELS[@]}"; do
 
   pids=()
   for f in "$MODEL_DIR"/*.ttf; do
-    "$RUST_BIN"/woff2_compress "$f" &
+    "$RUST_BIN"/woff2_compress "$f" &> /dev/null &
     pids+=($!)
   done
   wait_all "${pids[@]}" || { echo "FAIL [$model]: woff2_compress"; exit 1; }
