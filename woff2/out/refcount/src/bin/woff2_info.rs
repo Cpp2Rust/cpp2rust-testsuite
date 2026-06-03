@@ -2093,20 +2093,18 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         let mut __tmp2 = {
             let mut __tmp1 = (*filename.borrow())[(0_u64) as usize
                 ..::std::cmp::min(
-                    (0_u64
-                        + match (*filename.borrow())
+                    (0_u64 + {
+                        let __lookup: Vec<u8> = Ptr::from_string_literal(b".")
+                            .to_c_string_iterator()
+                            .collect();
+                        (*filename.borrow())
                             .iter()
-                            .take((*filename.borrow()).len() - 1)
-                            .rposition(|&x| {
-                                Ptr::from_string_literal(b".")
-                                    .to_c_string_iterator()
-                                    .position(|ch| ch == x)
-                                    .is_some()
-                            }) {
-                            Some(idx) => idx as u64,
-                            None => u64::MAX,
-                        }) as usize,
-                    (*filename.borrow()).len() - 1,
+                            .take((*filename.borrow()).len().saturating_sub(1))
+                            .rposition(|&x| __lookup.contains(&x))
+                            .map(|idx| idx as u64)
+                            .unwrap_or(u64::MAX)
+                    }) as usize,
+                    (*filename.borrow()).len().saturating_sub(1),
                 )]
                 .to_vec();
             __tmp1.push(0);
