@@ -14,5 +14,6 @@ __pycache__
 
 tmp
 *.swp
+*.a
 
 build

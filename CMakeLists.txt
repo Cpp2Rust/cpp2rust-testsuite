@@ -70,3 +70,10 @@ add_custom_target("benchmark"
           --csv "${CMAKE_BINARY_DIR}/bench.csv"
   USES_TERMINAL
 )
+
+find_program(RUFF NAMES ruff)
+set(PYTHON_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/scripts")
+add_custom_target("format"
+                  COMMAND ${RUFF} check --fix ${PYTHON_SOURCES}
+                  COMMAND ${RUFF} format ${PYTHON_SOURCES}
+                  )
