@@ -2,12 +2,11 @@
 # Distributed under the MIT license that can be found in the LICENSE file.
 
 import argparse
-import csv
 import os
+import re
 import shutil
 import statistics
 import subprocess
-import time
 from pathlib import Path
 from rich.console import Console
 from rich.progress import (
@@ -18,6 +17,34 @@ from rich.progress import (
     TimeRemainingColumn,
 )
 from rich.table import Table
+
+
+def run_timed(cmd):
+    """
+    Run *cmd* and return a tuple of (wall time in seconds, peak RSS in KB).
+    Uses GNU time -v.
+    """
+    proc = subprocess.run(
+        ["/usr/bin/time", "-v", "--"] + list(cmd),
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        check=True,
+    )
+    stderr_output = proc.stderr.decode()
+
+    m = re.search(
+        r"Elapsed \(wall clock\) time \(h:mm:ss or m:ss\):\s*([\d:.]+)",
+        stderr_output,
+    )
+    time_str = m.group(1) if m else "0:0"
+    time_parts = list(map(float, time_str.split(":")))
+    assert len(time_parts) == 2  # m:ss.cc
+    minutes, seconds = time_parts
+    wall_time_secs = (minutes * 60) + seconds
+
+    m = re.search(r"Maximum resident set size \(kbytes\):\s*(\d+)", stderr_output)
+    peak_kb = int(m.group(1)) if m else 0
+    return wall_time_secs, peak_kb
 
 
 def get_temp_dir():
@@ -70,8 +97,22 @@ PROGRAMS = {
 }
 
 
+def get_binary_size_mb(path):
+    """Return the binary size in MB"""
+    return os.path.getsize(path) / (1024 * 1024)
+
+
 def run_benchmark(
-    program, test, config, model, results, warmup_runs, benchmark_runs, progress, task
+    program,
+    test,
+    config,
+    model,
+    results,
+    warmup_runs,
+    benchmark_runs,
+    progress,
+    task,
+    binary_sizes,  # dict mutated in place: {(program, model): size_mb}
 ):
     base_dir = Path(__file__).resolve().parent.parent / program
     tests_dir = base_dir / "tests"
@@ -86,6 +127,11 @@ def run_benchmark(
     else:
         binary = str(base_dir / "out" / model / "target" / "release" / config["bin"])
 
+    # Record binary size once per (program, model) combination
+    key_pm = (program, model)
+    if key_pm not in binary_sizes:
+        binary_sizes[key_pm] = get_binary_size_mb(binary)
+
     if "setup" in config:
         config["setup"](tests, base_dir)
 
@@ -98,14 +144,11 @@ def run_benchmark(
                 config["cleanup"](base_dir)
         progress.update(task, advance=1)
 
-    # Actual Benchmark
+    # Actual benchmark runs
     for run_id in range(benchmark_runs):
         for f in tests:
             target_file = config["cmdline"](f) if "cmdline" in config else f
-
-            start = time.perf_counter()
-            subprocess.run([binary, str(target_file)], capture_output=True, check=True)
-            end = time.perf_counter()
+            time, peak_kb = run_timed([binary, str(target_file)])
 
             results.append(
                 {
@@ -114,7 +157,8 @@ def run_benchmark(
                     "model": model,
                     "file": os.path.basename(f),
                     "run_id": run_id,
-                    "time": end - start,
+                    "time": time,
+                    "peak_mem": peak_kb,
                 }
             )
 
@@ -139,9 +183,13 @@ def main():
 
     console = Console()
     results = []
+    binary_sizes = {}  # {(program, model): size_mb}
 
     get_temp_dir().mkdir(exist_ok=True)
     console.print(f"[green]Using temporary directory: {get_temp_dir()}[/]")
+    console.print(
+        f"[green]Running benchmarks {args.runs} times, warmup: {args.warmup}[/]"
+    )
 
     total_steps = 0
     for p in programs_to_run:
@@ -174,6 +222,7 @@ def main():
                         args.runs,
                         progress,
                         task,
+                        binary_sizes,
                     )
 
     if not results:
@@ -181,6 +230,8 @@ def main():
         return
 
     if args.csv:
+        import csv
+
         keys = results[0].keys()
         with open(args.csv, "w", newline="") as f:
             dict_writer = csv.DictWriter(f, fieldnames=keys)
@@ -188,20 +239,30 @@ def main():
             dict_writer.writerows(results)
         console.print(f"[green]Results exported to {args.csv}[/]")
 
-    # Sum execution times per run
+    # ------------------------------------------------------------------
+    # Aggregate statistics
+    # ------------------------------------------------------------------
+
+    # Sum execution times and take max peak memory per (prog, test, model, run_id)
     run_totals = {}
+    run_peak_mem = {}
     for r in results:
         key = (r["program"], r["test"], r["model"], r["run_id"])
         run_totals[key] = run_totals.get(key, 0) + r["time"]
+        run_peak_mem[key] = max(run_peak_mem.get(key, 0), r["peak_mem"])
 
-    # Group the total run times across runs to compute stats
     stats_map = {}
-    unique_groups = sorted(list(set((k[0], k[1], k[2]) for k in run_totals.keys())))
+    unique_groups = sorted(set((k[0], k[1], k[2]) for k in run_totals))
 
     for prog, test, model in unique_groups:
         total_times = [
             v
             for k, v in run_totals.items()
+            if k[0] == prog and k[1] == test and k[2] == model
+        ]
+        peak_mems = [
+            v
+            for k, v in run_peak_mem.items()
             if k[0] == prog and k[1] == test and k[2] == model
         ]
 
@@ -212,6 +273,7 @@ def main():
             "min": min(total_times),
             "max": max(total_times),
             "count": len(total_times),
+            "peak_mem": statistics.median(peak_mems),
         }
 
     table = Table(
@@ -226,14 +288,34 @@ def main():
     table.add_column("Δ Baseline", justify="right")
     table.add_column("Median (s)", justify="right")
     table.add_column("StdDev", justify="right")
+    table.add_column("Med Peak RSS", justify="right")
+    table.add_column("Δ Mem", justify="right")
+    table.add_column("Binary Size", justify="right")
 
+    keys_list = list(stats_map.keys())
     for (prog, test, model), data in stats_map.items():
         diff_str = "-"
         if model != "cpp":
             baseline_avg = stats_map.get((prog, test, "cpp"), {}).get("avg")
-            percent_change = ((data["avg"] - baseline_avg) / baseline_avg) * 100
-            color = "red" if percent_change > 2 else "green"
-            diff_str = f"[{color}]{percent_change:+.1f}%[/{color}]"
+            pct = ((data["avg"] - baseline_avg) / baseline_avg) * 100
+            color = "red" if pct > 2 else "green"
+            diff_str = f"[{color}]{pct:+.1f}%[/{color}]"
+
+        # --- peak memory (in MB) ---
+        peak_mem = data["peak_mem"] / 1024
+        peak_str = f"{peak_mem:.1f} MB"
+
+        # --- memory delta vs cpp baseline ---
+        mem_diff_str = "-"
+        if model != "cpp":
+            baseline_mem = stats_map.get((prog, test, "cpp"), {}).get("peak_mem", 0)
+            mem_pct = ((data["peak_mem"] - baseline_mem) / baseline_mem) * 100
+            mem_color = "red" if mem_pct > 5 else "green"
+            mem_diff_str = f"[{mem_color}]{mem_pct:+.1f}%[/{mem_color}]"
+
+        # --- binary size ---
+        bin_mb = binary_sizes.get((prog, model))
+        bin_str = f"{bin_mb:.2f} MB"
 
         table.add_row(
             prog,
@@ -243,11 +325,14 @@ def main():
             diff_str,
             f"{data['med']:.2f}",
             f"{data['std']:.2f}",
+            peak_str,
+            mem_diff_str,
+            bin_str,
         )
 
-        current_idx = list(stats_map.keys()).index((prog, test, model))
+        current_idx = keys_list.index((prog, test, model))
         if current_idx < len(stats_map) - 1:
-            next_key = list(stats_map.keys())[current_idx + 1]
+            next_key = keys_list[current_idx + 1]
             if next_key[1] != test:
                 table.add_section()
 
