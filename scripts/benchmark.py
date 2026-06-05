@@ -7,6 +7,7 @@ import re
 import shutil
 import statistics
 import subprocess
+import sys
 from pathlib import Path
 from rich.console import Console
 from rich.progress import (
@@ -76,6 +77,29 @@ def woff2_decompress_setup(files, base_dir):
         os.remove(file)
 
 
+def brunsli_cleanup(base_dir):
+    for f in list((base_dir / "tests").glob("**/*.brn")):
+        os.remove(f)
+    for f in list(get_temp_dir().glob("*.jpg")):
+        os.remove(f)
+
+
+def brunsli_decompress_cleanup():
+    for f in list(get_temp_dir().glob("*.brn")):
+        os.remove(f)
+
+
+def brunsli_decompress_setup(files, base_dir):
+    dir = get_temp_dir()
+    for f in files:
+        file = dir / f.name
+        shutil.copy(f, file)
+        # Using cpp binary to set up artifacts cleanly
+        pre_binary = str(base_dir / "src" / "bin" / "cbrunsli")
+        subprocess.run([pre_binary, str(file)], capture_output=True, check=True)
+        os.remove(file)
+
+
 PROGRAMS = {
     "woff2": {
         "Compress": {
@@ -92,6 +116,23 @@ PROGRAMS = {
             "setup": woff2_decompress_setup,
             "final_cleanup": woff2_decompress_cleanup,
             "cmdline": lambda f: get_temp_dir() / f.with_suffix(".woff2").name,
+        },
+    },
+    "brunsli": {
+        "Compress": {
+            "cpp_dir": "bin",
+            "bin": "cbrunsli",
+            "tests": "*.jpg",
+            "cleanup": brunsli_cleanup,
+        },
+        "Decompress": {
+            "cpp_dir": "bin",
+            "bin": "dbrunsli",
+            "tests": "*.jpg",
+            "cleanup": brunsli_cleanup,
+            "setup": brunsli_decompress_setup,
+            "final_cleanup": brunsli_decompress_cleanup,
+            "cmdline": lambda f: get_temp_dir() / f.with_suffix(".jpg.brn").name,
         },
     },
 }
@@ -336,7 +377,15 @@ def main():
             if next_key[1] != test:
                 table.add_section()
 
-    console.print(table)
+    if sys.stdout.isatty():
+        console.print(table)
+    else:
+        # If not printing to a terminal (e.g., output is redirected to a file),
+        # create a specific high-width file console.
+        console = Console(width=200, force_terminal=False)
+        with console.capture() as capture:
+            console.print(table)
+        sys.stdout.write(capture.get())
 
 
 if __name__ == "__main__":
