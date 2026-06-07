@@ -213,7 +213,7 @@ def run_benchmark(
 def main():
     parser = argparse.ArgumentParser(description="Benchmark Runner")
     parser.add_argument("--programs", default=",".join(PROGRAMS.keys()))
-    parser.add_argument("--models", default="refcount,unsafe")
+    parser.add_argument("--models", default="unsafe,refcount")
     parser.add_argument("--warmup", type=int, default=2)
     parser.add_argument("--runs", type=int, default=7)
     parser.add_argument("--csv", help="Path to export raw results as CSV")
