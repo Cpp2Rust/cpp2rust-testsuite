@@ -2131,8 +2131,7 @@ pub fn ReconstructGlyf_63(
                 let _data: Ptr<u8> = (*glyph_buf.borrow())
                     .as_pointer()
                     .offset((*glyph_size.borrow()) as isize);
-                let _n_bytes: u64 = 8_u64;
-                (*bbox_stream.borrow()).Read(_data, _n_bytes)
+                (*bbox_stream.borrow()).Read(_data, 8_u64)
             }) as i64)
                 != 0)
             {
@@ -2313,8 +2312,7 @@ pub fn ReconstructGlyf_63(
                     let _data: Ptr<u8> = (*glyph_buf.borrow())
                         .as_pointer()
                         .offset((*glyph_size.borrow()) as isize);
-                    let _n_bytes: u64 = 8_u64;
-                    (*bbox_stream.borrow()).Read(_data, _n_bytes)
+                    (*bbox_stream.borrow()).Read(_data, 8_u64)
                 }) as i64)
                     != 0)
                 {
@@ -2520,13 +2518,11 @@ pub fn ReadNumHMetrics_66(data: Ptr<u8>, data_size: u64, num_hmetrics: Ptr<u16>)
         (*data.borrow()).clone(),
         (*data_size.borrow()),
     )));
-    if ((((!({
-        let _n_bytes: u64 = 34_u64;
-        (*buffer.borrow()).Skip(_n_bytes)
-    })) || (!({
-        let _value: Ptr<u16> = (*num_hmetrics.borrow()).clone();
-        (*buffer.borrow()).ReadU16(_value)
-    }))) as i64)
+    if ((((!({ (*buffer.borrow()).Skip(34_u64) }))
+        || (!({
+            let _value: Ptr<u16> = (*num_hmetrics.borrow()).clone();
+            (*buffer.borrow()).ReadU16(_value)
+        }))) as i64)
         != 0)
     {
         return false;
@@ -2908,22 +2904,19 @@ pub fn StoreTableEntry_71(result: Ptr<u8>, offset: u32, tag: u32) -> u64 {
     let __rhs = (({
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = ((*offset.borrow()) as u64);
-        let _x: u32 = 0_u32;
-        StoreU32_31(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, 0_u32)
     }) as u32);
     (*offset.borrow_mut()) = __rhs;
     let __rhs = (({
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = ((*offset.borrow()) as u64);
-        let _x: u32 = 0_u32;
-        StoreU32_31(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, 0_u32)
     }) as u32);
     (*offset.borrow_mut()) = __rhs;
     let __rhs = (({
         let _dst: Ptr<u8> = (*result.borrow()).clone();
         let _offset: u64 = ((*offset.borrow()) as u64);
-        let _x: u32 = 0_u32;
-        StoreU32_31(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, 0_u32)
     }) as u32);
     (*offset.borrow_mut()) = __rhs;
     return ((*offset.borrow()) as u64);
@@ -3156,9 +3149,7 @@ pub fn ReconstructFont_74(
                     ({
                         let _dst: Ptr<u8> = (*transformed_buf.borrow())
                             .offset((*(*table.upgrade().deref()).src_offset.borrow()) as isize);
-                        let _offset: u64 = 8_u64;
-                        let _x: u32 = 0_u32;
-                        StoreU32_31(_dst, _offset, _x)
+                        StoreU32_31(_dst, 8_u64, 0_u32)
                     });
                 }
                 (*(*table.upgrade().deref()).dst_offset.borrow_mut()) =
@@ -3285,21 +3276,18 @@ pub fn ReconstructFont_74(
         (*font_checksum.borrow_mut()) = rhs_0;
         ({
             let _dst: Ptr<u8> = (table_entry.as_pointer() as Ptr<u8>);
-            let _offset: u64 = 0_u64;
             let _x: u32 = (*checksum.borrow());
-            StoreU32_31(_dst, _offset, _x)
+            StoreU32_31(_dst, 0_u64, _x)
         });
         ({
             let _dst: Ptr<u8> = (table_entry.as_pointer() as Ptr<u8>);
-            let _offset: u64 = 4_u64;
             let _x: u32 = (*(*table.upgrade().deref()).dst_offset.borrow());
-            StoreU32_31(_dst, _offset, _x)
+            StoreU32_31(_dst, 4_u64, _x)
         });
         ({
             let _dst: Ptr<u8> = (table_entry.as_pointer() as Ptr<u8>);
-            let _offset: u64 = 8_u64;
             let _x: u32 = (*(*table.upgrade().deref()).dst_length.borrow());
-            StoreU32_31(_dst, _offset, _x)
+            StoreU32_31(_dst, 8_u64, _x)
         });
         if ((!({
             let _buf: AnyPtr = ((table_entry.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any();
@@ -3314,8 +3302,7 @@ pub fn ReconstructFont_74(
                 })
                 .read())
             .wrapping_add(4_u32)) as u64);
-            let _n: u64 = 12_u64;
-            (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_u64_u64(_buf, _offset, _n)
+            (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_u64_u64(_buf, _offset, 12_u64)
         }) as i64)
             != 0)
         {
@@ -3324,8 +3311,7 @@ pub fn ReconstructFont_74(
         let rhs_0 = (*font_checksum.borrow()).wrapping_add(
             ({
                 let _buf: Ptr<u8> = (table_entry.as_pointer() as Ptr<u8>);
-                let _size: u64 = 12_u64;
-                ComputeULongSum_26(_buf, _size)
+                ComputeULongSum_26(_buf, 12_u64)
             }),
         );
         (*font_checksum.borrow_mut()) = rhs_0;
@@ -3371,9 +3357,8 @@ pub fn ReconstructFont_74(
         ));
         ({
             let _dst: Ptr<u8> = (checksum_adjustment.as_pointer() as Ptr<u8>);
-            let _offset: u64 = 0_u64;
             let _x: u32 = (2981146554_u32 as u32).wrapping_sub((*font_checksum.borrow()));
-            StoreU32_31(_dst, _offset, _x)
+            StoreU32_31(_dst, 0_u64, _x)
         });
         if ((!({
             let _buf: AnyPtr = ((checksum_adjustment.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any();
@@ -3381,8 +3366,7 @@ pub fn ReconstructFont_74(
                 .dst_offset
                 .borrow())
             .wrapping_add(8_u32)) as u64);
-            let _n: u64 = 4_u64;
-            (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_u64_u64(_buf, _offset, _n)
+            (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_u64_u64(_buf, _offset, 4_u64)
         }) as i64)
             != 0)
         {
@@ -3429,12 +3413,7 @@ pub fn ReadWOFF2Header_75(data: Ptr<u8>, length: u64, hdr: Ptr<woff2_WOFF2Header
     {
         return false;
     }
-    if ((!({
-        let _n_bytes: u64 = 6_u64;
-        (*file.borrow()).Skip(_n_bytes)
-    }) as i64)
-        != 0)
-    {
+    if ((!({ (*file.borrow()).Skip(6_u64) }) as i64) != 0) {
         return false;
     }
     if ((!({
@@ -3830,8 +3809,7 @@ pub fn WriteHeaders_76(
             let __rhs = ({
                 let _dst: Ptr<u8> = (*result.borrow()).clone();
                 let _offset: u64 = (*offset.borrow());
-                let _x: u32 = 0_u32;
-                StoreU32_31(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, 0_u32)
             });
             (*offset.borrow_mut()) = __rhs;
             (*i.borrow_mut()).postfix_inc();
@@ -3840,22 +3818,19 @@ pub fn WriteHeaders_76(
             let __rhs = ({
                 let _dst: Ptr<u8> = (*result.borrow()).clone();
                 let _offset: u64 = (*offset.borrow());
-                let _x: u32 = 0_u32;
-                StoreU32_31(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, 0_u32)
             });
             (*offset.borrow_mut()) = __rhs;
             let __rhs = ({
                 let _dst: Ptr<u8> = (*result.borrow()).clone();
                 let _offset: u64 = (*offset.borrow());
-                let _x: u32 = 0_u32;
-                StoreU32_31(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, 0_u32)
             });
             (*offset.borrow_mut()) = __rhs;
             let __rhs = ({
                 let _dst: Ptr<u8> = (*result.borrow()).clone();
                 let _offset: u64 = (*offset.borrow());
-                let _x: u32 = 0_u32;
-                StoreU32_31(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, 0_u32)
             });
             (*offset.borrow_mut()) = __rhs;
         }
@@ -4023,13 +3998,12 @@ pub fn ComputeWOFF2FinalSize_77(data: Ptr<u8>, length: u64) -> u64 {
         (*length.borrow()),
     )));
     let total_length: Value<u32> = <Value<u32>>::default();
-    if (!({
-        let _n_bytes: u64 = 16_u64;
-        (*file.borrow()).Skip(_n_bytes)
-    })) || (!({
-        let _value: Ptr<u32> = (total_length.as_pointer());
-        (*file.borrow()).ReadU32(_value)
-    })) {
+    if (!({ (*file.borrow()).Skip(16_u64) }))
+        || (!({
+            let _value: Ptr<u32> = (total_length.as_pointer());
+            (*file.borrow()).ReadU32(_value)
+        }))
+    {
         return 0_u64;
     }
     return ((*total_length.borrow()) as u64);

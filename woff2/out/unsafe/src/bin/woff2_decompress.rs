@@ -1406,8 +1406,7 @@ pub unsafe fn ReconstructGlyf_63(
                     .as_deref_mut()
                     .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
                     .offset((glyph_size) as isize);
-                let _n_bytes: u64 = 8_u64;
-                bbox_stream.Read(_data, _n_bytes)
+                bbox_stream.Read(_data, 8_u64)
             }) as i64)
                 != 0)
             {
@@ -1577,8 +1576,7 @@ pub unsafe fn ReconstructGlyf_63(
                         .as_deref_mut()
                         .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
                         .offset((glyph_size) as isize);
-                    let _n_bytes: u64 = 8_u64;
-                    bbox_stream.Read(_data, _n_bytes)
+                    bbox_stream.Read(_data, 8_u64)
                 }) as i64)
                     != 0)
                 {
@@ -1768,13 +1766,11 @@ pub unsafe fn ReadNumHMetrics_66(
     mut num_hmetrics: *mut u16,
 ) -> bool {
     let mut buffer: woff2_Buffer = woff2_Buffer::woff2_Buffer(data, data_size);
-    if ((((!(unsafe {
-        let _n_bytes: u64 = 34_u64;
-        buffer.Skip(_n_bytes)
-    })) || (!(unsafe {
-        let _value: *mut u16 = num_hmetrics;
-        buffer.ReadU16(_value)
-    }))) as i64)
+    if ((((!(unsafe { buffer.Skip(34_u64) }))
+        || (!(unsafe {
+            let _value: *mut u16 = num_hmetrics;
+            buffer.ReadU16(_value)
+        }))) as i64)
         != 0)
     {
         return false;
@@ -2074,20 +2070,17 @@ pub unsafe fn StoreTableEntry_71(mut result: *mut u8, mut offset: u32, mut tag: 
     offset = ((unsafe {
         let _dst: *mut u8 = result;
         let _offset: u64 = (offset as u64);
-        let _x: u32 = 0_u32;
-        StoreU32_31(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, 0_u32)
     }) as u32);
     offset = ((unsafe {
         let _dst: *mut u8 = result;
         let _offset: u64 = (offset as u64);
-        let _x: u32 = 0_u32;
-        StoreU32_31(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, 0_u32)
     }) as u32);
     offset = ((unsafe {
         let _dst: *mut u8 = result;
         let _offset: u64 = (offset as u64);
-        let _x: u32 = 0_u32;
-        StoreU32_31(_dst, _offset, _x)
+        StoreU32_31(_dst, _offset, 0_u32)
     }) as u32);
     return (offset as u64);
 }
@@ -2219,9 +2212,7 @@ pub unsafe fn ReconstructFont_74(
                     }
                     (unsafe {
                         let _dst: *mut u8 = transformed_buf.offset(((*table).src_offset) as isize);
-                        let _offset: u64 = 8_u64;
-                        let _x: u32 = 0_u32;
-                        StoreU32_31(_dst, _offset, _x)
+                        StoreU32_31(_dst, 8_u64, 0_u32)
                     });
                 }
                 (*table).dst_offset = (dest_offset as u32);
@@ -2320,21 +2311,18 @@ pub unsafe fn ReconstructFont_74(
         font_checksum = (font_checksum).wrapping_add(checksum);
         (unsafe {
             let _dst: *mut u8 = table_entry.as_mut_ptr();
-            let _offset: u64 = 0_u64;
             let _x: u32 = checksum;
-            StoreU32_31(_dst, _offset, _x)
+            StoreU32_31(_dst, 0_u64, _x)
         });
         (unsafe {
             let _dst: *mut u8 = table_entry.as_mut_ptr();
-            let _offset: u64 = 4_u64;
             let _x: u32 = (*table).dst_offset;
-            StoreU32_31(_dst, _offset, _x)
+            StoreU32_31(_dst, 4_u64, _x)
         });
         (unsafe {
             let _dst: *mut u8 = table_entry.as_mut_ptr();
-            let _offset: u64 = 8_u64;
             let _x: u32 = (*table).dst_length;
-            StoreU32_31(_dst, _offset, _x)
+            StoreU32_31(_dst, 8_u64, _x)
         });
         if ((!(unsafe {
             let _buf: *const ::libc::c_void =
@@ -2345,8 +2333,7 @@ pub unsafe fn ReconstructFont_74(
                 .or_default()
                 .as_mut())
             .wrapping_add(4_u32)) as u64);
-            let _n: u64 = 12_u64;
-            (*out).Write_pconstlibcc_void_u64_u64(_buf, _offset, _n)
+            (*out).Write_pconstlibcc_void_u64_u64(_buf, _offset, 12_u64)
         }) as i64)
             != 0)
         {
@@ -2355,8 +2342,7 @@ pub unsafe fn ReconstructFont_74(
         font_checksum = (font_checksum).wrapping_add(
             (unsafe {
                 let _buf: *const u8 = (table_entry.as_mut_ptr()).cast_const();
-                let _size: u64 = 12_u64;
-                ComputeULongSum_26(_buf, _size)
+                ComputeULongSum_26(_buf, 12_u64)
             }),
         );
         if ((!(unsafe {
@@ -2388,16 +2374,14 @@ pub unsafe fn ReconstructFont_74(
         let mut checksum_adjustment: [u8; 4] = [0_u8; 4];
         (unsafe {
             let _dst: *mut u8 = checksum_adjustment.as_mut_ptr();
-            let _offset: u64 = 0_u64;
             let _x: u32 = (2981146554_u32 as u32).wrapping_sub(font_checksum);
-            StoreU32_31(_dst, _offset, _x)
+            StoreU32_31(_dst, 0_u64, _x)
         });
         if ((!(unsafe {
             let _buf: *const ::libc::c_void =
                 (checksum_adjustment.as_mut_ptr() as *const u8 as *const ::libc::c_void);
             let _offset: u64 = ((((*head_table).dst_offset).wrapping_add(8_u32)) as u64);
-            let _n: u64 = 4_u64;
-            (*out).Write_pconstlibcc_void_u64_u64(_buf, _offset, _n)
+            (*out).Write_pconstlibcc_void_u64_u64(_buf, _offset, 4_u64)
         }) as i64)
             != 0)
         {
@@ -2442,12 +2426,7 @@ pub unsafe fn ReadWOFF2Header_75(
     {
         return false;
     }
-    if ((!(unsafe {
-        let _n_bytes: u64 = 6_u64;
-        file.Skip(_n_bytes)
-    }) as i64)
-        != 0)
-    {
+    if ((!(unsafe { file.Skip(6_u64) }) as i64) != 0) {
         return false;
     }
     if ((!(unsafe {
@@ -2763,8 +2742,7 @@ pub unsafe fn WriteHeaders_76(
             offset = (unsafe {
                 let _dst: *mut u8 = result;
                 let _offset: u64 = offset;
-                let _x: u32 = 0_u32;
-                StoreU32_31(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, 0_u32)
             });
             i.postfix_inc();
         }
@@ -2772,20 +2750,17 @@ pub unsafe fn WriteHeaders_76(
             offset = (unsafe {
                 let _dst: *mut u8 = result;
                 let _offset: u64 = offset;
-                let _x: u32 = 0_u32;
-                StoreU32_31(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, 0_u32)
             });
             offset = (unsafe {
                 let _dst: *mut u8 = result;
                 let _offset: u64 = offset;
-                let _x: u32 = 0_u32;
-                StoreU32_31(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, 0_u32)
             });
             offset = (unsafe {
                 let _dst: *mut u8 = result;
                 let _offset: u64 = offset;
-                let _x: u32 = 0_u32;
-                StoreU32_31(_dst, _offset, _x)
+                StoreU32_31(_dst, _offset, 0_u32)
             });
         }
         {
@@ -2886,13 +2861,12 @@ pub unsafe fn WriteHeaders_76(
 pub unsafe fn ComputeWOFF2FinalSize_77(mut data: *const u8, mut length: u64) -> u64 {
     let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer(data, length);
     let mut total_length: u32 = 0_u32;
-    if (!(unsafe {
-        let _n_bytes: u64 = 16_u64;
-        file.Skip(_n_bytes)
-    })) || (!(unsafe {
-        let _value: *mut u32 = (&mut total_length as *mut u32);
-        file.ReadU32(_value)
-    })) {
+    if (!(unsafe { file.Skip(16_u64) }))
+        || (!(unsafe {
+            let _value: *mut u32 = (&mut total_length as *mut u32);
+            file.ReadU32(_value)
+        }))
+    {
         return 0_u64;
     }
     return (total_length as u64);

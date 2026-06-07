@@ -779,10 +779,8 @@ pub unsafe fn ReadTrueTypeFont_33(
     if (!(unsafe {
         let _value: *mut u16 = (&mut (*font).num_tables as *mut u16);
         (*file).ReadU16(_value)
-    })) || (!(unsafe {
-        let _n_bytes: u64 = 6_u64;
-        (*file).Skip(_n_bytes)
-    })) {
+    })) || (!(unsafe { (*file).Skip(6_u64) }))
+    {
         return false;
     }
     let mut intervals: BTreeMap<u32, Box<u32>> = BTreeMap::new();
@@ -1259,31 +1257,27 @@ pub unsafe fn WriteFontCollection_44(
     let mut i: u64 = 0_u64;
     'loop_: while ((i) < ((*font_collection).fonts.len() as u64)) {
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = dst;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         i.postfix_inc();
     }
     if (((*font_collection).header_version) == (131072_u32)) {
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = dst;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = dst;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = dst;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
     }
     let mut i: u64 = 0_u64;
@@ -2368,10 +2362,9 @@ pub unsafe fn FixChecksums_78(mut font: *mut woff2_Font) -> bool {
     let mut head_buf: *mut u8 = (&mut (&mut (*head_table)).buffer[(0_u64) as usize] as *mut u8);
     let mut offset: u64 = 8_u64;
     (unsafe {
-        let _val: u32 = 0_u32;
         let _offset: *mut u64 = (&mut offset as *mut u64);
         let _dst: *mut u8 = head_buf;
-        StoreU32_30(_val, _offset, _dst)
+        StoreU32_30(0_u32, _offset, _dst)
     });
     let mut file_checksum: u32 = 0_u32;
     let mut head_checksum: u32 = 0_u32;
@@ -2605,8 +2598,7 @@ impl woff2_GlyfEncoder {
         } else {
             (unsafe {
                 let _out: *mut Vec<u8> = (&mut self.n_contour_stream_ as *mut Vec<u8>);
-                let _value: i32 = 0;
-                WriteUShort_88(_out, _value)
+                WriteUShort_88(_out, 0)
             });
         }
         return true;
@@ -2614,8 +2606,7 @@ impl woff2_GlyfEncoder {
     pub unsafe fn GetTransformedGlyfBytes(&mut self, mut result: *mut Vec<u8>) {
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _value: i32 = 0;
-            WriteUShort_88(_out, _value)
+            WriteUShort_88(_out, 0)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
@@ -2633,8 +2624,7 @@ impl woff2_GlyfEncoder {
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _value: i32 = 0;
-            WriteUShort_88(_out, _value)
+            WriteUShort_88(_out, 0)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
@@ -3060,13 +3050,12 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     let mut hhea_buf: woff2_Buffer =
         woff2_Buffer::woff2_Buffer((*hhea_table).data, ((*hhea_table).length as u64));
     let mut num_hmetrics: u16 = 0_u16;
-    if (!(unsafe {
-        let _n_bytes: u64 = 34_u64;
-        hhea_buf.Skip(_n_bytes)
-    })) || (!(unsafe {
-        let _value: *mut u16 = (&mut num_hmetrics as *mut u16);
-        hhea_buf.ReadU16(_value)
-    })) {
+    if (!(unsafe { hhea_buf.Skip(34_u64) }))
+        || (!(unsafe {
+            let _value: *mut u16 = (&mut num_hmetrics as *mut u16);
+            hhea_buf.ReadU16(_value)
+        }))
+    {
         return false;
     }
     if ((num_hmetrics as i32) < (1)) {
@@ -3182,8 +3171,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     (unsafe {
         let _out: *mut Vec<u8> = out;
         let _data: *const u8 = (&mut flags as *mut u8).cast_const();
-        let _len: u64 = 1_u64;
-        WriteBytes_86(_out, _data, _len)
+        WriteBytes_86(_out, _data, 1_u64)
     });
     'loop_: for advance_width in 0..(advance_widths.len()) {
         let mut advance_width = advance_widths[advance_width].clone();
@@ -3801,10 +3789,9 @@ pub unsafe fn ConvertTTFToWOFF2_109(
         Store16_31(_val, _offset, _dst)
     });
     (unsafe {
-        let _val: i32 = 0;
         let _offset: *mut u64 = (&mut offset as *mut u64);
         let _dst: *mut u8 = result;
-        Store16_31(_val, _offset, _dst)
+        Store16_31(0, _offset, _dst)
     });
     (unsafe {
         let _val: u32 = ((unsafe {
@@ -3823,16 +3810,14 @@ pub unsafe fn ConvertTTFToWOFF2_109(
         StoreU32_30(_val, _offset, _dst)
     });
     (unsafe {
-        let _val: i32 = 1;
         let _offset: *mut u64 = (&mut offset as *mut u64);
         let _dst: *mut u8 = result;
-        Store16_31(_val, _offset, _dst)
+        Store16_31(1, _offset, _dst)
     });
     (unsafe {
-        let _val: i32 = 0;
         let _offset: *mut u64 = (&mut offset as *mut u64);
         let _dst: *mut u8 = result;
-        Store16_31(_val, _offset, _dst)
+        Store16_31(0, _offset, _dst)
     });
     if ((compressed_metadata_buf_length) > (0_u32)) {
         (unsafe {
@@ -3856,35 +3841,30 @@ pub unsafe fn ConvertTTFToWOFF2_109(
         });
     } else {
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = result;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = result;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = result;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
     }
     (unsafe {
-        let _val: u32 = 0_u32;
         let _offset: *mut u64 = (&mut offset as *mut u64);
         let _dst: *mut u8 = result;
-        StoreU32_30(_val, _offset, _dst)
+        StoreU32_30(0_u32, _offset, _dst)
     });
     (unsafe {
-        let _val: u32 = 0_u32;
         let _offset: *mut u64 = (&mut offset as *mut u64);
         let _dst: *mut u8 = result;
-        StoreU32_30(_val, _offset, _dst)
+        StoreU32_30(0_u32, _offset, _dst)
     });
     'loop_: for table in 0..(tables.len()) {
         let mut table = tables.as_ptr().add(table);

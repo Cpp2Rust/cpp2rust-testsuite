@@ -779,10 +779,8 @@ pub unsafe fn ReadTrueTypeFont_33(
     if (!(unsafe {
         let _value: *mut u16 = (&mut (*font).num_tables as *mut u16);
         (*file).ReadU16(_value)
-    })) || (!(unsafe {
-        let _n_bytes: u64 = 6_u64;
-        (*file).Skip(_n_bytes)
-    })) {
+    })) || (!(unsafe { (*file).Skip(6_u64) }))
+    {
         return false;
     }
     let mut intervals: BTreeMap<u32, Box<u32>> = BTreeMap::new();
@@ -1259,31 +1257,27 @@ pub unsafe fn WriteFontCollection_44(
     let mut i: u64 = 0_u64;
     'loop_: while ((i) < ((*font_collection).fonts.len() as u64)) {
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = dst;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         i.postfix_inc();
     }
     if (((*font_collection).header_version) == (131072_u32)) {
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = dst;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = dst;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         (unsafe {
-            let _val: u32 = 0_u32;
             let _offset: *mut u64 = (&mut offset as *mut u64);
             let _dst: *mut u8 = dst;
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
     }
     let mut i: u64 = 0_u64;

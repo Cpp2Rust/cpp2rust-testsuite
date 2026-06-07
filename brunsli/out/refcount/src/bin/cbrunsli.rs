@@ -1461,10 +1461,8 @@ pub fn FastDivide_78(numerator: u32, denominator: u8) -> u8 {
     ));
     if !((*result.borrow()) < 256_u32) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"context.cc");
-            let _l: i32 = 55;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"FastDivide");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"context.cc"), 55, _fn)
         });
         'loop_: while true {}
     };
@@ -2115,10 +2113,8 @@ pub fn NumNonzerosContext_104(prev: Ptr<u8>, x: i32, y: i32) -> u8 {
     }
     if !((*prediction.borrow()) <= (*kNumNonZeroTreeSize_85.with(Value::clone).borrow())) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"context.cc");
-            let _l: i32 = 305;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"NumNonzerosContext");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"context.cc"), 305, _fn)
         });
         'loop_: while true {}
     };
@@ -2409,43 +2405,37 @@ pub fn ComputeACPredictMultipliers_109(quant: Ptr<i32>, mult_row: Ptr<i32>, mult
 }
 impl brunsli_ComponentStateDC {
     fn InitAll(&self) {
-        ({
-            let _probability: u8 = 135_u8;
-            (*self.is_zero_prob.borrow()).Init(_probability)
-        });
+        ({ (*self.is_zero_prob.borrow()).Init(135_u8) });
         let i: Value<u64> = Rc::new(RefCell::new(0_u64));
         'loop_: while ((*i.borrow()) < (*self.sign_prob.borrow()).len() as u64) {
             ({
-                let _probability: u8 = 128_u8;
                 (*(self.sign_prob.as_pointer() as Ptr<brunsli_Prob>)
                     .offset((*i.borrow()) as isize)
                     .upgrade()
                     .deref())
-                .Init(_probability)
+                .Init(128_u8)
             });
             (*i.borrow_mut()).prefix_inc();
         }
         let i: Value<u64> = Rc::new(RefCell::new(0_u64));
         'loop_: while ((*i.borrow()) < (*self.is_empty_block_prob.borrow()).len() as u64) {
             ({
-                let _probability: u8 = 74_u8;
                 (*(self.is_empty_block_prob.as_pointer() as Ptr<brunsli_Prob>)
                     .offset((*i.borrow()) as isize)
                     .upgrade()
                     .deref())
-                .Init(_probability)
+                .Init(74_u8)
             });
             (*i.borrow_mut()).prefix_inc();
         }
         let i: Value<u64> = Rc::new(RefCell::new(0_u64));
         'loop_: while ((*i.borrow()) < (*self.first_extra_bit_prob.borrow()).len() as u64) {
             ({
-                let _probability: u8 = 150_u8;
                 (*(self.first_extra_bit_prob.as_pointer() as Ptr<brunsli_Prob>)
                     .offset((*i.borrow()) as isize)
                     .upgrade()
                     .deref())
-                .Init(_probability)
+                .Init(150_u8)
             });
             (*i.borrow_mut()).prefix_inc();
         }
@@ -2760,10 +2750,8 @@ impl brunsli_ComponentState {
                 ));
                 if !((*v.borrow()) <= 255) {
                     ({
-                        let _f: Ptr<u8> = Ptr::from_string_literal(b"context.cc");
-                        let _l: i32 = 227;
                         let _fn: Ptr<u8> = Ptr::from_string_literal(b"InitAll");
-                        BrunsliDumpAndAbort_79(_f, _l, _fn)
+                        BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"context.cc"), 227, _fn)
                     });
                     'loop_: while true {}
                 };
@@ -2789,12 +2777,11 @@ impl brunsli_ComponentState {
                     .wrapping_mul(((*kDCTBlockSize_3.with(Value::clone).borrow()) as u64)))
             {
                 ({
-                    let _probability: u8 = 108_u8;
                     (*(self.sign_prob.as_pointer() as Ptr<brunsli_Prob>)
                         .offset((*i.borrow()) as isize)
                         .upgrade()
                         .deref())
-                    .Init(_probability)
+                    .Init(108_u8)
                 });
             } else if ((*i.borrow())
                 < (((*kMaxAverageContext_82.with(Value::clone).borrow()).wrapping_add(1_u64))
@@ -2802,21 +2789,19 @@ impl brunsli_ComponentState {
                     .wrapping_mul(((*kDCTBlockSize_3.with(Value::clone).borrow()) as u64)))
             {
                 ({
-                    let _probability: u8 = 128_u8;
                     (*(self.sign_prob.as_pointer() as Ptr<brunsli_Prob>)
                         .offset((*i.borrow()) as isize)
                         .upgrade()
                         .deref())
-                    .Init(_probability)
+                    .Init(128_u8)
                 });
             } else {
                 ({
-                    let _probability: u8 = 148_u8;
                     (*(self.sign_prob.as_pointer() as Ptr<brunsli_Prob>)
                         .offset((*i.borrow()) as isize)
                         .upgrade()
                         .deref())
-                    .Init(_probability)
+                    .Init(148_u8)
                 });
             }
             (*i.borrow_mut()).prefix_inc();
@@ -2824,12 +2809,11 @@ impl brunsli_ComponentState {
         let i: Value<u64> = Rc::new(RefCell::new(0_u64));
         'loop_: while ((*i.borrow()) < (*self.first_extra_bit_prob.borrow()).len() as u64) {
             ({
-                let _probability: u8 = 158_u8;
                 (*(self.first_extra_bit_prob.as_pointer() as Ptr<brunsli_Prob>)
                     .offset((*i.borrow()) as isize)
                     .upgrade()
                     .deref())
-                .Init(_probability)
+                .Init(158_u8)
             });
             (*i.borrow_mut()).prefix_inc();
         }
@@ -2884,10 +2868,8 @@ impl brunsli_PermutationCoder {
             Rc::new(RefCell::new(((*self.values_.borrow()).len() as u64 as u32)));
         if !((*num_values.borrow()) > 0_u32) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"lehmer_code.cc");
-                let _l: i32 = 51;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"num_bits");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"lehmer_code.cc"), 51, _fn)
             });
             'loop_: while true {}
         };
@@ -3016,10 +2998,8 @@ pub fn ComputeLehmerCode_112(sigma: Ptr<u32>, len: u64, code: Ptr<u32>) {
         ));
         if !((*it.borrow()) != (items.as_pointer() as Ptr<u32>).to_end()) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"lehmer_code.cc");
-                let _l: i32 = 21;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"ComputeLehmerCode");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"lehmer_code.cc"), 21, _fn)
             });
             'loop_: while true {}
         };
@@ -3184,10 +3164,8 @@ pub fn FillQuantMatrix_118(is_chroma: bool, q: u32, dst: Ptr<u8>) {
         && (((*q.borrow()) as u64) < (*kQFactorLimit_117.with(Value::clone).borrow())))
     {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"quant_matrix.cc");
-            let _l: i32 = 18;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"FillQuantMatrix");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"quant_matrix.cc"), 18, _fn)
         });
         'loop_: while true {}
     };
@@ -3313,19 +3291,15 @@ pub fn WriteBits_120(n_bits: u64, bits: u64, storage: Ptr<brunsli_Storage>) {
     }
     if !(((*bits.borrow()) >> (*n_bits.borrow())) == 0_u64) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"ans_encode.cc");
-            let _l: i32 = 58;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"WriteBits");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"ans_encode.cc"), 58, _fn)
         });
         'loop_: while true {}
     };
     if !((*n_bits.borrow()) <= 56_u64) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"ans_encode.cc");
-            let _l: i32 = 59;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"WriteBits");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"ans_encode.cc"), 59, _fn)
         });
         'loop_: while true {}
     };
@@ -3337,10 +3311,8 @@ pub fn WriteBits_120(n_bits: u64, bits: u64, storage: Ptr<brunsli_Storage>) {
         _lhs < (*(*(*storage.borrow()).upgrade().deref()).length.borrow())
     }) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"ans_encode.cc");
-            let _l: i32 = 61;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"WriteBits");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"ans_encode.cc"), 61, _fn)
         });
         'loop_: while true {}
     };
@@ -3534,14 +3506,13 @@ pub fn BuildAndStoreANSEncodingData_123(
     ({
         let _counts: Ptr<i32> = ((counts.as_pointer() as Ptr<i32>).offset(0_u64 as isize));
         let _omit_pos: Ptr<i32> = (omit_pos.as_pointer());
-        let _length: i32 = 18;
         let _precision_bits: i32 = (*BRUNSLI_ANS_LOG_TAB_SIZE_0.with(Value::clone).borrow());
         let _num_symbols: Ptr<i32> = (num_symbols.as_pointer());
         let _symbols: Ptr<i32> = (symbols.as_pointer() as Ptr<i32>);
         NormalizeCounts_124(
             _counts,
             _omit_pos,
-            _length,
+            18,
             _precision_bits,
             _num_symbols,
             _symbols,
@@ -3549,11 +3520,10 @@ pub fn BuildAndStoreANSEncodingData_123(
     });
     ({
         let _counts: Ptr<i32> = ((counts.as_pointer() as Ptr<i32>).offset(0_u64 as isize));
-        let _alphabet_size: i32 = 18;
         let _info: Ptr<brunsli_ANSEncSymbolInfo> =
             ((*(*table.borrow()).upgrade().deref()).info_.as_pointer()
                 as Ptr<brunsli_ANSEncSymbolInfo>);
-        ANSBuildInfoTable_122(_counts, _alphabet_size, _info)
+        ANSBuildInfoTable_122(_counts, 18, _info)
     });
     ({
         let _counts: Ptr<i32> = ((counts.as_pointer() as Ptr<i32>).offset(0_u64 as isize));
@@ -3888,10 +3858,8 @@ pub fn lt(p1: Ptr<brunsli_HistogramPair>, p2: Ptr<brunsli_HistogramPair>) -> boo
         _lhs < (*(*p1.upgrade().deref()).idx2.borrow())
     }) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-            let _l: i32 = 35;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"operator<");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 35, _fn)
         });
         'loop_: while true {}
     };
@@ -3900,10 +3868,8 @@ pub fn lt(p1: Ptr<brunsli_HistogramPair>, p2: Ptr<brunsli_HistogramPair>) -> boo
         _lhs < (*(*p2.upgrade().deref()).idx2.borrow())
     }) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-            let _l: i32 = 36;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"operator<");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 36, _fn)
         });
         'loop_: while true {}
     };
@@ -5508,10 +5474,8 @@ pub fn EncodeVarint_154(n: i32, max_bits: i32, storage: Ptr<brunsli_Storage>) {
     let b: Value<i32> = <Value<i32>>::default();
     if !((*n.borrow()) < (1 << (*max_bits.borrow()))) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-            let _l: i32 = 215;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeVarint");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 215, _fn)
         });
         'loop_: while true {}
     };
@@ -5519,27 +5483,22 @@ pub fn EncodeVarint_154(n: i32, max_bits: i32, storage: Ptr<brunsli_Storage>) {
     'loop_: while ((*n.borrow()) != 0) && ((*b.borrow()) < (*max_bits.borrow())) {
         if (((*b.borrow()) + 1) != (*max_bits.borrow())) {
             ({
-                let _n_bits: u64 = 1_u64;
-                let _bits: u64 = 1_u64;
                 let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                WriteBits_120(_n_bits, _bits, _storage)
+                WriteBits_120(1_u64, 1_u64, _storage)
             });
         }
         ({
-            let _n_bits: u64 = 1_u64;
             let _bits: u64 = (((*n.borrow()) & 1) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, _bits, _storage)
         });
         (*n.borrow_mut()) >>= 1;
         (*b.borrow_mut()).prefix_inc();
     }
     if ((*b.borrow()) < (*max_bits.borrow())) {
         ({
-            let _n_bits: u64 = 1_u64;
-            let _bits: u64 = 0_u64;
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, 0_u64, _storage)
         });
     }
 }
@@ -5559,10 +5518,9 @@ pub fn EncodeLimitedVarint_155(
     let b: Value<i32> = Rc::new(RefCell::new(0));
     'loop_: while ((*b.borrow()) < (*max_symbols.borrow())) {
         ({
-            let _n_bits: u64 = 1_u64;
             let _bits: u64 = (((*bits.borrow()) != 0_u64) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, _bits, _storage)
         });
         if ((*bits.borrow()) == 0_u64) {
             break;
@@ -5585,11 +5543,10 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
         return false;
     }
     ({
-        let _n_bits: u64 = 2_u64;
         let _bits: u64 =
             ((*(*jpg.upgrade().deref()).quant.borrow()).len() as u64).wrapping_sub(1_u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(2_u64, _bits, _storage)
     });
     let i: Value<u64> = Rc::new(RefCell::new(0_u64));
     'loop_: while {
@@ -5626,19 +5583,17 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
             }),
         ));
         ({
-            let _n_bits: u64 = 1_u64;
             let _bits: u64 = (((*code.borrow())
                 >= (*kNumStockQuantTables_47.with(Value::clone).borrow()))
                 as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, _bits, _storage)
         });
         if ((*code.borrow()) < (*kNumStockQuantTables_47.with(Value::clone).borrow())) {
             ({
-                let _n_bits: u64 = 3_u64;
                 let _bits: u64 = ((*code.borrow()) as u64);
                 let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                WriteBits_120(_n_bits, _bits, _storage)
+                WriteBits_120(3_u64, _bits, _storage)
             });
         } else {
             let q_factor: Value<u64> = Rc::new(RefCell::new(
@@ -5647,10 +5602,8 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
             ));
             if !((*q_factor.borrow()) < (*kQFactorLimit_117.with(Value::clone).borrow())) {
                 ({
-                    let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-                    let _l: i32 = 264;
                     let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeQuantTables");
-                    BrunsliDumpAndAbort_79(_f, _l, _fn)
+                    BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 264, _fn)
                 });
                 'loop_: while true {}
             };
@@ -5677,17 +5630,15 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
                     Rc::new(RefCell::new(((*new_diff.borrow()) - (*last_diff.borrow()))));
                 (*last_diff.borrow_mut()) = (*new_diff.borrow());
                 ({
-                    let _n_bits: u64 = 1_u64;
                     let _bits: u64 = (((*diff.borrow()) != 0) as u64);
                     let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                    WriteBits_120(_n_bits, _bits, _storage)
+                    WriteBits_120(1_u64, _bits, _storage)
                 });
                 if ((*diff.borrow()) != 0) {
                     ({
-                        let _n_bits: u64 = 1_u64;
                         let _bits: u64 = (((*diff.borrow()) < 0) as u64);
                         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                        WriteBits_120(_n_bits, _bits, _storage)
+                        WriteBits_120(1_u64, _bits, _storage)
                     });
                     if ((*diff.borrow()) < 0) {
                         let __rhs = -(*diff.borrow());
@@ -5699,9 +5650,8 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
                     }
                     ({
                         let _n: i32 = (*diff.borrow());
-                        let _max_bits: i32 = 16;
                         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                        EncodeVarint_154(_n, _max_bits, _storage)
+                        EncodeVarint_154(_n, 16, _storage)
                     });
                 }
                 (*k.borrow_mut()).prefix_inc();
@@ -5715,7 +5665,6 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
         _lhs < (*(*jpg.upgrade().deref()).components.borrow()).len() as u64
     } {
         ({
-            let _n_bits: u64 = 2_u64;
             let _bits: u64 = ((*(*((*jpg.upgrade().deref()).components.as_pointer()
                 as Ptr<brunsli_JPEGComponent>)
                 .offset((*i.borrow()) as isize)
@@ -5724,7 +5673,7 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
             .quant_idx
             .borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(2_u64, _bits, _storage)
         });
         (*i.borrow_mut()).prefix_inc();
     }
@@ -5738,23 +5687,20 @@ pub fn EncodeHuffmanCode_157(
     let is_known_last: Value<bool> = Rc::new(RefCell::new(is_known_last));
     let storage: Value<Ptr<brunsli_Storage>> = Rc::new(RefCell::new(storage));
     ({
-        let _n_bits: u64 = 2_u64;
         let _bits: u64 = (((*(*huff.upgrade().deref()).slot_id.borrow()) & 15) as u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(2_u64, _bits, _storage)
     });
     ({
-        let _n_bits: u64 = 1_u64;
         let _bits: u64 = (((*(*huff.upgrade().deref()).slot_id.borrow()) >> 4) as u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(1_u64, _bits, _storage)
     });
     if !(*is_known_last.borrow()) {
         ({
-            let _n_bits: u64 = 1_u64;
             let _bits: u64 = ((*(*huff.upgrade().deref()).is_last.borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, _bits, _storage)
         });
     } else if !(*(*huff.upgrade().deref()).is_last.borrow()) {
         return false;
@@ -5852,17 +5798,15 @@ pub fn EncodeHuffmanCode_157(
         }
     }
     ({
-        let _n_bits: u64 = 1_u64;
         let _bits: u64 = ((*found_match.borrow()) as u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(1_u64, _bits, _storage)
     });
     if ((*found_match.borrow()) != 0) {
         ({
-            let _n_bits: u64 = 1_u64;
             let _bits: u64 = ((*stock_table_idx.borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, _bits, _storage)
         });
         return true;
     }
@@ -5883,10 +5827,9 @@ pub fn EncodeHuffmanCode_157(
         return false;
     }
     ({
-        let _n_bits: u64 = 4_u64;
         let _bits: u64 = (((*max_len.borrow()) - 1) as u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(4_u64, _bits, _storage)
     });
     (*space.borrow_mut()) -=
         (1 << ((*kJpegHuffmanMaxBitLength_7.with(Value::clone).borrow()) - (*max_len.borrow())));
@@ -6010,10 +5953,9 @@ pub fn EncodeHuffmanCode_157(
         }
         ({
             let _bits: u64 = ((*code.borrow()) as u64);
-            let _nbits: i32 = 2;
             let _max_symbols: i32 = (((*nbits.borrow()) + 1) >> 1);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            EncodeLimitedVarint_155(_bits, _nbits, _max_symbols, _storage)
+            EncodeLimitedVarint_155(_bits, 2, _max_symbols, _storage)
         });
         (*i.borrow_mut()).prefix_inc();
     }
@@ -6022,34 +5964,29 @@ pub fn EncodeHuffmanCode_157(
 pub fn EncodeScanInfo_158(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_Storage>) -> bool {
     let storage: Value<Ptr<brunsli_Storage>> = Rc::new(RefCell::new(storage));
     ({
-        let _n_bits: u64 = 6_u64;
         let _bits: u64 = ((*(*si.upgrade().deref()).Ss.borrow()) as u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(6_u64, _bits, _storage)
     });
     ({
-        let _n_bits: u64 = 6_u64;
         let _bits: u64 = ((*(*si.upgrade().deref()).Se.borrow()) as u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(6_u64, _bits, _storage)
     });
     ({
-        let _n_bits: u64 = 4_u64;
         let _bits: u64 = ((*(*si.upgrade().deref()).Ah.borrow()) as u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(4_u64, _bits, _storage)
     });
     ({
-        let _n_bits: u64 = 4_u64;
         let _bits: u64 = ((*(*si.upgrade().deref()).Al.borrow()) as u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(4_u64, _bits, _storage)
     });
     ({
-        let _n_bits: u64 = 2_u64;
         let _bits: u64 = (*(*si.upgrade().deref()).num_components.borrow()).wrapping_sub(1_u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(2_u64, _bits, _storage)
     });
     let i: Value<u64> = Rc::new(RefCell::new(0_u64));
     'loop_: while {
@@ -6060,42 +5997,35 @@ pub fn EncodeScanInfo_158(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
             ((*si.upgrade().deref()).components.as_pointer() as Ptr<brunsli_JPEGComponentScanInfo>)
                 .offset((*i.borrow()) as isize);
         ({
-            let _n_bits: u64 = 2_u64;
             let _bits: u64 = ((*(*csi.upgrade().deref()).comp_idx.borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(2_u64, _bits, _storage)
         });
         ({
-            let _n_bits: u64 = 2_u64;
             let _bits: u64 = ((*(*csi.upgrade().deref()).dc_tbl_idx.borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(2_u64, _bits, _storage)
         });
         ({
-            let _n_bits: u64 = 2_u64;
             let _bits: u64 = ((*(*csi.upgrade().deref()).ac_tbl_idx.borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(2_u64, _bits, _storage)
         });
         (*i.borrow_mut()).prefix_inc();
     }
     let last_block_idx: Value<i32> = Rc::new(RefCell::new(-1_i32));
     'loop_: for mut block_idx in (*si.upgrade().deref()).reset_points.as_pointer() as Ptr<i32> {
         ({
-            let _n_bits: u64 = 1_u64;
-            let _bits: u64 = 1_u64;
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, 1_u64, _storage)
         });
         if !({
             let _lhs = (block_idx.read());
             _lhs >= ((*last_block_idx.borrow()) + 1)
         }) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-                let _l: i32 = 391;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeScanInfo");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 391, _fn)
             });
             'loop_: while true {}
         };
@@ -6104,18 +6034,15 @@ pub fn EncodeScanInfo_158(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
                 let _lhs = (block_idx.read());
                 _lhs - (*last_block_idx.borrow())
             } - 1);
-            let _max_bits: i32 = 28;
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            EncodeVarint_154(_n, _max_bits, _storage)
+            EncodeVarint_154(_n, 28, _storage)
         });
         let __rhs = (block_idx.read());
         (*last_block_idx.borrow_mut()) = __rhs;
     }
     ({
-        let _n_bits: u64 = 1_u64;
-        let _bits: u64 = 0_u64;
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(1_u64, 0_u64, _storage)
     });
     (*last_block_idx.borrow_mut()) = 0;
     let i: Value<u64> = Rc::new(RefCell::new(0_u64));
@@ -6143,26 +6070,21 @@ pub fn EncodeScanInfo_158(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
         ));
         if !((*block_idx.borrow()) >= (*last_block_idx.borrow())) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-                let _l: i32 = 401;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeScanInfo");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 401, _fn)
             });
             'loop_: while true {}
         };
         let j: Value<i32> = Rc::new(RefCell::new(0));
         'loop_: while ((*j.borrow()) < (*num.borrow())) {
             ({
-                let _n_bits: u64 = 1_u64;
-                let _bits: u64 = 1_u64;
                 let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                WriteBits_120(_n_bits, _bits, _storage)
+                WriteBits_120(1_u64, 1_u64, _storage)
             });
             ({
                 let _n: i32 = ((*block_idx.borrow()) - (*last_block_idx.borrow()));
-                let _max_bits: i32 = 28;
                 let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                EncodeVarint_154(_n, _max_bits, _storage)
+                EncodeVarint_154(_n, 28, _storage)
             });
             (*last_block_idx.borrow_mut()) = (*block_idx.borrow());
             (*j.borrow_mut()).prefix_inc();
@@ -6170,10 +6092,8 @@ pub fn EncodeScanInfo_158(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
         (*i.borrow_mut()).prefix_inc();
     }
     ({
-        let _n_bits: u64 = 1_u64;
-        let _bits: u64 = 0_u64;
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(1_u64, 0_u64, _storage)
     });
     return true;
 }
@@ -6248,9 +6168,8 @@ pub fn JumpToByteBoundary_160(storage: Ptr<brunsli_Storage>) {
     if ((*nbits.borrow()) > 0) {
         ({
             let _n_bits: u64 = ((8 - (*nbits.borrow())) as u64);
-            let _bits: u64 = 0_u64;
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(_n_bits, 0_u64, _storage)
         });
     }
 }
@@ -6280,10 +6199,9 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             return false;
         }
         ({
-            let _n_bits: u64 = 6_u64;
             let _bits: u64 = ((((*marker.borrow()) as i32) - 192) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(6_u64, _bits, _storage)
         });
         if (((*marker.borrow()) as i32) == 221) {
             (*have_dri.borrow_mut()) = true;
@@ -6295,10 +6213,9 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
     }
     if (*have_dri.borrow()) {
         ({
-            let _n_bits: u64 = 16_u64;
             let _bits: u64 = ((*(*jpg.upgrade().deref()).restart_interval.borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(16_u64, _bits, _storage)
         });
     }
     if !({
@@ -6306,10 +6223,8 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
         _lhs < ((*kMaxDHTMarkers_10.with(Value::clone).borrow()) as u64)
     }) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-            let _l: i32 = 453;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeAuxData");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 453, _fn)
         });
         'loop_: while true {}
     };
@@ -6325,10 +6240,9 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             }),
         ));
         ({
-            let _n_bits: u64 = 1_u64;
             let _bits: u64 = ((*is_known_last.borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, _bits, _storage)
         });
         if !({
             let _huff: Ptr<brunsli_JPEGHuffmanCode> =
@@ -6366,11 +6280,10 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
         (*i.borrow_mut()).prefix_inc();
     }
     ({
-        let _n_bits: u64 = 2_u64;
         let _bits: u64 =
             ((*(*jpg.upgrade().deref()).quant.borrow()).len() as u64).wrapping_sub(1_u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(2_u64, _bits, _storage)
     });
     let i: Value<u64> = Rc::new(RefCell::new(0_u64));
     'loop_: while {
@@ -6378,7 +6291,6 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
         _lhs < (*(*jpg.upgrade().deref()).quant.borrow()).len() as u64
     } {
         ({
-            let _n_bits: u64 = 2_u64;
             let _bits: u64 = ((*(*((*jpg.upgrade().deref()).quant.as_pointer()
                 as Ptr<brunsli_JPEGQuantTable>)
                 .offset((*i.borrow()) as isize)
@@ -6387,14 +6299,13 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             .index
             .borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(2_u64, _bits, _storage)
         });
         if {
             let _lhs = (*i.borrow());
             _lhs != ((*(*jpg.upgrade().deref()).quant.borrow()).len() as u64).wrapping_sub(1_u64)
         } {
             ({
-                let _n_bits: u64 = 1_u64;
                 let _bits: u64 = ((*(*((*jpg.upgrade().deref()).quant.as_pointer()
                     as Ptr<brunsli_JPEGQuantTable>)
                     .offset((*i.borrow()) as isize)
@@ -6403,7 +6314,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
                 .is_last
                 .borrow()) as u64);
                 let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                WriteBits_120(_n_bits, _bits, _storage)
+                WriteBits_120(1_u64, _bits, _storage)
             });
         } else if !(*(*((*jpg.upgrade().deref()).quant.as_pointer()
             as Ptr<brunsli_JPEGQuantTable>)
@@ -6416,7 +6327,6 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             return false;
         }
         ({
-            let _n_bits: u64 = 4_u64;
             let _bits: u64 = ((*(*((*jpg.upgrade().deref()).quant.as_pointer()
                 as Ptr<brunsli_JPEGQuantTable>)
                 .offset((*i.borrow()) as isize)
@@ -6425,7 +6335,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             .precision
             .borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(4_u64, _bits, _storage)
         });
         (*i.borrow_mut()).prefix_inc();
     }
@@ -6437,10 +6347,9 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
         }),
     ));
     ({
-        let _n_bits: u64 = 2_u64;
         let _bits: u64 = ((*comp_ids.borrow()) as u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(2_u64, _bits, _storage)
     });
     if ((*comp_ids.borrow()) == (*kComponentIdsCustom_52.with(Value::clone).borrow())) {
         let i: Value<u64> = Rc::new(RefCell::new(0_u64));
@@ -6449,7 +6358,6 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             _lhs < (*(*jpg.upgrade().deref()).components.borrow()).len() as u64
         } {
             ({
-                let _n_bits: u64 = 8_u64;
                 let _bits: u64 = ((*(*((*jpg.upgrade().deref()).components.as_pointer()
                     as Ptr<brunsli_JPEGComponent>)
                     .offset((*i.borrow()) as isize)
@@ -6458,7 +6366,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
                 .id
                 .borrow()) as u64);
                 let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                WriteBits_120(_n_bits, _bits, _storage)
+                WriteBits_120(8_u64, _bits, _storage)
             });
             (*i.borrow_mut()).prefix_inc();
         }
@@ -6481,21 +6389,18 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
     }
     ({
         let _bits: u64 = (*nsize.borrow());
-        let _nbits: i32 = 8;
-        let _max_symbols: i32 = 4;
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        EncodeLimitedVarint_155(_bits, _nbits, _max_symbols, _storage)
+        EncodeLimitedVarint_155(_bits, 8, 4, _storage)
     });
     if ((*nsize.borrow()) > 0_u64) {
         let i: Value<u64> = Rc::new(RefCell::new(0_u64));
         'loop_: while ((*i.borrow()) < (*nsize.borrow())) {
             ({
-                let _n_bits: u64 = 1_u64;
                 let _bits: u64 = ((((*jpg.upgrade().deref()).padding_bits.as_pointer() as Ptr<i32>)
                     .offset((*i.borrow()) as isize)
                     .read()) as u64);
                 let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                WriteBits_120(_n_bits, _bits, _storage)
+                WriteBits_120(1_u64, _bits, _storage)
             });
             (*i.borrow_mut()).prefix_inc();
         }
@@ -6573,10 +6478,8 @@ impl brunsli_internal_enc_Histogram {
         let val: Value<u64> = Rc::new(RefCell::new(val));
         if !((*val.borrow()) < 18_u64) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-                let _l: i32 = 522;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"Add");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 522, _fn)
             });
             'loop_: while true {}
         };
@@ -6711,10 +6614,8 @@ impl brunsli_internal_enc_EntropySource {
             _lhs >= (*(*other.upgrade().deref()).histograms_.borrow()).len() as u64
         }) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-                let _l: i32 = 568;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"Merge");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 568, _fn)
             });
             'loop_: while true {}
         };
@@ -6851,10 +6752,8 @@ impl brunsli_internal_enc_DataStream {
         (*(*word.borrow()).value.borrow_mut()) = 0_u16;
         if !(((*self.pos_.borrow()) as u64) < (*self.code_words_.borrow()).len() as u64) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-                let _l: i32 = 631;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"AddCode");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 631, _fn)
             });
             'loop_: while true {}
         };
@@ -7078,10 +6977,8 @@ pub fn EncodeNumNonzeros_165(
         Rc::new(RefCell::new(data_stream));
     if !((*val.borrow()) < ((1_u32 << (*kNumNonZeroBits_84.with(Value::clone).borrow())) as u64)) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-            let _l: i32 = 719;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeNumNonzeros");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 719, _fn)
         });
         'loop_: while true {}
     };
@@ -7178,19 +7075,11 @@ pub fn EncodeCoeffOrder_167(order: Ptr<u32>, data_stream: Ptr<brunsli_internal_e
             (*j.borrow_mut()).prefix_inc();
         }
         if !((*has_non_zero.borrow()) != 0) {
-            ({
-                let _nbits: i32 = 1;
-                let _bits: i32 = 0;
-                (*(*data_stream.borrow()).upgrade().deref()).AddBits(_nbits, _bits)
-            });
+            ({ (*(*data_stream.borrow()).upgrade().deref()).AddBits(1, 0) });
             (*i.borrow_mut()) += (*kSpan_168.with(Value::clone).borrow());
             continue 'loop_;
         } else {
-            ({
-                let _nbits: i32 = 1;
-                let _bits: i32 = 1;
-                (*(*data_stream.borrow()).upgrade().deref()).AddBits(_nbits, _bits)
-            });
+            ({ (*(*data_stream.borrow()).upgrade().deref()).AddBits(1, 1) });
         }
         let j: Value<i32> = Rc::new(RefCell::new((*start.borrow())));
         'loop_: while ((*j.borrow()) < (*end.borrow())) {
@@ -7199,26 +7088,19 @@ pub fn EncodeCoeffOrder_167(order: Ptr<u32>, data_stream: Ptr<brunsli_internal_e
                 <= ((*kDCTBlockSize_3.with(Value::clone).borrow()) as u32))
             {
                 ({
-                    let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-                    let _l: i32 = 769;
                     let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeCoeffOrder");
-                    BrunsliDumpAndAbort_79(_f, _l, _fn)
+                    BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 769, _fn)
                 });
                 'loop_: while true {}
             };
             (*v.borrow_mut()) = ((*lehmer.borrow())[(*j.borrow()) as usize] as i32);
             'loop_: while ((*v.borrow()) >= 7) {
-                ({
-                    let _nbits: i32 = 3;
-                    let _bits: i32 = 7;
-                    (*(*data_stream.borrow()).upgrade().deref()).AddBits(_nbits, _bits)
-                });
+                ({ (*(*data_stream.borrow()).upgrade().deref()).AddBits(3, 7) });
                 (*v.borrow_mut()) -= 7;
             }
             ({
-                let _nbits: i32 = 3;
                 let _bits: i32 = (*v.borrow());
-                (*(*data_stream.borrow()).upgrade().deref()).AddBits(_nbits, _bits)
+                (*(*data_stream.borrow()).upgrade().deref()).AddBits(3, _bits)
             });
             (*j.borrow_mut()).prefix_inc();
         }
@@ -7479,8 +7361,7 @@ pub fn EncodeMetaData_173(
         ({
             let _dst: Ptr<Vec<u8>> = (metadata.as_pointer());
             let _begin: Ptr<u8> = (marker.as_pointer() as Ptr<u8>);
-            let _length: u64 = 1_u64;
-            Append_72(_dst, _begin, _length)
+            Append_72(_dst, _begin, 1_u64)
         });
         ({
             let _dst: Ptr<Vec<u8>> = (metadata.as_pointer());
@@ -7607,7 +7488,6 @@ pub fn EncodeHistogramData_176(
         _lhs < (*(*jpg.upgrade().deref()).components.borrow()).len() as u64
     } {
         ({
-            let _n_bits: u64 = 3_u64;
             let _bits: u64 = ((*(*((*(*state.borrow()).upgrade().deref()).meta.as_pointer()
                 as Ptr<brunsli_internal_enc_ComponentMeta>)
                 .offset((*i.borrow()) as isize)
@@ -7616,7 +7496,7 @@ pub fn EncodeHistogramData_176(
             .context_bits
             .borrow()) as u64);
             let _storage: Ptr<brunsli_Storage> = (storage.as_pointer());
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(3_u64, _bits, _storage)
         });
         (*i.borrow_mut()).prefix_inc();
     }
@@ -7866,10 +7746,8 @@ pub fn SelectContextBits_182(num_symbols: u64) -> i32 {
     ));
     if !((*scheme.borrow()) < (*kNumSchemes_91.with(Value::clone).borrow())) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-            let _l: i32 = 1029;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"SelectContextBits");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"brunsli_encode.cc"), 1029, _fn)
         });
         'loop_: while true {}
     };
@@ -8924,10 +8802,12 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
                         <= (*kNumNonZeroTreeSize_85.with(Value::clone).borrow()))
                     {
                         ({
-                            let _f: Ptr<u8> = Ptr::from_string_literal(b"brunsli_encode.cc");
-                            let _l: i32 = 1329;
                             let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeAC");
-                            BrunsliDumpAndAbort_79(_f, _l, _fn)
+                            BrunsliDumpAndAbort_79(
+                                Ptr::from_string_literal(b"brunsli_encode.cc"),
+                                1329,
+                                _fn,
+                            )
                         });
                         'loop_: while true {}
                     };
@@ -9084,10 +8964,8 @@ pub fn BrunsliSerialize_189(
                     Ptr<u64>,
                 ) -> bool,
             >::new(EncodeHeader_172);
-            let _size: u64 = 1_u64;
-            (*encode_section.borrow_mut())(_tag, _fn, _size)
-        })
-        .clone();
+            (*encode_section.borrow_mut())(_tag, _fn, 1_u64)
+        });
         if !(*ok.borrow()) {
             return false;
         }
@@ -9180,10 +9058,8 @@ pub fn BrunsliSerialize_189(
                     Ptr<u64>,
                 ) -> bool,
             >::new(EncodeQuantData_175);
-            let _size: u64 = 2_u64;
-            (*encode_section.borrow_mut())(_tag, _fn, _size)
-        })
-        .clone();
+            (*encode_section.borrow_mut())(_tag, _fn, 2_u64)
+        });
         if !(*ok.borrow()) {
             return false;
         }
@@ -9479,10 +9355,9 @@ pub fn BrunsliEncodeJpeg_190(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
     return ({
         let _state: Ptr<brunsli_internal_enc_State> = (state.as_pointer());
         let _jpg: Ptr<brunsli_JPEGData> = (jpg).clone();
-        let _skip_sections: u32 = 0_u32;
         let _data: Ptr<u8> = (*data.borrow()).clone();
         let _len: Ptr<u64> = (*len.borrow()).clone();
-        BrunsliSerialize_189(_state, _jpg, _skip_sections, _data, _len)
+        BrunsliSerialize_189(_state, _jpg, 0_u32, _data, _len)
     });
 }
 thread_local!(
@@ -9584,20 +9459,10 @@ pub fn BrunsliEncodeJpegBypass_194(
         > = FnPtr::<
             fn(Ptr<brunsli_JPEGData>, Ptr<brunsli_internal_enc_State>, Ptr<u8>, Ptr<u64>) -> bool,
         >::new(EncodeHeader_172);
-        let _section_size_bytes: u64 = 1_u64;
         let _len: u64 = ((*len.borrow()).read());
         let _data: Ptr<u8> = (*data.borrow()).clone();
         let _pos: Ptr<u64> = (pos.as_pointer());
-        EncodeSection_179(
-            _jpg,
-            _s,
-            _tag,
-            _write_section,
-            _section_size_bytes,
-            _len,
-            _data,
-            _pos,
-        )
+        EncodeSection_179(_jpg, _s, _tag, _write_section, 1_u64, _len, _data, _pos)
     }) {
         return false;
     }
@@ -9687,17 +9552,13 @@ pub fn StoreVarLenUint8_196(n: u64, storage: Ptr<brunsli_Storage>) {
     let storage: Value<Ptr<brunsli_Storage>> = Rc::new(RefCell::new(storage));
     if ((*n.borrow()) == 0_u64) {
         ({
-            let _n_bits: u64 = 1_u64;
-            let _bits: u64 = 0_u64;
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, 0_u64, _storage)
         });
     } else {
         ({
-            let _n_bits: u64 = 1_u64;
-            let _bits: u64 = 1_u64;
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, 1_u64, _storage)
         });
         let nbits: Value<u64> = Rc::new(RefCell::new(
             (({
@@ -9706,10 +9567,9 @@ pub fn StoreVarLenUint8_196(n: u64, storage: Ptr<brunsli_Storage>) {
             }) as u64),
         ));
         ({
-            let _n_bits: u64 = 3_u64;
             let _bits: u64 = (*nbits.borrow());
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(3_u64, _bits, _storage)
         });
         ({
             let _n_bits: u64 = (*nbits.borrow());
@@ -9814,10 +9674,8 @@ pub fn MoveToFrontTransform_199(v: Ptr<Vec<u32>>) -> Vec<u32> {
         ));
         if !((*index.borrow()) < (*mtf.borrow()).len() as u64) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"context_map_encode.cc");
-                let _l: i32 = 60;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"MoveToFrontTransform");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"context_map_encode.cc"), 60, _fn)
             });
             'loop_: while true {}
         };
@@ -10027,17 +9885,15 @@ pub fn EncodeContextMap_163(
     }
     let use_rle: Value<bool> = Rc::new(RefCell::new(((*max_run_length_prefix.borrow()) > 0_u32)));
     ({
-        let _n_bits: u64 = 1_u64;
         let _bits: u64 = ((*use_rle.borrow()) as u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(1_u64, _bits, _storage)
     });
     if (*use_rle.borrow()) {
         ({
-            let _n_bits: u64 = 4_u64;
             let _bits: u64 = (((*max_run_length_prefix.borrow()).wrapping_sub(1_u32)) as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(4_u64, _bits, _storage)
         });
     }
     let bit_depths: Value<Box<[u8]>> = Rc::new(RefCell::new(
@@ -10112,10 +9968,8 @@ pub fn EncodeContextMap_163(
         (*i.borrow_mut()).prefix_inc();
     }
     ({
-        let _n_bits: u64 = 1_u64;
-        let _bits: u64 = 1_u64;
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(1_u64, 1_u64, _storage)
     });
 }
 pub fn GetPopulationCountPrecision_202(logcount: u32) -> u32 {
@@ -10149,10 +10003,8 @@ pub fn SmallestIncrement_207(count: i32) -> i32 {
     let count: Value<i32> = Rc::new(RefCell::new(count));
     if !((*count.borrow()) > 0) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-            let _l: i32 = 39;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"SmallestIncrement");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"histogram_encode.cc"), 39, _fn)
         });
         'loop_: while true {}
     };
@@ -10186,10 +10038,8 @@ pub fn RebalanceHistogram_208(
     let counts: Value<Ptr<i32>> = Rc::new(RefCell::new(counts));
     if !((*table_size.borrow()) >= 2) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-            let _l: i32 = 48;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"RebalanceHistogram");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"histogram_encode.cc"), 48, _fn)
         });
         'loop_: while true {}
     };
@@ -10277,10 +10127,8 @@ pub fn RebalanceHistogram_208(
     }
     if !((*remainder_pos.borrow()) != -1_i32) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-            let _l: i32 = 81;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"RebalanceHistogram");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"histogram_encode.cc"), 81, _fn)
         });
         'loop_: while true {}
     };
@@ -10312,10 +10160,8 @@ pub fn RebalanceHistogram_209(
     let counts: Value<Ptr<i32>> = Rc::new(RefCell::new(counts));
     if !((*table_size.borrow()) >= 2) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-            let _l: i32 = 48;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"RebalanceHistogram");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"histogram_encode.cc"), 48, _fn)
         });
         'loop_: while true {}
     };
@@ -10403,10 +10249,8 @@ pub fn RebalanceHistogram_209(
     }
     if !((*remainder_pos.borrow()) != -1_i32) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-            let _l: i32 = 81;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"RebalanceHistogram");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"histogram_encode.cc"), 81, _fn)
         });
         'loop_: while true {}
     };
@@ -10440,10 +10284,8 @@ pub fn NormalizeCounts_124(
     let symbols: Value<Ptr<i32>> = Rc::new(RefCell::new(symbols));
     if !((*precision_bits.borrow()) > 0) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-            let _l: i32 = 89;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"NormalizeCounts");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"histogram_encode.cc"), 89, _fn)
         });
         'loop_: while true {}
     };
@@ -10484,10 +10326,8 @@ pub fn NormalizeCounts_124(
     }
     if !((*symbol_count.borrow()) <= (*table_size.borrow())) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-            let _l: i32 = 112;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"NormalizeCounts");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"histogram_encode.cc"), 112, _fn)
         });
         'loop_: while true {}
     };
@@ -10523,10 +10363,8 @@ pub fn NormalizeCounts_124(
             RebalanceHistogram_209(_targets, _max_symbol, _table_size, _omit_pos, _counts)
         }) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-                let _l: i32 = 126;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"NormalizeCounts");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"histogram_encode.cc"), 126, _fn)
             });
             'loop_: while true {}
         };
@@ -10547,24 +10385,20 @@ pub fn EncodeCounts_125(
     let max_bits: Value<i32> = Rc::new(RefCell::new(5));
     if ((*num_symbols.borrow()) <= 2) {
         ({
-            let _n_bits: u64 = 1_u64;
-            let _bits: u64 = 1_u64;
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, 1_u64, _storage)
         });
         if ((*num_symbols.borrow()) == 0) {
             ({
                 let _n_bits: u64 = (((*max_bits.borrow()) + 1) as u64);
-                let _bits: u64 = 0_u64;
                 let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                WriteBits_120(_n_bits, _bits, _storage)
+                WriteBits_120(_n_bits, 0_u64, _storage)
             });
         } else {
             ({
-                let _n_bits: u64 = 1_u64;
                 let _bits: u64 = (((*num_symbols.borrow()) - 1) as u64);
                 let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                WriteBits_120(_n_bits, _bits, _storage)
+                WriteBits_120(1_u64, _bits, _storage)
             });
             let i: Value<i32> = Rc::new(RefCell::new(0));
             'loop_: while ((*i.borrow()) < (*num_symbols.borrow())) {
@@ -10591,10 +10425,8 @@ pub fn EncodeCounts_125(
         }
     } else {
         ({
-            let _n_bits: u64 = 1_u64;
-            let _bits: u64 = 0_u64;
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, 0_u64, _storage)
         });
         let length: Value<i32> = Rc::new(RefCell::new(0));
         let logcounts: Value<Box<[i32]>> = Rc::new(RefCell::new(Box::new([
@@ -10625,19 +10457,23 @@ pub fn EncodeCounts_125(
                 _lhs <= (*BRUNSLI_ANS_TAB_SIZE_1.with(Value::clone).borrow())
             }) {
                 ({
-                    let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-                    let _l: i32 = 155;
                     let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeCounts");
-                    BrunsliDumpAndAbort_79(_f, _l, _fn)
+                    BrunsliDumpAndAbort_79(
+                        Ptr::from_string_literal(b"histogram_encode.cc"),
+                        155,
+                        _fn,
+                    )
                 });
                 'loop_: while true {}
             };
             if !(((*counts.borrow()).offset((*i.borrow()) as isize).read()) >= 0) {
                 ({
-                    let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-                    let _l: i32 = 156;
                     let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeCounts");
-                    BrunsliDumpAndAbort_79(_f, _l, _fn)
+                    BrunsliDumpAndAbort_79(
+                        Ptr::from_string_literal(b"histogram_encode.cc"),
+                        156,
+                        _fn,
+                    )
                 });
                 'loop_: while true {}
             };
@@ -10724,10 +10560,12 @@ pub fn EncodeCounts_125(
                 }) == 0)
                 {
                     ({
-                        let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-                        let _l: i32 = 184;
                         let _fn: Ptr<u8> = Ptr::from_string_literal(b"EncodeCounts");
-                        BrunsliDumpAndAbort_79(_f, _l, _fn)
+                        BrunsliDumpAndAbort_79(
+                            Ptr::from_string_literal(b"histogram_encode.cc"),
+                            184,
+                            _fn,
+                        )
                     });
                     'loop_: while true {}
                 };
@@ -10822,10 +10660,12 @@ pub fn PopulationCost_130(data: Ptr<i32>, total_count: i32) -> f64 {
                 Rc::new(RefCell::new(((*c.borrow()) >> (*kDescaleBits.borrow()))));
             if !((*c_descaled.borrow()) < (1_u64 << 31)) {
                 ({
-                    let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-                    let _l: i32 = 236;
                     let _fn: Ptr<u8> = Ptr::from_string_literal(b"PopulationCost");
-                    BrunsliDumpAndAbort_79(_f, _l, _fn)
+                    BrunsliDumpAndAbort_79(
+                        Ptr::from_string_literal(b"histogram_encode.cc"),
+                        236,
+                        _fn,
+                    )
                 });
                 'loop_: while true {}
             };
@@ -10854,10 +10694,12 @@ pub fn PopulationCost_130(data: Ptr<i32>, total_count: i32) -> f64 {
                     Rc::new(RefCell::new(((*c.borrow()) >> (*kDescaleBits.borrow()))));
                 if !((*c_descaled.borrow()) < (1_u64 << 31)) {
                     ({
-                        let _f: Ptr<u8> = Ptr::from_string_literal(b"histogram_encode.cc");
-                        let _l: i32 = 245;
                         let _fn: Ptr<u8> = Ptr::from_string_literal(b"PopulationCost");
-                        BrunsliDumpAndAbort_79(_f, _l, _fn)
+                        BrunsliDumpAndAbort_79(
+                            Ptr::from_string_literal(b"histogram_encode.cc"),
+                            245,
+                            _fn,
+                        )
                     });
                     'loop_: while true {}
                 };
@@ -11030,10 +10872,9 @@ pub fn StoreHuffmanTreeOfHuffmanTreeToBitMask_211(
         }
     }
     ({
-        let _n_bits: u64 = 2_u64;
         let _bits: u64 = (*skip_some.borrow());
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(2_u64, _bits, _storage)
     });
     let i: Value<u64> = Rc::new(RefCell::new((*skip_some.borrow())));
     'loop_: while ((*i.borrow()) < (*codes_to_store.borrow())) {
@@ -11095,23 +10936,21 @@ pub fn StoreHuffmanTreeToBitMask_215(
             match __match_cond {
                 __v if __v == 16_u64 => {
                     ({
-                        let _n_bits: u64 = 2_u64;
                         let _bits: u64 = (((*huffman_tree_extra_bits.borrow())
                             .offset((*i.borrow()) as isize)
                             .read()) as u64);
                         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                        WriteBits_120(_n_bits, _bits, _storage)
+                        WriteBits_120(2_u64, _bits, _storage)
                     });
                     break 'switch;
                 }
                 __v if __v == 17_u64 => {
                     ({
-                        let _n_bits: u64 = 3_u64;
                         let _bits: u64 = (((*huffman_tree_extra_bits.borrow())
                             .offset((*i.borrow()) as isize)
                             .read()) as u64);
                         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-                        WriteBits_120(_n_bits, _bits, _storage)
+                        WriteBits_120(3_u64, _bits, _storage)
                     });
                     break 'switch;
                 }
@@ -11134,16 +10973,13 @@ pub fn StoreSimpleHuffmanTree_216(
     let max_bits: Value<u64> = Rc::new(RefCell::new(max_bits));
     let storage: Value<Ptr<brunsli_Storage>> = Rc::new(RefCell::new(storage));
     ({
-        let _n_bits: u64 = 2_u64;
-        let _bits: u64 = 1_u64;
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(2_u64, 1_u64, _storage)
     });
     ({
-        let _n_bits: u64 = 2_u64;
         let _bits: u64 = (*num_symbols.borrow()).wrapping_sub(1_u64);
         let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-        WriteBits_120(_n_bits, _bits, _storage)
+        WriteBits_120(2_u64, _bits, _storage)
     });
     let i: Value<u64> = Rc::new(RefCell::new(0_u64));
     'loop_: while ((*i.borrow()) < (*num_symbols.borrow())) {
@@ -11229,7 +11065,6 @@ pub fn StoreSimpleHuffmanTree_216(
             WriteBits_120(_n_bits, _bits, _storage)
         });
         ({
-            let _n_bits: u64 = 1_u64;
             let _bits: u64 = (if ((((*depths.borrow())
                 .offset(((*symbols.borrow()).offset((0) as isize).read()) as isize)
                 .read()) as i32)
@@ -11240,7 +11075,7 @@ pub fn StoreSimpleHuffmanTree_216(
                 0
             } as u64);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(1_u64, _bits, _storage)
         });
     }
 }
@@ -11358,9 +11193,8 @@ pub fn StoreHuffmanTree_217(depths: Ptr<u8>, num: u64, storage: Ptr<brunsli_Stor
         let _data: Ptr<u32> =
             ((huffman_tree_histogram.as_pointer() as Ptr<u32>).offset(0 as isize));
         let _length: u64 = ((*kCodeLengthCodes_210.with(Value::clone).borrow()) as u64);
-        let _tree_limit: i32 = 5;
         let _depth: Ptr<u8> = ((code_length_bitdepth.as_pointer() as Ptr<u8>).offset(0 as isize));
-        CreateHuffmanTree_219(_data, _length, _tree_limit, _depth)
+        CreateHuffmanTree_219(_data, _length, 5, _depth)
     });
     ({
         let _depth: Ptr<u8> = (code_length_bitdepth.as_pointer() as Ptr<u8>);
@@ -11437,10 +11271,8 @@ pub fn BuildAndStoreHuffmanTree_201(
     }
     if ((*count.borrow()) <= 1_u64) {
         ({
-            let _n_bits: u64 = 4_u64;
-            let _bits: u64 = 1_u64;
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
-            WriteBits_120(_n_bits, _bits, _storage)
+            WriteBits_120(4_u64, 1_u64, _storage)
         });
         ({
             let _n_bits: u64 = (*max_bits.borrow());
@@ -11453,9 +11285,8 @@ pub fn BuildAndStoreHuffmanTree_201(
     ({
         let _data: Ptr<u32> = (*histogram.borrow()).clone();
         let _length: u64 = (*length.borrow());
-        let _tree_limit: i32 = 15;
         let _depth: Ptr<u8> = (*depth.borrow()).clone();
-        CreateHuffmanTree_219(_data, _length, _tree_limit, _depth)
+        CreateHuffmanTree_219(_data, _length, 15, _depth)
     });
     ({
         let _depth: Ptr<u8> = (*depth.borrow()).clone();
@@ -11681,10 +11512,8 @@ pub fn CreateHuffmanTree_219(data: Ptr<u32>, length: u64, tree_limit: i32, depth
             == ((2_u64).wrapping_mul((*n.borrow()))).wrapping_add(1_u64))
         {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"huffman_tree.cc");
-                let _l: i32 = 121;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"CreateHuffmanTree");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"huffman_tree.cc"), 121, _fn)
             });
             'loop_: while true {}
         };
@@ -11694,8 +11523,7 @@ pub fn CreateHuffmanTree_219(data: Ptr<u32>, length: u64, tree_limit: i32, depth
             let _pool: Ptr<brunsli_HuffmanTree> =
                 ((tree.as_pointer() as Ptr<brunsli_HuffmanTree>).offset(0_u64 as isize));
             let _depth: Ptr<u8> = (*depth.borrow()).clone();
-            let _level: u8 = 0_u8;
-            SetDepth_221(_p, _pool, _depth, _level)
+            SetDepth_221(_p, _pool, _depth, 0_u8)
         });
         if {
             let _lhs = (({
@@ -11756,10 +11584,8 @@ pub fn WriteHuffmanTreeRepetitions_224(
     let extra_bits_data: Value<Ptr<u8>> = Rc::new(RefCell::new(extra_bits_data));
     if !((*repetitions.borrow()) > 0_u64) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"huffman_tree.cc");
-            let _l: i32 = 151;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"WriteHuffmanTreeRepetitions");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"huffman_tree.cc"), 151, _fn)
         });
         'loop_: while true {}
     };
@@ -13695,10 +13521,8 @@ impl brunsli_BitReaderState {
         (*self.bits_left_.borrow_mut()) -= (*nbits.borrow());
         if !((*val.borrow()) < ((1_u32 << 31) as u64)) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"jpeg_data_reader.cc");
-                let _l: i32 = 471;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"ReadBits");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"jpeg_data_reader.cc"), 471, _fn)
             });
             'loop_: while true {}
         };
@@ -13814,10 +13638,8 @@ pub fn HuffExtend_243(x: i32, s: i32) -> i32 {
     let s: Value<i32> = Rc::new(RefCell::new(s));
     if !((*s.borrow()) >= 1) {
         ({
-            let _f: Ptr<u8> = Ptr::from_string_literal(b"jpeg_data_reader.cc");
-            let _l: i32 = 575;
             let _fn: Ptr<u8> = Ptr::from_string_literal(b"HuffExtend");
-            BrunsliDumpAndAbort_79(_f, _l, _fn)
+            BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"jpeg_data_reader.cc"), 575, _fn)
         });
         'loop_: while true {}
     };
@@ -13825,10 +13647,8 @@ pub fn HuffExtend_243(x: i32, s: i32) -> i32 {
     if ((*x.borrow()) >= (*half.borrow())) {
         if !((*x.borrow()) < (1 << (*s.borrow()))) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"jpeg_data_reader.cc");
-                let _l: i32 = 578;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"HuffExtend");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"jpeg_data_reader.cc"), 578, _fn)
             });
             'loop_: while true {}
         };
@@ -14059,10 +13879,7 @@ pub fn RefineDCTBlock_245(
     let eobrun_allowed: Value<bool> = Rc::new(RefCell::new(((*Ss.borrow()) > 0)));
     if ((*Ss.borrow()) == 0) {
         let s: Value<i32> = Rc::new(RefCell::new(
-            ({
-                let _nbits: i32 = 1;
-                (*(*br.borrow()).upgrade().deref()).ReadBits(_nbits)
-            }),
+            ({ (*(*br.borrow()).upgrade().deref()).ReadBits(1) }),
         ));
         let dc_coeff: Value<i16> = Rc::new(RefCell::new(
             ((*coeffs.borrow()).offset((0) as isize).read()),
@@ -14114,10 +13931,7 @@ pub fn RefineDCTBlock_245(
                         brunsli_JPEGReadError::INVALID_SYMBOL;
                     return false;
                 }
-                (*s.borrow_mut()) = if (({
-                    let _nbits: i32 = 1;
-                    (*(*br.borrow()).upgrade().deref()).ReadBits(_nbits)
-                }) != 0)
+                (*s.borrow_mut()) = if (({ (*(*br.borrow()).upgrade().deref()).ReadBits(1) }) != 0)
                 {
                     (*p1.borrow())
                 } else {
@@ -14165,11 +13979,7 @@ pub fn RefineDCTBlock_245(
                         .read()),
                 ));
                 if (((*thiscoef.borrow()) as i32) != 0) {
-                    if (({
-                        let _nbits: i32 = 1;
-                        (*(*br.borrow()).upgrade().deref()).ReadBits(_nbits)
-                    }) != 0)
-                    {
+                    if (({ (*(*br.borrow()).upgrade().deref()).ReadBits(1) }) != 0) {
                         if ((((*thiscoef.borrow()) as i32) & (*p1.borrow())) == 0) {
                             if (((*thiscoef.borrow()) as i32) >= 0) {
                                 let rhs_0 = (((*thiscoef.borrow()) as i32) + (*p1.borrow())) as i16;
@@ -14235,11 +14045,7 @@ pub fn RefineDCTBlock_245(
                     .read()),
             ));
             if (((*thiscoef.borrow()) as i32) != 0) {
-                if (({
-                    let _nbits: i32 = 1;
-                    (*(*br.borrow()).upgrade().deref()).ReadBits(_nbits)
-                }) != 0)
-                {
+                if (({ (*(*br.borrow()).upgrade().deref()).ReadBits(1) }) != 0) {
                     if ((((*thiscoef.borrow()) as i32) & (*p1.borrow())) == 0) {
                         if (((*thiscoef.borrow()) as i32) >= 0) {
                             let rhs_0 = (((*thiscoef.borrow()) as i32) + (*p1.borrow())) as i16;
@@ -15485,10 +15291,8 @@ impl brunsli_Storage {
         };
         if !((*length.borrow()) > 0_u64) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"write_bits.cc");
-                let _l: i32 = 14;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"Storage");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"write_bits.cc"), 14, _fn)
             });
             'loop_: while true {}
         };
@@ -15513,10 +15317,8 @@ impl Drop for brunsli_Storage {
     fn drop(&mut self) {
         if !(({ self.GetBytesUsed() }) <= (*self.length.borrow())) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"write_bits.cc");
-                let _l: i32 = 26;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"~Storage");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"write_bits.cc"), 26, _fn)
             });
             'loop_: while true {}
         };
@@ -15530,19 +15332,15 @@ impl brunsli_Storage {
         let len: Value<u64> = Rc::new(RefCell::new(len));
         if !(((*self.pos.borrow()) & 7_u64) == 0_u64) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"write_bits.cc");
-                let _l: i32 = 19;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"AppendBytes");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"write_bits.cc"), 19, _fn)
             });
             'loop_: while true {}
         };
         if !(({ self.GetBytesUsed() }).wrapping_add((*len.borrow())) <= (*self.length.borrow())) {
             ({
-                let _f: Ptr<u8> = Ptr::from_string_literal(b"write_bits.cc");
-                let _l: i32 = 20;
                 let _fn: Ptr<u8> = Ptr::from_string_literal(b"AppendBytes");
-                BrunsliDumpAndAbort_79(_f, _l, _fn)
+                BrunsliDumpAndAbort_79(Ptr::from_string_literal(b"write_bits.cc"), 20, _fn)
             });
             'loop_: while true {}
         };

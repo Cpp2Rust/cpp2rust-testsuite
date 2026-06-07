@@ -1117,10 +1117,8 @@ pub fn ReadTrueTypeFont_33(
             .num_tables
             .as_pointer());
         (*(*file.borrow()).upgrade().deref()).ReadU16(_value)
-    })) || (!({
-        let _n_bytes: u64 = 6_u64;
-        (*(*file.borrow()).upgrade().deref()).Skip(_n_bytes)
-    })) {
+    })) || (!({ (*(*file.borrow()).upgrade().deref()).Skip(6_u64) }))
+    {
         return false;
     }
     let intervals: Value<BTreeMap<u32, Value<u32>>> = Rc::new(RefCell::new(BTreeMap::new()));
@@ -1769,31 +1767,27 @@ pub fn WriteFontCollection_44(
         _lhs < (*(*font_collection.upgrade().deref()).fonts.borrow()).len() as u64
     } {
         ({
-            let _val: u32 = 0_u32;
             let _offset: Ptr<u64> = (offset.as_pointer());
             let _dst: Ptr<u8> = (*dst.borrow()).clone();
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         (*i.borrow_mut()).postfix_inc();
     }
     if ((*(*font_collection.upgrade().deref()).header_version.borrow()) == 131072_u32) {
         ({
-            let _val: u32 = 0_u32;
             let _offset: Ptr<u64> = (offset.as_pointer());
             let _dst: Ptr<u8> = (*dst.borrow()).clone();
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         ({
-            let _val: u32 = 0_u32;
             let _offset: Ptr<u64> = (offset.as_pointer());
             let _dst: Ptr<u8> = (*dst.borrow()).clone();
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
         ({
-            let _val: u32 = 0_u32;
             let _offset: Ptr<u64> = (offset.as_pointer());
             let _dst: Ptr<u8> = (*dst.borrow()).clone();
-            StoreU32_30(_val, _offset, _dst)
+            StoreU32_30(0_u32, _offset, _dst)
         });
     }
     let i: Value<u64> = Rc::new(RefCell::new(0_u64));
