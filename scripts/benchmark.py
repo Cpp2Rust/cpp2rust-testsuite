@@ -137,6 +137,17 @@ PROGRAMS = {
     },
 }
 
+# Add micro benchmarks
+PROGRAMS["micro"] = {}
+micro_build_dir = Path(__file__).resolve().parent.parent / "micro" / "src" / "build"
+for p in micro_build_dir.iterdir():
+    if p.is_file() and os.access(p, os.X_OK):
+        PROGRAMS["micro"][p.name] = {
+            "cpp_dir": "build",
+            "bin": p.name,
+            "tests": "*",
+        }
+
 
 def get_binary_size_mb(path):
     """Return the binary size in MB"""
@@ -158,7 +169,7 @@ def run_benchmark(
     base_dir = Path(__file__).resolve().parent.parent / program
     tests_dir = base_dir / "tests"
 
-    tests = list(tests_dir.glob(config["tests"]))
+    tests = list(tests_dir.glob(config["tests"])) if tests_dir.exists() else [Path(".")]
     if not tests:
         print(f"No files found for {program}")
         exit(1)
@@ -181,7 +192,7 @@ def run_benchmark(
         for f in tests:
             target = config["cmdline"](f) if "cmdline" in config else f
             subprocess.run([binary, str(target)], capture_output=True, check=True)
-            if config["cleanup"]:
+            if "cleanup" in config:
                 config["cleanup"](base_dir)
         progress.update(task, advance=1)
 
@@ -196,14 +207,14 @@ def run_benchmark(
                     "program": program,
                     "test": test,
                     "model": model,
-                    "file": os.path.basename(f),
+                    "file": f.name,
                     "run_id": run_id,
                     "time": time,
                     "peak_mem": peak_kb,
                 }
             )
 
-            if config["cleanup"]:
+            if "cleanup" in config:
                 config["cleanup"](base_dir)
         progress.update(task, advance=1)
     if "final_cleanup" in config:

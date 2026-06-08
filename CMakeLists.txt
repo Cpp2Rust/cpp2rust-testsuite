@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(Cpp2Rust-TestSuite)
 
-set(CPP2RUST_PROGRAMS woff2 brunsli)
+set(CPP2RUST_PROGRAMS micro brunsli woff2)
 set(CPP2RUST_MODELS   unsafe refcount)
 set(CPP2RUST_SRCDIR   ${CMAKE_CURRENT_SOURCE_DIR}/../cpp2rust)
 set(CPP2RUST_BINARY   ${CPP2RUST_SRCDIR}/build/cpp2rust/cpp2rust)
