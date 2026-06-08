@@ -319,12 +319,7 @@ def main():
         ]
 
         stats_map[(prog, test, model)] = {
-            "avg": statistics.mean(total_times),
-            "med": statistics.median(total_times),
-            "std": statistics.stdev(total_times) if len(total_times) > 1 else 0,
-            "min": min(total_times),
-            "max": max(total_times),
-            "count": len(total_times),
+            "run_time": statistics.median(total_times),
             "peak_mem": statistics.median(peak_mems),
         }
 
@@ -336,20 +331,19 @@ def main():
     table.add_column("Program", style="cyan")
     table.add_column("Test", style="magenta")
     table.add_column("Model", style="green")
-    table.add_column("Avg (s)", justify="right")
+    table.add_column("Run Time (s)", justify="right")
     table.add_column("Δ Baseline", justify="right")
-    table.add_column("Median (s)", justify="right")
-    table.add_column("StdDev", justify="right")
-    table.add_column("Med Peak RSS", justify="right")
+    table.add_column("Peak RSS", justify="right")
     table.add_column("Δ Mem", justify="right")
     table.add_column("Binary Size", justify="right")
+    table.add_column("Δ Bin Size", justify="right")
 
     keys_list = list(stats_map.keys())
     for (prog, test, model), data in stats_map.items():
         diff_str = "-"
         if model != "cpp":
-            baseline_avg = stats_map.get((prog, test, "cpp"), {}).get("avg")
-            pct = ((data["avg"] - baseline_avg) / baseline_avg) * 100
+            baseline_med = stats_map.get((prog, test, "cpp"), {}).get("run_time")
+            pct = ((data["run_time"] - baseline_med) / baseline_med) * 100
             color = "red" if pct > 2 else "green"
             diff_str = f"[{color}]{pct:+.1f}%[/{color}]"
 
@@ -369,17 +363,24 @@ def main():
         bin_mb = binary_sizes.get((prog, model))
         bin_str = f"{bin_mb:.2f} MB"
 
+        # --- binary size delta vs cpp baseline ---
+        bin_diff_str = "-"
+        if model != "cpp":
+            baseline_bin = binary_sizes.get((prog, "cpp"), 0)
+            bin_pct = ((bin_mb - baseline_bin) / baseline_bin) * 100
+            bin_color = "red" if bin_pct > 5 else "green"
+            bin_diff_str = f"[{bin_color}]{bin_pct:+.1f}%[/{bin_color}]"
+
         table.add_row(
             prog,
             test,
             model,
-            f"{data['avg']:.2f}",
+            f"{data['run_time']:.2f}",
             diff_str,
-            f"{data['med']:.2f}",
-            f"{data['std']:.2f}",
             peak_str,
             mem_diff_str,
             bin_str,
+            bin_diff_str,
         )
 
         current_idx = keys_list.index((prog, test, model))
