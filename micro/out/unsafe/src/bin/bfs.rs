@@ -10,9 +10,9 @@ use std::rc::Rc;
 #[derive(Copy, Clone, Default)]
 pub struct Queue {
     pub elems: *mut u32,
-    pub front: u64,
-    pub back: u64,
-    pub capacity: u64,
+    pub front: usize,
+    pub back: usize,
+    pub capacity: usize,
 }
 impl Queue {
     pub unsafe fn enqueue(&mut self, mut elem: i32) {
@@ -58,23 +58,23 @@ impl Graph {
 pub unsafe fn BFS_0(graph: *const Graph, mut start_vertex: u32) -> *mut u32 {
     let mut Q: Queue = Queue {
         elems: Box::leak(
-            (0..((*graph).V as u64))
+            (0..((*graph).V as usize))
                 .map(|_| 0_u32)
                 .collect::<Box<[u32]>>(),
         )
         .as_mut_ptr(),
-        front: 0_u64,
-        back: 0_u64,
-        capacity: ((*graph).V as u64),
+        front: 0_usize,
+        back: 0_usize,
+        capacity: ((*graph).V as usize),
     };
     let mut visited: *mut bool = Box::leak(
-        (0..((*graph).V as u64))
+        (0..((*graph).V as usize))
             .map(|_| false)
             .collect::<Box<[bool]>>(),
     )
     .as_mut_ptr();
     let mut pred: *mut u32 = Box::leak(
-        (0..((*graph).V as u64))
+        (0..((*graph).V as usize))
             .map(|_| 0_u32)
             .collect::<Box<[u32]>>(),
     )
@@ -124,8 +124,8 @@ pub fn main() {
     }
 }
 unsafe fn main_0() -> i32 {
-    let N: u64 = 300_u64;
-    let V: u64 = (N).wrapping_mul(N);
+    let N: usize = 300_usize;
+    let V: usize = (N).wrapping_mul(N);
     let mut graph: Graph = Graph {
         V: (V as u32),
         adj: Box::leak(
@@ -136,22 +136,23 @@ unsafe fn main_0() -> i32 {
         .as_mut_ptr(),
     };
     let mut i: u32 = 0_u32;
-    'loop_: while ((i as u64) < (V)) {
+    'loop_: while ((i as usize) < (V)) {
         (*graph.adj.offset((i) as isize)) = std::ptr::null_mut();
         i.prefix_inc();
     }
     let mut r: u32 = 0_u32;
-    'loop_: while ((r as u64) < (N)) {
+    'loop_: while ((r as usize) < (N)) {
         let mut c: u32 = 0_u32;
-        'loop_: while ((c as u64) < (N)) {
-            let mut current: u32 = ((((r as u64).wrapping_mul(N)).wrapping_add((c as u64))) as u32);
+        'loop_: while ((c as usize) < (N)) {
+            let mut current: u32 =
+                ((((r as usize).wrapping_mul(N)).wrapping_add((c as usize))) as u32);
             let mut step: u32 = 1_u32;
             'loop_: while ((step) <= (80_u32)) {
-                if ((((c).wrapping_add(step)) as u64) < (N)) {
+                if ((((c).wrapping_add(step)) as usize) < (N)) {
                     (unsafe {
                         let _src: u32 = current;
-                        let _dst: u32 = ((((r as u64).wrapping_mul(N))
-                            .wrapping_add((((c).wrapping_add(step)) as u64)))
+                        let _dst: u32 = ((((r as usize).wrapping_mul(N))
+                            .wrapping_add((((c).wrapping_add(step)) as usize)))
                             as u32);
                         graph.push(_src, _dst)
                     });
@@ -160,11 +161,11 @@ unsafe fn main_0() -> i32 {
             }
             let mut step: u32 = 1_u32;
             'loop_: while ((step) <= (80_u32)) {
-                if ((((r).wrapping_add(step)) as u64) < (N)) {
+                if ((((r).wrapping_add(step)) as usize) < (N)) {
                     (unsafe {
                         let _src: u32 = current;
-                        let _dst: u32 = ((((((r).wrapping_add(step)) as u64).wrapping_mul(N))
-                            .wrapping_add((c as u64)))
+                        let _dst: u32 = ((((((r).wrapping_add(step)) as usize).wrapping_mul(N))
+                            .wrapping_add((c as usize)))
                             as u32);
                         graph.push(_src, _dst)
                     });
@@ -180,7 +181,7 @@ unsafe fn main_0() -> i32 {
         BFS_0(_graph, 0_u32)
     });
     let mut i: u32 = 0_u32;
-    'loop_: while ((i as u64) < (V)) {
+    'loop_: while ((i as usize) < (V)) {
         let mut head: *mut GraphNode = (*graph.adj.offset((i) as isize));
         'loop_: while !((head).is_null()) {
             let mut next: *mut GraphNode = (*head).next;
@@ -190,7 +191,7 @@ unsafe fn main_0() -> i32 {
         i.prefix_inc();
     }
     let mut i: u32 = 0_u32;
-    'loop_: while ((i as u64) < (V)) {
+    'loop_: while ((i as usize) < (V)) {
         write!(
             std::fs::File::from_raw_fd(
                 std::io::stdout()

@@ -17,18 +17,18 @@ unsafe fn main_0() -> i32 {
     let mut k: i32 = 0;
     'loop_: while ((k) < (35)) {
         let mut array: Option<Box<[i32]>> = Some(
-            (0..(N as u64))
+            (0..(N as usize))
                 .map(|_| <i32>::default())
                 .collect::<Box<[_]>>(),
         );
         let mut i: i32 = 0;
         'loop_: while ((i) < (N)) {
-            array.as_mut().unwrap()[(i as u64) as usize] = i;
+            array.as_mut().unwrap()[(i as usize)] = i;
             i.prefix_inc();
         }
         let mut i: i32 = 0;
         'loop_: while ((i) < (N)) {
-            sum += (array.as_mut().unwrap()[(i as u64) as usize] as i64);
+            sum += (array.as_mut().unwrap()[(i as usize)] as i64);
             i.prefix_inc();
         }
         k.prefix_inc();

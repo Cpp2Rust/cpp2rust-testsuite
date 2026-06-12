@@ -9,9 +9,9 @@ use std::rc::{Rc, Weak};
 #[derive(Default)]
 pub struct Queue {
     pub elems: Value<Ptr<u32>>,
-    pub front: Value<u64>,
-    pub back: Value<u64>,
-    pub capacity: Value<u64>,
+    pub front: Value<usize>,
+    pub back: Value<usize>,
+    pub capacity: Value<usize>,
 }
 impl Queue {
     pub fn enqueue(&self, elem: i32) {
@@ -106,23 +106,23 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
     let start_vertex: Value<u32> = Rc::new(RefCell::new(start_vertex));
     let Q: Value<Queue> = Rc::new(RefCell::new(Queue {
         elems: Rc::new(RefCell::new(Ptr::alloc_array(
-            (0..((*(*graph.upgrade().deref()).V.borrow()) as u64))
+            (0..((*(*graph.upgrade().deref()).V.borrow()) as usize))
                 .map(|_| <u32>::default())
                 .collect::<Box<[u32]>>(),
         ))),
-        front: Rc::new(RefCell::new(0_u64)),
-        back: Rc::new(RefCell::new(0_u64)),
+        front: Rc::new(RefCell::new(0_usize)),
+        back: Rc::new(RefCell::new(0_usize)),
         capacity: Rc::new(RefCell::new(
-            ((*(*graph.upgrade().deref()).V.borrow()) as u64),
+            ((*(*graph.upgrade().deref()).V.borrow()) as usize),
         )),
     }));
     let visited: Value<Ptr<bool>> = Rc::new(RefCell::new(Ptr::alloc_array(
-        (0..((*(*graph.upgrade().deref()).V.borrow()) as u64))
+        (0..((*(*graph.upgrade().deref()).V.borrow()) as usize))
             .map(|_| <bool>::default())
             .collect::<Box<[bool]>>(),
     )));
     let pred: Value<Ptr<u32>> = Rc::new(RefCell::new(Ptr::alloc_array(
-        (0..((*(*graph.upgrade().deref()).V.borrow()) as u64))
+        (0..((*(*graph.upgrade().deref()).V.borrow()) as usize))
             .map(|_| <u32>::default())
             .collect::<Box<[u32]>>(),
     )));
@@ -186,8 +186,8 @@ pub fn main() {
     std::process::exit(main_0());
 }
 fn main_0() -> i32 {
-    let N: Value<u64> = Rc::new(RefCell::new(300_u64));
-    let V: Value<u64> = Rc::new(RefCell::new((*N.borrow()).wrapping_mul((*N.borrow()))));
+    let N: Value<usize> = Rc::new(RefCell::new(300_usize));
+    let V: Value<usize> = Rc::new(RefCell::new((*N.borrow()).wrapping_mul((*N.borrow()))));
     let graph: Value<Graph> = Rc::new(RefCell::new(Graph {
         V: Rc::new(RefCell::new(((*V.borrow()) as u32))),
         adj: Rc::new(RefCell::new(Ptr::alloc_array(
@@ -197,28 +197,29 @@ fn main_0() -> i32 {
         ))),
     }));
     let i: Value<u32> = Rc::new(RefCell::new(0_u32));
-    'loop_: while (((*i.borrow()) as u64) < (*V.borrow())) {
+    'loop_: while (((*i.borrow()) as usize) < (*V.borrow())) {
         (*(*graph.borrow()).adj.borrow())
             .offset((*i.borrow()) as isize)
             .write(Ptr::<GraphNode>::null());
         (*i.borrow_mut()).prefix_inc();
     }
     let r: Value<u32> = Rc::new(RefCell::new(0_u32));
-    'loop_: while (((*r.borrow()) as u64) < (*N.borrow())) {
+    'loop_: while (((*r.borrow()) as usize) < (*N.borrow())) {
         let c: Value<u32> = Rc::new(RefCell::new(0_u32));
-        'loop_: while (((*c.borrow()) as u64) < (*N.borrow())) {
+        'loop_: while (((*c.borrow()) as usize) < (*N.borrow())) {
             let current: Value<u32> = Rc::new(RefCell::new(
-                (((((*r.borrow()) as u64).wrapping_mul((*N.borrow())))
-                    .wrapping_add(((*c.borrow()) as u64))) as u32),
+                (((((*r.borrow()) as usize).wrapping_mul((*N.borrow())))
+                    .wrapping_add(((*c.borrow()) as usize))) as u32),
             ));
             let step: Value<u32> = Rc::new(RefCell::new(1_u32));
             'loop_: while ((*step.borrow()) <= 80_u32) {
-                if ((((*c.borrow()).wrapping_add((*step.borrow()))) as u64) < (*N.borrow())) {
+                if ((((*c.borrow()).wrapping_add((*step.borrow()))) as usize) < (*N.borrow())) {
                     ({
                         let _src: u32 = (*current.borrow());
-                        let _dst: u32 = (((((*r.borrow()) as u64).wrapping_mul((*N.borrow())))
-                            .wrapping_add((((*c.borrow()).wrapping_add((*step.borrow()))) as u64)))
-                            as u32);
+                        let _dst: u32 = (((((*r.borrow()) as usize).wrapping_mul((*N.borrow())))
+                            .wrapping_add(
+                                (((*c.borrow()).wrapping_add((*step.borrow()))) as usize),
+                            )) as u32);
                         (*graph.borrow()).push(_src, _dst)
                     });
                 }
@@ -226,12 +227,13 @@ fn main_0() -> i32 {
             }
             let step: Value<u32> = Rc::new(RefCell::new(1_u32));
             'loop_: while ((*step.borrow()) <= 80_u32) {
-                if ((((*r.borrow()).wrapping_add((*step.borrow()))) as u64) < (*N.borrow())) {
+                if ((((*r.borrow()).wrapping_add((*step.borrow()))) as usize) < (*N.borrow())) {
                     ({
                         let _src: u32 = (*current.borrow());
-                        let _dst: u32 = ((((((*r.borrow()).wrapping_add((*step.borrow()))) as u64)
+                        let _dst: u32 = ((((((*r.borrow()).wrapping_add((*step.borrow())))
+                            as usize)
                             .wrapping_mul((*N.borrow())))
-                        .wrapping_add(((*c.borrow()) as u64)))
+                        .wrapping_add(((*c.borrow()) as usize)))
                             as u32);
                         (*graph.borrow()).push(_src, _dst)
                     });
@@ -249,7 +251,7 @@ fn main_0() -> i32 {
         }),
     ));
     let i: Value<u32> = Rc::new(RefCell::new(0_u32));
-    'loop_: while (((*i.borrow()) as u64) < (*V.borrow())) {
+    'loop_: while (((*i.borrow()) as usize) < (*V.borrow())) {
         let head: Value<Ptr<GraphNode>> = Rc::new(RefCell::new(
             ((*(*graph.borrow()).adj.borrow())
                 .offset((*i.borrow()) as isize)
@@ -266,7 +268,7 @@ fn main_0() -> i32 {
         (*i.borrow_mut()).prefix_inc();
     }
     let i: Value<u32> = Rc::new(RefCell::new(0_u32));
-    'loop_: while (((*i.borrow()) as u64) < (*V.borrow())) {
+    'loop_: while (((*i.borrow()) as usize) < (*V.borrow())) {
         write!(
             libcc2rs::cout(),
             "{:} -> {:}\n",

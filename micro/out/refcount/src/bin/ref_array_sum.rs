@@ -12,7 +12,7 @@ pub fn initialize_0(array: Ptr<Option<Value<Box<[i32]>>>>, N: i32) {
     'loop_: while ((*i.borrow()) < (*N.borrow())) {
         let __rhs = (*i.borrow());
         (*array.upgrade().deref()).as_ref().unwrap().borrow_mut()
-            [((*i.borrow()) as u64) as usize] = __rhs;
+            [((*i.borrow()) as usize) as usize] = __rhs;
         (*i.borrow_mut()).prefix_inc();
     }
 }
@@ -25,7 +25,7 @@ pub fn sum_1(array: Ptr<Option<Value<Box<[i32]>>>>, N: i32) -> i64 {
         (*sum.borrow_mut()) += ((*(*array.borrow()).upgrade().deref())
             .as_ref()
             .unwrap()
-            .borrow()[((*i.borrow()) as u64) as usize] as i64);
+            .borrow()[((*i.borrow()) as usize) as usize] as i64);
         (*i.borrow_mut()).prefix_inc();
     }
     return (*sum.borrow());
@@ -40,7 +40,7 @@ fn main_0() -> i32 {
     'loop_: while ((*k.borrow()) < 35) {
         let array: Value<Option<Value<Box<[i32]>>>> =
             Rc::new(RefCell::new(Some(Rc::new(RefCell::new(
-                (0..((*N.borrow()) as u64))
+                (0..((*N.borrow()) as usize))
                     .map(|_| <i32>::default())
                     .collect::<Box<[_]>>(),
             )))));
