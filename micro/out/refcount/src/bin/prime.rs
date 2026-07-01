@@ -22,10 +22,7 @@ pub fn largest_prime_1(n: i32) -> i32 {
     let max: Value<i32> = Rc::new(RefCell::new(-1_i32));
     let i: Value<i32> = Rc::new(RefCell::new(0));
     'loop_: while ((*i.borrow()) < (*n.borrow())) {
-        if ({
-            let _x: i32 = (*i.borrow());
-            is_prime_0(_x)
-        }) {
+        if ({ is_prime_0((*i.borrow())) }) {
             (*max.borrow_mut()) = (*i.borrow());
         }
         (*i.borrow_mut()).prefix_inc();
@@ -37,12 +34,7 @@ pub fn main() {
 }
 fn main_0() -> i32 {
     let N: Value<i32> = Rc::new(RefCell::new(270000));
-    let largest: Value<i32> = Rc::new(RefCell::new(
-        ({
-            let _n: i32 = (*N.borrow());
-            largest_prime_1(_n)
-        }),
-    ));
+    let largest: Value<i32> = Rc::new(RefCell::new(({ largest_prime_1((*N.borrow())) })));
     write!(
         libcc2rs::cout(),
         "The largest prime < {:} is: {:}\n",

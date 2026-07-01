@@ -13,14 +13,8 @@ pub fn fib_0(n: Ptr<u64>) {
     }
     let n_1: Value<u64> = Rc::new(RefCell::new(((*n.borrow()).read()).wrapping_sub(1_u64)));
     let n_2: Value<u64> = Rc::new(RefCell::new(((*n.borrow()).read()).wrapping_sub(2_u64)));
-    ({
-        let _n: Ptr<u64> = (n_1.as_pointer());
-        fib_0(_n)
-    });
-    ({
-        let _n: Ptr<u64> = (n_2.as_pointer());
-        fib_0(_n)
-    });
+    ({ fib_0((n_1.as_pointer())) });
+    ({ fib_0((n_2.as_pointer())) });
     let __rhs = (*n_1.borrow()).wrapping_add((*n_2.borrow()));
     (*n.borrow()).write(__rhs);
 }
@@ -29,10 +23,7 @@ pub fn main() {
 }
 fn main_0() -> i32 {
     let n: Value<u64> = Rc::new(RefCell::new(45_u64));
-    ({
-        let _n: Ptr<u64> = (n.as_pointer());
-        fib_0(_n)
-    });
+    ({ fib_0((n.as_pointer())) });
     write!(libcc2rs::cout(), "{:}\n", (*n.borrow()),);
     return 0;
 }

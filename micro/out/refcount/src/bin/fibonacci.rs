@@ -11,16 +11,8 @@ pub fn fib_0(n: u64) -> u64 {
     return if ((*n.borrow()) == 0_u64) || ((*n.borrow()) == 1_u64) {
         (*n.borrow())
     } else {
-        ({
-            let _n: u64 = (*n.borrow()).wrapping_sub(1_u64);
-            fib_0(_n)
-        })
-        .wrapping_add(
-            ({
-                let _n: u64 = (*n.borrow()).wrapping_sub(2_u64);
-                fib_0(_n)
-            }),
-        )
+        ({ fib_0((*n.borrow()).wrapping_sub(1_u64)) })
+            .wrapping_add(({ fib_0((*n.borrow()).wrapping_sub(2_u64)) }))
     };
 }
 pub fn main() {

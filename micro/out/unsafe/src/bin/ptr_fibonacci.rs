@@ -12,14 +12,8 @@ pub unsafe fn fib_0(mut n: *mut u64) {
     }
     let mut n_1: u64 = (*n).wrapping_sub(1_u64);
     let mut n_2: u64 = (*n).wrapping_sub(2_u64);
-    (unsafe {
-        let _n: *mut u64 = (&mut n_1 as *mut u64);
-        fib_0(_n)
-    });
-    (unsafe {
-        let _n: *mut u64 = (&mut n_2 as *mut u64);
-        fib_0(_n)
-    });
+    (unsafe { fib_0((&mut n_1 as *mut u64)) });
+    (unsafe { fib_0((&mut n_2 as *mut u64)) });
     (*n) = (n_1).wrapping_add(n_2);
 }
 pub fn main() {
@@ -29,10 +23,7 @@ pub fn main() {
 }
 unsafe fn main_0() -> i32 {
     let mut n: u64 = 45_u64;
-    (unsafe {
-        let _n: *mut u64 = (&mut n as *mut u64);
-        fib_0(_n)
-    });
+    (unsafe { fib_0((&mut n as *mut u64)) });
     write!(
         std::fs::File::from_raw_fd(
             std::io::stdout()

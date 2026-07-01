@@ -44,16 +44,8 @@ fn main_0() -> i32 {
                     .map(|_| <i32>::default())
                     .collect::<Box<[_]>>(),
             )))));
-        ({
-            let _array: Ptr<Option<Value<Box<[i32]>>>> = array.as_pointer();
-            let _N: i32 = (*N.borrow());
-            initialize_0(_array, _N)
-        });
-        (*out.borrow_mut()) += ({
-            let _array: Ptr<Option<Value<Box<[i32]>>>> = (array.as_pointer());
-            let _N: i32 = (*N.borrow());
-            sum_1(_array, _N)
-        });
+        ({ initialize_0(array.as_pointer(), (*N.borrow())) });
+        (*out.borrow_mut()) += ({ sum_1((array.as_pointer()), (*N.borrow())) });
         (*k.borrow_mut()).prefix_inc();
     }
     write!(libcc2rs::cout(), "Sum: {:}\n", (*out.borrow()),);

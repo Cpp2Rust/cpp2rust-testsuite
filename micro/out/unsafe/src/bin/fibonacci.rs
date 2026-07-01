@@ -10,16 +10,8 @@ pub unsafe fn fib_0(mut n: u64) -> u64 {
     return if ((n) == (0_u64)) || ((n) == (1_u64)) {
         n
     } else {
-        (unsafe {
-            let _n: u64 = (n).wrapping_sub(1_u64);
-            fib_0(_n)
-        })
-        .wrapping_add(
-            (unsafe {
-                let _n: u64 = (n).wrapping_sub(2_u64);
-                fib_0(_n)
-            }),
-        )
+        (unsafe { fib_0((n).wrapping_sub(1_u64)) })
+            .wrapping_add((unsafe { fib_0((n).wrapping_sub(2_u64)) }))
     };
 }
 pub fn main() {

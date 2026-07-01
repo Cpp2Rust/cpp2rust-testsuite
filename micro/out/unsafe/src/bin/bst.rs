@@ -15,17 +15,9 @@ pub struct node_t {
 }
 pub unsafe fn find_0(mut node: *mut node_t, mut value: i32) -> *mut node_t {
     if ((value) < ((*node).value)) && (!(((*node).left).is_null())) {
-        return (unsafe {
-            let _node: *mut node_t = (*node).left;
-            let _value: i32 = value;
-            find_0(_node, _value)
-        });
+        return (unsafe { find_0((*node).left, value) });
     } else if ((value) > ((*node).value)) && (!(((*node).right).is_null())) {
-        return (unsafe {
-            let _node: *mut node_t = (*node).right;
-            let _value: i32 = value;
-            find_0(_node, _value)
-        });
+        return (unsafe { find_0((*node).right, value) });
     } else if ((value) == ((*node).value)) {
         return node;
     }
@@ -36,17 +28,9 @@ pub unsafe fn insert_1(mut node: *mut node_t, mut new_node: *mut node_t) -> *mut
         return new_node;
     }
     if (((*new_node).value) < ((*node).value)) {
-        (*node).left = (unsafe {
-            let _node: *mut node_t = (*node).left;
-            let _new_node: *mut node_t = new_node;
-            insert_1(_node, _new_node)
-        });
+        (*node).left = (unsafe { insert_1((*node).left, new_node) });
     } else if (((*new_node).value) > ((*node).value)) {
-        (*node).right = (unsafe {
-            let _node: *mut node_t = (*node).right;
-            let _new_node: *mut node_t = new_node;
-            insert_1(_node, _new_node)
-        });
+        (*node).right = (unsafe { insert_1((*node).right, new_node) });
     }
     return node;
 }
@@ -65,13 +49,14 @@ unsafe fn main_0() -> i32 {
     let mut i: i32 = 0;
     'loop_: while ((i) < (N)) {
         (unsafe {
-            let _node: *mut node_t = tree;
-            let _new_node: *mut node_t = (Box::leak(Box::new(node_t {
-                left: std::ptr::null_mut(),
-                right: std::ptr::null_mut(),
-                value: i,
-            })) as *mut node_t);
-            insert_1(_node, _new_node)
+            insert_1(
+                tree,
+                (Box::leak(Box::new(node_t {
+                    left: std::ptr::null_mut(),
+                    right: std::ptr::null_mut(),
+                    value: i,
+                })) as *mut node_t),
+            )
         });
         i.prefix_inc();
     }
@@ -87,12 +72,7 @@ unsafe fn main_0() -> i32 {
             ),
             "Value: {:}, Found: {:}\n",
             i,
-            (*(unsafe {
-                let _node: *mut node_t = tree;
-                let _value: i32 = i;
-                find_0(_node, _value)
-            }))
-            .value,
+            (*(unsafe { find_0(tree, i,) })).value,
         );
         i.prefix_inc();
     }

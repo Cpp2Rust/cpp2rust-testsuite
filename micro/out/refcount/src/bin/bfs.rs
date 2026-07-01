@@ -47,7 +47,25 @@ impl Clone for Queue {
         this
     }
 }
-impl ByteRepr for Queue {}
+impl ByteRepr for Queue {
+    fn byte_size() -> usize {
+        32
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.elems.borrow()).to_bytes(&mut buf[0..8]);
+        (*self.front.borrow()).to_bytes(&mut buf[8..16]);
+        (*self.back.borrow()).to_bytes(&mut buf[16..24]);
+        (*self.capacity.borrow()).to_bytes(&mut buf[24..32]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            elems: Rc::new(RefCell::new(<Ptr<u32>>::from_bytes(&buf[0..8]))),
+            front: Rc::new(RefCell::new(<usize>::from_bytes(&buf[8..16]))),
+            back: Rc::new(RefCell::new(<usize>::from_bytes(&buf[16..24]))),
+            capacity: Rc::new(RefCell::new(<usize>::from_bytes(&buf[24..32]))),
+        }
+    }
+}
 #[derive(Default)]
 pub struct GraphNode {
     pub vertex: Value<u32>,
@@ -62,7 +80,21 @@ impl Clone for GraphNode {
         this
     }
 }
-impl ByteRepr for GraphNode {}
+impl ByteRepr for GraphNode {
+    fn byte_size() -> usize {
+        16
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.vertex.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.next.borrow()).to_bytes(&mut buf[8..16]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            vertex: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
+            next: Rc::new(RefCell::new(<Ptr<GraphNode>>::from_bytes(&buf[8..16]))),
+        }
+    }
+}
 #[derive(Default)]
 pub struct Graph {
     pub V: Value<u32>,
@@ -101,7 +133,21 @@ impl Clone for Graph {
         this
     }
 }
-impl ByteRepr for Graph {}
+impl ByteRepr for Graph {
+    fn byte_size() -> usize {
+        16
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.V.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.adj.borrow()).to_bytes(&mut buf[8..16]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            V: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
+            adj: Rc::new(RefCell::new(<Ptr<Ptr<GraphNode>>>::from_bytes(&buf[8..16]))),
+        }
+    }
+}
 pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
     let start_vertex: Value<u32> = Rc::new(RefCell::new(start_vertex));
     let Q: Value<Queue> = Rc::new(RefCell::new(Queue {
@@ -141,10 +187,7 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
     (*visited.borrow())
         .offset((*start_vertex.borrow()) as isize)
         .write(true);
-    ({
-        let _elem: i32 = ((*start_vertex.borrow()) as i32);
-        (*Q.borrow()).enqueue(_elem)
-    });
+    ({ (*Q.borrow()).enqueue(((*start_vertex.borrow()) as i32)) });
     'loop_: while !({ (*Q.borrow()).empty() }) {
         let current_vertex: Value<i32> =
             Rc::new(RefCell::new((({ (*Q.borrow()).dequeue() }) as i32)));
@@ -165,10 +208,7 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
                 (*visited.borrow())
                     .offset((*adj_vertex.borrow()) as isize)
                     .write(true);
-                ({
-                    let _elem: i32 = (*adj_vertex.borrow());
-                    (*Q.borrow()).enqueue(_elem)
-                });
+                ({ (*Q.borrow()).enqueue((*adj_vertex.borrow())) });
                 let __rhs = ((*current_vertex.borrow()) as u32);
                 (*pred.borrow())
                     .offset((*adj_vertex.borrow()) as isize)
@@ -215,12 +255,12 @@ fn main_0() -> i32 {
             'loop_: while ((*step.borrow()) <= 80_u32) {
                 if ((((*c.borrow()).wrapping_add((*step.borrow()))) as usize) < (*N.borrow())) {
                     ({
-                        let _src: u32 = (*current.borrow());
-                        let _dst: u32 = (((((*r.borrow()) as usize).wrapping_mul((*N.borrow())))
-                            .wrapping_add(
+                        (*graph.borrow()).push(
+                            (*current.borrow()),
+                            (((((*r.borrow()) as usize).wrapping_mul((*N.borrow()))).wrapping_add(
                                 (((*c.borrow()).wrapping_add((*step.borrow()))) as usize),
-                            )) as u32);
-                        (*graph.borrow()).push(_src, _dst)
+                            )) as u32),
+                        )
                     });
                 }
                 (*step.borrow_mut()).prefix_inc();
@@ -229,13 +269,13 @@ fn main_0() -> i32 {
             'loop_: while ((*step.borrow()) <= 80_u32) {
                 if ((((*r.borrow()).wrapping_add((*step.borrow()))) as usize) < (*N.borrow())) {
                     ({
-                        let _src: u32 = (*current.borrow());
-                        let _dst: u32 = ((((((*r.borrow()).wrapping_add((*step.borrow())))
-                            as usize)
-                            .wrapping_mul((*N.borrow())))
-                        .wrapping_add(((*c.borrow()) as usize)))
-                            as u32);
-                        (*graph.borrow()).push(_src, _dst)
+                        (*graph.borrow()).push(
+                            (*current.borrow()),
+                            ((((((*r.borrow()).wrapping_add((*step.borrow()))) as usize)
+                                .wrapping_mul((*N.borrow())))
+                            .wrapping_add(((*c.borrow()) as usize)))
+                                as u32),
+                        )
                     });
                 }
                 (*step.borrow_mut()).prefix_inc();
@@ -244,12 +284,7 @@ fn main_0() -> i32 {
         }
         (*r.borrow_mut()).prefix_inc();
     }
-    let pred: Value<Ptr<u32>> = Rc::new(RefCell::new(
-        ({
-            let _graph: Ptr<Graph> = graph.as_pointer();
-            BFS_0(_graph, 0_u32)
-        }),
-    ));
+    let pred: Value<Ptr<u32>> = Rc::new(RefCell::new(({ BFS_0(graph.as_pointer(), 0_u32) })));
     let i: Value<u32> = Rc::new(RefCell::new(0_u32));
     'loop_: while (((*i.borrow()) as usize) < (*V.borrow())) {
         let head: Value<Ptr<GraphNode>> = Rc::new(RefCell::new(
