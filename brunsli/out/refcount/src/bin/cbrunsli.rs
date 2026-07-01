@@ -523,7 +523,7 @@ pub fn JPEGDataIs420_15(jpg: Ptr<brunsli_JPEGData>) -> bool {
         && ((*(*jpg.upgrade().deref()).max_v_samp_factor.borrow()) == 2))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .h_samp_factor
@@ -531,7 +531,7 @@ pub fn JPEGDataIs420_15(jpg: Ptr<brunsli_JPEGData>) -> bool {
             == 2))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .v_samp_factor
@@ -539,7 +539,7 @@ pub fn JPEGDataIs420_15(jpg: Ptr<brunsli_JPEGData>) -> bool {
             == 2))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(1_usize as isize)
+            .offset(1_usize)
             .upgrade()
             .deref())
         .h_samp_factor
@@ -547,7 +547,7 @@ pub fn JPEGDataIs420_15(jpg: Ptr<brunsli_JPEGData>) -> bool {
             == 1))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(1_usize as isize)
+            .offset(1_usize)
             .upgrade()
             .deref())
         .v_samp_factor
@@ -555,7 +555,7 @@ pub fn JPEGDataIs420_15(jpg: Ptr<brunsli_JPEGData>) -> bool {
             == 1))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(2_usize as isize)
+            .offset(2_usize)
             .upgrade()
             .deref())
         .h_samp_factor
@@ -563,7 +563,7 @@ pub fn JPEGDataIs420_15(jpg: Ptr<brunsli_JPEGData>) -> bool {
             == 1))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(2_usize as isize)
+            .offset(2_usize)
             .upgrade()
             .deref())
         .v_samp_factor
@@ -576,7 +576,7 @@ pub fn JPEGDataIs444_16(jpg: Ptr<brunsli_JPEGData>) -> bool {
         && ((*(*jpg.upgrade().deref()).max_v_samp_factor.borrow()) == 1))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .h_samp_factor
@@ -584,7 +584,7 @@ pub fn JPEGDataIs444_16(jpg: Ptr<brunsli_JPEGData>) -> bool {
             == 1))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .v_samp_factor
@@ -592,7 +592,7 @@ pub fn JPEGDataIs444_16(jpg: Ptr<brunsli_JPEGData>) -> bool {
             == 1))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(1_usize as isize)
+            .offset(1_usize)
             .upgrade()
             .deref())
         .h_samp_factor
@@ -600,7 +600,7 @@ pub fn JPEGDataIs444_16(jpg: Ptr<brunsli_JPEGData>) -> bool {
             == 1))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(1_usize as isize)
+            .offset(1_usize)
             .upgrade()
             .deref())
         .v_samp_factor
@@ -608,7 +608,7 @@ pub fn JPEGDataIs444_16(jpg: Ptr<brunsli_JPEGData>) -> bool {
             == 1))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(2_usize as isize)
+            .offset(2_usize)
             .upgrade()
             .deref())
         .h_samp_factor
@@ -616,7 +616,7 @@ pub fn JPEGDataIs444_16(jpg: Ptr<brunsli_JPEGData>) -> bool {
             == 1))
         && ((*(*((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset(2_usize as isize)
+            .offset(2_usize)
             .upgrade()
             .deref())
         .v_samp_factor
@@ -2413,7 +2413,7 @@ impl brunsli_ComponentStateDC {
         'loop_: while ((*i.borrow()) < (*self.sign_prob.borrow()).len()) {
             ({
                 (*(self.sign_prob.as_pointer() as Ptr<brunsli_Prob>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .Init(128_u8)
@@ -2424,7 +2424,7 @@ impl brunsli_ComponentStateDC {
         'loop_: while ((*i.borrow()) < (*self.is_empty_block_prob.borrow()).len()) {
             ({
                 (*(self.is_empty_block_prob.as_pointer() as Ptr<brunsli_Prob>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .Init(74_u8)
@@ -2435,7 +2435,7 @@ impl brunsli_ComponentStateDC {
         'loop_: while ((*i.borrow()) < (*self.first_extra_bit_prob.borrow()).len()) {
             ({
                 (*(self.first_extra_bit_prob.as_pointer() as Ptr<brunsli_Prob>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .Init(150_u8)
@@ -2765,7 +2765,7 @@ impl brunsli_ComponentState {
                     (*(self.is_zero_prob.as_pointer() as Ptr<brunsli_Prob>)
                         .offset(
                             ((((*i.borrow()) * (*kDCTBlockSize_3.with(Value::clone).borrow()))
-                                + (*k.borrow())) as usize) as isize,
+                                + (*k.borrow())) as usize),
                         )
                         .upgrade()
                         .deref())
@@ -2783,7 +2783,7 @@ impl brunsli_ComponentState {
             {
                 ({
                     (*(self.sign_prob.as_pointer() as Ptr<brunsli_Prob>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .upgrade()
                         .deref())
                     .Init(108_u8)
@@ -2795,7 +2795,7 @@ impl brunsli_ComponentState {
             {
                 ({
                     (*(self.sign_prob.as_pointer() as Ptr<brunsli_Prob>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .upgrade()
                         .deref())
                     .Init(128_u8)
@@ -2803,7 +2803,7 @@ impl brunsli_ComponentState {
             } else {
                 ({
                     (*(self.sign_prob.as_pointer() as Ptr<brunsli_Prob>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .upgrade()
                         .deref())
                     .Init(148_u8)
@@ -2815,7 +2815,7 @@ impl brunsli_ComponentState {
         'loop_: while ((*i.borrow()) < (*self.first_extra_bit_prob.borrow()).len()) {
             ({
                 (*(self.first_extra_bit_prob.as_pointer() as Ptr<brunsli_Prob>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .Init(158_u8)
@@ -2892,7 +2892,7 @@ impl brunsli_PermutationCoder {
             return false;
         }
         let __rhs = ((self.values_.as_pointer() as Ptr<u8>)
-            .offset((*code.borrow()) as isize)
+            .offset((*code.borrow()))
             .read());
         (*value.borrow()).write(__rhs);
         {
@@ -2979,7 +2979,7 @@ pub fn ComputeLehmerCode_112(sigma: Ptr<u32>, len: usize, code: Ptr<u32>) {
     'loop_: while ((*i.borrow()) < (*len.borrow())) {
         let __rhs = ((*i.borrow()) as u32);
         (items.as_pointer() as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .write(__rhs);
         (*i.borrow_mut()).prefix_inc();
     }
@@ -3037,7 +3037,7 @@ pub fn DecodeLehmerCode_113(code: Ptr<u32>, len: usize, sigma: Ptr<u32>) -> bool
     'loop_: while ((*i.borrow()) < (*len.borrow())) {
         let __rhs = ((*i.borrow()) as u32);
         (items.as_pointer() as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .write(__rhs);
         (*i.borrow_mut()).prefix_inc();
     }
@@ -3051,7 +3051,7 @@ pub fn DecodeLehmerCode_113(code: Ptr<u32>, len: usize, sigma: Ptr<u32>) -> bool
         }
         let value: Value<u32> = Rc::new(RefCell::new(
             ((items.as_pointer() as Ptr<u32>)
-                .offset(((*index.borrow()) as usize) as isize)
+                .offset(((*index.borrow()) as usize))
                 .read()),
         ));
         {
@@ -3181,7 +3181,7 @@ pub fn FillQuantMatrix_118(is_chroma: bool, q: u32, dst: Ptr<u8>) {
     };
     let in_: Value<Ptr<u8>> = Rc::new(RefCell::new(
         (((kDefaultQuantMatrix_12.with(Value::clone).as_pointer() as Ptr<Value<Box<[u8]>>>)
-            .offset((*is_chroma.borrow()) as isize)
+            .offset((*is_chroma.borrow()))
             .read()
             .as_pointer()) as Ptr<u8>),
     ));
@@ -3540,7 +3540,7 @@ pub fn BuildAndStoreANSEncodingData_123(
     let omit_pos: Value<i32> = Rc::new(RefCell::new(0));
     ({
         NormalizeCounts_124(
-            ((counts.as_pointer() as Ptr<i32>).offset(0_usize as isize)),
+            ((counts.as_pointer() as Ptr<i32>).offset(0_usize)),
             (omit_pos.as_pointer()),
             18,
             (*BRUNSLI_ANS_LOG_TAB_SIZE_0.with(Value::clone).borrow()),
@@ -3550,7 +3550,7 @@ pub fn BuildAndStoreANSEncodingData_123(
     });
     ({
         ANSBuildInfoTable_122(
-            ((counts.as_pointer() as Ptr<i32>).offset(0_usize as isize)),
+            ((counts.as_pointer() as Ptr<i32>).offset(0_usize)),
             18,
             ((*(*table.borrow()).upgrade().deref()).info_.as_pointer()
                 as Ptr<brunsli_ANSEncSymbolInfo>),
@@ -3558,7 +3558,7 @@ pub fn BuildAndStoreANSEncodingData_123(
     });
     ({
         EncodeCounts_125(
-            ((counts.as_pointer() as Ptr<i32>).offset(0_usize as isize)),
+            ((counts.as_pointer() as Ptr<i32>).offset(0_usize)),
             (*omit_pos.borrow()),
             (*num_symbols.borrow()),
             (symbols.as_pointer() as Ptr<i32>),
@@ -3969,8 +3969,7 @@ pub fn ClusterCostDiff_128(size_a: i32, size_b: i32) -> f64 {
 }
 pub fn PopulationCost_129(h: Ptr<brunsli_internal_enc_Histogram>) -> f64 {
     return ({
-        let _data: Ptr<i32> =
-            (((*h.upgrade().deref()).data_.as_pointer() as Ptr<i32>).offset(0 as isize));
+        let _data: Ptr<i32> = (((*h.upgrade().deref()).data_.as_pointer() as Ptr<i32>).offset(0));
         let _total_count: i32 = (*(*h.upgrade().deref()).total_count_.borrow());
         PopulationCost_130(_data, _total_count)
     });
@@ -4063,7 +4062,7 @@ pub fn CompareAndPushToQueue_131(
                     (if __tmp_0.as_pointer().read()
                         >= (*(((*pairs.borrow()).to_strong().as_pointer())
                             as Ptr<brunsli_HistogramPair>)
-                            .offset(0_usize as isize)
+                            .offset(0_usize)
                             .upgrade()
                             .deref())
                         .cost_diff
@@ -4074,7 +4073,7 @@ pub fn CompareAndPushToQueue_131(
                     } else {
                         (*(((*pairs.borrow()).to_strong().as_pointer())
                             as Ptr<brunsli_HistogramPair>)
-                            .offset(0_usize as isize)
+                            .offset(0_usize)
                             .upgrade()
                             .deref())
                         .cost_diff
@@ -4208,10 +4207,10 @@ pub fn HistogramCombine_132(
             ({
                 let _cluster_size: Ptr<i32> = (*cluster_size.borrow()).clone();
                 let _idx1: i32 = (((clusters.as_pointer() as Ptr<u64>)
-                    .offset((*idx1.borrow()) as isize)
+                    .offset((*idx1.borrow()))
                     .read()) as i32);
                 let _idx2: i32 = (((clusters.as_pointer() as Ptr<u64>)
-                    .offset((*idx2.borrow()) as isize)
+                    .offset((*idx2.borrow()))
                     .read()) as i32);
                 CompareAndPushToQueue_131(
                     (*out.borrow()).clone(),
@@ -4227,7 +4226,7 @@ pub fn HistogramCombine_132(
     }
     'loop_: while ((*clusters.borrow()).len() > (*min_cluster_size.borrow())) {
         if ((*(*(pairs.as_pointer() as Ptr<brunsli_HistogramPair>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .cost_diff
@@ -4240,7 +4239,7 @@ pub fn HistogramCombine_132(
         }
         let best_idx1: Value<usize> = Rc::new(RefCell::new(
             (*(*(pairs.as_pointer() as Ptr<brunsli_HistogramPair>)
-                .offset(0_usize as isize)
+                .offset(0_usize)
                 .upgrade()
                 .deref())
             .idx1
@@ -4248,7 +4247,7 @@ pub fn HistogramCombine_132(
         ));
         let best_idx2: Value<usize> = Rc::new(RefCell::new(
             (*(*(pairs.as_pointer() as Ptr<brunsli_HistogramPair>)
-                .offset(0_usize as isize)
+                .offset(0_usize)
                 .upgrade()
                 .deref())
             .idx2
@@ -4269,7 +4268,7 @@ pub fn HistogramCombine_132(
             .deref())
         .bit_cost_
         .borrow_mut()) = (*(*(pairs.as_pointer() as Ptr<brunsli_HistogramPair>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .cost_combo
@@ -4361,7 +4360,7 @@ pub fn HistogramCombine_132(
                 let _cluster_size: Ptr<i32> = (*cluster_size.borrow()).clone();
                 let _idx1: i32 = ((*best_idx1.borrow()) as i32);
                 let _idx2: i32 = (((clusters.as_pointer() as Ptr<u64>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .read()) as i32);
                 CompareAndPushToQueue_131(
                     (*out.borrow()).clone(),
@@ -4525,7 +4524,7 @@ pub fn HistogramReindex_135(out: Ptr<Vec<brunsli_internal_enc_Histogram>>, symbo
         if RefcountMapIter::find_key(
             (new_index.as_pointer() as Ptr<BTreeMap<i32, Value<i32>>>),
             &(((((*symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .read()) as i32),
         ) == RefcountMapIter::end((new_index.as_pointer() as Ptr<BTreeMap<i32, Value<i32>>>))
         {
@@ -4533,7 +4532,7 @@ pub fn HistogramReindex_135(out: Ptr<Vec<brunsli_internal_enc_Histogram>>, symbo
                 .with_mut(|__v: &mut BTreeMap<i32, Value<i32>>| {
                     __v.entry(
                         (((((*symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-                            .offset((*i.borrow()) as isize)
+                            .offset((*i.borrow()))
                             .read()) as i32)
                             .clone(),
                     )
@@ -4544,14 +4543,14 @@ pub fn HistogramReindex_135(out: Ptr<Vec<brunsli_internal_enc_Histogram>>, symbo
             let __rhs = (*(tmp.as_pointer() as Ptr<brunsli_internal_enc_Histogram>)
                 .offset(
                     (((((*symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-                        .offset((*i.borrow()) as isize)
-                        .read()) as usize) as isize,
+                        .offset((*i.borrow()))
+                        .read()) as usize),
                 )
                 .upgrade()
                 .deref())
             .clone();
             (((*out.borrow()).to_strong().as_pointer()) as Ptr<brunsli_internal_enc_Histogram>)
-                .offset(((*next_index.borrow()) as usize) as isize)
+                .offset(((*next_index.borrow()) as usize))
                 .write(__rhs);
             (*next_index.borrow_mut()).prefix_inc();
         }
@@ -4572,7 +4571,7 @@ pub fn HistogramReindex_135(out: Ptr<Vec<brunsli_internal_enc_Histogram>>, symbo
             .with_mut(|__v: &mut BTreeMap<i32, Value<i32>>| {
                 __v.entry(
                     (((((*symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .read()) as i32)
                         .clone(),
                 )
@@ -4581,7 +4580,7 @@ pub fn HistogramReindex_135(out: Ptr<Vec<brunsli_internal_enc_Histogram>>, symbo
             })
             .read()) as u32);
         (((*symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .write(__rhs);
         (*i.borrow_mut()).prefix_inc();
     }
@@ -4620,28 +4619,28 @@ pub fn ClusterHistograms_136(
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < (*in_size.borrow())) {
         let __rhs = (*(in_.to_strong().as_pointer() as Ptr<brunsli_internal_enc_Histogram>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .clone();
         (((*out.borrow()).to_strong().as_pointer()) as Ptr<brunsli_internal_enc_Histogram>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .write(__rhs);
         let __rhs = ({
             PopulationCost_129(
                 (in_.to_strong().as_pointer() as Ptr<brunsli_internal_enc_Histogram>)
-                    .offset((*i.borrow()) as isize),
+                    .offset((*i.borrow())),
             )
         });
         (*(*(((*out.borrow()).to_strong().as_pointer()) as Ptr<brunsli_internal_enc_Histogram>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .bit_cost_
         .borrow_mut()) = __rhs;
         let __rhs = ((*i.borrow()) as u32);
         (((*histogram_symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .write(__rhs);
         (*i.borrow_mut()).prefix_inc();
     }
@@ -4651,13 +4650,13 @@ pub fn ClusterHistograms_136(
             ({
                 let _symbols: Ptr<u32> =
                     ((((*histogram_symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-                        .offset((*i.borrow()).wrapping_mul((*num_contexts.borrow())) as isize));
+                        .offset((*i.borrow()).wrapping_mul((*num_contexts.borrow()))));
                 let _symbols_size: usize = (*num_contexts.borrow());
                 HistogramCombine_132(
                     ((((*out.borrow()).to_strong().as_pointer())
                         as Ptr<brunsli_internal_enc_Histogram>)
-                        .offset(0_usize as isize)),
-                    ((cluster_size.as_pointer() as Ptr<i32>).offset(0_usize as isize)),
+                        .offset(0_usize)),
+                    ((cluster_size.as_pointer() as Ptr<i32>).offset(0_usize)),
                     _symbols,
                     _symbols_size,
                     (*max_histograms.borrow()),
@@ -4675,14 +4674,14 @@ pub fn ClusterHistograms_136(
         'loop_: while ((*i.borrow()) < (*block_group_offsets.borrow()).len()) {
             let offset: Value<usize> = Rc::new(RefCell::new(
                 (((block_group_offsets.as_pointer() as Ptr<u64>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .read())
                 .wrapping_mul(((*num_contexts.borrow()) as u64)) as usize),
             ));
             let next_offset: Value<usize> = Rc::new(RefCell::new(
                 (if ((*i.borrow()).wrapping_add(1_usize) < (*block_group_offsets.borrow()).len()) {
                     ((block_group_offsets.as_pointer() as Ptr<u64>)
-                        .offset((*i.borrow()).wrapping_add(1_usize) as isize)
+                        .offset((*i.borrow()).wrapping_add(1_usize))
                         .read())
                     .wrapping_mul(((*num_contexts.borrow()) as u64))
                 } else {
@@ -4697,10 +4696,10 @@ pub fn ClusterHistograms_136(
                     HistogramCombine_132(
                         ((((*out.borrow()).to_strong().as_pointer())
                             as Ptr<brunsli_internal_enc_Histogram>)
-                            .offset(0_usize as isize)),
-                        ((cluster_size.as_pointer() as Ptr<i32>).offset(0_usize as isize)),
+                            .offset(0_usize)),
+                        ((cluster_size.as_pointer() as Ptr<i32>).offset(0_usize)),
                         ((((*histogram_symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-                            .offset((*offset.borrow()) as isize)),
+                            .offset((*offset.borrow()))),
                         (*length.borrow()),
                         (*max_histograms.borrow()),
                     )
@@ -4715,16 +4714,16 @@ pub fn ClusterHistograms_136(
                 ({
                     let _in: Ptr<brunsli_internal_enc_Histogram> = ((in_.to_strong().as_pointer()
                         as Ptr<brunsli_internal_enc_Histogram>)
-                        .offset((*offset.borrow()) as isize));
+                        .offset((*offset.borrow())));
                     let _symbols: Ptr<u32> =
                         ((((*histogram_symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-                            .offset((*offset.borrow()) as isize));
+                            .offset((*offset.borrow())));
                     HistogramRemap_134(
                         _in,
                         (*length.borrow()),
                         ((((*out.borrow()).to_strong().as_pointer())
                             as Ptr<brunsli_internal_enc_Histogram>)
-                            .offset(0_usize as isize)),
+                            .offset(0_usize)),
                         _symbols,
                     )
                 });
@@ -4741,10 +4740,10 @@ pub fn ClusterHistograms_136(
             HistogramCombine_132(
                 ((((*out.borrow()).to_strong().as_pointer())
                     as Ptr<brunsli_internal_enc_Histogram>)
-                    .offset(0_usize as isize)),
-                ((cluster_size.as_pointer() as Ptr<i32>).offset(0_usize as isize)),
+                    .offset(0_usize)),
+                ((cluster_size.as_pointer() as Ptr<i32>).offset(0_usize)),
                 ((((*histogram_symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-                    .offset(0_usize as isize)),
+                    .offset(0_usize)),
                 (*in_size.borrow()),
                 (*max_histograms.borrow()),
             )
@@ -4758,13 +4757,13 @@ pub fn ClusterHistograms_136(
             ({
                 HistogramRemap_134(
                     ((in_.to_strong().as_pointer() as Ptr<brunsli_internal_enc_Histogram>)
-                        .offset(0_usize as isize)),
+                        .offset(0_usize)),
                     (*in_size.borrow()),
                     ((((*out.borrow()).to_strong().as_pointer())
                         as Ptr<brunsli_internal_enc_Histogram>)
-                        .offset(0_usize as isize)),
+                        .offset(0_usize)),
                     ((((*histogram_symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-                        .offset(0_usize as isize)),
+                        .offset(0_usize)),
                 )
             });
         }
@@ -5172,7 +5171,7 @@ pub fn EstimateAuxDataSize_143(jpg: Ptr<brunsli_JPEGData>) -> usize {
             ((7_usize).wrapping_mul(
                 (*(*((*jpg.upgrade().deref()).scan_info.as_pointer()
                     as Ptr<brunsli_JPEGScanInfo>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .reset_points
@@ -5185,7 +5184,7 @@ pub fn EstimateAuxDataSize_143(jpg: Ptr<brunsli_JPEGData>) -> usize {
             ((7_usize).wrapping_mul(
                 (*(*((*jpg.upgrade().deref()).scan_info.as_pointer()
                     as Ptr<brunsli_JPEGScanInfo>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .extra_zero_runs
@@ -5215,7 +5214,7 @@ pub fn EstimateAuxDataSize_143(jpg: Ptr<brunsli_JPEGData>) -> usize {
                 ((5_usize).wrapping_add(
                     (*(((*jpg.upgrade().deref()).inter_marker_data.as_pointer()
                         as Ptr<Value<Vec<u8>>>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .upgrade()
                         .deref()
                         .as_pointer() as Ptr<Vec<u8>>)
@@ -5321,34 +5320,34 @@ pub fn TransformApp0Marker_148(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
         return false;
     }
     if (((((((s.to_strong().as_pointer() as Ptr<u8>)
-        .offset(9_usize as isize)
+        .offset(9_usize)
         .read()) as i32)
         == 1)
         || ((((s.to_strong().as_pointer() as Ptr<u8>)
-            .offset(9_usize as isize)
+            .offset(9_usize)
             .read()) as i32)
             == 2))
         && ((((s.to_strong().as_pointer() as Ptr<u8>)
-            .offset(10_usize as isize)
+            .offset(10_usize)
             .read()) as i32)
             < 4))
         && ((((s.to_strong().as_pointer() as Ptr<u8>)
-            .offset(15_usize as isize)
+            .offset(15_usize)
             .read()) as i32)
             == 0))
         && ((((s.to_strong().as_pointer() as Ptr<u8>)
-            .offset(16_usize as isize)
+            .offset(16_usize)
             .read()) as i32)
             == 0)
     {
         let x_dens_hi: Value<u8> = Rc::new(RefCell::new(
             ((s.to_strong().as_pointer() as Ptr<u8>)
-                .offset(11_usize as isize)
+                .offset(11_usize)
                 .read()),
         ));
         let x_dens_lo: Value<u8> = Rc::new(RefCell::new(
             ((s.to_strong().as_pointer() as Ptr<u8>)
-                .offset(12_usize as isize)
+                .offset(12_usize)
                 .read()),
         ));
         let x_dens: Value<i32> = Rc::new(RefCell::new(
@@ -5356,12 +5355,12 @@ pub fn TransformApp0Marker_148(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
         ));
         let y_dens_hi: Value<u8> = Rc::new(RefCell::new(
             ((s.to_strong().as_pointer() as Ptr<u8>)
-                .offset(13_usize as isize)
+                .offset(13_usize)
                 .read()),
         ));
         let y_dens_lo: Value<u8> = Rc::new(RefCell::new(
             ((s.to_strong().as_pointer() as Ptr<u8>)
-                .offset(14_usize as isize)
+                .offset(14_usize)
                 .read()),
         ));
         let y_dens: Value<i32> = Rc::new(RefCell::new(
@@ -5383,11 +5382,11 @@ pub fn TransformApp0Marker_148(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
             let app0_status: Value<u8> = Rc::new(RefCell::new(
                 (({
                     let _lhs = (((((s.to_strong().as_pointer() as Ptr<u8>)
-                        .offset(9_usize as isize)
+                        .offset(9_usize)
                         .read()) as i32)
                         - 1)
                         | ((((s.to_strong().as_pointer() as Ptr<u8>)
-                            .offset(10_usize as isize)
+                            .offset(10_usize)
                             .read()) as i32)
                             << 1));
                     _lhs | ((*density_ix.borrow()) << 3)
@@ -5411,8 +5410,8 @@ pub fn TransformApp2Marker_149(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     if ( ( ( (*s.upgrade().deref()) .len()  == 3161_usize ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 84_usize )  != 0 ) ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 3161 - 85 ) ) as usize ) )  != 0 ) ) { let  code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
  ;
  ;
- (code .as_pointer()  as Ptr<u8>).offset(0_usize  as isize) .write( 128_u8  ) ;
- (code .as_pointer()  as Ptr<u8>).offset(1_usize  as isize) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(84_usize  as isize) .read() )  ) ;
+ (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 128_u8  ) ;
+ (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(84_usize ) .read() )  ) ;
  ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write((*code.borrow()) .clone())  ;
  return true  ;
  }
@@ -5423,8 +5422,8 @@ pub fn TransformApp12Marker_150(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     if ( ( ( (*s.upgrade().deref()) .len()  == 18_usize ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 15_usize )  != 0 ) ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 18 - 16 ) ) as usize ) )  != 0 ) ) { let  code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
  ;
  ;
- (code .as_pointer()  as Ptr<u8>).offset(0_usize  as isize) .write( 129_u8  ) ;
- (code .as_pointer()  as Ptr<u8>).offset(1_usize  as isize) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(15_usize  as isize) .read() )  ) ;
+ (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 129_u8  ) ;
+ (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(15_usize ) .read() )  ) ;
  ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write((*code.borrow()) .clone())  ;
  return true  ;
  }
@@ -5432,11 +5431,11 @@ pub fn TransformApp12Marker_150(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
 }
 pub fn TransformApp14Marker_151(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
-    if ( ( ( (*s.upgrade().deref()) .len()  == 15_usize ) ) && ( ! ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(0_usize  as isize)  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 10_usize )  != 0 ) ) ) && ( ! ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(11_usize  as isize)  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 11 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 15 - 11 ) ) as usize ) )  != 0 ) ) { let  code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
+    if ( ( ( (*s.upgrade().deref()) .len()  == 15_usize ) ) && ( ! ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(0_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 10_usize )  != 0 ) ) ) && ( ! ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(11_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 11 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 15 - 11 ) ) as usize ) )  != 0 ) ) { let  code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
  ;
  ;
- (code .as_pointer()  as Ptr<u8>).offset(0_usize  as isize) .write( 130_u8  ) ;
- (code .as_pointer()  as Ptr<u8>).offset(1_usize  as isize) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(10_usize  as isize) .read() )  ) ;
+ (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 130_u8  ) ;
+ (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(10_usize ) .read() )  ) ;
  ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write((*code.borrow()) .clone())  ;
  return true  ;
  }
@@ -5492,7 +5491,7 @@ pub fn GetQuantTableId_153(q: Ptr<brunsli_JPEGQuantTable>, is_chroma: bool, dst:
         {
             if {
                 let _lhs = (((*q.upgrade().deref()).values.as_pointer() as Ptr<i32>)
-                    .offset(((*k.borrow()) as usize) as isize)
+                    .offset(((*k.borrow()) as usize))
                     .read());
                 _lhs != ((*kStockQuantizationTables_48.with(Value::clone).borrow())
                     [(*is_chroma.borrow()) as usize]
@@ -5511,7 +5510,7 @@ pub fn GetQuantTableId_153(q: Ptr<brunsli_JPEGQuantTable>, is_chroma: bool, dst:
     return ((((*kNumStockQuantTables_47.with(Value::clone).borrow()) as u32).wrapping_add(
         ({
             FindBestMatrix_119(
-                (((*q.upgrade().deref()).values.as_pointer() as Ptr<i32>).offset(0_usize as isize)),
+                (((*q.upgrade().deref()).values.as_pointer() as Ptr<i32>).offset(0_usize)),
                 (*is_chroma.borrow()),
                 (*dst.borrow()).clone(),
             )
@@ -5609,7 +5608,7 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
     } {
         let q: Ptr<brunsli_JPEGQuantTable> = ((*jpg.upgrade().deref()).quant.as_pointer()
             as Ptr<brunsli_JPEGQuantTable>)
-            .offset((*i.borrow()) as isize);
+            .offset((*i.borrow()));
         let k: Value<i32> = Rc::new(RefCell::new(0));
         'loop_: while ((*k.borrow()) < (*kDCTBlockSize_3.with(Value::clone).borrow())) {
             let j: Value<i32> = Rc::new(RefCell::new(
@@ -5617,7 +5616,7 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
                     as i32),
             ));
             if ((((*q.upgrade().deref()).values.as_pointer() as Ptr<i32>)
-                .offset(((*j.borrow()) as usize) as isize)
+                .offset(((*j.borrow()) as usize))
                 .read())
                 == 0)
             {
@@ -5683,7 +5682,7 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
                 ));
                 let new_diff: Value<i32> = Rc::new(RefCell::new({
                     let _lhs = (((*q.upgrade().deref()).values.as_pointer() as Ptr<i32>)
-                        .offset(((*j.borrow()) as usize) as isize)
+                        .offset(((*j.borrow()) as usize))
                         .read());
                     _lhs - ((*quant_approx.borrow())[(*j.borrow()) as usize] as i32)
                 }));
@@ -5730,7 +5729,7 @@ pub fn EncodeQuantTables_156(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
                 2_usize,
                 ((*(*((*jpg.upgrade().deref()).components.as_pointer()
                     as Ptr<brunsli_JPEGComponent>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .quant_idx
@@ -5796,26 +5795,26 @@ pub fn EncodeHuffmanCode_157(
         'loop_: while ((*i.borrow()) < (*kNumStockDCHuffmanCodes_53.with(Value::clone).borrow()))
             && (!((*found_match.borrow()) != 0))
         {
-            if (((((*huff.upgrade().deref()).counts.as_pointer() as Ptr<i32>)
-                .offset(1_usize as isize)) as Ptr<i32>)
+            if (((((*huff.upgrade().deref()).counts.as_pointer() as Ptr<i32>).offset(1_usize))
+                as Ptr<i32>)
                 .to_any()
                 .memcmp(
                     &((((kStockDCHuffmanCodeCounts_54.with(Value::clone).as_pointer()
                         as Ptr<Value<Box<[i32]>>>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .read()
                         .as_pointer()) as Ptr<i32>) as Ptr<i32>)
                         .to_any(),
                     ::std::mem::size_of::<[i32; 16]>(),
                 )
                 == 0)
-                && (((((*huff.upgrade().deref()).values.as_pointer() as Ptr<i32>)
-                    .offset(0_usize as isize)) as Ptr<i32>)
+                && (((((*huff.upgrade().deref()).values.as_pointer() as Ptr<i32>).offset(0_usize))
+                    as Ptr<i32>)
                     .to_any()
                     .memcmp(
                         &((((kStockDCHuffmanCodeValues_55.with(Value::clone).as_pointer()
                             as Ptr<Value<Box<[i32]>>>)
-                            .offset((*i.borrow()) as isize)
+                            .offset((*i.borrow()))
                             .read()
                             .as_pointer()) as Ptr<i32>) as Ptr<i32>)
                             .to_any(),
@@ -5833,26 +5832,26 @@ pub fn EncodeHuffmanCode_157(
         'loop_: while ((*i.borrow()) < (*kNumStockACHuffmanCodes_56.with(Value::clone).borrow()))
             && (!((*found_match.borrow()) != 0))
         {
-            if (((((*huff.upgrade().deref()).counts.as_pointer() as Ptr<i32>)
-                .offset(1_usize as isize)) as Ptr<i32>)
+            if (((((*huff.upgrade().deref()).counts.as_pointer() as Ptr<i32>).offset(1_usize))
+                as Ptr<i32>)
                 .to_any()
                 .memcmp(
                     &((((kStockACHuffmanCodeCounts_57.with(Value::clone).as_pointer()
                         as Ptr<Value<Box<[i32]>>>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .read()
                         .as_pointer()) as Ptr<i32>) as Ptr<i32>)
                         .to_any(),
                     ::std::mem::size_of::<[i32; 16]>(),
                 )
                 == 0)
-                && (((((*huff.upgrade().deref()).values.as_pointer() as Ptr<i32>)
-                    .offset(0_usize as isize)) as Ptr<i32>)
+                && (((((*huff.upgrade().deref()).values.as_pointer() as Ptr<i32>).offset(0_usize))
+                    as Ptr<i32>)
                     .to_any()
                     .memcmp(
                         &((((kStockACHuffmanCodeValues_59.with(Value::clone).as_pointer()
                             as Ptr<Value<Box<[i32]>>>)
-                            .offset((*i.borrow()) as isize)
+                            .offset((*i.borrow()))
                             .read()
                             .as_pointer()) as Ptr<i32>) as Ptr<i32>)
                             .to_any(),
@@ -5885,14 +5884,14 @@ pub fn EncodeHuffmanCode_157(
     }
     'loop_: while ((*max_len.borrow()) > 0)
         && ((((*huff.upgrade().deref()).counts.as_pointer() as Ptr<i32>)
-            .offset(((*max_len.borrow()) as usize) as isize)
+            .offset(((*max_len.borrow()) as usize))
             .read())
             == 0)
     {
         (*max_len.borrow_mut()).prefix_dec();
     }
     if ((((*huff.upgrade().deref()).counts.as_pointer() as Ptr<i32>)
-        .offset(0_usize as isize)
+        .offset(0_usize)
         .read())
         != 0)
         || ((*max_len.borrow()) == 0)
@@ -5912,7 +5911,7 @@ pub fn EncodeHuffmanCode_157(
     'loop_: while ((*i.borrow()) <= (*max_len.borrow())) {
         let count: Value<i32> = Rc::new(RefCell::new({
             let _lhs = (((*huff.upgrade().deref()).counts.as_pointer() as Ptr<i32>)
-                .offset(((*i.borrow()) as usize) as isize)
+                .offset(((*i.borrow()) as usize))
                 .read());
             _lhs - (if ((*i.borrow()) == (*max_len.borrow())) {
                 1
@@ -5970,7 +5969,7 @@ pub fn EncodeHuffmanCode_157(
     }
     if {
         let _lhs = (((*huff.upgrade().deref()).values.as_pointer() as Ptr<i32>)
-            .offset(((*total_count.borrow()) as usize) as isize)
+            .offset(((*total_count.borrow()) as usize))
             .read());
         _lhs != (*kJpegHuffmanAlphabetSize_8.with(Value::clone).borrow())
     } {
@@ -6010,7 +6009,7 @@ pub fn EncodeHuffmanCode_157(
     'loop_: while ((*i.borrow()) < (*total_count.borrow())) {
         let val: Value<i32> = Rc::new(RefCell::new(
             (((*huff.upgrade().deref()).values.as_pointer() as Ptr<i32>)
-                .offset(((*i.borrow()) as usize) as isize)
+                .offset(((*i.borrow()) as usize))
                 .read()),
         ));
         let code: Value<i32> = <Value<i32>>::default();
@@ -6080,7 +6079,7 @@ pub fn EncodeScanInfo_158(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
     } {
         let csi: Ptr<brunsli_JPEGComponentScanInfo> =
             ((*si.upgrade().deref()).components.as_pointer() as Ptr<brunsli_JPEGComponentScanInfo>)
-                .offset((*i.borrow()) as isize);
+                .offset((*i.borrow()));
         ({
             WriteBits_120(
                 2_usize,
@@ -6141,7 +6140,7 @@ pub fn EncodeScanInfo_158(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
         let block_idx: Value<i32> = Rc::new(RefCell::new(
             (*(*((*si.upgrade().deref()).extra_zero_runs.as_pointer()
                 as Ptr<brunsli_JPEGScanInfo_ExtraZeroRunInfo>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .block_idx
@@ -6150,7 +6149,7 @@ pub fn EncodeScanInfo_158(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
         let num: Value<i32> = Rc::new(RefCell::new(
             (*(*((*si.upgrade().deref()).extra_zero_runs.as_pointer()
                 as Ptr<brunsli_JPEGScanInfo_ExtraZeroRunInfo>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .num_extra_zero_runs
@@ -6187,7 +6186,7 @@ pub fn EncodeScanInfo_158(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
 pub fn MatchComponentIds_159(comps: Ptr<Vec<brunsli_JPEGComponent>>) -> i32 {
     if ((*comps.upgrade().deref()).len() == 1_usize)
         && ((*(*(comps.to_strong().as_pointer() as Ptr<brunsli_JPEGComponent>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .id
@@ -6198,21 +6197,21 @@ pub fn MatchComponentIds_159(comps: Ptr<Vec<brunsli_JPEGComponent>>) -> i32 {
     }
     if ((*comps.upgrade().deref()).len() == 3_usize) {
         if (((*(*(comps.to_strong().as_pointer() as Ptr<brunsli_JPEGComponent>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .id
         .borrow())
             == 1)
             && ((*(*(comps.to_strong().as_pointer() as Ptr<brunsli_JPEGComponent>)
-                .offset(1_usize as isize)
+                .offset(1_usize)
                 .upgrade()
                 .deref())
             .id
             .borrow())
                 == 2))
             && ((*(*(comps.to_strong().as_pointer() as Ptr<brunsli_JPEGComponent>)
-                .offset(2_usize as isize)
+                .offset(2_usize)
                 .upgrade()
                 .deref())
             .id
@@ -6221,21 +6220,21 @@ pub fn MatchComponentIds_159(comps: Ptr<Vec<brunsli_JPEGComponent>>) -> i32 {
         {
             return (*kComponentIds123_49.with(Value::clone).borrow());
         } else if (((*(*(comps.to_strong().as_pointer() as Ptr<brunsli_JPEGComponent>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .id
         .borrow())
             == (('R' as u8) as i32))
             && ((*(*(comps.to_strong().as_pointer() as Ptr<brunsli_JPEGComponent>)
-                .offset(1_usize as isize)
+                .offset(1_usize)
                 .upgrade()
                 .deref())
             .id
             .borrow())
                 == (('G' as u8) as i32)))
             && ((*(*(comps.to_strong().as_pointer() as Ptr<brunsli_JPEGComponent>)
-                .offset(2_usize as isize)
+                .offset(2_usize)
                 .upgrade()
                 .deref())
             .id
@@ -6281,7 +6280,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
     } {
         let marker: Value<u8> = Rc::new(RefCell::new(
             (((*jpg.upgrade().deref()).marker_order.as_pointer() as Ptr<u8>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .read()),
         ));
         if (((*marker.borrow()) as i32) < 192) {
@@ -6346,7 +6345,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             EncodeHuffmanCode_157(
                 ((*jpg.upgrade().deref()).huffman_code.as_pointer()
                     as Ptr<brunsli_JPEGHuffmanCode>)
-                    .offset((*i.borrow()) as isize),
+                    .offset((*i.borrow())),
                 (*is_known_last.borrow()),
                 (*storage.borrow()).clone(),
             )
@@ -6369,7 +6368,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
         if !({
             EncodeScanInfo_158(
                 ((*jpg.upgrade().deref()).scan_info.as_pointer() as Ptr<brunsli_JPEGScanInfo>)
-                    .offset((*i.borrow()) as isize),
+                    .offset((*i.borrow())),
                 (*storage.borrow()).clone(),
             )
         }) {
@@ -6393,7 +6392,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             WriteBits_120(
                 2_usize,
                 ((*(*((*jpg.upgrade().deref()).quant.as_pointer() as Ptr<brunsli_JPEGQuantTable>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .index
@@ -6410,7 +6409,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
                     1_usize,
                     ((*(*((*jpg.upgrade().deref()).quant.as_pointer()
                         as Ptr<brunsli_JPEGQuantTable>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .upgrade()
                         .deref())
                     .is_last
@@ -6420,7 +6419,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             });
         } else if !(*(*((*jpg.upgrade().deref()).quant.as_pointer()
             as Ptr<brunsli_JPEGQuantTable>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .is_last
@@ -6432,7 +6431,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             WriteBits_120(
                 4_usize,
                 ((*(*((*jpg.upgrade().deref()).quant.as_pointer() as Ptr<brunsli_JPEGQuantTable>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .precision
@@ -6463,7 +6462,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
                     8_usize,
                     ((*(*((*jpg.upgrade().deref()).components.as_pointer()
                         as Ptr<brunsli_JPEGComponent>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .upgrade()
                         .deref())
                     .id
@@ -6495,7 +6494,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
                 WriteBits_120(
                     1_usize,
                     ((((*jpg.upgrade().deref()).padding_bits.as_pointer() as Ptr<i32>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .read()) as u64),
                     (*storage.borrow()).clone(),
                 )
@@ -6511,7 +6510,7 @@ pub fn EncodeAuxData_161(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
     } {
         let s: Ptr<Vec<u8>> = (((*jpg.upgrade().deref()).inter_marker_data.as_pointer()
             as Ptr<Value<Vec<u8>>>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref()
             .as_pointer() as Ptr<Vec<u8>>);
@@ -6608,7 +6607,7 @@ pub fn ComputeCoeffOrder_162(num_zeros: Ptr<Vec<i32>>, order: Ptr<u32>) {
     'loop_: while ((*i.borrow()) < (*kDCTBlockSize_3.with(Value::clone).borrow())) {
         let __rhs = (*i.borrow());
         (*(*(pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>)
-            .offset(((*i.borrow()) as usize) as isize)
+            .offset(((*i.borrow()) as usize))
             .upgrade()
             .deref())
         .0
@@ -6616,11 +6615,11 @@ pub fn ComputeCoeffOrder_162(num_zeros: Ptr<Vec<i32>>, order: Ptr<u32>) {
         let __rhs = ((num_zeros.to_strong().as_pointer() as Ptr<i32>)
             .offset(
                 ((*kJPEGNaturalOrder_13.with(Value::clone).borrow())[(*i.borrow()) as usize]
-                    as usize) as isize,
+                    as usize),
             )
             .read());
         (*(*(pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>)
-            .offset(((*i.borrow()) as usize) as isize)
+            .offset(((*i.borrow()) as usize))
             .upgrade()
             .deref())
         .1
@@ -6643,7 +6642,7 @@ pub fn ComputeCoeffOrder_162(num_zeros: Ptr<Vec<i32>>, order: Ptr<u32>) {
         let __rhs =
             (*kJPEGNaturalOrder_13.with(Value::clone).borrow())[(*(*(pos_and_val.as_pointer()
                 as Ptr<(Value<i32>, Value<i32>)>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .0
@@ -6673,7 +6672,7 @@ impl brunsli_internal_enc_EntropySource {
         let histo_ix: Value<usize> = Rc::new(RefCell::new(histo_ix));
         ({
             (*(self.histograms_.as_pointer() as Ptr<brunsli_internal_enc_Histogram>)
-                .offset((*histo_ix.borrow()) as isize)
+                .offset((*histo_ix.borrow()))
                 .upgrade()
                 .deref())
             .Add((*code.borrow()))
@@ -6725,9 +6724,9 @@ impl brunsli_internal_enc_EntropySource {
                 let _other: Ptr<brunsli_internal_enc_Histogram> =
                     ((*other.upgrade().deref()).histograms_.as_pointer()
                         as Ptr<brunsli_internal_enc_Histogram>)
-                        .offset((*i.borrow()) as isize);
+                        .offset((*i.borrow()));
                 (*(self.histograms_.as_pointer() as Ptr<brunsli_internal_enc_Histogram>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .Merge(_other)
@@ -6759,15 +6758,15 @@ impl brunsli_internal_enc_EntropyCodes {
             ({
                 let _histogram: Ptr<i32> = (((*(self.clustered_.as_pointer()
                     as Ptr<brunsli_internal_enc_Histogram>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .data_
                 .as_pointer() as Ptr<i32>)
-                    .offset(0 as isize));
+                    .offset(0));
                 let _table: Ptr<brunsli_ANSTable> = ((self.ans_tables_.as_pointer()
                     as Ptr<brunsli_ANSTable>)
-                    .offset((*i.borrow()) as isize));
+                    .offset((*i.borrow())));
                 BuildAndStoreANSEncodingData_123(_histogram, _table, (*storage.borrow()).clone())
             });
             (*i.borrow_mut()).prefix_inc();
@@ -6779,11 +6778,11 @@ impl brunsli_internal_enc_EntropyCodes {
         let context: Value<i32> = Rc::new(RefCell::new(context));
         let entropy_ix: Value<i32> = Rc::new(RefCell::new(
             (((self.context_map_.as_pointer() as Ptr<u32>)
-                .offset(((*context.borrow()) as usize) as isize)
+                .offset(((*context.borrow()) as usize))
                 .read()) as i32),
         ));
         return ((self.ans_tables_.as_pointer() as Ptr<brunsli_ANSTable>)
-            .offset(((*entropy_ix.borrow()) as usize) as isize));
+            .offset(((*entropy_ix.borrow()) as usize)));
     }
 }
 impl brunsli_internal_enc_DataStream {}
@@ -6855,7 +6854,7 @@ impl brunsli_internal_enc_DataStream {
             'loop_: while true {}
         };
         (self.code_words_.as_pointer() as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-            .offset(((*self.pos_.borrow_mut()).postfix_inc() as usize) as isize)
+            .offset(((*self.pos_.borrow_mut()).postfix_inc() as usize))
             .write((*word.borrow()).clone());
         ({ (*(*s.borrow()).upgrade().deref()).AddCode((*code.borrow()), (*histo_ix.borrow())) });
     }
@@ -6877,7 +6876,7 @@ impl brunsli_internal_enc_DataStream {
             (*(*word.borrow()).value.borrow_mut()) =
                 (((*self.bw_val_.borrow()) & 65535_u32) as u16);
             (self.code_words_.as_pointer() as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-                .offset(((*self.bw_pos_.borrow()) as usize) as isize)
+                .offset(((*self.bw_pos_.borrow()) as usize))
                 .write((*word.borrow()).clone());
             (*self.bw_pos_.borrow_mut()) = (*self.pos_.borrow());
             (*self.pos_.borrow_mut()).prefix_inc();
@@ -6889,25 +6888,25 @@ impl brunsli_internal_enc_DataStream {
 impl brunsli_internal_enc_DataStream {
     pub fn FlushArithmeticCoder(&self) {
         (*(*(self.code_words_.as_pointer() as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-            .offset(((*self.ac_pos0_.borrow()) as usize) as isize)
+            .offset(((*self.ac_pos0_.borrow()) as usize))
             .upgrade()
             .deref())
         .value
         .borrow_mut()) = (((*self.high_.borrow()) >> 16) as u16);
         (*(*(self.code_words_.as_pointer() as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-            .offset(((*self.ac_pos1_.borrow()) as usize) as isize)
+            .offset(((*self.ac_pos1_.borrow()) as usize))
             .upgrade()
             .deref())
         .value
         .borrow_mut()) = (((*self.high_.borrow()) & 65535_u32) as u16);
         (*(*(self.code_words_.as_pointer() as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-            .offset(((*self.ac_pos0_.borrow()) as usize) as isize)
+            .offset(((*self.ac_pos0_.borrow()) as usize))
             .upgrade()
             .deref())
         .nbits
         .borrow_mut()) = 16_u8;
         (*(*(self.code_words_.as_pointer() as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-            .offset(((*self.ac_pos1_.borrow()) as usize) as isize)
+            .offset(((*self.ac_pos1_.borrow()) as usize))
             .upgrade()
             .deref())
         .nbits
@@ -6919,13 +6918,13 @@ impl brunsli_internal_enc_DataStream {
 impl brunsli_internal_enc_DataStream {
     pub fn FlushBitWriter(&self) {
         (*(*(self.code_words_.as_pointer() as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-            .offset(((*self.bw_pos_.borrow()) as usize) as isize)
+            .offset(((*self.bw_pos_.borrow()) as usize))
             .upgrade()
             .deref())
         .nbits
         .borrow_mut()) = 16_u8;
         (*(*(self.code_words_.as_pointer() as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-            .offset(((*self.bw_pos_.borrow()) as usize) as isize)
+            .offset(((*self.bw_pos_.borrow()) as usize))
             .upgrade()
             .deref())
         .value
@@ -6956,14 +6955,14 @@ impl brunsli_internal_enc_DataStream {
         if ((((*self.low_.borrow()) ^ (*self.high_.borrow())) >> 16) == 0_u32) {
             (*(*(self.code_words_.as_pointer()
                 as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-                .offset(((*self.ac_pos0_.borrow()) as usize) as isize)
+                .offset(((*self.ac_pos0_.borrow()) as usize))
                 .upgrade()
                 .deref())
             .value
             .borrow_mut()) = (((*self.high_.borrow()) >> 16) as u16);
             (*(*(self.code_words_.as_pointer()
                 as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-                .offset(((*self.ac_pos0_.borrow()) as usize) as isize)
+                .offset(((*self.ac_pos0_.borrow()) as usize))
                 .upgrade()
                 .deref())
             .nbits
@@ -6993,7 +6992,7 @@ impl brunsli_internal_enc_DataStream {
         'loop_: while ((*i.borrow()) >= 0) {
             let word: Value<Ptr<brunsli_internal_enc_DataStream_CodeWord>> = Rc::new(RefCell::new(
                 ((self.code_words_.as_pointer() as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-                    .offset(((*i.borrow()) as usize) as isize)),
+                    .offset(((*i.borrow()) as usize))),
             ));
             if (((*(*(*word.borrow()).upgrade().deref()).nbits.borrow()) as i32) == 0) {
                 let info: Value<brunsli_ANSEncSymbolInfo> = Rc::new(RefCell::new(
@@ -7039,7 +7038,7 @@ impl brunsli_internal_enc_DataStream {
         'loop_: while ((*i.borrow()) < (*self.pos_.borrow())) {
             let word: Ptr<brunsli_internal_enc_DataStream_CodeWord> =
                 (self.code_words_.as_pointer() as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
-                    .offset(((*i.borrow()) as usize) as isize);
+                    .offset(((*i.borrow()) as usize));
             if ((*(*word.upgrade().deref()).nbits.borrow()) != 0) {
                 ({
                     let _p: AnyPtr =
@@ -7217,7 +7216,7 @@ pub fn FrameTypeCode_169(jpg: Ptr<brunsli_JPEGData>) -> u32 {
         let h_samp: Value<u32> = Rc::new(RefCell::new(
             (((*(*((*jpg.upgrade().deref()).components.as_pointer()
                 as Ptr<brunsli_JPEGComponent>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .h_samp_factor
@@ -7227,7 +7226,7 @@ pub fn FrameTypeCode_169(jpg: Ptr<brunsli_JPEGData>) -> u32 {
         let v_samp: Value<u32> = Rc::new(RefCell::new(
             (((*(*((*jpg.upgrade().deref()).components.as_pointer()
                 as Ptr<brunsli_JPEGComponent>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .v_samp_factor
@@ -7389,7 +7388,7 @@ pub fn EncodeMetaData_173(
     } {
         let s: Ptr<Vec<u8>> = (((*jpg.upgrade().deref()).app_data.as_pointer()
             as Ptr<Value<Vec<u8>>>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref()
             .as_pointer() as Ptr<Vec<u8>>);
@@ -7473,9 +7472,7 @@ pub fn EncodeMetaData_173(
         return true;
     } else if ((*metadata.borrow()).len() == 1_usize) {
         (*len.borrow()).write(1_usize);
-        let __rhs = ((metadata.as_pointer() as Ptr<u8>)
-            .offset(0_usize as isize)
-            .read());
+        let __rhs = ((metadata.as_pointer() as Ptr<u8>).offset(0_usize).read());
         (*data.borrow()).offset((0) as isize).write(__rhs);
         return true;
     }
@@ -7587,7 +7584,7 @@ pub fn EncodeHistogramData_176(
                 3_usize,
                 ((*(*((*(*state.borrow()).upgrade().deref()).meta.as_pointer()
                     as Ptr<brunsli_internal_enc_ComponentMeta>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .context_bits
@@ -7788,7 +7785,7 @@ pub fn SampleNumNonZeros_180(m: Ptr<brunsli_internal_enc_ComponentMeta>) -> usiz
         'loop_: while ((*k.borrow()) < ((*kDCTBlockSize_3.with(Value::clone).borrow()) as usize)) {
             if ((((*block.borrow()).offset((*k.borrow()) as isize).read()) as i32) == 0) {
                 (num_zeros.to_strong().as_pointer() as Ptr<i32>)
-                    .offset((*k.borrow()) as isize)
+                    .offset((*k.borrow()))
                     .with_mut(|__v| __v.prefix_inc());
             }
             (*k.borrow_mut()).prefix_inc();
@@ -7804,14 +7801,14 @@ pub fn SampleNumNonZeros_180(m: Ptr<brunsli_internal_enc_ComponentMeta>) -> usiz
     'loop_: while ((*i.borrow()) < ((*kDCTBlockSize_3.with(Value::clone).borrow()) as usize)) {
         let rhs_0 = (*total_nonzeros.borrow()).wrapping_sub(
             (((num_zeros.to_strong().as_pointer() as Ptr<i32>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .read()) as usize),
         );
         (*total_nonzeros.borrow_mut()) = rhs_0;
         (*i.borrow_mut()).prefix_inc();
     }
     (num_zeros.to_strong().as_pointer() as Ptr<i32>)
-        .offset(0_usize as isize)
+        .offset(0_usize)
         .write(0);
     return (*total_nonzeros.borrow())
         .wrapping_mul(((*kStride_181.with(Value::clone).borrow()) as usize));
@@ -7853,7 +7850,7 @@ pub fn PredictDCCoeffs_184(state: Ptr<brunsli_internal_enc_State>) -> bool {
     } {
         let m: Ptr<brunsli_internal_enc_ComponentMeta> = (meta.to_strong().as_pointer()
             as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset((*i.borrow()) as isize);
+            .offset((*i.borrow()));
         let width: Value<i32> = Rc::new(RefCell::new(
             (*(*m.upgrade().deref()).width_in_blocks.borrow()),
         ));
@@ -7927,10 +7924,10 @@ pub fn CalculateMeta_185(
     'loop_: while ((*i.borrow()) < (*num_components.borrow())) {
         let c: Ptr<brunsli_JPEGComponent> = ((*jpg.upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset((*i.borrow()) as isize);
+            .offset((*i.borrow()));
         let m: Ptr<brunsli_internal_enc_ComponentMeta> = (meta.to_strong().as_pointer()
             as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset((*i.borrow()) as isize);
+            .offset((*i.borrow()));
         if {
             let _lhs = ((*(*c.upgrade().deref()).quant_idx.borrow()) as usize);
             _lhs >= (*(*jpg.upgrade().deref()).quant.borrow()).len()
@@ -7939,7 +7936,7 @@ pub fn CalculateMeta_185(
         }
         let q: Ptr<brunsli_JPEGQuantTable> = ((*jpg.upgrade().deref()).quant.as_pointer()
             as Ptr<brunsli_JPEGQuantTable>)
-            .offset(((*(*c.upgrade().deref()).quant_idx.borrow()) as usize) as isize);
+            .offset(((*(*c.upgrade().deref()).quant_idx.borrow()) as usize));
         (*(*m.upgrade().deref()).h_samp.borrow_mut()) =
             (*(*c.upgrade().deref()).h_samp_factor.borrow());
         (*(*m.upgrade().deref()).v_samp.borrow_mut()) =
@@ -7955,7 +7952,7 @@ pub fn CalculateMeta_185(
         };
         (*(*m.upgrade().deref()).height_in_blocks.borrow_mut()) = __rhs;
         (*(*m.upgrade().deref()).ac_coeffs.borrow_mut()) =
-            (((*c.upgrade().deref()).coeffs.as_pointer() as Ptr<i16>).offset(0_usize as isize));
+            (((*c.upgrade().deref()).coeffs.as_pointer() as Ptr<i16>).offset(0_usize));
         let __rhs = {
             let _lhs = (*(*m.upgrade().deref()).width_in_blocks.borrow());
             _lhs * (*kDCTBlockSize_3.with(Value::clone).borrow())
@@ -7969,8 +7966,8 @@ pub fn CalculateMeta_185(
             (((*m.upgrade().deref()).quant.as_pointer() as Ptr<i32>) as Ptr<i32>)
                 .to_any()
                 .memcpy(
-                    &((((*q.upgrade().deref()).values.as_pointer() as Ptr<i32>)
-                        .offset(0_usize as isize)) as Ptr<i32>)
+                    &((((*q.upgrade().deref()).values.as_pointer() as Ptr<i32>).offset(0_usize))
+                        as Ptr<i32>)
                         .to_any(),
                     ((*kDCTBlockSize_3.with(Value::clone).borrow()) as usize)
                         .wrapping_mul((::std::mem::size_of::<i32>() as usize))
@@ -7991,13 +7988,13 @@ pub fn EncodeDC_186(state: Ptr<brunsli_internal_enc_State>) {
     let num_components: Value<usize> = Rc::new(RefCell::new((*meta.upgrade().deref()).len()));
     let mcu_rows: Value<i32> = Rc::new(RefCell::new({
         let _lhs = (*(*(meta.to_strong().as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .height_in_blocks
         .borrow());
         _lhs / (*(*(meta.to_strong().as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .v_samp
@@ -8020,10 +8017,10 @@ pub fn EncodeDC_186(state: Ptr<brunsli_internal_enc_State>) {
     'loop_: while ((*i.borrow()) < (*num_components.borrow())) {
         let m: Ptr<brunsli_internal_enc_ComponentMeta> = (meta.to_strong().as_pointer()
             as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset((*i.borrow()) as isize);
+            .offset((*i.borrow()));
         ({
             (*(comps.as_pointer() as Ptr<brunsli_ComponentStateDC>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .SetWidth((*(*m.upgrade().deref()).width_in_blocks.borrow()))
@@ -8051,12 +8048,11 @@ pub fn EncodeDC_186(state: Ptr<brunsli_internal_enc_State>) {
         let i: Value<usize> = Rc::new(RefCell::new(0_usize));
         'loop_: while ((*i.borrow()) < (*num_components.borrow())) {
             let c: Value<Ptr<brunsli_ComponentStateDC>> = Rc::new(RefCell::new(
-                ((comps.as_pointer() as Ptr<brunsli_ComponentStateDC>)
-                    .offset((*i.borrow()) as isize)),
+                ((comps.as_pointer() as Ptr<brunsli_ComponentStateDC>).offset((*i.borrow()))),
             ));
             let m: Ptr<brunsli_internal_enc_ComponentMeta> = (meta.to_strong().as_pointer()
                 as Ptr<brunsli_internal_enc_ComponentMeta>)
-                .offset((*i.borrow()) as isize);
+                .offset((*i.borrow()));
             let width: Value<i32> = Rc::new(RefCell::new(
                 (*(*(*c.borrow()).upgrade().deref()).width.borrow()),
             ));
@@ -8072,13 +8068,13 @@ pub fn EncodeDC_186(state: Ptr<brunsli_internal_enc_State>) {
             }));
             let prev_sgn: Value<Ptr<i32>> = Rc::new(RefCell::new(
                 (((*(*c.borrow()).upgrade().deref()).prev_sign.as_pointer() as Ptr<i32>)
-                    .offset(1_usize as isize)),
+                    .offset(1_usize)),
             ));
             let prev_abs: Value<Ptr<i32>> = Rc::new(RefCell::new(
                 (((*(*c.borrow()).upgrade().deref())
                     .prev_abs_coeff
                     .as_pointer() as Ptr<i32>)
-                    .offset(2_usize as isize)),
+                    .offset(2_usize)),
             ));
             let iy: Value<i32> = Rc::new(RefCell::new(0));
             'loop_: while {
@@ -8133,7 +8129,7 @@ pub fn EncodeDC_186(state: Ptr<brunsli_internal_enc_State>) {
                                 (((*(*c.borrow()).upgrade().deref())
                                     .prev_is_nonempty
                                     .as_pointer() as Ptr<i32>)
-                                    .offset(1_usize as isize)),
+                                    .offset(1_usize)),
                                 (*x.borrow()),
                             )
                         }),
@@ -8143,14 +8139,14 @@ pub fn EncodeDC_186(state: Ptr<brunsli_internal_enc_State>) {
                             .is_empty_block_prob
                             .as_pointer()
                             as Ptr<brunsli_Prob>)
-                            .offset(((*is_empty_ctx.borrow()) as usize) as isize));
+                            .offset(((*is_empty_ctx.borrow()) as usize)));
                         let _bit: i32 = (!(*is_empty_block.borrow()) as i32);
                         (*data_stream.upgrade().deref()).AddBit(_p, _bit)
                     });
                     ((*(*c.borrow()).upgrade().deref())
                         .prev_is_nonempty
                         .as_pointer() as Ptr<i32>)
-                        .offset((((*x.borrow()) + 1) as usize) as isize)
+                        .offset((((*x.borrow()) + 1) as usize))
                         .write((!(*is_empty_block.borrow()) as i32));
                     let __rhs = ((*is_empty_block.borrow()) as u8);
                     (*block_state.borrow()).write(__rhs);
@@ -8182,7 +8178,7 @@ pub fn EncodeDC_186(state: Ptr<brunsli_internal_enc_State>) {
                                 let _p: Ptr<brunsli_Prob> =
                                     (((*(*c.borrow()).upgrade().deref()).sign_prob.as_pointer()
                                         as Ptr<brunsli_Prob>)
-                                        .offset(((*sign_ctx.borrow()) as usize) as isize));
+                                        .offset(((*sign_ctx.borrow()) as usize)));
                                 let _bit: i32 = ((*sign.borrow()) - 1);
                                 (*data_stream.upgrade().deref()).AddBit(_p, _bit)
                             });
@@ -8239,7 +8235,7 @@ pub fn EncodeDC_186(state: Ptr<brunsli_internal_enc_State>) {
                                             .first_extra_bit_prob
                                             .as_pointer()
                                             as Ptr<brunsli_Prob>)
-                                            .offset(((*nbits.borrow()) as usize) as isize));
+                                            .offset(((*nbits.borrow()) as usize)));
                                     let _bit: i32 = (*first_extra_bit.borrow());
                                     (*data_stream.upgrade().deref()).AddBit(_p, _bit)
                                 });
@@ -8282,13 +8278,13 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
     let num_components: Value<usize> = Rc::new(RefCell::new((*meta.upgrade().deref()).len()));
     let mcu_rows: Value<i32> = Rc::new(RefCell::new({
         let _lhs = (*(*(meta.to_strong().as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .height_in_blocks
         .borrow());
         _lhs / (*(*(meta.to_strong().as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .v_samp
@@ -8323,7 +8319,7 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
     'loop_: while ((*i.borrow()) < (*num_components.borrow())) {
         let m: Ptr<brunsli_internal_enc_ComponentMeta> = (meta.to_strong().as_pointer()
             as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset((*i.borrow()) as isize);
+            .offset((*i.borrow()));
         let num_blocks: Value<usize> = Rc::new(RefCell::new(
             (({
                 let _lhs = (*(*m.upgrade().deref()).width_in_blocks.borrow());
@@ -8340,29 +8336,29 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
             ComputeCoeffOrder_162(
                 (*m.upgrade().deref()).num_zeros.as_pointer(),
                 (((*(comps.as_pointer() as Ptr<brunsli_ComponentState>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .order
                 .as_pointer() as Ptr<u32>)
-                    .offset(0 as isize)),
+                    .offset(0)),
             )
         });
         ({
             let _mult_row: Ptr<i32> = (((*(comps.as_pointer() as Ptr<brunsli_ComponentState>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .mult_row
             .as_pointer() as Ptr<i32>)
-                .offset(0 as isize));
+                .offset(0));
             let _mult_col: Ptr<i32> = (((*(comps.as_pointer() as Ptr<brunsli_ComponentState>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .mult_col
             .as_pointer() as Ptr<i32>)
-                .offset(0 as isize));
+                .offset(0));
             ComputeACPredictMultipliers_109(
                 ((*m.upgrade().deref()).quant.as_pointer() as Ptr<i32>),
                 _mult_row,
@@ -8371,7 +8367,7 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
         });
         ({
             (*(comps.as_pointer() as Ptr<brunsli_ComponentState>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .SetWidth((*(*m.upgrade().deref()).width_in_blocks.borrow()))
@@ -8391,12 +8387,12 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
         ({
             EncodeCoeffOrder_167(
                 (((*(comps.as_pointer() as Ptr<brunsli_ComponentState>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .order
                 .as_pointer() as Ptr<u32>)
-                    .offset(0 as isize)),
+                    .offset(0)),
                 (data_stream).clone(),
             )
         });
@@ -8407,12 +8403,11 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
         let i: Value<usize> = Rc::new(RefCell::new(0_usize));
         'loop_: while ((*i.borrow()) < (*num_components.borrow())) {
             let c: Value<Ptr<brunsli_ComponentState>> = Rc::new(RefCell::new(
-                ((comps.as_pointer() as Ptr<brunsli_ComponentState>)
-                    .offset((*i.borrow()) as isize)),
+                ((comps.as_pointer() as Ptr<brunsli_ComponentState>).offset((*i.borrow()))),
             ));
             let m: Ptr<brunsli_internal_enc_ComponentMeta> = (meta.to_strong().as_pointer()
                 as Ptr<brunsli_internal_enc_ComponentMeta>)
-                .offset((*i.borrow()) as isize);
+                .offset((*i.borrow()));
             let cur_ctx_bits: Value<i32> = Rc::new(RefCell::new(
                 (*(*m.upgrade().deref()).context_bits.borrow()),
             ));
@@ -8456,9 +8451,7 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
                 ));
                 let prev_sgn: Value<Ptr<i32>> = Rc::new(RefCell::new(
                     (((*(*c.borrow()).upgrade().deref()).prev_sign.as_pointer() as Ptr<i32>)
-                        .offset(
-                            ((*kDCTBlockSize_3.with(Value::clone).borrow()) as usize) as isize,
-                        )),
+                        .offset(((*kDCTBlockSize_3.with(Value::clone).borrow()) as usize))),
                 ));
                 let prev_abs: Value<Ptr<i32>> = Rc::new(RefCell::new(
                     (((*(*c.borrow()).upgrade().deref())
@@ -8467,7 +8460,7 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
                         .offset(
                             ((((((*y.borrow()) & 1) * ((*width.borrow()) + 3)) + 2)
                                 * (*kDCTBlockSize_3.with(Value::clone).borrow()))
-                                as usize) as isize,
+                                as usize),
                         )),
                 ));
                 let x: Value<i32> = Rc::new(RefCell::new(0));
@@ -8683,7 +8676,7 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
                             let p: Value<Ptr<brunsli_Prob>> = Rc::new(RefCell::new(
                                 (((*(*c.borrow()).upgrade().deref()).is_zero_prob.as_pointer()
                                     as Ptr<brunsli_Prob>)
-                                    .offset(((*is_zero_ctx.borrow()) as usize) as isize)),
+                                    .offset(((*is_zero_ctx.borrow()) as usize))),
                             ));
                             ({
                                 let _p: Ptr<brunsli_Prob> = (*p.borrow()).clone();
@@ -8732,9 +8725,7 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
                                             .mult_col
                                             .as_pointer()
                                             as Ptr<i32>)
-                                            .offset(
-                                                (*offset.borrow()).wrapping_mul(8_usize) as isize
-                                            ));
+                                            .offset((*offset.borrow()).wrapping_mul(8_usize)));
                                         ACPredictContextRow_103(
                                             _prev,
                                             _cur,
@@ -8760,7 +8751,7 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
                                             .mult_row
                                             .as_pointer()
                                             as Ptr<i32>)
-                                            .offset((*offset.borrow()) as isize));
+                                            .offset((*offset.borrow())));
                                         ACPredictContextCol_102(
                                             _prev,
                                             _cur,
@@ -8801,7 +8792,7 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
                             let sign_p: Value<Ptr<brunsli_Prob>> = Rc::new(RefCell::new(
                                 (((*(*c.borrow()).upgrade().deref()).sign_prob.as_pointer()
                                     as Ptr<brunsli_Prob>)
-                                    .offset((*sign_ctx.borrow()) as isize)),
+                                    .offset((*sign_ctx.borrow()))),
                             ));
                             ({
                                 let _p: Ptr<brunsli_Prob> = (*sign_p.borrow()).clone();
@@ -8868,8 +8859,7 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
                                         .as_pointer()
                                         as Ptr<brunsli_Prob>)
                                         .offset(
-                                            ((((*k.borrow()) * 10) + (*nbits.borrow())) as usize)
-                                                as isize,
+                                            ((((*k.borrow()) * 10) + (*nbits.borrow())) as usize),
                                         )),
                                 ));
                                 ({
@@ -8916,7 +8906,7 @@ pub fn EncodeAC_187(state: Ptr<brunsli_internal_enc_State>) {
                     ((*(*c.borrow()).upgrade().deref())
                         .prev_num_nonzeros
                         .as_pointer() as Ptr<u8>)
-                        .offset(((*x.borrow()) as usize) as isize)
+                        .offset(((*x.borrow()) as usize))
                         .write(((*num_nzeros.borrow()) as u8));
                     (*block_state.borrow_mut()).prefix_inc();
                     (*coeffs_in.borrow_mut()) += (*kDCTBlockSize_3.with(Value::clone).borrow());
@@ -8953,13 +8943,13 @@ pub fn PrepareEntropyCodes_188(
     'loop_: while ((*i.borrow()) < (*num_components.borrow())) {
         let __rhs = ((*(*(meta.to_strong().as_pointer()
             as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .context_offset
         .borrow()) as u64);
         (group_context_offsets.as_pointer() as Ptr<u64>)
-            .offset((*i.borrow()).wrapping_add(1_usize) as isize)
+            .offset((*i.borrow()).wrapping_add(1_usize))
             .write(__rhs);
         (*i.borrow_mut()).prefix_inc();
     }
@@ -9257,11 +9247,11 @@ pub fn BrunsliEncodeJpeg_190(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
         let __rhs = ({
             SampleNumNonZeros_180(
                 (((*state.borrow()).meta.as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-                    .offset((*i.borrow()) as isize)),
+                    .offset((*i.borrow()))),
             )
         });
         (*(*(meta.to_strong().as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .approx_total_nonzeros
@@ -9273,7 +9263,7 @@ pub fn BrunsliEncodeJpeg_190(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
         let __rhs = ({
             SelectContextBits_182(
                 (*(*(meta.to_strong().as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .approx_total_nonzeros
@@ -9282,7 +9272,7 @@ pub fn BrunsliEncodeJpeg_190(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
             )
         });
         (*(*(meta.to_strong().as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .context_bits
@@ -9293,7 +9283,7 @@ pub fn BrunsliEncodeJpeg_190(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < (*num_components.borrow())) {
         (*(*(meta.to_strong().as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .context_offset
@@ -9303,7 +9293,7 @@ pub fn BrunsliEncodeJpeg_190(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
                 .to_strong()
                 .as_pointer()
                 as Ptr<brunsli_internal_enc_ComponentMeta>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .context_bits
@@ -9325,32 +9315,32 @@ pub fn BrunsliEncodeJpeg_190(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
             let __a0 = (({
                 let _lhs = (*(*(meta.to_strong().as_pointer()
                     as Ptr<brunsli_internal_enc_ComponentMeta>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .width_in_blocks
                 .borrow());
                 _lhs * (*(*(meta.to_strong().as_pointer()
                     as Ptr<brunsli_internal_enc_ComponentMeta>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .height_in_blocks
                 .borrow())
             }) as usize) as usize;
             (dc_prediction_errors.as_pointer() as Ptr<Value<Vec<i16>>>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .with_mut(|__v: &mut Value<Vec<i16>>| {
                     (*__v.borrow_mut()).resize_with(__a0, || <i16>::default())
                 })
         };
         let __rhs = ((dc_prediction_errors.as_pointer() as Ptr<Value<Vec<i16>>>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref()
             .as_pointer() as Ptr<i16>);
         (*(*(meta.to_strong().as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .dc_prediction_errors
@@ -9371,32 +9361,32 @@ pub fn BrunsliEncodeJpeg_190(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
             let __a0 = (({
                 let _lhs = (*(*(meta.to_strong().as_pointer()
                     as Ptr<brunsli_internal_enc_ComponentMeta>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .width_in_blocks
                 .borrow());
                 _lhs * (*(*(meta.to_strong().as_pointer()
                     as Ptr<brunsli_internal_enc_ComponentMeta>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .upgrade()
                     .deref())
                 .height_in_blocks
                 .borrow())
             }) as usize) as usize;
             (block_state.as_pointer() as Ptr<Value<Vec<u8>>>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .with_mut(|__v: &mut Value<Vec<u8>>| {
                     (*__v.borrow_mut()).resize_with(__a0, || <u8>::default())
                 })
         };
         let __rhs = ((block_state.as_pointer() as Ptr<Value<Vec<u8>>>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref()
             .as_pointer() as Ptr<u8>);
         (*(*(meta.to_strong().as_pointer() as Ptr<brunsli_internal_enc_ComponentMeta>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .block_state
@@ -9491,13 +9481,13 @@ pub fn BrunsliEncodeJpegBypass_194(
                 .resize_with(__a0, || <brunsli_JPEGComponent>::default())
         };
         (*(*((*jpg.borrow()).components.as_pointer() as Ptr<brunsli_JPEGComponent>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .h_samp_factor
         .borrow_mut()) = 1;
         (*(*((*jpg.borrow()).components.as_pointer() as Ptr<brunsli_JPEGComponent>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .upgrade()
             .deref())
         .v_samp_factor
@@ -9638,7 +9628,7 @@ pub fn IndexOf_197(v: Ptr<Vec<u32>>, value: u32) -> usize {
     } {
         if {
             let _lhs = ((v.to_strong().as_pointer() as Ptr<u32>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .read());
             _lhs == (*value.borrow())
         } {
@@ -9653,21 +9643,21 @@ pub fn MoveToFront_198(v: Ptr<Vec<u32>>, index: usize) {
     let index: Value<usize> = Rc::new(RefCell::new(index));
     let value: Value<u32> = Rc::new(RefCell::new(
         ((((*v.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-            .offset((*index.borrow()) as isize)
+            .offset((*index.borrow()))
             .read()),
     ));
     let i: Value<usize> = Rc::new(RefCell::new((*index.borrow())));
     'loop_: while ((*i.borrow()) != 0_usize) {
         let __rhs = ((((*v.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-            .offset((*i.borrow()).wrapping_sub(1_usize) as isize)
+            .offset((*i.borrow()).wrapping_sub(1_usize))
             .read());
         (((*v.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .write(__rhs);
         (*i.borrow_mut()).prefix_dec();
     }
     (((*v.borrow()).to_strong().as_pointer()) as Ptr<u32>)
-        .offset(0_usize as isize)
+        .offset(0_usize)
         .write((*value.borrow()));
 }
 pub fn MoveToFrontTransform_199(v: Ptr<Vec<u32>>) -> Vec<u32> {
@@ -9699,7 +9689,7 @@ pub fn MoveToFrontTransform_199(v: Ptr<Vec<u32>>) -> Vec<u32> {
     'loop_: while ((*i.borrow()) <= (*max_value.borrow())) {
         let __rhs = (*i.borrow());
         (mtf.as_pointer() as Ptr<u32>)
-            .offset(((*i.borrow()) as usize) as isize)
+            .offset(((*i.borrow()) as usize))
             .write(__rhs);
         (*i.borrow_mut()).prefix_inc();
     }
@@ -9717,7 +9707,7 @@ pub fn MoveToFrontTransform_199(v: Ptr<Vec<u32>>) -> Vec<u32> {
             ({
                 let _v: Ptr<Vec<u32>> = mtf.as_pointer();
                 let _value: u32 = ((v.to_strong().as_pointer() as Ptr<u32>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .read());
                 IndexOf_197(_v, _value)
             }),
@@ -9733,7 +9723,7 @@ pub fn MoveToFrontTransform_199(v: Ptr<Vec<u32>>) -> Vec<u32> {
             'loop_: while true {}
         };
         (result.as_pointer() as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .write(((*index.borrow()) as u32));
         ({ MoveToFront_198((mtf.as_pointer()), (*index.borrow())) });
         (*i.borrow_mut()).prefix_inc();
@@ -9759,7 +9749,7 @@ pub fn RunLengthCodeZeros_200(
             let _lhs = (*i.borrow());
             _lhs < (*v_in.upgrade().deref()).len()
         }) && (((v_in.to_strong().as_pointer() as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .read())
             != 0_u32)
         {
@@ -9770,7 +9760,7 @@ pub fn RunLengthCodeZeros_200(
             let _lhs = (*i.borrow());
             _lhs < (*v_in.upgrade().deref()).len()
         }) && (((v_in.to_strong().as_pointer() as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .read())
             == 0_u32)
         {
@@ -9813,14 +9803,14 @@ pub fn RunLengthCodeZeros_200(
         _lhs < (*v_in.upgrade().deref()).len()
     } {
         if (((v_in.to_strong().as_pointer() as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .read())
             != 0_u32)
         {
             (*v_out.borrow()).with_mut(|__v: &mut Vec<u32>| {
                 __v.push(
                     ((v_in.to_strong().as_pointer() as Ptr<u32>)
-                        .offset((*i.borrow()) as isize)
+                        .offset((*i.borrow()))
                         .read())
                     .wrapping_add(((*max_run_length_prefix.borrow()).read())),
                 )
@@ -9834,7 +9824,7 @@ pub fn RunLengthCodeZeros_200(
                 let _lhs = (*k.borrow());
                 _lhs < (*v_in.upgrade().deref()).len()
             }) && (((v_in.to_strong().as_pointer() as Ptr<u32>)
-                .offset((*k.borrow()) as isize)
+                .offset((*k.borrow()))
                 .read())
                 == 0_u32)
             {
@@ -9919,7 +9909,7 @@ pub fn EncodeContextMap_163(
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < (*rle_symbols.borrow()).len()) {
         (*symbol_histogram.borrow_mut())[((rle_symbols.as_pointer() as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .read()) as usize]
             .prefix_inc();
         (*i.borrow_mut()).prefix_inc();
@@ -9976,28 +9966,28 @@ pub fn EncodeContextMap_163(
     'loop_: while ((*i.borrow()) < (*rle_symbols.borrow()).len()) {
         ({
             let _n_bits: usize = ((*bit_depths.borrow())[((rle_symbols.as_pointer() as Ptr<u32>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .read()) as usize] as usize);
             let _bits: u64 = ((*bit_codes.borrow())[((rle_symbols.as_pointer() as Ptr<u32>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .read()) as usize] as u64);
             WriteBits_120(_n_bits, _bits, (*storage.borrow()).clone())
         });
         if (((rle_symbols.as_pointer() as Ptr<u32>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .read())
             > 0_u32)
             && (((rle_symbols.as_pointer() as Ptr<u32>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .read())
                 <= (*max_run_length_prefix.borrow()))
         {
             ({
                 let _n_bits: usize = (((rle_symbols.as_pointer() as Ptr<u32>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .read()) as usize);
                 let _bits: u64 = (((extra_bits.as_pointer() as Ptr<u32>)
-                    .offset((*i.borrow()) as isize)
+                    .offset((*i.borrow()))
                     .read()) as u64);
                 WriteBits_120(_n_bits, _bits, (*storage.borrow()).clone())
             });
@@ -10563,12 +10553,12 @@ pub fn EncodeCounts_125(
                 } else {
                     let __rhs = (if omit_log.as_pointer().read()
                         >= (logcounts.as_pointer() as Ptr<i32>)
-                            .offset((*i.borrow()) as isize)
+                            .offset((*i.borrow()))
                             .read()
                     {
                         omit_log.as_pointer()
                     } else {
-                        (logcounts.as_pointer() as Ptr<i32>).offset((*i.borrow()) as isize)
+                        (logcounts.as_pointer() as Ptr<i32>).offset((*i.borrow()))
                     }
                     .read());
                     (*omit_log.borrow_mut()) = __rhs;
@@ -11233,17 +11223,17 @@ pub fn StoreHuffmanTree_217(depths: Ptr<u8>, num: usize, storage: Ptr<brunsli_St
     ])));
     ({
         CreateHuffmanTree_219(
-            ((huffman_tree_histogram.as_pointer() as Ptr<u32>).offset(0 as isize)),
+            ((huffman_tree_histogram.as_pointer() as Ptr<u32>).offset(0)),
             ((*kCodeLengthCodes_210.with(Value::clone).borrow()) as usize),
             5,
-            ((code_length_bitdepth.as_pointer() as Ptr<u8>).offset(0 as isize)),
+            ((code_length_bitdepth.as_pointer() as Ptr<u8>).offset(0)),
         )
     });
     ({
         ConvertBitDepthsToSymbols_220(
             (code_length_bitdepth.as_pointer() as Ptr<u8>),
             ((*kCodeLengthCodes_210.with(Value::clone).borrow()) as usize),
-            ((code_length_bitdepth_symbols.as_pointer() as Ptr<u16>).offset(0 as isize)),
+            ((code_length_bitdepth_symbols.as_pointer() as Ptr<u16>).offset(0)),
         )
     });
     ({
@@ -11261,7 +11251,7 @@ pub fn StoreHuffmanTree_217(depths: Ptr<u8>, num: usize, storage: Ptr<brunsli_St
             (*huffman_tree_size.borrow()),
             (*huffman_tree.borrow()).clone(),
             (*huffman_tree_extra_bits.borrow()).clone(),
-            ((code_length_bitdepth.as_pointer() as Ptr<u8>).offset(0 as isize)),
+            ((code_length_bitdepth.as_pointer() as Ptr<u8>).offset(0)),
             (code_length_bitdepth_symbols.as_pointer() as Ptr<u16>),
             (*storage.borrow()).clone(),
         )
@@ -11432,7 +11422,7 @@ pub fn CreateHuffmanTree_219(data: Ptr<u32>, length: usize, tree_limit: i32, dep
             (*depth.borrow())
                 .offset(
                     (*(*(tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                        .offset(0_usize as isize)
+                        .offset(0_usize)
                         .upgrade()
                         .deref())
                     .index_right_or_value
@@ -11465,13 +11455,13 @@ pub fn CreateHuffmanTree_219(data: Ptr<u32>, length: usize, tree_limit: i32, dep
             let left: Value<usize> = Rc::new(RefCell::new(0_usize));
             let right: Value<usize> = Rc::new(RefCell::new(0_usize));
             if ((*(*(tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .total_count
             .borrow())
                 <= (*(*(tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                    .offset((*j.borrow()) as isize)
+                    .offset((*j.borrow()))
                     .upgrade()
                     .deref())
                 .total_count
@@ -11484,13 +11474,13 @@ pub fn CreateHuffmanTree_219(data: Ptr<u32>, length: usize, tree_limit: i32, dep
                 (*j.borrow_mut()).prefix_inc();
             }
             if ((*(*(tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .total_count
             .borrow())
                 <= (*(*(tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                    .offset((*j.borrow()) as isize)
+                    .offset((*j.borrow()))
                     .upgrade()
                     .deref())
                 .total_count
@@ -11505,33 +11495,33 @@ pub fn CreateHuffmanTree_219(data: Ptr<u32>, length: usize, tree_limit: i32, dep
             let j_end: Value<usize> =
                 Rc::new(RefCell::new(((*tree.borrow()).len()).wrapping_sub(1_usize)));
             let __rhs = (*(*(tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                .offset((*left.borrow()) as isize)
+                .offset((*left.borrow()))
                 .upgrade()
                 .deref())
             .total_count
             .borrow())
             .wrapping_add(
                 (*(*(tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                    .offset((*right.borrow()) as isize)
+                    .offset((*right.borrow()))
                     .upgrade()
                     .deref())
                 .total_count
                 .borrow()),
             );
             (*(*(tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                .offset((*j_end.borrow()) as isize)
+                .offset((*j_end.borrow()))
                 .upgrade()
                 .deref())
             .total_count
             .borrow_mut()) = __rhs;
             (*(*(tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                .offset((*j_end.borrow()) as isize)
+                .offset((*j_end.borrow()))
                 .upgrade()
                 .deref())
             .index_left
             .borrow_mut()) = ((*left.borrow()) as i16);
             (*(*(tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                .offset((*j_end.borrow()) as isize)
+                .offset((*j_end.borrow()))
                 .upgrade()
                 .deref())
             .index_right_or_value
@@ -11556,9 +11546,9 @@ pub fn CreateHuffmanTree_219(data: Ptr<u32>, length: usize, tree_limit: i32, dep
         };
         ({
             let _p: Ptr<brunsli_HuffmanTree> = (tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                .offset(((2_usize).wrapping_mul((*n.borrow()))).wrapping_sub(1_usize) as isize);
+                .offset(((2_usize).wrapping_mul((*n.borrow()))).wrapping_sub(1_usize));
             let _pool: Ptr<brunsli_HuffmanTree> =
-                ((tree.as_pointer() as Ptr<brunsli_HuffmanTree>).offset(0_usize as isize));
+                ((tree.as_pointer() as Ptr<brunsli_HuffmanTree>).offset(0_usize));
             let _depth: Ptr<u8> = (*depth.borrow()).clone();
             SetDepth_221(_p, _pool, _depth, 0_u8)
         });
@@ -12203,7 +12193,7 @@ pub fn ProcessSOF_234(
             ({ ReadUint8_232((*data.borrow()).clone(), (*pos.borrow()).clone()) }),
         ));
         if ((*(ids_seen.as_pointer() as Ptr<bool>)
-            .offset(((*id.borrow()) as usize) as isize)
+            .offset(((*id.borrow()) as usize))
             .upgrade()
             .deref()) as bool)
         {
@@ -12217,11 +12207,11 @@ pub fn ProcessSOF_234(
             return false;
         }
         (ids_seen.as_pointer() as Ptr<bool>)
-            .offset(((*id.borrow()) as usize) as isize)
+            .offset(((*id.borrow()) as usize))
             .write(true);
         (*(*((*(*jpg.borrow()).upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .id
@@ -12257,14 +12247,14 @@ pub fn ProcessSOF_234(
         };
         (*(*((*(*jpg.borrow()).upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .h_samp_factor
         .borrow_mut()) = (*h_samp_factor.borrow());
         (*(*((*(*jpg.borrow()).upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .v_samp_factor
@@ -12272,7 +12262,7 @@ pub fn ProcessSOF_234(
         let __rhs = (({ ReadUint8_232((*data.borrow()).clone(), (*pos.borrow()).clone()) }) as u8);
         (*(*((*(*jpg.borrow()).upgrade().deref()).components.as_pointer()
             as Ptr<brunsli_JPEGComponent>)
-            .offset((*i.borrow()) as isize)
+            .offset((*i.borrow()))
             .upgrade()
             .deref())
         .quant_idx
@@ -12337,7 +12327,7 @@ pub fn ProcessSOF_234(
         let c: Value<Ptr<brunsli_JPEGComponent>> = Rc::new(RefCell::new(
             (((*(*jpg.borrow()).upgrade().deref()).components.as_pointer()
                 as Ptr<brunsli_JPEGComponent>)
-                .offset((*i.borrow()) as isize)),
+                .offset((*i.borrow()))),
         ));
         if ({
             let _lhs = (*(*(*jpg.borrow()).upgrade().deref())
@@ -12490,7 +12480,7 @@ pub fn ProcessSOS_235(
             ({ ReadUint8_232((*data.borrow()).clone(), (*pos.borrow()).clone()) }),
         ));
         if ((*(ids_seen.as_pointer() as Ptr<bool>)
-            .offset(((*id.borrow()) as usize) as isize)
+            .offset(((*id.borrow()) as usize))
             .upgrade()
             .deref()) as bool)
         {
@@ -12504,7 +12494,7 @@ pub fn ProcessSOS_235(
             return false;
         }
         (ids_seen.as_pointer() as Ptr<bool>)
-            .offset(((*id.borrow()) as usize) as isize)
+            .offset(((*id.borrow()) as usize))
             .write(true);
         let found_index: Value<bool> = Rc::new(RefCell::new(false));
         let j: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -12515,7 +12505,7 @@ pub fn ProcessSOS_235(
             if {
                 let _lhs = (*(*((*(*jpg.borrow()).upgrade().deref()).components.as_pointer()
                     as Ptr<brunsli_JPEGComponent>)
-                    .offset((*j.borrow()) as isize)
+                    .offset((*j.borrow()))
                     .upgrade()
                     .deref())
                 .id
@@ -12524,7 +12514,7 @@ pub fn ProcessSOS_235(
             } {
                 (*(*((*scan_info.borrow()).components.as_pointer()
                     as Ptr<brunsli_JPEGComponentScanInfo>)
-                    .offset(((*i.borrow()) as usize) as isize)
+                    .offset(((*i.borrow()) as usize))
                     .upgrade()
                     .deref())
                 .comp_idx
@@ -12570,14 +12560,14 @@ pub fn ProcessSOS_235(
         };
         (*(*((*scan_info.borrow()).components.as_pointer()
             as Ptr<brunsli_JPEGComponentScanInfo>)
-            .offset(((*i.borrow()) as usize) as isize)
+            .offset(((*i.borrow()) as usize))
             .upgrade()
             .deref())
         .dc_tbl_idx
         .borrow_mut()) = (*dc_tbl_idx.borrow());
         (*(*((*scan_info.borrow()).components.as_pointer()
             as Ptr<brunsli_JPEGComponentScanInfo>)
-            .offset(((*i.borrow()) as usize) as isize)
+            .offset(((*i.borrow()) as usize))
             .upgrade()
             .deref())
         .ac_tbl_idx
@@ -12653,7 +12643,7 @@ pub fn ProcessSOS_235(
                 (*(*((*(*jpg.borrow()).upgrade().deref())
                     .huffman_code
                     .as_pointer() as Ptr<brunsli_JPEGHuffmanCode>)
-                    .offset((*j.borrow()) as isize)
+                    .offset((*j.borrow()))
                     .upgrade()
                     .deref())
                 .slot_id
@@ -12662,7 +12652,7 @@ pub fn ProcessSOS_235(
             if ((*slot_id.borrow())
                 == (*(*((*scan_info.borrow()).components.as_pointer()
                     as Ptr<brunsli_JPEGComponentScanInfo>)
-                    .offset(((*i.borrow()) as usize) as isize)
+                    .offset(((*i.borrow()) as usize))
                     .upgrade()
                     .deref())
                 .dc_tbl_idx
@@ -12672,7 +12662,7 @@ pub fn ProcessSOS_235(
             } else if ((*slot_id.borrow())
                 == ((*(*((*scan_info.borrow()).components.as_pointer()
                     as Ptr<brunsli_JPEGComponentScanInfo>)
-                    .offset(((*i.borrow()) as usize) as isize)
+                    .offset(((*i.borrow()) as usize))
                     .upgrade()
                     .deref())
                 .ac_tbl_idx
@@ -12689,7 +12679,7 @@ pub fn ProcessSOS_235(
                 "SOS marker: Could not find DC Huffman table with index {:}\n",
                 (*(*((*scan_info.borrow()).components.as_pointer()
                     as Ptr<brunsli_JPEGComponentScanInfo>)
-                    .offset(((*i.borrow()) as usize) as isize)
+                    .offset(((*i.borrow()) as usize))
                     .upgrade()
                     .deref())
                 .dc_tbl_idx
@@ -12705,7 +12695,7 @@ pub fn ProcessSOS_235(
                 "SOS marker: Could not find AC Huffman table with index {:}\n",
                 (*(*((*scan_info.borrow()).components.as_pointer()
                     as Ptr<brunsli_JPEGComponentScanInfo>)
-                    .offset(((*i.borrow()) as usize) as isize)
+                    .offset(((*i.borrow()) as usize))
                     .upgrade()
                     .deref())
                 .ac_tbl_idx
@@ -12828,7 +12818,7 @@ pub fn ProcessDHT_236(
                 .offset(
                     (((*huffman_index.borrow())
                         * (*kJpegHuffmanLutSize_230.with(Value::clone).borrow()))
-                        as usize) as isize,
+                        as usize),
                 ));
         } else {
             if ((*huffman_index.borrow()) < 0) || ((*huffman_index.borrow()) > 3) {
@@ -12846,11 +12836,11 @@ pub fn ProcessDHT_236(
                 .offset(
                     (((*huffman_index.borrow())
                         * (*kJpegHuffmanLutSize_230.with(Value::clone).borrow()))
-                        as usize) as isize,
+                        as usize),
                 ));
         }
         ((*huff.borrow()).counts.as_pointer() as Ptr<i32>)
-            .offset(0_usize as isize)
+            .offset(0_usize)
             .write(0);
         let total_count: Value<i32> = Rc::new(RefCell::new(0));
         let space: Value<i32> = Rc::new(RefCell::new(
@@ -12866,7 +12856,7 @@ pub fn ProcessDHT_236(
                 (*max_depth.borrow_mut()) = (*i.borrow());
             }
             ((*huff.borrow()).counts.as_pointer() as Ptr<i32>)
-                .offset(((*i.borrow()) as usize) as isize)
+                .offset(((*i.borrow()) as usize))
                 .write((*count.borrow()));
             (*total_count.borrow_mut()) += (*count.borrow());
             (*space.borrow_mut()) -= ((*count.borrow())
@@ -12942,7 +12932,7 @@ pub fn ProcessDHT_236(
                 };
             }
             if ((*(values_seen.as_pointer() as Ptr<bool>)
-                .offset(((*value.borrow()) as usize) as isize)
+                .offset(((*value.borrow()) as usize))
                 .upgrade()
                 .deref()) as bool)
             {
@@ -12954,18 +12944,18 @@ pub fn ProcessDHT_236(
                 return false;
             }
             (values_seen.as_pointer() as Ptr<bool>)
-                .offset(((*value.borrow()) as usize) as isize)
+                .offset(((*value.borrow()) as usize))
                 .write(true);
             ((*huff.borrow()).values.as_pointer() as Ptr<i32>)
-                .offset(((*i.borrow()) as usize) as isize)
+                .offset(((*i.borrow()) as usize))
                 .write(((*value.borrow()) as i32));
             (*i.borrow_mut()).prefix_inc();
         }
         ((*huff.borrow()).counts.as_pointer() as Ptr<i32>)
-            .offset(((*max_depth.borrow()) as usize) as isize)
+            .offset(((*max_depth.borrow()) as usize))
             .with_mut(|__v| __v.prefix_inc());
         ((*huff.borrow()).values.as_pointer() as Ptr<i32>)
-            .offset(((*total_count.borrow()) as usize) as isize)
+            .offset(((*total_count.borrow()) as usize))
             .write((*kJpegHuffmanAlphabetSize_8.with(Value::clone).borrow()));
         (*space.borrow_mut()) -= (1
             << ((*kJpegHuffmanMaxBitLength_7.with(Value::clone).borrow()) - (*max_depth.borrow())));
@@ -13004,9 +12994,9 @@ pub fn ProcessDHT_236(
         if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode::JPEG_READ_ALL as i32)) {
             ({
                 let _counts: Ptr<i32> =
-                    (((*huff.borrow()).counts.as_pointer() as Ptr<i32>).offset(0_usize as isize));
+                    (((*huff.borrow()).counts.as_pointer() as Ptr<i32>).offset(0_usize));
                 let _symbols: Ptr<i32> =
-                    (((*huff.borrow()).values.as_pointer() as Ptr<i32>).offset(0_usize as isize));
+                    (((*huff.borrow()).values.as_pointer() as Ptr<i32>).offset(0_usize));
                 BuildJpegHuffmanTable_237(_counts, _symbols, (*huff_lut.borrow()).clone())
             });
         }
@@ -13164,7 +13154,7 @@ pub fn ProcessDQT_238(
             ((*table.borrow()).values.as_pointer() as Ptr<i32>)
                 .offset(
                     ((*kJPEGNaturalOrder_13.with(Value::clone).borrow())[(*i.borrow()) as usize]
-                        as usize) as isize,
+                        as usize),
                 )
                 .write((*quant_val.borrow()));
             (*i.borrow_mut()).prefix_inc();
@@ -14153,11 +14143,11 @@ pub fn ProcessScan_247(
                 ((*(*((*(*scan_info.borrow()).upgrade().deref())
                     .components
                     .as_pointer() as Ptr<brunsli_JPEGComponentScanInfo>)
-                    .offset(0_usize as isize)
+                    .offset(0_usize)
                     .upgrade()
                     .deref())
                 .comp_idx
-                .borrow()) as usize) as isize,
+                .borrow()) as usize),
             );
         (*MCUs_per_row.borrow_mut()) = ({
             let _a: i32 = {
@@ -14243,7 +14233,7 @@ pub fn ProcessScan_247(
             ((*(*((*(*scan_info.borrow()).upgrade().deref())
                 .components
                 .as_pointer() as Ptr<brunsli_JPEGComponentScanInfo>)
-                .offset((*i.borrow()) as isize)
+                .offset((*i.borrow()))
                 .upgrade()
                 .deref())
             .comp_idx
@@ -14370,14 +14360,13 @@ pub fn ProcessScan_247(
                     (((*(*scan_info.borrow()).upgrade().deref())
                         .components
                         .as_pointer() as Ptr<brunsli_JPEGComponentScanInfo>)
-                        .offset((*i.borrow()) as isize)),
+                        .offset((*i.borrow()))),
                 ));
                 let c: Value<Ptr<brunsli_JPEGComponent>> = Rc::new(RefCell::new(
                     (((*(*jpg.borrow()).upgrade().deref()).components.as_pointer()
                         as Ptr<brunsli_JPEGComponent>)
                         .offset(
-                            ((*(*(*si.borrow()).upgrade().deref()).comp_idx.borrow()) as usize)
-                                as isize,
+                            ((*(*(*si.borrow()).upgrade().deref()).comp_idx.borrow()) as usize),
                         )),
                 ));
                 let dc_lut: Value<Ptr<brunsli_HuffmanTableEntry>> = Rc::new(RefCell::new(
@@ -14387,7 +14376,7 @@ pub fn ProcessScan_247(
                                 let _lhs =
                                     (*(*(*si.borrow()).upgrade().deref()).dc_tbl_idx.borrow());
                                 _lhs * (*kJpegHuffmanLutSize_230.with(Value::clone).borrow())
-                            }) as usize) as isize,
+                            }) as usize),
                         )),
                 ));
                 let ac_lut: Value<Ptr<brunsli_HuffmanTableEntry>> = Rc::new(RefCell::new(
@@ -14397,7 +14386,7 @@ pub fn ProcessScan_247(
                                 let _lhs =
                                     (*(*(*si.borrow()).upgrade().deref()).ac_tbl_idx.borrow());
                                 _lhs * (*kJpegHuffmanLutSize_230.with(Value::clone).borrow())
-                            }) as usize) as isize,
+                            }) as usize),
                         )),
                 ));
                 let nblocks_y: Value<i32> = Rc::new(RefCell::new(if (*is_interleaved.borrow()) {
@@ -14434,7 +14423,7 @@ pub fn ProcessScan_247(
                                 .offset(
                                     (((*block_idx.borrow())
                                         * (*kDCTBlockSize_3.with(Value::clone).borrow()))
-                                        as usize) as isize,
+                                        as usize),
                                 )),
                         ));
                         if ((*Ah.borrow()) == 0) {
@@ -14451,8 +14440,7 @@ pub fn ProcessScan_247(
                                     (br.as_pointer()),
                                     (*jpg.borrow()).clone(),
                                     ((last_dc_coeff.as_pointer() as Ptr<i16>).offset(
-                                        (*(*(*si.borrow()).upgrade().deref()).comp_idx.borrow())
-                                            as isize,
+                                        (*(*(*si.borrow()).upgrade().deref()).comp_idx.borrow()),
                                     )),
                                     (*coeffs.borrow()).clone(),
                                 )
@@ -14548,7 +14536,7 @@ pub fn FixupIndexes_248(jpg: Ptr<brunsli_JPEGData>) -> bool {
         let c: Value<Ptr<brunsli_JPEGComponent>> = Rc::new(RefCell::new(
             (((*(*jpg.borrow()).upgrade().deref()).components.as_pointer()
                 as Ptr<brunsli_JPEGComponent>)
-                .offset((*i.borrow()) as isize)),
+                .offset((*i.borrow()))),
         ));
         let found_index: Value<bool> = Rc::new(RefCell::new(false));
         let j: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -14559,7 +14547,7 @@ pub fn FixupIndexes_248(jpg: Ptr<brunsli_JPEGData>) -> bool {
             if {
                 let _lhs = (*(*((*(*jpg.borrow()).upgrade().deref()).quant.as_pointer()
                     as Ptr<brunsli_JPEGQuantTable>)
-                    .offset((*j.borrow()) as isize)
+                    .offset((*j.borrow()))
                     .upgrade()
                     .deref())
                 .index
@@ -15435,7 +15423,7 @@ pub fn WriteFileInternal_254(file: Ptr<::std::fs::File>, content: Ptr<Vec<u8>>) 
     } {
         let bytes_written: Value<usize> = Rc::new(RefCell::new({
             let __a0 = (((content.to_strong().as_pointer() as Ptr<u8>)
-                .offset((*write_pos.borrow()) as isize)) as Ptr<u8>)
+                .offset((*write_pos.borrow()))) as Ptr<u8>)
                 .to_any();
             let __a1 = 1_usize;
             let __a2 = ((((*content.upgrade().deref()).len() - 1) as u64)
@@ -15537,7 +15525,7 @@ pub fn ProcessFile_256(file_name: Ptr<Vec<u8>>, outfile_name: Ptr<Vec<u8>>) -> b
         (*output.borrow_mut()).push(0)
     };
     let output_data: Value<Ptr<u8>> = Rc::new(RefCell::new(
-        ((output.as_pointer() as Ptr<u8>).offset(0_usize as isize)).reinterpret_cast::<u8>(),
+        ((output.as_pointer() as Ptr<u8>).offset(0_usize)).reinterpret_cast::<u8>(),
     ));
     (*ok.borrow_mut()) = ({
         BrunsliEncodeJpeg_190(

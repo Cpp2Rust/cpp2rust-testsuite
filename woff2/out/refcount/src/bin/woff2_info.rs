@@ -1435,7 +1435,7 @@ pub fn ReadFontCollection_37(
         let font: Ptr<woff2_Font> = ((*(*font_collection.borrow()).upgrade().deref())
             .fonts
             .as_pointer() as Ptr<woff2_Font>)
-            .offset(0_usize as isize);
+            .offset(0_usize);
         (*(*font.upgrade().deref()).flavor.borrow_mut()) =
             (*(*(*font_collection.borrow()).upgrade().deref())
                 .flavor
@@ -1753,7 +1753,7 @@ pub fn WriteFontCollection_44(
         return ({
             WriteFont_41(
                 ((*font_collection.upgrade().deref()).fonts.as_pointer() as Ptr<woff2_Font>)
-                    .offset(0_usize as isize),
+                    .offset(0_usize),
                 (offset.as_pointer()),
                 (*dst.borrow()).clone(),
                 (*dst_size.borrow()),
@@ -1802,7 +1802,7 @@ pub fn WriteFontCollection_44(
     } {
         let font: Ptr<woff2_Font> = ((*font_collection.upgrade().deref()).fonts.as_pointer()
             as Ptr<woff2_Font>)
-            .offset((*i.borrow()) as isize);
+            .offset((*i.borrow()));
         ({
             StoreU32_30(
                 ((*offset.borrow()) as u32),
@@ -2287,7 +2287,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
                         ({
                             PrintTag_51(
                                 (((table_tags.as_pointer() as Ptr<u32>)
-                                    .offset(((*table_idx.borrow()) as usize) as isize)
+                                    .offset(((*table_idx.borrow()) as usize))
                                     .read()) as i32),
                             )
                         })
