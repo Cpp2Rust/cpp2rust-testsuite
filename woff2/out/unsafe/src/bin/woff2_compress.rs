@@ -16,195 +16,195 @@ pub static mut kHheaTableTag_6: u32 = unsafe { 1751672161_u32 };
 pub static mut kMaxpTableTag_7: u32 = unsafe { 1835104368_u32 };
 pub static mut kKnownTags_8: [u32; 63] = unsafe {
     [
-        ((((((('c' as u8) as i32) << (24)) | ((('m' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('p' as u8) as i32)) as u32),
-        ((((((('h' as u8) as i32) << (24)) | ((('e' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('d' as u8) as i32)) as u32),
-        ((((((('h' as u8) as i32) << (24)) | ((('h' as u8) as i32) << (16)))
-            | ((('e' as u8) as i32) << (8)))
-            | (('a' as u8) as i32)) as u32),
-        ((((((('h' as u8) as i32) << (24)) | ((('m' as u8) as i32) << (16)))
-            | ((('t' as u8) as i32) << (8)))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('m' as u8) as i32) << (24)) | ((('a' as u8) as i32) << (16)))
-            | ((('x' as u8) as i32) << (8)))
-            | (('p' as u8) as i32)) as u32),
-        ((((((('n' as u8) as i32) << (24)) | ((('a' as u8) as i32) << (16)))
-            | ((('m' as u8) as i32) << (8)))
-            | (('e' as u8) as i32)) as u32),
-        ((((((('O' as u8) as i32) << (24)) | ((('S' as u8) as i32) << (16)))
-            | ((('/' as u8) as i32) << (8)))
-            | (('2' as u8) as i32)) as u32),
-        ((((((('p' as u8) as i32) << (24)) | ((('o' as u8) as i32) << (16)))
-            | ((('s' as u8) as i32) << (8)))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('c' as u8) as i32) << (24)) | ((('v' as u8) as i32) << (16)))
-            | ((('t' as u8) as i32) << (8)))
-            | ((' ' as u8) as i32)) as u32),
-        ((((((('f' as u8) as i32) << (24)) | ((('p' as u8) as i32) << (16)))
-            | ((('g' as u8) as i32) << (8)))
-            | (('m' as u8) as i32)) as u32),
-        ((((((('g' as u8) as i32) << (24)) | ((('l' as u8) as i32) << (16)))
-            | ((('y' as u8) as i32) << (8)))
-            | (('f' as u8) as i32)) as u32),
-        ((((((('l' as u8) as i32) << (24)) | ((('o' as u8) as i32) << (16)))
-            | ((('c' as u8) as i32) << (8)))
-            | (('a' as u8) as i32)) as u32),
-        ((((((('p' as u8) as i32) << (24)) | ((('r' as u8) as i32) << (16)))
-            | ((('e' as u8) as i32) << (8)))
-            | (('p' as u8) as i32)) as u32),
-        ((((((('C' as u8) as i32) << (24)) | ((('F' as u8) as i32) << (16)))
-            | ((('F' as u8) as i32) << (8)))
-            | ((' ' as u8) as i32)) as u32),
-        ((((((('V' as u8) as i32) << (24)) | ((('O' as u8) as i32) << (16)))
-            | ((('R' as u8) as i32) << (8)))
-            | (('G' as u8) as i32)) as u32),
-        ((((((('E' as u8) as i32) << (24)) | ((('B' as u8) as i32) << (16)))
-            | ((('D' as u8) as i32) << (8)))
-            | (('T' as u8) as i32)) as u32),
-        ((((((('E' as u8) as i32) << (24)) | ((('B' as u8) as i32) << (16)))
-            | ((('L' as u8) as i32) << (8)))
-            | (('C' as u8) as i32)) as u32),
-        ((((((('g' as u8) as i32) << (24)) | ((('a' as u8) as i32) << (16)))
-            | ((('s' as u8) as i32) << (8)))
-            | (('p' as u8) as i32)) as u32),
-        ((((((('h' as u8) as i32) << (24)) | ((('d' as u8) as i32) << (16)))
-            | ((('m' as u8) as i32) << (8)))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('k' as u8) as i32) << (24)) | ((('e' as u8) as i32) << (16)))
-            | ((('r' as u8) as i32) << (8)))
-            | (('n' as u8) as i32)) as u32),
-        ((((((('L' as u8) as i32) << (24)) | ((('T' as u8) as i32) << (16)))
-            | ((('S' as u8) as i32) << (8)))
-            | (('H' as u8) as i32)) as u32),
-        ((((((('P' as u8) as i32) << (24)) | ((('C' as u8) as i32) << (16)))
-            | ((('L' as u8) as i32) << (8)))
-            | (('T' as u8) as i32)) as u32),
-        ((((((('V' as u8) as i32) << (24)) | ((('D' as u8) as i32) << (16)))
-            | ((('M' as u8) as i32) << (8)))
-            | (('X' as u8) as i32)) as u32),
-        ((((((('v' as u8) as i32) << (24)) | ((('h' as u8) as i32) << (16)))
-            | ((('e' as u8) as i32) << (8)))
-            | (('a' as u8) as i32)) as u32),
-        ((((((('v' as u8) as i32) << (24)) | ((('m' as u8) as i32) << (16)))
-            | ((('t' as u8) as i32) << (8)))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('B' as u8) as i32) << (24)) | ((('A' as u8) as i32) << (16)))
-            | ((('S' as u8) as i32) << (8)))
-            | (('E' as u8) as i32)) as u32),
-        ((((((('G' as u8) as i32) << (24)) | ((('D' as u8) as i32) << (16)))
-            | ((('E' as u8) as i32) << (8)))
-            | (('F' as u8) as i32)) as u32),
-        ((((((('G' as u8) as i32) << (24)) | ((('P' as u8) as i32) << (16)))
-            | ((('O' as u8) as i32) << (8)))
-            | (('S' as u8) as i32)) as u32),
-        ((((((('G' as u8) as i32) << (24)) | ((('S' as u8) as i32) << (16)))
-            | ((('U' as u8) as i32) << (8)))
-            | (('B' as u8) as i32)) as u32),
-        ((((((('E' as u8) as i32) << (24)) | ((('B' as u8) as i32) << (16)))
-            | ((('S' as u8) as i32) << (8)))
-            | (('C' as u8) as i32)) as u32),
-        ((((((('J' as u8) as i32) << (24)) | ((('S' as u8) as i32) << (16)))
-            | ((('T' as u8) as i32) << (8)))
-            | (('F' as u8) as i32)) as u32),
-        ((((((('M' as u8) as i32) << (24)) | ((('A' as u8) as i32) << (16)))
-            | ((('T' as u8) as i32) << (8)))
-            | (('H' as u8) as i32)) as u32),
-        ((((((('C' as u8) as i32) << (24)) | ((('B' as u8) as i32) << (16)))
-            | ((('D' as u8) as i32) << (8)))
-            | (('T' as u8) as i32)) as u32),
-        ((((((('C' as u8) as i32) << (24)) | ((('B' as u8) as i32) << (16)))
-            | ((('L' as u8) as i32) << (8)))
-            | (('C' as u8) as i32)) as u32),
-        ((((((('C' as u8) as i32) << (24)) | ((('O' as u8) as i32) << (16)))
-            | ((('L' as u8) as i32) << (8)))
-            | (('R' as u8) as i32)) as u32),
-        ((((((('C' as u8) as i32) << (24)) | ((('P' as u8) as i32) << (16)))
-            | ((('A' as u8) as i32) << (8)))
-            | (('L' as u8) as i32)) as u32),
-        ((((((('S' as u8) as i32) << (24)) | ((('V' as u8) as i32) << (16)))
-            | ((('G' as u8) as i32) << (8)))
-            | ((' ' as u8) as i32)) as u32),
-        ((((((('s' as u8) as i32) << (24)) | ((('b' as u8) as i32) << (16)))
-            | ((('i' as u8) as i32) << (8)))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('a' as u8) as i32) << (24)) | ((('c' as u8) as i32) << (16)))
-            | ((('n' as u8) as i32) << (8)))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('a' as u8) as i32) << (24)) | ((('v' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('r' as u8) as i32)) as u32),
-        ((((((('b' as u8) as i32) << (24)) | ((('d' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('b' as u8) as i32) << (24)) | ((('l' as u8) as i32) << (16)))
-            | ((('o' as u8) as i32) << (8)))
-            | (('c' as u8) as i32)) as u32),
-        ((((((('b' as u8) as i32) << (24)) | ((('s' as u8) as i32) << (16)))
-            | ((('l' as u8) as i32) << (8)))
-            | (('n' as u8) as i32)) as u32),
-        ((((((('c' as u8) as i32) << (24)) | ((('v' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('r' as u8) as i32)) as u32),
-        ((((((('f' as u8) as i32) << (24)) | ((('d' as u8) as i32) << (16)))
-            | ((('s' as u8) as i32) << (8)))
-            | (('c' as u8) as i32)) as u32),
-        ((((((('f' as u8) as i32) << (24)) | ((('e' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('f' as u8) as i32) << (24)) | ((('m' as u8) as i32) << (16)))
-            | ((('t' as u8) as i32) << (8)))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('f' as u8) as i32) << (24)) | ((('v' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('r' as u8) as i32)) as u32),
-        ((((((('g' as u8) as i32) << (24)) | ((('v' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('r' as u8) as i32)) as u32),
-        ((((((('h' as u8) as i32) << (24)) | ((('s' as u8) as i32) << (16)))
-            | ((('t' as u8) as i32) << (8)))
-            | (('y' as u8) as i32)) as u32),
-        ((((((('j' as u8) as i32) << (24)) | ((('u' as u8) as i32) << (16)))
-            | ((('s' as u8) as i32) << (8)))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('l' as u8) as i32) << (24)) | ((('c' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('r' as u8) as i32)) as u32),
-        ((((((('m' as u8) as i32) << (24)) | ((('o' as u8) as i32) << (16)))
-            | ((('r' as u8) as i32) << (8)))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('m' as u8) as i32) << (24)) | ((('o' as u8) as i32) << (16)))
-            | ((('r' as u8) as i32) << (8)))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('o' as u8) as i32) << (24)) | ((('p' as u8) as i32) << (16)))
-            | ((('b' as u8) as i32) << (8)))
-            | (('d' as u8) as i32)) as u32),
-        ((((((('p' as u8) as i32) << (24)) | ((('r' as u8) as i32) << (16)))
-            | ((('o' as u8) as i32) << (8)))
-            | (('p' as u8) as i32)) as u32),
-        ((((((('t' as u8) as i32) << (24)) | ((('r' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('k' as u8) as i32)) as u32),
-        ((((((('Z' as u8) as i32) << (24)) | ((('a' as u8) as i32) << (16)))
-            | ((('p' as u8) as i32) << (8)))
-            | (('f' as u8) as i32)) as u32),
-        ((((((('S' as u8) as i32) << (24)) | ((('i' as u8) as i32) << (16)))
-            | ((('l' as u8) as i32) << (8)))
-            | (('f' as u8) as i32)) as u32),
-        ((((((('G' as u8) as i32) << (24)) | ((('l' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('G' as u8) as i32) << (24)) | ((('l' as u8) as i32) << (16)))
-            | ((('o' as u8) as i32) << (8)))
-            | (('c' as u8) as i32)) as u32),
-        ((((((('F' as u8) as i32) << (24)) | ((('e' as u8) as i32) << (16)))
-            | ((('a' as u8) as i32) << (8)))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('S' as u8) as i32) << (24)) | ((('i' as u8) as i32) << (16)))
-            | ((('l' as u8) as i32) << (8)))
-            | (('l' as u8) as i32)) as u32),
+        ((((((('c' as libc::c_char) as i32) << (24)) | ((('m' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('p' as libc::c_char) as i32)) as u32),
+        ((((((('h' as libc::c_char) as i32) << (24)) | ((('e' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('d' as libc::c_char) as i32)) as u32),
+        ((((((('h' as libc::c_char) as i32) << (24)) | ((('h' as libc::c_char) as i32) << (16)))
+            | ((('e' as libc::c_char) as i32) << (8)))
+            | (('a' as libc::c_char) as i32)) as u32),
+        ((((((('h' as libc::c_char) as i32) << (24)) | ((('m' as libc::c_char) as i32) << (16)))
+            | ((('t' as libc::c_char) as i32) << (8)))
+            | (('x' as libc::c_char) as i32)) as u32),
+        ((((((('m' as libc::c_char) as i32) << (24)) | ((('a' as libc::c_char) as i32) << (16)))
+            | ((('x' as libc::c_char) as i32) << (8)))
+            | (('p' as libc::c_char) as i32)) as u32),
+        ((((((('n' as libc::c_char) as i32) << (24)) | ((('a' as libc::c_char) as i32) << (16)))
+            | ((('m' as libc::c_char) as i32) << (8)))
+            | (('e' as libc::c_char) as i32)) as u32),
+        ((((((('O' as libc::c_char) as i32) << (24)) | ((('S' as libc::c_char) as i32) << (16)))
+            | ((('/' as libc::c_char) as i32) << (8)))
+            | (('2' as libc::c_char) as i32)) as u32),
+        ((((((('p' as libc::c_char) as i32) << (24)) | ((('o' as libc::c_char) as i32) << (16)))
+            | ((('s' as libc::c_char) as i32) << (8)))
+            | (('t' as libc::c_char) as i32)) as u32),
+        ((((((('c' as libc::c_char) as i32) << (24)) | ((('v' as libc::c_char) as i32) << (16)))
+            | ((('t' as libc::c_char) as i32) << (8)))
+            | ((' ' as libc::c_char) as i32)) as u32),
+        ((((((('f' as libc::c_char) as i32) << (24)) | ((('p' as libc::c_char) as i32) << (16)))
+            | ((('g' as libc::c_char) as i32) << (8)))
+            | (('m' as libc::c_char) as i32)) as u32),
+        ((((((('g' as libc::c_char) as i32) << (24)) | ((('l' as libc::c_char) as i32) << (16)))
+            | ((('y' as libc::c_char) as i32) << (8)))
+            | (('f' as libc::c_char) as i32)) as u32),
+        ((((((('l' as libc::c_char) as i32) << (24)) | ((('o' as libc::c_char) as i32) << (16)))
+            | ((('c' as libc::c_char) as i32) << (8)))
+            | (('a' as libc::c_char) as i32)) as u32),
+        ((((((('p' as libc::c_char) as i32) << (24)) | ((('r' as libc::c_char) as i32) << (16)))
+            | ((('e' as libc::c_char) as i32) << (8)))
+            | (('p' as libc::c_char) as i32)) as u32),
+        ((((((('C' as libc::c_char) as i32) << (24)) | ((('F' as libc::c_char) as i32) << (16)))
+            | ((('F' as libc::c_char) as i32) << (8)))
+            | ((' ' as libc::c_char) as i32)) as u32),
+        ((((((('V' as libc::c_char) as i32) << (24)) | ((('O' as libc::c_char) as i32) << (16)))
+            | ((('R' as libc::c_char) as i32) << (8)))
+            | (('G' as libc::c_char) as i32)) as u32),
+        ((((((('E' as libc::c_char) as i32) << (24)) | ((('B' as libc::c_char) as i32) << (16)))
+            | ((('D' as libc::c_char) as i32) << (8)))
+            | (('T' as libc::c_char) as i32)) as u32),
+        ((((((('E' as libc::c_char) as i32) << (24)) | ((('B' as libc::c_char) as i32) << (16)))
+            | ((('L' as libc::c_char) as i32) << (8)))
+            | (('C' as libc::c_char) as i32)) as u32),
+        ((((((('g' as libc::c_char) as i32) << (24)) | ((('a' as libc::c_char) as i32) << (16)))
+            | ((('s' as libc::c_char) as i32) << (8)))
+            | (('p' as libc::c_char) as i32)) as u32),
+        ((((((('h' as libc::c_char) as i32) << (24)) | ((('d' as libc::c_char) as i32) << (16)))
+            | ((('m' as libc::c_char) as i32) << (8)))
+            | (('x' as libc::c_char) as i32)) as u32),
+        ((((((('k' as libc::c_char) as i32) << (24)) | ((('e' as libc::c_char) as i32) << (16)))
+            | ((('r' as libc::c_char) as i32) << (8)))
+            | (('n' as libc::c_char) as i32)) as u32),
+        ((((((('L' as libc::c_char) as i32) << (24)) | ((('T' as libc::c_char) as i32) << (16)))
+            | ((('S' as libc::c_char) as i32) << (8)))
+            | (('H' as libc::c_char) as i32)) as u32),
+        ((((((('P' as libc::c_char) as i32) << (24)) | ((('C' as libc::c_char) as i32) << (16)))
+            | ((('L' as libc::c_char) as i32) << (8)))
+            | (('T' as libc::c_char) as i32)) as u32),
+        ((((((('V' as libc::c_char) as i32) << (24)) | ((('D' as libc::c_char) as i32) << (16)))
+            | ((('M' as libc::c_char) as i32) << (8)))
+            | (('X' as libc::c_char) as i32)) as u32),
+        ((((((('v' as libc::c_char) as i32) << (24)) | ((('h' as libc::c_char) as i32) << (16)))
+            | ((('e' as libc::c_char) as i32) << (8)))
+            | (('a' as libc::c_char) as i32)) as u32),
+        ((((((('v' as libc::c_char) as i32) << (24)) | ((('m' as libc::c_char) as i32) << (16)))
+            | ((('t' as libc::c_char) as i32) << (8)))
+            | (('x' as libc::c_char) as i32)) as u32),
+        ((((((('B' as libc::c_char) as i32) << (24)) | ((('A' as libc::c_char) as i32) << (16)))
+            | ((('S' as libc::c_char) as i32) << (8)))
+            | (('E' as libc::c_char) as i32)) as u32),
+        ((((((('G' as libc::c_char) as i32) << (24)) | ((('D' as libc::c_char) as i32) << (16)))
+            | ((('E' as libc::c_char) as i32) << (8)))
+            | (('F' as libc::c_char) as i32)) as u32),
+        ((((((('G' as libc::c_char) as i32) << (24)) | ((('P' as libc::c_char) as i32) << (16)))
+            | ((('O' as libc::c_char) as i32) << (8)))
+            | (('S' as libc::c_char) as i32)) as u32),
+        ((((((('G' as libc::c_char) as i32) << (24)) | ((('S' as libc::c_char) as i32) << (16)))
+            | ((('U' as libc::c_char) as i32) << (8)))
+            | (('B' as libc::c_char) as i32)) as u32),
+        ((((((('E' as libc::c_char) as i32) << (24)) | ((('B' as libc::c_char) as i32) << (16)))
+            | ((('S' as libc::c_char) as i32) << (8)))
+            | (('C' as libc::c_char) as i32)) as u32),
+        ((((((('J' as libc::c_char) as i32) << (24)) | ((('S' as libc::c_char) as i32) << (16)))
+            | ((('T' as libc::c_char) as i32) << (8)))
+            | (('F' as libc::c_char) as i32)) as u32),
+        ((((((('M' as libc::c_char) as i32) << (24)) | ((('A' as libc::c_char) as i32) << (16)))
+            | ((('T' as libc::c_char) as i32) << (8)))
+            | (('H' as libc::c_char) as i32)) as u32),
+        ((((((('C' as libc::c_char) as i32) << (24)) | ((('B' as libc::c_char) as i32) << (16)))
+            | ((('D' as libc::c_char) as i32) << (8)))
+            | (('T' as libc::c_char) as i32)) as u32),
+        ((((((('C' as libc::c_char) as i32) << (24)) | ((('B' as libc::c_char) as i32) << (16)))
+            | ((('L' as libc::c_char) as i32) << (8)))
+            | (('C' as libc::c_char) as i32)) as u32),
+        ((((((('C' as libc::c_char) as i32) << (24)) | ((('O' as libc::c_char) as i32) << (16)))
+            | ((('L' as libc::c_char) as i32) << (8)))
+            | (('R' as libc::c_char) as i32)) as u32),
+        ((((((('C' as libc::c_char) as i32) << (24)) | ((('P' as libc::c_char) as i32) << (16)))
+            | ((('A' as libc::c_char) as i32) << (8)))
+            | (('L' as libc::c_char) as i32)) as u32),
+        ((((((('S' as libc::c_char) as i32) << (24)) | ((('V' as libc::c_char) as i32) << (16)))
+            | ((('G' as libc::c_char) as i32) << (8)))
+            | ((' ' as libc::c_char) as i32)) as u32),
+        ((((((('s' as libc::c_char) as i32) << (24)) | ((('b' as libc::c_char) as i32) << (16)))
+            | ((('i' as libc::c_char) as i32) << (8)))
+            | (('x' as libc::c_char) as i32)) as u32),
+        ((((((('a' as libc::c_char) as i32) << (24)) | ((('c' as libc::c_char) as i32) << (16)))
+            | ((('n' as libc::c_char) as i32) << (8)))
+            | (('t' as libc::c_char) as i32)) as u32),
+        ((((((('a' as libc::c_char) as i32) << (24)) | ((('v' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('r' as libc::c_char) as i32)) as u32),
+        ((((((('b' as libc::c_char) as i32) << (24)) | ((('d' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('t' as libc::c_char) as i32)) as u32),
+        ((((((('b' as libc::c_char) as i32) << (24)) | ((('l' as libc::c_char) as i32) << (16)))
+            | ((('o' as libc::c_char) as i32) << (8)))
+            | (('c' as libc::c_char) as i32)) as u32),
+        ((((((('b' as libc::c_char) as i32) << (24)) | ((('s' as libc::c_char) as i32) << (16)))
+            | ((('l' as libc::c_char) as i32) << (8)))
+            | (('n' as libc::c_char) as i32)) as u32),
+        ((((((('c' as libc::c_char) as i32) << (24)) | ((('v' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('r' as libc::c_char) as i32)) as u32),
+        ((((((('f' as libc::c_char) as i32) << (24)) | ((('d' as libc::c_char) as i32) << (16)))
+            | ((('s' as libc::c_char) as i32) << (8)))
+            | (('c' as libc::c_char) as i32)) as u32),
+        ((((((('f' as libc::c_char) as i32) << (24)) | ((('e' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('t' as libc::c_char) as i32)) as u32),
+        ((((((('f' as libc::c_char) as i32) << (24)) | ((('m' as libc::c_char) as i32) << (16)))
+            | ((('t' as libc::c_char) as i32) << (8)))
+            | (('x' as libc::c_char) as i32)) as u32),
+        ((((((('f' as libc::c_char) as i32) << (24)) | ((('v' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('r' as libc::c_char) as i32)) as u32),
+        ((((((('g' as libc::c_char) as i32) << (24)) | ((('v' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('r' as libc::c_char) as i32)) as u32),
+        ((((((('h' as libc::c_char) as i32) << (24)) | ((('s' as libc::c_char) as i32) << (16)))
+            | ((('t' as libc::c_char) as i32) << (8)))
+            | (('y' as libc::c_char) as i32)) as u32),
+        ((((((('j' as libc::c_char) as i32) << (24)) | ((('u' as libc::c_char) as i32) << (16)))
+            | ((('s' as libc::c_char) as i32) << (8)))
+            | (('t' as libc::c_char) as i32)) as u32),
+        ((((((('l' as libc::c_char) as i32) << (24)) | ((('c' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('r' as libc::c_char) as i32)) as u32),
+        ((((((('m' as libc::c_char) as i32) << (24)) | ((('o' as libc::c_char) as i32) << (16)))
+            | ((('r' as libc::c_char) as i32) << (8)))
+            | (('t' as libc::c_char) as i32)) as u32),
+        ((((((('m' as libc::c_char) as i32) << (24)) | ((('o' as libc::c_char) as i32) << (16)))
+            | ((('r' as libc::c_char) as i32) << (8)))
+            | (('x' as libc::c_char) as i32)) as u32),
+        ((((((('o' as libc::c_char) as i32) << (24)) | ((('p' as libc::c_char) as i32) << (16)))
+            | ((('b' as libc::c_char) as i32) << (8)))
+            | (('d' as libc::c_char) as i32)) as u32),
+        ((((((('p' as libc::c_char) as i32) << (24)) | ((('r' as libc::c_char) as i32) << (16)))
+            | ((('o' as libc::c_char) as i32) << (8)))
+            | (('p' as libc::c_char) as i32)) as u32),
+        ((((((('t' as libc::c_char) as i32) << (24)) | ((('r' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('k' as libc::c_char) as i32)) as u32),
+        ((((((('Z' as libc::c_char) as i32) << (24)) | ((('a' as libc::c_char) as i32) << (16)))
+            | ((('p' as libc::c_char) as i32) << (8)))
+            | (('f' as libc::c_char) as i32)) as u32),
+        ((((((('S' as libc::c_char) as i32) << (24)) | ((('i' as libc::c_char) as i32) << (16)))
+            | ((('l' as libc::c_char) as i32) << (8)))
+            | (('f' as libc::c_char) as i32)) as u32),
+        ((((((('G' as libc::c_char) as i32) << (24)) | ((('l' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('t' as libc::c_char) as i32)) as u32),
+        ((((((('G' as libc::c_char) as i32) << (24)) | ((('l' as libc::c_char) as i32) << (16)))
+            | ((('o' as libc::c_char) as i32) << (8)))
+            | (('c' as libc::c_char) as i32)) as u32),
+        ((((((('F' as libc::c_char) as i32) << (24)) | ((('e' as libc::c_char) as i32) << (16)))
+            | ((('a' as libc::c_char) as i32) << (8)))
+            | (('t' as libc::c_char) as i32)) as u32),
+        ((((((('S' as libc::c_char) as i32) << (24)) | ((('i' as libc::c_char) as i32) << (16)))
+            | ((('l' as libc::c_char) as i32) << (8)))
+            | (('l' as libc::c_char) as i32)) as u32),
     ]
 };
 #[repr(C)]
@@ -2108,7 +2108,7 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
     'loop_: for font in 0..((*font_collection).fonts.len()) {
         let mut font = (*font_collection).fonts.as_mut_ptr().add(font);
         if !(unsafe { NormalizeWithoutFixingChecksums_80((font)) }) {
-            printf(b"Font normalization failed.\n\0".as_ptr() as *const i8);
+            printf(c"Font normalization failed.\n".as_ptr() as *const i8);
             return false;
         }
         offset = ((offset as usize).wrapping_add(
@@ -2134,7 +2134,7 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
     'loop_: for font in 0..((*font_collection).fonts.len()) {
         let mut font = (*font_collection).fonts.as_mut_ptr().add(font);
         if !(unsafe { FixChecksums_78((font)) }) {
-            printf(b"Failed to fix checksums\n\0".as_ptr() as *const i8);
+            printf(c"Failed to fix checksums\n".as_ptr() as *const i8);
             return false;
         }
     }
@@ -2728,7 +2728,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
 #[repr(C)]
 #[derive(Clone)]
 pub struct woff2_WOFF2Params {
-    pub extended_metadata: Vec<u8>,
+    pub extended_metadata: Vec<libc::c_char>,
     pub brotli_quality: i32,
     pub allow_transforms: bool,
 }
@@ -2736,7 +2736,7 @@ impl woff2_WOFF2Params {
     pub unsafe fn woff2_WOFF2Params() -> Self {
         let mut this = Self {
             extended_metadata: {
-                let s = b"\0".as_ptr();
+                let s = c"".as_ptr();
                 std::slice::from_raw_parts(s, (0..).take_while(|&i| *s.add(i) != 0).count() + 1)
                     .to_vec()
             },
@@ -2962,7 +2962,7 @@ pub unsafe fn ComputeTotalTransformLength_103(font: *const woff2_Font) -> usize 
 pub unsafe fn MaxWOFF2CompressedSize_104(mut data: *const u8, mut length: usize) -> usize {
     return (unsafe {
         let mut _extended_metadata = {
-            let s = b"\0".as_ptr();
+            let s = c"".as_ptr();
             std::slice::from_raw_parts(s, (0..).take_while(|&i| *s.add(i) != 0).count() + 1)
                 .to_vec()
         };
@@ -2972,7 +2972,7 @@ pub unsafe fn MaxWOFF2CompressedSize_104(mut data: *const u8, mut length: usize)
 pub unsafe fn MaxWOFF2CompressedSize_105(
     mut data: *const u8,
     mut length: usize,
-    extended_metadata: *const Vec<u8>,
+    extended_metadata: *const Vec<libc::c_char>,
 ) -> usize {
     return (((length).wrapping_add(1024_usize) as u64)
         .wrapping_add((((*extended_metadata).len() - 1) as u64)) as usize);
@@ -2984,7 +2984,7 @@ pub unsafe fn TransformFontCollection_107(mut font_collection: *mut woff2_FontCo
     'loop_: for font in 0..((*font_collection).fonts.len()) {
         let mut font = (*font_collection).fonts.as_mut_ptr().add(font);
         if !(unsafe { TransformGlyfAndLocaTables_90((font)) }) {
-            printf(b"glyf/loca transformation failed.\n\0".as_ptr() as *const i8);
+            printf(c"glyf/loca transformation failed.\n".as_ptr() as *const i8);
             return false;
         }
     }
@@ -3024,7 +3024,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             (&mut font_collection as *mut woff2_FontCollection),
         )
     }) {
-        printf(b"Parsing of the input font failed.\n\0".as_ptr() as *const i8);
+        printf(c"Parsing of the input font failed.\n".as_ptr() as *const i8);
         return false;
     }
     if !(unsafe { NormalizeFontCollection_82((&mut font_collection as *mut woff2_FontCollection)) })
@@ -3113,11 +3113,11 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             (*params).brotli_quality,
         )
     }) {
-        printf(b"Compression of combined table failed.\n\0".as_ptr() as *const i8);
+        printf(c"Compression of combined table failed.\n".as_ptr() as *const i8);
         return false;
     }
     printf(
-        b"Compressed %zu to %u.\n\0".as_ptr() as *const i8,
+        c"Compressed %zu to %u.\n".as_ptr() as *const i8,
         total_transform_length,
         total_compressed_length,
     );
@@ -3140,7 +3140,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
                 _quality,
             )
         }) {
-            printf(b"Compression of extended metadata failed.\n\0".as_ptr() as *const i8);
+            printf(c"Compression of extended metadata failed.\n".as_ptr() as *const i8);
             return false;
         }
     } else {
@@ -3203,7 +3203,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     });
     if ((woff2_length) > (*result_length)) {
         printf(
-            b"Result allocation was too small (%zd vs %zd bytes).\n\0".as_ptr() as *const i8,
+            c"Result allocation was too small (%zd vs %zd bytes).\n".as_ptr() as *const i8,
             (*result_length),
             woff2_length,
         );
@@ -3332,7 +3332,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
                     &index_by_tag_offset as *const BTreeMap<(u32, u32), Box<u16>>,
                 ) {
                     printf(
-                        b"Missing table index for offset 0x%08x\n\0".as_ptr() as *const i8,
+                        c"Missing table index for offset 0x%08x\n".as_ptr() as *const i8,
                         table_offset,
                     );
                     return false;
@@ -3361,7 +3361,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     });
     if ((*result_length) != (offset)) {
         printf(
-            b"Mismatch between computed and actual length (%zd vs %zd)\n\0".as_ptr() as *const i8,
+            c"Mismatch between computed and actual length (%zd vs %zd)\n".as_ptr() as *const i8,
             (*result_length),
             offset,
         );
@@ -3369,24 +3369,30 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     }
     return true;
 }
-pub unsafe fn GetFileContent_110(mut filename: Vec<u8>) -> Vec<u8> {
+pub unsafe fn GetFileContent_110(mut filename: Vec<libc::c_char>) -> Vec<libc::c_char> {
     let mut ifs: ::std::fs::File = ::std::fs::File::open(
-        ::std::ffi::CStr::from_ptr(filename.as_ptr() as *const i8)
+        ::std::ffi::CStr::from_ptr(filename.as_ptr())
             .to_str()
             .unwrap(),
     )
     .unwrap();
     return {
-        let mut __buf: Vec<u8> = Vec::new();
+        let mut __bytes: Vec<u8> = Vec::new();
         let mut __f = &ifs.try_clone().unwrap();
-        __f.read_to_end(&mut __buf).expect("couldn't read the file");
+        __f.read_to_end(&mut __bytes)
+            .expect("couldn't read the file");
+        let mut __buf: Vec<libc::c_char> = __bytes.iter().map(|&b| b as libc::c_char).collect();
         __buf.push(0);
         __buf
     };
 }
-pub unsafe fn SetFileContents_111(mut filename: Vec<u8>, mut start: *mut u8, mut end: *mut u8) {
+pub unsafe fn SetFileContents_111(
+    mut filename: Vec<libc::c_char>,
+    mut start: *mut libc::c_char,
+    mut end: *mut libc::c_char,
+) {
     let mut ofs: ::std::fs::File = ::std::fs::File::create(
-        ::std::ffi::CStr::from_ptr(filename.as_ptr() as *const i8)
+        ::std::ffi::CStr::from_ptr(filename.as_ptr())
             .to_str()
             .unwrap(),
     )
@@ -3406,26 +3412,29 @@ pub fn main() {
         .map(|arg| arg.as_bytes().to_vec())
         .collect();
     args.iter_mut().for_each(|v| v.push(0));
-    let mut argv: Vec<*mut u8> = args.iter().map(|arg| arg.as_ptr() as *mut u8).collect();
+    let mut argv: Vec<*mut libc::c_char> = args
+        .iter()
+        .map(|arg| arg.as_ptr() as *mut libc::c_char)
+        .collect();
     argv.push(::std::ptr::null_mut());
     unsafe { ::std::process::exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32) }
 }
-unsafe fn main_0(mut argc: i32, mut argv: *mut *mut u8) -> i32 {
+unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     if ((argc) != (2)) {
-        printf(b"One argument, the input filename, must be provided.\n\0".as_ptr() as *const i8);
+        printf(c"One argument, the input filename, must be provided.\n".as_ptr() as *const i8);
         return 1;
     }
-    let mut filename: Vec<u8> = {
+    let mut filename: Vec<libc::c_char> = {
         let s = (*argv.offset((1) as isize)).cast_const();
         std::slice::from_raw_parts(s, (0..).take_while(|&i| *s.add(i) != 0).count() + 1).to_vec()
     };
-    let mut outfilename: Vec<u8> = {
+    let mut outfilename: Vec<libc::c_char> = {
         let mut __tmp2 = {
             let mut __tmp1 = filename[(0_usize) as usize
                 ..::std::cmp::min(
                     (0_usize
                         + match filename.iter().rposition(|&c| {
-                            ::std::ffi::CStr::from_ptr(b".\0".as_ptr() as *const i8)
+                            ::std::ffi::CStr::from_ptr(c".".as_ptr())
                                 .to_str()
                                 .unwrap()
                                 .contains(c as u8 as char)
@@ -3441,7 +3450,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut u8) -> i32 {
         }
         .clone();
         __tmp2.pop();
-        let __from = b".woff2\0".as_ptr();
+        let __from = c".woff2".as_ptr();
         __tmp2.extend_from_slice(::std::slice::from_raw_parts(
             __from,
             (0..).position(|i| *__from.add(i) == 0).unwrap(),
@@ -3450,20 +3459,21 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut u8) -> i32 {
         __tmp2
     };
     printf(
-        b"Processing %s => %s\n\0".as_ptr() as *const i8,
+        c"Processing %s => %s\n".as_ptr() as *const i8,
         filename.as_ptr(),
         outfilename.as_ptr(),
     );
-    let mut input: Vec<u8> = (unsafe { GetFileContent_110(filename.clone()) });
+    let mut input: Vec<libc::c_char> = (unsafe { GetFileContent_110(filename.clone()) });
     let mut input_data: *const u8 = (input.as_ptr() as *const u8);
     let mut output_size: usize =
         (unsafe { MaxWOFF2CompressedSize_104(input_data, (input.len() - 1)) });
-    let mut output: Vec<u8> = vec![0_u8; (output_size) as usize]
+    let mut output: Vec<libc::c_char> = vec![(0 as libc::c_char); (output_size) as usize]
         .iter()
         .cloned()
         .chain(std::iter::once(0))
         .collect();
-    let mut output_data: *mut u8 = ((&mut output[(0_usize)] as *mut u8) as *mut u8 as *mut u8);
+    let mut output_data: *mut u8 =
+        ((&mut output[(0_usize)] as *mut libc::c_char) as *mut libc::c_char as *mut u8);
     let mut params: woff2_WOFF2Params = woff2_WOFF2Params::woff2_WOFF2Params();
     if !(unsafe {
         ConvertTTFToWOFF2_109(
@@ -3474,7 +3484,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut u8) -> i32 {
             &params as *const woff2_WOFF2Params,
         )
     }) {
-        printf(b"Compression failed.\n\0".as_ptr() as *const i8);
+        printf(c"Compression failed.\n".as_ptr() as *const i8);
         return 1;
     }
     {
@@ -3483,8 +3493,8 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut u8) -> i32 {
         output.push(0)
     };
     (unsafe {
-        let _start: *mut u8 = output.as_mut_ptr();
-        let _end: *mut u8 = output.as_mut_ptr().add(output.len() - 1);
+        let _start: *mut libc::c_char = output.as_mut_ptr();
+        let _end: *mut libc::c_char = output.as_mut_ptr().add(output.len() - 1);
         SetFileContents_111(outfilename.clone(), _start, _end)
     });
     return 0;

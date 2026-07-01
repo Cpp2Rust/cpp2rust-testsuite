@@ -4055,8 +4055,7 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
                         __v.pop();
                         __v.extend(
                             (*buf.borrow())
-                                .cast::<u8>()
-                                .expect("ub:wrong type")
+                                .reinterpret_cast::<u8>()
                                 .map(|c| c.read())
                                 .take((*n.borrow()) as usize),
                         );
@@ -4102,8 +4101,7 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
                         __v.splice(
                             pos..end,
                             (*buf.borrow())
-                                .cast::<u8>()
-                                .expect("ub:wrong type")
+                                .reinterpret_cast::<u8>()
                                 .map(|c| c.read())
                                 .take((*n.borrow()) as usize),
                         );
@@ -4266,11 +4264,13 @@ pub fn GetFileContent_80(filename: Vec<u8>) -> Vec<u8> {
             .expect("Failed to open file"),
     ));
     return {
-        let mut __buf: Vec<u8> = Vec::new();
+        use std::io::Read;
+        let mut __bytes: Vec<u8> = Vec::new();
         let mut __f = &(*ifs.borrow()).try_clone().unwrap();
-        __f.read_to_end(&mut __buf).expect("couldn't read the file");
-        __buf.push(0);
-        __buf
+        __f.read_to_end(&mut __bytes)
+            .expect("couldn't read the file");
+        __bytes.push(0);
+        __bytes
     };
 }
 pub fn SetFileContents_81(filename: Vec<u8>, start: Ptr<u8>, end: Ptr<u8>) {

@@ -1989,11 +1989,13 @@ pub fn GetFileContent_49(filename: Vec<u8>) -> Vec<u8> {
             .expect("Failed to open file"),
     ));
     return {
-        let mut __buf: Vec<u8> = Vec::new();
+        use std::io::Read;
+        let mut __bytes: Vec<u8> = Vec::new();
         let mut __f = &(*ifs.borrow()).try_clone().unwrap();
-        __f.read_to_end(&mut __buf).expect("couldn't read the file");
-        __buf.push(0);
-        __buf
+        __f.read_to_end(&mut __bytes)
+            .expect("couldn't read the file");
+        __bytes.push(0);
+        __bytes
     };
 }
 pub fn SetFileContents_50(filename: Vec<u8>, start: Ptr<u8>, end: Ptr<u8>) {

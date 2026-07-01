@@ -2074,9 +2074,7 @@ impl Clone for woff2_Glyph {
 }
 impl Default for woff2_Glyph {
     fn default() -> Self {
-        {
-            woff2_Glyph::woff2_Glyph()
-        }
+        { woff2_Glyph::woff2_Glyph() }
     }
 }
 impl ByteRepr for woff2_Glyph {}
@@ -4576,9 +4574,7 @@ impl Clone for woff2_WOFF2Params {
 }
 impl Default for woff2_WOFF2Params {
     fn default() -> Self {
-        {
-            woff2_WOFF2Params::woff2_WOFF2Params()
-        }
+        { woff2_WOFF2Params::woff2_WOFF2Params() }
     }
 }
 impl ByteRepr for woff2_WOFF2Params {}
@@ -5531,11 +5527,13 @@ pub fn GetFileContent_110(filename: Vec<u8>) -> Vec<u8> {
             .expect("Failed to open file"),
     ));
     return {
-        let mut __buf: Vec<u8> = Vec::new();
+        use std::io::Read;
+        let mut __bytes: Vec<u8> = Vec::new();
         let mut __f = &(*ifs.borrow()).try_clone().unwrap();
-        __f.read_to_end(&mut __buf).expect("couldn't read the file");
-        __buf.push(0);
-        __buf
+        __f.read_to_end(&mut __bytes)
+            .expect("couldn't read the file");
+        __bytes.push(0);
+        __bytes
     };
 }
 pub fn SetFileContents_111(filename: Vec<u8>, start: Ptr<u8>, end: Ptr<u8>) {

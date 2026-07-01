@@ -405,9 +405,7 @@ impl Clone for brunsli_JPEGComponent {
 }
 impl Default for brunsli_JPEGComponent {
     fn default() -> Self {
-        {
-            brunsli_JPEGComponent::brunsli_JPEGComponent()
-        }
+        { brunsli_JPEGComponent::brunsli_JPEGComponent() }
     }
 }
 impl ByteRepr for brunsli_JPEGComponent {}
@@ -511,9 +509,7 @@ impl Clone for brunsli_JPEGData {
 }
 impl Default for brunsli_JPEGData {
     fn default() -> Self {
-        {
-            brunsli_JPEGData::brunsli_JPEGData()
-        }
+        { brunsli_JPEGData::brunsli_JPEGData() }
     }
 }
 impl ByteRepr for brunsli_JPEGData {}
@@ -1554,9 +1550,7 @@ impl Clone for brunsli_Prob {
 }
 impl Default for brunsli_Prob {
     fn default() -> Self {
-        {
-            brunsli_Prob::brunsli_Prob()
-        }
+        { brunsli_Prob::brunsli_Prob() }
     }
 }
 impl ByteRepr for brunsli_Prob {
@@ -2221,9 +2215,7 @@ impl Clone for brunsli_ComponentStateDC {
 }
 impl Default for brunsli_ComponentStateDC {
     fn default() -> Self {
-        {
-            brunsli_ComponentStateDC::brunsli_ComponentStateDC()
-        }
+        { brunsli_ComponentStateDC::brunsli_ComponentStateDC() }
     }
 }
 impl ByteRepr for brunsli_ComponentStateDC {}
@@ -2342,9 +2334,7 @@ impl Clone for brunsli_ComponentState {
 }
 impl Default for brunsli_ComponentState {
     fn default() -> Self {
-        {
-            brunsli_ComponentState::brunsli_ComponentState()
-        }
+        { brunsli_ComponentState::brunsli_ComponentState() }
     }
 }
 impl ByteRepr for brunsli_ComponentState {}
@@ -2960,9 +2950,7 @@ impl Clone for brunsli_PermutationCoder {
 }
 impl Default for brunsli_PermutationCoder {
     fn default() -> Self {
-        {
-            brunsli_PermutationCoder::brunsli_PermutationCoder()
-        }
+        { brunsli_PermutationCoder::brunsli_PermutationCoder() }
     }
 }
 impl ByteRepr for brunsli_PermutationCoder {}
@@ -3442,9 +3430,7 @@ impl Clone for brunsli_BitSource {
 }
 impl Default for brunsli_BitSource {
     fn default() -> Self {
-        {
-            brunsli_BitSource::brunsli_BitSource()
-        }
+        { brunsli_BitSource::brunsli_BitSource() }
     }
 }
 impl ByteRepr for brunsli_BitSource {
@@ -3521,9 +3507,7 @@ impl Clone for brunsli_ANSDecodingData {
 }
 impl Default for brunsli_ANSDecodingData {
     fn default() -> Self {
-        {
-            brunsli_ANSDecodingData::brunsli_ANSDecodingData()
-        }
+        { brunsli_ANSDecodingData::brunsli_ANSDecodingData() }
     }
 }
 impl ByteRepr for brunsli_ANSDecodingData {
@@ -3603,9 +3587,7 @@ impl Clone for brunsli_ANSDecoder {
 }
 impl Default for brunsli_ANSDecoder {
     fn default() -> Self {
-        {
-            brunsli_ANSDecoder::brunsli_ANSDecoder()
-        }
+        { brunsli_ANSDecoder::brunsli_ANSDecoder() }
     }
 }
 impl ByteRepr for brunsli_ANSDecoder {
@@ -4006,9 +3988,7 @@ impl brunsli_BrunsliDecoder {
 }
 impl Default for brunsli_BrunsliDecoder {
     fn default() -> Self {
-        {
-            brunsli_BrunsliDecoder::brunsli_BrunsliDecoder()
-        }
+        { brunsli_BrunsliDecoder::brunsli_BrunsliDecoder() }
     }
 }
 impl ByteRepr for brunsli_BrunsliDecoder {}
@@ -4089,9 +4069,7 @@ impl Clone for brunsli_BinaryArithmeticDecoder {
 }
 impl Default for brunsli_BinaryArithmeticDecoder {
     fn default() -> Self {
-        {
-            brunsli_BinaryArithmeticDecoder::brunsli_BinaryArithmeticDecoder()
-        }
+        { brunsli_BinaryArithmeticDecoder::brunsli_BinaryArithmeticDecoder() }
     }
 }
 impl ByteRepr for brunsli_BinaryArithmeticDecoder {
@@ -4411,9 +4389,7 @@ impl brunsli_internal_dec_OutputChunk {
 }
 impl Default for brunsli_internal_dec_OutputChunk {
     fn default() -> Self {
-        {
-            brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2(None)
-        }
+        { brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2(None) }
     }
 }
 impl ByteRepr for brunsli_internal_dec_OutputChunk {}
@@ -17062,7 +17038,8 @@ pub fn SerializeJpeg_206(
                     if true {
                     } else {
                         write!(libcc2rs::cerr(), "Failed to encode marker ",);
-                        libcc2rs::cerr().write_all(&([(&[(*marker.borrow())] as &[u8])].concat()));
+                        libcc2rs::cerr()
+                            .write_all(&([(&[(*marker.borrow()) as u8] as &[u8])].concat()));
                         write!(libcc2rs::cerr(), "\n",);
                     }
                     (*(*ss.upgrade().deref()).stage.borrow_mut()) =
@@ -17144,9 +17121,7 @@ impl brunsli_internal_dec_State {
 }
 impl Default for brunsli_internal_dec_State {
     fn default() -> Self {
-        {
-            brunsli_internal_dec_State::brunsli_internal_dec_State()
-        }
+        { brunsli_internal_dec_State::brunsli_internal_dec_State() }
     }
 }
 impl ByteRepr for brunsli_internal_dec_State {}

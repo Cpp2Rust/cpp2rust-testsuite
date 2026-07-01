@@ -405,9 +405,7 @@ impl Clone for brunsli_JPEGComponent {
 }
 impl Default for brunsli_JPEGComponent {
     fn default() -> Self {
-        {
-            brunsli_JPEGComponent::brunsli_JPEGComponent()
-        }
+        { brunsli_JPEGComponent::brunsli_JPEGComponent() }
     }
 }
 impl ByteRepr for brunsli_JPEGComponent {}
@@ -511,9 +509,7 @@ impl Clone for brunsli_JPEGData {
 }
 impl Default for brunsli_JPEGData {
     fn default() -> Self {
-        {
-            brunsli_JPEGData::brunsli_JPEGData()
-        }
+        { brunsli_JPEGData::brunsli_JPEGData() }
     }
 }
 impl ByteRepr for brunsli_JPEGData {}
@@ -1554,9 +1550,7 @@ impl Clone for brunsli_Prob {
 }
 impl Default for brunsli_Prob {
     fn default() -> Self {
-        {
-            brunsli_Prob::brunsli_Prob()
-        }
+        { brunsli_Prob::brunsli_Prob() }
     }
 }
 impl ByteRepr for brunsli_Prob {
@@ -2221,9 +2215,7 @@ impl Clone for brunsli_ComponentStateDC {
 }
 impl Default for brunsli_ComponentStateDC {
     fn default() -> Self {
-        {
-            brunsli_ComponentStateDC::brunsli_ComponentStateDC()
-        }
+        { brunsli_ComponentStateDC::brunsli_ComponentStateDC() }
     }
 }
 impl ByteRepr for brunsli_ComponentStateDC {}
@@ -2342,9 +2334,7 @@ impl Clone for brunsli_ComponentState {
 }
 impl Default for brunsli_ComponentState {
     fn default() -> Self {
-        {
-            brunsli_ComponentState::brunsli_ComponentState()
-        }
+        { brunsli_ComponentState::brunsli_ComponentState() }
     }
 }
 impl ByteRepr for brunsli_ComponentState {}
@@ -2960,9 +2950,7 @@ impl Clone for brunsli_PermutationCoder {
 }
 impl Default for brunsli_PermutationCoder {
     fn default() -> Self {
-        {
-            brunsli_PermutationCoder::brunsli_PermutationCoder()
-        }
+        { brunsli_PermutationCoder::brunsli_PermutationCoder() }
     }
 }
 impl ByteRepr for brunsli_PermutationCoder {}
@@ -3464,9 +3452,7 @@ impl Clone for brunsli_ANSCoder {
 }
 impl Default for brunsli_ANSCoder {
     fn default() -> Self {
-        {
-            brunsli_ANSCoder::brunsli_ANSCoder()
-        }
+        { brunsli_ANSCoder::brunsli_ANSCoder() }
     }
 }
 impl ByteRepr for brunsli_ANSCoder {
@@ -4900,9 +4886,7 @@ impl Clone for brunsli_internal_enc_Histogram {
 }
 impl Default for brunsli_internal_enc_Histogram {
     fn default() -> Self {
-        {
-            brunsli_internal_enc_Histogram::brunsli_internal_enc_Histogram()
-        }
+        { brunsli_internal_enc_Histogram::brunsli_internal_enc_Histogram() }
     }
 }
 impl ByteRepr for brunsli_internal_enc_Histogram {
@@ -5000,9 +4984,7 @@ impl Clone for brunsli_internal_enc_EntropySource {
 }
 impl Default for brunsli_internal_enc_EntropySource {
     fn default() -> Self {
-        {
-            brunsli_internal_enc_EntropySource::brunsli_internal_enc_EntropySource()
-        }
+        { brunsli_internal_enc_EntropySource::brunsli_internal_enc_EntropySource() }
     }
 }
 impl ByteRepr for brunsli_internal_enc_EntropySource {}
@@ -5040,9 +5022,7 @@ impl Clone for brunsli_internal_enc_DataStream_CodeWord {
 }
 impl Default for brunsli_internal_enc_DataStream_CodeWord {
     fn default() -> Self {
-        {
-            brunsli_internal_enc_DataStream_CodeWord::brunsli_internal_enc_DataStream_CodeWord()
-        }
+        { brunsli_internal_enc_DataStream_CodeWord::brunsli_internal_enc_DataStream_CodeWord() }
     }
 }
 impl ByteRepr for brunsli_internal_enc_DataStream_CodeWord {
@@ -5110,9 +5090,7 @@ impl Clone for brunsli_internal_enc_DataStream {
 }
 impl Default for brunsli_internal_enc_DataStream {
     fn default() -> Self {
-        {
-            brunsli_internal_enc_DataStream::brunsli_internal_enc_DataStream()
-        }
+        { brunsli_internal_enc_DataStream::brunsli_internal_enc_DataStream() }
     }
 }
 impl ByteRepr for brunsli_internal_enc_DataStream {}
@@ -7720,7 +7698,7 @@ pub fn EncodeSection_179(
     {
         write!(libcc2rs::cerr(), "Section 0x",);
         libcc2rs::cerr()
-            .write_all(&([(&[(*marker.borrow())] as &[u8]), (b" size " as &[u8])].concat()));
+            .write_all(&([(&[(*marker.borrow()) as u8] as &[u8]), (b" size " as &[u8])].concat()));
         write!(
             libcc2rs::cerr(),
             "{:} too large for {:} bytes base128 number.\n",
@@ -12017,9 +11995,7 @@ impl Clone for brunsli_HuffmanTableEntry {
 }
 impl Default for brunsli_HuffmanTableEntry {
     fn default() -> Self {
-        {
-            brunsli_HuffmanTableEntry::brunsli_HuffmanTableEntry()
-        }
+        { brunsli_HuffmanTableEntry::brunsli_HuffmanTableEntry() }
     }
 }
 impl ByteRepr for brunsli_HuffmanTableEntry {
@@ -12924,7 +12900,7 @@ pub fn ProcessDHT_236(
                 {
                     write!(libcc2rs::cerr(), "Invalid value: ",);
                     libcc2rs::cerr().write_all(
-                        &([(&[(*value.borrow())] as &[u8]), (&[b'\n'] as &[u8])].concat()),
+                        &([(&[(*value.borrow()) as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()),
                     );
                     (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
                         brunsli_JPEGReadError::INVALID_HUFFMAN_CODE;
@@ -12937,8 +12913,9 @@ pub fn ProcessDHT_236(
                 .deref()) as bool)
             {
                 write!(libcc2rs::cerr(), "Duplicate Huffman code value ",);
-                libcc2rs::cerr()
-                    .write_all(&([(&[(*value.borrow())] as &[u8]), (&[b'\n'] as &[u8])].concat()));
+                libcc2rs::cerr().write_all(
+                    &([(&[(*value.borrow()) as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()),
+                );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
                     brunsli_JPEGReadError::INVALID_HUFFMAN_CODE;
                 return false;
@@ -14272,7 +14249,17 @@ pub fn ProcessScan_247(
                 _lhs & ((*refinement_bitmask.borrow()) as i32)
             } != 0)
             {
-                write!( libcc2rs::cerr()  , "Invalid scan order, a more refined scan was already done: component = {:} k = {:} prev_mask: {:} cur_mask: {:}\n", (*comp_idx.borrow()) , (*k.borrow()) , (  (*scan_progression.borrow()) . offset ( ( (*i.borrow()) ) as isize ) .read() ) .borrow() [((*k.borrow()) ) as usize] , (*scan_bitmask.borrow()) ,  );
+                write!(
+                    libcc2rs::cerr(),
+                    "Invalid scan order, a more refined scan was already done: component = {:} k = {:} prev_mask: {:} cur_mask: {:}\n",
+                    (*comp_idx.borrow()),
+                    (*k.borrow()),
+                    ((*scan_progression.borrow())
+                        .offset((*i.borrow()) as isize)
+                        .read())
+                    .borrow()[(*k.borrow()) as usize],
+                    (*scan_bitmask.borrow()),
+                );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
                     brunsli_JPEGReadError::INVALID_SCAN_ORDER;
                 return false;
@@ -14565,7 +14552,7 @@ pub fn FixupIndexes_248(jpg: Ptr<brunsli_JPEGData>) -> bool {
             write!(libcc2rs::cerr(), "Quantization table with index ",);
             libcc2rs::cerr().write_all(
                 &([
-                    (&[(*(*(*c.borrow()).upgrade().deref()).quant_idx.borrow())] as &[u8]),
+                    (&[(*(*(*c.borrow()).upgrade().deref()).quant_idx.borrow()) as u8] as &[u8]),
                     (b" not found." as &[u8]),
                     (&[b'\n'] as &[u8]),
                 ]
