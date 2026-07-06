@@ -9834,9 +9834,9 @@ pub fn RunLengthCodeZeros_200(
                     (*extra_bits.borrow()).with_mut(|__v: &mut Vec<u32>| {
                         __v.push((1_u32 << (*max_prefix.borrow())).wrapping_sub((1_u32 as u32)))
                     });
-                    let rhs_0 = (((*reps.borrow()) as u32).wrapping_sub(
+                    let rhs_0 = (*reps.borrow()).wrapping_sub(
                         (2_u32 << (*max_prefix.borrow())).wrapping_sub((1_u32 as u32)),
-                    )) as u32;
+                    );
                     (*reps.borrow_mut()) = rhs_0;
                 }
             }

@@ -2711,16 +2711,10 @@ pub fn ReadTableDirectory_69(
             || ((*tag.borrow()) == (*kLocaTableTag_2.with(Value::clone).borrow()))
         {
             if (((*xform_version.borrow()) as i32) == 0) {
-                let rhs_0 = (((*flags.borrow()) as u32)
-                    | (*kWoff2FlagsTransform_21.with(Value::clone).borrow()))
-                    as u32;
-                (*flags.borrow_mut()) = rhs_0;
+                (*flags.borrow_mut()) |= (*kWoff2FlagsTransform_21.with(Value::clone).borrow());
             }
         } else if (((*xform_version.borrow()) as i32) != 0) {
-            let rhs_0 = (((*flags.borrow()) as u32)
-                | (*kWoff2FlagsTransform_21.with(Value::clone).borrow()))
-                as u32;
-            (*flags.borrow_mut()) = rhs_0;
+            (*flags.borrow_mut()) |= (*kWoff2FlagsTransform_21.with(Value::clone).borrow());
         }
         (*flags.borrow_mut()) |= ((*xform_version.borrow()) as u32);
         let dst_length: Value<u32> = <Value<u32>>::default();
@@ -2884,11 +2878,11 @@ pub fn ComputeOffsetToFirstTable_72(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
         'loop_: for mut ttc_font in
             (*hdr.upgrade().deref()).ttc_fonts.as_pointer() as Ptr<woff2_TtcFont>
         {
-            let rhs_0 = (((*offset.borrow()) as u64).wrapping_add(
+            let rhs_0 = (*offset.borrow()).wrapping_add(
                 ((*kSfntEntrySize_24.with(Value::clone).borrow()) as u64).wrapping_mul(
                     ((*(*ttc_font.upgrade().deref()).table_indices.borrow()).len() as u64),
                 ),
-            )) as u64;
+            );
             (*offset.borrow_mut()) = rhs_0;
         }
     }

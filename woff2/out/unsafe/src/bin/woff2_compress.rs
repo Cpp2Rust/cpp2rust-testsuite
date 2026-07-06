@@ -1987,7 +1987,7 @@ pub unsafe fn NormalizeOffsets_76(mut font: *mut woff2_Font) -> bool {
         let table: *mut woff2_Font_Table =
             &mut (*(*font).tables.entry(tag).or_default().as_mut()) as *mut woff2_Font_Table;
         (*table).offset = offset;
-        offset = ((offset as u32).wrapping_add((unsafe { Round4_71((*table).length) }))) as u32;
+        offset = (offset).wrapping_add((unsafe { Round4_71((*table).length) }));
     }
     return true;
 }
@@ -2126,8 +2126,7 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
                 (*table).offset = (*(*table).reuse_of).offset;
             } else {
                 (*table).offset = offset;
-                offset =
-                    ((offset as u32).wrapping_add((unsafe { Round4_71((*table).length) }))) as u32;
+                offset = (offset).wrapping_add((unsafe { Round4_71((*table).length) }));
             }
         }
     }
@@ -3182,7 +3181,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             });
             if !((transformed_table).is_null()) {
                 table.flags = ((*transformed_table).flag_byte as u32);
-                table.flags = ((table.flags as u32) | kWoff2FlagsTransform_21) as u32;
+                table.flags |= kWoff2FlagsTransform_21;
                 table.transform_length = (*transformed_table).length;
                 transformed_data = (*transformed_table).data;
             }

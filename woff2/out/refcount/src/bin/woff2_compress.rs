@@ -3326,9 +3326,8 @@ pub fn NormalizeOffsets_76(font: Ptr<woff2_Font>) -> bool {
                         .as_pointer()
                 });
         (*(*table.upgrade().deref()).offset.borrow_mut()) = (*offset.borrow());
-        let rhs_0 = (((*offset.borrow()) as u32)
-            .wrapping_add(({ Round4_71((*(*table.upgrade().deref()).length.borrow())) })))
-            as u32;
+        let rhs_0 = (*offset.borrow())
+            .wrapping_add(({ Round4_71((*(*table.upgrade().deref()).length.borrow())) }));
         (*offset.borrow_mut()) = rhs_0;
     }
     return true;
@@ -3585,9 +3584,8 @@ pub fn NormalizeFontCollection_82(font_collection: Ptr<woff2_FontCollection>) ->
                 (*(*table.upgrade().deref()).offset.borrow_mut()) = __rhs;
             } else {
                 (*(*table.upgrade().deref()).offset.borrow_mut()) = (*offset.borrow());
-                let rhs_0 = (((*offset.borrow()) as u32)
-                    .wrapping_add(({ Round4_71((*(*table.upgrade().deref()).length.borrow())) })))
-                    as u32;
+                let rhs_0 = (*offset.borrow())
+                    .wrapping_add(({ Round4_71((*(*table.upgrade().deref()).length.borrow())) }));
                 (*offset.borrow_mut()) = rhs_0;
             }
         }
@@ -5223,10 +5221,8 @@ pub fn ConvertTTFToWOFF2_109(
                     ((*(*(*transformed_table.borrow()).upgrade().deref())
                         .flag_byte
                         .borrow()) as u32);
-                let rhs_0 = (((*(*table.borrow()).flags.borrow()) as u32)
-                    | (*kWoff2FlagsTransform_21.with(Value::clone).borrow()))
-                    as u32;
-                (*(*table.borrow()).flags.borrow_mut()) = rhs_0;
+                (*(*table.borrow()).flags.borrow_mut()) |=
+                    (*kWoff2FlagsTransform_21.with(Value::clone).borrow());
                 (*(*table.borrow()).transform_length.borrow_mut()) =
                     (*(*(*transformed_table.borrow()).upgrade().deref())
                         .length

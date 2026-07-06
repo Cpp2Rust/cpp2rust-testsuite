@@ -2715,7 +2715,7 @@ impl brunsli_BinaryArithmeticDecoder {
                 (((self.value_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32)).clone();
             self.low_ <<= 16_u32;
             self.high_ <<= 16_u32;
-            self.high_ = ((self.high_ as u32) | 65535_u32) as u32;
+            self.high_ |= 65535_u32;
         }
         return bit;
     }
@@ -5194,8 +5194,7 @@ pub unsafe fn VerifySignature_176(
         diff
     }) != (0));
     (*state).pos = ((*state).pos).wrapping_add(kBrunsliSignatureSize_43);
-    (*s).section.tags_met =
-        (((*s).section.tags_met as u32) | ((1_u32) << (kBrunsliSignatureTag_30 as i32))) as u32;
+    (*s).section.tags_met |= ((1_u32) << (kBrunsliSignatureTag_30 as i32));
     if is_signature_ok {
         return (unsafe { Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN) });
     }
@@ -5356,9 +5355,7 @@ pub unsafe fn DecodeHeader_177(
                         });
                     }
                     (*state).use_legacy_context_model = !(((version) & (2_usize)) != 0);
-                    (*s).section.tags_met = (((*s).section.tags_met as u32)
-                        | ((1_u32) << (kBrunsliOriginalJpgTag_38 as i32)))
-                        as u32;
+                    (*s).section.tags_met |= ((1_u32) << (kBrunsliOriginalJpgTag_38 as i32));
                     let has_width: bool = ((((*hs).section.tags_met)
                         & ((1_u32) << (kBrunsliHeaderWidthTag_39 as i32)))
                         != 0);

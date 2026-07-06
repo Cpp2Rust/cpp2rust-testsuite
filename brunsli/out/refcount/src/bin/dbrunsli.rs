@@ -4051,8 +4051,7 @@ impl brunsli_BinaryArithmeticDecoder {
             (*self.value_.borrow_mut()) = __rhs;
             (*self.low_.borrow_mut()) <<= 16_u32;
             (*self.high_.borrow_mut()) <<= 16_u32;
-            let rhs_0 = (((*self.high_.borrow()) as u32) | 65535_u32) as u32;
-            (*self.high_.borrow_mut()) = rhs_0;
+            (*self.high_.borrow_mut()) |= 65535_u32;
         }
         return (*bit.borrow());
     }
@@ -8091,12 +8090,10 @@ pub fn VerifySignature_176(state: Ptr<brunsli_internal_dec_State>) -> brunsli_in
     let rhs_0 = (*(*(*state.borrow()).upgrade().deref()).pos.borrow())
         .wrapping_add((*kBrunsliSignatureSize_43.with(Value::clone).borrow()));
     (*(*(*state.borrow()).upgrade().deref()).pos.borrow_mut()) = rhs_0;
-    let rhs_0 = (((*(*(*s.upgrade().deref()).section.borrow()).tags_met.borrow()) as u32)
-        | (1_u32 << ((*kBrunsliSignatureTag_30.with(Value::clone).borrow()) as i32)))
-        as u32;
     (*(*(*s.upgrade().deref()).section.borrow())
         .tags_met
-        .borrow_mut()) = rhs_0;
+        .borrow_mut()) |=
+        (1_u32 << ((*kBrunsliSignatureTag_30.with(Value::clone).borrow()) as i32));
     if (*is_signature_ok.borrow()) {
         return ({
             Fail_169(
@@ -8340,14 +8337,10 @@ pub fn DecodeHeader_177(
                     (*(*(*state.borrow()).upgrade().deref())
                         .use_legacy_context_model
                         .borrow_mut()) = !(((*version.borrow()) & 2_usize) != 0);
-                    let rhs_0 = (((*(*(*s.upgrade().deref()).section.borrow()).tags_met.borrow())
-                        as u32)
-                        | (1_u32
-                            << ((*kBrunsliOriginalJpgTag_38.with(Value::clone).borrow()) as i32)))
-                        as u32;
                     (*(*(*s.upgrade().deref()).section.borrow())
                         .tags_met
-                        .borrow_mut()) = rhs_0;
+                        .borrow_mut()) |= (1_u32
+                        << ((*kBrunsliOriginalJpgTag_38.with(Value::clone).borrow()) as i32));
                     let has_width: Value<bool> = Rc::new(RefCell::new(
                         ({
                             let _lhs = (*(*(*hs.upgrade().deref()).section.borrow())

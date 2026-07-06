@@ -6632,9 +6632,8 @@ pub unsafe fn RunLengthCodeZeros_200(
                         (*v_out).push(a0_clone)
                     };
                     (*extra_bits).push(((1_u32) << (max_prefix)).wrapping_sub((1_u32 as u32)));
-                    reps = ((reps as u32)
-                        .wrapping_sub(((2_u32) << (max_prefix)).wrapping_sub((1_u32 as u32))))
-                        as u32;
+                    reps =
+                        (reps).wrapping_sub(((2_u32) << (max_prefix)).wrapping_sub((1_u32 as u32)));
                 }
             }
         };

@@ -1808,10 +1808,10 @@ pub unsafe fn ReadTableDirectory_69(
         let mut xform_version: u8 = ((((flag_byte as i32) >> (6)) & (3)) as u8);
         if ((tag) == (kGlyfTableTag_0)) || ((tag) == (kLocaTableTag_2)) {
             if ((xform_version as i32) == (0)) {
-                flags = ((flags as u32) | kWoff2FlagsTransform_21) as u32;
+                flags |= kWoff2FlagsTransform_21;
             }
         } else if ((xform_version as i32) != (0)) {
-            flags = ((flags as u32) | kWoff2FlagsTransform_21) as u32;
+            flags |= kWoff2FlagsTransform_21;
         }
         flags |= (xform_version as u32);
         let mut dst_length: u32 = 0_u32;
@@ -1889,9 +1889,9 @@ pub unsafe fn ComputeOffsetToFirstTable_72(hdr: *const woff2_WOFF2Header) -> u64
         .clone();
         'loop_: for ttc_font in 0..((*hdr).ttc_fonts.len()) {
             let mut ttc_font = (*hdr).ttc_fonts.as_ptr().add(ttc_font);
-            offset = ((offset as u64).wrapping_add(
+            offset = (offset).wrapping_add(
                 (kSfntEntrySize_24 as u64).wrapping_mul(((*ttc_font).table_indices.len() as u64)),
-            )) as u64;
+            );
         }
     }
     return offset;
