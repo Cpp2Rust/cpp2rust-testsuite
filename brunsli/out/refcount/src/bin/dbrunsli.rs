@@ -1409,19 +1409,18 @@ pub fn Log2FloorNonZero_74(n: u32) -> i32 {
 }
 pub fn BrunsliSuppressUnusedFunctions_75() {
     ((FnPtr::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>::new(Append_73))
-        .cast::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>(None))
-    .clone();
-    (FnPtr::<fn()>::new(BrunsliSuppressUnusedFunctions_75)).clone();
-    (FnPtr::<fn(AnyPtr) -> u16>::new(BrunsliUnalignedRead16_66)).clone();
-    (FnPtr::<fn(AnyPtr, u16)>::new(BrunsliUnalignedWrite16_67)).clone();
-    (FnPtr::<fn(AnyPtr) -> u32>::new(BrunsliUnalignedRead32_68)).clone();
-    (FnPtr::<fn(AnyPtr) -> u64>::new(BrunsliUnalignedRead64_69)).clone();
-    (FnPtr::<fn(AnyPtr, u64)>::new(BrunsliUnalignedWrite64_70)).clone();
-    (FnPtr::<fn(AnyPtr) -> u16>::new(BrunsliUnalignedRead16_66)).clone();
-    (FnPtr::<fn(AnyPtr, u16)>::new(BrunsliUnalignedWrite16_67)).clone();
-    (FnPtr::<fn(AnyPtr) -> u32>::new(BrunsliUnalignedRead32_68)).clone();
-    (FnPtr::<fn(AnyPtr) -> u64>::new(BrunsliUnalignedRead64_69)).clone();
-    (FnPtr::<fn(AnyPtr, u64)>::new(BrunsliUnalignedWrite64_70)).clone();
+        .cast::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>(None));
+    (FnPtr::<fn()>::new(BrunsliSuppressUnusedFunctions_75));
+    (FnPtr::<fn(AnyPtr) -> u16>::new(BrunsliUnalignedRead16_66));
+    (FnPtr::<fn(AnyPtr, u16)>::new(BrunsliUnalignedWrite16_67));
+    (FnPtr::<fn(AnyPtr) -> u32>::new(BrunsliUnalignedRead32_68));
+    (FnPtr::<fn(AnyPtr) -> u64>::new(BrunsliUnalignedRead64_69));
+    (FnPtr::<fn(AnyPtr, u64)>::new(BrunsliUnalignedWrite64_70));
+    (FnPtr::<fn(AnyPtr) -> u16>::new(BrunsliUnalignedRead16_66));
+    (FnPtr::<fn(AnyPtr, u16)>::new(BrunsliUnalignedWrite16_67));
+    (FnPtr::<fn(AnyPtr) -> u32>::new(BrunsliUnalignedRead32_68));
+    (FnPtr::<fn(AnyPtr) -> u64>::new(BrunsliUnalignedRead64_69));
+    (FnPtr::<fn(AnyPtr, u64)>::new(BrunsliUnalignedWrite64_70));
 }
 thread_local!(
     pub static kNormalizeThreshold_76: Value<u8> = Rc::new(RefCell::new(254_u8));
@@ -3070,16 +3069,7 @@ pub fn BrunsliDumpAndAbort_79(f: Ptr<u8>, l: i32, fn_: Ptr<u8>) {
     let l: Value<i32> = Rc::new(RefCell::new(l));
     let fn_: Value<Ptr<u8>> = Rc::new(RefCell::new(fn_));
     eprintln!("{}:{} ({})", (*f.borrow()), (*l.borrow()), (*fn_.borrow()));
-    if !libcc2rs::cerr().is_null() {
-        match libcc2rs::cerr().with_mut(|v| v.sync_all()) {
-            Ok(_) => 0,
-            Err(_) => -1,
-        }
-    } else {
-        ::std::io::stdout().flush().unwrap();
-        ::std::io::stderr().flush().unwrap();
-        0
-    };
+    0;
     std::process::abort();
 }
 pub fn AdaptiveMedian_114(w: i32, n: i32, nw: i32) -> i32 {
@@ -17364,52 +17354,27 @@ pub fn StringWriter_262(data: AnyPtr, buf: Ptr<u8>, count: usize) -> usize {
     };
     return (*count.borrow());
 }
-pub fn ReadFileInternal_263(file: Ptr<::std::fs::File>, content: Ptr<Vec<u8>>) -> bool {
-    let file: Value<Ptr<::std::fs::File>> = Rc::new(RefCell::new(file));
+pub fn ReadFileInternal_263(file: Ptr<CFile>, content: Ptr<Vec<u8>>) -> bool {
+    let file: Value<Ptr<CFile>> = Rc::new(RefCell::new(file));
     let content: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(content));
-    if (if (match 2 {
-        0 => (*file.borrow())
-            .with_mut(|__v: &mut ::std::fs::File| __v.seek(std::io::SeekFrom::Start(0_i64 as u64))),
-        1 => (*file.borrow())
-            .with_mut(|__v: &mut ::std::fs::File| __v.seek(std::io::SeekFrom::Current(0_i64))),
-        2 => (*file.borrow())
-            .with_mut(|__v: &mut ::std::fs::File| __v.seek(std::io::SeekFrom::End(0_i64))),
-        _ => Err(std::io::Error::other("unsupported whence for fseek.")),
-    })
-    .is_ok()
-    {
-        0
-    } else {
-        -1
+    if (match (*file.borrow()).with_mut(|__v: &mut CFile| __v.seek(0_i64, ::libc::SEEK_END)) {
+        -1 => -1,
+        _ => 0,
     } != 0)
     {
         eprintln!("Failed to seek end of input file.");
         return false;
     }
     let input_size: Value<i32> = Rc::new(RefCell::new(
-        ((*file.borrow()).with_mut(|v| match v.stream_position() {
-            Ok(pos) => pos as i64,
-            Err(_) => -1,
-        }) as i32),
+        ((*file.borrow()).with(|__f| __f.tell()) as i32),
     ));
     if ((*input_size.borrow()) == 0) {
         eprintln!("Input file is empty.");
         return false;
     }
-    if (if (match 0 {
-        0 => (*file.borrow())
-            .with_mut(|__v: &mut ::std::fs::File| __v.seek(std::io::SeekFrom::Start(0_i64 as u64))),
-        1 => (*file.borrow())
-            .with_mut(|__v: &mut ::std::fs::File| __v.seek(std::io::SeekFrom::Current(0_i64))),
-        2 => (*file.borrow())
-            .with_mut(|__v: &mut ::std::fs::File| __v.seek(std::io::SeekFrom::End(0_i64))),
-        _ => Err(std::io::Error::other("unsupported whence for fseek.")),
-    })
-    .is_ok()
-    {
-        0
-    } else {
-        -1
+    if (match (*file.borrow()).with_mut(|__v: &mut CFile| __v.seek(0_i64, ::libc::SEEK_SET)) {
+        -1 => -1,
+        _ => 0,
     } != 0)
     {
         eprintln!("Failed to rewind input file to the beginning.");
@@ -17462,24 +17427,15 @@ pub fn ReadFileInternal_263(file: Ptr<::std::fs::File>, content: Ptr<Vec<u8>>) -
 }
 pub fn ReadFile_264(file_name: Ptr<Vec<u8>>, content: Ptr<Vec<u8>>) -> bool {
     let content: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(content));
-    let file: Value<Ptr<::std::fs::File>> =
-        Rc::new(RefCell::new(
-            match Ptr::from_string_literal(b"rb").to_rust_string() {
-                v if v == "rb" => std::fs::OpenOptions::new()
-                    .read(true)
-                    .open((file_name.to_strong().as_pointer() as Ptr<u8>).to_rust_string())
-                    .ok()
-                    .map_or(Ptr::null(), |f| Ptr::alloc(f)),
-                v if v == "wb" => std::fs::OpenOptions::new()
-                    .write(true)
-                    .create(true)
-                    .truncate(true)
-                    .open((file_name.to_strong().as_pointer() as Ptr<u8>).to_rust_string())
-                    .ok()
-                    .map_or(Ptr::null(), |f| Ptr::alloc(f)),
-                _ => panic!("unsupported mode"),
-            },
-        ));
+    let file: Value<Ptr<CFile>> = Rc::new(RefCell::new(
+        match CFile::open(
+            &(file_name.to_strong().as_pointer() as Ptr<u8>).to_rust_string(),
+            &Ptr::from_string_literal(b"rb").to_rust_string(),
+        ) {
+            Some(__f) => Ptr::alloc(__f),
+            None => Ptr::null(),
+        },
+    ));
     if (*file.borrow()).is_null() {
         eprintln!("Failed to open input file.");
         return false;
@@ -17488,8 +17444,9 @@ pub fn ReadFile_264(file_name: Ptr<Vec<u8>>, content: Ptr<Vec<u8>>) -> bool {
         ({ ReadFileInternal_263((*file.borrow()).clone(), (*content.borrow()).clone()) }),
     ));
     if ({
+        let __r = (*file.borrow()).with(|__f| __f.close());
         (*file.borrow()).delete();
-        0
+        __r
     } != 0)
     {
         if (*ok.borrow()) {
@@ -17499,8 +17456,8 @@ pub fn ReadFile_264(file_name: Ptr<Vec<u8>>, content: Ptr<Vec<u8>>) -> bool {
     }
     return (*ok.borrow());
 }
-pub fn WriteFileInternal_265(file: Ptr<::std::fs::File>, content: Ptr<Vec<u8>>) -> bool {
-    let file: Value<Ptr<::std::fs::File>> = Rc::new(RefCell::new(file));
+pub fn WriteFileInternal_265(file: Ptr<CFile>, content: Ptr<Vec<u8>>) -> bool {
+    let file: Value<Ptr<CFile>> = Rc::new(RefCell::new(file));
     let write_pos: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while {
         let _lhs = (*write_pos.borrow());
@@ -17528,38 +17485,30 @@ pub fn WriteFileInternal_265(file: Ptr<::std::fs::File>, content: Ptr<Vec<u8>>) 
     return true;
 }
 pub fn WriteFile_266(file_name: Ptr<Vec<u8>>, content: Ptr<Vec<u8>>) -> bool {
-    let file: Value<Ptr<::std::fs::File>> =
-        Rc::new(RefCell::new(
-            match Ptr::from_string_literal(b"wb").to_rust_string() {
-                v if v == "rb" => std::fs::OpenOptions::new()
-                    .read(true)
-                    .open((file_name.to_strong().as_pointer() as Ptr<u8>).to_rust_string())
-                    .ok()
-                    .map_or(Ptr::null(), |f| Ptr::alloc(f)),
-                v if v == "wb" => std::fs::OpenOptions::new()
-                    .write(true)
-                    .create(true)
-                    .truncate(true)
-                    .open((file_name.to_strong().as_pointer() as Ptr<u8>).to_rust_string())
-                    .ok()
-                    .map_or(Ptr::null(), |f| Ptr::alloc(f)),
-                _ => panic!("unsupported mode"),
-            },
-        ));
+    let file: Value<Ptr<CFile>> = Rc::new(RefCell::new(
+        match CFile::open(
+            &(file_name.to_strong().as_pointer() as Ptr<u8>).to_rust_string(),
+            &Ptr::from_string_literal(b"wb").to_rust_string(),
+        ) {
+            Some(__f) => Ptr::alloc(__f),
+            None => Ptr::null(),
+        },
+    ));
     if (*file.borrow()).is_null() {
         eprintln!("Failed to open file for writing.");
         return false;
     }
     let ok: Value<bool> = Rc::new(RefCell::new(
         ({
-            let _file: Ptr<::std::fs::File> = (*file.borrow()).clone();
+            let _file: Ptr<CFile> = (*file.borrow()).clone();
             let _content: Ptr<Vec<u8>> = (content).clone();
             WriteFileInternal_265(_file, _content)
         }),
     ));
     if ({
+        let __r = (*file.borrow()).with(|__f| __f.close());
         (*file.borrow()).delete();
-        0
+        __r
     } != 0)
     {
         if (*ok.borrow()) {

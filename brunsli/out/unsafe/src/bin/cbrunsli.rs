@@ -10714,7 +10714,7 @@ pub unsafe fn ReadFileInternal_252(
     mut file: *mut ::libc::FILE,
     mut content: *mut Vec<libc::c_char>,
 ) -> bool {
-    if ((libc::fseek(file, 0_i64 as ::libc::c_long, 2)) != (0)) {
+    if ((libc::fseek(file, 0_i64 as ::libc::c_long, ::libc::SEEK_END)) != (0)) {
         printf(c"Failed to seek end of input file.\n".as_ptr() as *const i8);
         return false;
     }
@@ -10723,7 +10723,7 @@ pub unsafe fn ReadFileInternal_252(
         printf(c"Input file is empty.\n".as_ptr() as *const i8);
         return false;
     }
-    if ((libc::fseek(file, 0_i64 as ::libc::c_long, 0)) != (0)) {
+    if ((libc::fseek(file, 0_i64 as ::libc::c_long, ::libc::SEEK_SET)) != (0)) {
         printf(c"Failed to rewind input file to the beginning.\n".as_ptr() as *const i8);
         return false;
     }
