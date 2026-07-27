@@ -1895,7 +1895,7 @@ pub fn IndexFormat_46(font: Ptr<woff2_Font>) -> i32 {
 }
 impl woff2_Font_Table {
     pub fn IsReused(&self) -> bool {
-        return (!((*self.reuse_of.borrow()).is_null())).clone();
+        return !((*self.reuse_of.borrow()).is_null());
     }
 }
 pub fn GetGlyphData_47(

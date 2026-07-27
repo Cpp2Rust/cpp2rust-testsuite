@@ -1895,7 +1895,7 @@ pub fn IndexFormat_46(font: Ptr<woff2_Font>) -> i32 {
 }
 impl woff2_Font_Table {
     pub fn IsReused(&self) -> bool {
-        return (!((*self.reuse_of.borrow()).is_null())).clone();
+        return !((*self.reuse_of.borrow()).is_null());
     }
 }
 pub fn GetGlyphData_47(
@@ -3292,8 +3292,8 @@ pub fn NormalizeGlyphs_75(font: Ptr<woff2_Font>) -> bool {
         return true;
     }
     if {
-        let _lhs = (((*glyf_table.borrow()).is_null()) as i32).clone();
-        _lhs != (((*loca_table.borrow()).is_null()) as i32).clone()
+        let _lhs = (((*glyf_table.borrow()).is_null()) as i32);
+        _lhs != (((*loca_table.borrow()).is_null()) as i32)
     } {
         return false;
     }
@@ -4297,8 +4297,8 @@ pub fn TransformGlyfAndLocaTables_90(font: Ptr<woff2_Font>) -> bool {
         return true;
     }
     if {
-        let _lhs = (((*glyf_table.borrow()).is_null()) as i32).clone();
-        _lhs != (((*loca_table.borrow()).is_null()) as i32).clone()
+        let _lhs = (((*glyf_table.borrow()).is_null()) as i32);
+        _lhs != (((*loca_table.borrow()).is_null()) as i32)
     } {
         return false;
     }

@@ -3036,8 +3036,8 @@ pub fn ReconstructFont_74(
         }),
     ));
     if ((({
-        let _lhs = (!(*glyf_table.borrow()).is_null() as i32).clone();
-        _lhs != (!(*loca_table.borrow()).is_null() as i32).clone()
+        let _lhs = (!(*glyf_table.borrow()).is_null() as i32);
+        _lhs != (!(*loca_table.borrow()).is_null() as i32)
     }) as i64)
         != 0)
     {

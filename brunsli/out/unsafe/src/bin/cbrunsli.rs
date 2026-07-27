@@ -2924,10 +2924,10 @@ pub unsafe fn HistogramCombine_132(
             }
             if lt(((pairs).first_mut().unwrap()), p) {
                 let mut front: brunsli_HistogramPair = (*((pairs).first_mut().unwrap())).clone();
-                (*((pairs).first_mut().unwrap())) = (*p).clone();
+                (*((pairs).first_mut().unwrap())) = (*p);
                 (*copy_to) = front;
             } else {
-                (*copy_to) = (*p).clone();
+                (*copy_to) = (*p);
             }
             copy_to.prefix_inc();
         }

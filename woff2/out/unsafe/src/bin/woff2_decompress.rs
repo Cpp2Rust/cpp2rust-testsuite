@@ -1878,15 +1878,14 @@ pub unsafe fn ComputeOffsetToFirstTable_72(hdr: *const woff2_WOFF2Header) -> u64
     let mut offset: u64 = (kSfntHeaderSize_23 as u64)
         .wrapping_add((kSfntEntrySize_24 as u64).wrapping_mul(((*hdr).num_tables as u64)));
     if ((*hdr).header_version != 0) {
-        offset = (((unsafe {
+        offset = ((unsafe {
             let _header_version: u32 = (*hdr).header_version;
             let _num_fonts: u32 = ((*hdr).ttc_fonts.len() as u32);
             CollectionHeaderSize_27(_header_version, _num_fonts)
         }) as u64)
             .wrapping_add(
                 (kSfntHeaderSize_23 as u64).wrapping_mul(((*hdr).ttc_fonts.len() as u64)),
-            ))
-        .clone();
+            );
         'loop_: for ttc_font in 0..((*hdr).ttc_fonts.len()) {
             let mut ttc_font = (*hdr).ttc_fonts.as_ptr().add(ttc_font);
             offset = (offset).wrapping_add(

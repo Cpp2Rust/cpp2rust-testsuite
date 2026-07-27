@@ -500,7 +500,7 @@ impl Clone for brunsli_JPEGData {
             tail_data: Rc::new(RefCell::new((*self.tail_data.borrow()).clone())),
             original_jpg: Rc::new(RefCell::new((*self.original_jpg.borrow()).clone())),
             original_jpg_size: Rc::new(RefCell::new((*self.original_jpg_size.borrow()))),
-            error: Rc::new(RefCell::new((*self.error.borrow()).clone())),
+            error: Rc::new(RefCell::new((*self.error.borrow()))),
             has_zero_padding_bit: Rc::new(RefCell::new((*self.has_zero_padding_bit.borrow()))),
             padding_bits: Rc::new(RefCell::new((*self.padding_bits.borrow()).clone())),
         };
@@ -4907,7 +4907,7 @@ pub struct brunsli_internal_dec_VarintState {
 impl Clone for brunsli_internal_dec_VarintState {
     fn clone(&self) -> Self {
         let mut this = Self {
-            stage: Rc::new(RefCell::new((*self.stage.borrow()).clone())),
+            stage: Rc::new(RefCell::new((*self.stage.borrow()))),
             value: Rc::new(RefCell::new((*self.value.borrow()))),
             i: Rc::new(RefCell::new((*self.i.borrow()))),
         };
@@ -5038,7 +5038,7 @@ pub struct brunsli_internal_dec_JpegInternalsState {
 impl Clone for brunsli_internal_dec_JpegInternalsState {
     fn clone(&self) -> Self {
         let mut this = Self {
-            stage: Rc::new(RefCell::new((*self.stage.borrow()).clone())),
+            stage: Rc::new(RefCell::new((*self.stage.borrow()))),
             have_dri: Rc::new(RefCell::new((*self.have_dri.borrow()))),
             num_scans: Rc::new(RefCell::new((*self.num_scans.borrow()))),
             dht_count: Rc::new(RefCell::new((*self.dht_count.borrow()))),
@@ -5127,7 +5127,7 @@ pub struct brunsli_internal_dec_QuantDataState {
 impl Clone for brunsli_internal_dec_QuantDataState {
     fn clone(&self) -> Self {
         let mut this = Self {
-            stage: Rc::new(RefCell::new((*self.stage.borrow()).clone())),
+            stage: Rc::new(RefCell::new((*self.stage.borrow()))),
             br: Rc::new(RefCell::new((*self.br.borrow()).clone())),
             i: Rc::new(RefCell::new((*self.i.borrow()))),
             j: Rc::new(RefCell::new((*self.j.borrow()))),
@@ -5435,7 +5435,7 @@ pub fn DecodeLimitedVarint_145(
                         }
                     }
                     (*(*(*s.borrow()).upgrade().deref()).stage.borrow_mut()) =
-                        (brunsli_internal_dec_VarintState_Stage::INIT).clone();
+                        brunsli_internal_dec_VarintState_Stage::INIT;
                     return true;
                 }
                 __v if __v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
@@ -5513,7 +5513,7 @@ pub fn DecodeLimitedVarint_146(
                         }
                     }
                     (*(*(*s.borrow()).upgrade().deref()).stage.borrow_mut()) =
-                        (brunsli_internal_dec_VarintState_Stage::INIT).clone();
+                        brunsli_internal_dec_VarintState_Stage::INIT;
                     return true;
                 }
                 __v if __v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
@@ -6398,7 +6398,7 @@ pub fn DecodeHuffmanCode_150(
                     continue 'loop_;
                 }
                 _ => {
-                    return (brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR).clone();
+                    return brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR;
                 }
             }
         };
@@ -6497,7 +6497,7 @@ pub fn DecodeScanInfo_151(
  if { let _lhs = (*(*js.upgrade().deref()) . i .borrow()) ; _lhs < (*(*js.upgrade().deref()) . num_scans .borrow())  } { (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMMON  ;
  ;
  continue 'loop_ ;
- } return (brunsli_BrunsliStatus::BRUNSLI_OK ).clone() ;
+ } return brunsli_BrunsliStatus::BRUNSLI_OK  ;
  } ;
  continue 'loop_ ;
  }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_DATA as i32 ) )  =>  { if ! (  { DecodeVarint_144 ( ( (*js.upgrade().deref()) . varint  .as_pointer()  )  , ((*br.borrow()) ).clone() , 28_usize  , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA  ;
@@ -6511,7 +6511,7 @@ pub fn DecodeScanInfo_151(
  } (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_CONTINUATION  ;
  ;
  continue 'loop_ ;
- }, _ =>  { return (brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR ).clone() ;
+ }, _ =>  { return brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR  ;
  }, }
         };
     }
@@ -7955,10 +7955,10 @@ pub fn Fail_169(
     let result: Value<brunsli_BrunsliStatus> = Rc::new(RefCell::new(result));
     let s: Ptr<brunsli_internal_dec_InternalState> =
         (*(*(*state.borrow()).upgrade().deref()).internal.borrow()).as_pointer();
-    (*(*s.upgrade().deref()).result.borrow_mut()) = (*result.borrow()).clone();
+    (*(*s.upgrade().deref()).result.borrow_mut()) = (*result.borrow());
     (*(*s.upgrade().deref()).last_stage.borrow_mut()) =
-        (*(*(*state.borrow()).upgrade().deref()).stage.borrow()).clone();
-    return (brunsli_internal_dec_Stage::ERROR).clone();
+        (*(*(*state.borrow()).upgrade().deref()).stage.borrow());
+    return brunsli_internal_dec_Stage::ERROR;
 }
 pub fn ReadTag_170(
     state: Ptr<brunsli_internal_dec_State>,
@@ -8024,7 +8024,7 @@ pub fn EnterSection_171(
         ({ DecodeBase128_168((*state.borrow()).clone(), (section_size.as_pointer())) }),
     ));
     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-        return (*status.borrow()).clone();
+        return (*status.borrow());
     }
     (*(*(*section.borrow()).upgrade().deref())
         .is_active
@@ -8164,9 +8164,7 @@ pub fn DecodeHeader_177(
                         }),
                     ));
                     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                        return ({
-                            Fail_169((*state.borrow()).clone(), (*status.borrow()).clone())
-                        });
+                        return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                     }
                     if ({
                         let _lhs = (*(*(*s.upgrade().deref()).section.borrow()).tag.borrow());
@@ -8196,9 +8194,7 @@ pub fn DecodeHeader_177(
                         }),
                     ));
                     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                        return ({
-                            Fail_169((*state.borrow()).clone(), (*status.borrow()).clone())
-                        });
+                        return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                     }
                     (*(*hs.upgrade().deref()).stage.borrow_mut()) =
                         (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG as usize);
@@ -8219,9 +8215,7 @@ pub fn DecodeHeader_177(
                         }),
                     ));
                     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                        return ({
-                            Fail_169((*state.borrow()).clone(), (*status.borrow()).clone())
-                        });
+                        return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                     }
                     let tag_bit: Value<u32> = Rc::new(RefCell::new(
                         (1_u32 << (*(*(*hs.upgrade().deref()).section.borrow()).tag.borrow())),
@@ -8261,9 +8255,7 @@ pub fn DecodeHeader_177(
                         }),
                     ));
                     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                        return ({
-                            Fail_169((*state.borrow()).clone(), (*status.borrow()).clone())
-                        });
+                        return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                     }
                     (*(*hs.upgrade().deref()).stage.borrow_mut()) =
                         (brunsli_internal_dec_HeaderState_Stage::ITEM_SKIP_CONTENTS as usize);
@@ -8305,9 +8297,7 @@ pub fn DecodeHeader_177(
                         ({ DecodeBase128_168((*state.borrow()).clone(), (value.as_pointer())) }),
                     ));
                     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                        return ({
-                            Fail_169((*state.borrow()).clone(), (*status.borrow()).clone())
-                        });
+                        return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                     }
                     ((*hs.upgrade().deref()).varint_values.as_pointer() as Ptr<u64>)
                         .offset((*(*(*hs.upgrade().deref()).section.borrow()).tag.borrow()))
@@ -8578,7 +8568,7 @@ pub fn DecodeMetaDataSection_180(
     if ((*(*ms.upgrade().deref()).decompression_stage.borrow())
         == brunsli_internal_dec_MetadataDecompressionStage::DONE)
     {
-        return (brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN).clone();
+        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
     }
     if ((*(*ms.upgrade().deref()).decompression_stage.borrow())
         == brunsli_internal_dec_MetadataDecompressionStage::INITIAL)
@@ -8586,7 +8576,7 @@ pub fn DecodeMetaDataSection_180(
         if ({ IsAtSectionBoundary_175((*state.borrow()).clone()) }) {
             (*(*ms.upgrade().deref()).decompression_stage.borrow_mut()) =
                 brunsli_internal_dec_MetadataDecompressionStage::DONE;
-            return (brunsli_BrunsliStatus::BRUNSLI_OK).clone();
+            return brunsli_BrunsliStatus::BRUNSLI_OK;
         }
         if (({ RemainingSectionLength_174((*state.borrow()).clone()) }) == 1_usize) {
             if !({ CheckCanReadByte_162((*state.borrow()).clone()) }) {
@@ -8629,7 +8619,7 @@ pub fn DecodeMetaDataSection_180(
             }),
         ));
         if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-            return (*status.borrow()).clone();
+            return (*status.borrow());
         }
         if ({ IsOutOfSectionBounds_173((*state.borrow()).clone()) }) {
             return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
@@ -8640,7 +8630,7 @@ pub fn DecodeMetaDataSection_180(
         (*(*ms.upgrade().deref()).brotli.borrow_mut()) =
             unsafe { ::brotli_sys::BrotliDecoderCreateInstance(None, None, std::ptr::null_mut()) };
         if (*(*ms.upgrade().deref()).brotli.borrow()).is_null() {
-            return (brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR).clone();
+            return brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR;
         }
         (*(*ms.upgrade().deref()).decompression_stage.borrow_mut()) =
             brunsli_internal_dec_MetadataDecompressionStage::DECOMPRESSING;
@@ -8669,7 +8659,7 @@ pub fn DecodeMetaDataSection_180(
                 (*(*ms.upgrade().deref()).brotli.borrow_mut()) = std::ptr::null_mut();
                 (*(*ms.upgrade().deref()).decompression_stage.borrow_mut()) =
                     (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
-                return (*result.borrow()).clone();
+                return (*result.borrow());
             }),
         ));
         'loop_: while true {
@@ -8862,7 +8852,7 @@ pub fn CheckBoundary_181(
             brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA
         };
     } else {
-        return (*result.borrow()).clone();
+        return (*result.borrow());
     }
     panic!("ub: non-void function does not return a value")
 }
@@ -8938,7 +8928,7 @@ pub fn SuspendBitReader_183(
         (*chunk_len.borrow()).wrapping_sub((*unused_bytes.borrow())),
     ));
     ({ SkipBytes_165((*state.borrow()).clone(), (*consumed_bytes.borrow())) });
-    let __rhs = ({ CheckBoundary_181((*state.borrow()).clone(), (*result.borrow()).clone()) });
+    let __rhs = ({ CheckBoundary_181((*state.borrow()).clone(), (*result.borrow())) });
     (*result.borrow_mut()) = __rhs;
     if !(({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) })
         || ((((*result.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32))
@@ -8954,7 +8944,7 @@ pub fn SuspendBitReader_183(
         });
         'loop_: while true {}
     };
-    return (*result.borrow()).clone();
+    return (*result.borrow());
 }
 pub fn DecodeJPEGInternalsSection_184(
     state: Ptr<brunsli_internal_dec_State>,
@@ -8983,7 +8973,7 @@ pub fn DecodeJPEGInternalsSection_184(
                 SuspendBitReader_183(
                     (*br.borrow()).clone(),
                     (*state.borrow()).clone(),
-                    (*result.borrow()).clone(),
+                    (*result.borrow()),
                 )
             });
         }),
@@ -9054,7 +9044,7 @@ pub fn DecodeJPEGInternalsSection_184(
             ({ DecodeHuffmanCode_150((*state.borrow()).clone(), (*jpg.borrow()).clone()) }),
         ));
         if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-            return ({ (*suspend_bit_reader.borrow_mut())((*status.borrow()).clone()) });
+            return ({ (*suspend_bit_reader.borrow_mut())((*status.borrow())) });
         }
         (*(*js.upgrade().deref()).stage.borrow_mut()) =
             brunsli_internal_dec_JpegInternalsState_Stage::PREPARE_READ_SCANS;
@@ -9084,7 +9074,7 @@ pub fn DecodeJPEGInternalsSection_184(
                 brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMMON;
         } else {
             (*(*js.upgrade().deref()).stage.borrow_mut()) =
-                (brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_QUANT).clone();
+                brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_QUANT;
         }
     }
     if ((((*(*js.upgrade().deref()).stage.borrow()) as i32)
@@ -9095,7 +9085,7 @@ pub fn DecodeJPEGInternalsSection_184(
             ({ DecodeScanInfo_151((*state.borrow()).clone(), (*jpg.borrow()).clone()) }),
         ));
         if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-            return ({ (*suspend_bit_reader.borrow_mut())((*status.borrow()).clone()) });
+            return ({ (*suspend_bit_reader.borrow_mut())((*status.borrow())) });
         }
         (*(*js.upgrade().deref()).stage.borrow_mut()) =
             brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_QUANT;
@@ -9410,9 +9400,7 @@ pub fn DecodeJPEGInternalsSection_184(
                     }),
                 ));
                 if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                    return ({
-                        CheckBoundary_181((*state.borrow()).clone(), (*status.borrow()).clone())
-                    });
+                    return ({ CheckBoundary_181((*state.borrow()).clone(), (*status.borrow())) });
                 }
                 if {
                     let _lhs = (*(*js.upgrade().deref()).intermarker_length.borrow());
@@ -9538,7 +9526,7 @@ pub fn DecodeQuantDataSection_186(
                 SuspendBitReader_183(
                     (*br.borrow()).clone(),
                     (*state.borrow()).clone(),
-                    (*result.borrow()).clone(),
+                    (*result.borrow()),
                 )
             });
         }),
@@ -9640,7 +9628,7 @@ pub fn DecodeQuantDataSection_186(
                         brunsli_internal_dec_QuantDataState_Stage::UPDATE;
                 } else {
                     (*(*qs.upgrade().deref()).stage.borrow_mut()) =
-                        (brunsli_internal_dec_QuantDataState_Stage::READ_Q_FACTOR).clone();
+                        brunsli_internal_dec_QuantDataState_Stage::READ_Q_FACTOR;
                 };
                 continue 'loop_;
             }
@@ -9687,7 +9675,7 @@ pub fn DecodeQuantDataSection_186(
                         brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_SIGN;
                 } else {
                     (*(*qs.upgrade().deref()).stage.borrow_mut()) =
-                        (brunsli_internal_dec_QuantDataState_Stage::APPLY_DIFF).clone();
+                        brunsli_internal_dec_QuantDataState_Stage::APPLY_DIFF;
                 };
                 continue 'loop_;
             }
@@ -9909,7 +9897,7 @@ pub fn DecodeHistogramDataSection_187(
                 SuspendBitReader_183(
                     (*br.borrow()).clone(),
                     (*state.borrow()).clone(),
-                    (*result.borrow()).clone(),
+                    (*result.borrow()),
                 )
             });
         }),
@@ -10139,7 +10127,7 @@ pub fn DecodeHistogramDataSection_187(
             }),
         ));
         if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-            return ({ (*suspend_bit_reader.borrow_mut())((*status.borrow()).clone()) });
+            return ({ (*suspend_bit_reader.borrow_mut())((*status.borrow())) });
         }
         (*(*hs.upgrade().deref()).i.borrow_mut()) = 0_usize;
         {
@@ -10314,7 +10302,7 @@ pub fn DecodeDCDataSection_190(state: Ptr<brunsli_internal_dec_State>) -> brunsl
             return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
         }
     }
-    return (*status.borrow()).clone();
+    return (*status.borrow());
 }
 pub fn DecodeACDataSection_191(state: Ptr<brunsli_internal_dec_State>) -> brunsli_BrunsliStatus {
     let state: Value<Ptr<brunsli_internal_dec_State>> = Rc::new(RefCell::new(state));
@@ -10398,7 +10386,7 @@ pub fn DecodeACDataSection_191(state: Ptr<brunsli_internal_dec_State>) -> brunsl
             return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
         }
     }
-    return (*status.borrow()).clone();
+    return (*status.borrow());
 }
 pub fn DecodeOriginalJpg_192(
     state: Ptr<brunsli_internal_dec_State>,
@@ -10425,9 +10413,7 @@ pub fn DecodeOriginalJpg_192(
                         }),
                     ));
                     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                        return ({
-                            Fail_169((*state.borrow()).clone(), (*status.borrow()).clone())
-                        });
+                        return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                     }
                     if ({
                         let _lhs = (*(*(*s.upgrade().deref()).section.borrow()).tag.borrow());
@@ -10459,9 +10445,7 @@ pub fn DecodeOriginalJpg_192(
                         }),
                     ));
                     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                        return ({
-                            Fail_169((*state.borrow()).clone(), (*status.borrow()).clone())
-                        });
+                        return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                     }
                     (*(*(*jpg.borrow()).upgrade().deref())
                         .original_jpg_size
@@ -10639,9 +10623,7 @@ pub fn ParseSection_193(state: Ptr<brunsli_internal_dec_State>) -> brunsli_inter
                         }
                     }
                     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                        return ({
-                            Fail_169((*state.borrow()).clone(), (*status.borrow()).clone())
-                        });
+                        return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                     }
                     if (*(*(*s.upgrade().deref()).section.borrow())
                         .is_section
@@ -10679,13 +10661,11 @@ pub fn ParseSection_193(state: Ptr<brunsli_internal_dec_State>) -> brunsli_inter
                         ({ DecodeBase128_168((*state.borrow()).clone(), (sink.as_pointer())) }),
                     ));
                     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                        return ({
-                            Fail_169((*state.borrow()).clone(), (*status.borrow()).clone())
-                        });
+                        return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                     }
                     (*result.borrow_mut()) = brunsli_internal_dec_Stage::SECTION;
                     (*(*sh.upgrade().deref()).stage.borrow_mut()) =
-                        (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize).clone();
+                        (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize);
                     continue 'loop_;
                 }
                 __v if __v
@@ -10700,13 +10680,11 @@ pub fn ParseSection_193(state: Ptr<brunsli_internal_dec_State>) -> brunsli_inter
                         }),
                     ));
                     if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                        return ({
-                            Fail_169((*state.borrow()).clone(), (*status.borrow()).clone())
-                        });
+                        return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                     }
                     (*result.borrow_mut()) = brunsli_internal_dec_Stage::SECTION_BODY;
                     (*(*sh.upgrade().deref()).stage.borrow_mut()) =
-                        (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize).clone();
+                        (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize);
                     continue 'loop_;
                 }
                 _ => {
@@ -10732,7 +10710,7 @@ pub fn ParseSection_193(state: Ptr<brunsli_internal_dec_State>) -> brunsli_inter
         });
         'loop_: while true {}
     };
-    return (*result.borrow()).clone();
+    return (*result.borrow());
 }
 pub fn ProcessSection_195(
     state: Ptr<brunsli_internal_dec_State>,
@@ -10811,7 +10789,7 @@ pub fn ProcessSection_195(
                     }),
                 ));
                 if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow()).clone()) });
+                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                 }
                 break 'switch;
             }
@@ -10825,7 +10803,7 @@ pub fn ProcessSection_195(
                     }),
                 ));
                 if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow()).clone()) });
+                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                 }
                 break 'switch;
             }
@@ -10852,7 +10830,7 @@ pub fn ProcessSection_195(
                     }),
                 ));
                 if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow()).clone()) });
+                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                 }
                 break 'switch;
             }
@@ -10879,7 +10857,7 @@ pub fn ProcessSection_195(
                     }),
                 ));
                 if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow()).clone()) });
+                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                 }
                 break 'switch;
             }
@@ -10925,7 +10903,7 @@ pub fn ProcessSection_195(
                     ({ DecodeDCDataSection_190((*state.borrow()).clone()) }),
                 ));
                 if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow()).clone()) });
+                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                 }
                 break 'switch;
             }
@@ -10958,7 +10936,7 @@ pub fn ProcessSection_195(
                     ({ DecodeACDataSection_191((*state.borrow()).clone()) }),
                 ));
                 if (((*status.borrow()) as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow()).clone()) });
+                    return ({ Fail_169((*state.borrow()).clone(), (*status.borrow())) });
                 }
                 break 'switch;
             }
@@ -11344,7 +11322,7 @@ pub fn DoProcessJpeg_197(
                         (*(*(*state.borrow()).upgrade().deref()).stage.borrow_mut()) = __rhs;
                         break 'switch;
                     }
-                    return (brunsli_BrunsliStatus::BRUNSLI_OK).clone();
+                    return brunsli_BrunsliStatus::BRUNSLI_OK;
                 }
                 __v if __v == brunsli_internal_dec_Stage::ERROR => {
                     return (*(*(*(*(*state.borrow()).upgrade().deref()).internal.borrow())
@@ -11352,8 +11330,7 @@ pub fn DoProcessJpeg_197(
                         .unwrap()
                         .borrow())
                     .result
-                    .borrow())
-                    .clone();
+                    .borrow());
                 }
                 _ => {
                     let __rhs = ({
@@ -11641,8 +11618,7 @@ pub fn UnloadInput_201(
         'loop_: while true {}
     };
     return (((*result.borrow()) as i32)
-        != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32))
-        .clone();
+        != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32));
 }
 pub fn UnchargeBuffer_202(state: Ptr<brunsli_internal_dec_State>) {
     let state: Value<Ptr<brunsli_internal_dec_State>> = Rc::new(RefCell::new(state));
@@ -11682,13 +11658,12 @@ pub fn ProcessJpeg_203(
             if (((*(*s.upgrade().deref()).result.borrow()) as i32)
                 != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32))
             {
-                return (*(*s.upgrade().deref()).result.borrow()).clone();
+                return (*(*s.upgrade().deref()).result.borrow());
             }
             (*(*s.upgrade().deref()).result.borrow_mut()) = brunsli_BrunsliStatus::BRUNSLI_OK;
             (*(*(*state.borrow()).upgrade().deref()).stage.borrow_mut()) =
-                (*(*s.upgrade().deref()).last_stage.borrow()).clone();
-            (*(*s.upgrade().deref()).last_stage.borrow_mut()) =
-                (brunsli_internal_dec_Stage::ERROR).clone();
+                (*(*s.upgrade().deref()).last_stage.borrow());
+            (*(*s.upgrade().deref()).last_stage.borrow_mut()) = brunsli_internal_dec_Stage::ERROR;
         }
         ({ LoadInput_200((*state.borrow()).clone()) });
         if (*(*(*s.upgrade().deref()).section.borrow())
@@ -11736,12 +11711,12 @@ pub fn ProcessJpeg_203(
                     .borrow_mut()) = rhs_0
             };
         }
-        if !({ UnloadInput_201((*state.borrow()).clone(), (*result.borrow()).clone()) }) {
+        if !({ UnloadInput_201((*state.borrow()).clone(), (*result.borrow())) }) {
             break;
         }
     }
     ({ UnchargeBuffer_202((*state.borrow()).clone()) });
-    return (*result.borrow()).clone();
+    return (*result.borrow());
 }
 pub fn BrunsliDecodeJpeg_204(
     data: Ptr<u8>,
@@ -11905,7 +11880,7 @@ impl brunsli_BrunsliDecoder {
             && (((*parse_status.borrow()) as i32)
                 != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32))
         {
-            return (brunsli_BrunsliDecoder_Status::ERROR).clone();
+            return brunsli_BrunsliDecoder_Status::ERROR;
         }
         if !(((*available_in.borrow()).read()) == 0_usize) {
             ({
@@ -11928,7 +11903,7 @@ impl brunsli_BrunsliDecoder {
                 }),
             ));
         if ((*serialization_status.borrow()) == brunsli_internal_dec_SerializationStatus::ERROR) {
-            return (brunsli_BrunsliDecoder_Status::ERROR).clone();
+            return brunsli_BrunsliDecoder_Status::ERROR;
         }
         'switch: {
             let __match_cond = (*serialization_status.borrow());
@@ -15391,8 +15366,7 @@ pub fn DoEncodeScan_255(
         (((*Ss.borrow()) != 0) || ((*Se.borrow()) != 0)),
     ));
     let complete_ac: Value<bool> = Rc::new(RefCell::new(
-        ((*(*parsing_state.upgrade().deref()).stage.borrow()) == brunsli_internal_dec_Stage::DONE)
-            .clone(),
+        ((*(*parsing_state.upgrade().deref()).stage.borrow()) == brunsli_internal_dec_Stage::DONE),
     ));
     let has_ac: Value<bool> = Rc::new(RefCell::new(
         (*complete_ac.borrow())
@@ -15862,8 +15836,7 @@ pub fn DoEncodeScan_256(
         (((*Ss.borrow()) != 0) || ((*Se.borrow()) != 0)),
     ));
     let complete_ac: Value<bool> = Rc::new(RefCell::new(
-        ((*(*parsing_state.upgrade().deref()).stage.borrow()) == brunsli_internal_dec_Stage::DONE)
-            .clone(),
+        ((*(*parsing_state.upgrade().deref()).stage.borrow()) == brunsli_internal_dec_Stage::DONE),
     ));
     let has_ac: Value<bool> = Rc::new(RefCell::new(
         (*complete_ac.borrow())
@@ -16333,8 +16306,7 @@ pub fn DoEncodeScan_257(
         (((*Ss.borrow()) != 0) || ((*Se.borrow()) != 0)),
     ));
     let complete_ac: Value<bool> = Rc::new(RefCell::new(
-        ((*(*parsing_state.upgrade().deref()).stage.borrow()) == brunsli_internal_dec_Stage::DONE)
-            .clone(),
+        ((*(*parsing_state.upgrade().deref()).stage.borrow()) == brunsli_internal_dec_Stage::DONE),
     ));
     let has_ac: Value<bool> = Rc::new(RefCell::new(
         (*complete_ac.borrow())
@@ -16990,8 +16962,7 @@ pub fn SerializeJpeg_206(
             __v if __v == (brunsli_internal_dec_SerializationState_Stage::INIT as i32) => {
                 let can_start_serialization: Value<bool> = Rc::new(RefCell::new(
                     ((*(*(*state.borrow()).upgrade().deref()).stage.borrow())
-                        == brunsli_internal_dec_Stage::DONE)
-                        .clone(),
+                        == brunsli_internal_dec_Stage::DONE),
                 ));
                 if ({
                     HasSection_194(
@@ -17015,7 +16986,7 @@ pub fn SerializeJpeg_206(
                 } {
                     if (*(*jpg.upgrade().deref()).original_jpg.borrow()).is_null() {
                         (*(*ss.upgrade().deref()).stage.borrow_mut()) =
-                            (brunsli_internal_dec_SerializationState_Stage::ERROR).clone();
+                            brunsli_internal_dec_SerializationState_Stage::ERROR;
                         break;
                     }
                     (*ss.upgrade().deref()).output_queue.as_pointer().with_mut(
@@ -17113,7 +17084,7 @@ pub fn SerializeJpeg_206(
                 if ((*status.borrow())
                     == brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT)
                 {
-                    return (brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT).clone();
+                    return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT;
                 } else if ((*status.borrow()) != brunsli_internal_dec_SerializationStatus::DONE) {
                     if !(false) {
                         ({
@@ -17267,10 +17238,8 @@ impl Clone for brunsli_internal_dec_MetadataState {
             brotli: Rc::new(RefCell::new((*self.brotli.borrow()).clone())),
             metadata_size: Rc::new(RefCell::new((*self.metadata_size.borrow()))),
             decompressed_size: Rc::new(RefCell::new((*self.decompressed_size.borrow()))),
-            result: Rc::new(RefCell::new((*self.result.borrow()).clone())),
-            decompression_stage: Rc::new(RefCell::new(
-                (*self.decompression_stage.borrow()).clone(),
-            )),
+            result: Rc::new(RefCell::new((*self.result.borrow()))),
+            decompression_stage: Rc::new(RefCell::new((*self.decompression_stage.borrow()))),
         };
         this
     }
@@ -17545,7 +17514,7 @@ pub fn ProcessFile_267(file_name: Ptr<Vec<u8>>, outfile_name: Ptr<Vec<u8>>) -> b
         }),
     ));
     (*ok.borrow_mut()) =
-        (((*status.borrow()) as i32) == (brunsli_BrunsliStatus::BRUNSLI_OK as i32)).clone();
+        (((*status.borrow()) as i32) == (brunsli_BrunsliStatus::BRUNSLI_OK as i32));
     if ((*(*jpg.borrow()).version.borrow()) != (*kFallbackVersion_2.with(Value::clone).borrow())) {
         {
             (*input.borrow_mut()).clear();

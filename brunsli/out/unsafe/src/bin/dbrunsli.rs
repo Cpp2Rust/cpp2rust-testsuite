@@ -2389,8 +2389,7 @@ impl brunsli_ANSDecoder {
     }
     pub unsafe fn Init(&mut self, mut in_: *mut brunsli_WordSource) {
         self.state_ = ((unsafe { (*in_).GetNextWord() }) as u32).clone();
-        self.state_ =
-            (((self.state_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32)).clone();
+        self.state_ = (((self.state_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32));
     }
     pub unsafe fn ReadSymbol(
         &mut self,
@@ -2405,7 +2404,7 @@ impl brunsli_ANSDecoder {
         .wrapping_add(((*s).offset_ as u32));
         if ((self.state_) < ((1_u32) << (16_u32))) {
             self.state_ =
-                (((self.state_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32)).clone();
+                (((self.state_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32));
         }
         return ((*s).symbol_ as i32);
     }
@@ -2694,8 +2693,7 @@ impl brunsli_BinaryArithmeticDecoder {
         self.low_ = 0_u32;
         self.high_ = !0_u32;
         self.value_ = ((unsafe { (*in_).GetNextWord() }) as u32).clone();
-        self.value_ =
-            (((self.value_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32)).clone();
+        self.value_ = (((self.value_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32));
     }
     pub unsafe fn ReadBit(&mut self, mut prob: i32, mut in_: *mut brunsli_WordSource) -> i32 {
         let diff: u32 = (self.high_).wrapping_sub(self.low_);
@@ -2712,7 +2710,7 @@ impl brunsli_BinaryArithmeticDecoder {
         }
         if ((((self.low_) ^ (self.high_)) >> (16_u32)) == (0_u32)) {
             self.value_ =
-                (((self.value_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32)).clone();
+                (((self.value_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32));
             self.low_ <<= 16_u32;
             self.high_ <<= 16_u32;
             self.high_ |= 65535_u32;
@@ -5083,8 +5081,8 @@ pub unsafe fn Fail_169(
     let s: *mut brunsli_internal_dec_InternalState =
         &mut (*(*state).internal.as_deref_mut().unwrap())
             as *mut brunsli_internal_dec_InternalState;
-    (*s).result = (result).clone();
-    (*s).last_stage = ((*state).stage).clone();
+    (*s).result = result;
+    (*s).last_stage = (*state).stage;
     return brunsli_internal_dec_Stage::ERROR;
 }
 pub unsafe fn ReadTag_170(
@@ -5807,7 +5805,7 @@ pub unsafe fn SuspendBitReader_183(
     let mut unused_bytes: usize = (unsafe { BrunsliBitReaderSuspend_130(br) });
     let mut consumed_bytes: usize = (chunk_len).wrapping_sub(unused_bytes);
     (unsafe { SkipBytes_165(state, consumed_bytes) });
-    result = (unsafe { CheckBoundary_181(state, result) }).clone();
+    result = (unsafe { CheckBoundary_181(state, result) });
     if !((unsafe { BrunsliBitReaderIsHealthy_132(br) })
         || (((result as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32))
             && ((result as i32) != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32))))
@@ -7112,9 +7110,8 @@ pub unsafe fn ParseSection_193(
                         return (unsafe { Fail_169(state, status) });
                     }
                     if (*s).section.is_section {
-                        (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage::ENTER_SECTION
-                            as usize)
-                            .clone();
+                        (*sh).stage =
+                            (brunsli_internal_dec_SectionHeaderState_Stage::ENTER_SECTION as usize);
                         continue 'loop_;
                     }
                     let tag_bit: u32 = ((1_u32) << ((*s).section.tag));
@@ -7124,9 +7121,8 @@ pub unsafe fn ParseSection_193(
                             Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
                         });
                     }
-                    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage::READ_VALUE
-                        as usize)
-                        .clone();
+                    (*sh).stage =
+                        (brunsli_internal_dec_SectionHeaderState_Stage::READ_VALUE as usize);
                     continue 'loop_;
                 }
                 __v if __v
@@ -7138,9 +7134,8 @@ pub unsafe fn ParseSection_193(
                     if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
-                    result = (brunsli_internal_dec_Stage::SECTION).clone();
-                    (*sh).stage =
-                        (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize).clone();
+                    result = brunsli_internal_dec_Stage::SECTION;
+                    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize);
                     continue 'loop_;
                 }
                 __v if __v
@@ -7155,9 +7150,8 @@ pub unsafe fn ParseSection_193(
                     if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
-                    result = (brunsli_internal_dec_Stage::SECTION_BODY).clone();
-                    (*sh).stage =
-                        (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize).clone();
+                    result = brunsli_internal_dec_Stage::SECTION_BODY;
+                    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize);
                     continue 'loop_;
                 }
                 _ => {
@@ -7168,7 +7162,7 @@ pub unsafe fn ParseSection_193(
             }
         };
     }
-    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage::READ_TAG as usize).clone();
+    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage::READ_TAG as usize);
     if !((result) != (brunsli_internal_dec_Stage::ERROR)) {
         (unsafe {
             BrunsliDumpAndAbort_79(
@@ -7715,7 +7709,7 @@ pub unsafe fn ProcessJpeg_203(
                 return (*s).result;
             }
             (*s).result = (brunsli_BrunsliStatus::BRUNSLI_OK).clone();
-            (*state).stage = ((*s).last_stage).clone();
+            (*state).stage = (*s).last_stage;
             (*s).last_stage = (brunsli_internal_dec_Stage::ERROR).clone();
         }
         (unsafe { LoadInput_200(state) });
@@ -11674,7 +11668,7 @@ pub unsafe fn ProcessFile_267(
             (&mut jpg as *mut brunsli_JPEGData),
         )
     });
-    ok = ((status as i32) == (brunsli_BrunsliStatus::BRUNSLI_OK as i32)).clone();
+    ok = ((status as i32) == (brunsli_BrunsliStatus::BRUNSLI_OK as i32));
     if ((jpg.version) != (kFallbackVersion_2)) {
         {
             input.clear();

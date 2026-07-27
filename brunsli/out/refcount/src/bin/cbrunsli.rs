@@ -500,7 +500,7 @@ impl Clone for brunsli_JPEGData {
             tail_data: Rc::new(RefCell::new((*self.tail_data.borrow()).clone())),
             original_jpg: Rc::new(RefCell::new((*self.original_jpg.borrow()).clone())),
             original_jpg_size: Rc::new(RefCell::new((*self.original_jpg_size.borrow()))),
-            error: Rc::new(RefCell::new((*self.error.borrow()).clone())),
+            error: Rc::new(RefCell::new((*self.error.borrow()))),
             has_zero_padding_bit: Rc::new(RefCell::new((*self.has_zero_padding_bit.borrow()))),
             padding_bits: Rc::new(RefCell::new((*self.padding_bits.borrow()).clone())),
         };
@@ -7025,12 +7025,12 @@ impl brunsli_internal_enc_DataStream {
         ));
         let out_start: Value<Ptr<u16>> = Rc::new(RefCell::new((*out.borrow()).clone()));
         ({
-            let _p: AnyPtr = (((*out.borrow_mut()).postfix_inc()).clone() as Ptr<u16>).to_any();
+            let _p: AnyPtr = ((*out.borrow_mut()).postfix_inc() as Ptr<u16>).to_any();
             let _v: u16 = (((*state.borrow()) >> 16) as u16);
             BrunsliUnalignedWrite16_67(_p, _v)
         });
         ({
-            let _p: AnyPtr = (((*out.borrow_mut()).postfix_inc()).clone() as Ptr<u16>).to_any();
+            let _p: AnyPtr = ((*out.borrow_mut()).postfix_inc() as Ptr<u16>).to_any();
             let _v: u16 = ((*state.borrow()) as u16);
             BrunsliUnalignedWrite16_67(_p, _v)
         });
@@ -7041,8 +7041,7 @@ impl brunsli_internal_enc_DataStream {
                     .offset(((*i.borrow()) as usize));
             if ((*(*word.upgrade().deref()).nbits.borrow()) != 0) {
                 ({
-                    let _p: AnyPtr =
-                        (((*out.borrow_mut()).postfix_inc()).clone() as Ptr<u16>).to_any();
+                    let _p: AnyPtr = ((*out.borrow_mut()).postfix_inc() as Ptr<u16>).to_any();
                     let _v: u16 = (*(*word.upgrade().deref()).value.borrow());
                     BrunsliUnalignedWrite16_67(_p, _v)
                 });
@@ -14915,7 +14914,7 @@ pub fn ReadJpeg_195(
                         ProcessSOF_234(
                             (*data.borrow()).clone(),
                             (*len.borrow()),
-                            (*mode.borrow()).clone(),
+                            (*mode.borrow()),
                             (pos.as_pointer()),
                             (*jpg.borrow()).clone(),
                         )
@@ -14928,7 +14927,7 @@ pub fn ReadJpeg_195(
                         ProcessDHT_236(
                             (*data.borrow()).clone(),
                             (*len.borrow()),
-                            (*mode.borrow()).clone(),
+                            (*mode.borrow()),
                             (dc_huff_lut.as_pointer()),
                             (ac_huff_lut.as_pointer()),
                             (pos.as_pointer()),
