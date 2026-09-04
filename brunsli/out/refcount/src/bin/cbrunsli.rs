@@ -87,112 +87,50 @@ thread_local!(
         35_u32, 36_u32, 48_u32, 49_u32, 57_u32, 58_u32, 62_u32, 63_u32,
     ])));
 );
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_JPEGReadError {
-    #[default]
-    OK = 0,
-    SOI_NOT_FOUND = 1,
-    SOF_NOT_FOUND = 2,
-    UNEXPECTED_EOF = 3,
-    MARKER_BYTE_NOT_FOUND = 4,
-    UNSUPPORTED_MARKER = 5,
-    WRONG_MARKER_SIZE = 6,
-    INVALID_PRECISION = 7,
-    INVALID_WIDTH = 8,
-    INVALID_HEIGHT = 9,
-    INVALID_NUMCOMP = 10,
-    INVALID_SAMP_FACTOR = 11,
-    INVALID_START_OF_SCAN = 12,
-    INVALID_END_OF_SCAN = 13,
-    INVALID_SCAN_BIT_POSITION = 14,
-    INVALID_COMPS_IN_SCAN = 15,
-    INVALID_HUFFMAN_INDEX = 16,
-    INVALID_QUANT_TBL_INDEX = 17,
-    INVALID_QUANT_VAL = 18,
-    INVALID_MARKER_LEN = 19,
-    INVALID_SAMPLING_FACTORS = 20,
-    INVALID_HUFFMAN_CODE = 21,
-    INVALID_SYMBOL = 22,
-    NON_REPRESENTABLE_DC_COEFF = 23,
-    NON_REPRESENTABLE_AC_COEFF = 24,
-    INVALID_SCAN = 25,
-    OVERLAPPING_SCANS = 26,
-    INVALID_SCAN_ORDER = 27,
-    EXTRA_ZERO_RUN = 28,
-    DUPLICATE_DRI = 29,
-    DUPLICATE_SOF = 30,
-    WRONG_RESTART_MARKER = 31,
-    DUPLICATE_COMPONENT_ID = 32,
-    COMPONENT_NOT_FOUND = 33,
-    HUFFMAN_TABLE_NOT_FOUND = 34,
-    HUFFMAN_TABLE_ERROR = 35,
-    QUANT_TABLE_NOT_FOUND = 36,
-    EMPTY_DHT = 37,
-    EMPTY_DQT = 38,
-    OUT_OF_BAND_COEFF = 39,
-    EOB_RUN_TOO_LONG = 40,
-    IMAGE_TOO_LARGE = 41,
-    INVALID_QUANT_TBL_PRECISION = 42,
-}
-impl From<i32> for brunsli_JPEGReadError {
-    fn from(n: i32) -> brunsli_JPEGReadError {
-        match n {
-            0 => brunsli_JPEGReadError::OK,
-            1 => brunsli_JPEGReadError::SOI_NOT_FOUND,
-            2 => brunsli_JPEGReadError::SOF_NOT_FOUND,
-            3 => brunsli_JPEGReadError::UNEXPECTED_EOF,
-            4 => brunsli_JPEGReadError::MARKER_BYTE_NOT_FOUND,
-            5 => brunsli_JPEGReadError::UNSUPPORTED_MARKER,
-            6 => brunsli_JPEGReadError::WRONG_MARKER_SIZE,
-            7 => brunsli_JPEGReadError::INVALID_PRECISION,
-            8 => brunsli_JPEGReadError::INVALID_WIDTH,
-            9 => brunsli_JPEGReadError::INVALID_HEIGHT,
-            10 => brunsli_JPEGReadError::INVALID_NUMCOMP,
-            11 => brunsli_JPEGReadError::INVALID_SAMP_FACTOR,
-            12 => brunsli_JPEGReadError::INVALID_START_OF_SCAN,
-            13 => brunsli_JPEGReadError::INVALID_END_OF_SCAN,
-            14 => brunsli_JPEGReadError::INVALID_SCAN_BIT_POSITION,
-            15 => brunsli_JPEGReadError::INVALID_COMPS_IN_SCAN,
-            16 => brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX,
-            17 => brunsli_JPEGReadError::INVALID_QUANT_TBL_INDEX,
-            18 => brunsli_JPEGReadError::INVALID_QUANT_VAL,
-            19 => brunsli_JPEGReadError::INVALID_MARKER_LEN,
-            20 => brunsli_JPEGReadError::INVALID_SAMPLING_FACTORS,
-            21 => brunsli_JPEGReadError::INVALID_HUFFMAN_CODE,
-            22 => brunsli_JPEGReadError::INVALID_SYMBOL,
-            23 => brunsli_JPEGReadError::NON_REPRESENTABLE_DC_COEFF,
-            24 => brunsli_JPEGReadError::NON_REPRESENTABLE_AC_COEFF,
-            25 => brunsli_JPEGReadError::INVALID_SCAN,
-            26 => brunsli_JPEGReadError::OVERLAPPING_SCANS,
-            27 => brunsli_JPEGReadError::INVALID_SCAN_ORDER,
-            28 => brunsli_JPEGReadError::EXTRA_ZERO_RUN,
-            29 => brunsli_JPEGReadError::DUPLICATE_DRI,
-            30 => brunsli_JPEGReadError::DUPLICATE_SOF,
-            31 => brunsli_JPEGReadError::WRONG_RESTART_MARKER,
-            32 => brunsli_JPEGReadError::DUPLICATE_COMPONENT_ID,
-            33 => brunsli_JPEGReadError::COMPONENT_NOT_FOUND,
-            34 => brunsli_JPEGReadError::HUFFMAN_TABLE_NOT_FOUND,
-            35 => brunsli_JPEGReadError::HUFFMAN_TABLE_ERROR,
-            36 => brunsli_JPEGReadError::QUANT_TABLE_NOT_FOUND,
-            37 => brunsli_JPEGReadError::EMPTY_DHT,
-            38 => brunsli_JPEGReadError::EMPTY_DQT,
-            39 => brunsli_JPEGReadError::OUT_OF_BAND_COEFF,
-            40 => brunsli_JPEGReadError::EOB_RUN_TOO_LONG,
-            41 => brunsli_JPEGReadError::IMAGE_TOO_LARGE,
-            42 => brunsli_JPEGReadError::INVALID_QUANT_TBL_PRECISION,
-            _ => panic!("invalid brunsli_JPEGReadError value: {}", n),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_JPEGReadError);
-impl ByteRepr for brunsli_JPEGReadError {
-    fn to_bytes(&self, buf: &mut [u8]) {
-        (*self as i32).to_bytes(buf);
-    }
-    fn from_bytes(buf: &[u8]) -> Self {
-        <brunsli_JPEGReadError>::from(i32::from_bytes(buf))
-    }
-}
+pub type brunsli_JPEGReadError = i32;
+pub const brunsli_JPEGReadError_OK: brunsli_JPEGReadError = 0;
+pub const brunsli_JPEGReadError_SOI_NOT_FOUND: brunsli_JPEGReadError = 1;
+pub const brunsli_JPEGReadError_SOF_NOT_FOUND: brunsli_JPEGReadError = 2;
+pub const brunsli_JPEGReadError_UNEXPECTED_EOF: brunsli_JPEGReadError = 3;
+pub const brunsli_JPEGReadError_MARKER_BYTE_NOT_FOUND: brunsli_JPEGReadError = 4;
+pub const brunsli_JPEGReadError_UNSUPPORTED_MARKER: brunsli_JPEGReadError = 5;
+pub const brunsli_JPEGReadError_WRONG_MARKER_SIZE: brunsli_JPEGReadError = 6;
+pub const brunsli_JPEGReadError_INVALID_PRECISION: brunsli_JPEGReadError = 7;
+pub const brunsli_JPEGReadError_INVALID_WIDTH: brunsli_JPEGReadError = 8;
+pub const brunsli_JPEGReadError_INVALID_HEIGHT: brunsli_JPEGReadError = 9;
+pub const brunsli_JPEGReadError_INVALID_NUMCOMP: brunsli_JPEGReadError = 10;
+pub const brunsli_JPEGReadError_INVALID_SAMP_FACTOR: brunsli_JPEGReadError = 11;
+pub const brunsli_JPEGReadError_INVALID_START_OF_SCAN: brunsli_JPEGReadError = 12;
+pub const brunsli_JPEGReadError_INVALID_END_OF_SCAN: brunsli_JPEGReadError = 13;
+pub const brunsli_JPEGReadError_INVALID_SCAN_BIT_POSITION: brunsli_JPEGReadError = 14;
+pub const brunsli_JPEGReadError_INVALID_COMPS_IN_SCAN: brunsli_JPEGReadError = 15;
+pub const brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX: brunsli_JPEGReadError = 16;
+pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_INDEX: brunsli_JPEGReadError = 17;
+pub const brunsli_JPEGReadError_INVALID_QUANT_VAL: brunsli_JPEGReadError = 18;
+pub const brunsli_JPEGReadError_INVALID_MARKER_LEN: brunsli_JPEGReadError = 19;
+pub const brunsli_JPEGReadError_INVALID_SAMPLING_FACTORS: brunsli_JPEGReadError = 20;
+pub const brunsli_JPEGReadError_INVALID_HUFFMAN_CODE: brunsli_JPEGReadError = 21;
+pub const brunsli_JPEGReadError_INVALID_SYMBOL: brunsli_JPEGReadError = 22;
+pub const brunsli_JPEGReadError_NON_REPRESENTABLE_DC_COEFF: brunsli_JPEGReadError = 23;
+pub const brunsli_JPEGReadError_NON_REPRESENTABLE_AC_COEFF: brunsli_JPEGReadError = 24;
+pub const brunsli_JPEGReadError_INVALID_SCAN: brunsli_JPEGReadError = 25;
+pub const brunsli_JPEGReadError_OVERLAPPING_SCANS: brunsli_JPEGReadError = 26;
+pub const brunsli_JPEGReadError_INVALID_SCAN_ORDER: brunsli_JPEGReadError = 27;
+pub const brunsli_JPEGReadError_EXTRA_ZERO_RUN: brunsli_JPEGReadError = 28;
+pub const brunsli_JPEGReadError_DUPLICATE_DRI: brunsli_JPEGReadError = 29;
+pub const brunsli_JPEGReadError_DUPLICATE_SOF: brunsli_JPEGReadError = 30;
+pub const brunsli_JPEGReadError_WRONG_RESTART_MARKER: brunsli_JPEGReadError = 31;
+pub const brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID: brunsli_JPEGReadError = 32;
+pub const brunsli_JPEGReadError_COMPONENT_NOT_FOUND: brunsli_JPEGReadError = 33;
+pub const brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND: brunsli_JPEGReadError = 34;
+pub const brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR: brunsli_JPEGReadError = 35;
+pub const brunsli_JPEGReadError_QUANT_TABLE_NOT_FOUND: brunsli_JPEGReadError = 36;
+pub const brunsli_JPEGReadError_EMPTY_DHT: brunsli_JPEGReadError = 37;
+pub const brunsli_JPEGReadError_EMPTY_DQT: brunsli_JPEGReadError = 38;
+pub const brunsli_JPEGReadError_OUT_OF_BAND_COEFF: brunsli_JPEGReadError = 39;
+pub const brunsli_JPEGReadError_EOB_RUN_TOO_LONG: brunsli_JPEGReadError = 40;
+pub const brunsli_JPEGReadError_IMAGE_TOO_LARGE: brunsli_JPEGReadError = 41;
+pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_PRECISION: brunsli_JPEGReadError = 42;
 #[derive()]
 pub struct brunsli_JPEGQuantTable {
     pub values: Value<Vec<i32>>,
@@ -223,7 +161,25 @@ impl Default for brunsli_JPEGQuantTable {
         }
     }
 }
-impl ByteRepr for brunsli_JPEGQuantTable {}
+impl ByteRepr for brunsli_JPEGQuantTable {
+    fn byte_size() -> usize {
+        268
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.values.borrow()).to_bytes(&mut buf[0..256]);
+        (*self.precision.borrow()).to_bytes(&mut buf[256..260]);
+        (*self.index.borrow()).to_bytes(&mut buf[260..264]);
+        (*self.is_last.borrow()).to_bytes(&mut buf[264..265]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            values: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[0..256]))),
+            precision: Rc::new(RefCell::new(<i32>::from_bytes(&buf[256..260]))),
+            index: Rc::new(RefCell::new(<i32>::from_bytes(&buf[260..264]))),
+            is_last: Rc::new(RefCell::new(<bool>::from_bytes(&buf[264..265]))),
+        }
+    }
+}
 #[derive()]
 pub struct brunsli_JPEGHuffmanCode {
     pub counts: Value<Vec<i32>>,
@@ -256,7 +212,25 @@ impl Default for brunsli_JPEGHuffmanCode {
         }
     }
 }
-impl ByteRepr for brunsli_JPEGHuffmanCode {}
+impl ByteRepr for brunsli_JPEGHuffmanCode {
+    fn byte_size() -> usize {
+        1104
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.counts.borrow()).to_bytes(&mut buf[0..68]);
+        (*self.values.borrow()).to_bytes(&mut buf[68..1096]);
+        (*self.slot_id.borrow()).to_bytes(&mut buf[1096..1100]);
+        (*self.is_last.borrow()).to_bytes(&mut buf[1100..1101]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            counts: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[0..68]))),
+            values: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[68..1096]))),
+            slot_id: Rc::new(RefCell::new(<i32>::from_bytes(&buf[1096..1100]))),
+            is_last: Rc::new(RefCell::new(<bool>::from_bytes(&buf[1100..1101]))),
+        }
+    }
+}
 #[derive(Default)]
 pub struct brunsli_JPEGComponentScanInfo {
     pub comp_idx: Value<u8>,
@@ -361,7 +335,37 @@ impl Default for brunsli_JPEGScanInfo {
         }
     }
 }
-impl ByteRepr for brunsli_JPEGScanInfo {}
+impl ByteRepr for brunsli_JPEGScanInfo {
+    fn byte_size() -> usize {
+        120
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.Ss.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.Se.borrow()).to_bytes(&mut buf[4..8]);
+        (*self.Ah.borrow()).to_bytes(&mut buf[8..12]);
+        (*self.Al.borrow()).to_bytes(&mut buf[12..16]);
+        (*self.num_components.borrow()).to_bytes(&mut buf[16..24]);
+        (*self.components.borrow()).to_bytes(&mut buf[24..72]);
+        (*self.reset_points.borrow()).to_bytes(&mut buf[72..96]);
+        (*self.extra_zero_runs.borrow()).to_bytes(&mut buf[96..120]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            Ss: Rc::new(RefCell::new(<i32>::from_bytes(&buf[0..4]))),
+            Se: Rc::new(RefCell::new(<i32>::from_bytes(&buf[4..8]))),
+            Ah: Rc::new(RefCell::new(<i32>::from_bytes(&buf[8..12]))),
+            Al: Rc::new(RefCell::new(<i32>::from_bytes(&buf[12..16]))),
+            num_components: Rc::new(RefCell::new(<usize>::from_bytes(&buf[16..24]))),
+            components: Rc::new(RefCell::new(
+                <Vec<brunsli_JPEGComponentScanInfo>>::from_bytes(&buf[24..72]),
+            )),
+            reset_points: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[72..96]))),
+            extra_zero_runs: Rc::new(RefCell::new(
+                <Vec<brunsli_JPEGScanInfo_ExtraZeroRunInfo>>::from_bytes(&buf[96..120]),
+            )),
+        }
+    }
+}
 #[derive()]
 pub struct brunsli_JPEGComponent {
     pub id: Value<i32>,
@@ -408,7 +412,33 @@ impl Default for brunsli_JPEGComponent {
         { brunsli_JPEGComponent::brunsli_JPEGComponent() }
     }
 }
-impl ByteRepr for brunsli_JPEGComponent {}
+impl ByteRepr for brunsli_JPEGComponent {
+    fn byte_size() -> usize {
+        56
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.id.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.h_samp_factor.borrow()).to_bytes(&mut buf[4..8]);
+        (*self.v_samp_factor.borrow()).to_bytes(&mut buf[8..12]);
+        (*self.quant_idx.borrow()).to_bytes(&mut buf[12..13]);
+        (*self.width_in_blocks.borrow()).to_bytes(&mut buf[16..20]);
+        (*self.height_in_blocks.borrow()).to_bytes(&mut buf[20..24]);
+        (*self.num_blocks.borrow()).to_bytes(&mut buf[24..28]);
+        (*self.coeffs.borrow()).to_bytes(&mut buf[32..56]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            id: Rc::new(RefCell::new(<i32>::from_bytes(&buf[0..4]))),
+            h_samp_factor: Rc::new(RefCell::new(<i32>::from_bytes(&buf[4..8]))),
+            v_samp_factor: Rc::new(RefCell::new(<i32>::from_bytes(&buf[8..12]))),
+            quant_idx: Rc::new(RefCell::new(<u8>::from_bytes(&buf[12..13]))),
+            width_in_blocks: Rc::new(RefCell::new(<u32>::from_bytes(&buf[16..20]))),
+            height_in_blocks: Rc::new(RefCell::new(<u32>::from_bytes(&buf[20..24]))),
+            num_blocks: Rc::new(RefCell::new(<u32>::from_bytes(&buf[24..28]))),
+            coeffs: Rc::new(RefCell::new(<Vec<i16>>::from_bytes(&buf[32..56]))),
+        }
+    }
+}
 #[derive()]
 pub struct brunsli_JPEGData {
     pub width: Value<i32>,
@@ -456,7 +486,7 @@ impl brunsli_JPEGData {
             tail_data: Rc::new(RefCell::new(Vec::new())),
             original_jpg: Rc::new(RefCell::new(Ptr::<u8>::null())),
             original_jpg_size: Rc::new(RefCell::new(0_usize)),
-            error: Rc::new(RefCell::new(brunsli_JPEGReadError::OK)),
+            error: Rc::new(RefCell::new(brunsli_JPEGReadError_OK)),
             has_zero_padding_bit: Rc::new(RefCell::new(false)),
             padding_bits: Rc::new(RefCell::new(Vec::new())),
         };
@@ -512,7 +542,77 @@ impl Default for brunsli_JPEGData {
         { brunsli_JPEGData::brunsli_JPEGData() }
     }
 }
-impl ByteRepr for brunsli_JPEGData {}
+impl ByteRepr for brunsli_JPEGData {
+    fn byte_size() -> usize {
+        296
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.width.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.height.borrow()).to_bytes(&mut buf[4..8]);
+        (*self.version.borrow()).to_bytes(&mut buf[8..12]);
+        (*self.max_h_samp_factor.borrow()).to_bytes(&mut buf[12..16]);
+        (*self.max_v_samp_factor.borrow()).to_bytes(&mut buf[16..20]);
+        (*self.MCU_rows.borrow()).to_bytes(&mut buf[20..24]);
+        (*self.MCU_cols.borrow()).to_bytes(&mut buf[24..28]);
+        (*self.restart_interval.borrow()).to_bytes(&mut buf[28..32]);
+        (*self.app_data.borrow()).to_bytes(&mut buf[32..56]);
+        (*self.com_data.borrow()).to_bytes(&mut buf[56..80]);
+        (*self.quant.borrow()).to_bytes(&mut buf[80..104]);
+        (*self.huffman_code.borrow()).to_bytes(&mut buf[104..128]);
+        (*self.components.borrow()).to_bytes(&mut buf[128..152]);
+        (*self.scan_info.borrow()).to_bytes(&mut buf[152..176]);
+        (*self.marker_order.borrow()).to_bytes(&mut buf[176..200]);
+        (*self.inter_marker_data.borrow()).to_bytes(&mut buf[200..224]);
+        (*self.tail_data.borrow()).to_bytes(&mut buf[224..248]);
+        (*self.original_jpg.borrow()).to_bytes(&mut buf[248..256]);
+        (*self.original_jpg_size.borrow()).to_bytes(&mut buf[256..264]);
+        (*self.error.borrow()).to_bytes(&mut buf[264..268]);
+        (*self.has_zero_padding_bit.borrow()).to_bytes(&mut buf[268..269]);
+        (*self.padding_bits.borrow()).to_bytes(&mut buf[272..296]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            width: Rc::new(RefCell::new(<i32>::from_bytes(&buf[0..4]))),
+            height: Rc::new(RefCell::new(<i32>::from_bytes(&buf[4..8]))),
+            version: Rc::new(RefCell::new(<i32>::from_bytes(&buf[8..12]))),
+            max_h_samp_factor: Rc::new(RefCell::new(<i32>::from_bytes(&buf[12..16]))),
+            max_v_samp_factor: Rc::new(RefCell::new(<i32>::from_bytes(&buf[16..20]))),
+            MCU_rows: Rc::new(RefCell::new(<i32>::from_bytes(&buf[20..24]))),
+            MCU_cols: Rc::new(RefCell::new(<i32>::from_bytes(&buf[24..28]))),
+            restart_interval: Rc::new(RefCell::new(<i32>::from_bytes(&buf[28..32]))),
+            app_data: Rc::new(RefCell::new(<Vec<Value<Vec<u8>>>>::from_bytes(
+                &buf[32..56],
+            ))),
+            com_data: Rc::new(RefCell::new(<Vec<Value<Vec<u8>>>>::from_bytes(
+                &buf[56..80],
+            ))),
+            quant: Rc::new(RefCell::new(<Vec<brunsli_JPEGQuantTable>>::from_bytes(
+                &buf[80..104],
+            ))),
+            huffman_code: Rc::new(RefCell::new(<Vec<brunsli_JPEGHuffmanCode>>::from_bytes(
+                &buf[104..128],
+            ))),
+            components: Rc::new(RefCell::new(<Vec<brunsli_JPEGComponent>>::from_bytes(
+                &buf[128..152],
+            ))),
+            scan_info: Rc::new(RefCell::new(<Vec<brunsli_JPEGScanInfo>>::from_bytes(
+                &buf[152..176],
+            ))),
+            marker_order: Rc::new(RefCell::new(<Vec<u8>>::from_bytes(&buf[176..200]))),
+            inter_marker_data: Rc::new(RefCell::new(<Vec<Value<Vec<u8>>>>::from_bytes(
+                &buf[200..224],
+            ))),
+            tail_data: Rc::new(RefCell::new(<Vec<u8>>::from_bytes(&buf[224..248]))),
+            original_jpg: Rc::new(RefCell::new(<Ptr<u8>>::from_bytes(&buf[248..256]))),
+            original_jpg_size: Rc::new(RefCell::new(<usize>::from_bytes(&buf[256..264]))),
+            error: Rc::new(RefCell::new(<brunsli_JPEGReadError>::from_bytes(
+                &buf[264..268],
+            ))),
+            has_zero_padding_bit: Rc::new(RefCell::new(<bool>::from_bytes(&buf[268..269]))),
+            padding_bits: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[272..296]))),
+        }
+    }
+}
 pub fn JPEGDataIs420_15(jpg: Ptr<brunsli_JPEGData>) -> bool {
     return ((((((((((*(*jpg.upgrade().deref()).components.borrow()).len() == 3_usize)
         && ((*(*jpg.upgrade().deref()).max_h_samp_factor.borrow()) == 2))
@@ -1408,19 +1508,19 @@ pub fn Log2FloorNonZero_74(n: u32) -> i32 {
     return (31 ^ (*n.borrow()).leading_zeros() as i32);
 }
 pub fn BrunsliSuppressUnusedFunctions_75() {
-    ((FnPtr::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>::new(Append_73))
+    &((FnPtr::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>::new(Append_73))
         .cast::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>(None));
-    (FnPtr::<fn()>::new(BrunsliSuppressUnusedFunctions_75));
-    (FnPtr::<fn(AnyPtr) -> u16>::new(BrunsliUnalignedRead16_66));
-    (FnPtr::<fn(AnyPtr, u16)>::new(BrunsliUnalignedWrite16_67));
-    (FnPtr::<fn(AnyPtr) -> u32>::new(BrunsliUnalignedRead32_68));
-    (FnPtr::<fn(AnyPtr) -> u64>::new(BrunsliUnalignedRead64_69));
-    (FnPtr::<fn(AnyPtr, u64)>::new(BrunsliUnalignedWrite64_70));
-    (FnPtr::<fn(AnyPtr) -> u16>::new(BrunsliUnalignedRead16_66));
-    (FnPtr::<fn(AnyPtr, u16)>::new(BrunsliUnalignedWrite16_67));
-    (FnPtr::<fn(AnyPtr) -> u32>::new(BrunsliUnalignedRead32_68));
-    (FnPtr::<fn(AnyPtr) -> u64>::new(BrunsliUnalignedRead64_69));
-    (FnPtr::<fn(AnyPtr, u64)>::new(BrunsliUnalignedWrite64_70));
+    &(FnPtr::<fn()>::new(BrunsliSuppressUnusedFunctions_75));
+    &(FnPtr::<fn(AnyPtr) -> u16>::new(BrunsliUnalignedRead16_66));
+    &(FnPtr::<fn(AnyPtr, u16)>::new(BrunsliUnalignedWrite16_67));
+    &(FnPtr::<fn(AnyPtr) -> u32>::new(BrunsliUnalignedRead32_68));
+    &(FnPtr::<fn(AnyPtr) -> u64>::new(BrunsliUnalignedRead64_69));
+    &(FnPtr::<fn(AnyPtr, u64)>::new(BrunsliUnalignedWrite64_70));
+    &(FnPtr::<fn(AnyPtr) -> u16>::new(BrunsliUnalignedRead16_66));
+    &(FnPtr::<fn(AnyPtr, u16)>::new(BrunsliUnalignedWrite16_67));
+    &(FnPtr::<fn(AnyPtr) -> u32>::new(BrunsliUnalignedRead32_68));
+    &(FnPtr::<fn(AnyPtr) -> u64>::new(BrunsliUnalignedRead64_69));
+    &(FnPtr::<fn(AnyPtr, u64)>::new(BrunsliUnalignedWrite64_70));
 }
 thread_local!(
     pub static kNormalizeThreshold_76: Value<u8> = Rc::new(RefCell::new(254_u8));
@@ -2222,7 +2322,37 @@ impl Default for brunsli_ComponentStateDC {
         { brunsli_ComponentStateDC::brunsli_ComponentStateDC() }
     }
 }
-impl ByteRepr for brunsli_ComponentStateDC {}
+impl ByteRepr for brunsli_ComponentStateDC {
+    fn byte_size() -> usize {
+        152
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.width.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.is_zero_prob.borrow()).to_bytes(&mut buf[4..8]);
+        (*self.is_empty_block_prob.borrow()).to_bytes(&mut buf[8..32]);
+        (*self.sign_prob.borrow()).to_bytes(&mut buf[32..56]);
+        (*self.first_extra_bit_prob.borrow()).to_bytes(&mut buf[56..80]);
+        (*self.prev_is_nonempty.borrow()).to_bytes(&mut buf[80..104]);
+        (*self.prev_abs_coeff.borrow()).to_bytes(&mut buf[104..128]);
+        (*self.prev_sign.borrow()).to_bytes(&mut buf[128..152]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            width: Rc::new(RefCell::new(<i32>::from_bytes(&buf[0..4]))),
+            is_zero_prob: Rc::new(RefCell::new(<brunsli_Prob>::from_bytes(&buf[4..8]))),
+            is_empty_block_prob: Rc::new(RefCell::new(<Vec<brunsli_Prob>>::from_bytes(
+                &buf[8..32],
+            ))),
+            sign_prob: Rc::new(RefCell::new(<Vec<brunsli_Prob>>::from_bytes(&buf[32..56]))),
+            first_extra_bit_prob: Rc::new(RefCell::new(<Vec<brunsli_Prob>>::from_bytes(
+                &buf[56..80],
+            ))),
+            prev_is_nonempty: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[80..104]))),
+            prev_abs_coeff: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[104..128]))),
+            prev_sign: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[128..152]))),
+        }
+    }
+}
 #[derive()]
 pub struct brunsli_ComponentState {
     pub width: Value<i32>,
@@ -2311,7 +2441,7 @@ impl brunsli_ComponentState {
     }
     pub fn SizeInBytes(w: i32) -> usize {
         let w: Value<i32> = Rc::new(RefCell::new(w));
-        return ( ( ( ( ( ( ( ( ( 4 + ( ( ( 10 + ( 3 * (*w.borrow()) ) ) ) * (*kDCTBlockSize_3.with(Value::clone).borrow()) ) ) + ( 2 * (*w.borrow()) ) ) ) as usize ) ) ) . wrapping_mul ( ( ::std::mem::size_of::<i32>() as usize ) ) as u64 ) ) . wrapping_add ( ( ( ( ( ( ( ( ( ( ( ( ( ( ( (*kNumNonzeroBuckets_90.with(Value::clone).borrow()) as usize ) ) ) . wrapping_add ( ( ( 2_usize ) . wrapping_mul ( (*kMaxAverageContext_82.with(Value::clone).borrow()) ) as usize ) ) as usize ) ) . wrapping_add ( 11_usize ) ) as usize ) ) . wrapping_mul ( ( ( (*kDCTBlockSize_3.with(Value::clone).borrow()) as usize ) ) ) as usize ) ) . wrapping_add ( ( ( (*kNumNonZeroContextCount_88.with(Value::clone).borrow()) ) . wrapping_mul ( (*kNumNonZeroTreeSize_85.with(Value::clone).borrow()) ) as usize ) ) ) as u64 ) ) . wrapping_mul ( ( 4usize as u64 ) ) as u64 ) ) as usize )  ;
+        return ( ( ( ( ( ( ( ( ( 4 + ( ( ( 10 + ( 3 * (*w.borrow()) ) ) ) * (*kDCTBlockSize_3.with(Value::clone).borrow()) ) ) + ( 2 * (*w.borrow()) ) ) ) as usize ) ) ) . wrapping_mul ( ( ::std::mem::size_of::<i32>() as usize ) ) as u64 ) ) . wrapping_add ( ( ( ( ( ( ( ( ( ( ( ( ( ( ( (*kNumNonzeroBuckets_90.with(Value::clone).borrow()) as usize ) ) ) . wrapping_add ( ( ( 2_usize ) . wrapping_mul ( (*kMaxAverageContext_82.with(Value::clone).borrow()) ) as usize ) ) as usize ) ) . wrapping_add ( 11_usize ) ) as usize ) ) . wrapping_mul ( ( ( (*kDCTBlockSize_3.with(Value::clone).borrow()) as usize ) ) ) as usize ) ) . wrapping_add ( ( ( (*kNumNonZeroContextCount_88.with(Value::clone).borrow()) ) . wrapping_mul ( (*kNumNonZeroTreeSize_85.with(Value::clone).borrow()) ) as usize ) ) ) as u64 ) ) . wrapping_mul ( ( 4usize as u64 ) ) as u64 ) ) as usize )   ;
     }
 }
 impl Clone for brunsli_ComponentState {
@@ -2341,7 +2471,51 @@ impl Default for brunsli_ComponentState {
         { brunsli_ComponentState::brunsli_ComponentState() }
     }
 }
-impl ByteRepr for brunsli_ComponentState {}
+impl ByteRepr for brunsli_ComponentState {
+    fn byte_size() -> usize {
+        9008
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.width.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.context_offset.borrow()).to_bytes(&mut buf[4..8]);
+        (*self.order.borrow()).to_bytes(&mut buf[8..264]);
+        (*self.mult_row.borrow()).to_bytes(&mut buf[264..520]);
+        (*self.mult_col.borrow()).to_bytes(&mut buf[520..776]);
+        (*self.is_zero_prob.borrow()).to_bytes(&mut buf[776..800]);
+        (*self.sign_prob.borrow()).to_bytes(&mut buf[800..824]);
+        (*self.num_nonzero_prob.borrow()).to_bytes(&mut buf[824..8888]);
+        (*self.first_extra_bit_prob.borrow()).to_bytes(&mut buf[8888..8912]);
+        (*self.prev_is_nonempty.borrow()).to_bytes(&mut buf[8912..8936]);
+        (*self.prev_num_nonzeros.borrow()).to_bytes(&mut buf[8936..8960]);
+        (*self.prev_abs_coeff.borrow()).to_bytes(&mut buf[8960..8984]);
+        (*self.prev_sign.borrow()).to_bytes(&mut buf[8984..9008]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            width: Rc::new(RefCell::new(<i32>::from_bytes(&buf[0..4]))),
+            context_offset: Rc::new(RefCell::new(<i32>::from_bytes(&buf[4..8]))),
+            order: Rc::new(RefCell::new(<Box<[u32]>>::from_bytes(&buf[8..264]))),
+            mult_row: Rc::new(RefCell::new(<Box<[i32]>>::from_bytes(&buf[264..520]))),
+            mult_col: Rc::new(RefCell::new(<Box<[i32]>>::from_bytes(&buf[520..776]))),
+            is_zero_prob: Rc::new(RefCell::new(<Vec<brunsli_Prob>>::from_bytes(
+                &buf[776..800],
+            ))),
+            sign_prob: Rc::new(RefCell::new(<Vec<brunsli_Prob>>::from_bytes(
+                &buf[800..824],
+            ))),
+            num_nonzero_prob: Rc::new(RefCell::new(<Box<[brunsli_Prob]>>::from_bytes(
+                &buf[824..8888],
+            ))),
+            first_extra_bit_prob: Rc::new(RefCell::new(<Vec<brunsli_Prob>>::from_bytes(
+                &buf[8888..8912],
+            ))),
+            prev_is_nonempty: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[8912..8936]))),
+            prev_num_nonzeros: Rc::new(RefCell::new(<Vec<u8>>::from_bytes(&buf[8936..8960]))),
+            prev_abs_coeff: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[8960..8984]))),
+            prev_sign: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[8984..9008]))),
+        }
+    }
+}
 thread_local!(
     pub static kSqrt2_107: Value<f64> = Rc::new(RefCell::new(1.414213562E+0));
 );
@@ -2957,7 +3131,19 @@ impl Default for brunsli_PermutationCoder {
         { brunsli_PermutationCoder::brunsli_PermutationCoder() }
     }
 }
-impl ByteRepr for brunsli_PermutationCoder {}
+impl ByteRepr for brunsli_PermutationCoder {
+    fn byte_size() -> usize {
+        24
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.values_.borrow()).to_bytes(&mut buf[0..24]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            values_: Rc::new(RefCell::new(<Vec<u8>>::from_bytes(&buf[0..24]))),
+        }
+    }
+}
 pub fn ComputeLehmerCode_112(sigma: Ptr<u32>, len: usize, code: Ptr<u32>) {
     let sigma: Value<Ptr<u32>> = Rc::new(RefCell::new(sigma));
     let len: Value<usize> = Rc::new(RefCell::new(len));
@@ -4766,32 +4952,10 @@ pub fn ClusterHistograms_136(
         )
     });
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_JpegReadMode {
-    #[default]
-    JPEG_READ_HEADER = 0,
-    JPEG_READ_TABLES = 1,
-    JPEG_READ_ALL = 2,
-}
-impl From<i32> for brunsli_JpegReadMode {
-    fn from(n: i32) -> brunsli_JpegReadMode {
-        match n {
-            0 => brunsli_JpegReadMode::JPEG_READ_HEADER,
-            1 => brunsli_JpegReadMode::JPEG_READ_TABLES,
-            2 => brunsli_JpegReadMode::JPEG_READ_ALL,
-            _ => panic!("invalid brunsli_JpegReadMode value: {}", n),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_JpegReadMode);
-impl ByteRepr for brunsli_JpegReadMode {
-    fn to_bytes(&self, buf: &mut [u8]) {
-        (*self as i32).to_bytes(buf);
-    }
-    fn from_bytes(buf: &[u8]) -> Self {
-        <brunsli_JpegReadMode>::from(i32::from_bytes(buf))
-    }
-}
+pub type brunsli_JpegReadMode = u32;
+pub const brunsli_JpegReadMode_JPEG_READ_HEADER: brunsli_JpegReadMode = 0;
+pub const brunsli_JpegReadMode_JPEG_READ_TABLES: brunsli_JpegReadMode = 1;
+pub const brunsli_JpegReadMode_JPEG_READ_ALL: brunsli_JpegReadMode = 2;
 #[derive()]
 pub struct brunsli_internal_enc_ComponentMeta {
     pub context_offset: Value<usize>,
@@ -4859,7 +5023,47 @@ impl Default for brunsli_internal_enc_ComponentMeta {
         }
     }
 }
-impl ByteRepr for brunsli_internal_enc_ComponentMeta {}
+impl ByteRepr for brunsli_internal_enc_ComponentMeta {
+    fn byte_size() -> usize {
+        584
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.context_offset.borrow()).to_bytes(&mut buf[0..8]);
+        (*self.approx_total_nonzeros.borrow()).to_bytes(&mut buf[8..16]);
+        (*self.h_samp.borrow()).to_bytes(&mut buf[16..20]);
+        (*self.v_samp.borrow()).to_bytes(&mut buf[20..24]);
+        (*self.context_bits.borrow()).to_bytes(&mut buf[24..28]);
+        (*self.ac_stride.borrow()).to_bytes(&mut buf[28..32]);
+        (*self.dc_stride.borrow()).to_bytes(&mut buf[32..36]);
+        (*self.b_stride.borrow()).to_bytes(&mut buf[36..40]);
+        (*self.width_in_blocks.borrow()).to_bytes(&mut buf[40..44]);
+        (*self.height_in_blocks.borrow()).to_bytes(&mut buf[44..48]);
+        (*self.ac_coeffs.borrow()).to_bytes(&mut buf[48..56]);
+        (*self.dc_prediction_errors.borrow()).to_bytes(&mut buf[56..64]);
+        (*self.block_state.borrow()).to_bytes(&mut buf[64..72]);
+        (*self.num_zeros.borrow()).to_bytes(&mut buf[72..328]);
+        (*self.quant.borrow()).to_bytes(&mut buf[328..584]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            context_offset: Rc::new(RefCell::new(<usize>::from_bytes(&buf[0..8]))),
+            approx_total_nonzeros: Rc::new(RefCell::new(<usize>::from_bytes(&buf[8..16]))),
+            h_samp: Rc::new(RefCell::new(<i32>::from_bytes(&buf[16..20]))),
+            v_samp: Rc::new(RefCell::new(<i32>::from_bytes(&buf[20..24]))),
+            context_bits: Rc::new(RefCell::new(<i32>::from_bytes(&buf[24..28]))),
+            ac_stride: Rc::new(RefCell::new(<i32>::from_bytes(&buf[28..32]))),
+            dc_stride: Rc::new(RefCell::new(<i32>::from_bytes(&buf[32..36]))),
+            b_stride: Rc::new(RefCell::new(<i32>::from_bytes(&buf[36..40]))),
+            width_in_blocks: Rc::new(RefCell::new(<i32>::from_bytes(&buf[40..44]))),
+            height_in_blocks: Rc::new(RefCell::new(<i32>::from_bytes(&buf[44..48]))),
+            ac_coeffs: Rc::new(RefCell::new(<Ptr<i16>>::from_bytes(&buf[48..56]))),
+            dc_prediction_errors: Rc::new(RefCell::new(<Ptr<i16>>::from_bytes(&buf[56..64]))),
+            block_state: Rc::new(RefCell::new(<Ptr<u8>>::from_bytes(&buf[64..72]))),
+            num_zeros: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[72..328]))),
+            quant: Rc::new(RefCell::new(<Vec<i32>>::from_bytes(&buf[328..584]))),
+        }
+    }
+}
 #[derive()]
 pub struct brunsli_internal_enc_Histogram {
     pub data_: Value<Box<[i32]>>,
@@ -4963,7 +5167,27 @@ impl Clone for brunsli_internal_enc_EntropyCodes {
         this
     }
 }
-impl ByteRepr for brunsli_internal_enc_EntropyCodes {}
+impl ByteRepr for brunsli_internal_enc_EntropyCodes {
+    fn byte_size() -> usize {
+        72
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.clustered_.borrow()).to_bytes(&mut buf[0..24]);
+        (*self.context_map_.borrow()).to_bytes(&mut buf[24..48]);
+        (*self.ans_tables_.borrow()).to_bytes(&mut buf[48..72]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            clustered_: Rc::new(RefCell::new(
+                <Vec<brunsli_internal_enc_Histogram>>::from_bytes(&buf[0..24]),
+            )),
+            context_map_: Rc::new(RefCell::new(<Vec<u32>>::from_bytes(&buf[24..48]))),
+            ans_tables_: Rc::new(RefCell::new(<Vec<brunsli_ANSTable>>::from_bytes(
+                &buf[48..72],
+            ))),
+        }
+    }
+}
 #[derive()]
 pub struct brunsli_internal_enc_EntropySource {
     num_bands_: Value<usize>,
@@ -4992,7 +5216,23 @@ impl Default for brunsli_internal_enc_EntropySource {
         { brunsli_internal_enc_EntropySource::brunsli_internal_enc_EntropySource() }
     }
 }
-impl ByteRepr for brunsli_internal_enc_EntropySource {}
+impl ByteRepr for brunsli_internal_enc_EntropySource {
+    fn byte_size() -> usize {
+        32
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.num_bands_.borrow()).to_bytes(&mut buf[0..8]);
+        (*self.histograms_.borrow()).to_bytes(&mut buf[8..32]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            num_bands_: Rc::new(RefCell::new(<usize>::from_bytes(&buf[0..8]))),
+            histograms_: Rc::new(RefCell::new(
+                <Vec<brunsli_internal_enc_Histogram>>::from_bytes(&buf[8..32]),
+            )),
+        }
+    }
+}
 thread_local!(
     static kSlackForOneBlock_139: Value<usize> = Rc::new(RefCell::new(1024_usize));
 );
@@ -5098,7 +5338,37 @@ impl Default for brunsli_internal_enc_DataStream {
         { brunsli_internal_enc_DataStream::brunsli_internal_enc_DataStream() }
     }
 }
-impl ByteRepr for brunsli_internal_enc_DataStream {}
+impl ByteRepr for brunsli_internal_enc_DataStream {
+    fn byte_size() -> usize {
+        56
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.pos_.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.bw_pos_.borrow()).to_bytes(&mut buf[4..8]);
+        (*self.ac_pos0_.borrow()).to_bytes(&mut buf[8..12]);
+        (*self.ac_pos1_.borrow()).to_bytes(&mut buf[12..16]);
+        (*self.low_.borrow()).to_bytes(&mut buf[16..20]);
+        (*self.high_.borrow()).to_bytes(&mut buf[20..24]);
+        (*self.bw_val_.borrow()).to_bytes(&mut buf[24..28]);
+        (*self.bw_bitpos_.borrow()).to_bytes(&mut buf[28..32]);
+        (*self.code_words_.borrow()).to_bytes(&mut buf[32..56]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            pos_: Rc::new(RefCell::new(<i32>::from_bytes(&buf[0..4]))),
+            bw_pos_: Rc::new(RefCell::new(<i32>::from_bytes(&buf[4..8]))),
+            ac_pos0_: Rc::new(RefCell::new(<i32>::from_bytes(&buf[8..12]))),
+            ac_pos1_: Rc::new(RefCell::new(<i32>::from_bytes(&buf[12..16]))),
+            low_: Rc::new(RefCell::new(<u32>::from_bytes(&buf[16..20]))),
+            high_: Rc::new(RefCell::new(<u32>::from_bytes(&buf[20..24]))),
+            bw_val_: Rc::new(RefCell::new(<u32>::from_bytes(&buf[24..28]))),
+            bw_bitpos_: Rc::new(RefCell::new(<i32>::from_bytes(&buf[28..32]))),
+            code_words_: Rc::new(RefCell::new(
+                <Vec<brunsli_internal_enc_DataStream_CodeWord>>::from_bytes(&buf[32..56]),
+            )),
+        }
+    }
+}
 #[derive(Default)]
 pub struct brunsli_internal_enc_State {
     pub entropy_source: Value<brunsli_internal_enc_EntropySource>,
@@ -5125,7 +5395,41 @@ impl Clone for brunsli_internal_enc_State {
         this
     }
 }
-impl ByteRepr for brunsli_internal_enc_State {}
+impl ByteRepr for brunsli_internal_enc_State {
+    fn byte_size() -> usize {
+        192
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.entropy_source.borrow()).to_bytes(&mut buf[0..32]);
+        (*self.entropy_codes.borrow()).to_bytes(&mut buf[32..40]);
+        (*self.data_stream_dc.borrow()).to_bytes(&mut buf[40..96]);
+        (*self.data_stream_ac.borrow()).to_bytes(&mut buf[96..152]);
+        (*self.meta.borrow()).to_bytes(&mut buf[152..176]);
+        (*self.num_contexts.borrow()).to_bytes(&mut buf[176..184]);
+        (*self.use_legacy_context_model.borrow()).to_bytes(&mut buf[184..185]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            entropy_source: Rc::new(RefCell::new(
+                <brunsli_internal_enc_EntropySource>::from_bytes(&buf[0..32]),
+            )),
+            entropy_codes: Rc::new(RefCell::new(
+                <Ptr<brunsli_internal_enc_EntropyCodes>>::from_bytes(&buf[32..40]),
+            )),
+            data_stream_dc: Rc::new(RefCell::new(<brunsli_internal_enc_DataStream>::from_bytes(
+                &buf[40..96],
+            ))),
+            data_stream_ac: Rc::new(RefCell::new(<brunsli_internal_enc_DataStream>::from_bytes(
+                &buf[96..152],
+            ))),
+            meta: Rc::new(RefCell::new(
+                <Vec<brunsli_internal_enc_ComponentMeta>>::from_bytes(&buf[152..176]),
+            )),
+            num_contexts: Rc::new(RefCell::new(<usize>::from_bytes(&buf[176..184]))),
+            use_legacy_context_model: Rc::new(RefCell::new(<bool>::from_bytes(&buf[184..185]))),
+        }
+    }
+}
 thread_local!(
     pub static kNumDirectCodes_140: Value<i32> = Rc::new(RefCell::new(8));
 );
@@ -5408,37 +5712,37 @@ pub fn TransformApp0Marker_148(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
 }
 pub fn TransformApp2Marker_149(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
-    if ( ( ( (*s.upgrade().deref()) .len()  == 3161_usize ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 84_usize )  != 0 ) ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 3161 - 85 ) ) as usize ) )  != 0 ) ) { let  code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
- ;
+    if ( ( ( (*s.upgrade().deref()) .len()  == 3161_usize ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 84_usize )  != 0 ) ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 3161 - 85 ) ) as usize ) )  != 0 ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
+  ;
  ;
  (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 128_u8  ) ;
  (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(84_usize ) .read() )  ) ;
  ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write((*code.borrow()) .clone())  ;
- return true  ;
+  return true   ;
  }
     return false;
 }
 pub fn TransformApp12Marker_150(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
-    if ( ( ( (*s.upgrade().deref()) .len()  == 18_usize ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 15_usize )  != 0 ) ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 18 - 16 ) ) as usize ) )  != 0 ) ) { let  code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
- ;
+    if ( ( ( (*s.upgrade().deref()) .len()  == 18_usize ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 15_usize )  != 0 ) ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 18 - 16 ) ) as usize ) )  != 0 ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
+  ;
  ;
  (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 129_u8  ) ;
  (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(15_usize ) .read() )  ) ;
  ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write((*code.borrow()) .clone())  ;
- return true  ;
+  return true   ;
  }
     return false;
 }
 pub fn TransformApp14Marker_151(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
-    if ( ( ( (*s.upgrade().deref()) .len()  == 15_usize ) ) && ( ! ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(0_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 10_usize )  != 0 ) ) ) && ( ! ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(11_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 11 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 15 - 11 ) ) as usize ) )  != 0 ) ) { let  code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
- ;
+    if ( ( ( (*s.upgrade().deref()) .len()  == 15_usize ) ) && ( ! ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(0_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 10_usize )  != 0 ) ) ) && ( ! ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(11_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 11 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 15 - 11 ) ) as usize ) )  != 0 ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
+  ;
  ;
  (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 130_u8  ) ;
  (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(10_usize ) .read() )  ) ;
  ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write((*code.borrow()) .clone())  ;
- return true  ;
+  return true   ;
  }
     return false;
 }
@@ -6693,9 +6997,9 @@ impl brunsli_internal_enc_EntropySource {
         );
         return Ptr::alloc(
             brunsli_internal_enc_EntropyCodes::brunsli_internal_enc_EntropyCodes(
-                histograms.as_pointer(),
-                (*self.num_bands_.borrow()),
-                (offsets).clone(),
+                { histograms.as_pointer() },
+                { (*self.num_bands_.borrow()) },
+                { (offsets).clone() },
             ),
         )
         .to_owned_opt();
@@ -7307,7 +7611,7 @@ pub fn EncodeHeader_172(
     let state: Value<Ptr<brunsli_internal_enc_State>> = Rc::new(RefCell::new(state));
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<Ptr<usize>> = Rc::new(RefCell::new(len));
-    (*state.borrow_mut()).clone();
+    &(*state.borrow_mut());
     let version: Value<usize> = Rc::new(RefCell::new(
         ((*(*jpg.upgrade().deref()).version.borrow()) as usize),
     ));
@@ -7388,7 +7692,7 @@ pub fn EncodeMetaData_173(
     let state: Value<Ptr<brunsli_internal_enc_State>> = Rc::new(RefCell::new(state));
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<Ptr<usize>> = Rc::new(RefCell::new(len));
-    (*state.borrow_mut()).clone();
+    &(*state.borrow_mut());
     let metadata: Value<Vec<u8>> = Rc::new(RefCell::new(Vec::new()));
     let transformed_marker_count: Value<usize> = Rc::new(RefCell::new(0_usize));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -7532,10 +7836,10 @@ pub fn EncodeJPEGInternals_174(
     let state: Value<Ptr<brunsli_internal_enc_State>> = Rc::new(RefCell::new(state));
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<Ptr<usize>> = Rc::new(RefCell::new(len));
-    (*state.borrow_mut()).clone();
+    &(*state.borrow_mut());
     let storage: Value<brunsli_Storage> = Rc::new(RefCell::new(brunsli_Storage::brunsli_Storage(
-        (*data.borrow()).clone(),
-        ((*len.borrow()).read()),
+        { (*data.borrow()).clone() },
+        { ((*len.borrow()).read()) },
     )));
     if !({
         let _jpg: Ptr<brunsli_JPEGData> = (jpg).clone();
@@ -7557,10 +7861,10 @@ pub fn EncodeQuantData_175(
     let state: Value<Ptr<brunsli_internal_enc_State>> = Rc::new(RefCell::new(state));
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<Ptr<usize>> = Rc::new(RefCell::new(len));
-    (*state.borrow_mut()).clone();
+    &(*state.borrow_mut());
     let storage: Value<brunsli_Storage> = Rc::new(RefCell::new(brunsli_Storage::brunsli_Storage(
-        (*data.borrow()).clone(),
-        ((*len.borrow()).read()),
+        { (*data.borrow()).clone() },
+        { ((*len.borrow()).read()) },
     )));
     if !({
         let _jpg: Ptr<brunsli_JPEGData> = (jpg).clone();
@@ -7583,8 +7887,8 @@ pub fn EncodeHistogramData_176(
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<Ptr<usize>> = Rc::new(RefCell::new(len));
     let storage: Value<brunsli_Storage> = Rc::new(RefCell::new(brunsli_Storage::brunsli_Storage(
-        (*data.borrow()).clone(),
-        ((*len.borrow()).read()),
+        { (*data.borrow()).clone() },
+        { ((*len.borrow()).read()) },
     )));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while {
@@ -7635,10 +7939,10 @@ pub fn EncodeDCData_177(
     let state: Value<Ptr<brunsli_internal_enc_State>> = Rc::new(RefCell::new(state));
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<Ptr<usize>> = Rc::new(RefCell::new(len));
-    (*jpg.upgrade().deref()).clone();
+    &(*jpg.upgrade().deref());
     let storage: Value<brunsli_Storage> = Rc::new(RefCell::new(brunsli_Storage::brunsli_Storage(
-        (*data.borrow()).clone(),
-        ((*len.borrow()).read()),
+        { (*data.borrow()).clone() },
+        { ((*len.borrow()).read()) },
     )));
     ({
         let _s: Ptr<brunsli_internal_enc_EntropyCodes> = (*(*(*state.borrow()).upgrade().deref())
@@ -7663,10 +7967,10 @@ pub fn EncodeACData_178(
     let state: Value<Ptr<brunsli_internal_enc_State>> = Rc::new(RefCell::new(state));
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<Ptr<usize>> = Rc::new(RefCell::new(len));
-    (*jpg.upgrade().deref()).clone();
+    &(*jpg.upgrade().deref());
     let storage: Value<brunsli_Storage> = Rc::new(RefCell::new(brunsli_Storage::brunsli_Storage(
-        (*data.borrow()).clone(),
-        ((*len.borrow()).read()),
+        { (*data.borrow()).clone() },
+        { ((*len.borrow()).read()) },
     )));
     ({
         let _s: Ptr<brunsli_internal_enc_EntropyCodes> = (*(*(*state.borrow()).upgrade().deref())
@@ -9454,7 +9758,7 @@ pub fn EncodeOriginalJpg_193(
     let state: Value<Ptr<brunsli_internal_enc_State>> = Rc::new(RefCell::new(state));
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<Ptr<usize>> = Rc::new(RefCell::new(len));
-    (*state.borrow_mut()).clone();
+    &(*state.borrow_mut());
     if ((*(*jpg.upgrade().deref()).original_jpg.borrow()).is_null())
         || ({
             let _lhs = (*(*jpg.upgrade().deref()).original_jpg_size.borrow());
@@ -9498,7 +9802,7 @@ pub fn BrunsliEncodeJpegBypass_194(
         ReadJpeg_195(
             (*jpg_data.borrow()).clone(),
             (*jpg_data_len.borrow()),
-            brunsli_JpegReadMode::JPEG_READ_HEADER,
+            brunsli_JpegReadMode_JPEG_READ_HEADER,
             (jpg.as_pointer()),
         )
     }) {
@@ -11452,9 +11756,9 @@ pub fn CreateHuffmanTree_219(data: Ptr<u32>, length: usize, tree_limit: i32, dep
                     .read())
                 }));
                 (*tree.borrow_mut()).push(brunsli_HuffmanTree::brunsli_HuffmanTree(
-                    (*count.borrow()),
-                    (-1_i32 as i16),
-                    ((*i.borrow()) as i16),
+                    { (*count.borrow()) },
+                    { (-1_i32 as i16) },
+                    { ((*i.borrow()) as i16) },
                 ));
             };
         }
@@ -11479,7 +11783,9 @@ pub fn CreateHuffmanTree_219(data: Ptr<u32>, length: usize, tree_limit: i32, dep
             Compare_222,
         );
         let sentinel: Value<brunsli_HuffmanTree> = Rc::new(RefCell::new(
-            brunsli_HuffmanTree::brunsli_HuffmanTree(<u32>::MAX, (-1_i32 as i16), (-1_i32 as i16)),
+            brunsli_HuffmanTree::brunsli_HuffmanTree({ <u32>::MAX }, { (-1_i32 as i16) }, {
+                (-1_i32 as i16)
+            }),
         ));
         {
             let a0_clone = (*sentinel.borrow()).clone();
@@ -11998,27 +12304,31 @@ pub fn ConvertBitDepthsToSymbols_220(depth: Ptr<u8>, len: usize, bits: Ptr<u16>)
         <u16>::default(),
         <u16>::default(),
     ])));
-    let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while ((*i.borrow()) < (*len.borrow())) {
-        (*bl_count.borrow_mut())
-            [((*depth.borrow()).offset((*i.borrow()) as isize).read()) as usize]
-            .prefix_inc();
-        (*i.borrow_mut()).prefix_inc();
+    {
+        let i: Value<usize> = Rc::new(RefCell::new(0_usize));
+        'loop_: while ((*i.borrow()) < (*len.borrow())) {
+            (*bl_count.borrow_mut())
+                [((*depth.borrow()).offset((*i.borrow()) as isize).read()) as usize]
+                .prefix_inc();
+            (*i.borrow_mut()).prefix_inc();
+        }
+        (*bl_count.borrow_mut())[(0) as usize] = 0_u16;
     }
-    (*bl_count.borrow_mut())[(0) as usize] = 0_u16;
     let next_code: Value<Box<[u16]>> = Rc::new(RefCell::new(
         (0..16).map(|_| <u16>::default()).collect::<Box<[u16]>>(),
     ));
     (*next_code.borrow_mut())[(0) as usize] = 0_u16;
-    let code: Value<i32> = Rc::new(RefCell::new(0));
-    let i: Value<usize> = Rc::new(RefCell::new(1_usize));
-    'loop_: while ((*i.borrow()) < ((*kMaxBits.borrow()) as usize)) {
-        let __rhs = (((*code.borrow())
-            + ((*bl_count.borrow())[((*i.borrow()).wrapping_sub(1_usize)) as usize] as i32))
-            << 1);
-        (*code.borrow_mut()) = __rhs;
-        (*next_code.borrow_mut())[(*i.borrow()) as usize] = ((*code.borrow()) as u16);
-        (*i.borrow_mut()).prefix_inc();
+    {
+        let code: Value<i32> = Rc::new(RefCell::new(0));
+        let i: Value<usize> = Rc::new(RefCell::new(1_usize));
+        'loop_: while ((*i.borrow()) < ((*kMaxBits.borrow()) as usize)) {
+            let __rhs = (((*code.borrow())
+                + ((*bl_count.borrow())[((*i.borrow()).wrapping_sub(1_usize)) as usize] as i32))
+                << 1);
+            (*code.borrow_mut()) = __rhs;
+            (*next_code.borrow_mut())[(*i.borrow()) as usize] = ((*code.borrow()) as u16);
+            (*i.borrow_mut()).prefix_inc();
+        }
     }
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < (*len.borrow())) {
@@ -12135,7 +12445,7 @@ pub fn ProcessSOF_234(
     if ((*(*(*jpg.borrow()).upgrade().deref()).width.borrow()) != 0) {
         write!(libcc2rs::cerr(), "Duplicate SOF marker.\n",);
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::DUPLICATE_SOF;
+            brunsli_JPEGReadError_DUPLICATE_SOF;
         return false;
     }
     let start_pos: Value<usize> = Rc::new(RefCell::new(((*pos.borrow()).read())));
@@ -12151,7 +12461,7 @@ pub fn ProcessSOF_234(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     let marker_len: Value<usize> = Rc::new(RefCell::new(
@@ -12176,7 +12486,7 @@ pub fn ProcessSOF_234(
             (*precision.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_PRECISION;
+            brunsli_JPEGReadError_INVALID_PRECISION;
         return false;
     };
     if ((*height.borrow()) < 1)
@@ -12188,7 +12498,7 @@ pub fn ProcessSOF_234(
             (*height.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_HEIGHT;
+            brunsli_JPEGReadError_INVALID_HEIGHT;
         return false;
     };
     if ((*width.borrow()) < 1)
@@ -12196,7 +12506,7 @@ pub fn ProcessSOF_234(
     {
         write!(libcc2rs::cerr(), "Invalid width: {:}\n", (*width.borrow()),);
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_WIDTH;
+            brunsli_JPEGReadError_INVALID_WIDTH;
         return false;
     };
     if ((*num_components.borrow()) < 1)
@@ -12208,7 +12518,7 @@ pub fn ProcessSOF_234(
             (*num_components.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_NUMCOMP;
+            brunsli_JPEGReadError_INVALID_NUMCOMP;
         return false;
     };
     if {
@@ -12224,7 +12534,7 @@ pub fn ProcessSOF_234(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     (*(*(*jpg.borrow()).upgrade().deref()).height.borrow_mut()) = (*height.borrow());
@@ -12258,7 +12568,7 @@ pub fn ProcessSOF_234(
                 (*id.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::DUPLICATE_COMPONENT_ID;
+                brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID;
             return false;
         }
         (ids_seen.as_pointer() as Ptr<bool>)
@@ -12285,7 +12595,7 @@ pub fn ProcessSOF_234(
                 (*h_samp_factor.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::INVALID_SAMP_FACTOR;
+                brunsli_JPEGReadError_INVALID_SAMP_FACTOR;
             return false;
         };
         if ((*v_samp_factor.borrow()) < 1)
@@ -12297,7 +12607,7 @@ pub fn ProcessSOF_234(
                 (*v_samp_factor.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::INVALID_SAMP_FACTOR;
+                brunsli_JPEGReadError_INVALID_SAMP_FACTOR;
             return false;
         };
         (*(*((*(*jpg.borrow()).upgrade().deref()).components.as_pointer()
@@ -12399,7 +12709,7 @@ pub fn ProcessSOF_234(
         {
             write!(libcc2rs::cerr(), "Non-integral subsampling ratios.\n",);
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::INVALID_SAMPLING_FACTORS;
+                brunsli_JPEGReadError_INVALID_SAMPLING_FACTORS;
             return false;
         }
         let __rhs = (({
@@ -12426,12 +12736,12 @@ pub fn ProcessSOF_234(
         {
             write!(libcc2rs::cerr(), "Image too large.\n",);
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::IMAGE_TOO_LARGE;
+                brunsli_JPEGReadError_IMAGE_TOO_LARGE;
             return false;
         }
         (*(*(*c.borrow()).upgrade().deref()).num_blocks.borrow_mut()) =
             (((*num_blocks.borrow()) as i32) as u32);
-        if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode::JPEG_READ_ALL as i32)) {
+        if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
             {
                 let __a0 = (((*(*(*c.borrow()).upgrade().deref()).num_blocks.borrow())
                     .wrapping_mul(((*kDCTBlockSize_3.with(Value::clone).borrow()) as u32)))
@@ -12453,7 +12763,7 @@ pub fn ProcessSOF_234(
             (((*pos.borrow()).read()).wrapping_sub((*start_pos.borrow()))),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::WRONG_MARKER_SIZE;
+            brunsli_JPEGReadError_WRONG_MARKER_SIZE;
         return false;
     };
     return true;
@@ -12481,7 +12791,7 @@ pub fn ProcessSOS_235(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     let marker_len: Value<usize> = Rc::new(RefCell::new(
@@ -12502,7 +12812,7 @@ pub fn ProcessSOS_235(
             ((*comps_in_scan.borrow()) as usize),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_COMPS_IN_SCAN;
+            brunsli_JPEGReadError_INVALID_COMPS_IN_SCAN;
         return false;
     };
     let scan_info: Value<brunsli_JPEGScanInfo> =
@@ -12521,7 +12831,7 @@ pub fn ProcessSOS_235(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     let ids_seen: Value<Vec<bool>> = Rc::new(RefCell::new(
@@ -12545,7 +12855,7 @@ pub fn ProcessSOS_235(
                 (*id.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::DUPLICATE_COMPONENT_ID;
+                brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID;
             return false;
         }
         (ids_seen.as_pointer() as Ptr<bool>)
@@ -12585,7 +12895,7 @@ pub fn ProcessSOS_235(
                 (*id.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::COMPONENT_NOT_FOUND;
+                brunsli_JPEGReadError_COMPONENT_NOT_FOUND;
             return false;
         }
         let c: Value<i32> = Rc::new(RefCell::new(
@@ -12600,7 +12910,7 @@ pub fn ProcessSOS_235(
                 (*dc_tbl_idx.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX;
+                brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX;
             return false;
         };
         if ((*ac_tbl_idx.borrow()) < 0) || ((*ac_tbl_idx.borrow()) > 3) {
@@ -12610,7 +12920,7 @@ pub fn ProcessSOS_235(
                 (*ac_tbl_idx.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX;
+                brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX;
             return false;
         };
         (*(*((*scan_info.borrow()).components.as_pointer()
@@ -12641,7 +12951,7 @@ pub fn ProcessSOS_235(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     (*(*scan_info.borrow()).Ss.borrow_mut()) =
@@ -12655,7 +12965,7 @@ pub fn ProcessSOS_235(
             (*(*scan_info.borrow()).Ss.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_START_OF_SCAN;
+            brunsli_JPEGReadError_INVALID_START_OF_SCAN;
         return false;
     };
     if ((*(*scan_info.borrow()).Se.borrow()) < (*(*scan_info.borrow()).Ss.borrow()))
@@ -12667,7 +12977,7 @@ pub fn ProcessSOS_235(
             (*(*scan_info.borrow()).Se.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_END_OF_SCAN;
+            brunsli_JPEGReadError_INVALID_END_OF_SCAN;
         return false;
     };
     let c: Value<i32> = Rc::new(RefCell::new(
@@ -12741,7 +13051,7 @@ pub fn ProcessSOS_235(
                 .borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::HUFFMAN_TABLE_NOT_FOUND;
+                brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND;
             return false;
         }
         if ((*(*scan_info.borrow()).Se.borrow()) > 0) && (!(*found_ac_table.borrow())) {
@@ -12757,7 +13067,7 @@ pub fn ProcessSOS_235(
                 .borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::HUFFMAN_TABLE_NOT_FOUND;
+                brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND;
             return false;
         }
         (*i.borrow_mut()).prefix_inc();
@@ -12777,7 +13087,7 @@ pub fn ProcessSOS_235(
             (((*pos.borrow()).read()).wrapping_sub((*start_pos.borrow()))),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::WRONG_MARKER_SIZE;
+            brunsli_JPEGReadError_WRONG_MARKER_SIZE;
         return false;
     };
     return true;
@@ -12813,7 +13123,7 @@ pub fn ProcessDHT_236(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     let marker_len: Value<usize> = Rc::new(RefCell::new(
@@ -12822,7 +13132,7 @@ pub fn ProcessDHT_236(
     if ((*marker_len.borrow()) == 2_usize) {
         write!(libcc2rs::cerr(), "DHT marker: no Huffman table found\n",);
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::EMPTY_DHT;
+            brunsli_JPEGReadError_EMPTY_DHT;
         return false;
     }
     'loop_: while {
@@ -12843,7 +13153,7 @@ pub fn ProcessDHT_236(
                 (*len.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::UNEXPECTED_EOF;
+                brunsli_JPEGReadError_UNEXPECTED_EOF;
             return false;
         };
         let huff: Value<brunsli_JPEGHuffmanCode> =
@@ -12865,7 +13175,7 @@ pub fn ProcessDHT_236(
                     (*huffman_index.borrow()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX;
+                    brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX;
                 return false;
             };
             (*huff_lut.borrow_mut()) = ((((*ac_huff_lut.borrow()).to_strong().as_pointer())
@@ -12883,7 +13193,7 @@ pub fn ProcessDHT_236(
                     (*huffman_index.borrow()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX;
+                    brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX;
                 return false;
             };
             (*huff_lut.borrow_mut()) = ((((*dc_huff_lut.borrow()).to_strong().as_pointer())
@@ -12930,7 +13240,7 @@ pub fn ProcessDHT_236(
                     (*total_count.borrow()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::INVALID_HUFFMAN_CODE;
+                    brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
                 return false;
             };
         } else {
@@ -12943,7 +13253,7 @@ pub fn ProcessDHT_236(
                     (*total_count.borrow()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::INVALID_HUFFMAN_CODE;
+                    brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
                 return false;
             };
         }
@@ -12959,7 +13269,7 @@ pub fn ProcessDHT_236(
                 (*len.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::UNEXPECTED_EOF;
+                brunsli_JPEGReadError_UNEXPECTED_EOF;
             return false;
         };
         let values_seen: Value<Vec<bool>> = Rc::new(RefCell::new(
@@ -12982,7 +13292,7 @@ pub fn ProcessDHT_236(
                         &([(&[(*value.borrow()) as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()),
                     );
                     (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                        brunsli_JPEGReadError::INVALID_HUFFMAN_CODE;
+                        brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
                     return false;
                 };
             }
@@ -12996,7 +13306,7 @@ pub fn ProcessDHT_236(
                     &([(&[(*value.borrow()) as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::INVALID_HUFFMAN_CODE;
+                    brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
                 return false;
             }
             (values_seen.as_pointer() as Ptr<bool>)
@@ -13018,7 +13328,7 @@ pub fn ProcessDHT_236(
         if ((*space.borrow()) < 0) {
             write!(libcc2rs::cerr(), "Invalid Huffman code lengths.\n",);
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::INVALID_HUFFMAN_CODE;
+                brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
             return false;
         } else if ((*space.borrow()) > 0)
             && (((*(*(*huff_lut.borrow()).offset((0) as isize).upgrade().deref())
@@ -13047,7 +13357,7 @@ pub fn ProcessDHT_236(
             let _lhs = ((*pos.borrow()).read());
             _lhs == (*start_pos.borrow()).wrapping_add((*marker_len.borrow()))
         });
-        if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode::JPEG_READ_ALL as i32)) {
+        if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
             ({
                 let _counts: Ptr<i32> =
                     (((*huff.borrow()).counts.as_pointer() as Ptr<i32>).offset(0_usize));
@@ -13075,7 +13385,7 @@ pub fn ProcessDHT_236(
             (((*pos.borrow()).read()).wrapping_sub((*start_pos.borrow()))),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::WRONG_MARKER_SIZE;
+            brunsli_JPEGReadError_WRONG_MARKER_SIZE;
         return false;
     };
     return true;
@@ -13103,7 +13413,7 @@ pub fn ProcessDQT_238(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     let marker_len: Value<usize> = Rc::new(RefCell::new(
@@ -13115,7 +13425,7 @@ pub fn ProcessDQT_238(
             "DQT marker: no quantization table found\n",
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::EMPTY_DQT;
+            brunsli_JPEGReadError_EMPTY_DQT;
         return false;
     }
     'loop_: while ({
@@ -13137,7 +13447,7 @@ pub fn ProcessDQT_238(
                 (*len.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::UNEXPECTED_EOF;
+                brunsli_JPEGReadError_UNEXPECTED_EOF;
             return false;
         };
         let quant_table_index: Value<i32> = Rc::new(RefCell::new(
@@ -13152,7 +13462,7 @@ pub fn ProcessDQT_238(
                 (*quant_table_precision.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::INVALID_QUANT_TBL_PRECISION;
+                brunsli_JPEGReadError_INVALID_QUANT_TBL_PRECISION;
             return false;
         };
         (*quant_table_index.borrow_mut()) &= 15;
@@ -13163,7 +13473,7 @@ pub fn ProcessDQT_238(
                 (*quant_table_index.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::INVALID_QUANT_TBL_INDEX;
+                brunsli_JPEGReadError_INVALID_QUANT_TBL_INDEX;
             return false;
         };
         if {
@@ -13182,7 +13492,7 @@ pub fn ProcessDQT_238(
                 (*len.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::UNEXPECTED_EOF;
+                brunsli_JPEGReadError_UNEXPECTED_EOF;
             return false;
         };
         let table: Value<brunsli_JPEGQuantTable> =
@@ -13204,7 +13514,7 @@ pub fn ProcessDQT_238(
                     (*quant_val.borrow()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::INVALID_QUANT_VAL;
+                    brunsli_JPEGReadError_INVALID_QUANT_VAL;
                 return false;
             };
             ((*table.borrow()).values.as_pointer() as Ptr<i32>)
@@ -13235,7 +13545,7 @@ pub fn ProcessDQT_238(
             (((*pos.borrow()).read()).wrapping_sub((*start_pos.borrow()))),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::WRONG_MARKER_SIZE;
+            brunsli_JPEGReadError_WRONG_MARKER_SIZE;
         return false;
     };
     return true;
@@ -13255,7 +13565,7 @@ pub fn ProcessDRI_239(
     if ((*found_dri.borrow()).read()) {
         write!(libcc2rs::cerr(), "Duplicate DRI marker.\n",);
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::DUPLICATE_DRI;
+            brunsli_JPEGReadError_DUPLICATE_DRI;
         return false;
     }
     (*found_dri.borrow()).write(true);
@@ -13272,7 +13582,7 @@ pub fn ProcessDRI_239(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     let marker_len: Value<usize> = Rc::new(RefCell::new(
@@ -13295,7 +13605,7 @@ pub fn ProcessDRI_239(
             (((*pos.borrow()).read()).wrapping_sub((*start_pos.borrow()))),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::WRONG_MARKER_SIZE;
+            brunsli_JPEGReadError_WRONG_MARKER_SIZE;
         return false;
     };
     return true;
@@ -13322,7 +13632,7 @@ pub fn ProcessAPP_240(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     let marker_len: Value<usize> = Rc::new(RefCell::new(
@@ -13335,7 +13645,7 @@ pub fn ProcessAPP_240(
             (*marker_len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_MARKER_LEN;
+            brunsli_JPEGReadError_INVALID_MARKER_LEN;
         return false;
     };
     if {
@@ -13351,7 +13661,7 @@ pub fn ProcessAPP_240(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     let app_str_start: Value<Ptr<u8>> = Rc::new(RefCell::new(
@@ -13400,7 +13710,7 @@ pub fn ProcessCOM_241(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     let marker_len: Value<usize> = Rc::new(RefCell::new(
@@ -13413,7 +13723,7 @@ pub fn ProcessCOM_241(
             (*marker_len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_MARKER_LEN;
+            brunsli_JPEGReadError_INVALID_MARKER_LEN;
         return false;
     };
     if {
@@ -13429,7 +13739,7 @@ pub fn ProcessCOM_241(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
     let com_str_start: Value<Ptr<u8>> = Rc::new(RefCell::new(
@@ -13740,7 +14050,7 @@ pub fn DecodeDCTBlock_244(
                 (*s.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::INVALID_SYMBOL;
+                brunsli_JPEGReadError_INVALID_SYMBOL;
             return false;
         }
         let diff: Value<i32> = Rc::new(RefCell::new(0));
@@ -13767,7 +14077,7 @@ pub fn DecodeDCTBlock_244(
                 (*dc_coeff.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::NON_REPRESENTABLE_DC_COEFF;
+                brunsli_JPEGReadError_NON_REPRESENTABLE_DC_COEFF;
             return false;
         }
         let __rhs = ((*coeff.borrow()) as i16);
@@ -13795,7 +14105,7 @@ pub fn DecodeDCTBlock_244(
                 (*k.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::INVALID_SYMBOL;
+                brunsli_JPEGReadError_INVALID_SYMBOL;
             return false;
         }
         let r: Value<i32> = Rc::new(RefCell::new(((*sr.borrow()) >> 4)));
@@ -13811,7 +14121,7 @@ pub fn DecodeDCTBlock_244(
                     (*Se.borrow()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::OUT_OF_BAND_COEFF;
+                    brunsli_JPEGReadError_OUT_OF_BAND_COEFF;
                 return false;
             }
             if (((*s.borrow()) + (*Al.borrow()))
@@ -13825,7 +14135,7 @@ pub fn DecodeDCTBlock_244(
                     (*k.borrow()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::NON_REPRESENTABLE_AC_COEFF;
+                    brunsli_JPEGReadError_NON_REPRESENTABLE_AC_COEFF;
                 return false;
             }
             let bits: Value<i32> = Rc::new(RefCell::new(
@@ -13857,7 +14167,7 @@ pub fn DecodeDCTBlock_244(
                 if !(*eobrun_allowed.borrow()) {
                     write!(libcc2rs::cerr(), "End-of-block run crossing DC coeff.\n",);
                     (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                        brunsli_JPEGReadError::EOB_RUN_TOO_LONG;
+                        brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
                     return false;
                 }
                 let __rhs = ({ (*(*br.borrow()).upgrade().deref()).ReadBits((*r.borrow())) });
@@ -13931,7 +14241,7 @@ pub fn RefineDCTBlock_245(
                     (*k.borrow()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::INVALID_SYMBOL;
+                    brunsli_JPEGReadError_INVALID_SYMBOL;
                 return false;
             }
             (*r.borrow_mut()) = ((*s.borrow()) >> 4);
@@ -13945,7 +14255,7 @@ pub fn RefineDCTBlock_245(
                         (*k.borrow()),
                     );
                     (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                        brunsli_JPEGReadError::INVALID_SYMBOL;
+                        brunsli_JPEGReadError_INVALID_SYMBOL;
                     return false;
                 }
                 (*s.borrow_mut()) = if (({ (*(*br.borrow()).upgrade().deref()).ReadBits(1) }) != 0)
@@ -13968,7 +14278,7 @@ pub fn RefineDCTBlock_245(
                         if !(*eobrun_allowed.borrow()) {
                             write!(libcc2rs::cerr(), "End-of-block run crossing DC coeff.\n",);
                             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                                brunsli_JPEGReadError::EOB_RUN_TOO_LONG;
+                                brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
                             return false;
                         }
                         let __rhs =
@@ -14035,7 +14345,7 @@ pub fn RefineDCTBlock_245(
                         (*Se.borrow()),
                     );
                     (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                        brunsli_JPEGReadError::OUT_OF_BAND_COEFF;
+                        brunsli_JPEGReadError_OUT_OF_BAND_COEFF;
                     return false;
                 }
                 let __rhs = ((*s.borrow()) as i16);
@@ -14052,7 +14362,7 @@ pub fn RefineDCTBlock_245(
     if (*in_zero_run.borrow()) {
         write!(libcc2rs::cerr(), "Extra zero run before end-of-block.\n",);
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::EXTRA_ZERO_RUN;
+            brunsli_JPEGReadError_EXTRA_ZERO_RUN;
         return false;
     }
     if (((*eobrun.borrow()).read()) > 0) {
@@ -14113,7 +14423,7 @@ pub fn ProcessRestart_246(
             .FinishStream((*jpg.borrow()).clone(), (pos.as_pointer()))
     }) {
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_SCAN;
+            brunsli_JPEGReadError_INVALID_SCAN;
         return false;
     }
     let expected_marker: Value<i32> = Rc::new(RefCell::new(
@@ -14134,7 +14444,7 @@ pub fn ProcessRestart_246(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::MARKER_BYTE_NOT_FOUND;
+            brunsli_JPEGReadError_MARKER_BYTE_NOT_FOUND;
         return false;
     };
     let marker: Value<i32> = Rc::new(RefCell::new(
@@ -14150,7 +14460,7 @@ pub fn ProcessRestart_246(
             (*marker.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::WRONG_RESTART_MARKER;
+            brunsli_JPEGReadError_WRONG_RESTART_MARKER;
         return false;
     }
     ({ (*(*br.borrow()).upgrade().deref()).Reset((*pos.borrow()).wrapping_add(2_usize)) });
@@ -14254,9 +14564,9 @@ pub fn ProcessScan_247(
     ])));
     let br: Value<brunsli_BitReaderState> = Rc::new(RefCell::new(
         brunsli_BitReaderState::brunsli_BitReaderState(
-            (*data.borrow()).clone(),
-            (*len.borrow()),
-            ((*pos.borrow()).read()),
+            { (*data.borrow()).clone() },
+            { (*len.borrow()) },
+            { ((*pos.borrow()).read()) },
         ),
     ));
     let restarts_to_go: Value<i32> = Rc::new(RefCell::new(
@@ -14335,7 +14645,7 @@ pub fn ProcessScan_247(
                     (*scan_bitmask.borrow()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::OVERLAPPING_SCANS;
+                    brunsli_JPEGReadError_OVERLAPPING_SCANS;
                 return false;
             }
             if ({
@@ -14358,7 +14668,7 @@ pub fn ProcessScan_247(
                     (*scan_bitmask.borrow()),
                 );
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::INVALID_SCAN_ORDER;
+                    brunsli_JPEGReadError_INVALID_SCAN_ORDER;
                 return false;
             }
             {
@@ -14383,7 +14693,7 @@ pub fn ProcessScan_247(
             (*Al.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::NON_REPRESENTABLE_AC_COEFF;
+            brunsli_JPEGReadError_NON_REPRESENTABLE_AC_COEFF;
         return false;
     }
     let mcu_y: Value<i32> = Rc::new(RefCell::new(0));
@@ -14419,7 +14729,7 @@ pub fn ProcessScan_247(
                         if ((*eobrun.borrow()) > 0) {
                             write!(libcc2rs::cerr(), "End-of-block run too long.\n",);
                             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                                brunsli_JPEGReadError::EOB_RUN_TOO_LONG;
+                                brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
                             return false;
                         }
                         (*eobrun.borrow_mut()) = -1_i32;
@@ -14432,7 +14742,7 @@ pub fn ProcessScan_247(
             if ({ (*br.borrow()).IsUnhealthy() }) {
                 write!(libcc2rs::cerr(), "Unexpected end of scan.\n",);
                 (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                    brunsli_JPEGReadError::INVALID_SCAN;
+                    brunsli_JPEGReadError_INVALID_SCAN;
                 return false;
             }
             let i: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -14588,12 +14898,12 @@ pub fn ProcessScan_247(
     if ((*eobrun.borrow()) > 0) {
         write!(libcc2rs::cerr(), "End-of-block run too long.\n",);
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::EOB_RUN_TOO_LONG;
+            brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
         return false;
     }
     if !({ (*br.borrow()).FinishStream((*jpg.borrow()).clone(), (*pos.borrow()).clone()) }) {
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::INVALID_SCAN;
+            brunsli_JPEGReadError_INVALID_SCAN;
         return false;
     }
     if {
@@ -14607,7 +14917,7 @@ pub fn ProcessScan_247(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::UNEXPECTED_EOF;
+            brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     }
     return true;
@@ -14658,7 +14968,7 @@ pub fn FixupIndexes_248(jpg: Ptr<brunsli_JPEGData>) -> bool {
                 .concat()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::QUANT_TABLE_NOT_FOUND;
+                brunsli_JPEGReadError_QUANT_TABLE_NOT_FOUND;
             return false;
         }
         (*i.borrow_mut()).prefix_inc();
@@ -14724,7 +15034,7 @@ pub fn ReadJpeg_195(
             (*len.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::MARKER_BYTE_NOT_FOUND;
+            brunsli_JPEGReadError_MARKER_BYTE_NOT_FOUND;
         return false;
     };
     let marker: Value<i32> = Rc::new(RefCell::new(
@@ -14743,7 +15053,7 @@ pub fn ReadJpeg_195(
             (*marker.borrow()),
         );
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::SOI_NOT_FOUND;
+            brunsli_JPEGReadError_SOI_NOT_FOUND;
         return false;
     }
     let lut_size: Value<i32> = Rc::new(RefCell::new(
@@ -14894,7 +15204,7 @@ pub fn ReadJpeg_195(
                 (*len.borrow()),
             );
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::MARKER_BYTE_NOT_FOUND;
+                brunsli_JPEGReadError_MARKER_BYTE_NOT_FOUND;
             return false;
         };
         (*marker.borrow_mut()) = (((*data.borrow())
@@ -14951,7 +15261,7 @@ pub fn ReadJpeg_195(
                     break 'switch;
                 }
                 __v if __v == 218 => {
-                    if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode::JPEG_READ_ALL as i32)) {
+                    if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
                         (*ok.borrow_mut()) = ({
                             ProcessScan_247(
                                 (*data.borrow()).clone(),
@@ -15007,8 +15317,7 @@ pub fn ReadJpeg_195(
                     || __v == 238
                     || __v == 239 =>
                 {
-                    if (((*mode.borrow()) as i32)
-                        != (brunsli_JpegReadMode::JPEG_READ_TABLES as i32))
+                    if (((*mode.borrow()) as i32) != (brunsli_JpegReadMode_JPEG_READ_TABLES as i32))
                     {
                         (*ok.borrow_mut()) = ({
                             ProcessAPP_240(
@@ -15022,8 +15331,7 @@ pub fn ReadJpeg_195(
                     break 'switch;
                 }
                 __v if __v == 254 => {
-                    if (((*mode.borrow()) as i32)
-                        != (brunsli_JpegReadMode::JPEG_READ_TABLES as i32))
+                    if (((*mode.borrow()) as i32) != (brunsli_JpegReadMode_JPEG_READ_TABLES as i32))
                     {
                         (*ok.borrow_mut()) = ({
                             ProcessCOM_241(
@@ -15045,7 +15353,7 @@ pub fn ReadJpeg_195(
                         (*len.borrow()),
                     );
                     (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                        brunsli_JPEGReadError::UNSUPPORTED_MARKER;
+                        brunsli_JPEGReadError_UNSUPPORTED_MARKER;
                     (*ok.borrow_mut()) = false;
                     break 'switch;
                 }
@@ -15058,7 +15366,7 @@ pub fn ReadJpeg_195(
             .marker_order
             .borrow_mut())
         .push(((*marker.borrow()) as u8));
-        if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode::JPEG_READ_HEADER as i32))
+        if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode_JPEG_READ_HEADER as i32))
             && (*found_sof.borrow())
         {
             break;
@@ -15067,10 +15375,10 @@ pub fn ReadJpeg_195(
     if !(*found_sof.borrow()) {
         write!(libcc2rs::cerr(), "Missing SOF marker.\n",);
         (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-            brunsli_JPEGReadError::SOF_NOT_FOUND;
+            brunsli_JPEGReadError_SOF_NOT_FOUND;
         return false;
     }
-    if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode::JPEG_READ_ALL as i32)) {
+    if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
         if ((*pos.borrow()) < (*len.borrow())) {
             ((*(*jpg.borrow()).upgrade().deref()).tail_data.as_pointer() as Ptr<Vec<u8>>).write({
                 let __count = (*data.borrow())
@@ -15089,7 +15397,7 @@ pub fn ReadJpeg_195(
         if (*(*(*jpg.borrow()).upgrade().deref()).huffman_code.borrow()).is_empty() {
             write!(libcc2rs::cerr(), "Need at least one Huffman code table.\n",);
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::HUFFMAN_TABLE_ERROR;
+                brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR;
             return false;
         }
         if {
@@ -15098,7 +15406,7 @@ pub fn ReadJpeg_195(
         } {
             write!(libcc2rs::cerr(), "Too many Huffman tables.\n",);
             (*(*(*jpg.borrow()).upgrade().deref()).error.borrow_mut()) =
-                brunsli_JPEGReadError::HUFFMAN_TABLE_ERROR;
+                brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR;
             return false;
         }
     }
@@ -15552,54 +15860,57 @@ pub fn ProcessFile_256(file_name: Ptr<Vec<u8>>, outfile_name: Ptr<Vec<u8>>) -> b
         return false;
     }
     let output: Value<Vec<u8>> = Rc::new(RefCell::new(vec![0]));
-    let jpg: Value<brunsli_JPEGData> = Rc::new(RefCell::new(brunsli_JPEGData::brunsli_JPEGData()));
-    let input_data: Value<Ptr<u8>> = Rc::new(RefCell::new(
-        (input.as_pointer() as Ptr<u8>).reinterpret_cast::<u8>(),
-    ));
-    (*ok.borrow_mut()) = ({
-        ReadJpeg_195(
-            (*input_data.borrow()).clone(),
-            ((*input.borrow()).len() - 1),
-            brunsli_JpegReadMode::JPEG_READ_ALL,
-            (jpg.as_pointer()),
-        )
-    });
     {
-        (*input.borrow_mut()).clear();
-        (*input.borrow_mut()).push(0)
-    };
-    (*input.borrow_mut()).shrink_to_fit();
-    if !(*ok.borrow()) {
-        eprintln!("Failed to parse JPEG input.");
-        return false;
+        let jpg: Value<brunsli_JPEGData> =
+            Rc::new(RefCell::new(brunsli_JPEGData::brunsli_JPEGData()));
+        let input_data: Value<Ptr<u8>> = Rc::new(RefCell::new(
+            (input.as_pointer() as Ptr<u8>).reinterpret_cast::<u8>(),
+        ));
+        (*ok.borrow_mut()) = ({
+            ReadJpeg_195(
+                (*input_data.borrow()).clone(),
+                ((*input.borrow()).len() - 1),
+                brunsli_JpegReadMode_JPEG_READ_ALL,
+                (jpg.as_pointer()),
+            )
+        });
+        {
+            (*input.borrow_mut()).clear();
+            (*input.borrow_mut()).push(0)
+        };
+        (*input.borrow_mut()).shrink_to_fit();
+        if !(*ok.borrow()) {
+            eprintln!("Failed to parse JPEG input.");
+            return false;
+        }
+        let output_size: Value<usize> = Rc::new(RefCell::new(
+            ({ GetMaximumBrunsliEncodedSize_144(jpg.as_pointer()) }),
+        ));
+        {
+            (*output.borrow_mut()).pop();
+            (*output.borrow_mut()).resize((*output_size.borrow()) as usize, 0);
+            (*output.borrow_mut()).push(0)
+        };
+        let output_data: Value<Ptr<u8>> = Rc::new(RefCell::new(
+            ((output.as_pointer() as Ptr<u8>).offset(0_usize)).reinterpret_cast::<u8>(),
+        ));
+        (*ok.borrow_mut()) = ({
+            BrunsliEncodeJpeg_190(
+                jpg.as_pointer(),
+                (*output_data.borrow()).clone(),
+                (output_size.as_pointer()),
+            )
+        });
+        if !(*ok.borrow()) {
+            eprintln!("Failed to transform JPEG to Brunsli");
+            return false;
+        }
+        {
+            (*output.borrow_mut()).pop();
+            (*output.borrow_mut()).resize((*output_size.borrow()) as usize, 0);
+            (*output.borrow_mut()).push(0)
+        };
     }
-    let output_size: Value<usize> = Rc::new(RefCell::new(
-        ({ GetMaximumBrunsliEncodedSize_144(jpg.as_pointer()) }),
-    ));
-    {
-        (*output.borrow_mut()).pop();
-        (*output.borrow_mut()).resize((*output_size.borrow()) as usize, 0);
-        (*output.borrow_mut()).push(0)
-    };
-    let output_data: Value<Ptr<u8>> = Rc::new(RefCell::new(
-        ((output.as_pointer() as Ptr<u8>).offset(0_usize)).reinterpret_cast::<u8>(),
-    ));
-    (*ok.borrow_mut()) = ({
-        BrunsliEncodeJpeg_190(
-            jpg.as_pointer(),
-            (*output_data.borrow()).clone(),
-            (output_size.as_pointer()),
-        )
-    });
-    if !(*ok.borrow()) {
-        eprintln!("Failed to transform JPEG to Brunsli");
-        return false;
-    }
-    {
-        (*output.borrow_mut()).pop();
-        (*output.borrow_mut()).resize((*output_size.borrow()) as usize, 0);
-        (*output.borrow_mut()).push(0)
-    };
     (*ok.borrow_mut()) = ({
         let _file_name: Ptr<Vec<u8>> = (outfile_name).clone();
         let _content: Ptr<Vec<u8>> = output.as_pointer();

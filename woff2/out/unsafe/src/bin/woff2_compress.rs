@@ -894,7 +894,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
     return true;
 }
 pub unsafe fn ReadFont_36(mut data: *const u8, mut len: usize, mut font: *mut woff2_Font) -> bool {
-    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer(data, len);
+    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
     if !(unsafe { file.ReadU32((&mut (*font).flavor as *mut u32)) }) {
         return false;
     }
@@ -908,7 +908,7 @@ pub unsafe fn ReadFontCollection_37(
     mut len: usize,
     mut font_collection: *mut woff2_FontCollection,
 ) -> bool {
-    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer(data, len);
+    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
     if !(unsafe { file.ReadU32((&mut (*font_collection).flavor as *mut u32)) }) {
         return false;
     }
@@ -943,8 +943,8 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
         let mut end_offset: usize = ((padding_size).wrapping_add(((*table).offset as usize)))
             .wrapping_add(((*table).length as usize));
         max_offset = ({
-            let mut __tmp_0 = (max_offset as u64);
-            let mut __tmp_1 = (end_offset as u64);
+            let mut __tmp_0: u64 = (max_offset as u64);
+            let mut __tmp_1: u64 = (end_offset as u64);
             (*if *&mut __tmp_0 >= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -959,8 +959,8 @@ pub unsafe fn FontCollectionFileSize_39(font_collection: *const woff2_FontCollec
     'loop_: for font in 0..((*font_collection).fonts.len()) {
         let mut font = (*font_collection).fonts.as_ptr().add(font);
         max_offset = ({
-            let mut __tmp_0 = (max_offset as u64);
-            let mut __tmp_1 = ((unsafe { FontFileSize_38(font) }) as u64);
+            let mut __tmp_0: u64 = (max_offset as u64);
+            let mut __tmp_1: u64 = ((unsafe { FontFileSize_38(font) }) as u64);
             (*if *&mut __tmp_0 >= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -1221,7 +1221,7 @@ pub unsafe fn GetGlyphData_47(
     }
     let mut index_fmt: i32 = (unsafe { IndexFormat_46(font) });
     let mut loca_buf: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer((*loca_table).data, ((*loca_table).length as usize));
+        woff2_Buffer::woff2_Buffer({ (*loca_table).data }, { ((*loca_table).length as usize) });
     if ((index_fmt) == (0)) {
         let mut offset1: u16 = 0_u16;
         let mut offset2: u16 = 0_u16;
@@ -1371,7 +1371,7 @@ pub unsafe fn ReadGlyph_63(
     mut len: usize,
     mut glyph: *mut woff2_Glyph,
 ) -> bool {
-    let mut buffer: woff2_Buffer = woff2_Buffer::woff2_Buffer(data, len);
+    let mut buffer: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
     let mut num_contours: i16 = 0_i16;
     if !(unsafe { buffer.ReadS16((&mut num_contours as *mut i16)) }) {
         return false;
@@ -1420,34 +1420,36 @@ pub unsafe fn ReadGlyph_63(
         let mut flags: Vec<Vec<u8>> = (0..(num_contours as usize) as usize)
             .map(|_| <Vec<u8>>::default())
             .collect::<Vec<_>>();
-        let mut flag: u8 = 0_u8;
-        let mut flag_repeat: u8 = 0_u8;
-        let mut i: i32 = 0;
-        'loop_: while ((i) < (num_contours as i32)) {
-            {
-                let __a0 = (&mut (*glyph)).contours[(i as usize)].len() as usize;
-                flags[(i as usize)].resize_with(__a0, || <u8>::default())
-            };
-            let mut j: usize = 0_usize;
-            'loop_: while ((j) < ((&mut (*glyph)).contours[(i as usize)].len())) {
-                if ((flag_repeat as i32) == (0)) {
-                    if !(unsafe { buffer.ReadU8((&mut flag as *mut u8)) }) {
-                        return false;
-                    }
-                    if (((flag as i32) & (kFLAG_REPEAT_52)) != 0) {
-                        if !(unsafe { buffer.ReadU8((&mut flag_repeat as *mut u8)) }) {
+        {
+            let mut flag: u8 = 0_u8;
+            let mut flag_repeat: u8 = 0_u8;
+            let mut i: i32 = 0;
+            'loop_: while ((i) < (num_contours as i32)) {
+                {
+                    let __a0 = (&mut (*glyph)).contours[(i as usize)].len() as usize;
+                    flags[(i as usize)].resize_with(__a0, || <u8>::default())
+                };
+                let mut j: usize = 0_usize;
+                'loop_: while ((j) < ((&mut (*glyph)).contours[(i as usize)].len())) {
+                    if ((flag_repeat as i32) == (0)) {
+                        if !(unsafe { buffer.ReadU8((&mut flag as *mut u8)) }) {
                             return false;
                         }
+                        if (((flag as i32) & (kFLAG_REPEAT_52)) != 0) {
+                            if !(unsafe { buffer.ReadU8((&mut flag_repeat as *mut u8)) }) {
+                                return false;
+                            }
+                        }
+                    } else {
+                        flag_repeat.postfix_dec();
                     }
-                } else {
-                    flag_repeat.postfix_dec();
+                    flags[(i as usize)][(j)] = flag;
+                    (&mut (*glyph)).contours[(i as usize)][(j)].on_curve =
+                        (((flag as i32) & (kFLAG_ONCURVE_49)) != 0);
+                    j.prefix_inc();
                 }
-                flags[(i as usize)][(j)] = flag;
-                (&mut (*glyph)).contours[(i as usize)][(j)].on_curve =
-                    (((flag as i32) & (kFLAG_ONCURVE_49)) != 0);
-                j.prefix_inc();
+                i.prefix_inc();
             }
-            i.prefix_inc();
         }
         if (!flags.is_empty()) && (!flags[(0_usize)].is_empty()) {
             (*glyph).overlap_simple_flag_set =
@@ -2548,7 +2550,7 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
         .or_default()
         .as_mut()) as *mut woff2_Font_Table);
     let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font) as *const woff2_Font) });
-    let mut encoder: woff2_GlyfEncoder = woff2_GlyfEncoder::woff2_GlyfEncoder(num_glyphs);
+    let mut encoder: woff2_GlyfEncoder = woff2_GlyfEncoder::woff2_GlyfEncoder({ num_glyphs });
     let mut i: i32 = 0;
     'loop_: while ((i) < (num_glyphs)) {
         let mut glyph: woff2_Glyph = woff2_Glyph::woff2_Glyph();
@@ -2599,7 +2601,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
         return false;
     }
     let mut hhea_buf: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer((*hhea_table).data, ((*hhea_table).length as usize));
+        woff2_Buffer::woff2_Buffer({ (*hhea_table).data }, { ((*hhea_table).length as usize) });
     let mut num_hmetrics: u16 = 0_u16;
     if (!(unsafe { hhea_buf.Skip(34_usize) }))
         || (!(unsafe { hhea_buf.ReadU16((&mut num_hmetrics as *mut u16)) }))
@@ -2616,7 +2618,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     let mut remove_proportional_lsb: bool = true;
     let mut remove_monospace_lsb: bool = (((num_glyphs) - (num_hmetrics as i32)) > (0));
     let mut hmtx_buf: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer((*hmtx_table).data, ((*hmtx_table).length as usize));
+        woff2_Buffer::woff2_Buffer({ (*hmtx_table).data }, { ((*hmtx_table).length as usize) });
     let mut i: i32 = 0;
     'loop_: while ((i) < (num_glyphs)) {
         let mut glyph: woff2_Glyph = woff2_Glyph::woff2_Glyph();
@@ -2960,7 +2962,7 @@ pub unsafe fn ComputeTotalTransformLength_103(font: *const woff2_Font) -> usize 
 }
 pub unsafe fn MaxWOFF2CompressedSize_104(mut data: *const u8, mut length: usize) -> usize {
     return (unsafe {
-        let mut _extended_metadata = {
+        let mut _extended_metadata: Vec<libc::c_char> = {
             let s = c"".as_ptr();
             std::slice::from_raw_parts(s, (0..).take_while(|&i| *s.add(i) != 0).count() + 1)
                 .to_vec()

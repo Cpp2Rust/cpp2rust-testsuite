@@ -845,7 +845,35 @@ impl Clone for woff2_Font_Table {
         this
     }
 }
-impl ByteRepr for woff2_Font_Table {}
+impl ByteRepr for woff2_Font_Table {
+    fn byte_size() -> usize {
+        64
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.tag.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.checksum.borrow()).to_bytes(&mut buf[4..8]);
+        (*self.offset.borrow()).to_bytes(&mut buf[8..12]);
+        (*self.length.borrow()).to_bytes(&mut buf[12..16]);
+        (*self.data.borrow()).to_bytes(&mut buf[16..24]);
+        (*self.buffer.borrow()).to_bytes(&mut buf[24..48]);
+        (*self.reuse_of.borrow()).to_bytes(&mut buf[48..56]);
+        (*self.flag_byte.borrow()).to_bytes(&mut buf[56..57]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            tag: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
+            checksum: Rc::new(RefCell::new(<u32>::from_bytes(&buf[4..8]))),
+            offset: Rc::new(RefCell::new(<u32>::from_bytes(&buf[8..12]))),
+            length: Rc::new(RefCell::new(<u32>::from_bytes(&buf[12..16]))),
+            data: Rc::new(RefCell::new(<Ptr<u8>>::from_bytes(&buf[16..24]))),
+            buffer: Rc::new(RefCell::new(<Vec<u8>>::from_bytes(&buf[24..48]))),
+            reuse_of: Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::from_bytes(
+                &buf[48..56],
+            ))),
+            flag_byte: Rc::new(RefCell::new(<u8>::from_bytes(&buf[56..57]))),
+        }
+    }
+}
 #[derive(Default)]
 pub struct woff2_Font {
     pub flavor: Value<u32>,
@@ -867,7 +895,25 @@ impl Clone for woff2_Font {
         this
     }
 }
-impl ByteRepr for woff2_Font {}
+impl ByteRepr for woff2_Font {
+    fn byte_size() -> usize {
+        56
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.flavor.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.num_tables.borrow()).to_bytes(&mut buf[4..6]);
+        (*self.tables.borrow()).to_bytes(&mut buf[8..56]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            flavor: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
+            num_tables: Rc::new(RefCell::new(<u16>::from_bytes(&buf[4..6]))),
+            tables: Rc::new(RefCell::new(
+                <BTreeMap<u32, Value<woff2_Font_Table>>>::from_bytes(&buf[8..56]),
+            )),
+        }
+    }
+}
 #[derive(Default)]
 pub struct woff2_FontCollection {
     pub flavor: Value<u32>,
@@ -891,7 +937,27 @@ impl Clone for woff2_FontCollection {
         this
     }
 }
-impl ByteRepr for woff2_FontCollection {}
+impl ByteRepr for woff2_FontCollection {
+    fn byte_size() -> usize {
+        80
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.flavor.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.header_version.borrow()).to_bytes(&mut buf[4..8]);
+        (*self.tables.borrow()).to_bytes(&mut buf[8..56]);
+        (*self.fonts.borrow()).to_bytes(&mut buf[56..80]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            flavor: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
+            header_version: Rc::new(RefCell::new(<u32>::from_bytes(&buf[4..8]))),
+            tables: Rc::new(RefCell::new(
+                <BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>::from_bytes(&buf[8..56]),
+            )),
+            fonts: Rc::new(RefCell::new(<Vec<woff2_Font>>::from_bytes(&buf[56..80]))),
+        }
+    }
+}
 pub fn StoreU32_28(dst: Ptr<u8>, offset: usize, x: u32) -> usize {
     let dst: Value<Ptr<u8>> = Rc::new(RefCell::new(dst));
     let offset: Value<usize> = Rc::new(RefCell::new(offset));
@@ -1400,8 +1466,8 @@ pub fn ReadFont_36(data: Ptr<u8>, len: usize, font: Ptr<woff2_Font>) -> bool {
     let len: Value<usize> = Rc::new(RefCell::new(len));
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
     let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*data.borrow()).clone(),
-        (*len.borrow()),
+        { (*data.borrow()).clone() },
+        { (*len.borrow()) },
     )));
     if !({ (*file.borrow()).ReadU32(((*(*font.borrow()).upgrade().deref()).flavor.as_pointer())) })
     {
@@ -1431,8 +1497,8 @@ pub fn ReadFontCollection_37(
     let len: Value<usize> = Rc::new(RefCell::new(len));
     let font_collection: Value<Ptr<woff2_FontCollection>> = Rc::new(RefCell::new(font_collection));
     let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*data.borrow()).clone(),
-        (*len.borrow()),
+        { (*data.borrow()).clone() },
+        { (*len.borrow()) },
     )));
     if !({
         (*file.borrow()).ReadU32(
@@ -1936,8 +2002,8 @@ pub fn GetGlyphData_47(
     }
     let index_fmt: Value<i32> = Rc::new(RefCell::new(({ IndexFormat_46((font).clone()) })));
     let loca_buf: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*(*(*loca_table.borrow()).upgrade().deref()).data.borrow()).clone(),
-        ((*(*(*loca_table.borrow()).upgrade().deref()).length.borrow()) as usize),
+        { (*(*(*loca_table.borrow()).upgrade().deref()).data.borrow()).clone() },
+        { ((*(*(*loca_table.borrow()).upgrade().deref()).length.borrow()) as usize) },
     )));
     if ((*index_fmt.borrow()) == 0) {
         let offset1: Value<u16> = <Value<u16>>::default();
@@ -2128,8 +2194,8 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         ({ GetFileContent_49((*filename.borrow()).clone()) }),
     ));
     let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (input.as_pointer() as Ptr<u8>).reinterpret_cast::<u8>(),
-        ((*input.borrow()).len() - 1),
+        { (input.as_pointer() as Ptr<u8>).reinterpret_cast::<u8>() },
+        { ((*input.borrow()).len() - 1) },
     )));
     println!("WOFF2Header");
     let signature: Value<u32> = <Value<u32>>::default();

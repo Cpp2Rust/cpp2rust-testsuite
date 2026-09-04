@@ -60,104 +60,50 @@ pub static mut kJPEGZigZagOrder_14: [u32; 64] = unsafe {
         35_u32, 36_u32, 48_u32, 49_u32, 57_u32, 58_u32, 62_u32, 63_u32,
     ]
 };
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_JPEGReadError {
-    #[default]
-    OK = 0,
-    SOI_NOT_FOUND = 1,
-    SOF_NOT_FOUND = 2,
-    UNEXPECTED_EOF = 3,
-    MARKER_BYTE_NOT_FOUND = 4,
-    UNSUPPORTED_MARKER = 5,
-    WRONG_MARKER_SIZE = 6,
-    INVALID_PRECISION = 7,
-    INVALID_WIDTH = 8,
-    INVALID_HEIGHT = 9,
-    INVALID_NUMCOMP = 10,
-    INVALID_SAMP_FACTOR = 11,
-    INVALID_START_OF_SCAN = 12,
-    INVALID_END_OF_SCAN = 13,
-    INVALID_SCAN_BIT_POSITION = 14,
-    INVALID_COMPS_IN_SCAN = 15,
-    INVALID_HUFFMAN_INDEX = 16,
-    INVALID_QUANT_TBL_INDEX = 17,
-    INVALID_QUANT_VAL = 18,
-    INVALID_MARKER_LEN = 19,
-    INVALID_SAMPLING_FACTORS = 20,
-    INVALID_HUFFMAN_CODE = 21,
-    INVALID_SYMBOL = 22,
-    NON_REPRESENTABLE_DC_COEFF = 23,
-    NON_REPRESENTABLE_AC_COEFF = 24,
-    INVALID_SCAN = 25,
-    OVERLAPPING_SCANS = 26,
-    INVALID_SCAN_ORDER = 27,
-    EXTRA_ZERO_RUN = 28,
-    DUPLICATE_DRI = 29,
-    DUPLICATE_SOF = 30,
-    WRONG_RESTART_MARKER = 31,
-    DUPLICATE_COMPONENT_ID = 32,
-    COMPONENT_NOT_FOUND = 33,
-    HUFFMAN_TABLE_NOT_FOUND = 34,
-    HUFFMAN_TABLE_ERROR = 35,
-    QUANT_TABLE_NOT_FOUND = 36,
-    EMPTY_DHT = 37,
-    EMPTY_DQT = 38,
-    OUT_OF_BAND_COEFF = 39,
-    EOB_RUN_TOO_LONG = 40,
-    IMAGE_TOO_LARGE = 41,
-    INVALID_QUANT_TBL_PRECISION = 42,
-}
-impl From<i32> for brunsli_JPEGReadError {
-    fn from(n: i32) -> brunsli_JPEGReadError {
-        match n {
-            0 => brunsli_JPEGReadError::OK,
-            1 => brunsli_JPEGReadError::SOI_NOT_FOUND,
-            2 => brunsli_JPEGReadError::SOF_NOT_FOUND,
-            3 => brunsli_JPEGReadError::UNEXPECTED_EOF,
-            4 => brunsli_JPEGReadError::MARKER_BYTE_NOT_FOUND,
-            5 => brunsli_JPEGReadError::UNSUPPORTED_MARKER,
-            6 => brunsli_JPEGReadError::WRONG_MARKER_SIZE,
-            7 => brunsli_JPEGReadError::INVALID_PRECISION,
-            8 => brunsli_JPEGReadError::INVALID_WIDTH,
-            9 => brunsli_JPEGReadError::INVALID_HEIGHT,
-            10 => brunsli_JPEGReadError::INVALID_NUMCOMP,
-            11 => brunsli_JPEGReadError::INVALID_SAMP_FACTOR,
-            12 => brunsli_JPEGReadError::INVALID_START_OF_SCAN,
-            13 => brunsli_JPEGReadError::INVALID_END_OF_SCAN,
-            14 => brunsli_JPEGReadError::INVALID_SCAN_BIT_POSITION,
-            15 => brunsli_JPEGReadError::INVALID_COMPS_IN_SCAN,
-            16 => brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX,
-            17 => brunsli_JPEGReadError::INVALID_QUANT_TBL_INDEX,
-            18 => brunsli_JPEGReadError::INVALID_QUANT_VAL,
-            19 => brunsli_JPEGReadError::INVALID_MARKER_LEN,
-            20 => brunsli_JPEGReadError::INVALID_SAMPLING_FACTORS,
-            21 => brunsli_JPEGReadError::INVALID_HUFFMAN_CODE,
-            22 => brunsli_JPEGReadError::INVALID_SYMBOL,
-            23 => brunsli_JPEGReadError::NON_REPRESENTABLE_DC_COEFF,
-            24 => brunsli_JPEGReadError::NON_REPRESENTABLE_AC_COEFF,
-            25 => brunsli_JPEGReadError::INVALID_SCAN,
-            26 => brunsli_JPEGReadError::OVERLAPPING_SCANS,
-            27 => brunsli_JPEGReadError::INVALID_SCAN_ORDER,
-            28 => brunsli_JPEGReadError::EXTRA_ZERO_RUN,
-            29 => brunsli_JPEGReadError::DUPLICATE_DRI,
-            30 => brunsli_JPEGReadError::DUPLICATE_SOF,
-            31 => brunsli_JPEGReadError::WRONG_RESTART_MARKER,
-            32 => brunsli_JPEGReadError::DUPLICATE_COMPONENT_ID,
-            33 => brunsli_JPEGReadError::COMPONENT_NOT_FOUND,
-            34 => brunsli_JPEGReadError::HUFFMAN_TABLE_NOT_FOUND,
-            35 => brunsli_JPEGReadError::HUFFMAN_TABLE_ERROR,
-            36 => brunsli_JPEGReadError::QUANT_TABLE_NOT_FOUND,
-            37 => brunsli_JPEGReadError::EMPTY_DHT,
-            38 => brunsli_JPEGReadError::EMPTY_DQT,
-            39 => brunsli_JPEGReadError::OUT_OF_BAND_COEFF,
-            40 => brunsli_JPEGReadError::EOB_RUN_TOO_LONG,
-            41 => brunsli_JPEGReadError::IMAGE_TOO_LARGE,
-            42 => brunsli_JPEGReadError::INVALID_QUANT_TBL_PRECISION,
-            _ => panic!("invalid brunsli_JPEGReadError value: {}", n),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_JPEGReadError);
+pub type brunsli_JPEGReadError = i32;
+pub const brunsli_JPEGReadError_OK: brunsli_JPEGReadError = 0;
+pub const brunsli_JPEGReadError_SOI_NOT_FOUND: brunsli_JPEGReadError = 1;
+pub const brunsli_JPEGReadError_SOF_NOT_FOUND: brunsli_JPEGReadError = 2;
+pub const brunsli_JPEGReadError_UNEXPECTED_EOF: brunsli_JPEGReadError = 3;
+pub const brunsli_JPEGReadError_MARKER_BYTE_NOT_FOUND: brunsli_JPEGReadError = 4;
+pub const brunsli_JPEGReadError_UNSUPPORTED_MARKER: brunsli_JPEGReadError = 5;
+pub const brunsli_JPEGReadError_WRONG_MARKER_SIZE: brunsli_JPEGReadError = 6;
+pub const brunsli_JPEGReadError_INVALID_PRECISION: brunsli_JPEGReadError = 7;
+pub const brunsli_JPEGReadError_INVALID_WIDTH: brunsli_JPEGReadError = 8;
+pub const brunsli_JPEGReadError_INVALID_HEIGHT: brunsli_JPEGReadError = 9;
+pub const brunsli_JPEGReadError_INVALID_NUMCOMP: brunsli_JPEGReadError = 10;
+pub const brunsli_JPEGReadError_INVALID_SAMP_FACTOR: brunsli_JPEGReadError = 11;
+pub const brunsli_JPEGReadError_INVALID_START_OF_SCAN: brunsli_JPEGReadError = 12;
+pub const brunsli_JPEGReadError_INVALID_END_OF_SCAN: brunsli_JPEGReadError = 13;
+pub const brunsli_JPEGReadError_INVALID_SCAN_BIT_POSITION: brunsli_JPEGReadError = 14;
+pub const brunsli_JPEGReadError_INVALID_COMPS_IN_SCAN: brunsli_JPEGReadError = 15;
+pub const brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX: brunsli_JPEGReadError = 16;
+pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_INDEX: brunsli_JPEGReadError = 17;
+pub const brunsli_JPEGReadError_INVALID_QUANT_VAL: brunsli_JPEGReadError = 18;
+pub const brunsli_JPEGReadError_INVALID_MARKER_LEN: brunsli_JPEGReadError = 19;
+pub const brunsli_JPEGReadError_INVALID_SAMPLING_FACTORS: brunsli_JPEGReadError = 20;
+pub const brunsli_JPEGReadError_INVALID_HUFFMAN_CODE: brunsli_JPEGReadError = 21;
+pub const brunsli_JPEGReadError_INVALID_SYMBOL: brunsli_JPEGReadError = 22;
+pub const brunsli_JPEGReadError_NON_REPRESENTABLE_DC_COEFF: brunsli_JPEGReadError = 23;
+pub const brunsli_JPEGReadError_NON_REPRESENTABLE_AC_COEFF: brunsli_JPEGReadError = 24;
+pub const brunsli_JPEGReadError_INVALID_SCAN: brunsli_JPEGReadError = 25;
+pub const brunsli_JPEGReadError_OVERLAPPING_SCANS: brunsli_JPEGReadError = 26;
+pub const brunsli_JPEGReadError_INVALID_SCAN_ORDER: brunsli_JPEGReadError = 27;
+pub const brunsli_JPEGReadError_EXTRA_ZERO_RUN: brunsli_JPEGReadError = 28;
+pub const brunsli_JPEGReadError_DUPLICATE_DRI: brunsli_JPEGReadError = 29;
+pub const brunsli_JPEGReadError_DUPLICATE_SOF: brunsli_JPEGReadError = 30;
+pub const brunsli_JPEGReadError_WRONG_RESTART_MARKER: brunsli_JPEGReadError = 31;
+pub const brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID: brunsli_JPEGReadError = 32;
+pub const brunsli_JPEGReadError_COMPONENT_NOT_FOUND: brunsli_JPEGReadError = 33;
+pub const brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND: brunsli_JPEGReadError = 34;
+pub const brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR: brunsli_JPEGReadError = 35;
+pub const brunsli_JPEGReadError_QUANT_TABLE_NOT_FOUND: brunsli_JPEGReadError = 36;
+pub const brunsli_JPEGReadError_EMPTY_DHT: brunsli_JPEGReadError = 37;
+pub const brunsli_JPEGReadError_EMPTY_DQT: brunsli_JPEGReadError = 38;
+pub const brunsli_JPEGReadError_OUT_OF_BAND_COEFF: brunsli_JPEGReadError = 39;
+pub const brunsli_JPEGReadError_EOB_RUN_TOO_LONG: brunsli_JPEGReadError = 40;
+pub const brunsli_JPEGReadError_IMAGE_TOO_LARGE: brunsli_JPEGReadError = 41;
+pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_PRECISION: brunsli_JPEGReadError = 42;
 #[repr(C)]
 #[derive(Clone)]
 pub struct brunsli_JPEGQuantTable {
@@ -313,7 +259,7 @@ impl brunsli_JPEGData {
             tail_data: Vec::new(),
             original_jpg: std::ptr::null(),
             original_jpg_size: 0_usize,
-            error: brunsli_JPEGReadError::OK,
+            error: brunsli_JPEGReadError_OK,
             has_zero_padding_bit: false,
             padding_bits: Vec::new(),
         };
@@ -2584,54 +2530,20 @@ pub unsafe fn BrunsliBitReaderCanRead_134(
         ((((n_bits).wrapping_sub(((*br).num_bits_ as usize))).wrapping_add(7_usize)) >> (3));
     return (((*br).next_.offset((num_extra_bytes) as isize)) <= ((*br).end_));
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_BrunsliStatus {
-    #[default]
-    BRUNSLI_OK = 0,
-    BRUNSLI_NON_REPRESENTABLE = 1,
-    BRUNSLI_MEMORY_ERROR = 2,
-    BRUNSLI_INVALID_PARAM = 3,
-    BRUNSLI_COMPRESSION_ERROR = 4,
-    BRUNSLI_INVALID_BRN = 5,
-    BRUNSLI_DECOMPRESSION_ERROR = 6,
-    BRUNSLI_NOT_ENOUGH_DATA = 7,
-}
-impl From<i32> for brunsli_BrunsliStatus {
-    fn from(n: i32) -> brunsli_BrunsliStatus {
-        match n {
-            0 => brunsli_BrunsliStatus::BRUNSLI_OK,
-            1 => brunsli_BrunsliStatus::BRUNSLI_NON_REPRESENTABLE,
-            2 => brunsli_BrunsliStatus::BRUNSLI_MEMORY_ERROR,
-            3 => brunsli_BrunsliStatus::BRUNSLI_INVALID_PARAM,
-            4 => brunsli_BrunsliStatus::BRUNSLI_COMPRESSION_ERROR,
-            5 => brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN,
-            6 => brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR,
-            7 => brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA,
-            _ => panic!("invalid brunsli_BrunsliStatus value: {}", n),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_BrunsliStatus);
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_BrunsliDecoder_Status {
-    #[default]
-    NEEDS_MORE_INPUT = 0,
-    NEEDS_MORE_OUTPUT = 1,
-    ERROR = 2,
-    DONE = 3,
-}
-impl From<i32> for brunsli_BrunsliDecoder_Status {
-    fn from(n: i32) -> brunsli_BrunsliDecoder_Status {
-        match n {
-            0 => brunsli_BrunsliDecoder_Status::NEEDS_MORE_INPUT,
-            1 => brunsli_BrunsliDecoder_Status::NEEDS_MORE_OUTPUT,
-            2 => brunsli_BrunsliDecoder_Status::ERROR,
-            3 => brunsli_BrunsliDecoder_Status::DONE,
-            _ => panic!("invalid brunsli_BrunsliDecoder_Status value: {}", n),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_BrunsliDecoder_Status);
+pub type brunsli_BrunsliStatus = u32;
+pub const brunsli_BrunsliStatus_BRUNSLI_OK: brunsli_BrunsliStatus = 0;
+pub const brunsli_BrunsliStatus_BRUNSLI_NON_REPRESENTABLE: brunsli_BrunsliStatus = 1;
+pub const brunsli_BrunsliStatus_BRUNSLI_MEMORY_ERROR: brunsli_BrunsliStatus = 2;
+pub const brunsli_BrunsliStatus_BRUNSLI_INVALID_PARAM: brunsli_BrunsliStatus = 3;
+pub const brunsli_BrunsliStatus_BRUNSLI_COMPRESSION_ERROR: brunsli_BrunsliStatus = 4;
+pub const brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN: brunsli_BrunsliStatus = 5;
+pub const brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR: brunsli_BrunsliStatus = 6;
+pub const brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA: brunsli_BrunsliStatus = 7;
+pub type brunsli_BrunsliDecoder_Status = u32;
+pub const brunsli_BrunsliDecoder_Status_NEEDS_MORE_INPUT: brunsli_BrunsliDecoder_Status = 0;
+pub const brunsli_BrunsliDecoder_Status_NEEDS_MORE_OUTPUT: brunsli_BrunsliDecoder_Status = 1;
+pub const brunsli_BrunsliDecoder_Status_ERROR: brunsli_BrunsliDecoder_Status = 2;
+pub const brunsli_BrunsliDecoder_Status_DONE: brunsli_BrunsliDecoder_Status = 3;
 #[repr(C)]
 #[derive()]
 pub struct brunsli_BrunsliDecoder {
@@ -2794,55 +2706,23 @@ impl Default for brunsli_internal_dec_ComponentMeta {
         }
     }
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_Stage {
-    #[default]
-    SIGNATURE = 0,
-    HEADER = 1,
-    FALLBACK = 2,
-    SECTION = 3,
-    SECTION_BODY = 4,
-    DONE = 5,
-    ERROR = 6,
-}
-impl From<i32> for brunsli_internal_dec_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_Stage {
-        match n {
-            0 => brunsli_internal_dec_Stage::SIGNATURE,
-            1 => brunsli_internal_dec_Stage::HEADER,
-            2 => brunsli_internal_dec_Stage::FALLBACK,
-            3 => brunsli_internal_dec_Stage::SECTION,
-            4 => brunsli_internal_dec_Stage::SECTION_BODY,
-            5 => brunsli_internal_dec_Stage::DONE,
-            6 => brunsli_internal_dec_Stage::ERROR,
-            _ => panic!("invalid brunsli_internal_dec_Stage value: {}", n),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_Stage);
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_SerializationStatus {
-    #[default]
-    NEEDS_MORE_INPUT = 0,
-    NEEDS_MORE_OUTPUT = 1,
-    ERROR = 2,
-    DONE = 3,
-}
-impl From<i32> for brunsli_internal_dec_SerializationStatus {
-    fn from(n: i32) -> brunsli_internal_dec_SerializationStatus {
-        match n {
-            0 => brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT,
-            1 => brunsli_internal_dec_SerializationStatus::NEEDS_MORE_OUTPUT,
-            2 => brunsli_internal_dec_SerializationStatus::ERROR,
-            3 => brunsli_internal_dec_SerializationStatus::DONE,
-            _ => panic!(
-                "invalid brunsli_internal_dec_SerializationStatus value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_SerializationStatus);
+pub type brunsli_internal_dec_Stage = i32;
+pub const brunsli_internal_dec_Stage_SIGNATURE: brunsli_internal_dec_Stage = 0;
+pub const brunsli_internal_dec_Stage_HEADER: brunsli_internal_dec_Stage = 1;
+pub const brunsli_internal_dec_Stage_FALLBACK: brunsli_internal_dec_Stage = 2;
+pub const brunsli_internal_dec_Stage_SECTION: brunsli_internal_dec_Stage = 3;
+pub const brunsli_internal_dec_Stage_SECTION_BODY: brunsli_internal_dec_Stage = 4;
+pub const brunsli_internal_dec_Stage_DONE: brunsli_internal_dec_Stage = 5;
+pub const brunsli_internal_dec_Stage_ERROR: brunsli_internal_dec_Stage = 6;
+pub type brunsli_internal_dec_SerializationStatus = i32;
+pub const brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT:
+    brunsli_internal_dec_SerializationStatus = 0;
+pub const brunsli_internal_dec_SerializationStatus_NEEDS_MORE_OUTPUT:
+    brunsli_internal_dec_SerializationStatus = 1;
+pub const brunsli_internal_dec_SerializationStatus_ERROR: brunsli_internal_dec_SerializationStatus =
+    2;
+pub const brunsli_internal_dec_SerializationStatus_DONE: brunsli_internal_dec_SerializationStatus =
+    3;
 #[repr(C)]
 #[derive(Default)]
 pub struct brunsli_Arena_brunsli_HuffmanCode_ {
@@ -2967,25 +2847,11 @@ pub struct brunsli_internal_dec_DCTCodingState {
     pub refinement_bits_: Vec<u16>,
     pub refinement_bits_count_: usize,
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_EncodeScanState_Stage {
-    #[default]
-    HEAD = 0,
-    BODY = 1,
-}
-impl From<i32> for brunsli_internal_dec_EncodeScanState_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_EncodeScanState_Stage {
-        match n {
-            0 => brunsli_internal_dec_EncodeScanState_Stage::HEAD,
-            1 => brunsli_internal_dec_EncodeScanState_Stage::BODY,
-            _ => panic!(
-                "invalid brunsli_internal_dec_EncodeScanState_Stage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_EncodeScanState_Stage);
+pub type brunsli_internal_dec_EncodeScanState_Stage = u32;
+pub const brunsli_internal_dec_EncodeScanState_Stage_HEAD:
+    brunsli_internal_dec_EncodeScanState_Stage = 0;
+pub const brunsli_internal_dec_EncodeScanState_Stage_BODY:
+    brunsli_internal_dec_EncodeScanState_Stage = 1;
 #[repr(C)]
 #[derive()]
 pub struct brunsli_internal_dec_EncodeScanState {
@@ -3005,7 +2871,7 @@ pub struct brunsli_internal_dec_EncodeScanState {
 impl Default for brunsli_internal_dec_EncodeScanState {
     fn default() -> Self {
         brunsli_internal_dec_EncodeScanState {
-            stage: brunsli_internal_dec_EncodeScanState_Stage::HEAD,
+            stage: brunsli_internal_dec_EncodeScanState_Stage_HEAD,
             mcu_y: 0_i32,
             bw: <brunsli_internal_dec_BitWriter>::default(),
             last_dc_coeff: [0_i16; 4],
@@ -3020,29 +2886,15 @@ impl Default for brunsli_internal_dec_EncodeScanState {
         }
     }
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_SerializationState_Stage {
-    #[default]
-    INIT = 0,
-    SERIALIZE_SECTION = 1,
-    DONE = 2,
-    ERROR = 3,
-}
-impl From<i32> for brunsli_internal_dec_SerializationState_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_SerializationState_Stage {
-        match n {
-            0 => brunsli_internal_dec_SerializationState_Stage::INIT,
-            1 => brunsli_internal_dec_SerializationState_Stage::SERIALIZE_SECTION,
-            2 => brunsli_internal_dec_SerializationState_Stage::DONE,
-            3 => brunsli_internal_dec_SerializationState_Stage::ERROR,
-            _ => panic!(
-                "invalid brunsli_internal_dec_SerializationState_Stage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_SerializationState_Stage);
+pub type brunsli_internal_dec_SerializationState_Stage = u32;
+pub const brunsli_internal_dec_SerializationState_Stage_INIT:
+    brunsli_internal_dec_SerializationState_Stage = 0;
+pub const brunsli_internal_dec_SerializationState_Stage_SERIALIZE_SECTION:
+    brunsli_internal_dec_SerializationState_Stage = 1;
+pub const brunsli_internal_dec_SerializationState_Stage_DONE:
+    brunsli_internal_dec_SerializationState_Stage = 2;
+pub const brunsli_internal_dec_SerializationState_Stage_ERROR:
+    brunsli_internal_dec_SerializationState_Stage = 3;
 #[repr(C)]
 #[derive(Default)]
 pub struct brunsli_internal_dec_SerializationState {
@@ -3085,37 +2937,21 @@ pub struct brunsli_internal_dec_SectionState {
     pub milestone: usize,
     pub projected_end: usize,
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_HeaderState_Stage {
-    #[default]
-    READ_TAG = 0,
-    ENTER_SECTION = 1,
-    ITEM_READ_TAG = 2,
-    ITEM_ENTER_SECTION = 3,
-    ITEM_SKIP_CONTENTS = 4,
-    ITEM_READ_VALUE = 5,
-    FINALE = 6,
-    DONE = 7,
-}
-impl From<i32> for brunsli_internal_dec_HeaderState_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_HeaderState_Stage {
-        match n {
-            0 => brunsli_internal_dec_HeaderState_Stage::READ_TAG,
-            1 => brunsli_internal_dec_HeaderState_Stage::ENTER_SECTION,
-            2 => brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG,
-            3 => brunsli_internal_dec_HeaderState_Stage::ITEM_ENTER_SECTION,
-            4 => brunsli_internal_dec_HeaderState_Stage::ITEM_SKIP_CONTENTS,
-            5 => brunsli_internal_dec_HeaderState_Stage::ITEM_READ_VALUE,
-            6 => brunsli_internal_dec_HeaderState_Stage::FINALE,
-            7 => brunsli_internal_dec_HeaderState_Stage::DONE,
-            _ => panic!(
-                "invalid brunsli_internal_dec_HeaderState_Stage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_HeaderState_Stage);
+pub type brunsli_internal_dec_HeaderState_Stage = u32;
+pub const brunsli_internal_dec_HeaderState_Stage_READ_TAG: brunsli_internal_dec_HeaderState_Stage =
+    0;
+pub const brunsli_internal_dec_HeaderState_Stage_ENTER_SECTION:
+    brunsli_internal_dec_HeaderState_Stage = 1;
+pub const brunsli_internal_dec_HeaderState_Stage_ITEM_READ_TAG:
+    brunsli_internal_dec_HeaderState_Stage = 2;
+pub const brunsli_internal_dec_HeaderState_Stage_ITEM_ENTER_SECTION:
+    brunsli_internal_dec_HeaderState_Stage = 3;
+pub const brunsli_internal_dec_HeaderState_Stage_ITEM_SKIP_CONTENTS:
+    brunsli_internal_dec_HeaderState_Stage = 4;
+pub const brunsli_internal_dec_HeaderState_Stage_ITEM_READ_VALUE:
+    brunsli_internal_dec_HeaderState_Stage = 5;
+pub const brunsli_internal_dec_HeaderState_Stage_FINALE: brunsli_internal_dec_HeaderState_Stage = 6;
+pub const brunsli_internal_dec_HeaderState_Stage_DONE: brunsli_internal_dec_HeaderState_Stage = 7;
 #[repr(C)]
 #[derive(Clone)]
 pub struct brunsli_internal_dec_HeaderState {
@@ -3134,107 +2970,50 @@ impl Default for brunsli_internal_dec_HeaderState {
         }
     }
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_FallbackState_Stage {
-    #[default]
-    READ_TAG = 0,
-    ENTER_SECTION = 1,
-    READ_CONTENTS = 2,
-    DONE = 3,
-}
-impl From<i32> for brunsli_internal_dec_FallbackState_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_FallbackState_Stage {
-        match n {
-            0 => brunsli_internal_dec_FallbackState_Stage::READ_TAG,
-            1 => brunsli_internal_dec_FallbackState_Stage::ENTER_SECTION,
-            2 => brunsli_internal_dec_FallbackState_Stage::READ_CONTENTS,
-            3 => brunsli_internal_dec_FallbackState_Stage::DONE,
-            _ => panic!(
-                "invalid brunsli_internal_dec_FallbackState_Stage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_FallbackState_Stage);
+pub type brunsli_internal_dec_FallbackState_Stage = u32;
+pub const brunsli_internal_dec_FallbackState_Stage_READ_TAG:
+    brunsli_internal_dec_FallbackState_Stage = 0;
+pub const brunsli_internal_dec_FallbackState_Stage_ENTER_SECTION:
+    brunsli_internal_dec_FallbackState_Stage = 1;
+pub const brunsli_internal_dec_FallbackState_Stage_READ_CONTENTS:
+    brunsli_internal_dec_FallbackState_Stage = 2;
+pub const brunsli_internal_dec_FallbackState_Stage_DONE: brunsli_internal_dec_FallbackState_Stage =
+    3;
 #[repr(C)]
 #[derive(Clone, Default)]
 pub struct brunsli_internal_dec_FallbackState {
     pub stage: usize,
     pub storage: Vec<u8>,
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_SectionHeaderState_Stage {
-    #[default]
-    READ_TAG = 0,
-    READ_VALUE = 1,
-    ENTER_SECTION = 2,
-    DONE = 3,
-}
-impl From<i32> for brunsli_internal_dec_SectionHeaderState_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_SectionHeaderState_Stage {
-        match n {
-            0 => brunsli_internal_dec_SectionHeaderState_Stage::READ_TAG,
-            1 => brunsli_internal_dec_SectionHeaderState_Stage::READ_VALUE,
-            2 => brunsli_internal_dec_SectionHeaderState_Stage::ENTER_SECTION,
-            3 => brunsli_internal_dec_SectionHeaderState_Stage::DONE,
-            _ => panic!(
-                "invalid brunsli_internal_dec_SectionHeaderState_Stage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_SectionHeaderState_Stage);
+pub type brunsli_internal_dec_SectionHeaderState_Stage = u32;
+pub const brunsli_internal_dec_SectionHeaderState_Stage_READ_TAG:
+    brunsli_internal_dec_SectionHeaderState_Stage = 0;
+pub const brunsli_internal_dec_SectionHeaderState_Stage_READ_VALUE:
+    brunsli_internal_dec_SectionHeaderState_Stage = 1;
+pub const brunsli_internal_dec_SectionHeaderState_Stage_ENTER_SECTION:
+    brunsli_internal_dec_SectionHeaderState_Stage = 2;
+pub const brunsli_internal_dec_SectionHeaderState_Stage_DONE:
+    brunsli_internal_dec_SectionHeaderState_Stage = 3;
 #[repr(C)]
 #[derive(Copy, Clone, Default)]
 pub struct brunsli_internal_dec_SectionHeaderState {
     pub stage: usize,
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_MetadataDecompressionStage {
-    #[default]
-    INITIAL = 0,
-    READ_LENGTH = 1,
-    DECOMPRESSING = 2,
-    DONE = 3,
-}
-impl From<i32> for brunsli_internal_dec_MetadataDecompressionStage {
-    fn from(n: i32) -> brunsli_internal_dec_MetadataDecompressionStage {
-        match n {
-            0 => brunsli_internal_dec_MetadataDecompressionStage::INITIAL,
-            1 => brunsli_internal_dec_MetadataDecompressionStage::READ_LENGTH,
-            2 => brunsli_internal_dec_MetadataDecompressionStage::DECOMPRESSING,
-            3 => brunsli_internal_dec_MetadataDecompressionStage::DONE,
-            _ => panic!(
-                "invalid brunsli_internal_dec_MetadataDecompressionStage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_MetadataDecompressionStage);
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_VarintState_Stage {
-    #[default]
-    INIT = 0,
-    READ_CONTINUATION = 1,
-    READ_DATA = 2,
-}
-impl From<i32> for brunsli_internal_dec_VarintState_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_VarintState_Stage {
-        match n {
-            0 => brunsli_internal_dec_VarintState_Stage::INIT,
-            1 => brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION,
-            2 => brunsli_internal_dec_VarintState_Stage::READ_DATA,
-            _ => panic!(
-                "invalid brunsli_internal_dec_VarintState_Stage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_VarintState_Stage);
+pub type brunsli_internal_dec_MetadataDecompressionStage = i32;
+pub const brunsli_internal_dec_MetadataDecompressionStage_INITIAL:
+    brunsli_internal_dec_MetadataDecompressionStage = 0;
+pub const brunsli_internal_dec_MetadataDecompressionStage_READ_LENGTH:
+    brunsli_internal_dec_MetadataDecompressionStage = 1;
+pub const brunsli_internal_dec_MetadataDecompressionStage_DECOMPRESSING:
+    brunsli_internal_dec_MetadataDecompressionStage = 2;
+pub const brunsli_internal_dec_MetadataDecompressionStage_DONE:
+    brunsli_internal_dec_MetadataDecompressionStage = 3;
+pub type brunsli_internal_dec_VarintState_Stage = u32;
+pub const brunsli_internal_dec_VarintState_Stage_INIT: brunsli_internal_dec_VarintState_Stage = 0;
+pub const brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION:
+    brunsli_internal_dec_VarintState_Stage = 1;
+pub const brunsli_internal_dec_VarintState_Stage_READ_DATA: brunsli_internal_dec_VarintState_Stage =
+    2;
 #[repr(C)]
 #[derive(Copy, Clone, Default)]
 pub struct brunsli_internal_dec_VarintState {
@@ -3242,77 +3021,63 @@ pub struct brunsli_internal_dec_VarintState {
     pub value: usize,
     pub i: usize,
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_JpegInternalsState_Stage {
-    #[default]
-    INIT = 0,
-    READ_MARKERS = 1,
-    READ_DRI = 2,
-    DECODE_HUFFMAN_MASK = 16,
-    READ_HUFFMAN_LAST = 17,
-    READ_HUFFMAN_SIMPLE = 18,
-    READ_HUFFMAN_MAX_LEN = 19,
-    READ_HUFFMAN_COUNT = 20,
-    READ_HUFFMAN_PERMUTATION = 21,
-    HUFFMAN_UPDATE = 22,
-    PREPARE_READ_SCANS = 32,
-    DECODE_SCAN_MASK = 64,
-    READ_SCAN_COMMON = 65,
-    READ_SCAN_COMPONENT = 66,
-    READ_SCAN_RESET_POINT_CONTINUATION = 67,
-    READ_SCAN_RESET_POINT_DATA = 68,
-    READ_SCAN_ZERO_RUN_CONTINUATION = 69,
-    READ_SCAN_ZERO_RUN_DATA = 70,
-    READ_NUM_QUANT = 128,
-    READ_QUANT = 129,
-    READ_COMP_ID_SCHEME = 130,
-    READ_COMP_ID = 131,
-    READ_NUM_PADDING_BITS = 132,
-    READ_PADDING_BITS = 133,
-    ITERATE_MARKERS = 134,
-    READ_INTERMARKER_LENGTH = 135,
-    READ_INTERMARKER_DATA = 136,
-    DONE = 137,
-}
-impl From<i32> for brunsli_internal_dec_JpegInternalsState_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_JpegInternalsState_Stage {
-        match n {
-            0 => brunsli_internal_dec_JpegInternalsState_Stage::INIT,
-            1 => brunsli_internal_dec_JpegInternalsState_Stage::READ_MARKERS,
-            2 => brunsli_internal_dec_JpegInternalsState_Stage::READ_DRI,
-            16 => brunsli_internal_dec_JpegInternalsState_Stage::DECODE_HUFFMAN_MASK,
-            17 => brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_LAST,
-            18 => brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_SIMPLE,
-            19 => brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_MAX_LEN,
-            20 => brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_COUNT,
-            21 => brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_PERMUTATION,
-            22 => brunsli_internal_dec_JpegInternalsState_Stage::HUFFMAN_UPDATE,
-            32 => brunsli_internal_dec_JpegInternalsState_Stage::PREPARE_READ_SCANS,
-            64 => brunsli_internal_dec_JpegInternalsState_Stage::DECODE_SCAN_MASK,
-            65 => brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMMON,
-            66 => brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMPONENT,
-            67 => brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_CONTINUATION,
-            68 => brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_DATA,
-            69 => brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_CONTINUATION,
-            70 => brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_DATA,
-            128 => brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_QUANT,
-            129 => brunsli_internal_dec_JpegInternalsState_Stage::READ_QUANT,
-            130 => brunsli_internal_dec_JpegInternalsState_Stage::READ_COMP_ID_SCHEME,
-            131 => brunsli_internal_dec_JpegInternalsState_Stage::READ_COMP_ID,
-            132 => brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_PADDING_BITS,
-            133 => brunsli_internal_dec_JpegInternalsState_Stage::READ_PADDING_BITS,
-            134 => brunsli_internal_dec_JpegInternalsState_Stage::ITERATE_MARKERS,
-            135 => brunsli_internal_dec_JpegInternalsState_Stage::READ_INTERMARKER_LENGTH,
-            136 => brunsli_internal_dec_JpegInternalsState_Stage::READ_INTERMARKER_DATA,
-            137 => brunsli_internal_dec_JpegInternalsState_Stage::DONE,
-            _ => panic!(
-                "invalid brunsli_internal_dec_JpegInternalsState_Stage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_JpegInternalsState_Stage);
+pub type brunsli_internal_dec_JpegInternalsState_Stage = u32;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_INIT:
+    brunsli_internal_dec_JpegInternalsState_Stage = 0;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_MARKERS:
+    brunsli_internal_dec_JpegInternalsState_Stage = 1;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_DRI:
+    brunsli_internal_dec_JpegInternalsState_Stage = 2;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_DECODE_HUFFMAN_MASK:
+    brunsli_internal_dec_JpegInternalsState_Stage = 16;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_LAST:
+    brunsli_internal_dec_JpegInternalsState_Stage = 17;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_SIMPLE:
+    brunsli_internal_dec_JpegInternalsState_Stage = 18;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_MAX_LEN:
+    brunsli_internal_dec_JpegInternalsState_Stage = 19;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_COUNT:
+    brunsli_internal_dec_JpegInternalsState_Stage = 20;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_PERMUTATION:
+    brunsli_internal_dec_JpegInternalsState_Stage = 21;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_HUFFMAN_UPDATE:
+    brunsli_internal_dec_JpegInternalsState_Stage = 22;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_PREPARE_READ_SCANS:
+    brunsli_internal_dec_JpegInternalsState_Stage = 32;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_DECODE_SCAN_MASK:
+    brunsli_internal_dec_JpegInternalsState_Stage = 64;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON:
+    brunsli_internal_dec_JpegInternalsState_Stage = 65;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT:
+    brunsli_internal_dec_JpegInternalsState_Stage = 66;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION:
+    brunsli_internal_dec_JpegInternalsState_Stage = 67;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA:
+    brunsli_internal_dec_JpegInternalsState_Stage = 68;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION:
+    brunsli_internal_dec_JpegInternalsState_Stage = 69;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA:
+    brunsli_internal_dec_JpegInternalsState_Stage = 70;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_NUM_QUANT:
+    brunsli_internal_dec_JpegInternalsState_Stage = 128;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_QUANT:
+    brunsli_internal_dec_JpegInternalsState_Stage = 129;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_COMP_ID_SCHEME:
+    brunsli_internal_dec_JpegInternalsState_Stage = 130;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_COMP_ID:
+    brunsli_internal_dec_JpegInternalsState_Stage = 131;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_NUM_PADDING_BITS:
+    brunsli_internal_dec_JpegInternalsState_Stage = 132;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_PADDING_BITS:
+    brunsli_internal_dec_JpegInternalsState_Stage = 133;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_ITERATE_MARKERS:
+    brunsli_internal_dec_JpegInternalsState_Stage = 134;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_INTERMARKER_LENGTH:
+    brunsli_internal_dec_JpegInternalsState_Stage = 135;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_INTERMARKER_DATA:
+    brunsli_internal_dec_JpegInternalsState_Stage = 136;
+pub const brunsli_internal_dec_JpegInternalsState_Stage_DONE:
+    brunsli_internal_dec_JpegInternalsState_Stage = 137;
 #[repr(C)]
 #[derive(Clone, Default)]
 pub struct brunsli_internal_dec_JpegInternalsState {
@@ -3337,43 +3102,29 @@ pub struct brunsli_internal_dec_JpegInternalsState {
     pub num_padding_bits: usize,
     pub intermarker_length: usize,
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_QuantDataState_Stage {
-    #[default]
-    INIT = 0,
-    READ_NUM_QUANT = 1,
-    READ_STOCK = 2,
-    READ_Q_FACTOR = 3,
-    READ_DIFF_IS_ZERO = 4,
-    READ_DIFF_SIGN = 5,
-    READ_DIFF = 6,
-    APPLY_DIFF = 7,
-    UPDATE = 8,
-    READ_QUANT_IDX = 9,
-    FINISH = 10,
-}
-impl From<i32> for brunsli_internal_dec_QuantDataState_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_QuantDataState_Stage {
-        match n {
-            0 => brunsli_internal_dec_QuantDataState_Stage::INIT,
-            1 => brunsli_internal_dec_QuantDataState_Stage::READ_NUM_QUANT,
-            2 => brunsli_internal_dec_QuantDataState_Stage::READ_STOCK,
-            3 => brunsli_internal_dec_QuantDataState_Stage::READ_Q_FACTOR,
-            4 => brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_IS_ZERO,
-            5 => brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_SIGN,
-            6 => brunsli_internal_dec_QuantDataState_Stage::READ_DIFF,
-            7 => brunsli_internal_dec_QuantDataState_Stage::APPLY_DIFF,
-            8 => brunsli_internal_dec_QuantDataState_Stage::UPDATE,
-            9 => brunsli_internal_dec_QuantDataState_Stage::READ_QUANT_IDX,
-            10 => brunsli_internal_dec_QuantDataState_Stage::FINISH,
-            _ => panic!(
-                "invalid brunsli_internal_dec_QuantDataState_Stage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_QuantDataState_Stage);
+pub type brunsli_internal_dec_QuantDataState_Stage = u32;
+pub const brunsli_internal_dec_QuantDataState_Stage_INIT:
+    brunsli_internal_dec_QuantDataState_Stage = 0;
+pub const brunsli_internal_dec_QuantDataState_Stage_READ_NUM_QUANT:
+    brunsli_internal_dec_QuantDataState_Stage = 1;
+pub const brunsli_internal_dec_QuantDataState_Stage_READ_STOCK:
+    brunsli_internal_dec_QuantDataState_Stage = 2;
+pub const brunsli_internal_dec_QuantDataState_Stage_READ_Q_FACTOR:
+    brunsli_internal_dec_QuantDataState_Stage = 3;
+pub const brunsli_internal_dec_QuantDataState_Stage_READ_DIFF_IS_ZERO:
+    brunsli_internal_dec_QuantDataState_Stage = 4;
+pub const brunsli_internal_dec_QuantDataState_Stage_READ_DIFF_SIGN:
+    brunsli_internal_dec_QuantDataState_Stage = 5;
+pub const brunsli_internal_dec_QuantDataState_Stage_READ_DIFF:
+    brunsli_internal_dec_QuantDataState_Stage = 6;
+pub const brunsli_internal_dec_QuantDataState_Stage_APPLY_DIFF:
+    brunsli_internal_dec_QuantDataState_Stage = 7;
+pub const brunsli_internal_dec_QuantDataState_Stage_UPDATE:
+    brunsli_internal_dec_QuantDataState_Stage = 8;
+pub const brunsli_internal_dec_QuantDataState_Stage_READ_QUANT_IDX:
+    brunsli_internal_dec_QuantDataState_Stage = 9;
+pub const brunsli_internal_dec_QuantDataState_Stage_FINISH:
+    brunsli_internal_dec_QuantDataState_Stage = 10;
 #[repr(C)]
 #[derive(Clone, Default)]
 pub struct brunsli_internal_dec_QuantDataState {
@@ -3387,37 +3138,23 @@ pub struct brunsli_internal_dec_QuantDataState {
     pub sign: i32,
     pub predictor: Vec<u8>,
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_HistogramDataState_Stage {
-    #[default]
-    INIT = 0,
-    READ_SCHEME = 1,
-    READ_NUM_HISTOGRAMS = 2,
-    READ_CONTEXT_MAP_CODE = 3,
-    READ_CONTEXT_MAP = 4,
-    READ_HISTOGRAMS = 5,
-    SKIP_CONTENT = 6,
-    DONE = 7,
-}
-impl From<i32> for brunsli_internal_dec_HistogramDataState_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_HistogramDataState_Stage {
-        match n {
-            0 => brunsli_internal_dec_HistogramDataState_Stage::INIT,
-            1 => brunsli_internal_dec_HistogramDataState_Stage::READ_SCHEME,
-            2 => brunsli_internal_dec_HistogramDataState_Stage::READ_NUM_HISTOGRAMS,
-            3 => brunsli_internal_dec_HistogramDataState_Stage::READ_CONTEXT_MAP_CODE,
-            4 => brunsli_internal_dec_HistogramDataState_Stage::READ_CONTEXT_MAP,
-            5 => brunsli_internal_dec_HistogramDataState_Stage::READ_HISTOGRAMS,
-            6 => brunsli_internal_dec_HistogramDataState_Stage::SKIP_CONTENT,
-            7 => brunsli_internal_dec_HistogramDataState_Stage::DONE,
-            _ => panic!(
-                "invalid brunsli_internal_dec_HistogramDataState_Stage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_HistogramDataState_Stage);
+pub type brunsli_internal_dec_HistogramDataState_Stage = u32;
+pub const brunsli_internal_dec_HistogramDataState_Stage_INIT:
+    brunsli_internal_dec_HistogramDataState_Stage = 0;
+pub const brunsli_internal_dec_HistogramDataState_Stage_READ_SCHEME:
+    brunsli_internal_dec_HistogramDataState_Stage = 1;
+pub const brunsli_internal_dec_HistogramDataState_Stage_READ_NUM_HISTOGRAMS:
+    brunsli_internal_dec_HistogramDataState_Stage = 2;
+pub const brunsli_internal_dec_HistogramDataState_Stage_READ_CONTEXT_MAP_CODE:
+    brunsli_internal_dec_HistogramDataState_Stage = 3;
+pub const brunsli_internal_dec_HistogramDataState_Stage_READ_CONTEXT_MAP:
+    brunsli_internal_dec_HistogramDataState_Stage = 4;
+pub const brunsli_internal_dec_HistogramDataState_Stage_READ_HISTOGRAMS:
+    brunsli_internal_dec_HistogramDataState_Stage = 5;
+pub const brunsli_internal_dec_HistogramDataState_Stage_SKIP_CONTENT:
+    brunsli_internal_dec_HistogramDataState_Stage = 6;
+pub const brunsli_internal_dec_HistogramDataState_Stage_DONE:
+    brunsli_internal_dec_HistogramDataState_Stage = 7;
 #[repr(C)]
 #[derive(Default)]
 pub struct brunsli_internal_dec_HistogramDataState {
@@ -3531,20 +3268,18 @@ pub unsafe fn DecodeVarint_144(
     mut br: *mut brunsli_BrunsliBitReader,
     mut max_bits: usize,
 ) -> bool {
-    if (((*s).stage as i32) == (brunsli_internal_dec_VarintState_Stage::INIT as i32)) {
+    if (((*s).stage as i32) == (brunsli_internal_dec_VarintState_Stage_INIT as i32)) {
         (*s).value = 0_usize;
         (*s).i = 0_usize;
-        (*s).stage = (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION).clone();
+        (*s).stage = (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION).clone();
     }
     'loop_: while true {
         'switch: {
             let __match_cond = ((*s).stage as i32);
             match __match_cond {
-                __v if __v
-                    == (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION as i32) =>
-                {
+                __v if __v == (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION as i32) => {
                     if (((*s).i) >= (max_bits)) {
-                        (*s).stage = (brunsli_internal_dec_VarintState_Stage::INIT).clone();
+                        (*s).stage = (brunsli_internal_dec_VarintState_Stage_INIT).clone();
                         return true;
                     }
                     if ((((*s).i).wrapping_add(1_usize)) != (max_bits)) {
@@ -3552,14 +3287,14 @@ pub unsafe fn DecodeVarint_144(
                             return false;
                         }
                         if !((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) != 0) {
-                            (*s).stage = (brunsli_internal_dec_VarintState_Stage::INIT).clone();
+                            (*s).stage = (brunsli_internal_dec_VarintState_Stage_INIT).clone();
                             return true;
                         }
                     }
-                    (*s).stage = (brunsli_internal_dec_VarintState_Stage::READ_DATA).clone();
+                    (*s).stage = (brunsli_internal_dec_VarintState_Stage_READ_DATA).clone();
                     continue 'loop_;
                 }
-                __v if __v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
+                __v if __v == (brunsli_internal_dec_VarintState_Stage_READ_DATA as i32) => {
                     if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
                         return false;
                     }
@@ -3567,8 +3302,7 @@ pub unsafe fn DecodeVarint_144(
                         ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) as usize);
                     (*s).value |= ((next_bit) << ((*s).i));
                     (*s).i.prefix_inc();
-                    (*s).stage =
-                        (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION).clone();
+                    (*s).stage = (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION).clone();
                     continue 'loop_;
                 }
                 _ => {
@@ -3594,32 +3328,29 @@ pub unsafe fn DecodeLimitedVarint_145(
     mut br: *mut brunsli_BrunsliBitReader,
     mut max_symbols: usize,
 ) -> bool {
-    if (((*s).stage as i32) == (brunsli_internal_dec_VarintState_Stage::INIT as i32)) {
+    if (((*s).stage as i32) == (brunsli_internal_dec_VarintState_Stage_INIT as i32)) {
         (*s).value = 0_usize;
         (*s).i = 0_usize;
-        (*s).stage = (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION).clone();
+        (*s).stage = (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION).clone();
     }
     'loop_: while true {
         'switch: {
             let __match_cond = ((*s).stage as i32);
             match __match_cond {
-                __v if __v
-                    == (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION as i32) =>
-                {
+                __v if __v == (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION as i32) => {
                     if (((*s).i) < (max_symbols)) {
                         if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
                             return false;
                         }
                         if ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) != 0) {
-                            (*s).stage =
-                                (brunsli_internal_dec_VarintState_Stage::READ_DATA).clone();
+                            (*s).stage = (brunsli_internal_dec_VarintState_Stage_READ_DATA).clone();
                             continue 'loop_;
                         }
                     }
-                    (*s).stage = (brunsli_internal_dec_VarintState_Stage::INIT).clone();
+                    (*s).stage = (brunsli_internal_dec_VarintState_Stage_INIT).clone();
                     return true;
                 }
-                __v if __v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
+                __v if __v == (brunsli_internal_dec_VarintState_Stage_READ_DATA as i32) => {
                     if !(unsafe { BrunsliBitReaderCanRead_134(br, (2_u64 as usize)) }) {
                         return false;
                     }
@@ -3627,8 +3358,7 @@ pub unsafe fn DecodeLimitedVarint_145(
                         ((unsafe { BrunsliBitReaderRead_126(br, (2_u64 as u32)) }) as usize);
                     (*s).value |= ((next_bits) << (((*s).i as u64).wrapping_mul((2_u64 as u64))));
                     (*s).i.prefix_inc();
-                    (*s).stage =
-                        (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION).clone();
+                    (*s).stage = (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION).clone();
                     continue 'loop_;
                 }
                 _ => {
@@ -3654,32 +3384,29 @@ pub unsafe fn DecodeLimitedVarint_146(
     mut br: *mut brunsli_BrunsliBitReader,
     mut max_symbols: usize,
 ) -> bool {
-    if (((*s).stage as i32) == (brunsli_internal_dec_VarintState_Stage::INIT as i32)) {
+    if (((*s).stage as i32) == (brunsli_internal_dec_VarintState_Stage_INIT as i32)) {
         (*s).value = 0_usize;
         (*s).i = 0_usize;
-        (*s).stage = (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION).clone();
+        (*s).stage = (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION).clone();
     }
     'loop_: while true {
         'switch: {
             let __match_cond = ((*s).stage as i32);
             match __match_cond {
-                __v if __v
-                    == (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION as i32) =>
-                {
+                __v if __v == (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION as i32) => {
                     if (((*s).i) < (max_symbols)) {
                         if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
                             return false;
                         }
                         if ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) != 0) {
-                            (*s).stage =
-                                (brunsli_internal_dec_VarintState_Stage::READ_DATA).clone();
+                            (*s).stage = (brunsli_internal_dec_VarintState_Stage_READ_DATA).clone();
                             continue 'loop_;
                         }
                     }
-                    (*s).stage = (brunsli_internal_dec_VarintState_Stage::INIT).clone();
+                    (*s).stage = (brunsli_internal_dec_VarintState_Stage_INIT).clone();
                     return true;
                 }
-                __v if __v == (brunsli_internal_dec_VarintState_Stage::READ_DATA as i32) => {
+                __v if __v == (brunsli_internal_dec_VarintState_Stage_READ_DATA as i32) => {
                     if !(unsafe { BrunsliBitReaderCanRead_134(br, (8_u64 as usize)) }) {
                         return false;
                     }
@@ -3687,8 +3414,7 @@ pub unsafe fn DecodeLimitedVarint_146(
                         ((unsafe { BrunsliBitReaderRead_126(br, (8_u64 as u32)) }) as usize);
                     (*s).value |= ((next_bits) << (((*s).i as u64).wrapping_mul((8_u64 as u64))));
                     (*s).i.prefix_inc();
-                    (*s).stage =
-                        (brunsli_internal_dec_VarintState_Stage::READ_CONTINUATION).clone();
+                    (*s).stage = (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION).clone();
                     continue 'loop_;
                 }
                 _ => {
@@ -3785,12 +3511,12 @@ pub unsafe fn ProcessMetaData_149(
         'switch: {
             let __match_cond = (*state).stage;
             match __match_cond {
-                __v if __v == (brunsli_internal_dec_MetadataState_Stage::READ_MARKER as usize) => {
+                __v if __v == (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize) => {
                     (*state).marker = (*data.offset((pos.postfix_inc()) as isize));
                     if (((*state).marker as i32) == (217)) {
                         (*jpg).tail_data = Vec::new();
                         (*state).stage =
-                            (brunsli_internal_dec_MetadataState_Stage::READ_TAIL as usize).clone();
+                            (brunsli_internal_dec_MetadataState_Stage_READ_TAIL as usize).clone();
                         continue 'loop_;
                     } else if (((*state).marker as i32) < (64)) {
                         (*state).short_marker_count.postfix_inc();
@@ -3811,7 +3537,7 @@ pub unsafe fn ProcessMetaData_149(
                             return false;
                         }
                         (*state).stage =
-                            (brunsli_internal_dec_MetadataState_Stage::READ_CODE as usize).clone();
+                            (brunsli_internal_dec_MetadataState_Stage_READ_CODE as usize).clone();
                         continue 'loop_;
                     }
                     if (((*state).marker as i32) != (254))
@@ -3820,10 +3546,10 @@ pub unsafe fn ProcessMetaData_149(
                         return false;
                     }
                     (*state).stage =
-                        (brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_HI as usize).clone();
+                        (brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_HI as usize).clone();
                     continue 'loop_;
                 }
-                __v if __v == (brunsli_internal_dec_MetadataState_Stage::READ_TAIL as usize) => {
+                __v if __v == (brunsli_internal_dec_MetadataState_Stage_READ_TAIL as usize) => {
                     (unsafe {
                         let _begin: *const u8 = data.offset((pos) as isize);
                         let _end: *const u8 = data.offset((len) as isize);
@@ -3832,25 +3558,25 @@ pub unsafe fn ProcessMetaData_149(
                     pos = len;
                     continue 'loop_;
                 }
-                __v if __v == (brunsli_internal_dec_MetadataState_Stage::READ_CODE as usize) => {
+                __v if __v == (brunsli_internal_dec_MetadataState_Stage_READ_CODE as usize) => {
                     let code: u8 = (*data.offset((pos.postfix_inc()) as isize));
                     (*jpg)
                         .app_data
                         .push((unsafe { GenerateAppMarker_148((*state).marker, code) }));
                     (*state).stage =
-                        (brunsli_internal_dec_MetadataState_Stage::READ_MARKER as usize).clone();
+                        (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize).clone();
                     continue 'loop_;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_HI as usize) =>
+                    == (brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_HI as usize) =>
                 {
                     (*state).length_hi = (*data.offset((pos.postfix_inc()) as isize));
                     (*state).stage =
-                        (brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_LO as usize).clone();
+                        (brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_LO as usize).clone();
                     continue 'loop_;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_LO as usize) =>
+                    == (brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_LO as usize) =>
                 {
                     let lo: u8 = (*data.offset((pos.postfix_inc()) as isize));
                     let mut marker_len: usize =
@@ -3887,18 +3613,18 @@ pub unsafe fn ProcessMetaData_149(
                     );
                     (*state).multibyte_sink = ((*dest).last_mut().unwrap());
                     (*state).stage = (if (((*state).remaining_multibyte_length) > (0_usize)) {
-                        brunsli_internal_dec_MetadataState_Stage::READ_MULTIBYTE
+                        brunsli_internal_dec_MetadataState_Stage_READ_MULTIBYTE
                     } else {
-                        brunsli_internal_dec_MetadataState_Stage::READ_MARKER
+                        brunsli_internal_dec_MetadataState_Stage_READ_MARKER
                     } as usize);
                     continue 'loop_;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_MetadataState_Stage::READ_MULTIBYTE as usize) =>
+                    == (brunsli_internal_dec_MetadataState_Stage_READ_MULTIBYTE as usize) =>
                 {
                     let mut chunk_size: usize = ({
-                        let mut __tmp_0 = ((*state).remaining_multibyte_length as u64);
-                        let mut __tmp_1 = ((len).wrapping_sub(pos) as u64);
+                        let mut __tmp_0: u64 = ((*state).remaining_multibyte_length as u64);
+                        let mut __tmp_1: u64 = ((len).wrapping_sub(pos) as u64);
                         (*if *&mut __tmp_0 <= *&mut __tmp_1 {
                             (&mut __tmp_0) as *const _
                         } else {
@@ -3916,9 +3642,8 @@ pub unsafe fn ProcessMetaData_149(
                         ((*state).remaining_multibyte_length).wrapping_sub(chunk_size);
                     pos = (pos).wrapping_add(chunk_size);
                     if (((*state).remaining_multibyte_length) == (0_usize)) {
-                        (*state).stage = (brunsli_internal_dec_MetadataState_Stage::READ_MARKER
-                            as usize)
-                            .clone();
+                        (*state).stage =
+                            (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize).clone();
                     };
                     continue 'loop_;
                 }
@@ -3945,11 +3670,10 @@ pub unsafe fn DecodeHuffmanCode_150(
             let __match_cond = ((*js).stage as i32);
             match __match_cond {
                 __v if __v
-                    == (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_LAST
-                        as i32) =>
+                    == (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_LAST as i32) =>
                 {
                     if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
-                        return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+                        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                     }
                     (*js).is_known_last_huffman_code =
                         ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) as usize);
@@ -3957,12 +3681,11 @@ pub unsafe fn DecodeHuffmanCode_150(
                         .huffman_code
                         .push(<brunsli_JPEGHuffmanCode>::default());
                     (*js).stage =
-                        (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_SIMPLE)
-                            .clone();
+                        (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_SIMPLE).clone();
                     continue 'loop_;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_SIMPLE
+                    == (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_SIMPLE
                         as i32) =>
                 {
                     if !(unsafe {
@@ -3971,7 +3694,7 @@ pub unsafe fn DecodeHuffmanCode_150(
                             (((5) + (!((*js).is_known_last_huffman_code != 0) as i32)) as usize),
                         )
                     }) {
-                        return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+                        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                     }
                     let mut huff: *mut brunsli_JPEGHuffmanCode =
                         (((*jpg).huffman_code).last_mut().unwrap());
@@ -4057,7 +3780,7 @@ pub unsafe fn DecodeHuffmanCode_150(
                             };
                         }
                         (*js).stage =
-                            (brunsli_internal_dec_JpegInternalsState_Stage::HUFFMAN_UPDATE).clone();
+                            (brunsli_internal_dec_JpegInternalsState_Stage_HUFFMAN_UPDATE).clone();
                     } else {
                         (unsafe {
                             let _values: Vec<u8> = if (*js).is_dc_table {
@@ -4080,17 +3803,17 @@ pub unsafe fn DecodeHuffmanCode_150(
                             (*js).p.Init(_values)
                         });
                         (*js).stage =
-                            (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_MAX_LEN)
+                            (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_MAX_LEN)
                                 .clone();
                     };
                     continue 'loop_;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_MAX_LEN
+                    == (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_MAX_LEN
                         as i32) =>
                 {
                     if !(unsafe { BrunsliBitReaderCanRead_134(br, 4_usize) }) {
-                        return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+                        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                     }
                     (*js).max_len = (((unsafe { BrunsliBitReaderRead_126(br, 4_u32) })
                         .wrapping_add(1_u32)) as usize);
@@ -4108,11 +3831,11 @@ pub unsafe fn DecodeHuffmanCode_150(
                         )) as usize);
                     (*js).i = 1_usize;
                     (*js).stage =
-                        (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_COUNT).clone();
+                        (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_COUNT).clone();
                     continue 'loop_;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_COUNT
+                    == (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_COUNT
                         as i32) =>
                 {
                     let mut huff: *mut brunsli_JPEGHuffmanCode =
@@ -4121,9 +3844,9 @@ pub unsafe fn DecodeHuffmanCode_150(
                         let mut shift: usize =
                             (kJpegHuffmanMaxBitLength_7 as usize).wrapping_sub((*js).i);
                         let mut count_limit: usize = ({
-                            let mut __tmp_0 =
+                            let mut __tmp_0: u64 =
                                 (((*js).max_count).wrapping_sub((*js).total_count) as u64);
-                            let mut __tmp_1 = ((((*js).space) >> (shift)) as u64);
+                            let mut __tmp_1: u64 = ((((*js).space) >> (shift)) as u64);
                             (*if *&mut __tmp_0 <= *&mut __tmp_1 {
                                 (&mut __tmp_0) as *const _
                             } else {
@@ -4134,13 +3857,13 @@ pub unsafe fn DecodeHuffmanCode_150(
                             let mut nbits: i32 =
                                 ((unsafe { Log2FloorNonZero_74((count_limit as u32)) }) + (1));
                             if !(unsafe { BrunsliBitReaderCanRead_134(br, (nbits as usize)) }) {
-                                return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+                                return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                             }
                             let mut count: usize =
                                 ((unsafe { BrunsliBitReaderRead_126(br, (nbits as u32)) })
                                     as usize);
                             if ((count) > (count_limit)) {
-                                return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+                                return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
                             }
                             (&mut (*huff)).counts[((*js).i)] = (count as i32);
                             (*js).total_count = ((*js).total_count).wrapping_add(count);
@@ -4153,12 +3876,12 @@ pub unsafe fn DecodeHuffmanCode_150(
                     (&mut (*huff)).counts[((*js).max_len)].prefix_inc();
                     (*js).i = 0_usize;
                     (*js).stage =
-                        (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_PERMUTATION)
+                        (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_PERMUTATION)
                             .clone();
                     continue 'loop_;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_PERMUTATION
+                    == (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_PERMUTATION
                         as i32) =>
                 {
                     let mut huff: *mut brunsli_JPEGHuffmanCode =
@@ -4172,14 +3895,14 @@ pub unsafe fn DecodeHuffmanCode_150(
                                 ((((nbits) + (1)) >> (1_u32)) as usize),
                             )
                         }) {
-                            return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+                            return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                         }
                         let mut value: u8 = 0_u8;
                         if !(unsafe {
                             let _code: usize = (*js).varint.value;
                             (*js).p.Remove(_code, (&mut value as *mut u8))
                         }) {
-                            return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+                            return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
                         }
                         (&mut (*huff)).values[((*js).i)] = (value as i32);
                         (*js).i.prefix_inc();
@@ -4187,33 +3910,33 @@ pub unsafe fn DecodeHuffmanCode_150(
                     }
                     (&mut (*huff)).values[((*js).total_count)] = kJpegHuffmanAlphabetSize_8;
                     (*js).stage =
-                        (brunsli_internal_dec_JpegInternalsState_Stage::HUFFMAN_UPDATE).clone();
+                        (brunsli_internal_dec_JpegInternalsState_Stage_HUFFMAN_UPDATE).clone();
                     continue 'loop_;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_JpegInternalsState_Stage::HUFFMAN_UPDATE as i32) =>
+                    == (brunsli_internal_dec_JpegInternalsState_Stage_HUFFMAN_UPDATE as i32) =>
                 {
                     if (*(((*jpg).huffman_code).last_mut().unwrap())).is_last {
                         (*js).terminal_huffman_code_count.postfix_inc();
                     }
                     if ((*js).is_known_last_huffman_code != 0) {
                         (unsafe { (*js).p.Clear() });
-                        return brunsli_BrunsliStatus::BRUNSLI_OK;
+                        return brunsli_BrunsliStatus_BRUNSLI_OK;
                     }
                     if (((*jpg).huffman_code.len()) >= (kMaxDHTMarkers_10 as usize)) {
-                        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+                        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
                     }
                     (*js).stage =
-                        (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_LAST).clone();
+                        (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_LAST).clone();
                     continue 'loop_;
                 }
                 _ => {
-                    return brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR;
+                    return brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR;
                 }
             }
         };
     }
-    return brunsli_BrunsliStatus::BRUNSLI_OK;
+    return brunsli_BrunsliStatus_BRUNSLI_OK;
 }
 pub unsafe fn DecodeScanInfo_151(
     mut state: *mut brunsli_internal_dec_State,
@@ -4228,55 +3951,55 @@ pub unsafe fn DecodeScanInfo_151(
     'loop_: while true {
         'switch: {
             let __match_cond = ((*js).stage as i32);
-            match __match_cond { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMMON as i32 ) )  =>  { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
+            match __match_cond { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 ) )  =>  { {  let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
+  ;
  ;
- ;
- if ! ( unsafe { BrunsliBitReaderCanRead_134 ( br , 22_usize , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
+ if ! ( unsafe { BrunsliBitReaderCanRead_134 ( br , 22_usize , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
  } ( * si  ) . Ss   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 6_u32 , ) } )  as i32 ) )  ;
  ( * si  ) . Se   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 6_u32 , ) } )  as i32 ) )  ;
  ( * si  ) . Ah   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 4_u32 , ) } )  as i32 ) )  ;
  ( * si  ) . Al   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 4_u32 , ) } )  as i32 ) )  ;
  ( * si  ) . num_components   = ( ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  ) . wrapping_add ( 1_u32 ) ) as usize )  ;
  ( * js ) . j   = 0_usize  ;
- ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMPONENT ).clone() ;
+ ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT ).clone() ;
  ;
  continue 'loop_ ;
- }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMPONENT as i32 ) )  =>  { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT as i32 ) )  =>  { {  let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
+  ;
  ;
- ;
- if ( ( ( * js ) . j  ) < ( ( * si  ) . num_components  ) ) { if ! ( unsafe { BrunsliBitReaderCanRead_134 ( br , 6_usize , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
+ if ( ( ( * js ) . j  ) < ( ( * si  ) . num_components  ) ) { if ! ( unsafe { BrunsliBitReaderCanRead_134 ( br , 6_usize , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
  } ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . comp_idx   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as u8 ) )  ;
  ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . dc_tbl_idx   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as i32 ) )  ;
  ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . ac_tbl_idx   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as i32 ) )  ;
  ( * js ) . j  .postfix_inc() ;
  } else { ( * js ) . last_block_idx   = - 1_i32  ;
- ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_CONTINUATION ).clone() ;
+ ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION ).clone() ;
  } ;
  continue 'loop_ ;
- }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_CONTINUATION as i32 ) )  =>  { if ! ( unsafe { BrunsliBitReaderCanRead_134 ( br , 1_usize , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
- } if ( ( unsafe { BrunsliBitReaderRead_126 ( br , 1_u32 , ) } )  != 0 ) { ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_DATA ).clone() ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION as i32 ) )  =>  { { if ! ( unsafe { BrunsliBitReaderCanRead_134 ( br , 1_usize , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
+ } if ( ( unsafe { BrunsliBitReaderRead_126 ( br , 1_u32 , ) } )  != 0 ) { ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA ).clone() ;
  } else { ( * js ) . last_block_idx   = 0  ;
  ( * js ) . last_num   = 0  ;
- ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_CONTINUATION ).clone() ;
+ ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION ).clone() ;
  } ;
  continue 'loop_ ;
- }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_DATA as i32 ) )  =>  { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA as i32 ) )  =>  { {  let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
+  ;
  ;
- ;
- if ! ( unsafe { DecodeVarint_144 ( ( & mut ( * js ) . varint  as *mut brunsli_internal_dec_VarintState ) , br , 28_usize , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
- } let mut block_idx : i32 = ( ( ( ( ( * js ) . last_block_idx  ) + ( ( ( ( * js ) . varint  . value  as i32 ) ) ) ) ) + ( 1 ) ) ;
- ;
+ if ! ( unsafe { DecodeVarint_144 ( ( & mut ( * js ) . varint  as *mut brunsli_internal_dec_VarintState ) , br , 28_usize , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
+ }  let mut block_idx : i32 = ( ( ( ( ( * js ) . last_block_idx  ) + ( ( ( ( * js ) . varint  . value  as i32 ) ) ) ) ) + ( 1 ) ) ;
+  ;
  ;
  ( * si  ) . reset_points  . push   ( block_idx as i32 )  ;
  ( * js ) . last_block_idx   = block_idx  ;
- if ( ( ( * js ) . last_block_idx  ) > ( ( ( ( 1 ) << ( 30 ) ) ) ) ) { return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN ;
- } ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_RESET_POINT_CONTINUATION ).clone() ;
+ if ( ( ( * js ) . last_block_idx  ) > ( ( ( ( 1 ) << ( 30 ) ) ) ) ) {  return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN  ;
+ } ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION ).clone() ;
  ;
  continue 'loop_ ;
- }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_CONTINUATION as i32 ) )  =>  { if ! ( unsafe { BrunsliBitReaderCanRead_134 ( br , 1_usize , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
- } if ( ( unsafe { BrunsliBitReaderRead_126 ( br , 1_u32 , ) } )  != 0 ) { ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_DATA ).clone() ;
- } else { ( unsafe { ( ( | | { if ( ( ( * js ) . last_num  ) > ( 0 ) ) { let mut info : brunsli_JPEGScanInfo_ExtraZeroRunInfo = <brunsli_JPEGScanInfo_ExtraZeroRunInfo >::default() ;
- ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION as i32 ) )  =>  { { if ! ( unsafe { BrunsliBitReaderCanRead_134 ( br , 1_usize , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
+ } if ( ( unsafe { BrunsliBitReaderRead_126 ( br , 1_u32 , ) } )  != 0 ) { ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA ).clone() ;
+ } else { ( unsafe { ( ( | | { if ( ( ( * js ) . last_num  ) > ( 0 ) ) {  let mut info : brunsli_JPEGScanInfo_ExtraZeroRunInfo = <brunsli_JPEGScanInfo_ExtraZeroRunInfo >::default() ;
+  ;
  ;
  info . block_idx   = ( * js ) . last_block_idx   ;
  info . num_extra_zero_runs   = ( * js ) . last_num   ;
@@ -4285,18 +4008,18 @@ pub unsafe fn DecodeScanInfo_151(
  ( * js ) . last_num   = 0  ;
  } } ) ) ( ) } ) ;
  ( * js ) . i  .prefix_inc() ;
- if ( ( ( * js ) . i  ) < ( ( * js ) . num_scans  ) ) { ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMMON ).clone() ;
+ if ( ( ( * js ) . i  ) < ( ( * js ) . num_scans  ) ) { ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON ).clone() ;
  ;
  continue 'loop_ ;
- } return brunsli_BrunsliStatus::BRUNSLI_OK ;
+ }  return brunsli_BrunsliStatus_BRUNSLI_OK  ;
  } ;
  continue 'loop_ ;
- }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_DATA as i32 ) )  =>  { if ! ( unsafe { DecodeVarint_144 ( ( & mut ( * js ) . varint  as *mut brunsli_internal_dec_VarintState ) , br , 28_usize , ) } )  { return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA ;
- } let mut block_idx : i32 = ( ( ( * js ) . last_block_idx  ) + ( ( ( ( * js ) . varint  . value  as i32 ) ) ) ) ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA as i32 ) )  =>  { { if ! ( unsafe { DecodeVarint_144 ( ( & mut ( * js ) . varint  as *mut brunsli_internal_dec_VarintState ) , br , 28_usize , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
+ }  let mut block_idx : i32 = ( ( ( * js ) . last_block_idx  ) + ( ( ( ( * js ) . varint  . value  as i32 ) ) ) ) ;
+  ;
  ;
- ;
- if ( ( block_idx ) > ( ( * js ) . last_block_idx  ) ) { ( unsafe { ( ( | | { if ( ( ( * js ) . last_num  ) > ( 0 ) ) { let mut info : brunsli_JPEGScanInfo_ExtraZeroRunInfo = <brunsli_JPEGScanInfo_ExtraZeroRunInfo >::default() ;
- ;
+ if ( ( block_idx ) > ( ( * js ) . last_block_idx  ) ) { ( unsafe { ( ( | | { if ( ( ( * js ) . last_num  ) > ( 0 ) ) {  let mut info : brunsli_JPEGScanInfo_ExtraZeroRunInfo = <brunsli_JPEGScanInfo_ExtraZeroRunInfo >::default() ;
+  ;
  ;
  info . block_idx   = ( * js ) . last_block_idx   ;
  info . num_extra_zero_runs   = ( * js ) . last_num   ;
@@ -4306,11 +4029,11 @@ pub unsafe fn DecodeScanInfo_151(
  } } ) ) ( ) } ) ;
  } ( * js ) . last_num  .prefix_inc() ;
  ( * js ) . last_block_idx   = block_idx  ;
- if ( ( ( * js ) . last_block_idx  ) > ( ( ( ( 1 ) << ( 30 ) ) ) ) ) { return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN ;
- } ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_ZERO_RUN_CONTINUATION ).clone() ;
+ if ( ( ( * js ) . last_block_idx  ) > ( ( ( ( 1 ) << ( 30 ) ) ) ) ) {  return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN  ;
+ } ( * js ) . stage   = (brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION ).clone() ;
  ;
  continue 'loop_ ;
- }, _ =>  { return brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR ;
+ } }, _ =>  {  return brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR  ;
  }, }
         };
     }
@@ -4479,7 +4202,7 @@ pub unsafe fn DecodeDC_157(
         }
     }
     if !(unsafe { (*in_).CanRead(5_usize) }) {
-        return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
     }
     (unsafe { EnsureSubdecodersInitialized_155(state, in_) });
     let mut ans: brunsli_ANSDecoder = (*s).ans_decoder.clone();
@@ -4522,7 +4245,7 @@ pub unsafe fn DecodeDC_157(
                         (*s).ans_decoder = (ans).clone();
                         (*s).bit_reader = (br).clone();
                         (*s).arith_decoder = (ac).clone();
-                        return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+                        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                     }
                     let is_empty_ctx: i32 = (unsafe {
                         IsEmptyBlockContext_106(
@@ -4639,9 +4362,9 @@ pub unsafe fn DecodeDC_157(
     (*s).bit_reader = (br).clone();
     (*s).arith_decoder = (ac).clone();
     if !(unsafe { FinalizeSubdecoders_156(state) }) {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
-    return brunsli_BrunsliStatus::BRUNSLI_OK;
+    return brunsli_BrunsliStatus_BRUNSLI_OK;
 }
 pub unsafe fn DecodeEmptyAcBlock_158(mut prev_sgn: *mut i32, mut prev_abs: *mut i32) {
     let mut k: i32 = 1;
@@ -4864,13 +4587,13 @@ pub unsafe fn DecodeAC_160(
         }
     }
     if !(unsafe { (*in_).CanRead(5_usize) }) {
-        return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
     }
     (unsafe { EnsureSubdecodersInitialized_155(state, in_) });
     if !(*ac_dc_state).ac_coeffs_order_decoded {
         'loop_: while (((*ac_dc_state).next_component) < (num_components)) {
             if !(unsafe { (*in_).CanRead(121_usize) }) {
-                return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+                return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
             }
             if !(unsafe {
                 DecodeCoeffOrder_152(
@@ -4881,7 +4604,7 @@ pub unsafe fn DecodeAC_160(
                     in_,
                 )
             }) {
-                return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+                return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
             }
             (*ac_dc_state).next_component.postfix_inc();
         }
@@ -4962,7 +4685,7 @@ pub unsafe fn DecodeAC_160(
                             (*ac_dc_state).next_component = i;
                             (*ac_dc_state).next_iy = iy;
                             (*ac_dc_state).next_x = c.x;
-                            return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+                            return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                         }
                         let mut num_nonzeros: usize =
                             (unsafe { DecodeAcBlock_159(&c as *const brunsli_AcBlockCookie) });
@@ -5007,9 +4730,9 @@ pub unsafe fn DecodeAC_160(
     (*comps).clear();
     (*comps).shrink_to_fit();
     if !(unsafe { FinalizeSubdecoders_156(state) }) {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
-    return brunsli_BrunsliStatus::BRUNSLI_OK;
+    return brunsli_BrunsliStatus_BRUNSLI_OK;
 }
 pub unsafe fn CheckCanRead_161(
     mut state: *mut brunsli_internal_dec_State,
@@ -5041,8 +4764,8 @@ pub unsafe fn SkipAvailableBytes_167(
 ) -> usize {
     let mut available: usize = (unsafe { GetBytesAvailable_166(state) });
     let mut skip_bytes: usize = ({
-        let mut __tmp_0 = (available as u64);
-        let mut __tmp_1 = (len as u64);
+        let mut __tmp_0: u64 = (available as u64);
+        let mut __tmp_1: u64 = (len as u64);
         (*if *&mut __tmp_0 <= *&mut __tmp_1 {
             (&mut __tmp_0) as *const _
         } else {
@@ -5061,7 +4784,7 @@ pub unsafe fn DecodeBase128_168(
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (9_usize)) && (((b) & (128_u64)) != 0) {
         if !(unsafe { CheckCanRead_161(state, (i).wrapping_add(1_usize)) }) {
-            return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+            return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
         }
         b = ((unsafe { PeekByte_164(state, i) }) as u64);
         (*val) = (((*val) as u64) | (((b) & (127_u64)) << ((i).wrapping_mul(7_usize)))) as usize;
@@ -5069,9 +4792,9 @@ pub unsafe fn DecodeBase128_168(
     }
     (unsafe { SkipBytes_165(state, i) });
     return if (((b) & (128_u64)) == (0_u64)) {
-        brunsli_BrunsliStatus::BRUNSLI_OK
+        brunsli_BrunsliStatus_BRUNSLI_OK
     } else {
-        brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN
+        brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN
     };
 }
 pub unsafe fn Fail_169(
@@ -5083,26 +4806,26 @@ pub unsafe fn Fail_169(
             as *mut brunsli_internal_dec_InternalState;
     (*s).result = result;
     (*s).last_stage = (*state).stage;
-    return brunsli_internal_dec_Stage::ERROR;
+    return brunsli_internal_dec_Stage_ERROR;
 }
 pub unsafe fn ReadTag_170(
     mut state: *mut brunsli_internal_dec_State,
     mut section: *mut brunsli_internal_dec_SectionState,
 ) -> brunsli_BrunsliStatus {
     if !(unsafe { CheckCanReadByte_162(state) }) {
-        return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
     }
     let marker: u8 = (unsafe { ReadByte_163(state) });
     let tag: usize = (((marker as i32) >> (3_u32)) as usize);
     if ((tag) == (0_usize)) || ((tag) > (15_usize)) {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
     (*section).tag = tag;
     let wiring_type: usize = (((marker as u32) & (7_u32)) as usize);
     if ((wiring_type) != (kBrunsliWiringTypeVarint_25 as usize))
         && ((wiring_type) != (kBrunsliWiringTypeLengthDelimited_26 as usize))
     {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
     (*section).is_section = ((wiring_type) == (kBrunsliWiringTypeLengthDelimited_26 as usize));
     let tag_bit: u32 = ((1_u32) << (tag));
@@ -5118,10 +4841,10 @@ pub unsafe fn ReadTag_170(
             "Duplicate marker {:x}\n",
             (marker as i32),
         );
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
     (*section).tags_met |= tag_bit;
-    return brunsli_BrunsliStatus::BRUNSLI_OK;
+    return brunsli_BrunsliStatus_BRUNSLI_OK;
 }
 pub unsafe fn EnterSection_171(
     mut state: *mut brunsli_internal_dec_State,
@@ -5130,14 +4853,14 @@ pub unsafe fn EnterSection_171(
     let mut section_size: usize = 0_usize;
     let mut status: brunsli_BrunsliStatus =
         (unsafe { DecodeBase128_168(state, (&mut section_size as *mut usize)) });
-    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
         return status;
     }
     (*section).is_active = true;
     (*section).remaining = section_size;
     (*section).milestone = (*state).pos;
     (*section).projected_end = ((*state).pos).wrapping_add((*section).remaining);
-    return brunsli_BrunsliStatus::BRUNSLI_OK;
+    return brunsli_BrunsliStatus_BRUNSLI_OK;
 }
 pub unsafe fn LeaveSection_172(mut section: *mut brunsli_internal_dec_SectionState) {
     (*section).is_active = false;
@@ -5170,7 +4893,7 @@ pub unsafe fn VerifySignature_176(
         &mut (*(*state).internal.as_deref_mut().unwrap())
             as *mut brunsli_internal_dec_InternalState;
     if !(unsafe { CheckCanRead_161(state, kBrunsliSignatureSize_43) }) {
-        return (unsafe { Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA) });
+        return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA) });
     }
     let is_signature_ok: bool = (({
         let sa = core::slice::from_raw_parts(
@@ -5194,9 +4917,9 @@ pub unsafe fn VerifySignature_176(
     (*state).pos = ((*state).pos).wrapping_add(kBrunsliSignatureSize_43);
     (*s).section.tags_met |= ((1_u32) << (kBrunsliSignatureTag_30 as i32));
     if is_signature_ok {
-        return (unsafe { Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN) });
+        return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
     }
-    return brunsli_internal_dec_Stage::HEADER;
+    return brunsli_internal_dec_Stage_HEADER;
 }
 pub unsafe fn DecodeHeader_177(
     mut state: *mut brunsli_internal_dec_State,
@@ -5207,49 +4930,49 @@ pub unsafe fn DecodeHeader_177(
             as *mut brunsli_internal_dec_InternalState;
     let hs: *mut brunsli_internal_dec_HeaderState =
         &mut (*s).header as *mut brunsli_internal_dec_HeaderState;
-    'loop_: while (((*hs).stage) != (brunsli_internal_dec_HeaderState_Stage::DONE as usize)) {
+    'loop_: while (((*hs).stage) != (brunsli_internal_dec_HeaderState_Stage_DONE as usize)) {
         'switch: {
             let __match_cond = (*hs).stage;
             match __match_cond {
-                __v if __v == (brunsli_internal_dec_HeaderState_Stage::READ_TAG as usize) => {
+                __v if __v == (brunsli_internal_dec_HeaderState_Stage_READ_TAG as usize) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         ReadTag_170(
                             state,
                             (&mut (*s).section as *mut brunsli_internal_dec_SectionState),
                         )
                     });
-                    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
                     if (((*s).section.tag) != (kBrunsliHeaderTag_31 as usize))
                         || (!(*s).section.is_section)
                     {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     (*hs).stage =
-                        (brunsli_internal_dec_HeaderState_Stage::ENTER_SECTION as usize).clone();
+                        (brunsli_internal_dec_HeaderState_Stage_ENTER_SECTION as usize).clone();
                     break 'switch;
                 }
-                __v if __v == (brunsli_internal_dec_HeaderState_Stage::ENTER_SECTION as usize) => {
+                __v if __v == (brunsli_internal_dec_HeaderState_Stage_ENTER_SECTION as usize) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         EnterSection_171(
                             state,
                             (&mut (*s).section as *mut brunsli_internal_dec_SectionState),
                         )
                     });
-                    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
                     (*hs).stage =
-                        (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG as usize).clone();
+                        (brunsli_internal_dec_HeaderState_Stage_ITEM_READ_TAG as usize).clone();
                     break 'switch;
                 }
-                __v if __v == (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG as usize) => {
+                __v if __v == (brunsli_internal_dec_HeaderState_Stage_ITEM_READ_TAG as usize) => {
                     if (unsafe { IsAtSectionBoundary_175(state) }) {
                         (*hs).stage =
-                            (brunsli_internal_dec_HeaderState_Stage::FINALE as usize).clone();
+                            (brunsli_internal_dec_HeaderState_Stage_FINALE as usize).clone();
                         break 'switch;
                     }
                     let mut status: brunsli_BrunsliStatus = (unsafe {
@@ -5258,41 +4981,39 @@ pub unsafe fn DecodeHeader_177(
                             (&mut (*hs).section as *mut brunsli_internal_dec_SectionState),
                         )
                     });
-                    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
                     let tag_bit: u32 = ((1_u32) << ((*hs).section.tag));
                     if (*hs).section.is_section {
                         if (((kKnownHeaderVarintTags_138) & (tag_bit)) != 0) {
-                            (unsafe {
-                                Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                            });
+                            (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
                         }
-                        (*hs).stage = (brunsli_internal_dec_HeaderState_Stage::ITEM_ENTER_SECTION
+                        (*hs).stage = (brunsli_internal_dec_HeaderState_Stage_ITEM_ENTER_SECTION
                             as usize)
                             .clone();
                         break 'switch;
                     }
                     (*hs).stage =
-                        (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_VALUE as usize).clone();
+                        (brunsli_internal_dec_HeaderState_Stage_ITEM_READ_VALUE as usize).clone();
                     break 'switch;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_HeaderState_Stage::ITEM_ENTER_SECTION as usize) =>
+                    == (brunsli_internal_dec_HeaderState_Stage_ITEM_ENTER_SECTION as usize) =>
                 {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         DecodeBase128_168(state, (&mut (*hs).remaining_skip_length as *mut usize))
                     });
-                    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
-                    (*hs).stage = (brunsli_internal_dec_HeaderState_Stage::ITEM_SKIP_CONTENTS
+                    (*hs).stage = (brunsli_internal_dec_HeaderState_Stage_ITEM_SKIP_CONTENTS
                         as usize)
                         .clone();
                     break 'switch;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_HeaderState_Stage::ITEM_SKIP_CONTENTS as usize) =>
+                    == (brunsli_internal_dec_HeaderState_Stage_ITEM_SKIP_CONTENTS as usize) =>
                 {
                     let mut bytes_skipped: usize =
                         (unsafe { SkipAvailableBytes_167(state, (*hs).remaining_skip_length) });
@@ -5300,34 +5021,32 @@ pub unsafe fn DecodeHeader_177(
                         ((*hs).remaining_skip_length).wrapping_sub(bytes_skipped);
                     if (((*hs).remaining_skip_length) > (0_usize)) {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
                         });
                     }
                     (*hs).stage =
-                        (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG as usize).clone();
+                        (brunsli_internal_dec_HeaderState_Stage_ITEM_READ_TAG as usize).clone();
                     break 'switch;
                 }
-                __v if __v
-                    == (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_VALUE as usize) =>
-                {
+                __v if __v == (brunsli_internal_dec_HeaderState_Stage_ITEM_READ_VALUE as usize) => {
                     let mut value: usize = 0_usize;
                     let mut status: brunsli_BrunsliStatus =
                         (unsafe { DecodeBase128_168(state, (&mut value as *mut usize)) });
-                    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
                     (&mut (*hs)).varint_values[((*hs).section.tag)] = (value as u64);
                     (*hs).stage =
-                        (brunsli_internal_dec_HeaderState_Stage::ITEM_READ_TAG as usize).clone();
+                        (brunsli_internal_dec_HeaderState_Stage_ITEM_READ_TAG as usize).clone();
                     break 'switch;
                 }
-                __v if __v == (brunsli_internal_dec_HeaderState_Stage::FINALE as usize) => {
+                __v if __v == (brunsli_internal_dec_HeaderState_Stage_FINALE as usize) => {
                     let has_version: bool = ((((*hs).section.tags_met)
                         & ((1_u32) << (kBrunsliHeaderVersionCompTag_41 as i32)))
                         != 0);
                     if !has_version {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     let version_and_comp_count: usize = ((&mut (*hs)).varint_values
@@ -5339,17 +5058,17 @@ pub unsafe fn DecodeHeader_177(
                         (*jpg).width = 0;
                         (*jpg).height = 0;
                         (*hs).stage =
-                            (brunsli_internal_dec_HeaderState_Stage::DONE as usize).clone();
+                            (brunsli_internal_dec_HeaderState_Stage_DONE as usize).clone();
                         break 'switch;
                     }
                     if (((version) & (1_usize)) != (0_usize)) {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     if (((version) & (!7_u32 as usize)) != (0_usize)) {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     (*state).use_legacy_context_model = !(((version) & (2_usize)) != 0);
@@ -5359,7 +5078,7 @@ pub unsafe fn DecodeHeader_177(
                         != 0);
                     if !has_width {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     let width: usize =
@@ -5369,7 +5088,7 @@ pub unsafe fn DecodeHeader_177(
                         != 0);
                     if !has_height {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     let height: usize = ((&mut (*hs)).varint_values
@@ -5377,14 +5096,14 @@ pub unsafe fn DecodeHeader_177(
                         as usize);
                     if ((width) == (0_usize)) || ((height) == (0_usize)) {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     if ((width) > (kMaxDimPixels_11 as usize))
                         || ((height) > (kMaxDimPixels_11 as usize))
                     {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     (*jpg).width = (width as i32);
@@ -5402,7 +5121,7 @@ pub unsafe fn DecodeHeader_177(
                         != 0);
                     if !has_subsampling {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     let mut subsampling_code: usize = ((&mut (*hs)).varint_values
@@ -5420,28 +5139,28 @@ pub unsafe fn DecodeHeader_177(
                         subsampling_code >>= 4_u32;
                         if (((*c).v_samp_factor) > (kBrunsliMaxSampling_27)) {
                             return (unsafe {
-                                Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                                Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                             });
                         }
                         if (((*c).h_samp_factor) > (kBrunsliMaxSampling_27)) {
                             return (unsafe {
-                                Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                                Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                             });
                         }
                         i.prefix_inc();
                     }
                     if !(unsafe { UpdateSubsamplingDerivatives_178(jpg) }) {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     (unsafe { PrepareMeta_179((jpg).cast_const(), state) });
-                    (*hs).stage = (brunsli_internal_dec_HeaderState_Stage::DONE as usize).clone();
+                    (*hs).stage = (brunsli_internal_dec_HeaderState_Stage_DONE as usize).clone();
                     break 'switch;
                 }
                 _ => {
                     return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR)
+                        Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR)
                     });
                 }
             }
@@ -5449,9 +5168,9 @@ pub unsafe fn DecodeHeader_177(
     }
     (unsafe { LeaveSection_172((&mut (*s).section as *mut brunsli_internal_dec_SectionState)) });
     return if (((*jpg).version) == (kFallbackVersion_2)) {
-        brunsli_internal_dec_Stage::FALLBACK
+        brunsli_internal_dec_Stage_FALLBACK
     } else {
-        brunsli_internal_dec_Stage::SECTION
+        brunsli_internal_dec_Stage_SECTION
     };
 }
 pub unsafe fn DecodeMetaDataSection_180(
@@ -5463,18 +5182,18 @@ pub unsafe fn DecodeMetaDataSection_180(
             as *mut brunsli_internal_dec_InternalState;
     let ms: *mut brunsli_internal_dec_MetadataState =
         &mut (*s).metadata as *mut brunsli_internal_dec_MetadataState;
-    if (((*ms).decompression_stage) == (brunsli_internal_dec_MetadataDecompressionStage::DONE)) {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+    if (((*ms).decompression_stage) == (brunsli_internal_dec_MetadataDecompressionStage_DONE)) {
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
-    if (((*ms).decompression_stage) == (brunsli_internal_dec_MetadataDecompressionStage::INITIAL)) {
+    if (((*ms).decompression_stage) == (brunsli_internal_dec_MetadataDecompressionStage_INITIAL)) {
         if (unsafe { IsAtSectionBoundary_175(state) }) {
             (*ms).decompression_stage =
-                (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
-            return brunsli_BrunsliStatus::BRUNSLI_OK;
+                (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
+            return brunsli_BrunsliStatus_BRUNSLI_OK;
         }
         if ((unsafe { RemainingSectionLength_174(state) }) == (1_usize)) {
             if !(unsafe { CheckCanReadByte_162(state) }) {
-                return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+                return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
             }
             let mut data: [u8; 1] = [0_u8; 1];
             data[(0) as usize] = (unsafe { ReadByte_163(state) }).clone();
@@ -5482,44 +5201,44 @@ pub unsafe fn DecodeMetaDataSection_180(
                 ProcessMetaData_149((data.as_mut_ptr()).cast_const(), 1_usize, (ms), jpg)
             }) && (unsafe { (*ms).CanFinish() });
             (*ms).decompression_stage =
-                (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
+                (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
             return if ok {
-                brunsli_BrunsliStatus::BRUNSLI_OK
+                brunsli_BrunsliStatus_BRUNSLI_OK
             } else {
-                brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN
+                brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN
             };
         }
         (*ms).decompression_stage =
-            (brunsli_internal_dec_MetadataDecompressionStage::READ_LENGTH).clone();
+            (brunsli_internal_dec_MetadataDecompressionStage_READ_LENGTH).clone();
     }
     if (((*ms).decompression_stage)
-        == (brunsli_internal_dec_MetadataDecompressionStage::READ_LENGTH))
+        == (brunsli_internal_dec_MetadataDecompressionStage_READ_LENGTH))
     {
         let mut status: brunsli_BrunsliStatus =
             (unsafe { DecodeBase128_168(state, (&mut (*ms).metadata_size as *mut usize)) });
-        if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+        if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
             return status;
         }
         if (unsafe { IsOutOfSectionBounds_173(state) }) {
-            return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+            return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
         }
         if ((unsafe { RemainingSectionLength_174(state) }) == (0_usize)) {
-            return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+            return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
         }
         (*ms).brotli = ::brotli_sys::BrotliDecoderCreateInstance(None, None, std::ptr::null_mut());
         if ((*ms).brotli).is_null() {
-            return brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR;
+            return brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR;
         }
         (*ms).decompression_stage =
-            (brunsli_internal_dec_MetadataDecompressionStage::DECOMPRESSING).clone();
+            (brunsli_internal_dec_MetadataDecompressionStage_DECOMPRESSING).clone();
     }
     if (((*ms).decompression_stage)
-        == (brunsli_internal_dec_MetadataDecompressionStage::DECOMPRESSING))
+        == (brunsli_internal_dec_MetadataDecompressionStage_DECOMPRESSING))
     {
         'loop_: while true {
             let mut available_bytes: usize = ({
-                let mut __tmp_0 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-                let mut __tmp_1 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
+                let mut __tmp_0: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
+                let mut __tmp_1: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
                 (*if *&mut __tmp_0 <= *&mut __tmp_1 {
                     (&mut __tmp_0) as *const _
                 } else {
@@ -5554,9 +5273,9 @@ pub unsafe fn DecodeMetaDataSection_180(
                         ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
                         (*ms).brotli = std::ptr::null_mut();
                         (*ms).decompression_stage =
-                            (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
+                            (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
                         return result;
-                    })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                    })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             let mut chunk_size: usize = 0_usize;
@@ -5581,9 +5300,9 @@ pub unsafe fn DecodeMetaDataSection_180(
                         ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
                         (*ms).brotli = std::ptr::null_mut();
                         (*ms).decompression_stage =
-                            (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
+                            (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
                         return result;
-                    })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                    })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             let mut consumed_bytes: usize = (available_bytes).wrapping_sub(available_in);
@@ -5606,9 +5325,9 @@ pub unsafe fn DecodeMetaDataSection_180(
                         ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
                         (*ms).brotli = std::ptr::null_mut();
                         (*ms).decompression_stage =
-                            (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
+                            (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
                         return result;
-                    })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                    })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             if ((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_SUCCESS as i32)) {
@@ -5628,9 +5347,9 @@ pub unsafe fn DecodeMetaDataSection_180(
                             ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
                             (*ms).brotli = std::ptr::null_mut();
                             (*ms).decompression_stage =
-                                (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
+                                (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
                             return result;
-                        })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                        })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                     });
                 }
                 if (((*ms).decompressed_size) != ((*ms).metadata_size)) {
@@ -5649,9 +5368,9 @@ pub unsafe fn DecodeMetaDataSection_180(
                             ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
                             (*ms).brotli = std::ptr::null_mut();
                             (*ms).decompression_stage =
-                                (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
+                                (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
                             return result;
-                        })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                        })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                     });
                 }
                 if !(unsafe { (*ms).CanFinish() }) {
@@ -5670,9 +5389,9 @@ pub unsafe fn DecodeMetaDataSection_180(
                             ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
                             (*ms).brotli = std::ptr::null_mut();
                             (*ms).decompression_stage =
-                                (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
+                                (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
                             return result;
-                        })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                        })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                     });
                 }
                 return (unsafe {
@@ -5690,9 +5409,9 @@ pub unsafe fn DecodeMetaDataSection_180(
                         ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
                         (*ms).brotli = std::ptr::null_mut();
                         (*ms).decompression_stage =
-                            (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
+                            (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
                         return result;
-                    })(brunsli_BrunsliStatus::BRUNSLI_OK)
+                    })(brunsli_BrunsliStatus_BRUNSLI_OK)
                 });
             }
             if ((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT as i32)) {
@@ -5724,12 +5443,12 @@ pub unsafe fn DecodeMetaDataSection_180(
                         ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
                         (*ms).brotli = std::ptr::null_mut();
                         (*ms).decompression_stage =
-                            (brunsli_internal_dec_MetadataDecompressionStage::DONE).clone();
+                            (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
                         return result;
-                    })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                    })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
-            return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+            return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
         }
     }
     if !(false) {
@@ -5742,19 +5461,19 @@ pub unsafe fn DecodeMetaDataSection_180(
         });
         'loop_: while true {}
     };
-    return brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR;
+    return brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR;
 }
 pub unsafe fn CheckBoundary_181(
     mut state: *mut brunsli_internal_dec_State,
     mut result: brunsli_BrunsliStatus,
 ) -> brunsli_BrunsliStatus {
-    if ((result as i32) == (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32)) {
+    if ((result as i32) == (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32)) {
         let mut last: bool = ((unsafe { RemainingSectionLength_174(state) })
             <= (unsafe { GetBytesAvailable_166(state) }));
         return if last {
-            brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN
+            brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN
         } else {
-            brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA
+            brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA
         };
     } else {
         return result;
@@ -5766,8 +5485,8 @@ pub unsafe fn PrepareBitReader_182(
     mut state: *mut brunsli_internal_dec_State,
 ) {
     let mut chunk_len: usize = ({
-        let mut __tmp_0 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-        let mut __tmp_1 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
+        let mut __tmp_0: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
+        let mut __tmp_1: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
         (*if *&mut __tmp_0 <= *&mut __tmp_1 {
             (&mut __tmp_0) as *const _
         } else {
@@ -5794,8 +5513,8 @@ pub unsafe fn SuspendBitReader_183(
     mut result: brunsli_BrunsliStatus,
 ) -> brunsli_BrunsliStatus {
     let mut chunk_len: usize = ({
-        let mut __tmp_0 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-        let mut __tmp_1 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
+        let mut __tmp_0: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
+        let mut __tmp_1: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
         (*if *&mut __tmp_0 <= *&mut __tmp_1 {
             (&mut __tmp_0) as *const _
         } else {
@@ -5807,8 +5526,8 @@ pub unsafe fn SuspendBitReader_183(
     (unsafe { SkipBytes_165(state, consumed_bytes) });
     result = (unsafe { CheckBoundary_181(state, result) });
     if !((unsafe { BrunsliBitReaderIsHealthy_132(br) })
-        || (((result as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32))
-            && ((result as i32) != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32))))
+        || (((result as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32))
+            && ((result as i32) != (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32))))
     {
         (unsafe {
             BrunsliDumpAndAbort_79(
@@ -5831,20 +5550,19 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
     let js: *mut brunsli_internal_dec_JpegInternalsState =
         &mut (*s).internals as *mut brunsli_internal_dec_JpegInternalsState;
     let mut br: *mut brunsli_BrunsliBitReader = (&mut (*js).br as *mut brunsli_BrunsliBitReader);
-    if (((*js).stage as i32) == (brunsli_internal_dec_JpegInternalsState_Stage::INIT as i32)) {
+    if (((*js).stage as i32) == (brunsli_internal_dec_JpegInternalsState_Stage_INIT as i32)) {
         (unsafe { BrunsliBitReaderInit_127(br) });
-        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::READ_MARKERS).clone();
+        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_MARKERS).clone();
     }
     (unsafe { PrepareBitReader_182(br, state) });
-    if (((*js).stage as i32)
-        == (brunsli_internal_dec_JpegInternalsState_Stage::READ_MARKERS as i32))
+    if (((*js).stage as i32) == (brunsli_internal_dec_JpegInternalsState_Stage_READ_MARKERS as i32))
     {
         'loop_: while true {
             if !(unsafe { BrunsliBitReaderCanRead_134(br, 6_usize) }) {
                 return (unsafe {
                     (|result: brunsli_BrunsliStatus| {
                         return (unsafe { SuspendBitReader_183(br, state, result) });
-                    })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                    })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
                 });
             }
             let mut marker: u8 =
@@ -5866,37 +5584,37 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                 break;
             }
         }
-        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::READ_DRI).clone();
+        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_DRI).clone();
     }
-    if (((*js).stage as i32) == (brunsli_internal_dec_JpegInternalsState_Stage::READ_DRI as i32)) {
+    if (((*js).stage as i32) == (brunsli_internal_dec_JpegInternalsState_Stage_READ_DRI as i32)) {
         if (*js).have_dri {
             if !(unsafe { BrunsliBitReaderCanRead_134(br, 16_usize) }) {
                 return (unsafe {
                     (|result: brunsli_BrunsliStatus| {
                         return (unsafe { SuspendBitReader_183(br, state, result) });
-                    })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                    })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
                 });
             }
             (*jpg).restart_interval = ((unsafe { BrunsliBitReaderRead_126(br, 16_u32) }) as i32);
         }
-        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::READ_HUFFMAN_LAST).clone();
+        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_LAST).clone();
     }
     if ((((*js).stage as i32)
-        & (brunsli_internal_dec_JpegInternalsState_Stage::DECODE_HUFFMAN_MASK as i32))
+        & (brunsli_internal_dec_JpegInternalsState_Stage_DECODE_HUFFMAN_MASK as i32))
         != 0)
     {
         let mut status: brunsli_BrunsliStatus = (unsafe { DecodeHuffmanCode_150(state, jpg) });
-        if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+        if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
                 })(status)
             });
         }
-        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::PREPARE_READ_SCANS).clone();
+        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_PREPARE_READ_SCANS).clone();
     }
     if (((*js).stage as i32)
-        == (brunsli_internal_dec_JpegInternalsState_Stage::PREPARE_READ_SCANS as i32))
+        == (brunsli_internal_dec_JpegInternalsState_Stage_PREPARE_READ_SCANS as i32))
     {
         if (((*js).dht_count) != ((*js).terminal_huffman_code_count)) {
             write!(
@@ -5912,7 +5630,7 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         if (((*js).num_scans) > (0_usize)) {
@@ -5923,33 +5641,33 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                     .resize_with(__a0, || <brunsli_JPEGScanInfo>::default())
             };
             (*js).i = 0_usize;
-            (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::READ_SCAN_COMMON).clone();
+            (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON).clone();
         } else {
-            (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_QUANT).clone();
+            (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_NUM_QUANT).clone();
         }
     }
     if ((((*js).stage as i32)
-        & (brunsli_internal_dec_JpegInternalsState_Stage::DECODE_SCAN_MASK as i32))
+        & (brunsli_internal_dec_JpegInternalsState_Stage_DECODE_SCAN_MASK as i32))
         != 0)
     {
         let mut status: brunsli_BrunsliStatus = (unsafe { DecodeScanInfo_151(state, jpg) });
-        if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+        if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
                 })(status)
             });
         }
-        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_QUANT).clone();
+        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_NUM_QUANT).clone();
     }
     if (((*js).stage as i32)
-        == (brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_QUANT as i32))
+        == (brunsli_internal_dec_JpegInternalsState_Stage_READ_NUM_QUANT as i32))
     {
         if !(unsafe { BrunsliBitReaderCanRead_134(br, 2_usize) }) {
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let mut num_quant_tables: i32 =
@@ -5961,21 +5679,21 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                 .resize_with(__a0, || <brunsli_JPEGQuantTable>::default())
         };
         (*js).i = 0_usize;
-        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::READ_QUANT).clone();
+        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_QUANT).clone();
     }
     'loop_: while (((*js).stage as i32)
-        == (brunsli_internal_dec_JpegInternalsState_Stage::READ_QUANT as i32))
+        == (brunsli_internal_dec_JpegInternalsState_Stage_READ_QUANT as i32))
     {
         if (((*js).i) >= ((*jpg).quant.len())) {
             (*js).stage =
-                (brunsli_internal_dec_JpegInternalsState_Stage::READ_COMP_ID_SCHEME).clone();
+                (brunsli_internal_dec_JpegInternalsState_Stage_READ_COMP_ID_SCHEME).clone();
             break;
         }
         if !(unsafe { BrunsliBitReaderCanRead_134(br, 7_usize) }) {
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let mut q: *mut brunsli_JPEGQuantTable =
@@ -5999,19 +5717,19 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (*js).i.prefix_inc();
     }
     if (((*js).stage as i32)
-        == (brunsli_internal_dec_JpegInternalsState_Stage::READ_COMP_ID_SCHEME as i32))
+        == (brunsli_internal_dec_JpegInternalsState_Stage_READ_COMP_ID_SCHEME as i32))
     {
         if !(unsafe { BrunsliBitReaderCanRead_134(br, 2_usize) }) {
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let mut comp_ids: i32 = ((unsafe { BrunsliBitReaderRead_126(br, 2_u32) }) as i32);
@@ -6032,11 +5750,10 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
-        (*js).stage =
-            (brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_PADDING_BITS).clone();
+        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_NUM_PADDING_BITS).clone();
         if ((comp_ids) == (kComponentIds123_49)) {
             (&mut (*jpg)).components[(0_usize)].id = 1;
             (&mut (*jpg)).components[(1_usize)].id = 2;
@@ -6059,29 +5776,27 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                 'loop_: while true {}
             };
             (*js).i = 0_usize;
-            (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::READ_COMP_ID).clone();
+            (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_COMP_ID).clone();
         }
     }
-    if (((*js).stage as i32)
-        == (brunsli_internal_dec_JpegInternalsState_Stage::READ_COMP_ID as i32))
+    if (((*js).stage as i32) == (brunsli_internal_dec_JpegInternalsState_Stage_READ_COMP_ID as i32))
     {
         'loop_: while (((*js).i) < ((*jpg).components.len())) {
             if !(unsafe { BrunsliBitReaderCanRead_134(br, 8_usize) }) {
                 return (unsafe {
                     (|result: brunsli_BrunsliStatus| {
                         return (unsafe { SuspendBitReader_183(br, state, result) });
-                    })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                    })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
                 });
             }
             (&mut (*jpg)).components[((*js).i)].id =
                 ((unsafe { BrunsliBitReaderRead_126(br, 8_u32) }) as i32);
             (*js).i.prefix_inc();
         }
-        (*js).stage =
-            (brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_PADDING_BITS).clone();
+        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_NUM_PADDING_BITS).clone();
     }
     if (((*js).stage as i32)
-        == (brunsli_internal_dec_JpegInternalsState_Stage::READ_NUM_PADDING_BITS as i32))
+        == (brunsli_internal_dec_JpegInternalsState_Stage_READ_NUM_PADDING_BITS as i32))
     {
         if !(unsafe {
             DecodeLimitedVarint_146(
@@ -6093,7 +5808,7 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         (*js).num_padding_bits = (*js).varint.value;
@@ -6115,21 +5830,21 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (*js).i = 0_usize;
-        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::READ_PADDING_BITS).clone();
+        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_READ_PADDING_BITS).clone();
     }
     if (((*js).stage as i32)
-        == (brunsli_internal_dec_JpegInternalsState_Stage::READ_PADDING_BITS as i32))
+        == (brunsli_internal_dec_JpegInternalsState_Stage_READ_PADDING_BITS as i32))
     {
         'loop_: while (((*js).i) < ((*js).num_padding_bits)) {
             if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
                 return (unsafe {
                     (|result: brunsli_BrunsliStatus| {
                         return (unsafe { SuspendBitReader_183(br, state, result) });
-                    })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                    })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
                 });
             }
             (*jpg)
@@ -6140,116 +5855,125 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
         (unsafe {
             (|result: brunsli_BrunsliStatus| {
                 return (unsafe { SuspendBitReader_183(br, state, result) });
-            })(brunsli_BrunsliStatus::BRUNSLI_OK)
+            })(brunsli_BrunsliStatus_BRUNSLI_OK)
         });
         (unsafe { BrunsliBitReaderFinish_131(br) });
         if !(unsafe { BrunsliBitReaderIsHealthy_132(br) }) {
-            return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+            return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
         }
         (*js).i = 0_usize;
-        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::ITERATE_MARKERS).clone();
+        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_ITERATE_MARKERS).clone();
     } else {
         (unsafe {
             (|result: brunsli_BrunsliStatus| {
                 return (unsafe { SuspendBitReader_183(br, state, result) });
-            })(brunsli_BrunsliStatus::BRUNSLI_OK)
+            })(brunsli_BrunsliStatus_BRUNSLI_OK)
         });
     }
     'loop_: while true {
         switch!(match ((*js).stage as i32) {
             __v if __v
-                == (brunsli_internal_dec_JpegInternalsState_Stage::ITERATE_MARKERS as i32) =>
+                == (brunsli_internal_dec_JpegInternalsState_Stage_ITERATE_MARKERS as i32) =>
             {
-                if (((*js).i) >= ((*jpg).marker_order.len())) {
-                    (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage::DONE).clone();
-                } else if (((&mut (*jpg)).marker_order[((*js).i)] as i32) == (255)) {
-                    (*js).stage =
-                        (brunsli_internal_dec_JpegInternalsState_Stage::READ_INTERMARKER_LENGTH)
-                            .clone();
-                } else {
-                    (*js).i.prefix_inc();
-                };
-                continue 'loop_;
-            }
-            __v if __v
-                == (brunsli_internal_dec_JpegInternalsState_Stage::READ_INTERMARKER_LENGTH
-                    as i32) =>
-            {
-                let mut status: brunsli_BrunsliStatus = (unsafe {
-                    DecodeBase128_168(state, (&mut (*js).intermarker_length as *mut usize))
-                });
-                if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
-                    return (unsafe { CheckBoundary_181(state, status) });
-                }
-                if (((*js).intermarker_length) > (unsafe { RemainingSectionLength_174(state) })) {
-                    return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
-                }
-                (*jpg).inter_marker_data.push(Vec::new());
-                (*js).stage =
-                    (brunsli_internal_dec_JpegInternalsState_Stage::READ_INTERMARKER_DATA).clone();
-                continue 'loop_;
-            }
-            __v if __v
-                == (brunsli_internal_dec_JpegInternalsState_Stage::READ_INTERMARKER_DATA
-                    as i32) =>
-            {
-                let dest: *mut Vec<u8> = (((*jpg).inter_marker_data).last_mut().unwrap());
-                let mut piece_limit: usize = (((*js).intermarker_length as u64)
-                    .wrapping_sub(((*dest).len() as u64))
-                    as usize);
-                let mut piece_size: usize = ({
-                    let mut __tmp_0 = (piece_limit as u64);
-                    let mut __tmp_1 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-                    (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                        (&mut __tmp_0) as *const _
+                {
+                    if (((*js).i) >= ((*jpg).marker_order.len())) {
+                        (*js).stage = (brunsli_internal_dec_JpegInternalsState_Stage_DONE).clone();
+                    } else if (((&mut (*jpg)).marker_order[((*js).i)] as i32) == (255)) {
+                        (*js).stage =
+                            (brunsli_internal_dec_JpegInternalsState_Stage_READ_INTERMARKER_LENGTH)
+                                .clone();
                     } else {
-                        (&mut __tmp_1) as *const _
-                    })
-                } as usize);
-                (unsafe {
-                    Append_72(
-                        (dest),
-                        (*state).data.offset(((*state).pos) as isize),
-                        piece_size,
-                    )
-                });
-                (unsafe { SkipBytes_165(state, piece_size) });
-                if (((*dest).len()) < ((*js).intermarker_length)) {
-                    if !((unsafe { GetBytesAvailable_166(state) }) == (0_usize)) {
-                        (unsafe {
-                            BrunsliDumpAndAbort_79(
-                                c"brunsli_decode.cc".as_ptr(),
-                                1613,
-                                c"DecodeJPEGInternalsSection".as_ptr(),
-                            )
-                        });
-                        'loop_: while true {}
+                        (*js).i.prefix_inc();
                     };
-                    if !((unsafe { RemainingSectionLength_174(state) }) > (0_usize)) {
-                        (unsafe {
-                            BrunsliDumpAndAbort_79(
-                                c"brunsli_decode.cc".as_ptr(),
-                                1614,
-                                c"DecodeJPEGInternalsSection".as_ptr(),
-                            )
-                        });
-                        'loop_: while true {}
-                    };
-                    return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+                    continue 'loop_;
                 }
-                (*js).i.prefix_inc();
-                (*js).stage =
-                    (brunsli_internal_dec_JpegInternalsState_Stage::ITERATE_MARKERS).clone();
-                continue 'loop_;
             }
-            _ => {}
+            __v if __v
+                == (brunsli_internal_dec_JpegInternalsState_Stage_READ_INTERMARKER_LENGTH
+                    as i32) =>
+            {
+                {
+                    let mut status: brunsli_BrunsliStatus = (unsafe {
+                        DecodeBase128_168(state, (&mut (*js).intermarker_length as *mut usize))
+                    });
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
+                        return (unsafe { CheckBoundary_181(state, status) });
+                    }
+                    if (((*js).intermarker_length) > (unsafe { RemainingSectionLength_174(state) }))
+                    {
+                        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
+                    }
+                    (*jpg).inter_marker_data.push(Vec::new());
+                    (*js).stage =
+                        (brunsli_internal_dec_JpegInternalsState_Stage_READ_INTERMARKER_DATA)
+                            .clone();
+                    continue 'loop_;
+                }
+            }
+            __v if __v
+                == (brunsli_internal_dec_JpegInternalsState_Stage_READ_INTERMARKER_DATA as i32) =>
+            {
+                {
+                    let dest: *mut Vec<u8> = (((*jpg).inter_marker_data).last_mut().unwrap());
+                    let mut piece_limit: usize = (((*js).intermarker_length as u64)
+                        .wrapping_sub(((*dest).len() as u64))
+                        as usize);
+                    let mut piece_size: usize = ({
+                        let mut __tmp_0: u64 = (piece_limit as u64);
+                        let mut __tmp_1: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
+                        (*if *&mut __tmp_0 <= *&mut __tmp_1 {
+                            (&mut __tmp_0) as *const _
+                        } else {
+                            (&mut __tmp_1) as *const _
+                        })
+                    } as usize);
+                    (unsafe {
+                        Append_72(
+                            (dest),
+                            (*state).data.offset(((*state).pos) as isize),
+                            piece_size,
+                        )
+                    });
+                    (unsafe { SkipBytes_165(state, piece_size) });
+                    if (((*dest).len()) < ((*js).intermarker_length)) {
+                        if !((unsafe { GetBytesAvailable_166(state) }) == (0_usize)) {
+                            (unsafe {
+                                BrunsliDumpAndAbort_79(
+                                    c"brunsli_decode.cc".as_ptr(),
+                                    1613,
+                                    c"DecodeJPEGInternalsSection".as_ptr(),
+                                )
+                            });
+                            'loop_: while true {}
+                        };
+                        if !((unsafe { RemainingSectionLength_174(state) }) > (0_usize)) {
+                            (unsafe {
+                                BrunsliDumpAndAbort_79(
+                                    c"brunsli_decode.cc".as_ptr(),
+                                    1614,
+                                    c"DecodeJPEGInternalsSection".as_ptr(),
+                                )
+                            });
+                            'loop_: while true {}
+                        };
+                        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
+                    }
+                    (*js).i.prefix_inc();
+                    (*js).stage =
+                        (brunsli_internal_dec_JpegInternalsState_Stage_ITERATE_MARKERS).clone();
+                    continue 'loop_;
+                }
+            }
+            _ => {
+                {}
+            }
         });
         break;
     }
     if !(unsafe { IsAtSectionBoundary_175(state) }) {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
-    return brunsli_BrunsliStatus::BRUNSLI_OK;
+    return brunsli_BrunsliStatus_BRUNSLI_OK;
 }
 pub unsafe fn DecodeQuantDataSection_186(
     mut state: *mut brunsli_internal_dec_State,
@@ -6261,18 +5985,17 @@ pub unsafe fn DecodeQuantDataSection_186(
     let qs: *mut brunsli_internal_dec_QuantDataState =
         &mut (*s).quant as *mut brunsli_internal_dec_QuantDataState;
     let mut br: *mut brunsli_BrunsliBitReader = (&mut (*qs).br as *mut brunsli_BrunsliBitReader);
-    if (((*qs).stage as i32) == (brunsli_internal_dec_QuantDataState_Stage::INIT as i32)) {
+    if (((*qs).stage as i32) == (brunsli_internal_dec_QuantDataState_Stage_INIT as i32)) {
         (unsafe { BrunsliBitReaderInit_127(br) });
-        (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::READ_NUM_QUANT).clone();
+        (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage_READ_NUM_QUANT).clone();
     }
     (unsafe { PrepareBitReader_182(br, state) });
-    if (((*qs).stage as i32) == (brunsli_internal_dec_QuantDataState_Stage::READ_NUM_QUANT as i32))
-    {
+    if (((*qs).stage as i32) == (brunsli_internal_dec_QuantDataState_Stage_READ_NUM_QUANT as i32)) {
         if !(unsafe { BrunsliBitReaderCanRead_134(br, 2_usize) }) {
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let mut num_quant_tables: usize =
@@ -6281,7 +6004,7 @@ pub unsafe fn DecodeQuantDataSection_186(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         {
@@ -6289,169 +6012,199 @@ pub unsafe fn DecodeQuantDataSection_186(
             (*qs).predictor.resize_with(__a0, || <u8>::default())
         };
         (*qs).i = 0_usize;
-        (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::READ_STOCK).clone();
+        (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage_READ_STOCK).clone();
     }
     'loop_: while true {
         switch!(match ((*qs).stage as i32) {
-            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::READ_STOCK as i32) => {
-                if (((*qs).i) >= ((*jpg).quant.len())) {
-                    std::mem::swap(&mut Vec::new(), &mut (*qs).predictor);
-                    (*qs).i = 0_usize;
-                    (*qs).stage =
-                        (brunsli_internal_dec_QuantDataState_Stage::READ_QUANT_IDX).clone();
-                    continue 'loop_;
-                }
-                if !(unsafe { BrunsliBitReaderCanRead_134(br, 4_usize) }) {
-                    return (unsafe {
-                        (|result: brunsli_BrunsliStatus| {
-                            return (unsafe { SuspendBitReader_183(br, state, result) });
-                        })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
-                    });
-                }
-                (*qs).data_precision = 0_u8;
-                let mut is_short: bool = !((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) != 0);
-                if is_short {
-                    let short_code: usize =
-                        ((unsafe { BrunsliBitReaderRead_126(br, 3_u32) }) as usize);
-                    let mut table: *mut i32 = (&mut (*jpg)).quant[((*qs).i)].values.as_mut_ptr();
-                    let mut selector: usize =
-                        (if (((*qs).i) > (0_usize)) { 1 } else { 0 } as usize);
-                    let mut k: usize = 0_usize;
-                    'loop_: while ((k) < (kDCTBlockSize_3 as usize)) {
-                        (*table.offset((k) as isize)) =
-                            (kStockQuantizationTables_48[(selector)][(short_code)][(k)] as i32);
-                        k.prefix_inc();
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage_READ_STOCK as i32) => {
+                {
+                    if (((*qs).i) >= ((*jpg).quant.len())) {
+                        std::mem::swap(&mut Vec::new(), &mut (*qs).predictor);
+                        (*qs).i = 0_usize;
+                        (*qs).stage =
+                            (brunsli_internal_dec_QuantDataState_Stage_READ_QUANT_IDX).clone();
+                        continue 'loop_;
                     }
-                    (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::UPDATE).clone();
-                } else {
-                    (*qs).stage =
-                        (brunsli_internal_dec_QuantDataState_Stage::READ_Q_FACTOR).clone();
-                };
-                continue 'loop_;
-            }
-            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::READ_Q_FACTOR as i32) => {
-                if !(unsafe { BrunsliBitReaderCanRead_134(br, 6_usize) }) {
-                    return (unsafe {
-                        (|result: brunsli_BrunsliStatus| {
-                            return (unsafe { SuspendBitReader_183(br, state, result) });
-                        })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
-                    });
-                }
-                let q_factor: u32 = (unsafe { BrunsliBitReaderRead_126(br, 6_u32) });
-                (unsafe {
-                    let _is_chroma: bool = (((*qs).i) > (0_usize));
-                    let _dst: *mut u8 = (*qs).predictor.as_mut_ptr();
-                    FillQuantMatrix_118(_is_chroma, q_factor, _dst)
-                });
-                (*qs).j = 0_usize;
-                (*qs).delta = 0;
-                (*qs).stage =
-                    (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_IS_ZERO).clone();
-                continue 'loop_;
-            }
-            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_IS_ZERO as i32) => {
-                if (((*qs).j) >= (kDCTBlockSize_3 as usize)) {
-                    (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::UPDATE).clone();
+                    if !(unsafe { BrunsliBitReaderCanRead_134(br, 4_usize) }) {
+                        return (unsafe {
+                            (|result: brunsli_BrunsliStatus| {
+                                return (unsafe { SuspendBitReader_183(br, state, result) });
+                            })(
+                                brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA
+                            )
+                        });
+                    }
+                    (*qs).data_precision = 0_u8;
+                    let mut is_short: bool =
+                        !((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) != 0);
+                    if is_short {
+                        let short_code: usize =
+                            ((unsafe { BrunsliBitReaderRead_126(br, 3_u32) }) as usize);
+                        let mut table: *mut i32 =
+                            (&mut (*jpg)).quant[((*qs).i)].values.as_mut_ptr();
+                        let mut selector: usize =
+                            (if (((*qs).i) > (0_usize)) { 1 } else { 0 } as usize);
+                        let mut k: usize = 0_usize;
+                        'loop_: while ((k) < (kDCTBlockSize_3 as usize)) {
+                            (*table.offset((k) as isize)) =
+                                (kStockQuantizationTables_48[(selector)][(short_code)][(k)] as i32);
+                            k.prefix_inc();
+                        }
+                        (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage_UPDATE).clone();
+                    } else {
+                        (*qs).stage =
+                            (brunsli_internal_dec_QuantDataState_Stage_READ_Q_FACTOR).clone();
+                    };
                     continue 'loop_;
                 }
-                if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
-                    return (unsafe {
-                        (|result: brunsli_BrunsliStatus| {
-                            return (unsafe { SuspendBitReader_183(br, state, result) });
-                        })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+            }
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage_READ_Q_FACTOR as i32) => {
+                {
+                    if !(unsafe { BrunsliBitReaderCanRead_134(br, 6_usize) }) {
+                        return (unsafe {
+                            (|result: brunsli_BrunsliStatus| {
+                                return (unsafe { SuspendBitReader_183(br, state, result) });
+                            })(
+                                brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA
+                            )
+                        });
+                    }
+                    let q_factor: u32 = (unsafe { BrunsliBitReaderRead_126(br, 6_u32) });
+                    (unsafe {
+                        let _is_chroma: bool = (((*qs).i) > (0_usize));
+                        let _dst: *mut u8 = (*qs).predictor.as_mut_ptr();
+                        FillQuantMatrix_118(_is_chroma, q_factor, _dst)
                     });
-                }
-                if ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) != 0) {
+                    (*qs).j = 0_usize;
+                    (*qs).delta = 0;
                     (*qs).stage =
-                        (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_SIGN).clone();
-                } else {
-                    (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::APPLY_DIFF).clone();
-                };
-                continue 'loop_;
+                        (brunsli_internal_dec_QuantDataState_Stage_READ_DIFF_IS_ZERO).clone();
+                    continue 'loop_;
+                }
             }
-            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_SIGN as i32) => {
-                if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
-                    return (unsafe {
-                        (|result: brunsli_BrunsliStatus| {
-                            return (unsafe { SuspendBitReader_183(br, state, result) });
-                        })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
-                    });
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage_READ_DIFF_IS_ZERO as i32) => {
+                {
+                    if (((*qs).j) >= (kDCTBlockSize_3 as usize)) {
+                        (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage_UPDATE).clone();
+                        continue 'loop_;
+                    }
+                    if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
+                        return (unsafe {
+                            (|result: brunsli_BrunsliStatus| {
+                                return (unsafe { SuspendBitReader_183(br, state, result) });
+                            })(
+                                brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA
+                            )
+                        });
+                    }
+                    if ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) != 0) {
+                        (*qs).stage =
+                            (brunsli_internal_dec_QuantDataState_Stage_READ_DIFF_SIGN).clone();
+                    } else {
+                        (*qs).stage =
+                            (brunsli_internal_dec_QuantDataState_Stage_APPLY_DIFF).clone();
+                    };
+                    continue 'loop_;
                 }
-                (*qs).sign = if ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) != 0) {
-                    -1_i32
-                } else {
-                    1
-                };
-                (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF).clone();
-                continue 'loop_;
             }
-            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF as i32) => {
-                if !(unsafe {
-                    DecodeVarint_144(
-                        (&mut (*qs).vs as *mut brunsli_internal_dec_VarintState),
-                        br,
-                        16_usize,
-                    )
-                }) {
-                    return (unsafe {
-                        (|result: brunsli_BrunsliStatus| {
-                            return (unsafe { SuspendBitReader_183(br, state, result) });
-                        })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
-                    });
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage_READ_DIFF_SIGN as i32) => {
+                {
+                    if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
+                        return (unsafe {
+                            (|result: brunsli_BrunsliStatus| {
+                                return (unsafe { SuspendBitReader_183(br, state, result) });
+                            })(
+                                brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA
+                            )
+                        });
+                    }
+                    (*qs).sign = if ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) != 0) {
+                        -1_i32
+                    } else {
+                        1
+                    };
+                    (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage_READ_DIFF).clone();
+                    continue 'loop_;
                 }
-                let mut diff: i32 = (((*qs).vs.value as i32) + (1));
-                (*qs).delta += (((*qs).sign) * (diff));
-                (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::APPLY_DIFF).clone();
-                continue 'loop_;
             }
-            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::APPLY_DIFF as i32) => {
-                let k: i32 = (kJPEGNaturalOrder_13[((*qs).j)] as i32);
-                let quant_value: i32 =
-                    (((&mut (*qs)).predictor[(k as usize)] as i32) + ((*qs).delta));
-                (&mut (*jpg)).quant[((*qs).i)].values[(k as usize)] = quant_value;
-                if ((quant_value) <= (0)) {
-                    return (unsafe {
-                        (|result: brunsli_BrunsliStatus| {
-                            return (unsafe { SuspendBitReader_183(br, state, result) });
-                        })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                    });
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage_READ_DIFF as i32) => {
+                {
+                    if !(unsafe {
+                        DecodeVarint_144(
+                            (&mut (*qs).vs as *mut brunsli_internal_dec_VarintState),
+                            br,
+                            16_usize,
+                        )
+                    }) {
+                        return (unsafe {
+                            (|result: brunsli_BrunsliStatus| {
+                                return (unsafe { SuspendBitReader_183(br, state, result) });
+                            })(
+                                brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA
+                            )
+                        });
+                    }
+                    let mut diff: i32 = (((*qs).vs.value as i32) + (1));
+                    (*qs).delta += (((*qs).sign) * (diff));
+                    (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage_APPLY_DIFF).clone();
+                    continue 'loop_;
                 }
-                if ((quant_value) >= (256)) {
-                    (*qs).data_precision = 1_u8;
-                }
-                if ((quant_value) >= (65536)) {
-                    return (unsafe {
-                        (|result: brunsli_BrunsliStatus| {
-                            return (unsafe { SuspendBitReader_183(br, state, result) });
-                        })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                    });
-                }
-                (*qs).j.prefix_inc();
-                (*qs).stage =
-                    (brunsli_internal_dec_QuantDataState_Stage::READ_DIFF_IS_ZERO).clone();
-                continue 'loop_;
             }
-            __v if __v == (brunsli_internal_dec_QuantDataState_Stage::UPDATE as i32) => {
-                if (((&mut (*jpg)).quant[((*qs).i)].precision) < ((*qs).data_precision as i32)) {
-                    return (unsafe {
-                        (|result: brunsli_BrunsliStatus| {
-                            return (unsafe { SuspendBitReader_183(br, state, result) });
-                        })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                    });
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage_APPLY_DIFF as i32) => {
+                {
+                    let k: i32 = (kJPEGNaturalOrder_13[((*qs).j)] as i32);
+                    let quant_value: i32 =
+                        (((&mut (*qs)).predictor[(k as usize)] as i32) + ((*qs).delta));
+                    (&mut (*jpg)).quant[((*qs).i)].values[(k as usize)] = quant_value;
+                    if ((quant_value) <= (0)) {
+                        return (unsafe {
+                            (|result: brunsli_BrunsliStatus| {
+                                return (unsafe { SuspendBitReader_183(br, state, result) });
+                            })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
+                        });
+                    }
+                    if ((quant_value) >= (256)) {
+                        (*qs).data_precision = 1_u8;
+                    }
+                    if ((quant_value) >= (65536)) {
+                        return (unsafe {
+                            (|result: brunsli_BrunsliStatus| {
+                                return (unsafe { SuspendBitReader_183(br, state, result) });
+                            })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
+                        });
+                    }
+                    (*qs).j.prefix_inc();
+                    (*qs).stage =
+                        (brunsli_internal_dec_QuantDataState_Stage_READ_DIFF_IS_ZERO).clone();
+                    continue 'loop_;
                 }
-                (*qs).i.prefix_inc();
-                (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::READ_STOCK).clone();
-                continue 'loop_;
             }
-            _ => {}
+            __v if __v == (brunsli_internal_dec_QuantDataState_Stage_UPDATE as i32) => {
+                {
+                    if (((&mut (*jpg)).quant[((*qs).i)].precision) < ((*qs).data_precision as i32))
+                    {
+                        return (unsafe {
+                            (|result: brunsli_BrunsliStatus| {
+                                return (unsafe { SuspendBitReader_183(br, state, result) });
+                            })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
+                        });
+                    }
+                    (*qs).i.prefix_inc();
+                    (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage_READ_STOCK).clone();
+                    continue 'loop_;
+                }
+            }
+            _ => {
+                {}
+            }
         });
         break;
     }
     'loop_: while (((*qs).stage as i32)
-        == (brunsli_internal_dec_QuantDataState_Stage::READ_QUANT_IDX as i32))
+        == (brunsli_internal_dec_QuantDataState_Stage_READ_QUANT_IDX as i32))
     {
         if (((*qs).i) >= ((*jpg).components.len())) {
-            (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage::FINISH).clone();
+            (*qs).stage = (brunsli_internal_dec_QuantDataState_Stage_FINISH).clone();
             continue 'loop_;
         }
         let mut c: *mut brunsli_JPEGComponent =
@@ -6460,7 +6213,7 @@ pub unsafe fn DecodeQuantDataSection_186(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         (*c).quant_idx = ((unsafe { BrunsliBitReaderRead_126(br, 2_u32) }) as u8);
@@ -6468,12 +6221,12 @@ pub unsafe fn DecodeQuantDataSection_186(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (*qs).i.prefix_inc();
     }
-    if !(((*qs).stage as i32) == (brunsli_internal_dec_QuantDataState_Stage::FINISH as i32)) {
+    if !(((*qs).stage as i32) == (brunsli_internal_dec_QuantDataState_Stage_FINISH as i32)) {
         (unsafe {
             BrunsliDumpAndAbort_79(
                 c"brunsli_decode.cc".as_ptr(),
@@ -6486,16 +6239,16 @@ pub unsafe fn DecodeQuantDataSection_186(
     (unsafe {
         (|result: brunsli_BrunsliStatus| {
             return (unsafe { SuspendBitReader_183(br, state, result) });
-        })(brunsli_BrunsliStatus::BRUNSLI_OK)
+        })(brunsli_BrunsliStatus_BRUNSLI_OK)
     });
     (unsafe { BrunsliBitReaderFinish_131(br) });
     if !(unsafe { BrunsliBitReaderIsHealthy_132(br) }) {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
     if !(unsafe { IsAtSectionBoundary_175(state) }) {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
-    return brunsli_BrunsliStatus::BRUNSLI_OK;
+    return brunsli_BrunsliStatus_BRUNSLI_OK;
 }
 pub unsafe fn DecodeHistogramDataSection_187(
     mut state: *mut brunsli_internal_dec_State,
@@ -6507,7 +6260,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
     let hs: *mut brunsli_internal_dec_HistogramDataState =
         &mut (*s).histogram as *mut brunsli_internal_dec_HistogramDataState;
     let mut br: *mut brunsli_BrunsliBitReader = (&mut (*hs).br as *mut brunsli_BrunsliBitReader);
-    if (((*hs).stage as i32) == (brunsli_internal_dec_HistogramDataState_Stage::INIT as i32)) {
+    if (((*hs).stage as i32) == (brunsli_internal_dec_HistogramDataState_Stage_INIT as i32)) {
         (unsafe { BrunsliBitReaderInit_127(br) });
         if !(!(*jpg).components.is_empty()) {
             (unsafe {
@@ -6520,7 +6273,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
             'loop_: while true {}
         };
         (*s).num_contexts = ((*jpg).components.len()).clone();
-        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage::READ_SCHEME).clone();
+        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage_READ_SCHEME).clone();
         (unsafe { (*hs).arena.reserve(648_usize) });
     }
     (unsafe { PrepareBitReader_182(br, state) });
@@ -6528,7 +6281,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
     {
         (unsafe { BrunsliBitReaderSetOptimistic_133(br) });
     };
-    if (((*hs).stage as i32) == (brunsli_internal_dec_HistogramDataState_Stage::READ_SCHEME as i32))
+    if (((*hs).stage as i32) == (brunsli_internal_dec_HistogramDataState_Stage_READ_SCHEME as i32))
     {
         let num_components: usize = (*jpg).components.len();
         if !((num_components) <= (4_usize)) {
@@ -6545,7 +6298,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let mut i: usize = 0_usize;
@@ -6555,7 +6308,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
                 return (unsafe {
                     (|result: brunsli_BrunsliStatus| {
                         return (unsafe { SuspendBitReader_183(br, state, result) });
-                    })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                    })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             let m: *mut brunsli_internal_dec_ComponentMeta =
@@ -6570,19 +6323,19 @@ pub unsafe fn DecodeHistogramDataSection_187(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
-        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage::READ_NUM_HISTOGRAMS).clone();
+        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage_READ_NUM_HISTOGRAMS).clone();
     }
     if (((*hs).stage as i32)
-        == (brunsli_internal_dec_HistogramDataState_Stage::READ_NUM_HISTOGRAMS as i32))
+        == (brunsli_internal_dec_HistogramDataState_Stage_READ_NUM_HISTOGRAMS as i32))
     {
         if !(unsafe { BrunsliBitReaderCanRead_134(br, 11_usize) }) {
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         (*s).num_histograms =
@@ -6591,11 +6344,11 @@ pub unsafe fn DecodeHistogramDataSection_187(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         if (*s).shallow_histograms {
-            (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage::SKIP_CONTENT).clone();
+            (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage_SKIP_CONTENT).clone();
         } else {
             {
                 let __a0 = ((*s).num_contexts).wrapping_mul(kNumAvrgContexts_83) as usize;
@@ -6610,7 +6363,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
             (*state).entropy_codes = ((*s).entropy_codes_.as_mut_ptr()).cast_const();
             if (((*s).num_histograms) > (1_usize)) {
                 (*hs).stage =
-                    (brunsli_internal_dec_HistogramDataState_Stage::READ_CONTEXT_MAP_CODE).clone();
+                    (brunsli_internal_dec_HistogramDataState_Stage_READ_CONTEXT_MAP_CODE).clone();
             } else {
                 (*hs).i = 0_usize;
                 {
@@ -6618,23 +6371,22 @@ pub unsafe fn DecodeHistogramDataSection_187(
                     (*hs).counts.resize_with(__a0, || <u32>::default())
                 };
                 (*hs).stage =
-                    (brunsli_internal_dec_HistogramDataState_Stage::READ_HISTOGRAMS).clone();
+                    (brunsli_internal_dec_HistogramDataState_Stage_READ_HISTOGRAMS).clone();
             }
         }
     }
-    if (((*hs).stage as i32)
-        == (brunsli_internal_dec_HistogramDataState_Stage::SKIP_CONTENT as i32))
+    if (((*hs).stage as i32) == (brunsli_internal_dec_HistogramDataState_Stage_SKIP_CONTENT as i32))
     {
         (unsafe {
             (|result: brunsli_BrunsliStatus| {
                 return (unsafe { SuspendBitReader_183(br, state, result) });
-            })(brunsli_BrunsliStatus::BRUNSLI_OK)
+            })(brunsli_BrunsliStatus_BRUNSLI_OK)
         });
         if !(unsafe { BrunsliBitReaderIsHealthy_132(br) }) {
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (unsafe {
@@ -6643,12 +6395,12 @@ pub unsafe fn DecodeHistogramDataSection_187(
             SkipAvailableBytes_167(_state, _len)
         });
         if !(unsafe { IsAtSectionBoundary_175(state) }) {
-            return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+            return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
         }
-        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage::DONE).clone();
+        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage_DONE).clone();
     }
     if (((*hs).stage as i32)
-        == (brunsli_internal_dec_HistogramDataState_Stage::READ_CONTEXT_MAP_CODE as i32))
+        == (brunsli_internal_dec_HistogramDataState_Stage_READ_CONTEXT_MAP_CODE as i32))
     {
         if !(unsafe {
             BrunsliBitReaderCanRead_134(
@@ -6659,7 +6411,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         (*hs).max_run_length_prefix = 0_usize;
@@ -6692,14 +6444,14 @@ pub unsafe fn DecodeHistogramDataSection_187(
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
-                })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (*hs).i = 0_usize;
-        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage::READ_CONTEXT_MAP).clone();
+        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage_READ_CONTEXT_MAP).clone();
     }
     if (((*hs).stage as i32)
-        == (brunsli_internal_dec_HistogramDataState_Stage::READ_CONTEXT_MAP as i32))
+        == (brunsli_internal_dec_HistogramDataState_Stage_READ_CONTEXT_MAP as i32))
     {
         let mut status: brunsli_BrunsliStatus = (unsafe {
             let _entropy: *const brunsli_HuffmanDecodingData =
@@ -6714,7 +6466,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
                 br,
             )
         });
-        if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+        if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
             return (unsafe {
                 (|result: brunsli_BrunsliStatus| {
                     return (unsafe { SuspendBitReader_183(br, state, result) });
@@ -6726,10 +6478,10 @@ pub unsafe fn DecodeHistogramDataSection_187(
             let __a0 = (kCoeffAlphabetSize_136 as usize) as usize;
             (*hs).counts.resize_with(__a0, || <u32>::default())
         };
-        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage::READ_HISTOGRAMS).clone();
+        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage_READ_HISTOGRAMS).clone();
     }
     if (((*hs).stage as i32)
-        == (brunsli_internal_dec_HistogramDataState_Stage::READ_HISTOGRAMS as i32))
+        == (brunsli_internal_dec_HistogramDataState_Stage_READ_HISTOGRAMS as i32))
     {
         'loop_: while (((*hs).i) < ((*s).num_histograms)) {
             if !(unsafe {
@@ -6741,7 +6493,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
                 return (unsafe {
                     (|result: brunsli_BrunsliStatus| {
                         return (unsafe { SuspendBitReader_183(br, state, result) });
-                    })(brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                    })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
                 });
             }
             if !(unsafe {
@@ -6754,7 +6506,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
                 return (unsafe {
                     (|result: brunsli_BrunsliStatus| {
                         return (unsafe { SuspendBitReader_183(br, state, result) });
-                    })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                    })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             if !(unsafe {
@@ -6764,7 +6516,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
                 return (unsafe {
                     (|result: brunsli_BrunsliStatus| {
                         return (unsafe { SuspendBitReader_183(br, state, result) });
-                    })(brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                    })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             (*hs).i.prefix_inc();
@@ -6781,19 +6533,19 @@ pub unsafe fn DecodeHistogramDataSection_187(
         (unsafe {
             (|result: brunsli_BrunsliStatus| {
                 return (unsafe { SuspendBitReader_183(br, state, result) });
-            })(brunsli_BrunsliStatus::BRUNSLI_OK)
+            })(brunsli_BrunsliStatus_BRUNSLI_OK)
         });
         (unsafe { BrunsliBitReaderFinish_131(br) });
         if !(unsafe { BrunsliBitReaderIsHealthy_132(br) }) {
-            return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+            return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
         }
         if !(unsafe { IsAtSectionBoundary_175(state) }) {
-            return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+            return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
         }
-        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage::DONE).clone();
+        (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage_DONE).clone();
     }
     (unsafe { (*hs).arena.reset() });
-    if !(((*hs).stage as i32) == (brunsli_internal_dec_HistogramDataState_Stage::DONE as i32)) {
+    if !(((*hs).stage as i32) == (brunsli_internal_dec_HistogramDataState_Stage_DONE as i32)) {
         (unsafe {
             BrunsliDumpAndAbort_79(
                 c"brunsli_decode.cc".as_ptr(),
@@ -6803,7 +6555,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
         });
         'loop_: while true {}
     };
-    return brunsli_BrunsliStatus::BRUNSLI_OK;
+    return brunsli_BrunsliStatus_BRUNSLI_OK;
 }
 pub unsafe fn DecodeDCDataSection_190(
     mut state: *mut brunsli_internal_dec_State,
@@ -6821,8 +6573,8 @@ pub unsafe fn DecodeDCDataSection_190(
         'loop_: while true {}
     };
     let mut chunk_len: usize = ({
-        let mut __tmp_0 = (available as u64);
-        let mut __tmp_1 = (limit as u64);
+        let mut __tmp_0: u64 = (available as u64);
+        let mut __tmp_1: u64 = (limit as u64);
         (*if *&mut __tmp_0 <= *&mut __tmp_1 {
             (&mut __tmp_0) as *const _
         } else {
@@ -6831,9 +6583,9 @@ pub unsafe fn DecodeDCDataSection_190(
     } as usize);
     let mut is_last_chunk: bool = ((chunk_len) == (limit));
     let mut in_: brunsli_WordSource = brunsli_WordSource::brunsli_WordSource(
-        (*state).data.offset(((*state).pos) as isize),
-        chunk_len,
-        is_last_chunk,
+        { (*state).data.offset(((*state).pos) as isize) },
+        { chunk_len },
+        { is_last_chunk },
     );
     let mut status: brunsli_BrunsliStatus =
         (unsafe { DecodeDC_157(state, (&mut in_ as *mut brunsli_WordSource)) });
@@ -6848,7 +6600,7 @@ pub unsafe fn DecodeDCDataSection_190(
         'loop_: while true {}
     };
     if in_.error_ {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
     if !((in_.pos_) <= (chunk_len)) {
         (unsafe {
@@ -6862,7 +6614,7 @@ pub unsafe fn DecodeDCDataSection_190(
     };
     (unsafe { SkipBytes_165(state, in_.pos_) });
     if is_last_chunk {
-        if !((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32)) {
+        if !((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32)) {
             (unsafe {
                 BrunsliDumpAndAbort_79(
                     c"brunsli_decode.cc".as_ptr(),
@@ -6873,7 +6625,7 @@ pub unsafe fn DecodeDCDataSection_190(
             'loop_: while true {}
         };
         if !(unsafe { IsAtSectionBoundary_175(state) }) {
-            return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+            return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
         }
     }
     return status;
@@ -6894,8 +6646,8 @@ pub unsafe fn DecodeACDataSection_191(
         'loop_: while true {}
     };
     let mut chunk_len: usize = ({
-        let mut __tmp_0 = (available as u64);
-        let mut __tmp_1 = (limit as u64);
+        let mut __tmp_0: u64 = (available as u64);
+        let mut __tmp_1: u64 = (limit as u64);
         (*if *&mut __tmp_0 <= *&mut __tmp_1 {
             (&mut __tmp_0) as *const _
         } else {
@@ -6904,9 +6656,9 @@ pub unsafe fn DecodeACDataSection_191(
     } as usize);
     let mut is_last_chunk: bool = ((chunk_len) == (limit));
     let mut in_: brunsli_WordSource = brunsli_WordSource::brunsli_WordSource(
-        (*state).data.offset(((*state).pos) as isize),
-        chunk_len,
-        is_last_chunk,
+        { (*state).data.offset(((*state).pos) as isize) },
+        { chunk_len },
+        { is_last_chunk },
     );
     let mut status: brunsli_BrunsliStatus =
         (unsafe { DecodeAC_160(state, (&mut in_ as *mut brunsli_WordSource)) });
@@ -6921,7 +6673,7 @@ pub unsafe fn DecodeACDataSection_191(
         'loop_: while true {}
     };
     if in_.error_ {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
     if !((in_.pos_) <= (chunk_len)) {
         (unsafe {
@@ -6935,7 +6687,7 @@ pub unsafe fn DecodeACDataSection_191(
     };
     (unsafe { SkipBytes_165(state, in_.pos_) });
     if is_last_chunk {
-        if !((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32)) {
+        if !((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32)) {
             (unsafe {
                 BrunsliDumpAndAbort_79(
                     c"brunsli_decode.cc".as_ptr(),
@@ -6946,7 +6698,7 @@ pub unsafe fn DecodeACDataSection_191(
             'loop_: while true {}
         };
         if !(unsafe { IsAtSectionBoundary_175(state) }) {
-            return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+            return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
         }
     }
     return status;
@@ -6960,61 +6712,57 @@ pub unsafe fn DecodeOriginalJpg_192(
             as *mut brunsli_internal_dec_InternalState;
     let fs: *mut brunsli_internal_dec_FallbackState =
         &mut (*s).fallback as *mut brunsli_internal_dec_FallbackState;
-    'loop_: while (((*fs).stage) != (brunsli_internal_dec_FallbackState_Stage::DONE as usize)) {
+    'loop_: while (((*fs).stage) != (brunsli_internal_dec_FallbackState_Stage_DONE as usize)) {
         'switch: {
             let __match_cond = (*fs).stage;
             match __match_cond {
-                __v if __v == (brunsli_internal_dec_FallbackState_Stage::READ_TAG as usize) => {
+                __v if __v == (brunsli_internal_dec_FallbackState_Stage_READ_TAG as usize) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         ReadTag_170(
                             state,
                             (&mut (*s).section as *mut brunsli_internal_dec_SectionState),
                         )
                     });
-                    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
                     if (((*s).section.tag) != (kBrunsliOriginalJpgTag_38 as usize))
                         || (!(*s).section.is_section)
                     {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     (*fs).stage =
-                        (brunsli_internal_dec_FallbackState_Stage::ENTER_SECTION as usize).clone();
+                        (brunsli_internal_dec_FallbackState_Stage_ENTER_SECTION as usize).clone();
                     break 'switch;
                 }
-                __v if __v
-                    == (brunsli_internal_dec_FallbackState_Stage::ENTER_SECTION as usize) =>
-                {
+                __v if __v == (brunsli_internal_dec_FallbackState_Stage_ENTER_SECTION as usize) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         EnterSection_171(
                             state,
                             (&mut (*s).section as *mut brunsli_internal_dec_SectionState),
                         )
                     });
-                    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
                     (*jpg).original_jpg_size = (*s).section.remaining;
                     if (((*jpg).original_jpg_size) == (0_usize)) {
                         (*jpg).original_jpg = std::ptr::null();
                         (*fs).stage =
-                            (brunsli_internal_dec_FallbackState_Stage::DONE as usize).clone();
+                            (brunsli_internal_dec_FallbackState_Stage_DONE as usize).clone();
                         break 'switch;
                     }
                     (*fs).stage =
-                        (brunsli_internal_dec_FallbackState_Stage::READ_CONTENTS as usize).clone();
+                        (brunsli_internal_dec_FallbackState_Stage_READ_CONTENTS as usize).clone();
                     break 'switch;
                 }
-                __v if __v
-                    == (brunsli_internal_dec_FallbackState_Stage::READ_CONTENTS as usize) =>
-                {
+                __v if __v == (brunsli_internal_dec_FallbackState_Stage_READ_CONTENTS as usize) => {
                     let mut chunk_size: usize = (unsafe { GetBytesAvailable_166(state) });
                     if ((chunk_size) == (0_usize)) {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
                         });
                     }
                     let mut src: *const u8 = (*state).data.offset(((*state).pos) as isize);
@@ -7023,7 +6771,7 @@ pub unsafe fn DecodeOriginalJpg_192(
                             (*jpg).original_jpg = src;
                             (unsafe { SkipBytes_165(state, (*jpg).original_jpg_size) });
                             (*fs).stage =
-                                (brunsli_internal_dec_FallbackState_Stage::DONE as usize).clone();
+                                (brunsli_internal_dec_FallbackState_Stage_DONE as usize).clone();
                             break 'switch;
                         }
                     }
@@ -7031,8 +6779,8 @@ pub unsafe fn DecodeOriginalJpg_192(
                         .wrapping_sub(((*fs).storage.len() as u64))
                         as usize);
                     let mut to_copy: usize = ({
-                        let mut __tmp_0 = (chunk_size as u64);
-                        let mut __tmp_1 = (remaining as u64);
+                        let mut __tmp_0: u64 = (chunk_size as u64);
+                        let mut __tmp_1: u64 = (remaining as u64);
                         (*if *&mut __tmp_0 <= *&mut __tmp_1 {
                             (&mut __tmp_0) as *const _
                         } else {
@@ -7057,23 +6805,23 @@ pub unsafe fn DecodeOriginalJpg_192(
                     if (((*fs).storage.len()) == ((*jpg).original_jpg_size)) {
                         (*jpg).original_jpg = ((*fs).storage.as_mut_ptr()).cast_const();
                         (*fs).stage =
-                            (brunsli_internal_dec_FallbackState_Stage::DONE as usize).clone();
+                            (brunsli_internal_dec_FallbackState_Stage_DONE as usize).clone();
                         break 'switch;
                     }
                     return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA)
+                        Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
                     });
                 }
                 _ => {
                     return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR)
+                        Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR)
                     });
                 }
             }
         };
     }
     (unsafe { LeaveSection_172((&mut (*s).section as *mut brunsli_internal_dec_SectionState)) });
-    return brunsli_internal_dec_Stage::DONE;
+    return brunsli_internal_dec_Stage_DONE;
 }
 pub unsafe fn ParseSection_193(
     mut state: *mut brunsli_internal_dec_State,
@@ -7083,63 +6831,59 @@ pub unsafe fn ParseSection_193(
             as *mut brunsli_internal_dec_InternalState;
     let sh: *mut brunsli_internal_dec_SectionHeaderState =
         &mut (*s).section_header as *mut brunsli_internal_dec_SectionHeaderState;
-    let mut result: brunsli_internal_dec_Stage = brunsli_internal_dec_Stage::ERROR;
-    'loop_: while (((*sh).stage) != (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize))
-    {
+    let mut result: brunsli_internal_dec_Stage = brunsli_internal_dec_Stage_ERROR;
+    'loop_: while (((*sh).stage) != (brunsli_internal_dec_SectionHeaderState_Stage_DONE as usize)) {
         'switch: {
             let __match_cond = (*sh).stage;
             match __match_cond {
-                __v if __v
-                    == (brunsli_internal_dec_SectionHeaderState_Stage::READ_TAG as usize) =>
-                {
+                __v if __v == (brunsli_internal_dec_SectionHeaderState_Stage_READ_TAG as usize) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         ReadTag_170(
                             state,
                             (&mut (*s).section as *mut brunsli_internal_dec_SectionState),
                         )
                     });
-                    if ((status as i32) == (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32))
-                    {
+                    if ((status as i32) == (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32)) {
                         if (unsafe {
                             HasSection_194((state).cast_const(), (kBrunsliACDataTag_37 as u32))
                         }) {
-                            return brunsli_internal_dec_Stage::DONE;
+                            return brunsli_internal_dec_Stage_DONE;
                         }
                     }
-                    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
                     if (*s).section.is_section {
                         (*sh).stage =
-                            (brunsli_internal_dec_SectionHeaderState_Stage::ENTER_SECTION as usize);
+                            (brunsli_internal_dec_SectionHeaderState_Stage_ENTER_SECTION as usize);
                         continue 'loop_;
                     }
                     let tag_bit: u32 = ((1_u32) << ((*s).section.tag));
                     let is_known_section_tag: bool = (((kKnownSectionTags_137) & (tag_bit)) != 0);
                     if is_known_section_tag {
                         return (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
+                            Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
                     (*sh).stage =
-                        (brunsli_internal_dec_SectionHeaderState_Stage::READ_VALUE as usize);
+                        (brunsli_internal_dec_SectionHeaderState_Stage_READ_VALUE as usize);
                     continue 'loop_;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_SectionHeaderState_Stage::READ_VALUE as usize) =>
+                    == (brunsli_internal_dec_SectionHeaderState_Stage_READ_VALUE as usize) =>
                 {
                     let mut sink: usize = 0_usize;
                     let mut status: brunsli_BrunsliStatus =
                         (unsafe { DecodeBase128_168(state, (&mut sink as *mut usize)) });
-                    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
-                    result = brunsli_internal_dec_Stage::SECTION;
-                    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize);
+                    result = brunsli_internal_dec_Stage_SECTION;
+                    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage_DONE as usize);
                     continue 'loop_;
                 }
                 __v if __v
-                    == (brunsli_internal_dec_SectionHeaderState_Stage::ENTER_SECTION as usize) =>
+                    == (brunsli_internal_dec_SectionHeaderState_Stage_ENTER_SECTION as usize) =>
                 {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         EnterSection_171(
@@ -7147,23 +6891,23 @@ pub unsafe fn ParseSection_193(
                             (&mut (*s).section as *mut brunsli_internal_dec_SectionState),
                         )
                     });
-                    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         return (unsafe { Fail_169(state, status) });
                     }
-                    result = brunsli_internal_dec_Stage::SECTION_BODY;
-                    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage::DONE as usize);
+                    result = brunsli_internal_dec_Stage_SECTION_BODY;
+                    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage_DONE as usize);
                     continue 'loop_;
                 }
                 _ => {
                     return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR)
+                        Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR)
                     });
                 }
             }
         };
     }
-    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage::READ_TAG as usize);
-    if !((result) != (brunsli_internal_dec_Stage::ERROR)) {
+    (*sh).stage = (brunsli_internal_dec_SectionHeaderState_Stage_READ_TAG as usize);
+    if !((result) != (brunsli_internal_dec_Stage_ERROR)) {
         (unsafe {
             BrunsliDumpAndAbort_79(
                 c"brunsli_decode.cc".as_ptr(),
@@ -7188,8 +6932,8 @@ pub unsafe fn ProcessSection_195(
         (!is_known_section_tag) || ((((*state).skip_tags) & (tag_bit as u32)) != 0);
     if skip_section {
         let mut to_skip: usize = ({
-            let mut __tmp_0 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-            let mut __tmp_1 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
+            let mut __tmp_0: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
+            let mut __tmp_1: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
             (*if *&mut __tmp_0 <= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -7208,9 +6952,9 @@ pub unsafe fn ProcessSection_195(
                 });
                 'loop_: while true {}
             };
-            return (unsafe { Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA) });
+            return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA) });
         }
-        return brunsli_internal_dec_Stage::SECTION;
+        return brunsli_internal_dec_Stage_SECTION;
     }
     'switch: {
         let __match_cond = (*s).section.tag;
@@ -7218,7 +6962,7 @@ pub unsafe fn ProcessSection_195(
             __v if __v == (kBrunsliMetaDataTag_32 as usize) => {
                 let mut status: brunsli_BrunsliStatus =
                     (unsafe { DecodeMetaDataSection_180(state, jpg) });
-                if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                     return (unsafe { Fail_169(state, status) });
                 }
                 break 'switch;
@@ -7226,7 +6970,7 @@ pub unsafe fn ProcessSection_195(
             __v if __v == (kBrunsliJPEGInternalsTag_33 as usize) => {
                 let mut status: brunsli_BrunsliStatus =
                     (unsafe { DecodeJPEGInternalsSection_184(state, jpg) });
-                if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                     return (unsafe { Fail_169(state, status) });
                 }
                 break 'switch;
@@ -7235,13 +6979,11 @@ pub unsafe fn ProcessSection_195(
                 if !(unsafe {
                     HasSection_194((state).cast_const(), (kBrunsliJPEGInternalsTag_33 as u32))
                 }) {
-                    return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                    });
+                    return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
                 }
                 let mut status: brunsli_BrunsliStatus =
                     (unsafe { DecodeQuantDataSection_186(state, jpg) });
-                if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                     return (unsafe { Fail_169(state, status) });
                 }
                 break 'switch;
@@ -7250,13 +6992,11 @@ pub unsafe fn ProcessSection_195(
                 if !(unsafe {
                     HasSection_194((state).cast_const(), (kBrunsliJPEGInternalsTag_33 as u32))
                 }) {
-                    return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                    });
+                    return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
                 }
                 let mut status: brunsli_BrunsliStatus =
                     (unsafe { DecodeHistogramDataSection_187(state, jpg) });
-                if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                     return (unsafe { Fail_169(state, status) });
                 }
                 break 'switch;
@@ -7265,25 +7005,19 @@ pub unsafe fn ProcessSection_195(
                 if !(unsafe {
                     HasSection_194((state).cast_const(), (kBrunsliHistogramDataTag_35 as u32))
                 }) {
-                    return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                    });
+                    return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
                 }
                 if !(unsafe {
                     HasSection_194((state).cast_const(), (kBrunsliQuantDataTag_34 as u32))
                 }) {
-                    return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                    });
+                    return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
                 }
                 if (((unsafe { RemainingSectionLength_174(state) }) & (1_usize)) != (0_usize)) {
-                    return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                    });
+                    return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
                 }
                 (unsafe { WarmupMeta_196(jpg, state) });
                 let mut status: brunsli_BrunsliStatus = (unsafe { DecodeDCDataSection_190(state) });
-                if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                     return (unsafe { Fail_169(state, status) });
                 }
                 break 'switch;
@@ -7291,34 +7025,30 @@ pub unsafe fn ProcessSection_195(
             __v if __v == (kBrunsliACDataTag_37 as usize) => {
                 if !(unsafe { HasSection_194((state).cast_const(), (kBrunsliDCDataTag_36 as u32)) })
                 {
-                    return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                    });
+                    return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
                 }
                 if (((unsafe { RemainingSectionLength_174(state) }) & (1_usize)) != (0_usize)) {
-                    return (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                    });
+                    return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
                 }
                 (unsafe { WarmupMeta_196(jpg, state) });
                 let mut status: brunsli_BrunsliStatus = (unsafe { DecodeACDataSection_191(state) });
-                if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                     return (unsafe { Fail_169(state, status) });
                 }
                 break 'switch;
             }
             _ => {
-                return (unsafe { Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN) });
+                return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
             }
         }
     };
     if !(unsafe { IsAtSectionBoundary_175(state) }) {
-        return (unsafe { Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN) });
+        return (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
     }
     if (((*s).section.tag) == (kBrunsliACDataTag_37 as usize)) {
-        return brunsli_internal_dec_Stage::DONE;
+        return brunsli_internal_dec_Stage_DONE;
     }
-    return brunsli_internal_dec_Stage::SECTION;
+    return brunsli_internal_dec_Stage_SECTION;
 }
 pub unsafe fn UpdateSubsamplingDerivatives_178(mut jpg: *mut brunsli_JPEGData) -> bool {
     let mut i: usize = 0_usize;
@@ -7480,42 +7210,41 @@ pub unsafe fn DoProcessJpeg_197(
         'switch: {
             let __match_cond = (*state).stage;
             match __match_cond {
-                __v if __v == brunsli_internal_dec_Stage::SIGNATURE => {
+                __v if __v == brunsli_internal_dec_Stage_SIGNATURE => {
                     (*state).stage = (unsafe { VerifySignature_176(state) }).clone();
                     break 'switch;
                 }
-                __v if __v == brunsli_internal_dec_Stage::HEADER => {
+                __v if __v == brunsli_internal_dec_Stage_HEADER => {
                     (*state).stage = (unsafe { DecodeHeader_177(state, jpg) }).clone();
                     break 'switch;
                 }
-                __v if __v == brunsli_internal_dec_Stage::FALLBACK => {
+                __v if __v == brunsli_internal_dec_Stage_FALLBACK => {
                     (*state).stage = (unsafe { DecodeOriginalJpg_192(state, jpg) }).clone();
                     break 'switch;
                 }
-                __v if __v == brunsli_internal_dec_Stage::SECTION => {
+                __v if __v == brunsli_internal_dec_Stage_SECTION => {
                     (*state).stage = (unsafe { ParseSection_193(state) }).clone();
                     break 'switch;
                 }
-                __v if __v == brunsli_internal_dec_Stage::SECTION_BODY => {
+                __v if __v == brunsli_internal_dec_Stage_SECTION_BODY => {
                     (*state).stage = (unsafe { ProcessSection_195(state, jpg) }).clone();
                     break 'switch;
                 }
-                __v if __v == brunsli_internal_dec_Stage::DONE => {
+                __v if __v == brunsli_internal_dec_Stage_DONE => {
                     if (((*state).pos) != ((*state).len)) {
-                        (*state).stage = (unsafe {
-                            Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN)
-                        })
-                        .clone();
+                        (*state).stage =
+                            (unsafe { Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) })
+                                .clone();
                         break 'switch;
                     }
-                    return brunsli_BrunsliStatus::BRUNSLI_OK;
+                    return brunsli_BrunsliStatus_BRUNSLI_OK;
                 }
-                __v if __v == brunsli_internal_dec_Stage::ERROR => {
+                __v if __v == brunsli_internal_dec_Stage_ERROR => {
                     return (*(*state).internal.as_deref_mut().unwrap()).result;
                 }
                 _ => {
                     (*state).stage = (unsafe {
-                        Fail_169(state, brunsli_BrunsliStatus::BRUNSLI_DECOMPRESSION_ERROR)
+                        Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR)
                     })
                     .clone();
                     break 'switch;
@@ -7555,8 +7284,8 @@ pub unsafe fn LoadInput_200(mut state: *mut brunsli_internal_dec_State) {
     };
     let mut available: usize = ((*b).external_len).wrapping_sub((*b).external_pos);
     (*b).borrowed_len = ({
-        let mut __tmp_0 = (kBufferMaxReadAhead_199 as u64);
-        let mut __tmp_1 = (available as u64);
+        let mut __tmp_0: u64 = (kBufferMaxReadAhead_199 as u64);
+        let mut __tmp_1: u64 = (available as u64);
         (*if *&mut __tmp_0 <= *&mut __tmp_1 {
             (&mut __tmp_0) as *const _
         } else {
@@ -7595,7 +7324,7 @@ pub unsafe fn UnloadInput_201(
             });
             'loop_: while true {}
         };
-        if ((result as i32) != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32)) {
+        if ((result as i32) != (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32)) {
             return true;
         }
         if !(((*b).data_len) == (0_usize)) {
@@ -7639,7 +7368,7 @@ pub unsafe fn UnloadInput_201(
         return true;
     }
     (*b).data_len = ((*b).data_len).wrapping_sub((*state).pos);
-    if ((result as i32) == (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32)) {
+    if ((result as i32) == (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32)) {
         if !((((*b).external_pos).wrapping_add((*b).borrowed_len)) == ((*b).external_len)) {
             (unsafe {
                 BrunsliDumpAndAbort_79(c"brunsli_decode.cc".as_ptr(), 2389, c"UnloadInput".as_ptr())
@@ -7680,7 +7409,7 @@ pub unsafe fn UnloadInput_201(
         });
         'loop_: while true {}
     };
-    return ((result as i32) != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32));
+    return ((result as i32) != (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32));
 }
 pub unsafe fn UnchargeBuffer_202(mut state: *mut brunsli_internal_dec_State) {
     let s: *mut brunsli_internal_dec_InternalState =
@@ -7699,18 +7428,18 @@ pub unsafe fn ProcessJpeg_203(
         &mut (*(*state).internal.as_deref_mut().unwrap())
             as *mut brunsli_internal_dec_InternalState;
     if (((*state).pos) > ((*state).len)) {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_PARAM;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_PARAM;
     }
     (unsafe { ChargeBuffer_198(state) });
-    let mut result: brunsli_BrunsliStatus = brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
-    'loop_: while ((result as i32) == (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32)) {
-        if (((*state).stage) == (brunsli_internal_dec_Stage::ERROR)) {
-            if (((*s).result as i32) != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32)) {
+    let mut result: brunsli_BrunsliStatus = brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
+    'loop_: while ((result as i32) == (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32)) {
+        if (((*state).stage) == (brunsli_internal_dec_Stage_ERROR)) {
+            if (((*s).result as i32) != (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32)) {
                 return (*s).result;
             }
-            (*s).result = (brunsli_BrunsliStatus::BRUNSLI_OK).clone();
+            (*s).result = (brunsli_BrunsliStatus_BRUNSLI_OK).clone();
             (*state).stage = (*s).last_stage;
-            (*s).last_stage = (brunsli_internal_dec_Stage::ERROR).clone();
+            (*s).last_stage = (brunsli_internal_dec_Stage_ERROR).clone();
         }
         (unsafe { LoadInput_200(state) });
         if (*s).section.is_active {
@@ -7737,7 +7466,7 @@ pub unsafe fn BrunsliDecodeJpeg_204(
     mut jpg: *mut brunsli_JPEGData,
 ) -> brunsli_BrunsliStatus {
     if !!(data).is_null() {
-        return brunsli_BrunsliStatus::BRUNSLI_INVALID_PARAM;
+        return brunsli_BrunsliStatus_BRUNSLI_INVALID_PARAM;
     }
     let mut state: brunsli_internal_dec_State =
         brunsli_internal_dec_State::brunsli_internal_dec_State();
@@ -7747,7 +7476,7 @@ pub unsafe fn BrunsliDecodeJpeg_204(
 }
 pub unsafe fn BrunsliEstimateDecoderPeakMemoryUsage_205(mut data: *const u8, len: usize) -> usize {
     if !!(data).is_null() {
-        return (brunsli_BrunsliStatus::BRUNSLI_INVALID_PARAM as usize);
+        return (brunsli_BrunsliStatus_BRUNSLI_INVALID_PARAM as usize);
     }
     let mut state: brunsli_internal_dec_State =
         brunsli_internal_dec_State::brunsli_internal_dec_State();
@@ -7764,7 +7493,7 @@ pub unsafe fn BrunsliEstimateDecoderPeakMemoryUsage_205(mut data: *const u8, len
             (&mut jpg as *mut brunsli_JPEGData),
         )
     });
-    if ((status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+    if ((status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
         return 0_usize;
     }
     let mut out_size: usize = (2_usize).wrapping_mul(len);
@@ -7795,8 +7524,8 @@ pub unsafe fn BrunsliEstimateDecoderPeakMemoryUsage_205(mut data: *const u8, len
             as usize),
     );
     return ((((out_size).wrapping_add(jpeg_data_size) as u64).wrapping_add({
-        let mut __tmp_0 = (decode_peak as u64);
-        let mut __tmp_1 = (jpeg_writer_size as u64);
+        let mut __tmp_0: u64 = (decode_peak as u64);
+        let mut __tmp_1: u64 = (jpeg_writer_size as u64);
         (*if *&mut __tmp_0 >= *&mut __tmp_1 {
             (&mut __tmp_0) as *const _
         } else {
@@ -7842,10 +7571,10 @@ impl brunsli_BrunsliDecoder {
         let mut consumed_bytes: usize = (*state).pos;
         (*available_in) = (*available_in).wrapping_sub(consumed_bytes);
         (*next_in) = (*next_in).wrapping_add(consumed_bytes as usize);
-        if ((parse_status as i32) != (brunsli_BrunsliStatus::BRUNSLI_OK as i32))
-            && ((parse_status as i32) != (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32))
+        if ((parse_status as i32) != (brunsli_BrunsliStatus_BRUNSLI_OK as i32))
+            && ((parse_status as i32) != (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32))
         {
-            return brunsli_BrunsliDecoder_Status::ERROR;
+            return brunsli_BrunsliDecoder_Status_ERROR;
         }
         if !((*available_in) == (0_usize)) {
             (unsafe {
@@ -7860,14 +7589,14 @@ impl brunsli_BrunsliDecoder {
             let _next_out: *mut *mut u8 = next_out;
             SerializeJpeg_206(_state, _jpg, _available_out, _next_out)
         });
-        if ((serialization_status) == (brunsli_internal_dec_SerializationStatus::ERROR)) {
-            return brunsli_BrunsliDecoder_Status::ERROR;
+        if ((serialization_status) == (brunsli_internal_dec_SerializationStatus_ERROR)) {
+            return brunsli_BrunsliDecoder_Status_ERROR;
         }
         'switch: {
             let __match_cond = serialization_status;
             match __match_cond {
-                __v if __v == brunsli_internal_dec_SerializationStatus::DONE => {
-                    if !((parse_status as i32) == (brunsli_BrunsliStatus::BRUNSLI_OK as i32)) {
+                __v if __v == brunsli_internal_dec_SerializationStatus_DONE => {
+                    if !((parse_status as i32) == (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         (unsafe {
                             BrunsliDumpAndAbort_79(
                                 c"brunsli_decode.cc".as_ptr(),
@@ -7877,11 +7606,11 @@ impl brunsli_BrunsliDecoder {
                         });
                         'loop_: while true {}
                     };
-                    return brunsli_BrunsliDecoder_Status::DONE;
+                    return brunsli_BrunsliDecoder_Status_DONE;
                 }
-                __v if __v == brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT => {
+                __v if __v == brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT => {
                     if !((parse_status as i32)
-                        == (brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA as i32))
+                        == (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA as i32))
                     {
                         (unsafe {
                             BrunsliDumpAndAbort_79(
@@ -7892,9 +7621,9 @@ impl brunsli_BrunsliDecoder {
                         });
                         'loop_: while true {}
                     };
-                    return brunsli_BrunsliDecoder_Status::NEEDS_MORE_INPUT;
+                    return brunsli_BrunsliDecoder_Status_NEEDS_MORE_INPUT;
                 }
-                __v if __v == brunsli_internal_dec_SerializationStatus::NEEDS_MORE_OUTPUT => {
+                __v if __v == brunsli_internal_dec_SerializationStatus_NEEDS_MORE_OUTPUT => {
                     if !((*available_out) == (0_usize)) {
                         (unsafe {
                             BrunsliDumpAndAbort_79(
@@ -7905,10 +7634,10 @@ impl brunsli_BrunsliDecoder {
                         });
                         'loop_: while true {}
                     };
-                    return brunsli_BrunsliDecoder_Status::NEEDS_MORE_OUTPUT;
+                    return brunsli_BrunsliDecoder_Status_NEEDS_MORE_OUTPUT;
                 }
-                __v if __v == brunsli_internal_dec_SerializationStatus::ERROR => {
-                    return brunsli_BrunsliDecoder_Status::ERROR;
+                __v if __v == brunsli_internal_dec_SerializationStatus_ERROR => {
+                    return brunsli_BrunsliDecoder_Status_ERROR;
                 }
                 _ => {
                     if !(false) {
@@ -7921,7 +7650,7 @@ impl brunsli_BrunsliDecoder {
                         });
                         'loop_: while true {}
                     };
-                    return brunsli_BrunsliDecoder_Status::ERROR;
+                    return brunsli_BrunsliDecoder_Status_ERROR;
                 }
             }
         };
@@ -7971,7 +7700,7 @@ pub unsafe fn DecodeContextMap_188(
                 ((15_usize).wrapping_add(max_run_length_prefix)).wrapping_add(1_usize),
             )
         }) {
-            return brunsli_BrunsliStatus::BRUNSLI_NOT_ENOUGH_DATA;
+            return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
         }
         let mut code: u32 = ((unsafe {
             let _br: *mut brunsli_BrunsliBitReader = br;
@@ -7986,7 +7715,7 @@ pub unsafe fn DecodeContextMap_188(
                 as usize);
             'loop_: while (reps.prefix_dec() != 0) {
                 if ((*i) >= (length)) {
-                    return brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN;
+                    return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
                 }
                 (*map.offset((*i) as isize)) = 0_u8;
                 (*i).prefix_inc();
@@ -8001,9 +7730,9 @@ pub unsafe fn DecodeContextMap_188(
         (unsafe { InverseMoveToFrontTransform_208(map, length) });
     }
     return if (unsafe { BrunsliBitReaderIsHealthy_132(br) }) {
-        brunsli_BrunsliStatus::BRUNSLI_OK
+        brunsli_BrunsliStatus_BRUNSLI_OK
     } else {
-        brunsli_BrunsliStatus::BRUNSLI_INVALID_BRN
+        brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN
     };
 }
 pub unsafe fn GetPopulationCountPrecision_209(mut logcount: u32) -> u32 {
@@ -8771,15 +8500,17 @@ pub unsafe fn BuildHuffmanTable_218(
         .map(|_| <u16>::default())
         .collect::<Vec<_>>();
     let mut sorted: *mut u16 = sorted_storage.as_mut_ptr();
-    let mut sum: u16 = 0_u16;
-    len = 1_usize;
-    'loop_: while ((len) <= (kMaxHuffmanBits_22)) {
-        offset[(len)] = sum;
-        if ((*count.offset((len) as isize)) != 0) {
-            sum = (((sum as i32) + ((*count.offset((len) as isize)) as i32)) as u16);
-            max_length = len;
+    {
+        let mut sum: u16 = 0_u16;
+        len = 1_usize;
+        'loop_: while ((len) <= (kMaxHuffmanBits_22)) {
+            offset[(len)] = sum;
+            if ((*count.offset((len) as isize)) != 0) {
+                sum = (((sum as i32) + ((*count.offset((len) as isize)) as i32)) as u16);
+                max_length = len;
+            }
+            len.postfix_inc();
         }
-        len.postfix_inc();
     }
     symbol = 0_usize;
     'loop_: while ((symbol) < (code_lengths_size)) {
@@ -8915,9 +8646,9 @@ pub unsafe fn BitWriterInit_228(
     mut output_queue: *mut Vec<brunsli_internal_dec_OutputChunk>,
 ) {
     (*bw).output = output_queue;
-    (*bw).chunk = brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2(Some(
-        kBitWriterChunkSize_225,
-    ));
+    (*bw).chunk = brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
+        Some(kBitWriterChunkSize_225)
+    });
     (*bw).pos = 0_usize;
     (*bw).put_buffer = 0_u64;
     (*bw).put_bits = 64;
@@ -8927,9 +8658,9 @@ pub unsafe fn BitWriterInit_228(
 pub unsafe fn SwapBuffer_229(mut bw: *mut brunsli_internal_dec_BitWriter) {
     (*bw).chunk.len = (*bw).pos;
     (*(*bw).output).push(std::mem::take(&mut (*bw).chunk));
-    (*bw).chunk = brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2(Some(
-        kBitWriterChunkSize_225,
-    ));
+    (*bw).chunk = brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
+        Some(kBitWriterChunkSize_225)
+    });
     (*bw).data = (*(*bw).chunk.buffer.as_deref_mut().unwrap()).as_mut_ptr();
     (*bw).pos = 0_usize;
 }
@@ -9076,8 +8807,8 @@ pub unsafe fn BitWriterFinish_236(mut bw: *mut brunsli_internal_dec_BitWriter) {
     (*bw).chunk.len = (*bw).pos;
     (*(*bw).output).push(std::mem::take(&mut (*bw).chunk));
     (*bw).chunk = brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk1(
-        std::ptr::null(),
-        0_usize,
+        { std::ptr::null() },
+        { 0_usize },
     );
     (*bw).data = std::ptr::null_mut();
     (*bw).pos = 0_usize;
@@ -9154,8 +8885,8 @@ pub unsafe fn BufferEndOfBand_239(
         let mut tail: usize = (((*s).refinement_bits_count_) & (15_usize));
         if (tail != 0) {
             let mut stuff_bits_count: usize = ({
-                let mut __tmp_0 = ((16_usize).wrapping_sub(tail) as u64);
-                let mut __tmp_1 = (new_bits_count as u64);
+                let mut __tmp_0: u64 = ((16_usize).wrapping_sub(tail) as u64);
+                let mut __tmp_1: u64 = (new_bits_count as u64);
                 (*if *&mut __tmp_0 <= *&mut __tmp_1 {
                     (&mut __tmp_0) as *const _
                 } else {
@@ -9242,7 +8973,9 @@ pub unsafe fn BuildHuffmanCodeTable_240(
 }
 pub unsafe fn EncodeSOI_241(mut state: *mut brunsli_internal_dec_SerializationState) -> bool {
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3(vec![255_u8, 216_u8]),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({
+            vec![255_u8, 216_u8]
+        }),
     );
     return true;
 }
@@ -9251,12 +8984,14 @@ pub unsafe fn EncodeEOI_242(
     mut state: *mut brunsli_internal_dec_SerializationState,
 ) -> bool {
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3(vec![255_u8, 217_u8]),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({
+            vec![255_u8, 217_u8]
+        }),
     );
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4(
-            &(*jpg).tail_data as *const Vec<u8>,
-        ),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4({
+            &(*jpg).tail_data as *const Vec<u8>
+        }),
     );
     return true;
 }
@@ -9271,9 +9006,9 @@ pub unsafe fn EncodeSOF_243(
     let n_comps: usize = (*jpg).components.len();
     let marker_len: usize = (8_usize).wrapping_add((3_usize).wrapping_mul(n_comps));
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2(Some(
-            (marker_len).wrapping_add(2_usize),
-        )),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
+            Some((marker_len).wrapping_add(2_usize))
+        }),
     );
     let mut data: *mut u8 = (*(*((*state).output_queue.last_mut().unwrap()))
         .buffer
@@ -9314,9 +9049,9 @@ pub unsafe fn EncodeSOS_244(
     let n_scans: usize = (*scan_info).num_components;
     let marker_len: usize = (6_usize).wrapping_add((2_usize).wrapping_mul(n_scans));
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2(Some(
-            (marker_len).wrapping_add(2_usize),
-        )),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
+            Some((marker_len).wrapping_add(2_usize))
+        }),
     );
     let mut data: *mut u8 = (*(*((*state).output_queue.last_mut().unwrap()))
         .buffer
@@ -9371,9 +9106,9 @@ pub unsafe fn EncodeDHT_245(
         i.prefix_inc();
     }
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2(Some(
-            (marker_len).wrapping_add(2_usize),
-        )),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
+            Some((marker_len).wrapping_add(2_usize))
+        }),
     );
     let mut data: *mut u8 = (*(*((*state).output_queue.last_mut().unwrap()))
         .buffer
@@ -9457,9 +9192,9 @@ pub unsafe fn EncodeDQT_246(
         i.prefix_inc();
     }
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2(Some(
-            (((marker_len) + (2)) as usize),
-        )),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
+            Some((((marker_len) + (2)) as usize))
+        }),
     );
     let mut data: *mut u8 = (*(*((*state).output_queue.last_mut().unwrap()))
         .buffer
@@ -9502,14 +9237,16 @@ pub unsafe fn EncodeDRI_247(
 ) -> bool {
     (*state).seen_dri_marker = true;
     let mut dri_marker: brunsli_internal_dec_OutputChunk =
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3(vec![
-            255_u8,
-            221_u8,
-            0_u8,
-            4_u8,
-            ((((*jpg).restart_interval) >> (8)) as u8),
-            ((((*jpg).restart_interval) & (255)) as u8),
-        ]);
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({
+            vec![
+                255_u8,
+                221_u8,
+                0_u8,
+                4_u8,
+                ((((*jpg).restart_interval) >> (8)) as u8),
+                ((((*jpg).restart_interval) & (255)) as u8),
+            ]
+        });
     (*state).output_queue.push(std::mem::take(&mut dri_marker));
     return true;
 }
@@ -9518,7 +9255,9 @@ pub unsafe fn EncodeRestart_248(
     mut state: *mut brunsli_internal_dec_SerializationState,
 ) -> bool {
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3(vec![255_u8, marker]),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({
+            vec![255_u8, marker]
+        }),
     );
     return true;
 }
@@ -9532,13 +9271,13 @@ pub unsafe fn EncodeAPP_249(
     if ((app_index) >= ((*jpg).app_data.len())) {
         return false;
     }
-    (*state)
-        .output_queue
-        .push(brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3(vec![255_u8]));
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4(
-            &(&(*jpg)).app_data[(app_index)] as *const Vec<u8>,
-        ),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({ vec![255_u8] }),
+    );
+    (*state).output_queue.push(
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4({
+            &(&(*jpg)).app_data[(app_index)] as *const Vec<u8>
+        }),
     );
     return true;
 }
@@ -9550,13 +9289,13 @@ pub unsafe fn EncodeCOM_250(
     if ((com_index) >= ((*jpg).com_data.len())) {
         return false;
     }
-    (*state)
-        .output_queue
-        .push(brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3(vec![255_u8]));
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4(
-            &(&(*jpg)).com_data[(com_index)] as *const Vec<u8>,
-        ),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({ vec![255_u8] }),
+    );
+    (*state).output_queue.push(
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4({
+            &(&(*jpg)).com_data[(com_index)] as *const Vec<u8>
+        }),
     );
     return true;
 }
@@ -9569,9 +9308,9 @@ pub unsafe fn EncodeInterMarkerData_251(
         return false;
     }
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4(
-            &(&(*jpg)).inter_marker_data[(index)] as *const Vec<u8>,
-        ),
+        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4({
+            &(&(*jpg)).inter_marker_data[(index)] as *const Vec<u8>
+        }),
     );
     return true;
 }
@@ -9910,14 +9649,14 @@ pub unsafe fn DoEncodeScan_255(
     } else {
         0
     };
-    if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage::HEAD as i32)) {
+    if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_HEAD as i32)) {
         if !(unsafe {
             let _jpg: *const brunsli_JPEGData = jpg;
             let _scan_info: *const brunsli_JPEGScanInfo = scan_info;
             let _state: *mut brunsli_internal_dec_SerializationState = state;
             EncodeSOS_244(_jpg, _scan_info, _state)
         }) {
-            return brunsli_internal_dec_SerializationStatus::ERROR;
+            return brunsli_internal_dec_SerializationStatus_ERROR;
         }
         (unsafe {
             BitWriterInit_228(
@@ -9965,13 +9704,13 @@ pub unsafe fn DoEncodeScan_255(
             }
             ((*ss).last_dc_coeff.as_mut_ptr() as *mut i16 as *mut ::libc::c_void)
         };
-        (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage::BODY).clone();
+        (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage_BODY).clone();
     }
     let mut bw: *mut brunsli_internal_dec_BitWriter =
         (&mut (*ss).bw as *mut brunsli_internal_dec_BitWriter);
     let mut coding_state: *mut brunsli_internal_dec_DCTCodingState =
         (&mut (*ss).coding_state as *mut brunsli_internal_dec_DCTCodingState);
-    if !(((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage::BODY as i32)) {
+    if !(((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_BODY as i32)) {
         (unsafe {
             BrunsliDumpAndAbort_79(
                 c"jpeg_data_writer.cc".as_ptr(),
@@ -10010,11 +9749,11 @@ pub unsafe fn DoEncodeScan_255(
     let Ss: i32 = if is_progressive { (*scan_info).Ss } else { 0 };
     let Se: i32 = if is_progressive { (*scan_info).Se } else { 63 };
     let want_ac: bool = (((Ss) != (0)) || ((Se) != (0)));
-    let complete_ac: bool = (((*parsing_state).stage) == (brunsli_internal_dec_Stage::DONE));
+    let complete_ac: bool = (((*parsing_state).stage) == (brunsli_internal_dec_Stage_DONE));
     let has_ac: bool = (complete_ac)
         || (unsafe { HasSection_194((parsing_state), (kBrunsliACDataTag_37 as u32)) });
     if (want_ac) && (!has_ac) {
-        return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT;
+        return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT;
     }
     let complete_dc: bool = has_ac;
     let complete: bool = if want_ac { complete_ac } else { complete_dc };
@@ -10038,7 +9777,7 @@ pub unsafe fn DoEncodeScan_255(
                     let _pad_bits_end: *const i32 = (*state).pad_bits_end;
                     JumpToByteBoundary_235(bw, _pad_bits, _pad_bits_end)
                 }) {
-                    return brunsli_internal_dec_SerializationStatus::ERROR;
+                    return brunsli_internal_dec_SerializationStatus_ERROR;
                 }
                 (unsafe { EmitMarker_234(bw, ((208) + ((*ss).next_restart_marker))) });
                 (*ss).next_restart_marker += 1;
@@ -10200,7 +9939,7 @@ pub unsafe fn DoEncodeScan_255(
                             .clone();
                         }
                         if !ok {
-                            return brunsli_internal_dec_SerializationStatus::ERROR;
+                            return brunsli_internal_dec_SerializationStatus_ERROR;
                         }
                         (*ss).block_scan_index.prefix_inc();
                         ix.prefix_inc();
@@ -10216,9 +9955,9 @@ pub unsafe fn DoEncodeScan_255(
     }
     if (((*ss).mcu_y) < (MCU_rows)) {
         if !(*bw).healthy {
-            return brunsli_internal_dec_SerializationStatus::ERROR;
+            return brunsli_internal_dec_SerializationStatus_ERROR;
         }
-        return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT;
+        return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT;
     }
     (unsafe { Flush_238(coding_state, bw) });
     if !(unsafe {
@@ -10226,15 +9965,15 @@ pub unsafe fn DoEncodeScan_255(
         let _pad_bits_end: *const i32 = (*state).pad_bits_end;
         JumpToByteBoundary_235(bw, _pad_bits, _pad_bits_end)
     }) {
-        return brunsli_internal_dec_SerializationStatus::ERROR;
+        return brunsli_internal_dec_SerializationStatus_ERROR;
     }
     (unsafe { BitWriterFinish_236(bw) });
-    (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage::HEAD).clone();
+    (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage_HEAD).clone();
     (*state).scan_index.postfix_inc();
     if !(*bw).healthy {
-        return brunsli_internal_dec_SerializationStatus::ERROR;
+        return brunsli_internal_dec_SerializationStatus_ERROR;
     }
-    return brunsli_internal_dec_SerializationStatus::DONE;
+    return brunsli_internal_dec_SerializationStatus_DONE;
 }
 pub unsafe fn DoEncodeScan_256(
     jpg: *const brunsli_JPEGData,
@@ -10250,14 +9989,14 @@ pub unsafe fn DoEncodeScan_256(
     } else {
         0
     };
-    if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage::HEAD as i32)) {
+    if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_HEAD as i32)) {
         if !(unsafe {
             let _jpg: *const brunsli_JPEGData = jpg;
             let _scan_info: *const brunsli_JPEGScanInfo = scan_info;
             let _state: *mut brunsli_internal_dec_SerializationState = state;
             EncodeSOS_244(_jpg, _scan_info, _state)
         }) {
-            return brunsli_internal_dec_SerializationStatus::ERROR;
+            return brunsli_internal_dec_SerializationStatus_ERROR;
         }
         (unsafe {
             BitWriterInit_228(
@@ -10305,13 +10044,13 @@ pub unsafe fn DoEncodeScan_256(
             }
             ((*ss).last_dc_coeff.as_mut_ptr() as *mut i16 as *mut ::libc::c_void)
         };
-        (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage::BODY).clone();
+        (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage_BODY).clone();
     }
     let mut bw: *mut brunsli_internal_dec_BitWriter =
         (&mut (*ss).bw as *mut brunsli_internal_dec_BitWriter);
     let mut coding_state: *mut brunsli_internal_dec_DCTCodingState =
         (&mut (*ss).coding_state as *mut brunsli_internal_dec_DCTCodingState);
-    if !(((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage::BODY as i32)) {
+    if !(((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_BODY as i32)) {
         (unsafe {
             BrunsliDumpAndAbort_79(
                 c"jpeg_data_writer.cc".as_ptr(),
@@ -10350,11 +10089,11 @@ pub unsafe fn DoEncodeScan_256(
     let Ss: i32 = if is_progressive { (*scan_info).Ss } else { 0 };
     let Se: i32 = if is_progressive { (*scan_info).Se } else { 63 };
     let want_ac: bool = (((Ss) != (0)) || ((Se) != (0)));
-    let complete_ac: bool = (((*parsing_state).stage) == (brunsli_internal_dec_Stage::DONE));
+    let complete_ac: bool = (((*parsing_state).stage) == (brunsli_internal_dec_Stage_DONE));
     let has_ac: bool = (complete_ac)
         || (unsafe { HasSection_194((parsing_state), (kBrunsliACDataTag_37 as u32)) });
     if (want_ac) && (!has_ac) {
-        return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT;
+        return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT;
     }
     let complete_dc: bool = has_ac;
     let complete: bool = if want_ac { complete_ac } else { complete_dc };
@@ -10378,7 +10117,7 @@ pub unsafe fn DoEncodeScan_256(
                     let _pad_bits_end: *const i32 = (*state).pad_bits_end;
                     JumpToByteBoundary_235(bw, _pad_bits, _pad_bits_end)
                 }) {
-                    return brunsli_internal_dec_SerializationStatus::ERROR;
+                    return brunsli_internal_dec_SerializationStatus_ERROR;
                 }
                 (unsafe { EmitMarker_234(bw, ((208) + ((*ss).next_restart_marker))) });
                 (*ss).next_restart_marker += 1;
@@ -10540,7 +10279,7 @@ pub unsafe fn DoEncodeScan_256(
                             .clone();
                         }
                         if !ok {
-                            return brunsli_internal_dec_SerializationStatus::ERROR;
+                            return brunsli_internal_dec_SerializationStatus_ERROR;
                         }
                         (*ss).block_scan_index.prefix_inc();
                         ix.prefix_inc();
@@ -10556,9 +10295,9 @@ pub unsafe fn DoEncodeScan_256(
     }
     if (((*ss).mcu_y) < (MCU_rows)) {
         if !(*bw).healthy {
-            return brunsli_internal_dec_SerializationStatus::ERROR;
+            return brunsli_internal_dec_SerializationStatus_ERROR;
         }
-        return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT;
+        return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT;
     }
     (unsafe { Flush_238(coding_state, bw) });
     if !(unsafe {
@@ -10566,15 +10305,15 @@ pub unsafe fn DoEncodeScan_256(
         let _pad_bits_end: *const i32 = (*state).pad_bits_end;
         JumpToByteBoundary_235(bw, _pad_bits, _pad_bits_end)
     }) {
-        return brunsli_internal_dec_SerializationStatus::ERROR;
+        return brunsli_internal_dec_SerializationStatus_ERROR;
     }
     (unsafe { BitWriterFinish_236(bw) });
-    (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage::HEAD).clone();
+    (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage_HEAD).clone();
     (*state).scan_index.postfix_inc();
     if !(*bw).healthy {
-        return brunsli_internal_dec_SerializationStatus::ERROR;
+        return brunsli_internal_dec_SerializationStatus_ERROR;
     }
-    return brunsli_internal_dec_SerializationStatus::DONE;
+    return brunsli_internal_dec_SerializationStatus_DONE;
 }
 pub unsafe fn DoEncodeScan_257(
     jpg: *const brunsli_JPEGData,
@@ -10590,14 +10329,14 @@ pub unsafe fn DoEncodeScan_257(
     } else {
         0
     };
-    if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage::HEAD as i32)) {
+    if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_HEAD as i32)) {
         if !(unsafe {
             let _jpg: *const brunsli_JPEGData = jpg;
             let _scan_info: *const brunsli_JPEGScanInfo = scan_info;
             let _state: *mut brunsli_internal_dec_SerializationState = state;
             EncodeSOS_244(_jpg, _scan_info, _state)
         }) {
-            return brunsli_internal_dec_SerializationStatus::ERROR;
+            return brunsli_internal_dec_SerializationStatus_ERROR;
         }
         (unsafe {
             BitWriterInit_228(
@@ -10645,13 +10384,13 @@ pub unsafe fn DoEncodeScan_257(
             }
             ((*ss).last_dc_coeff.as_mut_ptr() as *mut i16 as *mut ::libc::c_void)
         };
-        (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage::BODY).clone();
+        (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage_BODY).clone();
     }
     let mut bw: *mut brunsli_internal_dec_BitWriter =
         (&mut (*ss).bw as *mut brunsli_internal_dec_BitWriter);
     let mut coding_state: *mut brunsli_internal_dec_DCTCodingState =
         (&mut (*ss).coding_state as *mut brunsli_internal_dec_DCTCodingState);
-    if !(((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage::BODY as i32)) {
+    if !(((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_BODY as i32)) {
         (unsafe {
             BrunsliDumpAndAbort_79(
                 c"jpeg_data_writer.cc".as_ptr(),
@@ -10690,11 +10429,11 @@ pub unsafe fn DoEncodeScan_257(
     let Ss: i32 = if is_progressive { (*scan_info).Ss } else { 0 };
     let Se: i32 = if is_progressive { (*scan_info).Se } else { 63 };
     let want_ac: bool = (((Ss) != (0)) || ((Se) != (0)));
-    let complete_ac: bool = (((*parsing_state).stage) == (brunsli_internal_dec_Stage::DONE));
+    let complete_ac: bool = (((*parsing_state).stage) == (brunsli_internal_dec_Stage_DONE));
     let has_ac: bool = (complete_ac)
         || (unsafe { HasSection_194((parsing_state), (kBrunsliACDataTag_37 as u32)) });
     if (want_ac) && (!has_ac) {
-        return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT;
+        return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT;
     }
     let complete_dc: bool = has_ac;
     let complete: bool = if want_ac { complete_ac } else { complete_dc };
@@ -10718,7 +10457,7 @@ pub unsafe fn DoEncodeScan_257(
                     let _pad_bits_end: *const i32 = (*state).pad_bits_end;
                     JumpToByteBoundary_235(bw, _pad_bits, _pad_bits_end)
                 }) {
-                    return brunsli_internal_dec_SerializationStatus::ERROR;
+                    return brunsli_internal_dec_SerializationStatus_ERROR;
                 }
                 (unsafe { EmitMarker_234(bw, ((208) + ((*ss).next_restart_marker))) });
                 (*ss).next_restart_marker += 1;
@@ -10880,7 +10619,7 @@ pub unsafe fn DoEncodeScan_257(
                             .clone();
                         }
                         if !ok {
-                            return brunsli_internal_dec_SerializationStatus::ERROR;
+                            return brunsli_internal_dec_SerializationStatus_ERROR;
                         }
                         (*ss).block_scan_index.prefix_inc();
                         ix.prefix_inc();
@@ -10896,9 +10635,9 @@ pub unsafe fn DoEncodeScan_257(
     }
     if (((*ss).mcu_y) < (MCU_rows)) {
         if !(*bw).healthy {
-            return brunsli_internal_dec_SerializationStatus::ERROR;
+            return brunsli_internal_dec_SerializationStatus_ERROR;
         }
-        return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT;
+        return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT;
     }
     (unsafe { Flush_238(coding_state, bw) });
     if !(unsafe {
@@ -10906,15 +10645,15 @@ pub unsafe fn DoEncodeScan_257(
         let _pad_bits_end: *const i32 = (*state).pad_bits_end;
         JumpToByteBoundary_235(bw, _pad_bits, _pad_bits_end)
     }) {
-        return brunsli_internal_dec_SerializationStatus::ERROR;
+        return brunsli_internal_dec_SerializationStatus_ERROR;
     }
     (unsafe { BitWriterFinish_236(bw) });
-    (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage::HEAD).clone();
+    (*ss).stage = (brunsli_internal_dec_EncodeScanState_Stage_HEAD).clone();
     (*state).scan_index.postfix_inc();
     if !(*bw).healthy {
-        return brunsli_internal_dec_SerializationStatus::ERROR;
+        return brunsli_internal_dec_SerializationStatus_ERROR;
     }
-    return brunsli_internal_dec_SerializationStatus::DONE;
+    return brunsli_internal_dec_SerializationStatus_DONE;
 }
 pub unsafe fn EncodeScan_258(
     jpg: *const brunsli_JPEGData,
@@ -10967,9 +10706,9 @@ pub unsafe fn SerializeSection_259(
                 return (unsafe {
                     (|result: bool| {
                         return if result {
-                            brunsli_internal_dec_SerializationStatus::DONE
+                            brunsli_internal_dec_SerializationStatus_DONE
                         } else {
-                            brunsli_internal_dec_SerializationStatus::ERROR
+                            brunsli_internal_dec_SerializationStatus_ERROR
                         };
                     })(
                         (unsafe {
@@ -10985,9 +10724,9 @@ pub unsafe fn SerializeSection_259(
                 return (unsafe {
                     (|result: bool| {
                         return if result {
-                            brunsli_internal_dec_SerializationStatus::DONE
+                            brunsli_internal_dec_SerializationStatus_DONE
                         } else {
-                            brunsli_internal_dec_SerializationStatus::ERROR
+                            brunsli_internal_dec_SerializationStatus_ERROR
                         };
                     })(
                         (unsafe {
@@ -11010,9 +10749,9 @@ pub unsafe fn SerializeSection_259(
                 return (unsafe {
                     (|result: bool| {
                         return if result {
-                            brunsli_internal_dec_SerializationStatus::DONE
+                            brunsli_internal_dec_SerializationStatus_DONE
                         } else {
-                            brunsli_internal_dec_SerializationStatus::ERROR
+                            brunsli_internal_dec_SerializationStatus_ERROR
                         };
                     })((unsafe { EncodeRestart_248(marker, state) }))
                 });
@@ -11021,9 +10760,9 @@ pub unsafe fn SerializeSection_259(
                 return (unsafe {
                     (|result: bool| {
                         return if result {
-                            brunsli_internal_dec_SerializationStatus::DONE
+                            brunsli_internal_dec_SerializationStatus_DONE
                         } else {
-                            brunsli_internal_dec_SerializationStatus::ERROR
+                            brunsli_internal_dec_SerializationStatus_ERROR
                         };
                     })(
                         (unsafe {
@@ -11046,9 +10785,9 @@ pub unsafe fn SerializeSection_259(
                 return (unsafe {
                     (|result: bool| {
                         return if result {
-                            brunsli_internal_dec_SerializationStatus::DONE
+                            brunsli_internal_dec_SerializationStatus_DONE
                         } else {
-                            brunsli_internal_dec_SerializationStatus::ERROR
+                            brunsli_internal_dec_SerializationStatus_ERROR
                         };
                     })(
                         (unsafe {
@@ -11063,9 +10802,9 @@ pub unsafe fn SerializeSection_259(
                 return (unsafe {
                     (|result: bool| {
                         return if result {
-                            brunsli_internal_dec_SerializationStatus::DONE
+                            brunsli_internal_dec_SerializationStatus_DONE
                         } else {
-                            brunsli_internal_dec_SerializationStatus::ERROR
+                            brunsli_internal_dec_SerializationStatus_ERROR
                         };
                     })(
                         (unsafe {
@@ -11096,9 +10835,9 @@ pub unsafe fn SerializeSection_259(
                 return (unsafe {
                     (|result: bool| {
                         return if result {
-                            brunsli_internal_dec_SerializationStatus::DONE
+                            brunsli_internal_dec_SerializationStatus_DONE
                         } else {
-                            brunsli_internal_dec_SerializationStatus::ERROR
+                            brunsli_internal_dec_SerializationStatus_ERROR
                         };
                     })(
                         (unsafe {
@@ -11114,9 +10853,9 @@ pub unsafe fn SerializeSection_259(
                 return (unsafe {
                     (|result: bool| {
                         return if result {
-                            brunsli_internal_dec_SerializationStatus::DONE
+                            brunsli_internal_dec_SerializationStatus_DONE
                         } else {
-                            brunsli_internal_dec_SerializationStatus::ERROR
+                            brunsli_internal_dec_SerializationStatus_ERROR
                         };
                     })(
                         (unsafe {
@@ -11131,9 +10870,9 @@ pub unsafe fn SerializeSection_259(
                 return (unsafe {
                     (|result: bool| {
                         return if result {
-                            brunsli_internal_dec_SerializationStatus::DONE
+                            brunsli_internal_dec_SerializationStatus_DONE
                         } else {
-                            brunsli_internal_dec_SerializationStatus::ERROR
+                            brunsli_internal_dec_SerializationStatus_ERROR
                         };
                     })(
                         (unsafe {
@@ -11145,7 +10884,7 @@ pub unsafe fn SerializeSection_259(
                 });
             }
             _ => {
-                return brunsli_internal_dec_SerializationStatus::ERROR;
+                return brunsli_internal_dec_SerializationStatus_ERROR;
             }
         }
     };
@@ -11162,8 +10901,8 @@ pub unsafe fn PushOutput_260(
         }
         let chunk: *mut brunsli_internal_dec_OutputChunk = ((*in_).first_mut().unwrap());
         let mut to_copy: usize = ({
-            let mut __tmp_0 = ((*available_out) as u64);
-            let mut __tmp_1 = ((*chunk).len as u64);
+            let mut __tmp_0: u64 = ((*available_out) as u64);
+            let mut __tmp_1: u64 = ((*chunk).len as u64);
             (*if *&mut __tmp_0 <= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -11194,7 +10933,7 @@ pub unsafe fn PushOutput_260(
 pub unsafe fn WriteJpeg_261(jpg: *const brunsli_JPEGData, mut out: brunsli_JPEGOutput) -> bool {
     let mut state: brunsli_internal_dec_State =
         brunsli_internal_dec_State::brunsli_internal_dec_State();
-    state.stage = (brunsli_internal_dec_Stage::DONE).clone();
+    state.stage = (brunsli_internal_dec_Stage_DONE).clone();
     let mut buffer: Vec<u8> = (0..(16384_usize) as usize)
         .map(|_| <u8>::default())
         .collect::<Vec<_>>();
@@ -11209,8 +10948,8 @@ pub unsafe fn WriteJpeg_261(jpg: *const brunsli_JPEGData, mut out: brunsli_JPEGO
             let _next_out: *mut *mut u8 = (&mut next_out as *mut *mut u8);
             SerializeJpeg_206(_state, _jpg, _available_out, _next_out)
         });
-        if ((status) != (brunsli_internal_dec_SerializationStatus::DONE))
-            && ((status) != (brunsli_internal_dec_SerializationStatus::NEEDS_MORE_OUTPUT))
+        if ((status) != (brunsli_internal_dec_SerializationStatus_DONE))
+            && ((status) != (brunsli_internal_dec_SerializationStatus_NEEDS_MORE_OUTPUT))
         {
             return false;
         }
@@ -11219,7 +10958,7 @@ pub unsafe fn WriteJpeg_261(jpg: *const brunsli_JPEGData, mut out: brunsli_JPEGO
         if !(unsafe { out.Write((buffer.as_mut_ptr()).cast_const(), to_write) }) {
             return false;
         }
-        if ((status) == (brunsli_internal_dec_SerializationStatus::DONE)) {
+        if ((status) == (brunsli_internal_dec_SerializationStatus_DONE)) {
             return true;
         }
     }
@@ -11237,7 +10976,7 @@ pub unsafe fn SerializeJpeg_206(
     (unsafe {
         (|| {
             if (((*ss).stage as i32)
-                != (brunsli_internal_dec_SerializationState_Stage::ERROR as i32))
+                != (brunsli_internal_dec_SerializationState_Stage_ERROR as i32))
             {
                 (unsafe {
                     PushOutput_260(
@@ -11251,175 +10990,181 @@ pub unsafe fn SerializeJpeg_206(
     });
     'loop_: while true {
         switch!(match ((*ss).stage as i32) {
-            __v if __v == (brunsli_internal_dec_SerializationState_Stage::INIT as i32) => {
-                let mut can_start_serialization: bool =
-                    (((*state).stage) == (brunsli_internal_dec_Stage::DONE));
-                if (unsafe { HasSection_194((state).cast_const(), (kBrunsliDCDataTag_36 as u32)) })
-                    || (unsafe {
-                        HasSection_194((state).cast_const(), (kBrunsliACDataTag_37 as u32))
-                    })
+            __v if __v == (brunsli_internal_dec_SerializationState_Stage_INIT as i32) => {
                 {
-                    can_start_serialization = true;
-                }
-                if !can_start_serialization {
-                    return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT;
-                }
-                if (((*jpg).version) == (kFallbackVersion_2)) {
-                    if ((*jpg).original_jpg).is_null() {
-                        (*ss).stage =
-                            (brunsli_internal_dec_SerializationState_Stage::ERROR).clone();
+                    let mut can_start_serialization: bool =
+                        (((*state).stage) == (brunsli_internal_dec_Stage_DONE));
+                    if (unsafe {
+                        HasSection_194((state).cast_const(), (kBrunsliDCDataTag_36 as u32))
+                    }) || (unsafe {
+                        HasSection_194((state).cast_const(), (kBrunsliACDataTag_37 as u32))
+                    }) {
+                        can_start_serialization = true;
+                    }
+                    if !can_start_serialization {
+                        return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT;
+                    }
+                    if (((*jpg).version) == (kFallbackVersion_2)) {
+                        if ((*jpg).original_jpg).is_null() {
+                            (*ss).stage =
+                                (brunsli_internal_dec_SerializationState_Stage_ERROR).clone();
+                            break;
+                        }
+                        (*ss).output_queue.push(
+                            brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk1(
+                                { (*jpg).original_jpg },
+                                { (*jpg).original_jpg_size },
+                            ),
+                        );
+                        (*ss).stage = (brunsli_internal_dec_SerializationState_Stage_DONE).clone();
                         break;
                     }
-                    (*ss).output_queue.push(
-                        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk1(
-                            (*jpg).original_jpg,
-                            (*jpg).original_jpg_size,
-                        ),
-                    );
-                    (*ss).stage = (brunsli_internal_dec_SerializationState_Stage::DONE).clone();
+                    if ((((*jpg).version) & (1)) == (kFallbackVersion_2)) {
+                        (*ss).stage = (brunsli_internal_dec_SerializationState_Stage_ERROR).clone();
+                        break;
+                    }
+                    if (*jpg).marker_order.is_empty() {
+                        (*ss).stage = (brunsli_internal_dec_SerializationState_Stage_ERROR).clone();
+                        break;
+                    }
+                    {
+                        let __a0 = (kMaxHuffmanTables_6 as usize) as usize;
+                        (*ss)
+                            .dc_huff_table
+                            .resize_with(__a0, || <brunsli_HuffmanCodeTable>::default())
+                    };
+                    {
+                        let __a0 = (kMaxHuffmanTables_6 as usize) as usize;
+                        (*ss)
+                            .ac_huff_table
+                            .resize_with(__a0, || <brunsli_HuffmanCodeTable>::default())
+                    };
+                    if (*jpg).has_zero_padding_bit {
+                        (*ss).pad_bits = (*jpg).padding_bits.as_ptr();
+                        (*ss).pad_bits_end =
+                            (*ss).pad_bits.offset(((*jpg).padding_bits.len()) as isize);
+                    }
+                    (unsafe { EncodeSOI_241((ss)) });
+                    (unsafe {
+                        (|| {
+                            if (((*ss).stage as i32)
+                                != (brunsli_internal_dec_SerializationState_Stage_ERROR as i32))
+                            {
+                                (unsafe {
+                                    PushOutput_260(
+                                        (&mut (*ss).output_queue
+                                            as *mut Vec<brunsli_internal_dec_OutputChunk>),
+                                        available_out,
+                                        next_out,
+                                    )
+                                });
+                            }
+                        })()
+                    });
+                    (*ss).stage =
+                        (brunsli_internal_dec_SerializationState_Stage_SERIALIZE_SECTION).clone();
                     break;
                 }
-                if ((((*jpg).version) & (1)) == (kFallbackVersion_2)) {
-                    (*ss).stage = (brunsli_internal_dec_SerializationState_Stage::ERROR).clone();
-                    break;
-                }
-                if (*jpg).marker_order.is_empty() {
-                    (*ss).stage = (brunsli_internal_dec_SerializationState_Stage::ERROR).clone();
-                    break;
-                }
-                {
-                    let __a0 = (kMaxHuffmanTables_6 as usize) as usize;
-                    (*ss)
-                        .dc_huff_table
-                        .resize_with(__a0, || <brunsli_HuffmanCodeTable>::default())
-                };
-                {
-                    let __a0 = (kMaxHuffmanTables_6 as usize) as usize;
-                    (*ss)
-                        .ac_huff_table
-                        .resize_with(__a0, || <brunsli_HuffmanCodeTable>::default())
-                };
-                if (*jpg).has_zero_padding_bit {
-                    (*ss).pad_bits = (*jpg).padding_bits.as_ptr();
-                    (*ss).pad_bits_end =
-                        (*ss).pad_bits.offset(((*jpg).padding_bits.len()) as isize);
-                }
-                (unsafe { EncodeSOI_241((ss)) });
-                (unsafe {
-                    (|| {
-                        if (((*ss).stage as i32)
-                            != (brunsli_internal_dec_SerializationState_Stage::ERROR as i32))
-                        {
-                            (unsafe {
-                                PushOutput_260(
-                                    (&mut (*ss).output_queue
-                                        as *mut Vec<brunsli_internal_dec_OutputChunk>),
-                                    available_out,
-                                    next_out,
-                                )
-                            });
-                        }
-                    })()
-                });
-                (*ss).stage =
-                    (brunsli_internal_dec_SerializationState_Stage::SERIALIZE_SECTION).clone();
-                break;
             }
             __v if __v
-                == (brunsli_internal_dec_SerializationState_Stage::SERIALIZE_SECTION as i32) =>
+                == (brunsli_internal_dec_SerializationState_Stage_SERIALIZE_SECTION as i32) =>
             {
-                if (((*ss).section_index) >= ((*jpg).marker_order.len())) {
-                    (*ss).stage = (brunsli_internal_dec_SerializationState_Stage::DONE).clone();
-                    break;
-                }
-                let mut marker: u8 = (&(*jpg)).marker_order[((*ss).section_index)];
-                let mut status: brunsli_internal_dec_SerializationStatus = (unsafe {
-                    let _marker: u8 = marker;
-                    let _parsing_state: *const brunsli_internal_dec_State =
-                        &(*state) as *const brunsli_internal_dec_State;
-                    let _state: *mut brunsli_internal_dec_SerializationState = (ss);
-                    let _jpg: *const brunsli_JPEGData = jpg;
-                    SerializeSection_259(_marker, _parsing_state, _state, _jpg)
-                });
-                if ((status) == (brunsli_internal_dec_SerializationStatus::ERROR)) {
-                    if true {
-                    } else {
-                        write!(
-                            std::fs::File::from_raw_fd(
-                                std::io::stderr()
-                                    .as_fd()
-                                    .try_clone_to_owned()
-                                    .unwrap()
-                                    .into_raw_fd(),
-                            ),
-                            "Failed to encode marker ",
-                        );
-                        std::fs::File::from_raw_fd(
-                            std::io::stderr()
-                                .as_fd()
-                                .try_clone_to_owned()
-                                .unwrap()
-                                .into_raw_fd(),
-                        )
-                        .write_all(&([(&[marker as u8] as &[u8])].concat()));
-                        write!(
-                            std::fs::File::from_raw_fd(
-                                std::io::stderr()
-                                    .as_fd()
-                                    .try_clone_to_owned()
-                                    .unwrap()
-                                    .into_raw_fd(),
-                            ),
-                            "\n",
-                        );
+                {
+                    if (((*ss).section_index) >= ((*jpg).marker_order.len())) {
+                        (*ss).stage = (brunsli_internal_dec_SerializationState_Stage_DONE).clone();
+                        break;
                     }
-                    (*ss).stage = (brunsli_internal_dec_SerializationState_Stage::ERROR).clone();
-                    break;
-                }
-                (unsafe {
-                    (|| {
-                        if (((*ss).stage as i32)
-                            != (brunsli_internal_dec_SerializationState_Stage::ERROR as i32))
-                        {
+                    let mut marker: u8 = (&(*jpg)).marker_order[((*ss).section_index)];
+                    let mut status: brunsli_internal_dec_SerializationStatus = (unsafe {
+                        let _marker: u8 = marker;
+                        let _parsing_state: *const brunsli_internal_dec_State =
+                            &(*state) as *const brunsli_internal_dec_State;
+                        let _state: *mut brunsli_internal_dec_SerializationState = (ss);
+                        let _jpg: *const brunsli_JPEGData = jpg;
+                        SerializeSection_259(_marker, _parsing_state, _state, _jpg)
+                    });
+                    if ((status) == (brunsli_internal_dec_SerializationStatus_ERROR)) {
+                        if true {
+                        } else {
+                            write!(
+                                std::fs::File::from_raw_fd(
+                                    std::io::stderr()
+                                        .as_fd()
+                                        .try_clone_to_owned()
+                                        .unwrap()
+                                        .into_raw_fd(),
+                                ),
+                                "Failed to encode marker ",
+                            );
+                            std::fs::File::from_raw_fd(
+                                std::io::stderr()
+                                    .as_fd()
+                                    .try_clone_to_owned()
+                                    .unwrap()
+                                    .into_raw_fd(),
+                            )
+                            .write_all(&([(&[marker as u8] as &[u8])].concat()));
+                            write!(
+                                std::fs::File::from_raw_fd(
+                                    std::io::stderr()
+                                        .as_fd()
+                                        .try_clone_to_owned()
+                                        .unwrap()
+                                        .into_raw_fd(),
+                                ),
+                                "\n",
+                            );
+                        }
+                        (*ss).stage = (brunsli_internal_dec_SerializationState_Stage_ERROR).clone();
+                        break;
+                    }
+                    (unsafe {
+                        (|| {
+                            if (((*ss).stage as i32)
+                                != (brunsli_internal_dec_SerializationState_Stage_ERROR as i32))
+                            {
+                                (unsafe {
+                                    PushOutput_260(
+                                        (&mut (*ss).output_queue
+                                            as *mut Vec<brunsli_internal_dec_OutputChunk>),
+                                        available_out,
+                                        next_out,
+                                    )
+                                });
+                            }
+                        })()
+                    });
+                    if ((status) == (brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT)) {
+                        return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT;
+                    } else if ((status) != (brunsli_internal_dec_SerializationStatus_DONE)) {
+                        if !(false) {
                             (unsafe {
-                                PushOutput_260(
-                                    (&mut (*ss).output_queue
-                                        as *mut Vec<brunsli_internal_dec_OutputChunk>),
-                                    available_out,
-                                    next_out,
+                                BrunsliDumpAndAbort_79(
+                                    c"jpeg_data_writer.cc".as_ptr(),
+                                    1073,
+                                    c"SerializeJpeg".as_ptr(),
                                 )
                             });
-                        }
-                    })()
-                });
-                if ((status) == (brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT)) {
-                    return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_INPUT;
-                } else if ((status) != (brunsli_internal_dec_SerializationStatus::DONE)) {
-                    if !(false) {
-                        (unsafe {
-                            BrunsliDumpAndAbort_79(
-                                c"jpeg_data_writer.cc".as_ptr(),
-                                1073,
-                                c"SerializeJpeg".as_ptr(),
-                            )
-                        });
-                        'loop_: while true {}
-                    };
-                    (*ss).stage = (brunsli_internal_dec_SerializationState_Stage::ERROR).clone();
+                            'loop_: while true {}
+                        };
+                        (*ss).stage = (brunsli_internal_dec_SerializationState_Stage_ERROR).clone();
+                        break;
+                    }
+                    (*ss).section_index.prefix_inc();
                     break;
                 }
-                (*ss).section_index.prefix_inc();
-                break;
             }
-            __v if __v == (brunsli_internal_dec_SerializationState_Stage::DONE as i32) => {
-                if !(*ss).output_queue.is_empty() {
-                    return brunsli_internal_dec_SerializationStatus::NEEDS_MORE_OUTPUT;
-                } else {
-                    return brunsli_internal_dec_SerializationStatus::DONE;
+            __v if __v == (brunsli_internal_dec_SerializationState_Stage_DONE as i32) => {
+                {
+                    if !(*ss).output_queue.is_empty() {
+                        return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_OUTPUT;
+                    } else {
+                        return brunsli_internal_dec_SerializationStatus_DONE;
+                    }
                 }
             }
             _ => {
-                return brunsli_internal_dec_SerializationStatus::ERROR;
+                return brunsli_internal_dec_SerializationStatus_ERROR;
             }
         });
     }
@@ -11444,7 +11189,7 @@ pub struct brunsli_internal_dec_State {
 impl brunsli_internal_dec_State {
     pub unsafe fn brunsli_internal_dec_State() -> Self {
         let mut this = Self {
-            stage: brunsli_internal_dec_Stage::SIGNATURE,
+            stage: brunsli_internal_dec_Stage_SIGNATURE,
             tags_met: 0_u32,
             skip_tags: 0_u32,
             data: std::ptr::null(),
@@ -11468,33 +11213,19 @@ impl Default for brunsli_internal_dec_State {
         unsafe { brunsli_internal_dec_State::brunsli_internal_dec_State() }
     }
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_internal_dec_MetadataState_Stage {
-    #[default]
-    READ_MARKER = 0,
-    READ_TAIL = 1,
-    READ_CODE = 2,
-    READ_LENGTH_HI = 3,
-    READ_LENGTH_LO = 4,
-    READ_MULTIBYTE = 5,
-}
-impl From<i32> for brunsli_internal_dec_MetadataState_Stage {
-    fn from(n: i32) -> brunsli_internal_dec_MetadataState_Stage {
-        match n {
-            0 => brunsli_internal_dec_MetadataState_Stage::READ_MARKER,
-            1 => brunsli_internal_dec_MetadataState_Stage::READ_TAIL,
-            2 => brunsli_internal_dec_MetadataState_Stage::READ_CODE,
-            3 => brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_HI,
-            4 => brunsli_internal_dec_MetadataState_Stage::READ_LENGTH_LO,
-            5 => brunsli_internal_dec_MetadataState_Stage::READ_MULTIBYTE,
-            _ => panic!(
-                "invalid brunsli_internal_dec_MetadataState_Stage value: {}",
-                n
-            ),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_internal_dec_MetadataState_Stage);
+pub type brunsli_internal_dec_MetadataState_Stage = u32;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_MARKER:
+    brunsli_internal_dec_MetadataState_Stage = 0;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_TAIL:
+    brunsli_internal_dec_MetadataState_Stage = 1;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_CODE:
+    brunsli_internal_dec_MetadataState_Stage = 2;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_HI:
+    brunsli_internal_dec_MetadataState_Stage = 3;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_LO:
+    brunsli_internal_dec_MetadataState_Stage = 4;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_MULTIBYTE:
+    brunsli_internal_dec_MetadataState_Stage = 5;
 #[repr(C)]
 #[derive(Copy, Clone, Default)]
 pub struct brunsli_internal_dec_MetadataState {
@@ -11512,8 +11243,8 @@ pub struct brunsli_internal_dec_MetadataState {
 }
 impl brunsli_internal_dec_MetadataState {
     pub unsafe fn CanFinish(&mut self) -> bool {
-        return ((self.stage) == (brunsli_internal_dec_MetadataState_Stage::READ_MARKER as usize))
-            || ((self.stage) == (brunsli_internal_dec_MetadataState_Stage::READ_TAIL as usize));
+        return ((self.stage) == (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize))
+            || ((self.stage) == (brunsli_internal_dec_MetadataState_Stage_READ_TAIL as usize));
     }
 }
 impl brunsli_internal_dec_State {}
@@ -11659,35 +11390,38 @@ pub unsafe fn ProcessFile_267(
         return false;
     }
     let mut output: Vec<libc::c_char> = vec![0];
-    let mut jpg: brunsli_JPEGData = brunsli_JPEGData::brunsli_JPEGData();
-    let mut input_data: *const u8 = (input.as_ptr() as *const u8);
-    let mut status: brunsli_BrunsliStatus = (unsafe {
-        BrunsliDecodeJpeg_204(
-            input_data,
-            (input.len() - 1),
-            (&mut jpg as *mut brunsli_JPEGData),
-        )
-    });
-    ok = ((status as i32) == (brunsli_BrunsliStatus::BRUNSLI_OK as i32));
-    if ((jpg.version) != (kFallbackVersion_2)) {
-        {
-            input.clear();
-            input.push(0)
-        };
-        input.shrink_to_fit();
-    }
-    if !ok {
-        printf(c"Failed to parse Brunsli input.\n".as_ptr() as *const i8);
-        return false;
-    }
-    let mut writer: brunsli_JPEGOutput = brunsli_JPEGOutput::brunsli_JPEGOutput(
-        Some(StringWriter_262),
-        ((&mut output as *mut Vec<libc::c_char>) as *mut Vec<libc::c_char> as *mut ::libc::c_void),
-    );
-    ok = (unsafe { WriteJpeg_261(&jpg as *const brunsli_JPEGData, writer.clone()) });
-    if !ok {
-        printf(c"Failed to serialize JPEG data.\n".as_ptr() as *const i8);
-        return false;
+    {
+        let mut jpg: brunsli_JPEGData = brunsli_JPEGData::brunsli_JPEGData();
+        let mut input_data: *const u8 = (input.as_ptr() as *const u8);
+        let mut status: brunsli_BrunsliStatus = (unsafe {
+            BrunsliDecodeJpeg_204(
+                input_data,
+                (input.len() - 1),
+                (&mut jpg as *mut brunsli_JPEGData),
+            )
+        });
+        ok = ((status as i32) == (brunsli_BrunsliStatus_BRUNSLI_OK as i32));
+        if ((jpg.version) != (kFallbackVersion_2)) {
+            {
+                input.clear();
+                input.push(0)
+            };
+            input.shrink_to_fit();
+        }
+        if !ok {
+            printf(c"Failed to parse Brunsli input.\n".as_ptr() as *const i8);
+            return false;
+        }
+        let mut writer: brunsli_JPEGOutput =
+            brunsli_JPEGOutput::brunsli_JPEGOutput({ Some(StringWriter_262) }, {
+                ((&mut output as *mut Vec<libc::c_char>) as *mut Vec<libc::c_char>
+                    as *mut ::libc::c_void)
+            });
+        ok = (unsafe { WriteJpeg_261(&jpg as *const brunsli_JPEGData, writer.clone()) });
+        if !ok {
+            printf(c"Failed to serialize JPEG data.\n".as_ptr() as *const i8);
+            return false;
+        }
     }
     ok = (unsafe {
         let _file_name: *const Vec<libc::c_char> = outfile_name;

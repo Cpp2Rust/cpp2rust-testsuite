@@ -894,7 +894,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
     return true;
 }
 pub unsafe fn ReadFont_36(mut data: *const u8, mut len: usize, mut font: *mut woff2_Font) -> bool {
-    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer(data, len);
+    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
     if !(unsafe { file.ReadU32((&mut (*font).flavor as *mut u32)) }) {
         return false;
     }
@@ -908,7 +908,7 @@ pub unsafe fn ReadFontCollection_37(
     mut len: usize,
     mut font_collection: *mut woff2_FontCollection,
 ) -> bool {
-    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer(data, len);
+    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
     if !(unsafe { file.ReadU32((&mut (*font_collection).flavor as *mut u32)) }) {
         return false;
     }
@@ -943,8 +943,8 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
         let mut end_offset: usize = ((padding_size).wrapping_add(((*table).offset as usize)))
             .wrapping_add(((*table).length as usize));
         max_offset = ({
-            let mut __tmp_0 = (max_offset as u64);
-            let mut __tmp_1 = (end_offset as u64);
+            let mut __tmp_0: u64 = (max_offset as u64);
+            let mut __tmp_1: u64 = (end_offset as u64);
             (*if *&mut __tmp_0 >= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -959,8 +959,8 @@ pub unsafe fn FontCollectionFileSize_39(font_collection: *const woff2_FontCollec
     'loop_: for font in 0..((*font_collection).fonts.len()) {
         let mut font = (*font_collection).fonts.as_ptr().add(font);
         max_offset = ({
-            let mut __tmp_0 = (max_offset as u64);
-            let mut __tmp_1 = ((unsafe { FontFileSize_38(font) }) as u64);
+            let mut __tmp_0: u64 = (max_offset as u64);
+            let mut __tmp_1: u64 = ((unsafe { FontFileSize_38(font) }) as u64);
             (*if *&mut __tmp_0 >= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -1221,7 +1221,7 @@ pub unsafe fn GetGlyphData_47(
     }
     let mut index_fmt: i32 = (unsafe { IndexFormat_46(font) });
     let mut loca_buf: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer((*loca_table).data, ((*loca_table).length as usize));
+        woff2_Buffer::woff2_Buffer({ (*loca_table).data }, { ((*loca_table).length as usize) });
     if ((index_fmt) == (0)) {
         let mut offset1: u16 = 0_u16;
         let mut offset2: u16 = 0_u16;
@@ -1383,7 +1383,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     );
     let mut input: Vec<libc::c_char> = (unsafe { GetFileContent_49(filename.clone()) });
     let mut file: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer((input.as_ptr() as *const u8), (input.len() - 1));
+        woff2_Buffer::woff2_Buffer({ (input.as_ptr() as *const u8) }, { (input.len() - 1) });
     printf(c"WOFF2Header\n".as_ptr() as *const i8);
     let mut signature: u32 = 0_u32;
     let mut flavor: u32 = 0_u32;

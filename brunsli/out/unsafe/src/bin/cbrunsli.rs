@@ -60,104 +60,50 @@ pub static mut kJPEGZigZagOrder_14: [u32; 64] = unsafe {
         35_u32, 36_u32, 48_u32, 49_u32, 57_u32, 58_u32, 62_u32, 63_u32,
     ]
 };
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_JPEGReadError {
-    #[default]
-    OK = 0,
-    SOI_NOT_FOUND = 1,
-    SOF_NOT_FOUND = 2,
-    UNEXPECTED_EOF = 3,
-    MARKER_BYTE_NOT_FOUND = 4,
-    UNSUPPORTED_MARKER = 5,
-    WRONG_MARKER_SIZE = 6,
-    INVALID_PRECISION = 7,
-    INVALID_WIDTH = 8,
-    INVALID_HEIGHT = 9,
-    INVALID_NUMCOMP = 10,
-    INVALID_SAMP_FACTOR = 11,
-    INVALID_START_OF_SCAN = 12,
-    INVALID_END_OF_SCAN = 13,
-    INVALID_SCAN_BIT_POSITION = 14,
-    INVALID_COMPS_IN_SCAN = 15,
-    INVALID_HUFFMAN_INDEX = 16,
-    INVALID_QUANT_TBL_INDEX = 17,
-    INVALID_QUANT_VAL = 18,
-    INVALID_MARKER_LEN = 19,
-    INVALID_SAMPLING_FACTORS = 20,
-    INVALID_HUFFMAN_CODE = 21,
-    INVALID_SYMBOL = 22,
-    NON_REPRESENTABLE_DC_COEFF = 23,
-    NON_REPRESENTABLE_AC_COEFF = 24,
-    INVALID_SCAN = 25,
-    OVERLAPPING_SCANS = 26,
-    INVALID_SCAN_ORDER = 27,
-    EXTRA_ZERO_RUN = 28,
-    DUPLICATE_DRI = 29,
-    DUPLICATE_SOF = 30,
-    WRONG_RESTART_MARKER = 31,
-    DUPLICATE_COMPONENT_ID = 32,
-    COMPONENT_NOT_FOUND = 33,
-    HUFFMAN_TABLE_NOT_FOUND = 34,
-    HUFFMAN_TABLE_ERROR = 35,
-    QUANT_TABLE_NOT_FOUND = 36,
-    EMPTY_DHT = 37,
-    EMPTY_DQT = 38,
-    OUT_OF_BAND_COEFF = 39,
-    EOB_RUN_TOO_LONG = 40,
-    IMAGE_TOO_LARGE = 41,
-    INVALID_QUANT_TBL_PRECISION = 42,
-}
-impl From<i32> for brunsli_JPEGReadError {
-    fn from(n: i32) -> brunsli_JPEGReadError {
-        match n {
-            0 => brunsli_JPEGReadError::OK,
-            1 => brunsli_JPEGReadError::SOI_NOT_FOUND,
-            2 => brunsli_JPEGReadError::SOF_NOT_FOUND,
-            3 => brunsli_JPEGReadError::UNEXPECTED_EOF,
-            4 => brunsli_JPEGReadError::MARKER_BYTE_NOT_FOUND,
-            5 => brunsli_JPEGReadError::UNSUPPORTED_MARKER,
-            6 => brunsli_JPEGReadError::WRONG_MARKER_SIZE,
-            7 => brunsli_JPEGReadError::INVALID_PRECISION,
-            8 => brunsli_JPEGReadError::INVALID_WIDTH,
-            9 => brunsli_JPEGReadError::INVALID_HEIGHT,
-            10 => brunsli_JPEGReadError::INVALID_NUMCOMP,
-            11 => brunsli_JPEGReadError::INVALID_SAMP_FACTOR,
-            12 => brunsli_JPEGReadError::INVALID_START_OF_SCAN,
-            13 => brunsli_JPEGReadError::INVALID_END_OF_SCAN,
-            14 => brunsli_JPEGReadError::INVALID_SCAN_BIT_POSITION,
-            15 => brunsli_JPEGReadError::INVALID_COMPS_IN_SCAN,
-            16 => brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX,
-            17 => brunsli_JPEGReadError::INVALID_QUANT_TBL_INDEX,
-            18 => brunsli_JPEGReadError::INVALID_QUANT_VAL,
-            19 => brunsli_JPEGReadError::INVALID_MARKER_LEN,
-            20 => brunsli_JPEGReadError::INVALID_SAMPLING_FACTORS,
-            21 => brunsli_JPEGReadError::INVALID_HUFFMAN_CODE,
-            22 => brunsli_JPEGReadError::INVALID_SYMBOL,
-            23 => brunsli_JPEGReadError::NON_REPRESENTABLE_DC_COEFF,
-            24 => brunsli_JPEGReadError::NON_REPRESENTABLE_AC_COEFF,
-            25 => brunsli_JPEGReadError::INVALID_SCAN,
-            26 => brunsli_JPEGReadError::OVERLAPPING_SCANS,
-            27 => brunsli_JPEGReadError::INVALID_SCAN_ORDER,
-            28 => brunsli_JPEGReadError::EXTRA_ZERO_RUN,
-            29 => brunsli_JPEGReadError::DUPLICATE_DRI,
-            30 => brunsli_JPEGReadError::DUPLICATE_SOF,
-            31 => brunsli_JPEGReadError::WRONG_RESTART_MARKER,
-            32 => brunsli_JPEGReadError::DUPLICATE_COMPONENT_ID,
-            33 => brunsli_JPEGReadError::COMPONENT_NOT_FOUND,
-            34 => brunsli_JPEGReadError::HUFFMAN_TABLE_NOT_FOUND,
-            35 => brunsli_JPEGReadError::HUFFMAN_TABLE_ERROR,
-            36 => brunsli_JPEGReadError::QUANT_TABLE_NOT_FOUND,
-            37 => brunsli_JPEGReadError::EMPTY_DHT,
-            38 => brunsli_JPEGReadError::EMPTY_DQT,
-            39 => brunsli_JPEGReadError::OUT_OF_BAND_COEFF,
-            40 => brunsli_JPEGReadError::EOB_RUN_TOO_LONG,
-            41 => brunsli_JPEGReadError::IMAGE_TOO_LARGE,
-            42 => brunsli_JPEGReadError::INVALID_QUANT_TBL_PRECISION,
-            _ => panic!("invalid brunsli_JPEGReadError value: {}", n),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_JPEGReadError);
+pub type brunsli_JPEGReadError = i32;
+pub const brunsli_JPEGReadError_OK: brunsli_JPEGReadError = 0;
+pub const brunsli_JPEGReadError_SOI_NOT_FOUND: brunsli_JPEGReadError = 1;
+pub const brunsli_JPEGReadError_SOF_NOT_FOUND: brunsli_JPEGReadError = 2;
+pub const brunsli_JPEGReadError_UNEXPECTED_EOF: brunsli_JPEGReadError = 3;
+pub const brunsli_JPEGReadError_MARKER_BYTE_NOT_FOUND: brunsli_JPEGReadError = 4;
+pub const brunsli_JPEGReadError_UNSUPPORTED_MARKER: brunsli_JPEGReadError = 5;
+pub const brunsli_JPEGReadError_WRONG_MARKER_SIZE: brunsli_JPEGReadError = 6;
+pub const brunsli_JPEGReadError_INVALID_PRECISION: brunsli_JPEGReadError = 7;
+pub const brunsli_JPEGReadError_INVALID_WIDTH: brunsli_JPEGReadError = 8;
+pub const brunsli_JPEGReadError_INVALID_HEIGHT: brunsli_JPEGReadError = 9;
+pub const brunsli_JPEGReadError_INVALID_NUMCOMP: brunsli_JPEGReadError = 10;
+pub const brunsli_JPEGReadError_INVALID_SAMP_FACTOR: brunsli_JPEGReadError = 11;
+pub const brunsli_JPEGReadError_INVALID_START_OF_SCAN: brunsli_JPEGReadError = 12;
+pub const brunsli_JPEGReadError_INVALID_END_OF_SCAN: brunsli_JPEGReadError = 13;
+pub const brunsli_JPEGReadError_INVALID_SCAN_BIT_POSITION: brunsli_JPEGReadError = 14;
+pub const brunsli_JPEGReadError_INVALID_COMPS_IN_SCAN: brunsli_JPEGReadError = 15;
+pub const brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX: brunsli_JPEGReadError = 16;
+pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_INDEX: brunsli_JPEGReadError = 17;
+pub const brunsli_JPEGReadError_INVALID_QUANT_VAL: brunsli_JPEGReadError = 18;
+pub const brunsli_JPEGReadError_INVALID_MARKER_LEN: brunsli_JPEGReadError = 19;
+pub const brunsli_JPEGReadError_INVALID_SAMPLING_FACTORS: brunsli_JPEGReadError = 20;
+pub const brunsli_JPEGReadError_INVALID_HUFFMAN_CODE: brunsli_JPEGReadError = 21;
+pub const brunsli_JPEGReadError_INVALID_SYMBOL: brunsli_JPEGReadError = 22;
+pub const brunsli_JPEGReadError_NON_REPRESENTABLE_DC_COEFF: brunsli_JPEGReadError = 23;
+pub const brunsli_JPEGReadError_NON_REPRESENTABLE_AC_COEFF: brunsli_JPEGReadError = 24;
+pub const brunsli_JPEGReadError_INVALID_SCAN: brunsli_JPEGReadError = 25;
+pub const brunsli_JPEGReadError_OVERLAPPING_SCANS: brunsli_JPEGReadError = 26;
+pub const brunsli_JPEGReadError_INVALID_SCAN_ORDER: brunsli_JPEGReadError = 27;
+pub const brunsli_JPEGReadError_EXTRA_ZERO_RUN: brunsli_JPEGReadError = 28;
+pub const brunsli_JPEGReadError_DUPLICATE_DRI: brunsli_JPEGReadError = 29;
+pub const brunsli_JPEGReadError_DUPLICATE_SOF: brunsli_JPEGReadError = 30;
+pub const brunsli_JPEGReadError_WRONG_RESTART_MARKER: brunsli_JPEGReadError = 31;
+pub const brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID: brunsli_JPEGReadError = 32;
+pub const brunsli_JPEGReadError_COMPONENT_NOT_FOUND: brunsli_JPEGReadError = 33;
+pub const brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND: brunsli_JPEGReadError = 34;
+pub const brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR: brunsli_JPEGReadError = 35;
+pub const brunsli_JPEGReadError_QUANT_TABLE_NOT_FOUND: brunsli_JPEGReadError = 36;
+pub const brunsli_JPEGReadError_EMPTY_DHT: brunsli_JPEGReadError = 37;
+pub const brunsli_JPEGReadError_EMPTY_DQT: brunsli_JPEGReadError = 38;
+pub const brunsli_JPEGReadError_OUT_OF_BAND_COEFF: brunsli_JPEGReadError = 39;
+pub const brunsli_JPEGReadError_EOB_RUN_TOO_LONG: brunsli_JPEGReadError = 40;
+pub const brunsli_JPEGReadError_IMAGE_TOO_LARGE: brunsli_JPEGReadError = 41;
+pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_PRECISION: brunsli_JPEGReadError = 42;
 #[repr(C)]
 #[derive(Clone)]
 pub struct brunsli_JPEGQuantTable {
@@ -313,7 +259,7 @@ impl brunsli_JPEGData {
             tail_data: Vec::new(),
             original_jpg: std::ptr::null(),
             original_jpg_size: 0_usize,
-            error: brunsli_JPEGReadError::OK,
+            error: brunsli_JPEGReadError_OK,
             has_zero_padding_bit: false,
             padding_bits: Vec::new(),
         };
@@ -2762,7 +2708,7 @@ pub unsafe fn CompareAndPushToQueue_131(
             1.0E+99
         } else {
             {
-                let mut __tmp_0 = 0.0E+0;
+                let mut __tmp_0: f64 = 0.0E+0;
                 (*if *&mut __tmp_0 >= *&(&mut (*pairs))[(0_usize)].cost_diff {
                     (&mut __tmp_0) as *const _
                 } else {
@@ -3206,24 +3152,10 @@ pub unsafe fn ClusterHistograms_136(
     }
     (unsafe { HistogramReindex_135(out, histogram_symbols) });
 }
-#[derive(Clone, Copy, PartialEq, Debug, Default)]
-enum brunsli_JpegReadMode {
-    #[default]
-    JPEG_READ_HEADER = 0,
-    JPEG_READ_TABLES = 1,
-    JPEG_READ_ALL = 2,
-}
-impl From<i32> for brunsli_JpegReadMode {
-    fn from(n: i32) -> brunsli_JpegReadMode {
-        match n {
-            0 => brunsli_JpegReadMode::JPEG_READ_HEADER,
-            1 => brunsli_JpegReadMode::JPEG_READ_TABLES,
-            2 => brunsli_JpegReadMode::JPEG_READ_ALL,
-            _ => panic!("invalid brunsli_JpegReadMode value: {}", n),
-        }
-    }
-}
-libcc2rs::impl_enum_inc_dec!(brunsli_JpegReadMode);
+pub type brunsli_JpegReadMode = u32;
+pub const brunsli_JpegReadMode_JPEG_READ_HEADER: brunsli_JpegReadMode = 0;
+pub const brunsli_JpegReadMode_JPEG_READ_TABLES: brunsli_JpegReadMode = 1;
+pub const brunsli_JpegReadMode_JPEG_READ_ALL: brunsli_JpegReadMode = 2;
 #[repr(C)]
 #[derive(Clone)]
 pub struct brunsli_internal_enc_ComponentMeta {
@@ -4051,8 +3983,8 @@ pub unsafe fn EncodeHuffmanCode_157(
         let mut count: i32 =
             (((&(*huff)).counts[(i as usize)]) - (if ((i) == (max_len)) { 1 } else { 0 }));
         let mut count_limit: i32 = {
-            let mut __tmp_0 = ((max_count) - (total_count));
-            let mut __tmp_1 = ((space) >> ((kJpegHuffmanMaxBitLength_7) - (i)));
+            let mut __tmp_0: i32 = ((max_count) - (total_count));
+            let mut __tmp_1: i32 = ((space) >> ((kJpegHuffmanMaxBitLength_7) - (i)));
             (*if *&mut __tmp_0 <= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -4465,9 +4397,9 @@ impl brunsli_internal_enc_EntropySource {
         return Some(Box::from_raw(
             (Box::leak(Box::new(
                 brunsli_internal_enc_EntropyCodes::brunsli_internal_enc_EntropyCodes(
-                    &histograms as *const Vec<brunsli_internal_enc_Histogram>,
-                    self.num_bands_,
-                    offsets,
+                    { &histograms as *const Vec<brunsli_internal_enc_Histogram> },
+                    { self.num_bands_ },
+                    { offsets },
                 ),
             )) as *mut brunsli_internal_enc_EntropyCodes),
         ));
@@ -4923,7 +4855,7 @@ pub unsafe fn EncodeMetaData_173(
         let s: *const Vec<u8> = &(&(*jpg)).app_data[(i)] as *const Vec<u8>;
         (unsafe {
             let _dst: *mut Vec<u8> = (&mut metadata as *mut Vec<u8>);
-            let mut _src = (unsafe {
+            let mut _src: Vec<u8> = (unsafe {
                 let _s: *const Vec<u8> = s;
                 let _transformed_marker_count: *mut usize =
                     (&mut transformed_marker_count as *mut usize);
@@ -5042,7 +4974,7 @@ pub unsafe fn EncodeJPEGInternals_174(
     mut len: *mut usize,
 ) -> bool {
     &(state);
-    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage(data, (*len));
+    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage({ data }, { (*len) });
     if !(unsafe {
         let _jpg: *const brunsli_JPEGData = jpg;
         let _storage: *mut brunsli_Storage = (&mut storage as *mut brunsli_Storage);
@@ -5060,7 +4992,7 @@ pub unsafe fn EncodeQuantData_175(
     mut len: *mut usize,
 ) -> bool {
     &(state);
-    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage(data, (*len));
+    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage({ data }, { (*len) });
     if !(unsafe {
         let _jpg: *const brunsli_JPEGData = jpg;
         let _storage: *mut brunsli_Storage = (&mut storage as *mut brunsli_Storage);
@@ -5077,7 +5009,7 @@ pub unsafe fn EncodeHistogramData_176(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage(data, (*len));
+    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage({ data }, { (*len) });
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*jpg).components.len())) {
         (unsafe {
@@ -5106,7 +5038,7 @@ pub unsafe fn EncodeDCData_177(
     mut len: *mut usize,
 ) -> bool {
     &(*jpg);
-    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage(data, (*len));
+    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage({ data }, { (*len) });
     (unsafe {
         let _s: *mut brunsli_internal_enc_EntropyCodes = (*state).entropy_codes;
         (*state)
@@ -5123,7 +5055,7 @@ pub unsafe fn EncodeACData_178(
     mut len: *mut usize,
 ) -> bool {
     &(*jpg);
-    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage(data, (*len));
+    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage({ data }, { (*len) });
     (unsafe {
         let _s: *mut brunsli_internal_enc_EntropyCodes = (*state).entropy_codes;
         (*state)
@@ -6401,7 +6333,7 @@ pub unsafe fn BrunsliEncodeJpegBypass_194(
         ReadJpeg_195(
             jpg_data,
             jpg_data_len,
-            brunsli_JpegReadMode::JPEG_READ_HEADER,
+            brunsli_JpegReadMode_JPEG_READ_HEADER,
             (&mut jpg as *mut brunsli_JPEGData),
         )
     }) {
@@ -6582,8 +6514,8 @@ pub unsafe fn RunLengthCodeZeros_200(
             i.prefix_inc();
         }
         max_reps = ({
-            let mut __tmp_0 = ((i).wrapping_sub(i0) as u64);
-            let mut __tmp_1 = (max_reps as u64);
+            let mut __tmp_0: u64 = ((i).wrapping_sub(i0) as u64);
+            let mut __tmp_1: u64 = (max_reps as u64);
             (*if *&mut __tmp_0 >= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -7079,7 +7011,7 @@ pub unsafe fn EncodeCounts_125(
                 length = ((i) + (1));
                 if ((i) < (omit_pos)) {
                     omit_log = {
-                        let mut __tmp_1 = ((logcounts[(i) as usize]) + (1));
+                        let mut __tmp_1: i32 = ((logcounts[(i) as usize]) + (1));
                         (*if *&mut omit_log >= *&mut __tmp_1 {
                             (&mut omit_log) as *const _
                         } else {
@@ -7665,7 +7597,7 @@ pub unsafe fn CreateHuffmanTree_219(
             i.prefix_dec();
             if ((*data.offset((i) as isize)) != 0) {
                 let count: u32 = {
-                    let mut __tmp_1 = (count_limit).wrapping_sub(1_u32);
+                    let mut __tmp_1: u32 = (count_limit).wrapping_sub(1_u32);
                     (*if *data.offset((i) as isize) >= *&mut __tmp_1 {
                         (data.offset((i) as isize)) as *const _
                     } else {
@@ -7673,9 +7605,9 @@ pub unsafe fn CreateHuffmanTree_219(
                     })
                 };
                 tree.push(brunsli_HuffmanTree::brunsli_HuffmanTree(
-                    count,
-                    (-1_i32 as i16),
-                    (i as i16),
+                    { count },
+                    { (-1_i32 as i16) },
+                    { (i as i16) },
                 ));
             };
         }
@@ -7700,7 +7632,9 @@ pub unsafe fn CreateHuffmanTree_219(
             })
         };
         let sentinel: brunsli_HuffmanTree =
-            brunsli_HuffmanTree::brunsli_HuffmanTree(<u32>::MAX, (-1_i32 as i16), (-1_i32 as i16));
+            brunsli_HuffmanTree::brunsli_HuffmanTree({ <u32>::MAX }, { (-1_i32 as i16) }, {
+                (-1_i32 as i16)
+            });
         {
             let a0_clone = sentinel.clone();
             tree.push(a0_clone)
@@ -8041,20 +7975,24 @@ pub unsafe fn ConvertBitDepthsToSymbols_220(
         0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
         0_u16, 0_u16, 0_u16,
     ];
-    let mut i: usize = 0_usize;
-    'loop_: while ((i) < (len)) {
-        bl_count[(*depth.offset((i) as isize)) as usize].prefix_inc();
-        i.prefix_inc();
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while ((i) < (len)) {
+            bl_count[(*depth.offset((i) as isize)) as usize].prefix_inc();
+            i.prefix_inc();
+        }
+        bl_count[(0) as usize] = 0_u16;
     }
-    bl_count[(0) as usize] = 0_u16;
     let mut next_code: [u16; 16] = [0_u16; 16];
     next_code[(0) as usize] = 0_u16;
-    let mut code: i32 = 0;
-    let mut i: usize = 1_usize;
-    'loop_: while ((i) < (kMaxBits as usize)) {
-        code = (((code) + (bl_count[((i).wrapping_sub(1_usize))] as i32)) << (1));
-        next_code[(i)] = (code as u16);
-        i.prefix_inc();
+    {
+        let mut code: i32 = 0;
+        let mut i: usize = 1_usize;
+        'loop_: while ((i) < (kMaxBits as usize)) {
+            code = (((code) + (bl_count[((i).wrapping_sub(1_usize))] as i32)) << (1));
+            next_code[(i)] = (code as u16);
+            i.prefix_inc();
+        }
     }
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (len)) {
@@ -8120,7 +8058,7 @@ pub unsafe fn ProcessSOF_234(
             ),
             "Duplicate SOF marker.\n",
         );
-        (*jpg).error = (brunsli_JPEGReadError::DUPLICATE_SOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_DUPLICATE_SOF).clone();
         return false;
     }
     let start_pos: usize = (*pos);
@@ -8138,7 +8076,7 @@ pub unsafe fn ProcessSOF_234(
             (8),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     let mut marker_len: usize = ((unsafe { ReadUint16_233(data, pos) }) as usize);
@@ -8158,7 +8096,7 @@ pub unsafe fn ProcessSOF_234(
             "Invalid precision: {:}\n",
             precision,
         );
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_PRECISION).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_PRECISION).clone();
         return false;
     };
     if ((height) < (1)) || ((height) > (kMaxDimPixels_11)) {
@@ -8173,7 +8111,7 @@ pub unsafe fn ProcessSOF_234(
             "Invalid height: {:}\n",
             height,
         );
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_HEIGHT).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_HEIGHT).clone();
         return false;
     };
     if ((width) < (1)) || ((width) > (kMaxDimPixels_11)) {
@@ -8188,7 +8126,7 @@ pub unsafe fn ProcessSOF_234(
             "Invalid width: {:}\n",
             width,
         );
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_WIDTH).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_WIDTH).clone();
         return false;
     };
     if ((num_components) < (1)) || ((num_components) > (kMaxComponents_4)) {
@@ -8203,7 +8141,7 @@ pub unsafe fn ProcessSOF_234(
             "Invalid num_components: {:}\n",
             num_components,
         );
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_NUMCOMP).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_NUMCOMP).clone();
         return false;
     };
     if (((*pos).wrapping_add((((3) * (num_components)) as usize))) > (len)) {
@@ -8220,7 +8158,7 @@ pub unsafe fn ProcessSOF_234(
             ((3) * (num_components)),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     (*jpg).height = height;
@@ -8249,7 +8187,7 @@ pub unsafe fn ProcessSOF_234(
                 "Duplicate ID {:} in SOF.\n",
                 id,
             );
-            (*jpg).error = (brunsli_JPEGReadError::DUPLICATE_COMPONENT_ID).clone();
+            (*jpg).error = (brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID).clone();
             return false;
         }
         ids_seen[(id as usize)] = true;
@@ -8269,7 +8207,7 @@ pub unsafe fn ProcessSOF_234(
                 "Invalid h_samp_factor: {:}\n",
                 h_samp_factor,
             );
-            (*jpg).error = (brunsli_JPEGReadError::INVALID_SAMP_FACTOR).clone();
+            (*jpg).error = (brunsli_JPEGReadError_INVALID_SAMP_FACTOR).clone();
             return false;
         };
         if ((v_samp_factor) < (1)) || ((v_samp_factor) > (kBrunsliMaxSampling_27)) {
@@ -8284,7 +8222,7 @@ pub unsafe fn ProcessSOF_234(
                 "Invalid v_samp_factor: {:}\n",
                 v_samp_factor,
             );
-            (*jpg).error = (brunsli_JPEGReadError::INVALID_SAMP_FACTOR).clone();
+            (*jpg).error = (brunsli_JPEGReadError_INVALID_SAMP_FACTOR).clone();
             return false;
         };
         (&mut (*jpg)).components[(i)].h_samp_factor = h_samp_factor;
@@ -8330,7 +8268,7 @@ pub unsafe fn ProcessSOF_234(
                 ),
                 "Non-integral subsampling ratios.\n",
             );
-            (*jpg).error = (brunsli_JPEGReadError::INVALID_SAMPLING_FACTORS).clone();
+            (*jpg).error = (brunsli_JPEGReadError_INVALID_SAMPLING_FACTORS).clone();
             return false;
         }
         (*c).width_in_blocks = ((((*jpg).MCU_cols) * ((*c).h_samp_factor)) as u32);
@@ -8348,11 +8286,11 @@ pub unsafe fn ProcessSOF_234(
                 ),
                 "Image too large.\n",
             );
-            (*jpg).error = (brunsli_JPEGReadError::IMAGE_TOO_LARGE).clone();
+            (*jpg).error = (brunsli_JPEGReadError_IMAGE_TOO_LARGE).clone();
             return false;
         }
         (*c).num_blocks = ((num_blocks as i32) as u32);
-        if ((mode as i32) == (brunsli_JpegReadMode::JPEG_READ_ALL as i32)) {
+        if ((mode as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
             {
                 let __a0 =
                     ((((*c).num_blocks).wrapping_mul((kDCTBlockSize_3 as u32))) as usize) as usize;
@@ -8374,7 +8312,7 @@ pub unsafe fn ProcessSOF_234(
             marker_len,
             ((*pos).wrapping_sub(start_pos)),
         );
-        (*jpg).error = (brunsli_JPEGReadError::WRONG_MARKER_SIZE).clone();
+        (*jpg).error = (brunsli_JPEGReadError_WRONG_MARKER_SIZE).clone();
         return false;
     };
     return true;
@@ -8400,7 +8338,7 @@ pub unsafe fn ProcessSOS_235(
             (3),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     let mut marker_len: usize = ((unsafe { ReadUint16_233(data, pos) }) as usize);
@@ -8419,7 +8357,7 @@ pub unsafe fn ProcessSOS_235(
             "Invalid static_cast<size_t>(comps_in_scan): {:}\n",
             (comps_in_scan as usize),
         );
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_COMPS_IN_SCAN).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_COMPS_IN_SCAN).clone();
         return false;
     };
     let mut scan_info: brunsli_JPEGScanInfo = <brunsli_JPEGScanInfo>::default();
@@ -8438,7 +8376,7 @@ pub unsafe fn ProcessSOS_235(
             ((2) * (comps_in_scan)),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     let mut ids_seen: Vec<bool> = (0..(256_usize) as usize)
@@ -8459,7 +8397,7 @@ pub unsafe fn ProcessSOS_235(
                 "Duplicate ID {:} in SOS.\n",
                 id,
             );
-            (*jpg).error = (brunsli_JPEGReadError::DUPLICATE_COMPONENT_ID).clone();
+            (*jpg).error = (brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID).clone();
             return false;
         }
         ids_seen[(id as usize)] = true;
@@ -8484,7 +8422,7 @@ pub unsafe fn ProcessSOS_235(
                 "SOS marker: Could not find component with id {:}\n",
                 id,
             );
-            (*jpg).error = (brunsli_JPEGReadError::COMPONENT_NOT_FOUND).clone();
+            (*jpg).error = (brunsli_JPEGReadError_COMPONENT_NOT_FOUND).clone();
             return false;
         }
         let mut c: i32 = (unsafe { ReadUint8_232(data, pos) });
@@ -8502,7 +8440,7 @@ pub unsafe fn ProcessSOS_235(
                 "Invalid dc_tbl_idx: {:}\n",
                 dc_tbl_idx,
             );
-            (*jpg).error = (brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX).clone();
+            (*jpg).error = (brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX).clone();
             return false;
         };
         if ((ac_tbl_idx) < (0)) || ((ac_tbl_idx) > (3)) {
@@ -8517,7 +8455,7 @@ pub unsafe fn ProcessSOS_235(
                 "Invalid ac_tbl_idx: {:}\n",
                 ac_tbl_idx,
             );
-            (*jpg).error = (brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX).clone();
+            (*jpg).error = (brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX).clone();
             return false;
         };
         scan_info.components[(i as usize)].dc_tbl_idx = dc_tbl_idx;
@@ -8538,7 +8476,7 @@ pub unsafe fn ProcessSOS_235(
             (3),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     scan_info.Ss = (unsafe { ReadUint8_232(data, pos) }).clone();
@@ -8555,7 +8493,7 @@ pub unsafe fn ProcessSOS_235(
             "Invalid scan_info.Ss: {:}\n",
             scan_info.Ss,
         );
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_START_OF_SCAN).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_START_OF_SCAN).clone();
         return false;
     };
     if ((scan_info.Se) < (scan_info.Ss)) || ((scan_info.Se) > (63)) {
@@ -8570,7 +8508,7 @@ pub unsafe fn ProcessSOS_235(
             "Invalid scan_info.Se: {:}\n",
             scan_info.Se,
         );
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_END_OF_SCAN).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_END_OF_SCAN).clone();
         return false;
     };
     let mut c: i32 = (unsafe { ReadUint8_232(data, pos) });
@@ -8616,7 +8554,7 @@ pub unsafe fn ProcessSOS_235(
                 "SOS marker: Could not find DC Huffman table with index {:}\n",
                 scan_info.components[(i as usize)].dc_tbl_idx,
             );
-            (*jpg).error = (brunsli_JPEGReadError::HUFFMAN_TABLE_NOT_FOUND).clone();
+            (*jpg).error = (brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND).clone();
             return false;
         }
         if ((scan_info.Se) > (0)) && (!found_ac_table) {
@@ -8631,7 +8569,7 @@ pub unsafe fn ProcessSOS_235(
                 "SOS marker: Could not find AC Huffman table with index {:}\n",
                 scan_info.components[(i as usize)].ac_tbl_idx,
             );
-            (*jpg).error = (brunsli_JPEGReadError::HUFFMAN_TABLE_NOT_FOUND).clone();
+            (*jpg).error = (brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND).clone();
             return false;
         }
         i.prefix_inc();
@@ -8653,7 +8591,7 @@ pub unsafe fn ProcessSOS_235(
             marker_len,
             ((*pos).wrapping_sub(start_pos)),
         );
-        (*jpg).error = (brunsli_JPEGReadError::WRONG_MARKER_SIZE).clone();
+        (*jpg).error = (brunsli_JPEGReadError_WRONG_MARKER_SIZE).clone();
         return false;
     };
     return true;
@@ -8682,7 +8620,7 @@ pub unsafe fn ProcessDHT_236(
             (2),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     let mut marker_len: usize = ((unsafe { ReadUint16_233(data, pos) }) as usize);
@@ -8697,7 +8635,7 @@ pub unsafe fn ProcessDHT_236(
             ),
             "DHT marker: no Huffman table found\n",
         );
-        (*jpg).error = (brunsli_JPEGReadError::EMPTY_DHT).clone();
+        (*jpg).error = (brunsli_JPEGReadError_EMPTY_DHT).clone();
         return false;
     }
     'loop_: while ((*pos) < ((start_pos).wrapping_add(marker_len))) {
@@ -8715,7 +8653,7 @@ pub unsafe fn ProcessDHT_236(
                 ((1) + (kJpegHuffmanMaxBitLength_7)),
                 len,
             );
-            (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+            (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
             return false;
         };
         let mut huff: brunsli_JPEGHuffmanCode = <brunsli_JPEGHuffmanCode>::default();
@@ -8737,7 +8675,7 @@ pub unsafe fn ProcessDHT_236(
                     "Invalid huffman_index: {:}\n",
                     huffman_index,
                 );
-                (*jpg).error = (brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX).clone();
+                (*jpg).error = (brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX).clone();
                 return false;
             };
             huff_lut = (&mut (&mut (*ac_huff_lut))
@@ -8756,7 +8694,7 @@ pub unsafe fn ProcessDHT_236(
                     "Invalid huffman_index: {:}\n",
                     huffman_index,
                 );
-                (*jpg).error = (brunsli_JPEGReadError::INVALID_HUFFMAN_INDEX).clone();
+                (*jpg).error = (brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX).clone();
                 return false;
             };
             huff_lut = (&mut (&mut (*dc_huff_lut))
@@ -8791,7 +8729,7 @@ pub unsafe fn ProcessDHT_236(
                     "Invalid total_count: {:}\n",
                     total_count,
                 );
-                (*jpg).error = (brunsli_JPEGReadError::INVALID_HUFFMAN_CODE).clone();
+                (*jpg).error = (brunsli_JPEGReadError_INVALID_HUFFMAN_CODE).clone();
                 return false;
             };
         } else {
@@ -8807,7 +8745,7 @@ pub unsafe fn ProcessDHT_236(
                     "Invalid total_count: {:}\n",
                     total_count,
                 );
-                (*jpg).error = (brunsli_JPEGReadError::INVALID_HUFFMAN_CODE).clone();
+                (*jpg).error = (brunsli_JPEGReadError_INVALID_HUFFMAN_CODE).clone();
                 return false;
             };
         }
@@ -8825,7 +8763,7 @@ pub unsafe fn ProcessDHT_236(
                 (total_count),
                 len,
             );
-            (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+            (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
             return false;
         };
         let mut values_seen: Vec<bool> = (0..(256_usize) as usize)
@@ -8854,7 +8792,7 @@ pub unsafe fn ProcessDHT_236(
                             .into_raw_fd(),
                     )
                     .write_all(&([(&[value as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()));
-                    (*jpg).error = (brunsli_JPEGReadError::INVALID_HUFFMAN_CODE).clone();
+                    (*jpg).error = (brunsli_JPEGReadError_INVALID_HUFFMAN_CODE).clone();
                     return false;
                 };
             }
@@ -8877,7 +8815,7 @@ pub unsafe fn ProcessDHT_236(
                         .into_raw_fd(),
                 )
                 .write_all(&([(&[value as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()));
-                (*jpg).error = (brunsli_JPEGReadError::INVALID_HUFFMAN_CODE).clone();
+                (*jpg).error = (brunsli_JPEGReadError_INVALID_HUFFMAN_CODE).clone();
                 return false;
             }
             values_seen[(value as usize)] = true;
@@ -8898,7 +8836,7 @@ pub unsafe fn ProcessDHT_236(
                 ),
                 "Invalid Huffman code lengths.\n",
             );
-            (*jpg).error = (brunsli_JPEGReadError::INVALID_HUFFMAN_CODE).clone();
+            (*jpg).error = (brunsli_JPEGReadError_INVALID_HUFFMAN_CODE).clone();
             return false;
         } else if ((space) > (0)) && (((*huff_lut.offset((0) as isize)).value as i32) != (65535)) {
             let mut i: i32 = 0;
@@ -8909,7 +8847,7 @@ pub unsafe fn ProcessDHT_236(
             }
         }
         huff.is_last = ((*pos) == ((start_pos).wrapping_add(marker_len)));
-        if ((mode as i32) == (brunsli_JpegReadMode::JPEG_READ_ALL as i32)) {
+        if ((mode as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
             (unsafe {
                 let _counts: *const i32 = (&mut huff.counts[(0_usize)] as *mut i32).cast_const();
                 let _symbols: *const i32 = (&mut huff.values[(0_usize)] as *mut i32).cast_const();
@@ -8934,7 +8872,7 @@ pub unsafe fn ProcessDHT_236(
             marker_len,
             ((*pos).wrapping_sub(start_pos)),
         );
-        (*jpg).error = (brunsli_JPEGReadError::WRONG_MARKER_SIZE).clone();
+        (*jpg).error = (brunsli_JPEGReadError_WRONG_MARKER_SIZE).clone();
         return false;
     };
     return true;
@@ -8960,7 +8898,7 @@ pub unsafe fn ProcessDQT_238(
             (2),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     let mut marker_len: usize = ((unsafe { ReadUint16_233(data, pos) }) as usize);
@@ -8975,7 +8913,7 @@ pub unsafe fn ProcessDQT_238(
             ),
             "DQT marker: no quantization table found\n",
         );
-        (*jpg).error = (brunsli_JPEGReadError::EMPTY_DQT).clone();
+        (*jpg).error = (brunsli_JPEGReadError_EMPTY_DQT).clone();
         return false;
     }
     'loop_: while ((*pos) < ((start_pos).wrapping_add(marker_len)))
@@ -8995,7 +8933,7 @@ pub unsafe fn ProcessDQT_238(
                 (1),
                 len,
             );
-            (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+            (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
             return false;
         };
         let mut quant_table_index: i32 = (unsafe { ReadUint8_232(data, pos) });
@@ -9012,7 +8950,7 @@ pub unsafe fn ProcessDQT_238(
                 "Invalid quant_table_precision: {:}\n",
                 quant_table_precision,
             );
-            (*jpg).error = (brunsli_JPEGReadError::INVALID_QUANT_TBL_PRECISION).clone();
+            (*jpg).error = (brunsli_JPEGReadError_INVALID_QUANT_TBL_PRECISION).clone();
             return false;
         };
         quant_table_index &= 15;
@@ -9028,7 +8966,7 @@ pub unsafe fn ProcessDQT_238(
                 "Invalid quant_table_index: {:}\n",
                 quant_table_index,
             );
-            (*jpg).error = (brunsli_JPEGReadError::INVALID_QUANT_TBL_INDEX).clone();
+            (*jpg).error = (brunsli_JPEGReadError_INVALID_QUANT_TBL_INDEX).clone();
             return false;
         };
         if (((*pos).wrapping_add(((((quant_table_precision) + (1)) * (kDCTBlockSize_3)) as usize)))
@@ -9047,7 +8985,7 @@ pub unsafe fn ProcessDQT_238(
                 (((quant_table_precision) + (1)) * (kDCTBlockSize_3)),
                 len,
             );
-            (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+            (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
             return false;
         };
         let mut table: brunsli_JPEGQuantTable = <brunsli_JPEGQuantTable>::default();
@@ -9072,7 +9010,7 @@ pub unsafe fn ProcessDQT_238(
                     "Invalid quant_val: {:}\n",
                     quant_val,
                 );
-                (*jpg).error = (brunsli_JPEGReadError::INVALID_QUANT_VAL).clone();
+                (*jpg).error = (brunsli_JPEGReadError_INVALID_QUANT_VAL).clone();
                 return false;
             };
             table.values[(kJPEGNaturalOrder_13[(i) as usize] as usize)] = quant_val;
@@ -9097,7 +9035,7 @@ pub unsafe fn ProcessDQT_238(
             marker_len,
             ((*pos).wrapping_sub(start_pos)),
         );
-        (*jpg).error = (brunsli_JPEGReadError::WRONG_MARKER_SIZE).clone();
+        (*jpg).error = (brunsli_JPEGReadError_WRONG_MARKER_SIZE).clone();
         return false;
     };
     return true;
@@ -9120,7 +9058,7 @@ pub unsafe fn ProcessDRI_239(
             ),
             "Duplicate DRI marker.\n",
         );
-        (*jpg).error = (brunsli_JPEGReadError::DUPLICATE_DRI).clone();
+        (*jpg).error = (brunsli_JPEGReadError_DUPLICATE_DRI).clone();
         return false;
     }
     (*found_dri) = true;
@@ -9139,7 +9077,7 @@ pub unsafe fn ProcessDRI_239(
             (4),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     let mut marker_len: usize = ((unsafe { ReadUint16_233(data, pos) }) as usize);
@@ -9158,7 +9096,7 @@ pub unsafe fn ProcessDRI_239(
             marker_len,
             ((*pos).wrapping_sub(start_pos)),
         );
-        (*jpg).error = (brunsli_JPEGReadError::WRONG_MARKER_SIZE).clone();
+        (*jpg).error = (brunsli_JPEGReadError_WRONG_MARKER_SIZE).clone();
         return false;
     };
     return true;
@@ -9183,7 +9121,7 @@ pub unsafe fn ProcessAPP_240(
             (2),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     let mut marker_len: usize = ((unsafe { ReadUint16_233(data, pos) }) as usize);
@@ -9199,7 +9137,7 @@ pub unsafe fn ProcessAPP_240(
             "Invalid marker_len: {:}\n",
             marker_len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_MARKER_LEN).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_MARKER_LEN).clone();
         return false;
     };
     if (((*pos).wrapping_add(((marker_len).wrapping_sub(2_usize)))) > (len)) {
@@ -9216,7 +9154,7 @@ pub unsafe fn ProcessAPP_240(
             ((marker_len).wrapping_sub(2_usize)),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     let mut app_str_start: *const u8 = data.offset((*pos) as isize).offset(-((3) as isize));
@@ -9252,7 +9190,7 @@ pub unsafe fn ProcessCOM_241(
             (2),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     let mut marker_len: usize = ((unsafe { ReadUint16_233(data, pos) }) as usize);
@@ -9268,7 +9206,7 @@ pub unsafe fn ProcessCOM_241(
             "Invalid marker_len: {:}\n",
             marker_len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_MARKER_LEN).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_MARKER_LEN).clone();
         return false;
     };
     if (((*pos).wrapping_add(((marker_len).wrapping_sub(2_usize)))) > (len)) {
@@ -9285,7 +9223,7 @@ pub unsafe fn ProcessCOM_241(
             ((marker_len).wrapping_sub(2_usize)),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     };
     let mut com_str_start: *const u8 = data.offset((*pos) as isize).offset(-((3) as isize));
@@ -9493,7 +9431,7 @@ pub unsafe fn DecodeDCTBlock_244(
                 "Invalid Huffman symbol {:} for DC coefficient.\n",
                 s,
             );
-            (*jpg).error = (brunsli_JPEGReadError::INVALID_SYMBOL).clone();
+            (*jpg).error = (brunsli_JPEGReadError_INVALID_SYMBOL).clone();
             return false;
         }
         let mut diff: i32 = 0;
@@ -9516,7 +9454,7 @@ pub unsafe fn DecodeDCTBlock_244(
                 "Invalid DC coefficient {:}\n",
                 dc_coeff,
             );
-            (*jpg).error = (brunsli_JPEGReadError::NON_REPRESENTABLE_DC_COEFF).clone();
+            (*jpg).error = (brunsli_JPEGReadError_NON_REPRESENTABLE_DC_COEFF).clone();
             return false;
         }
         (*last_dc_coeff) = (coeff as i16);
@@ -9546,7 +9484,7 @@ pub unsafe fn DecodeDCTBlock_244(
                 sr,
                 k,
             );
-            (*jpg).error = (brunsli_JPEGReadError::INVALID_SYMBOL).clone();
+            (*jpg).error = (brunsli_JPEGReadError_INVALID_SYMBOL).clone();
             return false;
         }
         let mut r: i32 = ((sr) >> (4));
@@ -9567,7 +9505,7 @@ pub unsafe fn DecodeDCTBlock_244(
                     Ss,
                     Se,
                 );
-                (*jpg).error = (brunsli_JPEGReadError::OUT_OF_BAND_COEFF).clone();
+                (*jpg).error = (brunsli_JPEGReadError_OUT_OF_BAND_COEFF).clone();
                 return false;
             }
             if (((s) + (Al)) >= (kJpegDCAlphabetSize_9)) {
@@ -9584,7 +9522,7 @@ pub unsafe fn DecodeDCTBlock_244(
                     Al,
                     k,
                 );
-                (*jpg).error = (brunsli_JPEGReadError::NON_REPRESENTABLE_AC_COEFF).clone();
+                (*jpg).error = (brunsli_JPEGReadError_NON_REPRESENTABLE_AC_COEFF).clone();
                 return false;
             }
             let mut bits: i32 = (unsafe { (*br).ReadBits(s) });
@@ -9612,7 +9550,7 @@ pub unsafe fn DecodeDCTBlock_244(
                         ),
                         "End-of-block run crossing DC coeff.\n",
                     );
-                    (*jpg).error = (brunsli_JPEGReadError::EOB_RUN_TOO_LONG).clone();
+                    (*jpg).error = (brunsli_JPEGReadError_EOB_RUN_TOO_LONG).clone();
                     return false;
                 }
                 (*eobrun) += (unsafe { (*br).ReadBits(r) });
@@ -9669,7 +9607,7 @@ pub unsafe fn RefineDCTBlock_245(
                     s,
                     k,
                 );
-                (*jpg).error = (brunsli_JPEGReadError::INVALID_SYMBOL).clone();
+                (*jpg).error = (brunsli_JPEGReadError_INVALID_SYMBOL).clone();
                 return false;
             }
             r = ((s) >> (4));
@@ -9688,7 +9626,7 @@ pub unsafe fn RefineDCTBlock_245(
                         s,
                         k,
                     );
-                    (*jpg).error = (brunsli_JPEGReadError::INVALID_SYMBOL).clone();
+                    (*jpg).error = (brunsli_JPEGReadError_INVALID_SYMBOL).clone();
                     return false;
                 }
                 s = if ((unsafe { (*br).ReadBits(1) }) != 0) {
@@ -9715,7 +9653,7 @@ pub unsafe fn RefineDCTBlock_245(
                                 ),
                                 "End-of-block run crossing DC coeff.\n",
                             );
-                            (*jpg).error = (brunsli_JPEGReadError::EOB_RUN_TOO_LONG).clone();
+                            (*jpg).error = (brunsli_JPEGReadError_EOB_RUN_TOO_LONG).clone();
                             return false;
                         }
                         (*eobrun) += (unsafe { (*br).ReadBits(r) });
@@ -9762,7 +9700,7 @@ pub unsafe fn RefineDCTBlock_245(
                         Ss,
                         Se,
                     );
-                    (*jpg).error = (brunsli_JPEGReadError::OUT_OF_BAND_COEFF).clone();
+                    (*jpg).error = (brunsli_JPEGReadError_OUT_OF_BAND_COEFF).clone();
                     return false;
                 }
                 (*coeffs.offset((kJPEGNaturalOrder_13[(k) as usize]) as isize)) = (s as i16);
@@ -9781,7 +9719,7 @@ pub unsafe fn RefineDCTBlock_245(
             ),
             "Extra zero run before end-of-block.\n",
         );
-        (*jpg).error = (brunsli_JPEGReadError::EXTRA_ZERO_RUN).clone();
+        (*jpg).error = (brunsli_JPEGReadError_EXTRA_ZERO_RUN).clone();
         return false;
     }
     if ((*eobrun) > (0)) {
@@ -9814,7 +9752,7 @@ pub unsafe fn ProcessRestart_246(
 ) -> bool {
     let mut pos: usize = 0_usize;
     if !(unsafe { (*br).FinishStream(jpg, (&mut pos as *mut usize)) }) {
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_SCAN).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_SCAN).clone();
         return false;
     }
     let mut expected_marker: i32 = ((208) + (*next_restart_marker));
@@ -9837,7 +9775,7 @@ pub unsafe fn ProcessRestart_246(
             pos,
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::MARKER_BYTE_NOT_FOUND).clone();
+        (*jpg).error = (brunsli_JPEGReadError_MARKER_BYTE_NOT_FOUND).clone();
         return false;
     };
     let mut marker: i32 = ((*data.offset(((pos).wrapping_add(1_usize)) as isize)) as i32);
@@ -9854,7 +9792,7 @@ pub unsafe fn ProcessRestart_246(
             expected_marker,
             marker,
         );
-        (*jpg).error = (brunsli_JPEGReadError::WRONG_RESTART_MARKER).clone();
+        (*jpg).error = (brunsli_JPEGReadError_WRONG_RESTART_MARKER).clone();
         return false;
     }
     (unsafe { (*br).Reset((pos).wrapping_add(2_usize)) });
@@ -9903,7 +9841,7 @@ pub unsafe fn ProcessScan_247(
     }
     let mut last_dc_coeff: [i16; 4] = [0_i16, 0_i16, 0_i16, 0_i16];
     let mut br: brunsli_BitReaderState =
-        brunsli_BitReaderState::brunsli_BitReaderState(data, len, (*pos));
+        brunsli_BitReaderState::brunsli_BitReaderState({ data }, { len }, { (*pos) });
     let mut restarts_to_go: i32 = (*jpg).restart_interval;
     let mut next_restart_marker: i32 = 0;
     let mut eobrun: i32 = -1_i32;
@@ -9941,7 +9879,7 @@ pub unsafe fn ProcessScan_247(
                     (*scan_progression.offset((i) as isize))[(k) as usize],
                     scan_bitmask,
                 );
-                (*jpg).error = (brunsli_JPEGReadError::OVERLAPPING_SCANS).clone();
+                (*jpg).error = (brunsli_JPEGReadError_OVERLAPPING_SCANS).clone();
                 return false;
             }
             if ((((*scan_progression.offset((comp_idx) as isize))[(k) as usize] as i32)
@@ -9962,7 +9900,7 @@ pub unsafe fn ProcessScan_247(
                     (*scan_progression.offset((i) as isize))[(k) as usize],
                     scan_bitmask,
                 );
-                (*jpg).error = (brunsli_JPEGReadError::INVALID_SCAN_ORDER).clone();
+                (*jpg).error = (brunsli_JPEGReadError_INVALID_SCAN_ORDER).clone();
                 return false;
             }
             (*scan_progression.offset((comp_idx) as isize))[(k) as usize] =
@@ -9984,7 +9922,7 @@ pub unsafe fn ProcessScan_247(
             "Scan parameter Al = {:} is not supported in brunsli.\n",
             Al,
         );
-        (*jpg).error = (brunsli_JPEGReadError::NON_REPRESENTABLE_AC_COEFF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_NON_REPRESENTABLE_AC_COEFF).clone();
         return false;
     }
     let mut mcu_y: i32 = 0;
@@ -10023,7 +9961,7 @@ pub unsafe fn ProcessScan_247(
                                 ),
                                 "End-of-block run too long.\n",
                             );
-                            (*jpg).error = (brunsli_JPEGReadError::EOB_RUN_TOO_LONG).clone();
+                            (*jpg).error = (brunsli_JPEGReadError_EOB_RUN_TOO_LONG).clone();
                             return false;
                         }
                         eobrun = -1_i32;
@@ -10044,7 +9982,7 @@ pub unsafe fn ProcessScan_247(
                     ),
                     "Unexpected end of scan.\n",
                 );
-                (*jpg).error = (brunsli_JPEGReadError::INVALID_SCAN).clone();
+                (*jpg).error = (brunsli_JPEGReadError_INVALID_SCAN).clone();
                 return false;
             }
             let mut i: usize = 0_usize;
@@ -10157,11 +10095,11 @@ pub unsafe fn ProcessScan_247(
             ),
             "End-of-block run too long.\n",
         );
-        (*jpg).error = (brunsli_JPEGReadError::EOB_RUN_TOO_LONG).clone();
+        (*jpg).error = (brunsli_JPEGReadError_EOB_RUN_TOO_LONG).clone();
         return false;
     }
     if !(unsafe { br.FinishStream(jpg, pos) }) {
-        (*jpg).error = (brunsli_JPEGReadError::INVALID_SCAN).clone();
+        (*jpg).error = (brunsli_JPEGReadError_INVALID_SCAN).clone();
         return false;
     }
     if ((*pos) > (len)) {
@@ -10177,7 +10115,7 @@ pub unsafe fn ProcessScan_247(
             (*pos),
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::UNEXPECTED_EOF).clone();
+        (*jpg).error = (brunsli_JPEGReadError_UNEXPECTED_EOF).clone();
         return false;
     }
     return true;
@@ -10223,7 +10161,7 @@ pub unsafe fn FixupIndexes_248(mut jpg: *mut brunsli_JPEGData) -> bool {
                 ]
                 .concat()),
             );
-            (*jpg).error = (brunsli_JPEGReadError::QUANT_TABLE_NOT_FOUND).clone();
+            (*jpg).error = (brunsli_JPEGReadError_QUANT_TABLE_NOT_FOUND).clone();
             return false;
         }
         i.prefix_inc();
@@ -10280,7 +10218,7 @@ pub unsafe fn ReadJpeg_195(
             pos,
             len,
         );
-        (*jpg).error = (brunsli_JPEGReadError::MARKER_BYTE_NOT_FOUND).clone();
+        (*jpg).error = (brunsli_JPEGReadError_MARKER_BYTE_NOT_FOUND).clone();
         return false;
     };
     let mut marker: i32 = ((*data.offset(((pos).wrapping_add(1_usize)) as isize)) as i32);
@@ -10297,7 +10235,7 @@ pub unsafe fn ReadJpeg_195(
             "Did not find expected SOI marker, actual={:}\n",
             marker,
         );
-        (*jpg).error = (brunsli_JPEGReadError::SOI_NOT_FOUND).clone();
+        (*jpg).error = (brunsli_JPEGReadError_SOI_NOT_FOUND).clone();
         return false;
     }
     let mut lut_size: i32 = ((kMaxHuffmanTables_6) * (kJpegHuffmanLutSize_230));
@@ -10363,7 +10301,7 @@ pub unsafe fn ReadJpeg_195(
                 pos,
                 len,
             );
-            (*jpg).error = (brunsli_JPEGReadError::MARKER_BYTE_NOT_FOUND).clone();
+            (*jpg).error = (brunsli_JPEGReadError_MARKER_BYTE_NOT_FOUND).clone();
             return false;
         };
         marker = ((*data.offset(((pos).wrapping_add(1_usize)) as isize)) as i32);
@@ -10410,7 +10348,7 @@ pub unsafe fn ReadJpeg_195(
                     break 'switch;
                 }
                 __v if __v == 218 => {
-                    if ((mode as i32) == (brunsli_JpegReadMode::JPEG_READ_ALL as i32)) {
+                    if ((mode as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
                         ok = (unsafe {
                             ProcessScan_247(
                                 data,
@@ -10462,14 +10400,14 @@ pub unsafe fn ReadJpeg_195(
                     || __v == 238
                     || __v == 239 =>
                 {
-                    if ((mode as i32) != (brunsli_JpegReadMode::JPEG_READ_TABLES as i32)) {
+                    if ((mode as i32) != (brunsli_JpegReadMode_JPEG_READ_TABLES as i32)) {
                         ok = (unsafe { ProcessAPP_240(data, len, (&mut pos as *mut usize), jpg) })
                             .clone();
                     }
                     break 'switch;
                 }
                 __v if __v == 254 => {
-                    if ((mode as i32) != (brunsli_JpegReadMode::JPEG_READ_TABLES as i32)) {
+                    if ((mode as i32) != (brunsli_JpegReadMode_JPEG_READ_TABLES as i32)) {
                         ok = (unsafe { ProcessCOM_241(data, len, (&mut pos as *mut usize), jpg) })
                             .clone();
                     }
@@ -10489,7 +10427,7 @@ pub unsafe fn ReadJpeg_195(
                         pos,
                         len,
                     );
-                    (*jpg).error = (brunsli_JPEGReadError::UNSUPPORTED_MARKER).clone();
+                    (*jpg).error = (brunsli_JPEGReadError_UNSUPPORTED_MARKER).clone();
                     ok = false;
                     break 'switch;
                 }
@@ -10499,7 +10437,7 @@ pub unsafe fn ReadJpeg_195(
             return false;
         }
         (*jpg).marker_order.push((marker as u8));
-        if ((mode as i32) == (brunsli_JpegReadMode::JPEG_READ_HEADER as i32)) && (found_sof) {
+        if ((mode as i32) == (brunsli_JpegReadMode_JPEG_READ_HEADER as i32)) && (found_sof) {
             break;
         }
     }
@@ -10514,10 +10452,10 @@ pub unsafe fn ReadJpeg_195(
             ),
             "Missing SOF marker.\n",
         );
-        (*jpg).error = (brunsli_JPEGReadError::SOF_NOT_FOUND).clone();
+        (*jpg).error = (brunsli_JPEGReadError_SOF_NOT_FOUND).clone();
         return false;
     }
-    if ((mode as i32) == (brunsli_JpegReadMode::JPEG_READ_ALL as i32)) {
+    if ((mode as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
         if ((pos) < (len)) {
             (*jpg).tail_data = core::slice::from_raw_parts(
                 data.offset((pos) as isize),
@@ -10539,7 +10477,7 @@ pub unsafe fn ReadJpeg_195(
                 ),
                 "Need at least one Huffman code table.\n",
             );
-            (*jpg).error = (brunsli_JPEGReadError::HUFFMAN_TABLE_ERROR).clone();
+            (*jpg).error = (brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR).clone();
             return false;
         }
         if (((*jpg).huffman_code.len()) >= (kMaxDHTMarkers_10 as usize)) {
@@ -10553,7 +10491,7 @@ pub unsafe fn ReadJpeg_195(
                 ),
                 "Too many Huffman tables.\n",
             );
-            (*jpg).error = (brunsli_JPEGReadError::HUFFMAN_TABLE_ERROR).clone();
+            (*jpg).error = (brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR).clone();
             return false;
         }
     }
@@ -10828,52 +10766,54 @@ pub unsafe fn ProcessFile_256(
         return false;
     }
     let mut output: Vec<libc::c_char> = vec![0];
-    let mut jpg: brunsli_JPEGData = brunsli_JPEGData::brunsli_JPEGData();
-    let mut input_data: *const u8 = (input.as_ptr() as *const u8);
-    ok = (unsafe {
-        ReadJpeg_195(
-            input_data,
-            (input.len() - 1),
-            brunsli_JpegReadMode::JPEG_READ_ALL,
-            (&mut jpg as *mut brunsli_JPEGData),
-        )
-    })
-    .clone();
     {
-        input.clear();
-        input.push(0)
-    };
-    input.shrink_to_fit();
-    if !ok {
-        printf(c"Failed to parse JPEG input.\n".as_ptr() as *const i8);
-        return false;
+        let mut jpg: brunsli_JPEGData = brunsli_JPEGData::brunsli_JPEGData();
+        let mut input_data: *const u8 = (input.as_ptr() as *const u8);
+        ok = (unsafe {
+            ReadJpeg_195(
+                input_data,
+                (input.len() - 1),
+                brunsli_JpegReadMode_JPEG_READ_ALL,
+                (&mut jpg as *mut brunsli_JPEGData),
+            )
+        })
+        .clone();
+        {
+            input.clear();
+            input.push(0)
+        };
+        input.shrink_to_fit();
+        if !ok {
+            printf(c"Failed to parse JPEG input.\n".as_ptr() as *const i8);
+            return false;
+        }
+        let mut output_size: usize =
+            (unsafe { GetMaximumBrunsliEncodedSize_144(&jpg as *const brunsli_JPEGData) });
+        {
+            output.pop();
+            output.resize((output_size) as usize, 0);
+            output.push(0)
+        };
+        let mut output_data: *mut u8 =
+            ((&mut output[(0_usize)] as *mut libc::c_char) as *mut libc::c_char as *mut u8);
+        ok = (unsafe {
+            BrunsliEncodeJpeg_190(
+                &jpg as *const brunsli_JPEGData,
+                output_data,
+                (&mut output_size as *mut usize),
+            )
+        })
+        .clone();
+        if !ok {
+            printf(c"Failed to transform JPEG to Brunsli\n".as_ptr() as *const i8);
+            return false;
+        }
+        {
+            output.pop();
+            output.resize((output_size) as usize, 0);
+            output.push(0)
+        };
     }
-    let mut output_size: usize =
-        (unsafe { GetMaximumBrunsliEncodedSize_144(&jpg as *const brunsli_JPEGData) });
-    {
-        output.pop();
-        output.resize((output_size) as usize, 0);
-        output.push(0)
-    };
-    let mut output_data: *mut u8 =
-        ((&mut output[(0_usize)] as *mut libc::c_char) as *mut libc::c_char as *mut u8);
-    ok = (unsafe {
-        BrunsliEncodeJpeg_190(
-            &jpg as *const brunsli_JPEGData,
-            output_data,
-            (&mut output_size as *mut usize),
-        )
-    })
-    .clone();
-    if !ok {
-        printf(c"Failed to transform JPEG to Brunsli\n".as_ptr() as *const i8);
-        return false;
-    }
-    {
-        output.pop();
-        output.resize((output_size) as usize, 0);
-        output.push(0)
-    };
     ok = (unsafe {
         let _file_name: *const Vec<libc::c_char> = outfile_name;
         let _content: *const Vec<libc::c_char> = &output as *const Vec<libc::c_char>;

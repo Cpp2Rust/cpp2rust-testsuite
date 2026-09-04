@@ -1010,7 +1010,25 @@ impl Clone for woff2_TtcFont {
         this
     }
 }
-impl ByteRepr for woff2_TtcFont {}
+impl ByteRepr for woff2_TtcFont {
+    fn byte_size() -> usize {
+        40
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.flavor.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.dst_offset.borrow()).to_bytes(&mut buf[4..8]);
+        (*self.header_checksum.borrow()).to_bytes(&mut buf[8..12]);
+        (*self.table_indices.borrow()).to_bytes(&mut buf[16..40]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            flavor: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
+            dst_offset: Rc::new(RefCell::new(<u32>::from_bytes(&buf[4..8]))),
+            header_checksum: Rc::new(RefCell::new(<u32>::from_bytes(&buf[8..12]))),
+            table_indices: Rc::new(RefCell::new(<Vec<u16>>::from_bytes(&buf[16..40]))),
+        }
+    }
+}
 #[derive(Default)]
 pub struct woff2_WOFF2Header {
     pub flavor: Value<u32>,
@@ -1037,7 +1055,33 @@ impl Clone for woff2_WOFF2Header {
         this
     }
 }
-impl ByteRepr for woff2_WOFF2Header {}
+impl ByteRepr for woff2_WOFF2Header {
+    fn byte_size() -> usize {
+        80
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.flavor.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.header_version.borrow()).to_bytes(&mut buf[4..8]);
+        (*self.num_tables.borrow()).to_bytes(&mut buf[8..10]);
+        (*self.compressed_offset.borrow()).to_bytes(&mut buf[16..24]);
+        (*self.compressed_length.borrow()).to_bytes(&mut buf[24..28]);
+        (*self.uncompressed_size.borrow()).to_bytes(&mut buf[28..32]);
+        (*self.tables.borrow()).to_bytes(&mut buf[32..56]);
+        (*self.ttc_fonts.borrow()).to_bytes(&mut buf[56..80]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            flavor: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
+            header_version: Rc::new(RefCell::new(<u32>::from_bytes(&buf[4..8]))),
+            num_tables: Rc::new(RefCell::new(<u16>::from_bytes(&buf[8..10]))),
+            compressed_offset: Rc::new(RefCell::new(<u64>::from_bytes(&buf[16..24]))),
+            compressed_length: Rc::new(RefCell::new(<u32>::from_bytes(&buf[24..28]))),
+            uncompressed_size: Rc::new(RefCell::new(<u32>::from_bytes(&buf[28..32]))),
+            tables: Rc::new(RefCell::new(<Vec<woff2_Table>>::from_bytes(&buf[32..56]))),
+            ttc_fonts: Rc::new(RefCell::new(<Vec<woff2_TtcFont>>::from_bytes(&buf[56..80]))),
+        }
+    }
+}
 #[derive(Default)]
 pub struct woff2_WOFF2FontInfo {
     pub num_glyphs: Value<u16>,
@@ -1063,7 +1107,29 @@ impl Clone for woff2_WOFF2FontInfo {
         this
     }
 }
-impl ByteRepr for woff2_WOFF2FontInfo {}
+impl ByteRepr for woff2_WOFF2FontInfo {
+    fn byte_size() -> usize {
+        80
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.num_glyphs.borrow()).to_bytes(&mut buf[0..2]);
+        (*self.index_format.borrow()).to_bytes(&mut buf[2..4]);
+        (*self.num_hmetrics.borrow()).to_bytes(&mut buf[4..6]);
+        (*self.x_mins.borrow()).to_bytes(&mut buf[8..32]);
+        (*self.table_entry_by_tag.borrow()).to_bytes(&mut buf[32..80]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            num_glyphs: Rc::new(RefCell::new(<u16>::from_bytes(&buf[0..2]))),
+            index_format: Rc::new(RefCell::new(<u16>::from_bytes(&buf[2..4]))),
+            num_hmetrics: Rc::new(RefCell::new(<u16>::from_bytes(&buf[4..6]))),
+            x_mins: Rc::new(RefCell::new(<Vec<i16>>::from_bytes(&buf[8..32]))),
+            table_entry_by_tag: Rc::new(RefCell::new(<BTreeMap<u32, Value<u32>>>::from_bytes(
+                &buf[32..80],
+            ))),
+        }
+    }
+}
 #[derive(Default)]
 pub struct woff2_RebuildMetadata {
     pub header_checksum: Value<u32>,
@@ -1085,7 +1151,27 @@ impl Clone for woff2_RebuildMetadata {
         this
     }
 }
-impl ByteRepr for woff2_RebuildMetadata {}
+impl ByteRepr for woff2_RebuildMetadata {
+    fn byte_size() -> usize {
+        80
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.header_checksum.borrow()).to_bytes(&mut buf[0..4]);
+        (*self.font_infos.borrow()).to_bytes(&mut buf[8..32]);
+        (*self.checksums.borrow()).to_bytes(&mut buf[32..80]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            header_checksum: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
+            font_infos: Rc::new(RefCell::new(<Vec<woff2_WOFF2FontInfo>>::from_bytes(
+                &buf[8..32],
+            ))),
+            checksums: Rc::new(RefCell::new(
+                <BTreeMap<(Value<u32>, Value<u32>), Value<u32>>>::from_bytes(&buf[32..80]),
+            )),
+        }
+    }
+}
 pub fn WithSign_55(flag: i32, baseval: i32) -> i32 {
     let flag: Value<i32> = Rc::new(RefCell::new(flag));
     let baseval: Value<i32> = Rc::new(RefCell::new(baseval));
@@ -1821,10 +1907,12 @@ pub fn ReconstructGlyf_63(
         static kNumSubStreams_64: Value<i32> = Rc::new(RefCell::new(7));
     );
     let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*data.borrow()).clone(),
-        ((*(*(*glyf_table.borrow()).upgrade().deref())
-            .transform_length
-            .borrow()) as usize),
+        { (*data.borrow()).clone() },
+        {
+            ((*(*(*glyf_table.borrow()).upgrade().deref())
+                .transform_length
+                .borrow()) as usize)
+        },
     )));
     let version: Value<u16> = <Value<u16>>::default();
     let substreams: Value<Vec<(Value<Ptr<u8>>, Value<u64>)>> = Rc::new(RefCell::new(
@@ -1937,110 +2025,138 @@ pub fn ReconstructGlyf_63(
         (*i.borrow_mut()).prefix_inc();
     }
     let n_contour_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(0_usize)
-            .upgrade()
-            .deref())
-        .0
-        .borrow())
-        .clone(),
-        ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(0_usize)
-            .upgrade()
-            .deref())
-        .1
-        .borrow()) as usize),
-    )));
-    let n_points_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(1_usize)
-            .upgrade()
-            .deref())
-        .0
-        .borrow())
-        .clone(),
-        ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(1_usize)
-            .upgrade()
-            .deref())
-        .1
-        .borrow()) as usize),
-    )));
-    let flag_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(2_usize)
-            .upgrade()
-            .deref())
-        .0
-        .borrow())
-        .clone(),
-        ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(2_usize)
-            .upgrade()
-            .deref())
-        .1
-        .borrow()) as usize),
-    )));
-    let glyph_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(3_usize)
-            .upgrade()
-            .deref())
-        .0
-        .borrow())
-        .clone(),
-        ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(3_usize)
-            .upgrade()
-            .deref())
-        .1
-        .borrow()) as usize),
-    )));
-    let composite_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(4_usize)
-            .upgrade()
-            .deref())
-        .0
-        .borrow())
-        .clone(),
-        ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(4_usize)
-            .upgrade()
-            .deref())
-        .1
-        .borrow()) as usize),
-    )));
-    let bbox_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(5_usize)
-            .upgrade()
-            .deref())
-        .0
-        .borrow())
-        .clone(),
-        ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-            .offset(5_usize)
-            .upgrade()
-            .deref())
-        .1
-        .borrow()) as usize),
-    )));
-    let instruction_stream: Value<woff2_Buffer> =
-        Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+        {
             (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-                .offset(6_usize)
+                .offset(0_usize)
                 .upgrade()
                 .deref())
             .0
             .borrow())
-            .clone(),
+            .clone()
+        },
+        {
             ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
-                .offset(6_usize)
+                .offset(0_usize)
                 .upgrade()
                 .deref())
             .1
-            .borrow()) as usize),
+            .borrow()) as usize)
+        },
+    )));
+    let n_points_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+        {
+            (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                .offset(1_usize)
+                .upgrade()
+                .deref())
+            .0
+            .borrow())
+            .clone()
+        },
+        {
+            ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                .offset(1_usize)
+                .upgrade()
+                .deref())
+            .1
+            .borrow()) as usize)
+        },
+    )));
+    let flag_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+        {
+            (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                .offset(2_usize)
+                .upgrade()
+                .deref())
+            .0
+            .borrow())
+            .clone()
+        },
+        {
+            ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                .offset(2_usize)
+                .upgrade()
+                .deref())
+            .1
+            .borrow()) as usize)
+        },
+    )));
+    let glyph_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+        {
+            (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                .offset(3_usize)
+                .upgrade()
+                .deref())
+            .0
+            .borrow())
+            .clone()
+        },
+        {
+            ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                .offset(3_usize)
+                .upgrade()
+                .deref())
+            .1
+            .borrow()) as usize)
+        },
+    )));
+    let composite_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+        {
+            (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                .offset(4_usize)
+                .upgrade()
+                .deref())
+            .0
+            .borrow())
+            .clone()
+        },
+        {
+            ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                .offset(4_usize)
+                .upgrade()
+                .deref())
+            .1
+            .borrow()) as usize)
+        },
+    )));
+    let bbox_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+        {
+            (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                .offset(5_usize)
+                .upgrade()
+                .deref())
+            .0
+            .borrow())
+            .clone()
+        },
+        {
+            ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                .offset(5_usize)
+                .upgrade()
+                .deref())
+            .1
+            .borrow()) as usize)
+        },
+    )));
+    let instruction_stream: Value<woff2_Buffer> =
+        Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+            {
+                (*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                    .offset(6_usize)
+                    .upgrade()
+                    .deref())
+                .0
+                .borrow())
+                .clone()
+            },
+            {
+                ((*(*(substreams.as_pointer() as Ptr<(Value<Ptr<u8>>, Value<u64>)>)
+                    .offset(6_usize)
+                    .upgrade()
+                    .deref())
+                .1
+                .borrow()) as usize)
+            },
         )));
     let overlap_bitmap: Value<Ptr<u8>> = Rc::new(RefCell::new(Ptr::<u8>::null()));
     let overlap_bitmap_length: Value<u32> = Rc::new(RefCell::new(0_u32));
@@ -2475,8 +2591,8 @@ pub fn ReconstructGlyf_63(
         };
         if (((*n_contours.borrow()) as i32) > 0) {
             let x_min_buf: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-                (*glyph_buf.borrow()).as_pointer().offset((2) as isize),
-                2_usize,
+                { (*glyph_buf.borrow()).as_pointer().offset((2) as isize) },
+                { 2_usize },
             )));
             if ((!({
                 (*x_min_buf.borrow()).ReadS16(
@@ -2550,8 +2666,8 @@ pub fn ReadNumHMetrics_66(data: Ptr<u8>, data_size: usize, num_hmetrics: Ptr<u16
     let data_size: Value<usize> = Rc::new(RefCell::new(data_size));
     let num_hmetrics: Value<Ptr<u16>> = Rc::new(RefCell::new(num_hmetrics));
     let buffer: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*data.borrow()).clone(),
-        (*data_size.borrow()),
+        { (*data.borrow()).clone() },
+        { (*data_size.borrow()) },
     )));
     if ((((!({ (*buffer.borrow()).Skip(34_usize) }))
         || (!({ (*buffer.borrow()).ReadU16((*num_hmetrics.borrow()).clone()) }))) as i64)
@@ -2577,8 +2693,8 @@ pub fn ReconstructTransformedHmtx_67(
     let checksum: Value<Ptr<u32>> = Rc::new(RefCell::new(checksum));
     let out: Value<PtrDyn<dyn woff2_WOFF2Out>> = Rc::new(RefCell::new(out));
     let hmtx_buff_in: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*transformed_buf.borrow()).clone(),
-        (*transformed_size.borrow()),
+        { (*transformed_buf.borrow()).clone() },
+        { (*transformed_size.borrow()) },
     )));
     let hmtx_flags: Value<u8> = <Value<u8>>::default();
     if ((!({ (*hmtx_buff_in.borrow()).ReadU8((hmtx_flags.as_pointer())) }) as i64) != 0) {
@@ -3397,8 +3513,8 @@ pub fn ReadWOFF2Header_75(data: Ptr<u8>, length: usize, hdr: Ptr<woff2_WOFF2Head
     let length: Value<usize> = Rc::new(RefCell::new(length));
     let hdr: Value<Ptr<woff2_WOFF2Header>> = Rc::new(RefCell::new(hdr));
     let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*data.borrow()).clone(),
-        (*length.borrow()),
+        { (*data.borrow()).clone() },
+        { (*length.borrow()) },
     )));
     let signature: Value<u32> = <Value<u32>>::default();
     if (((((!({ (*file.borrow()).ReadU32((signature.as_pointer())) }))
@@ -3957,8 +4073,8 @@ pub fn ComputeWOFF2FinalSize_77(data: Ptr<u8>, length: usize) -> usize {
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let length: Value<usize> = Rc::new(RefCell::new(length));
     let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
-        (*data.borrow()).clone(),
-        (*length.borrow()),
+        { (*data.borrow()).clone() },
+        { (*length.borrow()) },
     )));
     let total_length: Value<u32> = <Value<u32>>::default();
     if (!({ (*file.borrow()).Skip(16_usize) }))
@@ -3978,11 +4094,11 @@ pub fn ConvertWOFF2ToTTF_78(
     let result_length: Value<usize> = Rc::new(RefCell::new(result_length));
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let length: Value<usize> = Rc::new(RefCell::new(length));
-    let out: Value<woff2_WOFF2MemoryOut> =
-        Rc::new(RefCell::new(woff2_WOFF2MemoryOut::woff2_WOFF2MemoryOut(
-            (*result.borrow()).clone(),
-            (*result_length.borrow()),
-        )));
+    let out: Value<woff2_WOFF2MemoryOut> = Rc::new(RefCell::new(
+        woff2_WOFF2MemoryOut::woff2_WOFF2MemoryOut({ (*result.borrow()).clone() }, {
+            (*result_length.borrow())
+        }),
+    ));
     return ({
         ConvertWOFF2ToTTF_79(
             (*data.borrow()).clone(),
@@ -4455,9 +4571,10 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         .chain(std::iter::once(0))
         .collect(),
     ));
-    let out: Value<woff2_WOFF2StringOut> = Rc::new(RefCell::new(
-        woff2_WOFF2StringOut::woff2_WOFF2StringOut((output.as_pointer())),
-    ));
+    let out: Value<woff2_WOFF2StringOut> =
+        Rc::new(RefCell::new(woff2_WOFF2StringOut::woff2_WOFF2StringOut({
+            (output.as_pointer())
+        })));
     let ok: Value<bool> = Rc::new(RefCell::new(
         ({
             ConvertWOFF2ToTTF_79(

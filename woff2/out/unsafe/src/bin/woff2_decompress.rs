@@ -1134,7 +1134,7 @@ pub unsafe fn ReconstructGlyf_63(
 ) -> bool {
     static mut kNumSubStreams_64: i32 = unsafe { 7 };;
     let mut file: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer(data, ((*glyf_table).transform_length as usize));
+        woff2_Buffer::woff2_Buffer({ data }, { ((*glyf_table).transform_length as usize) });
     let mut version: u16 = 0_u16;
     let mut substreams: Vec<(*const u8, u64)> = (0..(kNumSubStreams_64 as usize) as usize)
         .map(|_| <(*const u8, u64)>::default())
@@ -1180,19 +1180,30 @@ pub unsafe fn ReconstructGlyf_63(
         i.prefix_inc();
     }
     let mut n_contour_stream: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer(substreams[(0_usize)].0, (substreams[(0_usize)].1 as usize));
+        woff2_Buffer::woff2_Buffer({ substreams[(0_usize)].0 }, {
+            (substreams[(0_usize)].1 as usize)
+        });
     let mut n_points_stream: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer(substreams[(1_usize)].0, (substreams[(1_usize)].1 as usize));
-    let mut flag_stream: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer(substreams[(2_usize)].0, (substreams[(2_usize)].1 as usize));
-    let mut glyph_stream: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer(substreams[(3_usize)].0, (substreams[(3_usize)].1 as usize));
+        woff2_Buffer::woff2_Buffer({ substreams[(1_usize)].0 }, {
+            (substreams[(1_usize)].1 as usize)
+        });
+    let mut flag_stream: woff2_Buffer = woff2_Buffer::woff2_Buffer({ substreams[(2_usize)].0 }, {
+        (substreams[(2_usize)].1 as usize)
+    });
+    let mut glyph_stream: woff2_Buffer = woff2_Buffer::woff2_Buffer({ substreams[(3_usize)].0 }, {
+        (substreams[(3_usize)].1 as usize)
+    });
     let mut composite_stream: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer(substreams[(4_usize)].0, (substreams[(4_usize)].1 as usize));
-    let mut bbox_stream: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer(substreams[(5_usize)].0, (substreams[(5_usize)].1 as usize));
+        woff2_Buffer::woff2_Buffer({ substreams[(4_usize)].0 }, {
+            (substreams[(4_usize)].1 as usize)
+        });
+    let mut bbox_stream: woff2_Buffer = woff2_Buffer::woff2_Buffer({ substreams[(5_usize)].0 }, {
+        (substreams[(5_usize)].1 as usize)
+    });
     let mut instruction_stream: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer(substreams[(6_usize)].0, (substreams[(6_usize)].1 as usize));
+        woff2_Buffer::woff2_Buffer({ substreams[(6_usize)].0 }, {
+            (substreams[(6_usize)].1 as usize)
+        });
     let mut overlap_bitmap: *const u8 = std::ptr::null();
     let mut overlap_bitmap_length: u32 = 0_u32;
     if has_overlap_bitmap {
@@ -1577,12 +1588,14 @@ pub unsafe fn ReconstructGlyf_63(
         );
         if ((n_contours as i32) > (0)) {
             let mut x_min_buf: woff2_Buffer = woff2_Buffer::woff2_Buffer(
-                (glyph_buf
-                    .as_deref_mut()
-                    .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                    .offset((2) as isize))
-                .cast_const(),
-                2_usize,
+                {
+                    (glyph_buf
+                        .as_deref_mut()
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
+                        .offset((2) as isize))
+                    .cast_const()
+                },
+                { 2_usize },
             );
             if ((!(unsafe {
                 x_min_buf.ReadS16((&mut (&mut (*info)).x_mins[(i as usize)] as *mut i16))
@@ -1631,7 +1644,7 @@ pub unsafe fn ReadNumHMetrics_66(
     mut data_size: usize,
     mut num_hmetrics: *mut u16,
 ) -> bool {
-    let mut buffer: woff2_Buffer = woff2_Buffer::woff2_Buffer(data, data_size);
+    let mut buffer: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { data_size });
     if ((((!(unsafe { buffer.Skip(34_usize) })) || (!(unsafe { buffer.ReadU16(num_hmetrics) })))
         as i64)
         != 0)
@@ -1650,7 +1663,7 @@ pub unsafe fn ReconstructTransformedHmtx_67(
     mut out: *mut dyn woff2_WOFF2Out,
 ) -> bool {
     let mut hmtx_buff_in: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer(transformed_buf, transformed_size);
+        woff2_Buffer::woff2_Buffer({ transformed_buf }, { transformed_size });
     let mut hmtx_flags: u8 = 0_u8;
     if ((!(unsafe { hmtx_buff_in.ReadU8((&mut hmtx_flags as *mut u8)) }) as i64) != 0) {
         return false;
@@ -2145,7 +2158,7 @@ pub unsafe fn ReadWOFF2Header_75(
     mut length: usize,
     mut hdr: *mut woff2_WOFF2Header,
 ) -> bool {
-    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer(data, length);
+    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { length });
     let mut signature: u32 = 0_u32;
     if (((((!(unsafe { file.ReadU32((&mut signature as *mut u32)) }))
         || ((signature) != (kWoff2Signature_20)))
@@ -2501,7 +2514,7 @@ pub unsafe fn WriteHeaders_76(
     return true;
 }
 pub unsafe fn ComputeWOFF2FinalSize_77(mut data: *const u8, mut length: usize) -> usize {
-    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer(data, length);
+    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { length });
     let mut total_length: u32 = 0_u32;
     if (!(unsafe { file.Skip(16_usize) }))
         || (!(unsafe { file.ReadU32((&mut total_length as *mut u32)) }))
@@ -2517,7 +2530,7 @@ pub unsafe fn ConvertWOFF2ToTTF_78(
     mut length: usize,
 ) -> bool {
     let mut out: woff2_WOFF2MemoryOut =
-        woff2_WOFF2MemoryOut::woff2_WOFF2MemoryOut(result, result_length);
+        woff2_WOFF2MemoryOut::woff2_WOFF2MemoryOut({ result }, { result_length });
     return (unsafe {
         ConvertWOFF2ToTTF_79(data, length, (&mut out as *mut woff2_WOFF2MemoryOut))
     });
@@ -2659,8 +2672,8 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2StringOut {
             );
         }
         self.offset_ = ({
-            let mut __tmp_0 = (self.offset_ as u64);
-            let mut __tmp_1 = ((offset).wrapping_add(n) as u64);
+            let mut __tmp_0: u64 = (self.offset_ as u64);
+            let mut __tmp_1: u64 = ((offset).wrapping_add(n) as u64);
             (*if *&mut __tmp_0 >= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -2721,8 +2734,8 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
             (self.buf_.offset((offset) as isize) as *mut u8 as *mut ::libc::c_void)
         };
         self.offset_ = ({
-            let mut __tmp_0 = (self.offset_ as u64);
-            let mut __tmp_1 = ((offset).wrapping_add(n) as u64);
+            let mut __tmp_0: u64 = (self.offset_ as u64);
+            let mut __tmp_1: u64 = ((offset).wrapping_add(n) as u64);
             (*if *&mut __tmp_0 >= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -2839,9 +2852,9 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     let mut output: Vec<libc::c_char> = vec![
         (0 as libc::c_char);
         ({
-            let mut __tmp_0 =
+            let mut __tmp_0: u64 =
                 ((unsafe { ComputeWOFF2FinalSize_77(raw_input, (input.len() - 1)) }) as u64);
-            let mut __tmp_1 = (kDefaultMaxSize_28 as u64);
+            let mut __tmp_1: u64 = (kDefaultMaxSize_28 as u64);
             (*if *&mut __tmp_0 <= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -2854,7 +2867,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     .chain(std::iter::once(0))
     .collect();
     let mut out: woff2_WOFF2StringOut =
-        woff2_WOFF2StringOut::woff2_WOFF2StringOut((&mut output as *mut Vec<libc::c_char>));
+        woff2_WOFF2StringOut::woff2_WOFF2StringOut({ (&mut output as *mut Vec<libc::c_char>) });
     let ok: bool = (unsafe {
         ConvertWOFF2ToTTF_79(
             raw_input,
