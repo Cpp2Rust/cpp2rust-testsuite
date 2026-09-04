@@ -2740,12 +2740,6 @@ impl brunsli_Arena_brunsli_HuffmanCode_ {
             )));
         }
     }
-    pub unsafe fn data(&mut self) -> *mut brunsli_HuffmanCode {
-        return self
-            .storage
-            .as_deref_mut()
-            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr());
-    }
     pub unsafe fn reset(&mut self) {
         self.capacity = 0_usize;
         self.storage = None;
@@ -7930,6 +7924,14 @@ pub unsafe fn ReadHistogram_189(
         (*histogram.offset((omit_pos) as isize)) = (space).wrapping_sub(total_count);
     }
     return (unsafe { BrunsliBitReaderIsHealthy_132(br) });
+}
+impl brunsli_Arena_brunsli_HuffmanCode_ {
+    pub unsafe fn data(&mut self) -> *mut brunsli_HuffmanCode {
+        return self
+            .storage
+            .as_deref_mut()
+            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr());
+    }
 }
 #[repr(C)]
 #[derive(Clone, Default)]

@@ -4472,9 +4472,6 @@ impl brunsli_Arena_brunsli_HuffmanCode_ {
             .to_owned_opt();
         }
     }
-    pub fn data(&self) -> Ptr<brunsli_HuffmanCode> {
-        return (*self.storage.borrow()).as_pointer();
-    }
     pub fn reset(&self) {
         (*self.capacity.borrow_mut()) = 0_usize;
         (*self.storage.borrow_mut()) = None;
@@ -12752,6 +12749,11 @@ pub fn ReadHistogram_189(
             .write(__rhs);
     }
     return ({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) });
+}
+impl brunsli_Arena_brunsli_HuffmanCode_ {
+    pub fn data(&self) -> Ptr<brunsli_HuffmanCode> {
+        return (*self.storage.borrow()).as_pointer();
+    }
 }
 #[derive(Default)]
 pub struct brunsli_HuffmanDecodingData {
