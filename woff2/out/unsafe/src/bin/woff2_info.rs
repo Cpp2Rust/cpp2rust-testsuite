@@ -224,7 +224,7 @@ impl woff2_Buffer {
         this
     }
     pub unsafe fn Skip(&mut self, mut n_bytes: usize) -> bool {
-        return (unsafe { self.Read(std::ptr::null_mut(), n_bytes) });
+        return (unsafe { woff2_Buffer::Read(self, std::ptr::null_mut(), n_bytes) });
     }
     pub unsafe fn Read(&mut self, mut data: *mut u8, mut n_bytes: usize) -> bool {
         if ((n_bytes) > ((((1024) * (1024)) * (1024)) as usize)) {
@@ -281,7 +281,7 @@ impl woff2_Buffer {
         return true;
     }
     pub unsafe fn ReadS16(&mut self, mut value: *mut i16) -> bool {
-        return (unsafe { self.ReadU16((value as *mut u16)) });
+        return (unsafe { woff2_Buffer::ReadU16(self, (value as *mut u16)) });
     }
     pub unsafe fn ReadU24(&mut self, mut value: *mut u32) -> bool {
         if ((self.length_) < (3_usize)) || ((self.offset_) > ((self.length_).wrapping_sub(3_usize)))
@@ -321,7 +321,7 @@ impl woff2_Buffer {
         return true;
     }
     pub unsafe fn ReadS32(&mut self, mut value: *mut i32) -> bool {
-        return (unsafe { self.ReadU32((value as *mut u32)) });
+        return (unsafe { woff2_Buffer::ReadU32(self, (value as *mut u32)) });
     }
     pub unsafe fn ReadTag(&mut self, mut value: *mut u32) -> bool {
         if ((self.length_) < (4_usize)) || ((self.offset_) > ((self.length_).wrapping_sub(4_usize)))
@@ -418,26 +418,26 @@ pub unsafe fn Read255UShort_12(mut buf: *mut woff2_Buffer, mut value: *mut u32) 
     static mut kOneMoreByteCode1_15: i32 = unsafe { 255 };;
     static mut kLowestUCode_16: i32 = unsafe { 253 };;
     let mut code: u8 = 0_u8;
-    if !(unsafe { (*buf).ReadU8((&mut code as *mut u8)) }) {
+    if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
         return false;
     }
     if ((code as i32) == (kWordCode_13)) {
         let mut result: u16 = 0_u16;
-        if !(unsafe { (*buf).ReadU16((&mut result as *mut u16)) }) {
+        if !(unsafe { woff2_Buffer::ReadU16(&mut (*buf), (&mut result as *mut u16)) }) {
             return false;
         }
         (*value) = (result as u32);
         return true;
     } else if ((code as i32) == (kOneMoreByteCode1_15)) {
         let mut result: u8 = 0_u8;
-        if !(unsafe { (*buf).ReadU8((&mut result as *mut u8)) }) {
+        if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut result as *mut u8)) }) {
             return false;
         }
         (*value) = (((result as i32) + (kLowestUCode_16)) as u32);
         return true;
     } else if ((code as i32) == (kOneMoreByteCode2_14)) {
         let mut result: u8 = 0_u8;
-        if !(unsafe { (*buf).ReadU8((&mut result as *mut u8)) }) {
+        if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut result as *mut u8)) }) {
             return false;
         }
         (*value) = (((result as i32) + ((kLowestUCode_16) * (2))) as u32);
@@ -453,7 +453,7 @@ pub unsafe fn ReadBase128_17(mut buf: *mut woff2_Buffer, mut value: *mut u32) ->
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (5_usize)) {
         let mut code: u8 = 0_u8;
-        if !(unsafe { (*buf).ReadU8((&mut code as *mut u8)) }) {
+        if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
             return false;
         }
         if ((i) == (0_usize)) && ((code as i32) == (128)) {
@@ -752,8 +752,8 @@ pub unsafe fn ReadTrueTypeFont_33(
     mut len: usize,
     mut font: *mut woff2_Font,
 ) -> bool {
-    if (!(unsafe { (*file).ReadU16((&mut (*font).num_tables as *mut u16)) }))
-        || (!(unsafe { (*file).Skip(6_usize) }))
+    if (!(unsafe { woff2_Buffer::ReadU16(&mut (*file), (&mut (*font).num_tables as *mut u16)) }))
+        || (!(unsafe { woff2_Buffer::Skip(&mut (*file), 6_usize) }))
     {
         return false;
     }
@@ -763,10 +763,12 @@ pub unsafe fn ReadTrueTypeFont_33(
         let mut table: woff2_Font_Table = <woff2_Font_Table>::default();
         table.flag_byte = 0_u8;
         table.reuse_of = std::ptr::null_mut();
-        if (((!(unsafe { (*file).ReadU32((&mut table.tag as *mut u32)) }))
-            || (!(unsafe { (*file).ReadU32((&mut table.checksum as *mut u32)) })))
-            || (!(unsafe { (*file).ReadU32((&mut table.offset as *mut u32)) })))
-            || (!(unsafe { (*file).ReadU32((&mut table.length as *mut u32)) }))
+        if (((!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut table.tag as *mut u32)) }))
+            || (!(unsafe {
+                woff2_Buffer::ReadU32(&mut (*file), (&mut table.checksum as *mut u32))
+            })))
+            || (!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut table.offset as *mut u32)) })))
+            || (!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut table.length as *mut u32)) }))
         {
             return false;
         }
@@ -800,7 +802,7 @@ pub unsafe fn ReadTrueTypeFont_33(
         last_offset = (*i.first()).wrapping_add(*i.second());
     }
     let mut head_table: *const woff2_Font_Table =
-        (unsafe { (*font).FindTable_u32(kHeadTableTag_1) }).cast_const();
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) }).cast_const();
     if (!((head_table).is_null())) && (((*head_table).length) < (52_u32)) {
         return false;
     }
@@ -813,7 +815,7 @@ pub unsafe fn ReadCollectionFont_34(
     mut font: *mut woff2_Font,
     mut all_tables: *mut BTreeMap<u32, Box<*mut woff2_Font_Table>>,
 ) -> bool {
-    if !(unsafe { (*file).ReadU32((&mut (*font).flavor as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut (*font).flavor as *mut u32)) }) {
         return false;
     }
     if !(unsafe { ReadTrueTypeFont_33(file, data, len, font) }) {
@@ -830,7 +832,7 @@ pub unsafe fn ReadCollectionFont_34(
             &(*all_tables) as *const BTreeMap<u32, Box<*mut woff2_Font_Table>>,
         ) {
             (*(*all_tables).entry((*table).offset).or_default().as_mut()) =
-                (unsafe { (*font).FindTable_u32((*table).tag) });
+                (unsafe { woff2_Font::FindTable_u32(&mut (*font), (*table).tag) });
         } else {
             (*table).reuse_of = (*(*all_tables).entry((*table).offset).or_default().as_mut());
             if (((*table).tag) != ((*(*table).reuse_of).tag)) {
@@ -847,8 +849,12 @@ pub unsafe fn ReadTrueTypeCollection_35(
     mut font_collection: *mut woff2_FontCollection,
 ) -> bool {
     let mut num_fonts: u32 = 0_u32;
-    if (!(unsafe { (*file).ReadU32((&mut (*font_collection).header_version as *mut u32)) }))
-        || (!(unsafe { (*file).ReadU32((&mut num_fonts as *mut u32)) }))
+    if (!(unsafe {
+        woff2_Buffer::ReadU32(
+            &mut (*file),
+            (&mut (*font_collection).header_version as *mut u32),
+        )
+    })) || (!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut num_fonts as *mut u32)) }))
     {
         return false;
     }
@@ -856,7 +862,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (num_fonts as usize)) {
         let mut offset: u32 = 0_u32;
-        if !(unsafe { (*file).ReadU32((&mut offset as *mut u32)) }) {
+        if !(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut offset as *mut u32)) }) {
             return false;
         }
         {
@@ -875,7 +881,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
     let mut all_tables: BTreeMap<u32, Box<*mut woff2_Font_Table>> = BTreeMap::new();
     'loop_: for offset in 0..(offsets.len()) {
         let offset = offsets[offset].clone();
-        if !(unsafe { (*file).set_offset((offset as usize)) }) {
+        if !(unsafe { woff2_Buffer::set_offset(&mut (*file), (offset as usize)) }) {
             return false;
         }
         let font: *mut woff2_Font = &mut (*font_it.postfix_inc()) as *mut woff2_Font;
@@ -895,7 +901,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
 }
 pub unsafe fn ReadFont_36(mut data: *const u8, mut len: usize, mut font: *mut woff2_Font) -> bool {
     let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
-    if !(unsafe { file.ReadU32((&mut (*font).flavor as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut (*font).flavor as *mut u32)) }) {
         return false;
     }
     if (((*font).flavor) == (kTtcFontFlavor_22)) {
@@ -909,7 +915,8 @@ pub unsafe fn ReadFontCollection_37(
     mut font_collection: *mut woff2_FontCollection,
 ) -> bool {
     let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
-    if !(unsafe { file.ReadU32((&mut (*font_collection).flavor as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut (*font_collection).flavor as *mut u32)) })
+    {
         return false;
     }
     if (((*font_collection).flavor) != (kTtcFontFlavor_22)) {
@@ -989,7 +996,7 @@ pub unsafe fn WriteTableRecord_42(
     if ((dst_size) < ((*offset).wrapping_add(kSfntEntrySize_24))) {
         return false;
     }
-    if (unsafe { (*table).IsReused() }) {
+    if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
         table = ((*table).reuse_of).cast_const();
     }
     (unsafe { StoreU32_30((*table).tag, offset, dst) });
@@ -1011,7 +1018,7 @@ pub unsafe fn WriteTable_43(
     }) {
         return false;
     }
-    if !(unsafe { (*table).IsReused() }) {
+    if !(unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
         if ((((*table).offset).wrapping_add((*table).length)) < ((*table).offset))
             || ((dst_size) < ((((*table).offset).wrapping_add((*table).length)) as usize))
         {
@@ -1160,11 +1167,11 @@ pub unsafe fn WriteFontCollection_44(
 pub unsafe fn NumGlyphs_45(font: *const woff2_Font) -> i32 {
     let mut head_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kHeadTableTag_1;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut loca_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kLocaTableTag_2;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if (((head_table).is_null()) || ((loca_table).is_null())) || (((*head_table).length) < (52_u32))
     {
@@ -1181,7 +1188,7 @@ pub unsafe fn NumGlyphs_45(font: *const woff2_Font) -> i32 {
 pub unsafe fn IndexFormat_46(font: *const woff2_Font) -> i32 {
     let mut head_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kHeadTableTag_1;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if (head_table).is_null() {
         return 0;
@@ -1204,15 +1211,15 @@ pub unsafe fn GetGlyphData_47(
     }
     let mut head_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kHeadTableTag_1;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut loca_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kLocaTableTag_2;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut glyf_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kGlyfTableTag_0;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if ((((head_table).is_null()) || ((loca_table).is_null())) || ((glyf_table).is_null()))
         || (((*head_table).length) < (52_u32))
@@ -1225,9 +1232,9 @@ pub unsafe fn GetGlyphData_47(
     if ((index_fmt) == (0)) {
         let mut offset1: u16 = 0_u16;
         let mut offset2: u16 = 0_u16;
-        if ((((!(unsafe { loca_buf.Skip((((2) * (glyph_index)) as usize)) }))
-            || (!(unsafe { loca_buf.ReadU16((&mut offset1 as *mut u16)) })))
-            || (!(unsafe { loca_buf.ReadU16((&mut offset2 as *mut u16)) })))
+        if ((((!(unsafe { woff2_Buffer::Skip(&mut loca_buf, (((2) * (glyph_index)) as usize)) }))
+            || (!(unsafe { woff2_Buffer::ReadU16(&mut loca_buf, (&mut offset1 as *mut u16)) })))
+            || (!(unsafe { woff2_Buffer::ReadU16(&mut loca_buf, (&mut offset2 as *mut u16)) })))
             || ((offset2 as i32) < (offset1 as i32)))
             || ((((2) * (offset2 as i32)) as u32) > ((*glyf_table).length))
         {
@@ -1238,9 +1245,9 @@ pub unsafe fn GetGlyphData_47(
     } else {
         let mut offset1: u32 = 0_u32;
         let mut offset2: u32 = 0_u32;
-        if ((((!(unsafe { loca_buf.Skip((((4) * (glyph_index)) as usize)) }))
-            || (!(unsafe { loca_buf.ReadU32((&mut offset1 as *mut u32)) })))
-            || (!(unsafe { loca_buf.ReadU32((&mut offset2 as *mut u32)) })))
+        if ((((!(unsafe { woff2_Buffer::Skip(&mut loca_buf, (((4) * (glyph_index)) as usize)) }))
+            || (!(unsafe { woff2_Buffer::ReadU32(&mut loca_buf, (&mut offset1 as *mut u32)) })))
+            || (!(unsafe { woff2_Buffer::ReadU32(&mut loca_buf, (&mut offset2 as *mut u32)) })))
             || ((offset2) < (offset1)))
             || ((offset2) > ((*glyf_table).length))
         {
@@ -1399,46 +1406,46 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     let mut reserved: u16 = 0_u16;
     let mut major: u16 = 0_u16;
     let mut minor: u16 = 0_u16;
-    if !(unsafe { file.ReadU32((&mut signature as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut signature as *mut u32)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU32((&mut flavor as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut flavor as *mut u32)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU32((&mut length as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut length as *mut u32)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU16((&mut num_tables as *mut u16)) }) {
+    if !(unsafe { woff2_Buffer::ReadU16(&mut file, (&mut num_tables as *mut u16)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU16((&mut reserved as *mut u16)) }) {
+    if !(unsafe { woff2_Buffer::ReadU16(&mut file, (&mut reserved as *mut u16)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU32((&mut totalSfntSize as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut totalSfntSize as *mut u32)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU32((&mut totalCompressedSize as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut totalCompressedSize as *mut u32)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU16((&mut major as *mut u16)) }) {
+    if !(unsafe { woff2_Buffer::ReadU16(&mut file, (&mut major as *mut u16)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU16((&mut minor as *mut u16)) }) {
+    if !(unsafe { woff2_Buffer::ReadU16(&mut file, (&mut minor as *mut u16)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU32((&mut metaOffset as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut metaOffset as *mut u32)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU32((&mut metaLength as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut metaLength as *mut u32)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU32((&mut metaOrigLength as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut metaOrigLength as *mut u32)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU32((&mut privOffset as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut privOffset as *mut u32)) }) {
         return 1;
     }
-    if !(unsafe { file.ReadU32((&mut privLength as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut privLength as *mut u32)) }) {
         return 1;
     }
     if ((signature) != (2001684018_u32)) {
@@ -1504,21 +1511,21 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     let mut table_tags: Vec<u32> = Vec::new();
     printf(
         c"TableDirectory starts at +%zu\n".as_ptr() as *const i8,
-        (unsafe { file.offset() }),
+        (unsafe { woff2_Buffer::offset(&file) }),
     );
     printf(c"Entry offset flags tag  origLength txLength\n".as_ptr() as *const i8);
     let mut i: i32 = 0;
     'loop_: while ((i) < (num_tables as i32)) {
-        let mut offset: usize = (unsafe { file.offset() });
+        let mut offset: usize = (unsafe { woff2_Buffer::offset(&file) });
         let mut flags: u8 = 0_u8;
         let mut tag: u32 = 0_u32;
         let mut origLength: u32 = 0_u32;
         let mut transformLength: u32 = 0_u32;
-        if !(unsafe { file.ReadU8((&mut flags as *mut u8)) }) {
+        if !(unsafe { woff2_Buffer::ReadU8(&mut file, (&mut flags as *mut u8)) }) {
             return 1;
         }
         if (((flags as i32) & (63)) == (63)) {
-            if !(unsafe { file.ReadU32((&mut tag as *mut u32)) }) {
+            if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut tag as *mut u32)) }) {
                 return 1;
             }
         } else {
@@ -1574,7 +1581,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     if ((flavor) == (kTtcFontFlavor_22)) {
         let mut version: u32 = 0_u32;
         let mut numFonts: u32 = 0_u32;
-        if !(unsafe { file.ReadU32((&mut version as *mut u32)) }) {
+        if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut version as *mut u32)) }) {
             return 1;
         }
         if !(unsafe {
@@ -1602,7 +1609,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
             }) {
                 return 1;
             }
-            if !(unsafe { file.ReadU32((&mut flavor as *mut u32)) }) {
+            if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut flavor as *mut u32)) }) {
                 return 1;
             }
             printf(
@@ -1638,7 +1645,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     }
     printf(
         c"TableDirectory ends at +%zu\n".as_ptr() as *const i8,
-        (unsafe { file.offset() }),
+        (unsafe { woff2_Buffer::offset(&file) }),
     );
     return 0;
 }

@@ -224,7 +224,7 @@ impl woff2_Buffer {
         this
     }
     pub unsafe fn Skip(&mut self, mut n_bytes: usize) -> bool {
-        return (unsafe { self.Read(std::ptr::null_mut(), n_bytes) });
+        return (unsafe { woff2_Buffer::Read(self, std::ptr::null_mut(), n_bytes) });
     }
     pub unsafe fn Read(&mut self, mut data: *mut u8, mut n_bytes: usize) -> bool {
         if ((n_bytes) > ((((1024) * (1024)) * (1024)) as usize)) {
@@ -281,7 +281,7 @@ impl woff2_Buffer {
         return true;
     }
     pub unsafe fn ReadS16(&mut self, mut value: *mut i16) -> bool {
-        return (unsafe { self.ReadU16((value as *mut u16)) });
+        return (unsafe { woff2_Buffer::ReadU16(self, (value as *mut u16)) });
     }
     pub unsafe fn ReadU24(&mut self, mut value: *mut u32) -> bool {
         if ((self.length_) < (3_usize)) || ((self.offset_) > ((self.length_).wrapping_sub(3_usize)))
@@ -321,7 +321,7 @@ impl woff2_Buffer {
         return true;
     }
     pub unsafe fn ReadS32(&mut self, mut value: *mut i32) -> bool {
-        return (unsafe { self.ReadU32((value as *mut u32)) });
+        return (unsafe { woff2_Buffer::ReadU32(self, (value as *mut u32)) });
     }
     pub unsafe fn ReadTag(&mut self, mut value: *mut u32) -> bool {
         if ((self.length_) < (4_usize)) || ((self.offset_) > ((self.length_).wrapping_sub(4_usize)))
@@ -418,26 +418,26 @@ pub unsafe fn Read255UShort_12(mut buf: *mut woff2_Buffer, mut value: *mut u32) 
     static mut kOneMoreByteCode1_15: i32 = unsafe { 255 };;
     static mut kLowestUCode_16: i32 = unsafe { 253 };;
     let mut code: u8 = 0_u8;
-    if !(unsafe { (*buf).ReadU8((&mut code as *mut u8)) }) {
+    if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
         return false;
     }
     if ((code as i32) == (kWordCode_13)) {
         let mut result: u16 = 0_u16;
-        if !(unsafe { (*buf).ReadU16((&mut result as *mut u16)) }) {
+        if !(unsafe { woff2_Buffer::ReadU16(&mut (*buf), (&mut result as *mut u16)) }) {
             return false;
         }
         (*value) = (result as u32);
         return true;
     } else if ((code as i32) == (kOneMoreByteCode1_15)) {
         let mut result: u8 = 0_u8;
-        if !(unsafe { (*buf).ReadU8((&mut result as *mut u8)) }) {
+        if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut result as *mut u8)) }) {
             return false;
         }
         (*value) = (((result as i32) + (kLowestUCode_16)) as u32);
         return true;
     } else if ((code as i32) == (kOneMoreByteCode2_14)) {
         let mut result: u8 = 0_u8;
-        if !(unsafe { (*buf).ReadU8((&mut result as *mut u8)) }) {
+        if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut result as *mut u8)) }) {
             return false;
         }
         (*value) = (((result as i32) + ((kLowestUCode_16) * (2))) as u32);
@@ -453,7 +453,7 @@ pub unsafe fn ReadBase128_17(mut buf: *mut woff2_Buffer, mut value: *mut u32) ->
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (5_usize)) {
         let mut code: u8 = 0_u8;
-        if !(unsafe { (*buf).ReadU8((&mut code as *mut u8)) }) {
+        if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
             return false;
         }
         if ((i) == (0_usize)) && ((code as i32) == (128)) {
@@ -752,8 +752,8 @@ pub unsafe fn ReadTrueTypeFont_33(
     mut len: usize,
     mut font: *mut woff2_Font,
 ) -> bool {
-    if (!(unsafe { (*file).ReadU16((&mut (*font).num_tables as *mut u16)) }))
-        || (!(unsafe { (*file).Skip(6_usize) }))
+    if (!(unsafe { woff2_Buffer::ReadU16(&mut (*file), (&mut (*font).num_tables as *mut u16)) }))
+        || (!(unsafe { woff2_Buffer::Skip(&mut (*file), 6_usize) }))
     {
         return false;
     }
@@ -763,10 +763,12 @@ pub unsafe fn ReadTrueTypeFont_33(
         let mut table: woff2_Font_Table = <woff2_Font_Table>::default();
         table.flag_byte = 0_u8;
         table.reuse_of = std::ptr::null_mut();
-        if (((!(unsafe { (*file).ReadU32((&mut table.tag as *mut u32)) }))
-            || (!(unsafe { (*file).ReadU32((&mut table.checksum as *mut u32)) })))
-            || (!(unsafe { (*file).ReadU32((&mut table.offset as *mut u32)) })))
-            || (!(unsafe { (*file).ReadU32((&mut table.length as *mut u32)) }))
+        if (((!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut table.tag as *mut u32)) }))
+            || (!(unsafe {
+                woff2_Buffer::ReadU32(&mut (*file), (&mut table.checksum as *mut u32))
+            })))
+            || (!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut table.offset as *mut u32)) })))
+            || (!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut table.length as *mut u32)) }))
         {
             return false;
         }
@@ -800,7 +802,7 @@ pub unsafe fn ReadTrueTypeFont_33(
         last_offset = (*i.first()).wrapping_add(*i.second());
     }
     let mut head_table: *const woff2_Font_Table =
-        (unsafe { (*font).FindTable_u32(kHeadTableTag_1) }).cast_const();
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) }).cast_const();
     if (!((head_table).is_null())) && (((*head_table).length) < (52_u32)) {
         return false;
     }
@@ -813,7 +815,7 @@ pub unsafe fn ReadCollectionFont_34(
     mut font: *mut woff2_Font,
     mut all_tables: *mut BTreeMap<u32, Box<*mut woff2_Font_Table>>,
 ) -> bool {
-    if !(unsafe { (*file).ReadU32((&mut (*font).flavor as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut (*font).flavor as *mut u32)) }) {
         return false;
     }
     if !(unsafe { ReadTrueTypeFont_33(file, data, len, font) }) {
@@ -830,7 +832,7 @@ pub unsafe fn ReadCollectionFont_34(
             &(*all_tables) as *const BTreeMap<u32, Box<*mut woff2_Font_Table>>,
         ) {
             (*(*all_tables).entry((*table).offset).or_default().as_mut()) =
-                (unsafe { (*font).FindTable_u32((*table).tag) });
+                (unsafe { woff2_Font::FindTable_u32(&mut (*font), (*table).tag) });
         } else {
             (*table).reuse_of = (*(*all_tables).entry((*table).offset).or_default().as_mut());
             if (((*table).tag) != ((*(*table).reuse_of).tag)) {
@@ -847,8 +849,12 @@ pub unsafe fn ReadTrueTypeCollection_35(
     mut font_collection: *mut woff2_FontCollection,
 ) -> bool {
     let mut num_fonts: u32 = 0_u32;
-    if (!(unsafe { (*file).ReadU32((&mut (*font_collection).header_version as *mut u32)) }))
-        || (!(unsafe { (*file).ReadU32((&mut num_fonts as *mut u32)) }))
+    if (!(unsafe {
+        woff2_Buffer::ReadU32(
+            &mut (*file),
+            (&mut (*font_collection).header_version as *mut u32),
+        )
+    })) || (!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut num_fonts as *mut u32)) }))
     {
         return false;
     }
@@ -856,7 +862,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (num_fonts as usize)) {
         let mut offset: u32 = 0_u32;
-        if !(unsafe { (*file).ReadU32((&mut offset as *mut u32)) }) {
+        if !(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut offset as *mut u32)) }) {
             return false;
         }
         {
@@ -875,7 +881,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
     let mut all_tables: BTreeMap<u32, Box<*mut woff2_Font_Table>> = BTreeMap::new();
     'loop_: for offset in 0..(offsets.len()) {
         let offset = offsets[offset].clone();
-        if !(unsafe { (*file).set_offset((offset as usize)) }) {
+        if !(unsafe { woff2_Buffer::set_offset(&mut (*file), (offset as usize)) }) {
             return false;
         }
         let font: *mut woff2_Font = &mut (*font_it.postfix_inc()) as *mut woff2_Font;
@@ -895,7 +901,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
 }
 pub unsafe fn ReadFont_36(mut data: *const u8, mut len: usize, mut font: *mut woff2_Font) -> bool {
     let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
-    if !(unsafe { file.ReadU32((&mut (*font).flavor as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut (*font).flavor as *mut u32)) }) {
         return false;
     }
     if (((*font).flavor) == (kTtcFontFlavor_22)) {
@@ -909,7 +915,8 @@ pub unsafe fn ReadFontCollection_37(
     mut font_collection: *mut woff2_FontCollection,
 ) -> bool {
     let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
-    if !(unsafe { file.ReadU32((&mut (*font_collection).flavor as *mut u32)) }) {
+    if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut (*font_collection).flavor as *mut u32)) })
+    {
         return false;
     }
     if (((*font_collection).flavor) != (kTtcFontFlavor_22)) {
@@ -989,7 +996,7 @@ pub unsafe fn WriteTableRecord_42(
     if ((dst_size) < ((*offset).wrapping_add(kSfntEntrySize_24))) {
         return false;
     }
-    if (unsafe { (*table).IsReused() }) {
+    if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
         table = ((*table).reuse_of).cast_const();
     }
     (unsafe { StoreU32_30((*table).tag, offset, dst) });
@@ -1011,7 +1018,7 @@ pub unsafe fn WriteTable_43(
     }) {
         return false;
     }
-    if !(unsafe { (*table).IsReused() }) {
+    if !(unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
         if ((((*table).offset).wrapping_add((*table).length)) < ((*table).offset))
             || ((dst_size) < ((((*table).offset).wrapping_add((*table).length)) as usize))
         {
@@ -1160,11 +1167,11 @@ pub unsafe fn WriteFontCollection_44(
 pub unsafe fn NumGlyphs_45(font: *const woff2_Font) -> i32 {
     let mut head_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kHeadTableTag_1;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut loca_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kLocaTableTag_2;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if (((head_table).is_null()) || ((loca_table).is_null())) || (((*head_table).length) < (52_u32))
     {
@@ -1181,7 +1188,7 @@ pub unsafe fn NumGlyphs_45(font: *const woff2_Font) -> i32 {
 pub unsafe fn IndexFormat_46(font: *const woff2_Font) -> i32 {
     let mut head_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kHeadTableTag_1;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if (head_table).is_null() {
         return 0;
@@ -1204,15 +1211,15 @@ pub unsafe fn GetGlyphData_47(
     }
     let mut head_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kHeadTableTag_1;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut loca_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kLocaTableTag_2;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut glyf_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = kGlyfTableTag_0;
-        (*font).FindTable_u32_const(_tag)
+        woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if ((((head_table).is_null()) || ((loca_table).is_null())) || ((glyf_table).is_null()))
         || (((*head_table).length) < (52_u32))
@@ -1225,9 +1232,9 @@ pub unsafe fn GetGlyphData_47(
     if ((index_fmt) == (0)) {
         let mut offset1: u16 = 0_u16;
         let mut offset2: u16 = 0_u16;
-        if ((((!(unsafe { loca_buf.Skip((((2) * (glyph_index)) as usize)) }))
-            || (!(unsafe { loca_buf.ReadU16((&mut offset1 as *mut u16)) })))
-            || (!(unsafe { loca_buf.ReadU16((&mut offset2 as *mut u16)) })))
+        if ((((!(unsafe { woff2_Buffer::Skip(&mut loca_buf, (((2) * (glyph_index)) as usize)) }))
+            || (!(unsafe { woff2_Buffer::ReadU16(&mut loca_buf, (&mut offset1 as *mut u16)) })))
+            || (!(unsafe { woff2_Buffer::ReadU16(&mut loca_buf, (&mut offset2 as *mut u16)) })))
             || ((offset2 as i32) < (offset1 as i32)))
             || ((((2) * (offset2 as i32)) as u32) > ((*glyf_table).length))
         {
@@ -1238,9 +1245,9 @@ pub unsafe fn GetGlyphData_47(
     } else {
         let mut offset1: u32 = 0_u32;
         let mut offset2: u32 = 0_u32;
-        if ((((!(unsafe { loca_buf.Skip((((4) * (glyph_index)) as usize)) }))
-            || (!(unsafe { loca_buf.ReadU32((&mut offset1 as *mut u32)) })))
-            || (!(unsafe { loca_buf.ReadU32((&mut offset2 as *mut u32)) })))
+        if ((((!(unsafe { woff2_Buffer::Skip(&mut loca_buf, (((4) * (glyph_index)) as usize)) }))
+            || (!(unsafe { woff2_Buffer::ReadU32(&mut loca_buf, (&mut offset1 as *mut u32)) })))
+            || (!(unsafe { woff2_Buffer::ReadU32(&mut loca_buf, (&mut offset2 as *mut u32)) })))
             || ((offset2) < (offset1)))
             || ((offset2) > ((*glyf_table).length))
         {
@@ -1329,12 +1336,12 @@ pub unsafe fn ReadCompositeGlyphData_62(
     mut glyph: *mut woff2_Glyph,
 ) -> bool {
     (*glyph).have_instructions = false;
-    (*glyph).composite_data = (unsafe { (*(buffer).cast_const()).buffer() })
-        .offset((unsafe { (*(buffer).cast_const()).offset() }) as isize);
-    let mut start_offset: usize = (unsafe { (*(buffer).cast_const()).offset() });
+    (*glyph).composite_data = (unsafe { woff2_Buffer::buffer(&(*(buffer).cast_const())) })
+        .offset((unsafe { woff2_Buffer::offset(&(*(buffer).cast_const())) }) as isize);
+    let mut start_offset: usize = (unsafe { woff2_Buffer::offset(&(*(buffer).cast_const())) });
     let mut flags: u16 = (kFLAG_MORE_COMPONENTS_58 as u16);
     'loop_: while (((flags as i32) & (kFLAG_MORE_COMPONENTS_58)) != 0) {
-        if !(unsafe { (*buffer).ReadU16((&mut flags as *mut u16)) }) {
+        if !(unsafe { woff2_Buffer::ReadU16(&mut (*buffer), (&mut flags as *mut u16)) }) {
             return false;
         }
         (*glyph).have_instructions = (((*glyph).have_instructions as i32)
@@ -1353,17 +1360,17 @@ pub unsafe fn ReadCompositeGlyphData_62(
         } else if (((flags as i32) & (kFLAG_WE_HAVE_A_TWO_BY_TWO_60)) != 0) {
             arg_size = (arg_size).wrapping_add(8_usize);
         }
-        if !(unsafe { (*buffer).Skip(arg_size) }) {
+        if !(unsafe { woff2_Buffer::Skip(&mut (*buffer), arg_size) }) {
             return false;
         }
     }
-    if (((unsafe { (*(buffer).cast_const()).offset() }).wrapping_sub(start_offset))
+    if (((unsafe { woff2_Buffer::offset(&(*(buffer).cast_const())) }).wrapping_sub(start_offset))
         > (<u32>::MAX as usize))
     {
         return false;
     }
-    (*glyph).composite_data_size =
-        (((unsafe { (*(buffer).cast_const()).offset() }).wrapping_sub(start_offset)) as u32);
+    (*glyph).composite_data_size = (((unsafe { woff2_Buffer::offset(&(*(buffer).cast_const())) })
+        .wrapping_sub(start_offset)) as u32);
     return true;
 }
 pub unsafe fn ReadGlyph_63(
@@ -1373,13 +1380,13 @@ pub unsafe fn ReadGlyph_63(
 ) -> bool {
     let mut buffer: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
     let mut num_contours: i16 = 0_i16;
-    if !(unsafe { buffer.ReadS16((&mut num_contours as *mut i16)) }) {
+    if !(unsafe { woff2_Buffer::ReadS16(&mut buffer, (&mut num_contours as *mut i16)) }) {
         return false;
     }
-    if (((!(unsafe { buffer.ReadS16((&mut (*glyph).x_min as *mut i16)) }))
-        || (!(unsafe { buffer.ReadS16((&mut (*glyph).y_min as *mut i16)) })))
-        || (!(unsafe { buffer.ReadS16((&mut (*glyph).x_max as *mut i16)) })))
-        || (!(unsafe { buffer.ReadS16((&mut (*glyph).y_max as *mut i16)) }))
+    if (((!(unsafe { woff2_Buffer::ReadS16(&mut buffer, (&mut (*glyph).x_min as *mut i16)) }))
+        || (!(unsafe { woff2_Buffer::ReadS16(&mut buffer, (&mut (*glyph).y_min as *mut i16)) })))
+        || (!(unsafe { woff2_Buffer::ReadS16(&mut buffer, (&mut (*glyph).x_max as *mut i16)) })))
+        || (!(unsafe { woff2_Buffer::ReadS16(&mut buffer, (&mut (*glyph).y_max as *mut i16)) }))
     {
         return false;
     }
@@ -1396,7 +1403,7 @@ pub unsafe fn ReadGlyph_63(
         let mut i: i32 = 0;
         'loop_: while ((i) < (num_contours as i32)) {
             let mut point_index: u16 = 0_u16;
-            if !(unsafe { buffer.ReadU16((&mut point_index as *mut u16)) }) {
+            if !(unsafe { woff2_Buffer::ReadU16(&mut buffer, (&mut point_index as *mut u16)) }) {
                 return false;
             }
             let mut num_points: u16 = ((((point_index as i32) - (last_point_index as i32))
@@ -1410,11 +1417,14 @@ pub unsafe fn ReadGlyph_63(
             last_point_index = point_index;
             i.prefix_inc();
         }
-        if !(unsafe { buffer.ReadU16((&mut (*glyph).instructions_size as *mut u16)) }) {
+        if !(unsafe {
+            woff2_Buffer::ReadU16(&mut buffer, (&mut (*glyph).instructions_size as *mut u16))
+        }) {
             return false;
         }
-        (*glyph).instructions_data = data.offset((unsafe { buffer.offset() }) as isize);
-        if !(unsafe { buffer.Skip(((*glyph).instructions_size as usize)) }) {
+        (*glyph).instructions_data =
+            data.offset((unsafe { woff2_Buffer::offset(&buffer) }) as isize);
+        if !(unsafe { woff2_Buffer::Skip(&mut buffer, ((*glyph).instructions_size as usize)) }) {
             return false;
         }
         let mut flags: Vec<Vec<u8>> = (0..(num_contours as usize) as usize)
@@ -1432,11 +1442,13 @@ pub unsafe fn ReadGlyph_63(
                 let mut j: usize = 0_usize;
                 'loop_: while ((j) < ((&mut (*glyph)).contours[(i as usize)].len())) {
                     if ((flag_repeat as i32) == (0)) {
-                        if !(unsafe { buffer.ReadU8((&mut flag as *mut u8)) }) {
+                        if !(unsafe { woff2_Buffer::ReadU8(&mut buffer, (&mut flag as *mut u8)) }) {
                             return false;
                         }
                         if (((flag as i32) & (kFLAG_REPEAT_52)) != 0) {
-                            if !(unsafe { buffer.ReadU8((&mut flag_repeat as *mut u8)) }) {
+                            if !(unsafe {
+                                woff2_Buffer::ReadU8(&mut buffer, (&mut flag_repeat as *mut u8))
+                            }) {
                                 return false;
                             }
                         }
@@ -1463,7 +1475,7 @@ pub unsafe fn ReadGlyph_63(
                 let mut flag: u8 = flags[(i as usize)][(j)];
                 if (((flag as i32) & (kFLAG_XSHORT_50)) != 0) {
                     let mut x_delta: u8 = 0_u8;
-                    if !(unsafe { buffer.ReadU8((&mut x_delta as *mut u8)) }) {
+                    if !(unsafe { woff2_Buffer::ReadU8(&mut buffer, (&mut x_delta as *mut u8)) }) {
                         return false;
                     }
                     let mut sign: i32 = if (((flag as i32) & (kFLAG_XREPEATSIGN_53)) != 0) {
@@ -1476,7 +1488,9 @@ pub unsafe fn ReadGlyph_63(
                 } else {
                     let mut x_delta: i16 = 0_i16;
                     if !(((flag as i32) & (kFLAG_XREPEATSIGN_53)) != 0) {
-                        if !(unsafe { buffer.ReadS16((&mut x_delta as *mut i16)) }) {
+                        if !(unsafe {
+                            woff2_Buffer::ReadS16(&mut buffer, (&mut x_delta as *mut i16))
+                        }) {
                             return false;
                         }
                     }
@@ -1495,7 +1509,7 @@ pub unsafe fn ReadGlyph_63(
                 let mut flag: u8 = flags[(i as usize)][(j)];
                 if (((flag as i32) & (kFLAG_YSHORT_51)) != 0) {
                     let mut y_delta: u8 = 0_u8;
-                    if !(unsafe { buffer.ReadU8((&mut y_delta as *mut u8)) }) {
+                    if !(unsafe { woff2_Buffer::ReadU8(&mut buffer, (&mut y_delta as *mut u8)) }) {
                         return false;
                     }
                     let mut sign: i32 = if (((flag as i32) & (kFLAG_YREPEATSIGN_54)) != 0) {
@@ -1508,7 +1522,9 @@ pub unsafe fn ReadGlyph_63(
                 } else {
                     let mut y_delta: i16 = 0_i16;
                     if !(((flag as i32) & (kFLAG_YREPEATSIGN_54)) != 0) {
-                        if !(unsafe { buffer.ReadS16((&mut y_delta as *mut i16)) }) {
+                        if !(unsafe {
+                            woff2_Buffer::ReadS16(&mut buffer, (&mut y_delta as *mut i16))
+                        }) {
                             return false;
                         }
                     }
@@ -1524,11 +1540,15 @@ pub unsafe fn ReadGlyph_63(
             return false;
         }
         if (*glyph).have_instructions {
-            if !(unsafe { buffer.ReadU16((&mut (*glyph).instructions_size as *mut u16)) }) {
+            if !(unsafe {
+                woff2_Buffer::ReadU16(&mut buffer, (&mut (*glyph).instructions_size as *mut u16))
+            }) {
                 return false;
             }
-            (*glyph).instructions_data = data.offset((unsafe { buffer.offset() }) as isize);
-            if !(unsafe { buffer.Skip(((*glyph).instructions_size as usize)) }) {
+            (*glyph).instructions_data =
+                data.offset((unsafe { woff2_Buffer::offset(&buffer) }) as isize);
+            if !(unsafe { woff2_Buffer::Skip(&mut buffer, ((*glyph).instructions_size as usize)) })
+            {
                 return false;
             }
         } else {
@@ -1812,8 +1832,10 @@ pub unsafe fn WriteNormalizedLoca_73(
     mut num_glyphs: i32,
     mut font: *mut woff2_Font,
 ) -> bool {
-    let mut glyf_table: *mut woff2_Font_Table = (unsafe { (*font).FindTable_u32(kGlyfTableTag_0) });
-    let mut loca_table: *mut woff2_Font_Table = (unsafe { (*font).FindTable_u32(kLocaTableTag_2) });
+    let mut glyf_table: *mut woff2_Font_Table =
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kGlyfTableTag_0) });
+    let mut loca_table: *mut woff2_Font_Table =
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kLocaTableTag_2) });
     let mut glyph_sz: i32 = if ((index_fmt) == (0)) { 2 } else { 4 };
     {
         let __a0 = (((unsafe { Round4_69(((num_glyphs) + (1))) }) * (glyph_sz)) as usize) as usize;
@@ -1905,11 +1927,12 @@ pub unsafe fn WriteNormalizedLoca_73(
     return true;
 }
 pub unsafe fn MakeEditableBuffer_74(mut font: *mut woff2_Font, mut tableTag: i32) -> bool {
-    let mut table: *mut woff2_Font_Table = (unsafe { (*font).FindTable_u32((tableTag as u32)) });
+    let mut table: *mut woff2_Font_Table =
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), (tableTag as u32)) });
     if (table).is_null() {
         return false;
     }
-    if (unsafe { (*(table).cast_const()).IsReused() }) {
+    if (unsafe { woff2_Font_Table::IsReused(&(*(table).cast_const())) }) {
         return true;
     }
     let mut sz: i32 = ((unsafe { Round4_71((*table).length) }) as i32);
@@ -1942,9 +1965,12 @@ pub unsafe fn MakeEditableBuffer_74(mut font: *mut woff2_Font, mut tableTag: i32
     return true;
 }
 pub unsafe fn NormalizeGlyphs_75(mut font: *mut woff2_Font) -> bool {
-    let mut head_table: *mut woff2_Font_Table = (unsafe { (*font).FindTable_u32(kHeadTableTag_1) });
-    let mut glyf_table: *mut woff2_Font_Table = (unsafe { (*font).FindTable_u32(kGlyfTableTag_0) });
-    let mut loca_table: *mut woff2_Font_Table = (unsafe { (*font).FindTable_u32(kLocaTableTag_2) });
+    let mut head_table: *mut woff2_Font_Table =
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) });
+    let mut glyf_table: *mut woff2_Font_Table =
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kGlyfTableTag_0) });
+    let mut loca_table: *mut woff2_Font_Table =
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kLocaTableTag_2) });
     if (head_table).is_null() {
         return false;
     }
@@ -1954,12 +1980,12 @@ pub unsafe fn NormalizeGlyphs_75(mut font: *mut woff2_Font) -> bool {
     if ((((glyf_table).is_null()) as i32) != (((loca_table).is_null()) as i32)) {
         return false;
     }
-    if (((unsafe { (*(loca_table).cast_const()).IsReused() }) as i32)
-        != ((unsafe { (*(glyf_table).cast_const()).IsReused() }) as i32))
+    if (((unsafe { woff2_Font_Table::IsReused(&(*(loca_table).cast_const())) }) as i32)
+        != ((unsafe { woff2_Font_Table::IsReused(&(*(glyf_table).cast_const())) }) as i32))
     {
         return false;
     }
-    if (unsafe { (*(loca_table).cast_const()).IsReused() }) {
+    if (unsafe { woff2_Font_Table::IsReused(&(*(loca_table).cast_const())) }) {
         return true;
     }
     let mut index_fmt: i32 = ((*(*head_table).data.offset((51) as isize)) as i32);
@@ -1984,8 +2010,11 @@ pub unsafe fn NormalizeGlyphs_75(mut font: *mut woff2_Font) -> bool {
 }
 pub unsafe fn NormalizeOffsets_76(mut font: *mut woff2_Font) -> bool {
     let mut offset: u32 = (((12) + ((16) * ((*font).num_tables as i32))) as u32);
-    'loop_: for tag in 0..((unsafe { (*(font).cast_const()).OutputOrderedTags() }).len()) {
-        let mut tag = (unsafe { (&(*(font).cast_const())).OutputOrderedTags() })[tag].clone();
+    'loop_: for tag in
+        0..((unsafe { woff2_Font::OutputOrderedTags(&(*(font).cast_const())) }).len())
+    {
+        let mut tag =
+            (unsafe { woff2_Font::OutputOrderedTags(&(&(*(font).cast_const()))) })[tag].clone();
         let table: *mut woff2_Font_Table =
             &mut (*(*font).tables.entry(tag).or_default().as_mut()) as *mut woff2_Font_Table;
         (*table).offset = offset;
@@ -2015,7 +2044,7 @@ pub unsafe fn ComputeHeaderChecksum_77(font: *const woff2_Font) -> u32 {
         UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
         let mut table: *const woff2_Font_Table = (&*i.second() as *const woff2_Font_Table);
-        if (unsafe { (*table).IsReused() }) {
+        if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
             table = ((*table).reuse_of).cast_const();
         }
         checksum = (checksum).wrapping_add((*table).tag);
@@ -2026,7 +2055,8 @@ pub unsafe fn ComputeHeaderChecksum_77(font: *const woff2_Font) -> u32 {
     return checksum;
 }
 pub unsafe fn FixChecksums_78(mut font: *mut woff2_Font) -> bool {
-    let mut head_table: *mut woff2_Font_Table = (unsafe { (*font).FindTable_u32(kHeadTableTag_1) });
+    let mut head_table: *mut woff2_Font_Table =
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) });
     if (head_table).is_null() {
         return false;
     }
@@ -2045,7 +2075,7 @@ pub unsafe fn FixChecksums_78(mut font: *mut woff2_Font) -> bool {
         UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
         let mut table: *mut woff2_Font_Table = (&mut *i.second() as *mut woff2_Font_Table);
-        if (unsafe { (*(table).cast_const()).IsReused() }) {
+        if (unsafe { woff2_Font_Table::IsReused(&(*(table).cast_const())) }) {
             table = (*table).reuse_of;
         }
         (*table).checksum = (unsafe {
@@ -2071,7 +2101,8 @@ pub unsafe fn FixChecksums_78(mut font: *mut woff2_Font) -> bool {
     return true;
 }
 pub unsafe fn MarkTransformed_79(mut font: *mut woff2_Font) -> bool {
-    let mut head_table: *mut woff2_Font_Table = (unsafe { (*font).FindTable_u32(kHeadTableTag_1) });
+    let mut head_table: *mut woff2_Font_Table =
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) });
     if (head_table).is_null() {
         return false;
     }
@@ -2120,11 +2151,11 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
     }
     'loop_: for font in 0..((*font_collection).fonts.len()) {
         let mut font = (*font_collection).fonts.as_mut_ptr().add(font);
-        'loop_: for tag in 0..((unsafe { (*font).OutputOrderedTags() }).len()) {
-            let mut tag = (unsafe { (&(*font)).OutputOrderedTags() })[tag].clone();
+        'loop_: for tag in 0..((unsafe { woff2_Font::OutputOrderedTags(&(*font)) }).len()) {
+            let mut tag = (unsafe { woff2_Font::OutputOrderedTags(&(&(*font))) })[tag].clone();
             let table: *mut woff2_Font_Table =
                 &mut (*(*font).tables.entry(tag).or_default().as_mut()) as *mut woff2_Font_Table;
-            if (unsafe { (*table).IsReused() }) {
+            if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
                 (*table).offset = (*(*table).reuse_of).offset;
             } else {
                 (*table).offset = offset;
@@ -2223,13 +2254,13 @@ impl woff2_GlyfEncoder {
             (unsafe {
                 let _glyph_id: i32 = glyph_id;
                 let _glyph: *const woff2_Glyph = glyph;
-                self.WriteCompositeGlyph(_glyph_id, _glyph)
+                woff2_GlyfEncoder::WriteCompositeGlyph(self, _glyph_id, _glyph)
             });
         } else if (((*glyph).contours.len()) > (0_usize)) {
             (unsafe {
                 let _glyph_id: i32 = glyph_id;
                 let _glyph: *const woff2_Glyph = glyph;
-                self.WriteSimpleGlyph(_glyph_id, _glyph)
+                woff2_GlyfEncoder::WriteSimpleGlyph(self, _glyph_id, _glyph)
             });
         } else {
             (unsafe { WriteUShort_88((&mut self.n_contour_stream_ as *mut Vec<u8>), 0) });
@@ -2366,18 +2397,18 @@ impl woff2_GlyfEncoder {
     }
     unsafe fn WriteSimpleGlyph(&mut self, mut glyph_id: i32, glyph: *const woff2_Glyph) {
         if (*glyph).overlap_simple_flag_set {
-            (unsafe { self.EnsureOverlapBitmap() });
+            (unsafe { woff2_GlyfEncoder::EnsureOverlapBitmap(self) });
             self.overlap_bitmap_[(((glyph_id) >> (3)) as usize)] =
                 ((self.overlap_bitmap_[(((glyph_id) >> (3)) as usize)] as i32)
                     | ((128) >> ((glyph_id) & (7)))) as u8;
         }
         let mut num_contours: i32 = ((*glyph).contours.len() as i32);
         (unsafe { WriteUShort_88((&mut self.n_contour_stream_ as *mut Vec<u8>), num_contours) });
-        if (unsafe { self.ShouldWriteSimpleGlyphBbox(glyph) }) {
+        if (unsafe { woff2_GlyfEncoder::ShouldWriteSimpleGlyphBbox(self, glyph) }) {
             (unsafe {
                 let _glyph_id: i32 = glyph_id;
                 let _glyph: *const woff2_Glyph = glyph;
-                self.WriteBbox(_glyph_id, _glyph)
+                woff2_GlyfEncoder::WriteBbox(self, _glyph_id, _glyph)
             });
         }
         let mut i: i32 = 0;
@@ -2402,7 +2433,8 @@ impl woff2_GlyfEncoder {
                 let mut dx: i32 = ((x) - (lastX));
                 let mut dy: i32 = ((y) - (lastY));
                 (unsafe {
-                    self.WriteTriplet(
+                    woff2_GlyfEncoder::WriteTriplet(
+                        self,
                         (&(*glyph)).contours[(i as usize)][(j as usize)].on_curve,
                         dx,
                         dy,
@@ -2415,7 +2447,7 @@ impl woff2_GlyfEncoder {
             i.postfix_inc();
         }
         if ((num_contours) > (0)) {
-            (unsafe { self.WriteInstructions(glyph) });
+            (unsafe { woff2_GlyfEncoder::WriteInstructions(self, glyph) });
         }
     }
     unsafe fn WriteCompositeGlyph(&mut self, mut glyph_id: i32, glyph: *const woff2_Glyph) {
@@ -2423,7 +2455,7 @@ impl woff2_GlyfEncoder {
         (unsafe {
             let _glyph_id: i32 = glyph_id;
             let _glyph: *const woff2_Glyph = glyph;
-            self.WriteBbox(_glyph_id, _glyph)
+            woff2_GlyfEncoder::WriteBbox(self, _glyph_id, _glyph)
         });
         (unsafe {
             let _data: *const u8 = (*glyph).composite_data;
@@ -2431,7 +2463,7 @@ impl woff2_GlyfEncoder {
             WriteBytes_86((&mut self.composite_stream_ as *mut Vec<u8>), _data, _len)
         });
         if (*glyph).have_instructions {
-            (unsafe { self.WriteInstructions(glyph) });
+            (unsafe { woff2_GlyfEncoder::WriteInstructions(self, glyph) });
         }
     }
     unsafe fn WriteBbox(&mut self, mut glyph_id: i32, glyph: *const woff2_Glyph) {
@@ -2522,21 +2554,21 @@ impl woff2_GlyfEncoder {
 }
 pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
     let mut glyf_table: *const woff2_Font_Table =
-        (unsafe { (*font).FindTable_u32(kGlyfTableTag_0) }).cast_const();
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kGlyfTableTag_0) }).cast_const();
     let mut loca_table: *const woff2_Font_Table =
-        (unsafe { (*font).FindTable_u32(kLocaTableTag_2) }).cast_const();
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kLocaTableTag_2) }).cast_const();
     if ((loca_table).is_null()) && ((glyf_table).is_null()) {
         return true;
     }
     if ((((glyf_table).is_null()) as i32) != (((loca_table).is_null()) as i32)) {
         return false;
     }
-    if (((unsafe { (*loca_table).IsReused() }) as i32)
-        != ((unsafe { (*glyf_table).IsReused() }) as i32))
+    if (((unsafe { woff2_Font_Table::IsReused(&(*loca_table)) }) as i32)
+        != ((unsafe { woff2_Font_Table::IsReused(&(*glyf_table)) }) as i32))
     {
         return false;
     }
-    if (unsafe { (*loca_table).IsReused() }) {
+    if (unsafe { woff2_Font_Table::IsReused(&(*loca_table)) }) {
         return true;
     }
     let mut transformed_glyf: *mut woff2_Font_Table = (&mut (*(*font)
@@ -2569,12 +2601,17 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
         {
             return false;
         }
-        (unsafe { encoder.Encode(i, &glyph as *const woff2_Glyph) });
+        (unsafe { woff2_GlyfEncoder::Encode(&mut encoder, i, &glyph as *const woff2_Glyph) });
         i.prefix_inc();
     }
-    (unsafe { encoder.GetTransformedGlyfBytes((&mut (*transformed_glyf).buffer as *mut Vec<u8>)) });
+    (unsafe {
+        woff2_GlyfEncoder::GetTransformedGlyfBytes(
+            &mut encoder,
+            (&mut (*transformed_glyf).buffer as *mut Vec<u8>),
+        )
+    });
     let mut head_table: *const woff2_Font_Table =
-        (unsafe { (*font).FindTable_u32(kHeadTableTag_1) }).cast_const();
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) }).cast_const();
     if ((head_table).is_null()) || (((*head_table).length) < (52_u32)) {
         return false;
     }
@@ -2589,11 +2626,11 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
 }
 pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     let mut glyf_table: *const woff2_Font_Table =
-        (unsafe { (*font).FindTable_u32(kGlyfTableTag_0) }).cast_const();
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kGlyfTableTag_0) }).cast_const();
     let mut hmtx_table: *const woff2_Font_Table =
-        (unsafe { (*font).FindTable_u32(kHmtxTableTag_5) }).cast_const();
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHmtxTableTag_5) }).cast_const();
     let mut hhea_table: *const woff2_Font_Table =
-        (unsafe { (*font).FindTable_u32(kHheaTableTag_6) }).cast_const();
+        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHheaTableTag_6) }).cast_const();
     if ((hmtx_table).is_null()) || ((glyf_table).is_null()) {
         return true;
     }
@@ -2603,8 +2640,8 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     let mut hhea_buf: woff2_Buffer =
         woff2_Buffer::woff2_Buffer({ (*hhea_table).data }, { ((*hhea_table).length as usize) });
     let mut num_hmetrics: u16 = 0_u16;
-    if (!(unsafe { hhea_buf.Skip(34_usize) }))
-        || (!(unsafe { hhea_buf.ReadU16((&mut num_hmetrics as *mut u16)) }))
+    if (!(unsafe { woff2_Buffer::Skip(&mut hhea_buf, 34_usize) }))
+        || (!(unsafe { woff2_Buffer::ReadU16(&mut hhea_buf, (&mut num_hmetrics as *mut u16)) }))
     {
         return false;
     }
@@ -2640,10 +2677,11 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
         let mut advance_width: u16 = 0_u16;
         let mut lsb: i16 = 0_i16;
         if ((i) < (num_hmetrics as i32)) {
-            if !(unsafe { hmtx_buf.ReadU16((&mut advance_width as *mut u16)) }) {
+            if !(unsafe { woff2_Buffer::ReadU16(&mut hmtx_buf, (&mut advance_width as *mut u16)) })
+            {
                 return false;
             }
-            if !(unsafe { hmtx_buf.ReadS16((&mut lsb as *mut i16)) }) {
+            if !(unsafe { woff2_Buffer::ReadS16(&mut hmtx_buf, (&mut lsb as *mut i16)) }) {
                 return false;
             }
             if ((glyph_size) > (0_usize)) && ((glyph.x_min as i32) != (lsb as i32)) {
@@ -2658,7 +2696,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
                 proportional_lsbs.push(a0_clone)
             };
         } else {
-            if !(unsafe { hmtx_buf.ReadS16((&mut lsb as *mut i16)) }) {
+            if !(unsafe { woff2_Buffer::ReadS16(&mut hmtx_buf, (&mut lsb as *mut i16)) }) {
                 return false;
             }
             if ((glyph_size) > (0_usize)) && ((glyph.x_min as i32) != (lsb as i32)) {
@@ -2913,7 +2951,7 @@ pub unsafe fn ComputeUncompressedLength_101(font: *const woff2_Font) -> usize {
         if ((((*table).tag) & (2155905152_u32)) != 0) {
             continue 'loop_;
         }
-        if (unsafe { (*table).IsReused() }) {
+        if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
             continue 'loop_;
         }
         size = (size).wrapping_add(((unsafe { Round4_71((*table).length) }) as usize));
@@ -2945,13 +2983,13 @@ pub unsafe fn ComputeTotalTransformLength_103(font: *const woff2_Font) -> usize 
         UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
         let table: *const woff2_Font_Table = &*i.second() as *const woff2_Font_Table;
-        if (unsafe { (*table).IsReused() }) {
+        if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
             continue 'loop_;
         }
         if ((((*table).tag) & (2155905152_u32)) != 0)
             || (!!(unsafe {
                 let _tag: u32 = (((*table).tag) ^ (2155905152_u32));
-                (*font).FindTable_u32_const(_tag)
+                woff2_Font::FindTable_u32_const(&(*font), _tag)
             })
             .is_null())
         {
@@ -3043,11 +3081,11 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             let mut font = font_collection.fonts.as_mut_ptr().add(font);
             let mut glyf_table: *mut woff2_Font_Table = (unsafe {
                 let _tag: u32 = kGlyfTableTag_0;
-                (*font).FindTable_u32(_tag)
+                woff2_Font::FindTable_u32(&mut (*font), _tag)
             });
             let mut loca_table: *mut woff2_Font_Table = (unsafe {
                 let _tag: u32 = kLocaTableTag_2;
-                (*font).FindTable_u32(_tag)
+                woff2_Font::FindTable_u32(&mut (*font), _tag)
             });
             if !(glyf_table).is_null() {
                 (*glyf_table).flag_byte = (((*glyf_table).flag_byte as i32) | 192) as u8;
@@ -3075,12 +3113,12 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     let mut transform_offset: usize = 0_usize;
     'loop_: for font in 0..(font_collection.fonts.len()) {
         let mut font = font_collection.fonts.as_ptr().add(font);
-        'loop_: for tag in 0..((unsafe { (*font).OutputOrderedTags() }).len()) {
-            let tag = (unsafe { (&(*font)).OutputOrderedTags() })[tag].clone();
+        'loop_: for tag in 0..((unsafe { woff2_Font::OutputOrderedTags(&(*font)) }).len()) {
+            let tag = (unsafe { woff2_Font::OutputOrderedTags(&(&(*font))) })[tag].clone();
             let original: *const woff2_Font_Table =
                 ((*font).tables.get(&tag).expect("out of range!").as_ref()
                     as *const woff2_Font_Table);
-            if (unsafe { (*original).IsReused() }) {
+            if (unsafe { woff2_Font_Table::IsReused(&(*original)) }) {
                 continue 'loop_;
             }
             if (((tag) & (2155905152_u32)) != 0) {
@@ -3088,7 +3126,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             }
             let mut table_to_store: *const woff2_Font_Table = (unsafe {
                 let _tag: u32 = ((tag) ^ (2155905152_u32));
-                (*font).FindTable_u32_const(_tag)
+                woff2_Font::FindTable_u32_const(&(*font), _tag)
             });
             if (table_to_store).is_null() {
                 table_to_store = (original);
@@ -3151,12 +3189,12 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     let mut index_by_tag_offset: BTreeMap<(u32, u32), Box<u16>> = BTreeMap::new();
     'loop_: for font in 0..(font_collection.fonts.len()) {
         let mut font = font_collection.fonts.as_ptr().add(font);
-        'loop_: for tag in 0..((unsafe { (*font).OutputOrderedTags() }).len()) {
-            let tag = (unsafe { (&(*font)).OutputOrderedTags() })[tag].clone();
+        'loop_: for tag in 0..((unsafe { woff2_Font::OutputOrderedTags(&(*font)) }).len()) {
+            let tag = (unsafe { woff2_Font::OutputOrderedTags(&(&(*font))) })[tag].clone();
             let src_table: *const woff2_Font_Table =
                 ((*font).tables.get(&tag).expect("out of range!").as_ref()
                     as *const woff2_Font_Table);
-            if (unsafe { (*src_table).IsReused() }) {
+            if (unsafe { woff2_Font_Table::IsReused(&(*src_table)) }) {
                 continue 'loop_;
             }
             let mut tag_offset: (u32, u32) = ((*src_table).tag.into(), (*src_table).offset.into());
@@ -3179,7 +3217,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             let mut transformed_data: *const u8 = (*src_table).data;
             let mut transformed_table: *const woff2_Font_Table = (unsafe {
                 let _tag: u32 = (((*src_table).tag) ^ (2155905152_u32));
-                (*font).FindTable_u32_const(_tag)
+                woff2_Font::FindTable_u32_const(&(*font), _tag)
             });
             if !((transformed_table).is_null()) {
                 table.flags = ((*transformed_table).flag_byte as u32);
@@ -3315,12 +3353,12 @@ pub unsafe fn ConvertTTFToWOFF2_109(
                 if ((((*table).tag) & (2155905152_u32)) != 0) {
                     continue 'loop_;
                 }
-                let mut table_offset: u32 = if (unsafe { (*table).IsReused() }) {
+                let mut table_offset: u32 = if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
                     (*(*table).reuse_of).offset
                 } else {
                     (*table).offset
                 };
-                let mut table_length: u32 = if (unsafe { (*table).IsReused() }) {
+                let mut table_length: u32 = if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
                     (*(*table).reuse_of).length
                 } else {
                     (*table).length

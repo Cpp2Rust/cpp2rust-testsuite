@@ -1042,7 +1042,7 @@ pub unsafe fn FastDivide_78(mut numerator: u32, mut denominator: u8) -> u8 {
 pub static mut kInitProb_80: u8 = unsafe { 134_u8 };
 pub static mut kInitProbCount_81: u8 = unsafe { 3_u8 };
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Clone)]
 pub struct brunsli_Prob {
     prob8: u8,
     total: u8,
@@ -1057,6 +1057,7 @@ impl brunsli_Prob {
         };
         this
     }
+    pub unsafe fn destructor(&mut self) {}
     pub unsafe fn Init(&mut self, mut probability: u8) {
         self.prob8 = probability;
         self.total = kInitProbCount_81;
@@ -1434,7 +1435,7 @@ impl brunsli_ComponentStateDC {
             prev_abs_coeff: Vec::new(),
             prev_sign: Vec::new(),
         };
-        (unsafe { this.InitAll() });
+        (unsafe { brunsli_ComponentStateDC::InitAll(&mut this) });
         this
     }
     pub unsafe fn SetWidth(&mut self, mut w: i32) {
@@ -1451,6 +1452,11 @@ impl brunsli_ComponentStateDC {
             let __a0 = (((w) + (1)) as usize) as usize;
             self.prev_sign.resize_with(__a0, || <i32>::default())
         };
+    }
+}
+impl brunsli_ComponentStateDC {
+    pub unsafe fn destructor(&mut self) {
+        brunsli_Prob::destructor(&mut self.is_zero_prob);
     }
 }
 impl Default for brunsli_ComponentStateDC {
@@ -1501,7 +1507,7 @@ impl brunsli_ComponentState {
             prev_abs_coeff: Vec::new(),
             prev_sign: Vec::new(),
         };
-        (unsafe { this.InitAll() });
+        (unsafe { brunsli_ComponentState::InitAll(&mut this) });
         this
     }
     pub unsafe fn SetWidth(&mut self, mut w: i32) {
@@ -1541,6 +1547,13 @@ impl brunsli_ComponentState {
             ) as usize);
     }
 }
+impl brunsli_ComponentState {
+    pub unsafe fn destructor(&mut self) {
+        for __e in self.num_nonzero_prob.iter_mut() {
+            brunsli_Prob::destructor(__e);
+        }
+    }
+}
 impl Default for brunsli_ComponentState {
     fn default() -> Self {
         unsafe { brunsli_ComponentState::brunsli_ComponentState() }
@@ -1573,20 +1586,20 @@ pub unsafe fn ComputeACPredictMultipliers_109(
 }
 impl brunsli_ComponentStateDC {
     unsafe fn InitAll(&mut self) {
-        (unsafe { self.is_zero_prob.Init(135_u8) });
+        (unsafe { brunsli_Prob::Init(&mut self.is_zero_prob, 135_u8) });
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (self.sign_prob.len())) {
-            (unsafe { self.sign_prob[(i)].Init(128_u8) });
+            (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 128_u8) });
             i.prefix_inc();
         }
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (self.is_empty_block_prob.len())) {
-            (unsafe { self.is_empty_block_prob[(i)].Init(74_u8) });
+            (unsafe { brunsli_Prob::Init(&mut self.is_empty_block_prob[(i)], 74_u8) });
             i.prefix_inc();
         }
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (self.first_extra_bit_prob.len())) {
-            (unsafe { self.first_extra_bit_prob[(i)].Init(150_u8) });
+            (unsafe { brunsli_Prob::Init(&mut self.first_extra_bit_prob[(i)], 150_u8) });
             i.prefix_inc();
         }
     }
@@ -1875,7 +1888,10 @@ impl brunsli_ComponentState {
                     'loop_: while true {}
                 };
                 (unsafe {
-                    self.is_zero_prob[((((i) * (kDCTBlockSize_3)) + (k)) as usize)].Init((v as u8))
+                    brunsli_Prob::Init(
+                        &mut self.is_zero_prob[((((i) * (kDCTBlockSize_3)) + (k)) as usize)],
+                        (v as u8),
+                    )
                 });
                 k.prefix_inc();
             }
@@ -1884,20 +1900,20 @@ impl brunsli_ComponentState {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (self.sign_prob.len())) {
             if ((i) < ((kMaxAverageContext_82).wrapping_mul((kDCTBlockSize_3 as usize)))) {
-                (unsafe { self.sign_prob[(i)].Init(108_u8) });
+                (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 108_u8) });
             } else if ((i)
                 < ((((kMaxAverageContext_82).wrapping_add(1_usize)) as usize)
                     .wrapping_mul((kDCTBlockSize_3 as usize))))
             {
-                (unsafe { self.sign_prob[(i)].Init(128_u8) });
+                (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 128_u8) });
             } else {
-                (unsafe { self.sign_prob[(i)].Init(148_u8) });
+                (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 148_u8) });
             }
             i.prefix_inc();
         }
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (self.first_extra_bit_prob.len())) {
-            (unsafe { self.first_extra_bit_prob[(i)].Init(158_u8) });
+            (unsafe { brunsli_Prob::Init(&mut self.first_extra_bit_prob[(i)], 158_u8) });
             i.prefix_inc();
         }
         let mut i: usize = 0_usize;
@@ -1910,7 +1926,7 @@ impl brunsli_ComponentState {
             'loop_: while ((j) < (kNumNonZeroTreeSize_85)) {
                 (unsafe {
                     let _probability: u8 = kInitProbNonzero_111[(i)][(j)];
-                    (*non_zero_probs.offset((j) as isize)).Init(_probability)
+                    brunsli_Prob::Init(&mut (*non_zero_probs.offset((j) as isize)), _probability)
                 });
                 j.prefix_inc();
             }
@@ -1982,7 +1998,7 @@ impl brunsli_PermutationCoder {
             return false;
         }
         (*code) = (it.offset_from(self.values_.as_mut_ptr()) as i32).clone();
-        (*nbits) = (unsafe { self.num_bits() }).clone();
+        (*nbits) = (unsafe { brunsli_PermutationCoder::num_bits(self) }).clone();
         {
             let pos = it.offset_from(self.values_.as_ptr()) as usize;
             self.values_.remove(pos);
@@ -2264,12 +2280,13 @@ impl brunsli_BitSource {
         this
     }
     pub unsafe fn Init(&mut self, mut in_: *mut brunsli_WordSource) {
-        self.val_ = ((unsafe { (*in_).GetNextWord() }) as u32).clone();
+        self.val_ = ((unsafe { brunsli_WordSource::GetNextWord(&mut (*in_)) }) as u32).clone();
         self.bit_pos_ = 0;
     }
     pub unsafe fn ReadBits(&mut self, mut nbits: i32, mut in_: *mut brunsli_WordSource) -> u32 {
         if (((self.bit_pos_) + (nbits)) > (16)) {
-            let mut new_bits: u32 = ((unsafe { (*in_).GetNextWord() }) as u32);
+            let mut new_bits: u32 =
+                ((unsafe { brunsli_WordSource::GetNextWord(&mut (*in_)) }) as u32);
             self.val_ |= ((new_bits) << (16));
         }
         let mut result: u32 =
@@ -2334,8 +2351,9 @@ impl brunsli_ANSDecoder {
         this
     }
     pub unsafe fn Init(&mut self, mut in_: *mut brunsli_WordSource) {
-        self.state_ = ((unsafe { (*in_).GetNextWord() }) as u32).clone();
-        self.state_ = (((self.state_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32));
+        self.state_ = ((unsafe { brunsli_WordSource::GetNextWord(&mut (*in_)) }) as u32).clone();
+        self.state_ = (((self.state_) << (16_u32))
+            | ((unsafe { brunsli_WordSource::GetNextWord(&mut (*in_)) }) as u32));
     }
     pub unsafe fn ReadSymbol(
         &mut self,
@@ -2349,8 +2367,8 @@ impl brunsli_ANSDecoder {
             .wrapping_mul(((self.state_) >> (BRUNSLI_ANS_LOG_TAB_SIZE_0))))
         .wrapping_add(((*s).offset_ as u32));
         if ((self.state_) < ((1_u32) << (16_u32))) {
-            self.state_ =
-                (((self.state_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32));
+            self.state_ = (((self.state_) << (16_u32))
+                | ((unsafe { brunsli_WordSource::GetNextWord(&mut (*in_)) }) as u32));
         }
         return ((*s).symbol_ as i32);
     }
@@ -2604,8 +2622,9 @@ impl brunsli_BinaryArithmeticDecoder {
     pub unsafe fn Init(&mut self, mut in_: *mut brunsli_WordSource) {
         self.low_ = 0_u32;
         self.high_ = !0_u32;
-        self.value_ = ((unsafe { (*in_).GetNextWord() }) as u32).clone();
-        self.value_ = (((self.value_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32));
+        self.value_ = ((unsafe { brunsli_WordSource::GetNextWord(&mut (*in_)) }) as u32).clone();
+        self.value_ = (((self.value_) << (16_u32))
+            | ((unsafe { brunsli_WordSource::GetNextWord(&mut (*in_)) }) as u32));
     }
     pub unsafe fn ReadBit(&mut self, mut prob: i32, mut in_: *mut brunsli_WordSource) -> i32 {
         let diff: u32 = (self.high_).wrapping_sub(self.low_);
@@ -2621,8 +2640,8 @@ impl brunsli_BinaryArithmeticDecoder {
             bit = 0;
         }
         if ((((self.low_) ^ (self.high_)) >> (16_u32)) == (0_u32)) {
-            self.value_ =
-                (((self.value_) << (16_u32)) | ((unsafe { (*in_).GetNextWord() }) as u32));
+            self.value_ = (((self.value_) << (16_u32))
+                | ((unsafe { brunsli_WordSource::GetNextWord(&mut (*in_)) }) as u32));
             self.low_ <<= 16_u32;
             self.high_ <<= 16_u32;
             self.high_ |= 65535_u32;
@@ -3794,7 +3813,7 @@ pub unsafe fn DecodeHuffmanCode_150(
                                 )
                                 .to_vec()
                             };
-                            (*js).p.Init(_values)
+                            brunsli_PermutationCoder::Init(&mut (*js).p, _values)
                         });
                         (*js).stage =
                             (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_MAX_LEN)
@@ -3881,7 +3900,7 @@ pub unsafe fn DecodeHuffmanCode_150(
                     let mut huff: *mut brunsli_JPEGHuffmanCode =
                         (((*jpg).huffman_code).last_mut().unwrap());
                     if (((*js).i) < ((*js).total_count)) {
-                        let nbits: i32 = (unsafe { (*js).p.num_bits() });
+                        let nbits: i32 = (unsafe { brunsli_PermutationCoder::num_bits(&(*js).p) });
                         if !(unsafe {
                             DecodeLimitedVarint_145(
                                 (&mut (*js).varint as *mut brunsli_internal_dec_VarintState),
@@ -3894,7 +3913,11 @@ pub unsafe fn DecodeHuffmanCode_150(
                         let mut value: u8 = 0_u8;
                         if !(unsafe {
                             let _code: usize = (*js).varint.value;
-                            (*js).p.Remove(_code, (&mut value as *mut u8))
+                            brunsli_PermutationCoder::Remove(
+                                &mut (*js).p,
+                                _code,
+                                (&mut value as *mut u8),
+                            )
                         }) {
                             return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
                         }
@@ -3914,7 +3937,7 @@ pub unsafe fn DecodeHuffmanCode_150(
                         (*js).terminal_huffman_code_count.postfix_inc();
                     }
                     if ((*js).is_known_last_huffman_code != 0) {
-                        (unsafe { (*js).p.Clear() });
+                        (unsafe { brunsli_PermutationCoder::Clear(&mut (*js).p) });
                         return brunsli_BrunsliStatus_BRUNSLI_OK;
                     }
                     if (((*jpg).huffman_code.len()) >= (kMaxDHTMarkers_10 as usize)) {
@@ -4048,7 +4071,7 @@ pub unsafe fn DecodeCoeffOrder_152(
     static mut kSpan_153: i32 = unsafe { 16 };;
     let mut i: i32 = 0;
     'loop_: while ((i) < (kDCTBlockSize_3)) {
-        if !((unsafe { (*br).ReadBits(1, in_) }) != 0) {
+        if !((unsafe { brunsli_BitSource::ReadBits(&mut (*br), 1, in_) }) != 0) {
             i += kSpan_153;
             continue 'loop_;
         }
@@ -4058,7 +4081,7 @@ pub unsafe fn DecodeCoeffOrder_152(
         'loop_: while ((j) < (end)) {
             let mut v: u32 = 0_u32;
             'loop_: while ((v) <= (kDCTBlockSize_3 as u32)) {
-                let bits: u32 = (unsafe { (*br).ReadBits(3, in_) });
+                let bits: u32 = (unsafe { brunsli_BitSource::ReadBits(&mut (*br), 3, in_) });
                 v = (v).wrapping_add(bits);
                 if ((bits) < (7_u32)) {
                     break;
@@ -4114,14 +4137,15 @@ pub unsafe fn DecodeNumNonzeros_154(
     let mut b: usize = 0_usize;
     'loop_: while ((b) < (kNumNonZeroBits_84)) {
         let bit: i32 = (unsafe {
-            (*ac).ReadBit(
-                ((unsafe { (*bst.offset((ctx) as isize)).get_proba() }) as i32),
+            brunsli_BinaryArithmeticDecoder::ReadBit(
+                &mut (*ac),
+                ((unsafe { brunsli_Prob::get_proba(&(*bst.offset((ctx) as isize))) }) as i32),
                 in_,
             )
         });
         (unsafe {
             let _val: i32 = bit;
-            (*bst.offset((ctx) as isize)).Add(_val)
+            brunsli_Prob::Add(&mut (*bst.offset((ctx) as isize)), _val)
         });
         ctx = ((2_usize).wrapping_mul(ctx)).wrapping_add((bit as usize));
         b.prefix_inc();
@@ -4147,9 +4171,9 @@ pub unsafe fn EnsureSubdecodersInitialized_155(
         &mut (*(*state).internal.as_deref_mut().unwrap())
             as *mut brunsli_internal_dec_InternalState;
     if !(*s).subdecoders_initialized {
-        (unsafe { (*s).ans_decoder.Init(in_) });
-        (unsafe { (*s).bit_reader.Init(in_) });
-        (unsafe { (*s).arith_decoder.Init(in_) });
+        (unsafe { brunsli_ANSDecoder::Init(&mut (*s).ans_decoder, in_) });
+        (unsafe { brunsli_BitSource::Init(&mut (*s).bit_reader, in_) });
+        (unsafe { brunsli_BinaryArithmeticDecoder::Init(&mut (*s).arith_decoder, in_) });
         (*s).subdecoders_initialized = true;
     }
 }
@@ -4157,10 +4181,10 @@ pub unsafe fn FinalizeSubdecoders_156(mut state: *mut brunsli_internal_dec_State
     let s: *mut brunsli_internal_dec_InternalState =
         &mut (*(*state).internal.as_deref_mut().unwrap())
             as *mut brunsli_internal_dec_InternalState;
-    if !(unsafe { (*s).ans_decoder.CheckCRC() }) {
+    if !(unsafe { brunsli_ANSDecoder::CheckCRC(&(*s).ans_decoder) }) {
         return false;
     }
-    if !(unsafe { (*s).bit_reader.Finish() }) {
+    if !(unsafe { brunsli_BitSource::Finish(&mut (*s).bit_reader) }) {
         return false;
     }
     (*s).subdecoders_initialized = false;
@@ -4190,12 +4214,12 @@ pub unsafe fn DecodeDC_157(
         'loop_: while ((c) < (num_components)) {
             (unsafe {
                 let _w: i32 = (&(*meta))[(c)].width_in_blocks;
-                (&mut (*comps))[(c)].SetWidth(_w)
+                brunsli_ComponentStateDC::SetWidth(&mut (&mut (*comps))[(c)], _w)
             });
             c.prefix_inc();
         }
     }
-    if !(unsafe { (*in_).CanRead(5_usize) }) {
+    if !(unsafe { brunsli_WordSource::CanRead(&mut (*in_), 5_usize) }) {
         return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
     }
     (unsafe { EnsureSubdecodersInitialized_155(state, in_) });
@@ -4231,7 +4255,9 @@ pub unsafe fn DecodeDC_157(
                     .offset(((*ac_dc_state).next_x) as isize);
                 let mut x: i32 = (*ac_dc_state).next_x;
                 'loop_: while ((x) < (width)) {
-                    if ((!(unsafe { (*in_).CanRead(6_usize) }) as i64) != 0) {
+                    if ((!(unsafe { brunsli_WordSource::CanRead(&mut (*in_), 6_usize) }) as i64)
+                        != 0)
+                    {
                         (*ac_dc_state).next_mcu_y = mcu_y;
                         (*ac_dc_state).next_component = i;
                         (*ac_dc_state).next_iy = iy;
@@ -4251,12 +4277,14 @@ pub unsafe fn DecodeDC_157(
                         [(is_empty_ctx as usize)]
                         as *mut brunsli_Prob);
                     let is_empty_block: bool = !((unsafe {
-                        ac.ReadBit(
-                            ((unsafe { (*(is_empty_p).cast_const()).get_proba() }) as i32),
+                        brunsli_BinaryArithmeticDecoder::ReadBit(
+                            &mut ac,
+                            ((unsafe { brunsli_Prob::get_proba(&(*(is_empty_p).cast_const())) })
+                                as i32),
                             in_,
                         )
                     }) != 0);
-                    (unsafe { (*is_empty_p).Add((!is_empty_block as i32)) });
+                    (unsafe { brunsli_Prob::Add(&mut (*is_empty_p), (!is_empty_block as i32)) });
                     (&mut (*c)).prev_is_nonempty[(((x) + (1)) as usize)] = (!is_empty_block as i32);
                     (*block_state) = (is_empty_block as u8);
                     let mut abs_val: i32 = 0;
@@ -4265,12 +4293,14 @@ pub unsafe fn DecodeDC_157(
                         let mut p_is_zero: *mut brunsli_Prob =
                             (&mut (*c).is_zero_prob as *mut brunsli_Prob);
                         let mut is_zero: i32 = (unsafe {
-                            ac.ReadBit(
-                                ((unsafe { (*(p_is_zero).cast_const()).get_proba() }) as i32),
+                            brunsli_BinaryArithmeticDecoder::ReadBit(
+                                &mut ac,
+                                ((unsafe { brunsli_Prob::get_proba(&(*(p_is_zero).cast_const())) })
+                                    as i32),
                                 in_,
                             )
                         });
-                        (unsafe { (*p_is_zero).Add(is_zero) });
+                        (unsafe { brunsli_Prob::Add(&mut (*p_is_zero), is_zero) });
                         if !(is_zero != 0) {
                             let avg_ctx: i32 = (unsafe {
                                 let _vals: *const i32 = (prev_abs).cast_const();
@@ -4283,13 +4313,15 @@ pub unsafe fn DecodeDC_157(
                                 [(sign_ctx as usize)]
                                 as *mut brunsli_Prob);
                             sign = (unsafe {
-                                ac.ReadBit(
-                                    ((unsafe { (*(sign_p).cast_const()).get_proba() }) as i32),
+                                brunsli_BinaryArithmeticDecoder::ReadBit(
+                                    &mut ac,
+                                    ((unsafe { brunsli_Prob::get_proba(&(*(sign_p).cast_const())) })
+                                        as i32),
                                     in_,
                                 )
                             })
                             .clone();
-                            (unsafe { (*sign_p).Add(sign) });
+                            (unsafe { brunsli_Prob::Add(&mut (*sign_p), sign) });
                             let entropy_ix: i32 =
                                 ((*context_map.offset((avg_ctx) as isize)) as i32);
                             let mut code: i32 = (unsafe {
@@ -4297,7 +4329,7 @@ pub unsafe fn DecodeDC_157(
                                     &(*(*state).entropy_codes.offset((entropy_ix) as isize))
                                         as *const brunsli_ANSDecodingData;
                                 let _in: *mut brunsli_WordSource = in_;
-                                ans.ReadSymbol(_code, _in)
+                                brunsli_ANSDecoder::ReadSymbol(&mut ans, _code, _in)
                             });
                             if ((code) < (kNumDirectCodes_135)) {
                                 abs_val = ((code) + (1));
@@ -4307,18 +4339,26 @@ pub unsafe fn DecodeDC_157(
                                     .first_extra_bit_prob[(nbits as usize)]
                                     as *mut brunsli_Prob);
                                 let mut first_extra_bit: i32 = (unsafe {
-                                    ac.ReadBit(
+                                    brunsli_BinaryArithmeticDecoder::ReadBit(
+                                        &mut ac,
                                         ((unsafe {
-                                            (*(p_first_extra_bit).cast_const()).get_proba()
+                                            brunsli_Prob::get_proba(
+                                                &(*(p_first_extra_bit).cast_const()),
+                                            )
                                         }) as i32),
                                         in_,
                                     )
                                 });
-                                (unsafe { (*p_first_extra_bit).Add(first_extra_bit) });
+                                (unsafe {
+                                    brunsli_Prob::Add(&mut (*p_first_extra_bit), first_extra_bit)
+                                });
                                 let mut extra_bits_val: i32 = ((first_extra_bit) << (nbits));
                                 if ((nbits) > (0)) {
-                                    extra_bits_val |=
-                                        ((unsafe { br.ReadBits(nbits, in_) }) as i32).clone();
+                                    extra_bits_val |= ((unsafe {
+                                        brunsli_BitSource::ReadBits(&mut br, nbits, in_)
+                                    })
+                                        as i32)
+                                        .clone();
                                 }
                                 abs_val = ((((kNumDirectCodes_135) - (1)) + ((2) << (nbits)))
                                     + (extra_bits_val));
@@ -4433,10 +4473,17 @@ pub unsafe fn DecodeAcBlock_159(cookie: *const brunsli_AcBlockCookie) -> usize {
                 ((bucket).wrapping_mul((kDCTBlockSize_3 as usize))).wrapping_add(k);
             let p: *mut brunsli_Prob =
                 &mut (*c.is_zero_prob.offset((is_zero_ctx) as isize)) as *mut brunsli_Prob;
-            is_zero = (unsafe { ac.ReadBit(((unsafe { (*p).get_proba() }) as i32), in_) }).clone();
+            is_zero = (unsafe {
+                brunsli_BinaryArithmeticDecoder::ReadBit(
+                    &mut ac,
+                    ((unsafe { brunsli_Prob::get_proba(&(*p)) }) as i32),
+                    in_,
+                )
+            })
+            .clone();
             (unsafe {
                 let _val: i32 = is_zero;
-                (*p).Add(_val)
+                brunsli_Prob::Add(&mut (*p), _val)
             });
         }
         let mut abs_val: i32 = 0;
@@ -4488,11 +4535,17 @@ pub unsafe fn DecodeAcBlock_159(cookie: *const brunsli_AcBlockCookie) -> usize {
             sign_ctx = ((sign_ctx).wrapping_mul((kDCTBlockSize_3 as usize))).wrapping_add(k);
             let sign_p: *mut brunsli_Prob =
                 &mut (*c.sign_prob.offset((sign_ctx) as isize)) as *mut brunsli_Prob;
-            sign =
-                (unsafe { ac.ReadBit(((unsafe { (*sign_p).get_proba() }) as i32), in_) }).clone();
+            sign = (unsafe {
+                brunsli_BinaryArithmeticDecoder::ReadBit(
+                    &mut ac,
+                    ((unsafe { brunsli_Prob::get_proba(&(*sign_p)) }) as i32),
+                    in_,
+                )
+            })
+            .clone();
             (unsafe {
                 let _val: i32 = sign;
-                (*sign_p).Add(_val)
+                brunsli_Prob::Add(&mut (*sign_p), _val)
             });
             (*c.prev_sgn.offset((k) as isize)) = ((sign) + (1));
             sign = ((1) - ((2) * (sign)));
@@ -4506,7 +4559,7 @@ pub unsafe fn DecodeAcBlock_159(cookie: *const brunsli_AcBlockCookie) -> usize {
                     &(*c.entropy_codes.offset((entropy_ix) as isize))
                         as *const brunsli_ANSDecodingData;
                 let _in: *mut brunsli_WordSource = in_;
-                ans.ReadSymbol(_code, _in)
+                brunsli_ANSDecoder::ReadSymbol(&mut ans, _code, _in)
             });
             if ((code) < (kNumDirectCodes_135)) {
                 abs_val = ((code) + (1));
@@ -4516,16 +4569,22 @@ pub unsafe fn DecodeAcBlock_159(cookie: *const brunsli_AcBlockCookie) -> usize {
                     .first_extra_bit_prob
                     .offset((((k).wrapping_mul(10_usize)).wrapping_add((nbits as usize))) as isize))
                     as *mut brunsli_Prob;
-                let mut first_extra_bit: i32 =
-                    (unsafe { ac.ReadBit(((unsafe { (*p).get_proba() }) as i32), in_) });
+                let mut first_extra_bit: i32 = (unsafe {
+                    brunsli_BinaryArithmeticDecoder::ReadBit(
+                        &mut ac,
+                        ((unsafe { brunsli_Prob::get_proba(&(*p)) }) as i32),
+                        in_,
+                    )
+                });
                 (unsafe {
                     let _val: i32 = first_extra_bit;
-                    (*p).Add(_val)
+                    brunsli_Prob::Add(&mut (*p), _val)
                 });
                 let mut extra_bits_val: i32 = ((first_extra_bit) << (nbits));
                 if ((nbits) > (0)) {
-                    extra_bits_val =
-                        ((extra_bits_val as u32) | (unsafe { br.ReadBits(nbits, in_) })) as i32;
+                    extra_bits_val = ((extra_bits_val as u32)
+                        | (unsafe { brunsli_BitSource::ReadBits(&mut br, nbits, in_) }))
+                        as i32;
                 }
                 abs_val = ((((((kNumDirectCodes_135) - (1)) as u32)
                     .wrapping_add(((2_u32) << (nbits))))
@@ -4569,7 +4628,7 @@ pub unsafe fn DecodeAC_160(
         'loop_: while ((c) < (num_components)) {
             (unsafe {
                 let _w: i32 = (&(*meta))[(c)].width_in_blocks;
-                (&mut (*comps))[(c)].SetWidth(_w)
+                brunsli_ComponentState::SetWidth(&mut (&mut (*comps))[(c)], _w)
             });
             (unsafe {
                 let _quant: *const i32 = (&(&(*meta))[(c)].quant[(0_usize)] as *const i32);
@@ -4580,13 +4639,13 @@ pub unsafe fn DecodeAC_160(
             c.prefix_inc();
         }
     }
-    if !(unsafe { (*in_).CanRead(5_usize) }) {
+    if !(unsafe { brunsli_WordSource::CanRead(&mut (*in_), 5_usize) }) {
         return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
     }
     (unsafe { EnsureSubdecodersInitialized_155(state, in_) });
     if !(*ac_dc_state).ac_coeffs_order_decoded {
         'loop_: while (((*ac_dc_state).next_component) < (num_components)) {
-            if !(unsafe { (*in_).CanRead(121_usize) }) {
+            if !(unsafe { brunsli_WordSource::CanRead(&mut (*in_), 121_usize) }) {
                 return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
             }
             if !(unsafe {
@@ -4674,7 +4733,10 @@ pub unsafe fn DecodeAC_160(
                 'loop_: while ((c.x) < (width)) {
                     let mut is_empty: bool = ((*(block_state.postfix_inc())) != 0);
                     if !is_empty {
-                        if ((!(unsafe { (*in_).CanRead(297_usize) }) as i64) != 0) {
+                        if ((!(unsafe { brunsli_WordSource::CanRead(&mut (*in_), 297_usize) })
+                            as i64)
+                            != 0)
+                        {
                             (*ac_dc_state).next_mcu_y = mcu_y;
                             (*ac_dc_state).next_component = i;
                             (*ac_dc_state).next_iy = iy;
@@ -5191,9 +5253,10 @@ pub unsafe fn DecodeMetaDataSection_180(
             }
             let mut data: [u8; 1] = [0_u8; 1];
             data[(0) as usize] = (unsafe { ReadByte_163(state) }).clone();
-            let mut ok: bool = (unsafe {
-                ProcessMetaData_149((data.as_mut_ptr()).cast_const(), 1_usize, (ms), jpg)
-            }) && (unsafe { (*ms).CanFinish() });
+            let mut ok: bool =
+                (unsafe {
+                    ProcessMetaData_149((data.as_mut_ptr()).cast_const(), 1_usize, (ms), jpg)
+                }) && (unsafe { brunsli_internal_dec_MetadataState::CanFinish(&mut (*ms)) });
             (*ms).decompression_stage =
                 (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
             return if ok {
@@ -5367,7 +5430,7 @@ pub unsafe fn DecodeMetaDataSection_180(
                         })(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                     });
                 }
-                if !(unsafe { (*ms).CanFinish() }) {
+                if !(unsafe { brunsli_internal_dec_MetadataState::CanFinish(&mut (*ms)) }) {
                     return (unsafe {
                         (|result: brunsli_BrunsliStatus| {
                             if !(!(((*ms).brotli).is_null())) {
@@ -6268,7 +6331,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
         };
         (*s).num_contexts = ((*jpg).components.len()).clone();
         (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage_READ_SCHEME).clone();
-        (unsafe { (*hs).arena.reserve(648_usize) });
+        (unsafe { brunsli_Arena_brunsli_HuffmanCode_::reserve(&mut (*hs).arena, 648_usize) });
     }
     (unsafe { PrepareBitReader_182(br, state) });
     if ((unsafe { RemainingSectionLength_174(state) }) <= (unsafe { GetBytesAvailable_166(state) }))
@@ -6429,7 +6492,8 @@ pub unsafe fn DecodeHistogramDataSection_187(
         if !(unsafe {
             let _arena: *mut brunsli_Arena_brunsli_HuffmanCode_ =
                 (&mut (*hs).arena as *mut brunsli_Arena_brunsli_HuffmanCode_);
-            (*(*hs).entropy.as_deref_mut().unwrap()).ReadFromBitStream(
+            brunsli_HuffmanDecodingData::ReadFromBitStream(
+                &mut (*(*hs).entropy.as_deref_mut().unwrap()),
                 alphabet_size,
                 br,
                 Some(_arena),
@@ -6505,7 +6569,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
             }
             if !(unsafe {
                 let _counts: *const Vec<u32> = &(*hs).counts as *const Vec<u32>;
-                (&mut (*s)).entropy_codes_[((*hs).i)].Init(_counts)
+                brunsli_ANSDecodingData::Init(&mut (&mut (*s)).entropy_codes_[((*hs).i)], _counts)
             }) {
                 return (unsafe {
                     (|result: brunsli_BrunsliStatus| {
@@ -6538,7 +6602,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
         }
         (*hs).stage = (brunsli_internal_dec_HistogramDataState_Stage_DONE).clone();
     }
-    (unsafe { (*hs).arena.reset() });
+    (unsafe { brunsli_Arena_brunsli_HuffmanCode_::reset(&mut (*hs).arena) });
     if !(((*hs).stage as i32) == (brunsli_internal_dec_HistogramDataState_Stage_DONE as i32)) {
         (unsafe {
             BrunsliDumpAndAbort_79(
@@ -7529,6 +7593,9 @@ pub unsafe fn BrunsliEstimateDecoderPeakMemoryUsage_205(mut data: *const u8, len
 }
 impl brunsli_BrunsliDecoder {}
 impl brunsli_BrunsliDecoder {
+    pub unsafe fn destructor(&mut self) {}
+}
+impl brunsli_BrunsliDecoder {
     pub unsafe fn Decode(
         &mut self,
         mut available_in: *mut usize,
@@ -7698,7 +7765,7 @@ pub unsafe fn DecodeContextMap_188(
         }
         let mut code: u32 = ((unsafe {
             let _br: *mut brunsli_BrunsliBitReader = br;
-            (*entropy).ReadSymbol(_br)
+            brunsli_HuffmanDecodingData::ReadSymbol(&(*entropy), _br)
         }) as u32);
         if ((code) == (0_u32)) {
             (*map.offset((*i) as isize)) = 0_u8;
@@ -8401,10 +8468,15 @@ impl brunsli_HuffmanDecodingData {
             counts[(code_lengths[(i)]) as usize].prefix_inc();
             i.prefix_inc();
         }
-        (unsafe { (*arena).reserve((alphabet_size).wrapping_add(376_usize)) });
+        (unsafe {
+            brunsli_Arena_brunsli_HuffmanCode_::reserve(
+                &mut (*arena),
+                (alphabet_size).wrapping_add(376_usize),
+            )
+        });
         let mut table_size: u32 = (unsafe {
             BuildHuffmanTable_218(
-                (unsafe { (*arena).data() }),
+                (unsafe { brunsli_Arena_brunsli_HuffmanCode_::data(&mut (*arena)) }),
                 (kHuffmanTableBits_21 as usize),
                 (&mut code_lengths[(0_usize)] as *mut u8).cast_const(),
                 alphabet_size,
@@ -8412,9 +8484,11 @@ impl brunsli_HuffmanDecodingData {
             )
         });
         self.table_ = core::slice::from_raw_parts(
-            (unsafe { (*arena).data() }),
-            ((unsafe { (*arena).data() }).offset((table_size) as isize))
-                .offset_from((unsafe { (*arena).data() })) as usize,
+            (unsafe { brunsli_Arena_brunsli_HuffmanCode_::data(&mut (*arena)) }),
+            ((unsafe { brunsli_Arena_brunsli_HuffmanCode_::data(&mut (*arena)) })
+                .offset((table_size) as isize))
+            .offset_from((unsafe { brunsli_Arena_brunsli_HuffmanCode_::data(&mut (*arena)) }))
+                as usize,
         )
         .iter()
         .map(|x| brunsli_HuffmanCode::try_from(x.clone()).ok().unwrap())
@@ -10957,7 +11031,9 @@ pub unsafe fn WriteJpeg_261(jpg: *const brunsli_JPEGData, mut out: brunsli_JPEGO
         }
         let mut to_write: usize =
             ((buffer.len() as u64).wrapping_sub((available_out as u64)) as usize);
-        if !(unsafe { out.Write((buffer.as_mut_ptr()).cast_const(), to_write) }) {
+        if !(unsafe {
+            brunsli_JPEGOutput::Write(&out, (buffer.as_mut_ptr()).cast_const(), to_write)
+        }) {
             return false;
         }
         if ((status) == (brunsli_internal_dec_SerializationStatus_DONE)) {
@@ -11229,7 +11305,7 @@ pub const brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_LO:
 pub const brunsli_internal_dec_MetadataState_Stage_READ_MULTIBYTE:
     brunsli_internal_dec_MetadataState_Stage = 5;
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Clone, Default)]
 pub struct brunsli_internal_dec_MetadataState {
     pub short_marker_count: usize,
     pub marker: u8,
@@ -11251,6 +11327,17 @@ impl brunsli_internal_dec_MetadataState {
 }
 impl brunsli_internal_dec_State {}
 impl brunsli_internal_dec_State {}
+impl brunsli_internal_dec_State {
+    pub unsafe fn destructor(&mut self) {}
+}
+impl brunsli_internal_dec_MetadataState {
+    pub unsafe fn destructor(&mut self) {
+        if !((self.brotli).is_null()) {
+            ::brotli_sys::BrotliDecoderDestroyInstance(self.brotli);
+            self.brotli = std::ptr::null_mut();
+        }
+    }
+}
 pub unsafe fn HasSection_194(mut state: *const brunsli_internal_dec_State, mut tag: u32) -> bool {
     return ((((*(*(std::ptr::addr_of!((*state).internal).cast_mut()))
         .as_deref_mut()

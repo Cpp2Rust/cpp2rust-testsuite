@@ -22,7 +22,7 @@ impl Queue {
         (*self.elems.offset((self.back.postfix_inc()) as isize)) = (elem as u32);
     }
     pub unsafe fn dequeue(&mut self) -> u32 {
-        if (unsafe { self.empty() }) {
+        if (unsafe { Queue::empty(self) }) {
             return (-1_i32 as u32);
         }
         return (*self.elems.offset((self.front.postfix_inc()) as isize));
@@ -86,15 +86,15 @@ pub unsafe fn BFS_0(graph: *const Graph, mut start_vertex: u32) -> *mut u32 {
         i.prefix_inc();
     }
     (*visited.offset((start_vertex) as isize)) = true;
-    (unsafe { Q.enqueue((start_vertex as i32)) });
-    'loop_: while !(unsafe { Q.empty() }) {
-        let mut current_vertex: i32 = ((unsafe { Q.dequeue() }) as i32);
+    (unsafe { Queue::enqueue(&mut Q, (start_vertex as i32)) });
+    'loop_: while !(unsafe { Queue::empty(&Q) }) {
+        let mut current_vertex: i32 = ((unsafe { Queue::dequeue(&mut Q) }) as i32);
         let mut head: *mut GraphNode = (*(*graph).adj.offset((current_vertex) as isize));
         'loop_: while !((head).is_null()) {
             let mut adj_vertex: i32 = ((*head).vertex as i32);
             if !(*visited.offset((adj_vertex) as isize)) {
                 (*visited.offset((adj_vertex) as isize)) = true;
-                (unsafe { Q.enqueue(adj_vertex) });
+                (unsafe { Queue::enqueue(&mut Q, adj_vertex) });
                 (*pred.offset((adj_vertex) as isize)) = (current_vertex as u32);
             }
             head = (*head).next;
@@ -144,7 +144,8 @@ unsafe fn main_0() -> i32 {
             'loop_: while ((step) <= (80_u32)) {
                 if ((((c).wrapping_add(step)) as usize) < (N)) {
                     (unsafe {
-                        graph.push(
+                        Graph::push(
+                            &mut graph,
                             current,
                             ((((r as usize).wrapping_mul(N))
                                 .wrapping_add((((c).wrapping_add(step)) as usize)))
@@ -158,7 +159,8 @@ unsafe fn main_0() -> i32 {
             'loop_: while ((step) <= (80_u32)) {
                 if ((((r).wrapping_add(step)) as usize) < (N)) {
                     (unsafe {
-                        graph.push(
+                        Graph::push(
+                            &mut graph,
                             current,
                             ((((((r).wrapping_add(step)) as usize).wrapping_mul(N))
                                 .wrapping_add((c as usize))) as u32),

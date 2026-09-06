@@ -13,38 +13,21 @@ pub struct Queue {
     pub back: Value<usize>,
     pub capacity: Value<usize>,
 }
-impl Queue {
-    pub fn enqueue(&self, elem: i32) {
-        let elem: Value<i32> = Rc::new(RefCell::new(elem));
-        if ((*self.back.borrow()) == (*self.capacity.borrow())) {
-            return;
-        }
-        let __rhs = ((*elem.borrow()) as u32);
-        (*self.elems.borrow())
-            .offset(((*self.back.borrow_mut()).postfix_inc()) as isize)
-            .write(__rhs);
-    }
-    pub fn dequeue(&self) -> u32 {
-        if ({ self.empty() }) {
-            return (-1_i32 as u32);
-        }
-        return ((*self.elems.borrow())
-            .offset(((*self.front.borrow_mut()).postfix_inc()) as isize)
-            .read());
-    }
-    pub fn empty(&self) -> bool {
-        return ((*self.front.borrow()) == (*self.back.borrow()));
-    }
+pub trait QueueImpl {
+    fn enqueue(&self, elem: i32);
+    fn dequeue(&self) -> u32;
+    fn empty(&self) -> bool;
 }
 impl Clone for Queue {
     fn clone(&self) -> Self {
-        let mut this = Self {
+        let __this: Value<Queue> = Rc::new(RefCell::new(Self {
             elems: Rc::new(RefCell::new((*self.elems.borrow()).clone())),
             front: Rc::new(RefCell::new((*self.front.borrow()))),
             back: Rc::new(RefCell::new((*self.back.borrow()))),
             capacity: Rc::new(RefCell::new((*self.capacity.borrow()))),
-        };
-        this
+        }));
+        let this: Ptr<Queue> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
 impl ByteRepr for Queue {
@@ -73,11 +56,12 @@ pub struct GraphNode {
 }
 impl Clone for GraphNode {
     fn clone(&self) -> Self {
-        let mut this = Self {
+        let __this: Value<GraphNode> = Rc::new(RefCell::new(Self {
             vertex: Rc::new(RefCell::new((*self.vertex.borrow()))),
             next: Rc::new(RefCell::new((*self.next.borrow()).clone())),
-        };
-        this
+        }));
+        let this: Ptr<GraphNode> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
 impl ByteRepr for GraphNode {
@@ -100,37 +84,17 @@ pub struct Graph {
     pub V: Value<u32>,
     pub adj: Value<Ptr<Ptr<GraphNode>>>,
 }
-impl Graph {
-    pub fn push(&self, src: u32, dst: u32) {
-        let src: Value<u32> = Rc::new(RefCell::new(src));
-        let dst: Value<u32> = Rc::new(RefCell::new(dst));
-        let __rhs = Ptr::alloc(GraphNode {
-            vertex: Rc::new(RefCell::new((*dst.borrow()))),
-            next: Rc::new(RefCell::new(
-                ((*self.adj.borrow()).offset((*src.borrow()) as isize).read()).clone(),
-            )),
-        });
-        (*self.adj.borrow())
-            .offset((*src.borrow()) as isize)
-            .write(__rhs);
-        let __rhs = Ptr::alloc(GraphNode {
-            vertex: Rc::new(RefCell::new((*src.borrow()))),
-            next: Rc::new(RefCell::new(
-                ((*self.adj.borrow()).offset((*dst.borrow()) as isize).read()).clone(),
-            )),
-        });
-        (*self.adj.borrow())
-            .offset((*dst.borrow()) as isize)
-            .write(__rhs);
-    }
+pub trait GraphImpl {
+    fn push(&self, src: u32, dst: u32);
 }
 impl Clone for Graph {
     fn clone(&self) -> Self {
-        let mut this = Self {
+        let __this: Value<Graph> = Rc::new(RefCell::new(Self {
             V: Rc::new(RefCell::new((*self.V.borrow()))),
             adj: Rc::new(RefCell::new((*self.adj.borrow()).clone())),
-        };
-        this
+        }));
+        let this: Ptr<Graph> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
 impl ByteRepr for Graph {
@@ -187,10 +151,11 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
     (*visited.borrow())
         .offset((*start_vertex.borrow()) as isize)
         .write(true);
-    ({ (*Q.borrow()).enqueue(((*start_vertex.borrow()) as i32)) });
-    'loop_: while !({ (*Q.borrow()).empty() }) {
-        let current_vertex: Value<i32> =
-            Rc::new(RefCell::new((({ (*Q.borrow()).dequeue() }) as i32)));
+    ({ QueueImpl::enqueue(&Q.as_pointer(), ((*start_vertex.borrow()) as i32)) });
+    'loop_: while !({ QueueImpl::empty(&Q.as_pointer()) }) {
+        let current_vertex: Value<i32> = Rc::new(RefCell::new(
+            (({ QueueImpl::dequeue(&Q.as_pointer()) }) as i32),
+        ));
         let head: Value<Ptr<GraphNode>> = Rc::new(RefCell::new(
             ((*(*graph.upgrade().deref()).adj.borrow())
                 .offset((*current_vertex.borrow()) as isize)
@@ -208,7 +173,7 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
                 (*visited.borrow())
                     .offset((*adj_vertex.borrow()) as isize)
                     .write(true);
-                ({ (*Q.borrow()).enqueue((*adj_vertex.borrow())) });
+                ({ QueueImpl::enqueue(&Q.as_pointer(), (*adj_vertex.borrow())) });
                 let __rhs = ((*current_vertex.borrow()) as u32);
                 (*pred.borrow())
                     .offset((*adj_vertex.borrow()) as isize)
@@ -255,7 +220,8 @@ fn main_0() -> i32 {
             'loop_: while ((*step.borrow()) <= 80_u32) {
                 if ((((*c.borrow()).wrapping_add((*step.borrow()))) as usize) < (*N.borrow())) {
                     ({
-                        (*graph.borrow()).push(
+                        GraphImpl::push(
+                            &graph.as_pointer(),
                             (*current.borrow()),
                             (((((*r.borrow()) as usize).wrapping_mul((*N.borrow()))).wrapping_add(
                                 (((*c.borrow()).wrapping_add((*step.borrow()))) as usize),
@@ -269,7 +235,8 @@ fn main_0() -> i32 {
             'loop_: while ((*step.borrow()) <= 80_u32) {
                 if ((((*r.borrow()).wrapping_add((*step.borrow()))) as usize) < (*N.borrow())) {
                     ({
-                        (*graph.borrow()).push(
+                        GraphImpl::push(
+                            &graph.as_pointer(),
                             (*current.borrow()),
                             ((((((*r.borrow()).wrapping_add((*step.borrow()))) as usize)
                                 .wrapping_mul((*N.borrow())))
@@ -315,4 +282,60 @@ fn main_0() -> i32 {
     (*(*graph.borrow()).adj.borrow()).delete_array();
     (*pred.borrow()).delete_array();
     return 0;
+}
+impl GraphImpl for Ptr<Graph> {
+    fn push(&self, src: u32, dst: u32) {
+        let src: Value<u32> = Rc::new(RefCell::new(src));
+        let dst: Value<u32> = Rc::new(RefCell::new(dst));
+        let __rhs = Ptr::alloc(GraphNode {
+            vertex: Rc::new(RefCell::new((*dst.borrow()))),
+            next: Rc::new(RefCell::new(
+                ((*(*(*self).upgrade().deref()).adj.borrow())
+                    .offset((*src.borrow()) as isize)
+                    .read())
+                .clone(),
+            )),
+        });
+        (*(*(*self).upgrade().deref()).adj.borrow())
+            .offset((*src.borrow()) as isize)
+            .write(__rhs);
+        let __rhs = Ptr::alloc(GraphNode {
+            vertex: Rc::new(RefCell::new((*src.borrow()))),
+            next: Rc::new(RefCell::new(
+                ((*(*(*self).upgrade().deref()).adj.borrow())
+                    .offset((*dst.borrow()) as isize)
+                    .read())
+                .clone(),
+            )),
+        });
+        (*(*(*self).upgrade().deref()).adj.borrow())
+            .offset((*dst.borrow()) as isize)
+            .write(__rhs);
+    }
+}
+impl QueueImpl for Ptr<Queue> {
+    fn enqueue(&self, elem: i32) {
+        let elem: Value<i32> = Rc::new(RefCell::new(elem));
+        if ((*(*(*self).upgrade().deref()).back.borrow())
+            == (*(*(*self).upgrade().deref()).capacity.borrow()))
+        {
+            return;
+        }
+        let __rhs = ((*elem.borrow()) as u32);
+        (*(*(*self).upgrade().deref()).elems.borrow())
+            .offset(((*(*(*self).upgrade().deref()).back.borrow_mut()).postfix_inc()) as isize)
+            .write(__rhs);
+    }
+    fn dequeue(&self) -> u32 {
+        if ({ QueueImpl::empty(self) }) {
+            return (-1_i32 as u32);
+        }
+        return ((*(*(*self).upgrade().deref()).elems.borrow())
+            .offset(((*(*(*self).upgrade().deref()).front.borrow_mut()).postfix_inc()) as isize)
+            .read());
+    }
+    fn empty(&self) -> bool {
+        return ((*(*(*self).upgrade().deref()).front.borrow())
+            == (*(*(*self).upgrade().deref()).back.borrow()));
+    }
 }
