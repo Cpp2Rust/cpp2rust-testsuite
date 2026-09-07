@@ -243,22 +243,6 @@ impl woff2_Buffer {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait woff2_BufferImpl {
-    fn Skip(&self, n_bytes: usize) -> bool;
-    fn Read(&self, data: Ptr<u8>, n_bytes: usize) -> bool;
-    fn ReadU8(&self, value: Ptr<u8>) -> bool;
-    fn ReadU16(&self, value: Ptr<u16>) -> bool;
-    fn ReadS16(&self, value: Ptr<i16>) -> bool;
-    fn ReadU24(&self, value: Ptr<u32>) -> bool;
-    fn ReadU32(&self, value: Ptr<u32>) -> bool;
-    fn ReadS32(&self, value: Ptr<i32>) -> bool;
-    fn ReadTag(&self, value: Ptr<u32>) -> bool;
-    fn ReadR64(&self, value: Ptr<u64>) -> bool;
-    fn buffer(&self) -> Ptr<u8>;
-    fn offset(&self) -> usize;
-    fn length(&self) -> usize;
-    fn set_offset(&self, newoffset: usize) -> bool;
-}
 impl Clone for woff2_Buffer {
     fn clone(&self) -> Self {
         let __this: Value<woff2_Buffer> = Rc::new(RefCell::new(Self {
@@ -665,9 +649,6 @@ pub struct woff2_Font_Table {
     pub reuse_of: Value<Ptr<woff2_Font_Table>>,
     pub flag_byte: Value<u8>,
 }
-pub trait woff2_Font_TableImpl {
-    fn IsReused(&self) -> bool;
-}
 impl Clone for woff2_Font_Table {
     fn clone(&self) -> Self {
         let __this: Value<woff2_Font_Table> = Rc::new(RefCell::new(Self {
@@ -718,11 +699,6 @@ pub struct woff2_Font {
     pub flavor: Value<u32>,
     pub num_tables: Value<u16>,
     pub tables: Value<BTreeMap<u32, Value<woff2_Font_Table>>>,
-}
-pub trait woff2_FontImpl {
-    fn OutputOrderedTags(&self) -> Vec<u32>;
-    fn FindTable_u32(&self, tag: u32) -> Ptr<woff2_Font_Table>;
-    fn FindTable_u32_const(&self, tag: u32) -> Ptr<woff2_Font_Table>;
 }
 impl Clone for woff2_Font {
     fn clone(&self) -> Self {
@@ -3642,17 +3618,6 @@ impl woff2_GlyfEncoder {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait woff2_GlyfEncoderImpl {
-    fn Encode(&self, glyph_id: i32, glyph: Ptr<woff2_Glyph>) -> bool;
-    fn GetTransformedGlyfBytes(&self, result: Ptr<Vec<u8>>);
-    fn WriteInstructions(&self, glyph: Ptr<woff2_Glyph>);
-    fn ShouldWriteSimpleGlyphBbox(&self, glyph: Ptr<woff2_Glyph>) -> bool;
-    fn WriteSimpleGlyph(&self, glyph_id: i32, glyph: Ptr<woff2_Glyph>);
-    fn WriteCompositeGlyph(&self, glyph_id: i32, glyph: Ptr<woff2_Glyph>);
-    fn WriteBbox(&self, glyph_id: i32, glyph: Ptr<woff2_Glyph>);
-    fn WriteTriplet(&self, on_curve: bool, x: i32, y: i32);
-    fn EnsureOverlapBitmap(&self);
-}
 impl Clone for woff2_GlyfEncoder {
     fn clone(&self) -> Self {
         let __this: Value<woff2_GlyfEncoder> = Rc::new(RefCell::new(Self {
@@ -5242,6 +5207,22 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
     });
     return 0;
 }
+pub trait woff2_BufferImpl {
+    fn Skip(&self, n_bytes: usize) -> bool;
+    fn Read(&self, data: Ptr<u8>, n_bytes: usize) -> bool;
+    fn ReadU8(&self, value: Ptr<u8>) -> bool;
+    fn ReadU16(&self, value: Ptr<u16>) -> bool;
+    fn ReadS16(&self, value: Ptr<i16>) -> bool;
+    fn ReadU24(&self, value: Ptr<u32>) -> bool;
+    fn ReadU32(&self, value: Ptr<u32>) -> bool;
+    fn ReadS32(&self, value: Ptr<i32>) -> bool;
+    fn ReadTag(&self, value: Ptr<u32>) -> bool;
+    fn ReadR64(&self, value: Ptr<u64>) -> bool;
+    fn buffer(&self) -> Ptr<u8>;
+    fn offset(&self) -> usize;
+    fn length(&self) -> usize;
+    fn set_offset(&self, newoffset: usize) -> bool;
+}
 impl woff2_BufferImpl for Ptr<woff2_Buffer> {
     fn Skip(&self, n_bytes: usize) -> bool {
         let n_bytes: Value<usize> = Rc::new(RefCell::new(n_bytes));
@@ -5453,6 +5434,11 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         return true;
     }
 }
+pub trait woff2_FontImpl {
+    fn OutputOrderedTags(&self) -> Vec<u32>;
+    fn FindTable_u32(&self, tag: u32) -> Ptr<woff2_Font_Table>;
+    fn FindTable_u32_const(&self, tag: u32) -> Ptr<woff2_Font_Table>;
+}
 impl woff2_FontImpl for Ptr<woff2_Font> {
     fn FindTable_u32(&self, tag: u32) -> Ptr<woff2_Font_Table> {
         let tag: Value<u32> = Rc::new(RefCell::new(tag));
@@ -5606,10 +5592,24 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
         return (*output_order.borrow_mut()).clone();
     }
 }
+pub trait woff2_Font_TableImpl {
+    fn IsReused(&self) -> bool;
+}
 impl woff2_Font_TableImpl for Ptr<woff2_Font_Table> {
     fn IsReused(&self) -> bool {
         return !((*(*(*self).upgrade().deref()).reuse_of.borrow()).is_null());
     }
+}
+pub trait woff2_GlyfEncoderImpl {
+    fn Encode(&self, glyph_id: i32, glyph: Ptr<woff2_Glyph>) -> bool;
+    fn GetTransformedGlyfBytes(&self, result: Ptr<Vec<u8>>);
+    fn WriteInstructions(&self, glyph: Ptr<woff2_Glyph>);
+    fn ShouldWriteSimpleGlyphBbox(&self, glyph: Ptr<woff2_Glyph>) -> bool;
+    fn WriteSimpleGlyph(&self, glyph_id: i32, glyph: Ptr<woff2_Glyph>);
+    fn WriteCompositeGlyph(&self, glyph_id: i32, glyph: Ptr<woff2_Glyph>);
+    fn WriteBbox(&self, glyph_id: i32, glyph: Ptr<woff2_Glyph>);
+    fn WriteTriplet(&self, on_curve: bool, x: i32, y: i32);
+    fn EnsureOverlapBitmap(&self);
 }
 impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
     fn Encode(&self, glyph_id: i32, glyph: Ptr<woff2_Glyph>) -> bool {

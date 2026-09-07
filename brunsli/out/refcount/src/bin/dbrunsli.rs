@@ -1615,12 +1615,6 @@ impl brunsli_Prob {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait brunsli_ProbImpl {
-    fn destructor(&self);
-    fn Init(&self, probability: u8);
-    fn Add(&self, val: i32);
-    fn get_proba(&self) -> u8;
-}
 impl Clone for brunsli_Prob {
     fn clone(&self) -> Self {
         let __this: Value<brunsli_Prob> = Rc::new(RefCell::new(Self {
@@ -2263,11 +2257,6 @@ impl brunsli_ComponentStateDC {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait brunsli_ComponentStateDCImpl {
-    fn SetWidth(&self, w: i32);
-    fn InitAll(&self);
-    fn destructor(&self);
-}
 impl Clone for brunsli_ComponentStateDC {
     fn clone(&self) -> Self {
         let __this: Value<brunsli_ComponentStateDC> = Rc::new(RefCell::new(Self {
@@ -2393,11 +2382,6 @@ impl brunsli_ComponentState {
         let w: Value<i32> = Rc::new(RefCell::new(w));
         return ( ( ( ( ( ( ( ( ( 4 + ( ( ( 10 + ( 3 * (*w.borrow()) ) ) ) * (*kDCTBlockSize_3.with(Value::clone).borrow()) ) ) + ( 2 * (*w.borrow()) ) ) ) as usize ) ) ) . wrapping_mul ( ( ::std::mem::size_of::<i32>() as usize ) ) as u64 ) ) . wrapping_add ( ( ( ( ( ( ( ( ( ( ( ( ( ( ( (*kNumNonzeroBuckets_90.with(Value::clone).borrow()) as usize ) ) ) . wrapping_add ( ( ( 2_usize ) . wrapping_mul ( (*kMaxAverageContext_82.with(Value::clone).borrow()) ) as usize ) ) as usize ) ) . wrapping_add ( 11_usize ) ) as usize ) ) . wrapping_mul ( ( ( (*kDCTBlockSize_3.with(Value::clone).borrow()) as usize ) ) ) as usize ) ) . wrapping_add ( ( ( (*kNumNonZeroContextCount_88.with(Value::clone).borrow()) ) . wrapping_mul ( (*kNumNonZeroTreeSize_85.with(Value::clone).borrow()) ) as usize ) ) ) as u64 ) ) . wrapping_mul ( ( 4usize as u64 ) ) as u64 ) ) as usize )   ;
     }
-}
-pub trait brunsli_ComponentStateImpl {
-    fn SetWidth(&self, w: i32);
-    fn InitAll(&self);
-    fn destructor(&self);
 }
 impl Clone for brunsli_ComponentState {
     fn clone(&self) -> Self {
@@ -2838,13 +2822,6 @@ impl brunsli_PermutationCoder {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait brunsli_PermutationCoderImpl {
-    fn Init(&self, values: Vec<u8>);
-    fn Clear(&self);
-    fn num_bits(&self) -> i32;
-    fn Remove(&self, code: usize, value: Ptr<u8>) -> bool;
-    fn RemoveValue(&self, value: u8, code: Ptr<i32>, nbits: Ptr<i32>) -> bool;
-}
 impl Clone for brunsli_PermutationCoder {
     fn clone(&self) -> Self {
         let __this: Value<brunsli_PermutationCoder> = Rc::new(RefCell::new(Self {
@@ -3215,10 +3192,6 @@ impl brunsli_WordSource {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait brunsli_WordSourceImpl {
-    fn GetNextWord(&self) -> u16;
-    fn CanRead(&self, n: usize) -> bool;
-}
 impl Clone for brunsli_WordSource {
     fn clone(&self) -> Self {
         let __this: Value<brunsli_WordSource> = Rc::new(RefCell::new(Self {
@@ -3267,11 +3240,6 @@ impl brunsli_BitSource {
         let this: Ptr<brunsli_BitSource> = __this.as_pointer();
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
-}
-pub trait brunsli_BitSourceImpl {
-    fn Init(&self, in_: Ptr<brunsli_WordSource>);
-    fn ReadBits(&self, nbits: i32, in_: Ptr<brunsli_WordSource>) -> u32;
-    fn Finish(&self) -> bool;
 }
 impl Clone for brunsli_BitSource {
     fn clone(&self) -> Self {
@@ -3354,9 +3322,6 @@ impl brunsli_ANSDecodingData {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait brunsli_ANSDecodingDataImpl {
-    fn Init(&self, counts: Ptr<Vec<u32>>) -> bool;
-}
 impl Clone for brunsli_ANSDecodingData {
     fn clone(&self) -> Self {
         let __this: Value<brunsli_ANSDecodingData> = Rc::new(RefCell::new(Self {
@@ -3398,11 +3363,6 @@ impl brunsli_ANSDecoder {
         let this: Ptr<brunsli_ANSDecoder> = __this.as_pointer();
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
-}
-pub trait brunsli_ANSDecoderImpl {
-    fn Init(&self, in_: Ptr<brunsli_WordSource>);
-    fn ReadSymbol(&self, code: Ptr<brunsli_ANSDecodingData>, in_: Ptr<brunsli_WordSource>) -> i32;
-    fn CheckCRC(&self) -> bool;
 }
 impl Clone for brunsli_ANSDecoder {
     fn clone(&self) -> Self {
@@ -3743,16 +3703,6 @@ impl brunsli_BrunsliDecoder {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait brunsli_BrunsliDecoderImpl {
-    fn destructor(&self);
-    fn Decode(
-        &self,
-        available_in: Ptr<usize>,
-        next_in: Ptr<Ptr<u8>>,
-        available_out: Ptr<usize>,
-        next_out: Ptr<Ptr<u8>>,
-    ) -> brunsli_BrunsliDecoder_Status;
-}
 impl Default for brunsli_BrunsliDecoder {
     fn default() -> Self {
         { brunsli_BrunsliDecoder::brunsli_BrunsliDecoder() }
@@ -3798,10 +3748,6 @@ impl brunsli_BinaryArithmeticDecoder {
         let this: Ptr<brunsli_BinaryArithmeticDecoder> = __this.as_pointer();
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
-}
-pub trait brunsli_BinaryArithmeticDecoderImpl {
-    fn Init(&self, in_: Ptr<brunsli_WordSource>);
-    fn ReadBit(&self, prob: i32, in_: Ptr<brunsli_WordSource>) -> i32;
 }
 impl Clone for brunsli_BinaryArithmeticDecoder {
     fn clone(&self) -> Self {
@@ -3885,9 +3831,6 @@ impl brunsli_JPEGOutput {
         let this: Ptr<brunsli_JPEGOutput> = __this.as_pointer();
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
-}
-pub trait brunsli_JPEGOutputImpl {
-    fn Write(&self, buf: Ptr<u8>, len: usize) -> bool;
 }
 impl Clone for brunsli_JPEGOutput {
     fn clone(&self) -> Self {
@@ -4032,10 +3975,6 @@ pub const brunsli_internal_dec_SerializationStatus_DONE: brunsli_internal_dec_Se
 pub struct brunsli_Arena_brunsli_HuffmanCode_ {
     pub capacity: Value<usize>,
     pub storage: Value<Option<Value<Box<[brunsli_HuffmanCode]>>>>,
-}
-pub trait brunsli_Arena_brunsli_HuffmanCode_Impl {
-    fn reserve(&self, limit: usize);
-    fn reset(&self);
 }
 impl ByteRepr for brunsli_Arena_brunsli_HuffmanCode_ {
     fn byte_size() -> usize {
@@ -12230,23 +12169,9 @@ pub fn ReadHistogram_189(
     }
     return ({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) });
 }
-impl brunsli_Arena_brunsli_HuffmanCode_ {
-    pub fn data(&self) -> Ptr<brunsli_HuffmanCode> {
-        return (*(*(*self).upgrade().deref()).storage.borrow()).as_pointer();
-    }
-}
 #[derive(Default)]
 pub struct brunsli_HuffmanDecodingData {
     pub table_: Value<Vec<brunsli_HuffmanCode>>,
-}
-pub trait brunsli_HuffmanDecodingDataImpl {
-    fn ReadFromBitStream(
-        &self,
-        alphabet_size: usize,
-        br: Ptr<brunsli_BrunsliBitReader>,
-        arena: Option<Ptr<brunsli_Arena_brunsli_HuffmanCode_>>,
-    ) -> bool;
-    fn ReadSymbol(&self, br: Ptr<brunsli_BrunsliBitReader>) -> u16;
 }
 impl Clone for brunsli_HuffmanDecodingData {
     fn clone(&self) -> Self {
@@ -16802,9 +16727,6 @@ impl brunsli_internal_dec_State {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait brunsli_internal_dec_StateImpl {
-    fn destructor(&self);
-}
 impl Default for brunsli_internal_dec_State {
     fn default() -> Self {
         { brunsli_internal_dec_State::brunsli_internal_dec_State() }
@@ -16879,10 +16801,6 @@ pub struct brunsli_internal_dec_MetadataState {
     pub decompressed_size: Value<usize>,
     pub result: Value<brunsli_BrunsliStatus>,
     pub decompression_stage: Value<brunsli_internal_dec_MetadataDecompressionStage>,
-}
-pub trait brunsli_internal_dec_MetadataStateImpl {
-    fn destructor(&self);
-    fn CanFinish(&self) -> bool;
 }
 impl Clone for brunsli_internal_dec_MetadataState {
     fn clone(&self) -> Self {
@@ -17260,6 +17178,11 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
     ));
     return if (*ok.borrow()) { 0 } else { 1 };
 }
+pub trait brunsli_ANSDecoderImpl {
+    fn Init(&self, in_: Ptr<brunsli_WordSource>);
+    fn ReadSymbol(&self, code: Ptr<brunsli_ANSDecodingData>, in_: Ptr<brunsli_WordSource>) -> i32;
+    fn CheckCRC(&self) -> bool;
+}
 impl brunsli_ANSDecoderImpl for Ptr<brunsli_ANSDecoder> {
     fn Init(&self, in_: Ptr<brunsli_WordSource>) {
         let in_: Value<Ptr<brunsli_WordSource>> = Rc::new(RefCell::new(in_));
@@ -17299,6 +17222,9 @@ impl brunsli_ANSDecoderImpl for Ptr<brunsli_ANSDecoder> {
         return ((*(*(*self).upgrade().deref()).state_.borrow()) == (19_u32 << 16_u32));
     }
 }
+pub trait brunsli_ANSDecodingDataImpl {
+    fn Init(&self, counts: Ptr<Vec<u32>>) -> bool;
+}
 impl brunsli_ANSDecodingDataImpl for Ptr<brunsli_ANSDecodingData> {
     fn Init(&self, counts: Ptr<Vec<u32>>) -> bool {
         let pos: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -17334,6 +17260,11 @@ impl brunsli_ANSDecodingDataImpl for Ptr<brunsli_ANSDecodingData> {
             == ((*BRUNSLI_ANS_TAB_SIZE_1.with(Value::clone).borrow()) as usize));
     }
 }
+pub trait brunsli_Arena_brunsli_HuffmanCode_Impl {
+    fn reserve(&self, limit: usize);
+    fn reset(&self);
+    fn data(&self) -> Ptr<brunsli_HuffmanCode>;
+}
 impl brunsli_Arena_brunsli_HuffmanCode_Impl for Ptr<brunsli_Arena_brunsli_HuffmanCode_> {
     fn reserve(&self, limit: usize) {
         let limit: Value<usize> = Rc::new(RefCell::new(limit));
@@ -17351,6 +17282,13 @@ impl brunsli_Arena_brunsli_HuffmanCode_Impl for Ptr<brunsli_Arena_brunsli_Huffma
         (*(*(*self).upgrade().deref()).capacity.borrow_mut()) = 0_usize;
         (*(*(*self).upgrade().deref()).storage.borrow_mut()) = None;
     }
+    fn data(&self) -> Ptr<brunsli_HuffmanCode> {
+        return (*(*(*self).upgrade().deref()).storage.borrow()).as_pointer();
+    }
+}
+pub trait brunsli_BinaryArithmeticDecoderImpl {
+    fn Init(&self, in_: Ptr<brunsli_WordSource>);
+    fn ReadBit(&self, prob: i32, in_: Ptr<brunsli_WordSource>) -> i32;
 }
 impl brunsli_BinaryArithmeticDecoderImpl for Ptr<brunsli_BinaryArithmeticDecoder> {
     fn Init(&self, in_: Ptr<brunsli_WordSource>) {
@@ -17403,6 +17341,11 @@ impl brunsli_BinaryArithmeticDecoderImpl for Ptr<brunsli_BinaryArithmeticDecoder
         return (*bit.borrow());
     }
 }
+pub trait brunsli_BitSourceImpl {
+    fn Init(&self, in_: Ptr<brunsli_WordSource>);
+    fn ReadBits(&self, nbits: i32, in_: Ptr<brunsli_WordSource>) -> u32;
+    fn Finish(&self) -> bool;
+}
 impl brunsli_BitSourceImpl for Ptr<brunsli_BitSource> {
     fn Init(&self, in_: Ptr<brunsli_WordSource>) {
         let in_: Value<Ptr<brunsli_WordSource>> = Rc::new(RefCell::new(in_));
@@ -17448,6 +17391,16 @@ impl brunsli_BitSourceImpl for Ptr<brunsli_BitSource> {
         }
         return true;
     }
+}
+pub trait brunsli_BrunsliDecoderImpl {
+    fn destructor(&self);
+    fn Decode(
+        &self,
+        available_in: Ptr<usize>,
+        next_in: Ptr<Ptr<u8>>,
+        available_out: Ptr<usize>,
+        next_out: Ptr<Ptr<u8>>,
+    ) -> brunsli_BrunsliDecoder_Status;
 }
 impl brunsli_BrunsliDecoderImpl for Ptr<brunsli_BrunsliDecoder> {
     fn destructor(&self) {}
@@ -17604,80 +17557,10 @@ impl brunsli_BrunsliDecoderImpl for Ptr<brunsli_BrunsliDecoder> {
         panic!("ub: non-void function does not return a value")
     }
 }
-impl brunsli_ComponentStateDCImpl for Ptr<brunsli_ComponentStateDC> {
-    fn SetWidth(&self, w: i32) {
-        let w: Value<i32> = Rc::new(RefCell::new(w));
-        (*(*(*self).upgrade().deref()).width.borrow_mut()) = (*w.borrow());
-        {
-            let __a0 = (((*w.borrow()) + 1) as usize) as usize;
-            (*(*(*self).upgrade().deref()).prev_is_nonempty.borrow_mut()).resize(__a0, 1)
-        };
-        {
-            let __a0 = (((*w.borrow()) + 3) as usize) as usize;
-            (*(*(*self).upgrade().deref()).prev_abs_coeff.borrow_mut())
-                .resize_with(__a0, || <i32>::default())
-        };
-        {
-            let __a0 = (((*w.borrow()) + 1) as usize) as usize;
-            (*(*(*self).upgrade().deref()).prev_sign.borrow_mut())
-                .resize_with(__a0, || <i32>::default())
-        };
-    }
-    fn destructor(&self) {
-        (*self.upgrade().deref())
-            .is_zero_prob
-            .as_pointer()
-            .destructor();
-    }
-    fn InitAll(&self) {
-        ({
-            brunsli_ProbImpl::Init(
-                &(*(*self).upgrade().deref()).is_zero_prob.as_pointer(),
-                135_u8,
-            )
-        });
-        let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-        'loop_: while ((*i.borrow()) < (*(*(*self).upgrade().deref()).sign_prob.borrow()).len()) {
-            ({
-                brunsli_ProbImpl::Init(
-                    &((*(*self).upgrade().deref()).sign_prob.as_pointer() as Ptr<brunsli_Prob>)
-                        .offset((*i.borrow())),
-                    128_u8,
-                )
-            });
-            (*i.borrow_mut()).prefix_inc();
-        }
-        let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-        'loop_: while ((*i.borrow())
-            < (*(*(*self).upgrade().deref()).is_empty_block_prob.borrow()).len())
-        {
-            ({
-                brunsli_ProbImpl::Init(
-                    &((*(*self).upgrade().deref())
-                        .is_empty_block_prob
-                        .as_pointer() as Ptr<brunsli_Prob>)
-                        .offset((*i.borrow())),
-                    74_u8,
-                )
-            });
-            (*i.borrow_mut()).prefix_inc();
-        }
-        let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-        'loop_: while ((*i.borrow())
-            < (*(*(*self).upgrade().deref()).first_extra_bit_prob.borrow()).len())
-        {
-            ({
-                brunsli_ProbImpl::Init(
-                    &((*(*self).upgrade().deref())
-                        .first_extra_bit_prob
-                        .as_pointer() as Ptr<brunsli_Prob>)
-                        .offset((*i.borrow())),
-                    150_u8,
-                )
-            });
-            (*i.borrow_mut()).prefix_inc();
-        }
-    }
+pub trait brunsli_ComponentStateImpl {
+    fn SetWidth(&self, w: i32);
+    fn InitAll(&self);
+    fn destructor(&self);
 }
 impl brunsli_ComponentStateImpl for Ptr<brunsli_ComponentState> {
     fn SetWidth(&self, w: i32) {
@@ -17826,6 +17709,95 @@ impl brunsli_ComponentStateImpl for Ptr<brunsli_ComponentState> {
             (*i.borrow_mut()).prefix_inc();
         }
     }
+}
+pub trait brunsli_ComponentStateDCImpl {
+    fn SetWidth(&self, w: i32);
+    fn InitAll(&self);
+    fn destructor(&self);
+}
+impl brunsli_ComponentStateDCImpl for Ptr<brunsli_ComponentStateDC> {
+    fn SetWidth(&self, w: i32) {
+        let w: Value<i32> = Rc::new(RefCell::new(w));
+        (*(*(*self).upgrade().deref()).width.borrow_mut()) = (*w.borrow());
+        {
+            let __a0 = (((*w.borrow()) + 1) as usize) as usize;
+            (*(*(*self).upgrade().deref()).prev_is_nonempty.borrow_mut()).resize(__a0, 1)
+        };
+        {
+            let __a0 = (((*w.borrow()) + 3) as usize) as usize;
+            (*(*(*self).upgrade().deref()).prev_abs_coeff.borrow_mut())
+                .resize_with(__a0, || <i32>::default())
+        };
+        {
+            let __a0 = (((*w.borrow()) + 1) as usize) as usize;
+            (*(*(*self).upgrade().deref()).prev_sign.borrow_mut())
+                .resize_with(__a0, || <i32>::default())
+        };
+    }
+    fn destructor(&self) {
+        (*self.upgrade().deref())
+            .is_zero_prob
+            .as_pointer()
+            .destructor();
+    }
+    fn InitAll(&self) {
+        ({
+            brunsli_ProbImpl::Init(
+                &(*(*self).upgrade().deref()).is_zero_prob.as_pointer(),
+                135_u8,
+            )
+        });
+        let i: Value<usize> = Rc::new(RefCell::new(0_usize));
+        'loop_: while ((*i.borrow()) < (*(*(*self).upgrade().deref()).sign_prob.borrow()).len()) {
+            ({
+                brunsli_ProbImpl::Init(
+                    &((*(*self).upgrade().deref()).sign_prob.as_pointer() as Ptr<brunsli_Prob>)
+                        .offset((*i.borrow())),
+                    128_u8,
+                )
+            });
+            (*i.borrow_mut()).prefix_inc();
+        }
+        let i: Value<usize> = Rc::new(RefCell::new(0_usize));
+        'loop_: while ((*i.borrow())
+            < (*(*(*self).upgrade().deref()).is_empty_block_prob.borrow()).len())
+        {
+            ({
+                brunsli_ProbImpl::Init(
+                    &((*(*self).upgrade().deref())
+                        .is_empty_block_prob
+                        .as_pointer() as Ptr<brunsli_Prob>)
+                        .offset((*i.borrow())),
+                    74_u8,
+                )
+            });
+            (*i.borrow_mut()).prefix_inc();
+        }
+        let i: Value<usize> = Rc::new(RefCell::new(0_usize));
+        'loop_: while ((*i.borrow())
+            < (*(*(*self).upgrade().deref()).first_extra_bit_prob.borrow()).len())
+        {
+            ({
+                brunsli_ProbImpl::Init(
+                    &((*(*self).upgrade().deref())
+                        .first_extra_bit_prob
+                        .as_pointer() as Ptr<brunsli_Prob>)
+                        .offset((*i.borrow())),
+                    150_u8,
+                )
+            });
+            (*i.borrow_mut()).prefix_inc();
+        }
+    }
+}
+pub trait brunsli_HuffmanDecodingDataImpl {
+    fn ReadFromBitStream(
+        &self,
+        alphabet_size: usize,
+        br: Ptr<brunsli_BrunsliBitReader>,
+        arena: Option<Ptr<brunsli_Arena_brunsli_HuffmanCode_>>,
+    ) -> bool;
+    fn ReadSymbol(&self, br: Ptr<brunsli_BrunsliBitReader>) -> u16;
 }
 impl brunsli_HuffmanDecodingDataImpl for Ptr<brunsli_HuffmanDecodingData> {
     fn ReadFromBitStream(
@@ -18107,6 +18079,9 @@ impl brunsli_HuffmanDecodingDataImpl for Ptr<brunsli_HuffmanDecodingData> {
         return (*(*(*table.borrow()).upgrade().deref()).value.borrow());
     }
 }
+pub trait brunsli_JPEGOutputImpl {
+    fn Write(&self, buf: Ptr<u8>, len: usize) -> bool;
+}
 impl brunsli_JPEGOutputImpl for Ptr<brunsli_JPEGOutput> {
     fn Write(&self, buf: Ptr<u8>, len: usize) -> bool {
         let buf: Value<Ptr<u8>> = Rc::new(RefCell::new(buf));
@@ -18126,6 +18101,13 @@ impl brunsli_JPEGOutputImpl for Ptr<brunsli_JPEGOutput> {
         ));
         return ((*bytes_written.borrow()) == (*len.borrow()));
     }
+}
+pub trait brunsli_PermutationCoderImpl {
+    fn Init(&self, values: Vec<u8>);
+    fn Clear(&self);
+    fn num_bits(&self) -> i32;
+    fn Remove(&self, code: usize, value: Ptr<u8>) -> bool;
+    fn RemoveValue(&self, value: u8, code: Ptr<i32>, nbits: Ptr<i32>) -> bool;
 }
 impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
     fn Init(&self, values: Vec<u8>) {
@@ -18226,6 +18208,12 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         return true;
     }
 }
+pub trait brunsli_ProbImpl {
+    fn destructor(&self);
+    fn Init(&self, probability: u8);
+    fn Add(&self, val: i32);
+    fn get_proba(&self) -> u8;
+}
 impl brunsli_ProbImpl for Ptr<brunsli_Prob> {
     fn destructor(&self) {}
     fn Init(&self, probability: u8) {
@@ -18268,6 +18256,10 @@ impl brunsli_ProbImpl for Ptr<brunsli_Prob> {
         return (*(*(*self).upgrade().deref()).prob8.borrow());
     }
 }
+pub trait brunsli_WordSourceImpl {
+    fn GetNextWord(&self) -> u16;
+    fn CanRead(&self, n: usize) -> bool;
+}
 impl brunsli_WordSourceImpl for Ptr<brunsli_WordSource> {
     fn GetNextWord(&self) -> u16 {
         let val: Value<u16> = Rc::new(RefCell::new(0_u16));
@@ -18306,6 +18298,10 @@ impl brunsli_WordSourceImpl for Ptr<brunsli_WordSource> {
         return ((*projected_end.borrow()) <= (*(*(*self).upgrade().deref()).len_.borrow()));
     }
 }
+pub trait brunsli_internal_dec_MetadataStateImpl {
+    fn destructor(&self);
+    fn CanFinish(&self) -> bool;
+}
 impl brunsli_internal_dec_MetadataStateImpl for Ptr<brunsli_internal_dec_MetadataState> {
     fn CanFinish(&self) -> bool {
         return ((*(*(*self).upgrade().deref()).stage.borrow())
@@ -18323,6 +18319,9 @@ impl brunsli_internal_dec_MetadataStateImpl for Ptr<brunsli_internal_dec_Metadat
             (*(*(*self).upgrade().deref()).brotli.borrow_mut()) = std::ptr::null_mut();
         }
     }
+}
+pub trait brunsli_internal_dec_StateImpl {
+    fn destructor(&self);
 }
 impl brunsli_internal_dec_StateImpl for Ptr<brunsli_internal_dec_State> {
     fn destructor(&self) {}

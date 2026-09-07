@@ -243,22 +243,6 @@ impl woff2_Buffer {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait woff2_BufferImpl {
-    fn Skip(&self, n_bytes: usize) -> bool;
-    fn Read(&self, data: Ptr<u8>, n_bytes: usize) -> bool;
-    fn ReadU8(&self, value: Ptr<u8>) -> bool;
-    fn ReadU16(&self, value: Ptr<u16>) -> bool;
-    fn ReadS16(&self, value: Ptr<i16>) -> bool;
-    fn ReadU24(&self, value: Ptr<u32>) -> bool;
-    fn ReadU32(&self, value: Ptr<u32>) -> bool;
-    fn ReadS32(&self, value: Ptr<i32>) -> bool;
-    fn ReadTag(&self, value: Ptr<u32>) -> bool;
-    fn ReadR64(&self, value: Ptr<u64>) -> bool;
-    fn buffer(&self) -> Ptr<u8>;
-    fn offset(&self) -> usize;
-    fn length(&self) -> usize;
-    fn set_offset(&self, newoffset: usize) -> bool;
-}
 impl Clone for woff2_Buffer {
     fn clone(&self) -> Self {
         let __this: Value<woff2_Buffer> = Rc::new(RefCell::new(Self {
@@ -4120,10 +4104,6 @@ impl woff2_WOFF2StringOut {
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
 }
-pub trait woff2_WOFF2StringOutImpl {
-    fn MaxSize(&self) -> usize;
-    fn SetMaxSize(&self, max_size: usize);
-}
 impl woff2_WOFF2Out for woff2_WOFF2StringOut {
     fn Write_AnyPtr_usize(&self, buf: AnyPtr, n: usize) -> bool {
         let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
@@ -4497,6 +4477,22 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
     }
     return if (*ok.borrow()) { 0 } else { 1 };
 }
+pub trait woff2_BufferImpl {
+    fn Skip(&self, n_bytes: usize) -> bool;
+    fn Read(&self, data: Ptr<u8>, n_bytes: usize) -> bool;
+    fn ReadU8(&self, value: Ptr<u8>) -> bool;
+    fn ReadU16(&self, value: Ptr<u16>) -> bool;
+    fn ReadS16(&self, value: Ptr<i16>) -> bool;
+    fn ReadU24(&self, value: Ptr<u32>) -> bool;
+    fn ReadU32(&self, value: Ptr<u32>) -> bool;
+    fn ReadS32(&self, value: Ptr<i32>) -> bool;
+    fn ReadTag(&self, value: Ptr<u32>) -> bool;
+    fn ReadR64(&self, value: Ptr<u64>) -> bool;
+    fn buffer(&self) -> Ptr<u8>;
+    fn offset(&self) -> usize;
+    fn length(&self) -> usize;
+    fn set_offset(&self, newoffset: usize) -> bool;
+}
 impl woff2_BufferImpl for Ptr<woff2_Buffer> {
     fn Skip(&self, n_bytes: usize) -> bool {
         let n_bytes: Value<usize> = Rc::new(RefCell::new(n_bytes));
@@ -4707,6 +4703,10 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         (*(*(*self).upgrade().deref()).offset_.borrow_mut()) = (*newoffset.borrow());
         return true;
     }
+}
+pub trait woff2_WOFF2StringOutImpl {
+    fn MaxSize(&self) -> usize;
+    fn SetMaxSize(&self, max_size: usize);
 }
 impl woff2_WOFF2StringOutImpl for Ptr<woff2_WOFF2StringOut> {
     fn MaxSize(&self) -> usize {

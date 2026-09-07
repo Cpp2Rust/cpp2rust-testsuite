@@ -13,11 +13,6 @@ pub struct Queue {
     pub back: Value<usize>,
     pub capacity: Value<usize>,
 }
-pub trait QueueImpl {
-    fn enqueue(&self, elem: i32);
-    fn dequeue(&self) -> u32;
-    fn empty(&self) -> bool;
-}
 impl Clone for Queue {
     fn clone(&self) -> Self {
         let __this: Value<Queue> = Rc::new(RefCell::new(Self {
@@ -83,9 +78,6 @@ impl ByteRepr for GraphNode {
 pub struct Graph {
     pub V: Value<u32>,
     pub adj: Value<Ptr<Ptr<GraphNode>>>,
-}
-pub trait GraphImpl {
-    fn push(&self, src: u32, dst: u32);
 }
 impl Clone for Graph {
     fn clone(&self) -> Self {
@@ -283,6 +275,9 @@ fn main_0() -> i32 {
     (*pred.borrow()).delete_array();
     return 0;
 }
+pub trait GraphImpl {
+    fn push(&self, src: u32, dst: u32);
+}
 impl GraphImpl for Ptr<Graph> {
     fn push(&self, src: u32, dst: u32) {
         let src: Value<u32> = Rc::new(RefCell::new(src));
@@ -312,6 +307,11 @@ impl GraphImpl for Ptr<Graph> {
             .offset((*dst.borrow()) as isize)
             .write(__rhs);
     }
+}
+pub trait QueueImpl {
+    fn enqueue(&self, elem: i32);
+    fn dequeue(&self) -> u32;
+    fn empty(&self) -> bool;
 }
 impl QueueImpl for Ptr<Queue> {
     fn enqueue(&self, elem: i32) {
