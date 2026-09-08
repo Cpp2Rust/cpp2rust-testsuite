@@ -4225,7 +4225,7 @@ pub unsafe fn DecodeDC_157(
     (unsafe { EnsureSubdecodersInitialized_155(state, in_) });
     let mut ans: brunsli_ANSDecoder = (*s).ans_decoder.clone();
     let mut br: brunsli_BitSource = (*s).bit_reader.clone();
-    let mut ac: brunsli_BinaryArithmeticDecoder = (*s).arith_decoder.clone();
+    let mut ac: brunsli_BinaryArithmeticDecoder = (*s).arith_decoder;
     let mut mcu_y: i32 = (*ac_dc_state).next_mcu_y;
     'loop_: while ((mcu_y) < (mcu_rows)) {
         let mut i: usize = (*ac_dc_state).next_component;
@@ -4437,8 +4437,8 @@ pub struct brunsli_AcBlockCookie {
     pub first_extra_bit_prob: *mut brunsli_Prob,
 }
 pub unsafe fn DecodeAcBlock_159(cookie: *const brunsli_AcBlockCookie) -> usize {
-    let mut c: brunsli_AcBlockCookie = (*cookie).clone();
-    let mut ac: brunsli_BinaryArithmeticDecoder = (*c.ac).clone();
+    let mut c: brunsli_AcBlockCookie = (*cookie);
+    let mut ac: brunsli_BinaryArithmeticDecoder = (*c.ac);
     let mut in_: *mut brunsli_WordSource = c.in_;
     let mut ans: brunsli_ANSDecoder = (*c.ans).clone();
     let mut br: brunsli_BitSource = (*c.br).clone();

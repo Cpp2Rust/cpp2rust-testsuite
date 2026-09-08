@@ -518,16 +518,16 @@ pub struct woff2_Table {
     pub dst_data: *const u8,
 }
 impl woff2_Table {
-    pub unsafe fn lt(&self, other: *const woff2_Table) -> bool {
+    pub unsafe fn operator_lt(&self, other: *const woff2_Table) -> bool {
         return ((self.tag) < ((*other).tag));
     }
 }
-impl Ord for woff2_Table {
+impl std::cmp::Ord for woff2_Table {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         unsafe {
-            if self.lt(other) {
+            if woff2_Table::operator_lt(self, other as *const woff2_Table) {
                 std::cmp::Ordering::Less
-            } else if other.lt(self) {
+            } else if woff2_Table::operator_lt(other, self as *const woff2_Table) {
                 std::cmp::Ordering::Greater
             } else {
                 std::cmp::Ordering::Equal
@@ -535,17 +535,20 @@ impl Ord for woff2_Table {
         }
     }
 }
-impl PartialOrd for woff2_Table {
+impl std::cmp::PartialOrd for woff2_Table {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(other))
     }
 }
-impl PartialEq for woff2_Table {
+impl std::cmp::PartialEq for woff2_Table {
     fn eq(&self, other: &Self) -> bool {
-        unsafe { !(self.lt(other)) && !(other.lt(self)) }
+        unsafe {
+            !(woff2_Table::operator_lt(self, other as *const woff2_Table))
+                && !(woff2_Table::operator_lt(other, self as *const woff2_Table))
+        }
     }
 }
-impl Eq for woff2_Table {}
+impl std::cmp::Eq for woff2_Table {}
 pub unsafe fn Log2Floor_25(mut n: u32) -> i32 {
     return if ((n) == (0_u32)) {
         -1_i32
@@ -3437,8 +3440,8 @@ pub unsafe fn SetFileContents_111(
     )
     .unwrap();
     {
-        let __start = start.clone() as *const u8;
-        let __end = end.clone() as *const u8;
+        let __start = start as *const u8;
+        let __end = end as *const u8;
         let __len = __end.offset_from(__start) as usize;
         ofs.try_clone()
             .unwrap()

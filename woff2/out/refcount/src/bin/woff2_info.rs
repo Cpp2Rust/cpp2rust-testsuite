@@ -486,20 +486,18 @@ pub struct woff2_Table {
     pub dst_length: Value<u32>,
     pub dst_data: Value<Ptr<u8>>,
 }
-impl woff2_Table {
-    pub fn lt(&self, other: Ptr<woff2_Table>) -> bool {
-        return {
-            let _lhs = (*(*self).tag.borrow());
-            _lhs < (*(*other.upgrade().deref()).tag.borrow())
-        };
-    }
-}
-impl Ord for woff2_Table {
+impl std::cmp::Ord for woff2_Table {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         {
-            if self.lt(Rc::new(RefCell::new(other.clone())).as_pointer()) {
+            if woff2_TableImpl::operator_lt(
+                &Rc::new(RefCell::new(self.clone())).as_pointer(),
+                Rc::new(RefCell::new(other.clone())).as_pointer(),
+            ) {
                 std::cmp::Ordering::Less
-            } else if other.lt(Rc::new(RefCell::new(self.clone())).as_pointer()) {
+            } else if woff2_TableImpl::operator_lt(
+                &Rc::new(RefCell::new(other.clone())).as_pointer(),
+                Rc::new(RefCell::new(self.clone())).as_pointer(),
+            ) {
                 std::cmp::Ordering::Greater
             } else {
                 std::cmp::Ordering::Equal
@@ -507,20 +505,25 @@ impl Ord for woff2_Table {
         }
     }
 }
-impl PartialOrd for woff2_Table {
+impl std::cmp::PartialOrd for woff2_Table {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(other))
     }
 }
-impl PartialEq for woff2_Table {
+impl std::cmp::PartialEq for woff2_Table {
     fn eq(&self, other: &Self) -> bool {
         {
-            !(self.lt(Rc::new(RefCell::new(other.clone())).as_pointer()))
-                && !(other.lt(Rc::new(RefCell::new(self.clone())).as_pointer()))
+            !(woff2_TableImpl::operator_lt(
+                &Rc::new(RefCell::new(self.clone())).as_pointer(),
+                Rc::new(RefCell::new(other.clone())).as_pointer(),
+            )) && !(woff2_TableImpl::operator_lt(
+                &Rc::new(RefCell::new(other.clone())).as_pointer(),
+                Rc::new(RefCell::new(self.clone())).as_pointer(),
+            ))
         }
     }
 }
-impl Eq for woff2_Table {}
+impl std::cmp::Eq for woff2_Table {}
 impl Clone for woff2_Table {
     fn clone(&self) -> Self {
         let __this: Value<woff2_Table> = Rc::new(RefCell::new(Self {
@@ -2480,5 +2483,16 @@ pub trait woff2_Font_TableImpl {
 impl woff2_Font_TableImpl for Ptr<woff2_Font_Table> {
     fn IsReused(&self) -> bool {
         return !((*(*(*self).upgrade().deref()).reuse_of.borrow()).is_null());
+    }
+}
+pub trait woff2_TableImpl {
+    fn operator_lt(&self, other: Ptr<woff2_Table>) -> bool;
+}
+impl woff2_TableImpl for Ptr<woff2_Table> {
+    fn operator_lt(&self, other: Ptr<woff2_Table>) -> bool {
+        return {
+            let _lhs = (*(*(*self).upgrade().deref()).tag.borrow());
+            _lhs < (*(*other.upgrade().deref()).tag.borrow())
+        };
     }
 }
