@@ -1302,7 +1302,8 @@ pub unsafe fn ReconstructGlyf_63(
                 Store16_32(
                     glyph_buf
                         .as_deref_mut()
-                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
+                        as *mut u8,
                     glyph_size,
                     (n_contours as i32),
                 )
@@ -1342,7 +1343,8 @@ pub unsafe fn ReconstructGlyf_63(
                     Store16_32(
                         glyph_buf
                             .as_deref_mut()
-                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
+                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
+                            as *mut u8,
                         glyph_size,
                         (instruction_size as i32),
                     )
@@ -1423,7 +1425,8 @@ pub unsafe fn ReconstructGlyf_63(
                     total_n_points,
                     points
                         .as_deref_mut()
-                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
+                        as *mut woff2_Point,
                     (&mut triplet_bytes_consumed as *mut usize),
                 )
             }) as i64)
@@ -1472,7 +1475,8 @@ pub unsafe fn ReconstructGlyf_63(
                 Store16_32(
                     glyph_buf
                         .as_deref_mut()
-                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
+                        as *mut u8,
                     glyph_size,
                     (n_contours as i32),
                 )
@@ -1499,10 +1503,11 @@ pub unsafe fn ReconstructGlyf_63(
                         (points
                             .as_deref_mut()
                             .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()))
-                        .cast_const(),
+                        .cast_const() as *const woff2_Point,
                         glyph_buf
                             .as_deref_mut()
-                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
+                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
+                            as *mut u8,
                     )
                 });
             }
@@ -1519,7 +1524,8 @@ pub unsafe fn ReconstructGlyf_63(
                     Store16_32(
                         glyph_buf
                             .as_deref_mut()
-                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
+                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
+                            as *mut u8,
                         glyph_size,
                         end_point,
                     )
@@ -1530,7 +1536,8 @@ pub unsafe fn ReconstructGlyf_63(
                 Store16_32(
                     glyph_buf
                         .as_deref_mut()
-                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
+                        as *mut u8,
                     glyph_size,
                     (instruction_size as i32),
                 )
@@ -1560,13 +1567,14 @@ pub unsafe fn ReconstructGlyf_63(
                     (points
                         .as_deref_mut()
                         .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()))
-                    .cast_const(),
+                    .cast_const() as *const woff2_Point,
                     (n_contours as u32),
                     instruction_size,
                     has_overlap_bit,
                     glyph_buf
                         .as_deref_mut()
-                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
+                        as *mut u8,
                     glyph_buf_size,
                     (&mut glyph_size as *mut usize),
                 )
@@ -1587,7 +1595,7 @@ pub unsafe fn ReconstructGlyf_63(
                 (glyph_buf
                     .as_deref_mut()
                     .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                    as *const u8 as *const ::libc::c_void),
+                    as *const u8 as *const ::libc::c_void) as *const ::libc::c_void,
                 glyph_size,
             )
         }) as i64)
@@ -1604,7 +1612,7 @@ pub unsafe fn ReconstructGlyf_63(
                     (glyph_buf
                         .as_deref_mut()
                         .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()))
-                    .cast_const(),
+                    .cast_const() as *const u8,
                     glyph_size,
                 )
             }),

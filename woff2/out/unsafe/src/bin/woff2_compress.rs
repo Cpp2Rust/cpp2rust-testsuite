@@ -3145,7 +3145,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     }
     if !(unsafe {
         Woff2Compress_95(
-            (transform_buf.as_mut_ptr()).cast_const(),
+            (transform_buf.as_mut_ptr()).cast_const() as *const u8,
             total_transform_length,
             (&mut compression_buf[(0_usize)] as *mut u8),
             (&mut total_compressed_length as *mut u32),
@@ -3174,7 +3174,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             TextCompress_96(
                 _data,
                 _len,
-                compressed_metadata_buf.as_mut_ptr(),
+                compressed_metadata_buf.as_mut_ptr() as *mut u8,
                 (&mut compressed_metadata_buf_length as *mut u32),
                 _quality,
             )
@@ -3392,7 +3392,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     offset = ((unsafe { Round4_70((offset as u64)) }) as usize);
     (unsafe {
         StoreBytes_32(
-            (compressed_metadata_buf.as_mut_ptr()).cast_const(),
+            (compressed_metadata_buf.as_mut_ptr()).cast_const() as *const u8,
             (compressed_metadata_buf_length as usize),
             (&mut offset as *mut usize),
             result,

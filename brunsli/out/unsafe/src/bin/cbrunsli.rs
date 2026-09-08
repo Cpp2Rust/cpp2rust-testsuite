@@ -972,7 +972,7 @@ pub unsafe fn Append_72(mut dst: *mut Vec<u8>, mut begin: *const u8, mut length:
 }
 pub unsafe fn Append_73(mut dst: *mut Vec<u8>, src: *const Vec<u8>) {
     (unsafe {
-        let _begin: *const u8 = (*src).as_ptr();
+        let _begin: *const u8 = (*src).as_ptr() as *const u8;
         let _length: usize = (*src).len();
         Append_72(dst, _begin, _length)
     });
@@ -4306,7 +4306,7 @@ pub unsafe fn EncodeAuxData_161(
             brunsli_Storage::AppendBytes(&mut (*storage), (buffer.as_mut_ptr()).cast_const(), len)
         });
         (unsafe {
-            let _src: *const u8 = (*s).as_ptr();
+            let _src: *const u8 = (*s).as_ptr() as *const u8;
             let _len: usize = (*s).len();
             brunsli_Storage::AppendBytes(&mut (*storage), _src, _len)
         });
@@ -5575,7 +5575,7 @@ pub unsafe fn EncodeAC_187(mut state: *mut brunsli_internal_enc_State) {
         (unsafe {
             let _mult_row: *mut i32 = (&mut comps[(i)].mult_row[(0) as usize] as *mut i32);
             let _mult_col: *mut i32 = (&mut comps[(i)].mult_col[(0) as usize] as *mut i32);
-            ComputeACPredictMultipliers_109((*m).quant.as_ptr(), _mult_row, _mult_col)
+            ComputeACPredictMultipliers_109((*m).quant.as_ptr() as *const i32, _mult_row, _mult_col)
         });
         (unsafe { brunsli_ComponentState::SetWidth(&mut comps[(i)], (*m).width_in_blocks) });
         i.prefix_inc();
@@ -5654,7 +5654,7 @@ pub unsafe fn EncodeAC_187(mut state: *mut brunsli_internal_enc_State) {
                         }
                         let nzero_context: u8 = (unsafe {
                             NumNonzerosContext_104(
-                                ((*c).prev_num_nonzeros.as_mut_ptr()).cast_const(),
+                                ((*c).prev_num_nonzeros.as_mut_ptr()).cast_const() as *const u8,
                                 x,
                                 y,
                             )

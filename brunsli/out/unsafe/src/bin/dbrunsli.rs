@@ -972,7 +972,7 @@ pub unsafe fn Append_72(mut dst: *mut Vec<u8>, mut begin: *const u8, mut length:
 }
 pub unsafe fn Append_73(mut dst: *mut Vec<u8>, src: *const Vec<u8>) {
     (unsafe {
-        let _begin: *const u8 = (*src).as_ptr();
+        let _begin: *const u8 = (*src).as_ptr() as *const u8;
         let _length: usize = (*src).len();
         Append_72(dst, _begin, _length)
     });
@@ -6129,7 +6129,7 @@ pub unsafe fn DecodeQuantDataSection_186(
                     let q_factor: u32 = (unsafe { BrunsliBitReaderRead_126(br, 6_u32) });
                     (unsafe {
                         let _is_chroma: bool = (((*qs).i) > (0_usize));
-                        let _dst: *mut u8 = (*qs).predictor.as_mut_ptr();
+                        let _dst: *mut u8 = (*qs).predictor.as_mut_ptr() as *mut u8;
                         FillQuantMatrix_118(_is_chroma, q_factor, _dst)
                     });
                     (*qs).j = 0_usize;
@@ -8355,7 +8355,11 @@ impl brunsli_HuffmanDecodingData {
                     .resize_with(__a0, || <brunsli_HuffmanCode>::default())
             };
             return (unsafe {
-                ReadSimpleCode_219((alphabet_size as u16), br, self.table_.as_mut_ptr())
+                ReadSimpleCode_219(
+                    (alphabet_size as u16),
+                    br,
+                    self.table_.as_mut_ptr() as *mut brunsli_HuffmanCode,
+                )
             });
         }
         let mut code_length_code_lengths: [u8; 18] = [
@@ -11032,7 +11036,11 @@ pub unsafe fn WriteJpeg_261(jpg: *const brunsli_JPEGData, mut out: brunsli_JPEGO
         let mut to_write: usize =
             ((buffer.len() as u64).wrapping_sub((available_out as u64)) as usize);
         if !(unsafe {
-            brunsli_JPEGOutput::Write(&out, (buffer.as_mut_ptr()).cast_const(), to_write)
+            brunsli_JPEGOutput::Write(
+                &out,
+                (buffer.as_mut_ptr()).cast_const() as *const u8,
+                to_write,
+            )
         }) {
             return false;
         }
