@@ -1466,7 +1466,7 @@ pub unsafe fn ReadGlyph_63(
                 i.prefix_inc();
             }
         }
-        if (!flags.is_empty()) && (!flags[(0_usize)].is_empty()) {
+        if (!(flags.is_empty())) && (!(flags[(0_usize)].is_empty())) {
             (*glyph).overlap_simple_flag_set =
                 (((flags[(0_usize)][(0_usize)] as i32) & (kFLAG_OVERLAP_SIMPLE_55)) != 0);
         }
@@ -2336,7 +2336,7 @@ impl woff2_GlyfEncoder {
             let _in: *const Vec<u8> = &self.instruction_stream_ as *const Vec<u8>;
             WriteBytes_87(_out, _in)
         });
-        if !self.overlap_bitmap_.is_empty() {
+        if !(self.overlap_bitmap_.is_empty()) {
             (unsafe {
                 let _out: *mut Vec<u8> = result;
                 let _in: *const Vec<u8> = &self.overlap_bitmap_ as *const Vec<u8>;
@@ -2710,7 +2710,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
                 monospace_lsbs.push(a0_clone)
             };
         }
-        if (!remove_proportional_lsb) && (!remove_monospace_lsb) {
+        if (!(remove_proportional_lsb)) && (!(remove_monospace_lsb)) {
             return true;
         }
         i.postfix_inc();
@@ -2749,13 +2749,13 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
         let mut advance_width = advance_widths[advance_width].clone();
         (unsafe { WriteUShort_88(out, (advance_width as i32)) });
     }
-    if !remove_proportional_lsb {
+    if !(remove_proportional_lsb) {
         'loop_: for lsb in 0..(proportional_lsbs.len()) {
             let mut lsb = proportional_lsbs[lsb].clone();
             (unsafe { WriteUShort_88(out, (lsb as i32)) });
         }
     }
-    if !remove_monospace_lsb {
+    if !(remove_monospace_lsb) {
         'loop_: for lsb in 0..(monospace_lsbs.len()) {
             let mut lsb = monospace_lsbs[lsb].clone();
             (unsafe { WriteUShort_88(out, (lsb as i32)) });
@@ -2990,11 +2990,11 @@ pub unsafe fn ComputeTotalTransformLength_103(font: *const woff2_Font) -> usize 
             continue 'loop_;
         }
         if ((((*table).tag) & (2155905152_u32)) != 0)
-            || (!!(unsafe {
+            || (!(!(unsafe {
                 let _tag: u32 = (((*table).tag) ^ (2155905152_u32));
                 woff2_Font::FindTable_u32_const(&(*font), _tag)
             })
-            .is_null())
+            .is_null()))
         {
             total = (total).wrapping_add(((*table).length as usize));
         }

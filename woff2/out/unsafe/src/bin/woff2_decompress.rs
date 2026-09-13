@@ -1266,7 +1266,7 @@ pub unsafe fn ReconstructGlyf_63(
         if ((n_contours as i32) == (65535)) {
             let mut have_instructions: bool = false;
             let mut instruction_size: u32 = 0_u32;
-            if ((!have_bbox as i64) != 0) {
+            if ((!(have_bbox) as i64) != 0) {
                 return false;
             }
             let mut composite_size: usize = 0_usize;
@@ -2047,7 +2047,7 @@ pub unsafe fn ReconstructFont_74(
             }
         }
         let mut checksum: u32 = 0_u32;
-        if !reused {
+        if !(reused) {
             if ((((*table).flags) & (kWoff2FlagsTransform_21)) != (kWoff2FlagsTransform_21)) {
                 if (((*table).tag) == (kHeadTableTag_1)) {
                     if (((((*table).src_length) < (12_u32)) as i64) != 0) {

@@ -490,13 +490,53 @@ impl std::cmp::Ord for woff2_Table {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         {
             if woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(self.clone())).as_pointer(),
-                Rc::new(RefCell::new(other.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
             ) {
                 std::cmp::Ordering::Less
             } else if woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(other.clone())).as_pointer(),
-                Rc::new(RefCell::new(self.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
             ) {
                 std::cmp::Ordering::Greater
             } else {
@@ -514,11 +554,51 @@ impl std::cmp::PartialEq for woff2_Table {
     fn eq(&self, other: &Self) -> bool {
         {
             !(woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(self.clone())).as_pointer(),
-                Rc::new(RefCell::new(other.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
             )) && !(woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(other.clone())).as_pointer(),
-                Rc::new(RefCell::new(self.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
             ))
         }
     }
@@ -2210,15 +2290,15 @@ pub fn ReadGlyph_63(data: Ptr<u8>, len: usize, glyph: Ptr<woff2_Glyph>) -> bool 
                 (*i.borrow_mut()).prefix_inc();
             }
         }
-        if (!(*flags.borrow()).is_empty())
-            && (!(*((flags.as_pointer() as Ptr<Value<Vec<u8>>>)
+        if (!((*flags.borrow()).is_empty()))
+            && (!((*((flags.as_pointer() as Ptr<Value<Vec<u8>>>)
                 .offset(0_usize)
                 .upgrade()
                 .deref()
                 .as_pointer() as Ptr<Vec<u8>>)
                 .upgrade()
                 .deref())
-            .is_empty())
+            .is_empty()))
         {
             (*(*(*glyph.borrow()).upgrade().deref())
                 .overlap_simple_flag_set
@@ -4432,11 +4512,11 @@ pub fn ComputeTotalTransformLength_103(font: Ptr<woff2_Font>) -> usize {
             continue 'loop_;
         }
         if (((*(*table.upgrade().deref()).tag.borrow()) & 2155905152_u32) != 0)
-            || (!!({
+            || (!(!({
                 let _tag: u32 = ((*(*table.upgrade().deref()).tag.borrow()) ^ 2155905152_u32);
                 woff2_FontImpl::FindTable_u32_const(&font, _tag)
             })
-            .is_null())
+            .is_null()))
         {
             {
                 let rhs_0 = (*total.borrow())
@@ -5745,7 +5825,7 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
                 .as_pointer();
             WriteBytes_87(_out, _in)
         });
-        if !(*(*(*self).upgrade().deref()).overlap_bitmap_.borrow()).is_empty() {
+        if !((*(*(*self).upgrade().deref()).overlap_bitmap_.borrow()).is_empty()) {
             ({
                 let _out: Ptr<Vec<u8>> = (*result.borrow()).clone();
                 let _in: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).overlap_bitmap_.as_pointer();

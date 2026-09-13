@@ -490,13 +490,53 @@ impl std::cmp::Ord for woff2_Table {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         {
             if woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(self.clone())).as_pointer(),
-                Rc::new(RefCell::new(other.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
             ) {
                 std::cmp::Ordering::Less
             } else if woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(other.clone())).as_pointer(),
-                Rc::new(RefCell::new(self.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
             ) {
                 std::cmp::Ordering::Greater
             } else {
@@ -514,11 +554,51 @@ impl std::cmp::PartialEq for woff2_Table {
     fn eq(&self, other: &Self) -> bool {
         {
             !(woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(self.clone())).as_pointer(),
-                Rc::new(RefCell::new(other.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
             )) && !(woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(other.clone())).as_pointer(),
-                Rc::new(RefCell::new(self.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
             ))
         }
     }
@@ -4112,25 +4192,25 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
         let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
         let n: Value<usize> = Rc::new(RefCell::new(n));
         return ({
-            let _offset: usize = (*(*self).offset_.borrow());
-            (*self).Write_AnyPtr_usize_usize((*buf.borrow()).clone(), _offset, (*n.borrow()))
+            let _offset: usize = (*self.offset_.borrow());
+            self.Write_AnyPtr_usize_usize((*buf.borrow()).clone(), _offset, (*n.borrow()))
         });
     }
     fn Write_AnyPtr_usize_usize(&self, buf: AnyPtr, offset: usize, n: usize) -> bool {
         let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
         let offset: Value<usize> = Rc::new(RefCell::new(offset));
         let n: Value<usize> = Rc::new(RefCell::new(n));
-        if ((*offset.borrow()) > (*(*self).max_size_.borrow()))
-            || ((*n.borrow()) > (*(*self).max_size_.borrow()).wrapping_sub((*offset.borrow())))
+        if ((*offset.borrow()) > (*self.max_size_.borrow()))
+            || ((*n.borrow()) > (*self.max_size_.borrow()).wrapping_sub((*offset.borrow())))
         {
             return false;
         }
         if {
             let _lhs = (*offset.borrow());
-            _lhs == ((*(*(*self).buf_.borrow()).upgrade().deref()).len() - 1)
+            _lhs == ((*(*self.buf_.borrow()).upgrade().deref()).len() - 1)
         } {
             {
-                ((*(*self).buf_.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>).with_mut(
+                ((*self.buf_.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>).with_mut(
                     |__v: &mut Vec<u8>| {
                         __v.pop();
                         __v.extend(
@@ -4142,41 +4222,41 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
                         __v.push(0);
                     },
                 );
-                ((*(*self).buf_.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>)
+                ((*self.buf_.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>)
             };
         } else {
             if {
                 let _lhs = (*offset.borrow()).wrapping_add((*n.borrow()));
-                _lhs > ((*(*(*self).buf_.borrow()).upgrade().deref()).len() - 1)
+                _lhs > ((*(*self.buf_.borrow()).upgrade().deref()).len() - 1)
             } {
                 {
-                    (*(*self).buf_.borrow()).with_mut(|__v: &mut Vec<u8>| __v.pop());
-                    (*(*self).buf_.borrow()).with_mut(|__v: &mut Vec<u8>| {
+                    (*self.buf_.borrow()).with_mut(|__v: &mut Vec<u8>| __v.pop());
+                    (*self.buf_.borrow()).with_mut(|__v: &mut Vec<u8>| {
                         __v.resize(
-                            (*(*(*self).buf_.borrow()).upgrade().deref()).len()
+                            (*(*self.buf_.borrow()).upgrade().deref()).len()
                                 + (((*offset.borrow()).wrapping_add((*n.borrow())) as u64)
                                     .wrapping_sub(
-                                        (((*(*(*self).buf_.borrow()).upgrade().deref()).len() - 1)
+                                        (((*(*self.buf_.borrow()).upgrade().deref()).len() - 1)
                                             as u64),
                                     ) as usize) as usize,
                             0_u8,
                         )
                     });
-                    (*(*self).buf_.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(0));
-                    (*(*(*self).buf_.borrow()).upgrade().deref()).clone()
+                    (*self.buf_.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(0));
+                    (*(*self.buf_.borrow()).upgrade().deref()).clone()
                 };
             }
             {
                 let pos = (*offset.borrow()) as usize;
                 let end = std::cmp::min(
                     pos + (*n.borrow()) as usize,
-                    (*((*(*self).buf_.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>)
+                    (*((*self.buf_.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>)
                         .upgrade()
                         .deref())
                     .len()
                     .saturating_sub(1),
                 );
-                ((*(*self).buf_.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>).with_mut(
+                ((*self.buf_.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>).with_mut(
                     |__v: &mut Vec<u8>| {
                         __v.splice(
                             pos..end,
@@ -4187,11 +4267,11 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
                         );
                     },
                 );
-                ((*(*self).buf_.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>)
+                ((*self.buf_.borrow()).to_strong().as_pointer() as Ptr<Vec<u8>>)
             };
         }
         let __rhs = ({
-            let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*(*self).offset_.borrow()) as u64)));
+            let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*self.offset_.borrow()) as u64)));
             let __tmp_1: Value<u64> = Rc::new(RefCell::new(
                 ((*offset.borrow()).wrapping_add((*n.borrow())) as u64),
             ));
@@ -4202,11 +4282,11 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
             }
             .read())
         } as usize);
-        (*(*self).offset_.borrow_mut()) = __rhs;
+        (*self.offset_.borrow_mut()) = __rhs;
         return true;
     }
     fn Size(&self) -> usize {
-        return (*(*self).offset_.borrow());
+        return (*self.offset_.borrow());
     }
 }
 impl Clone for woff2_WOFF2StringOut {
@@ -4261,29 +4341,29 @@ impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
         let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
         let n: Value<usize> = Rc::new(RefCell::new(n));
         return ({
-            let _offset: usize = (*(*self).offset_.borrow());
-            (*self).Write_AnyPtr_usize_usize((*buf.borrow()).clone(), _offset, (*n.borrow()))
+            let _offset: usize = (*self.offset_.borrow());
+            self.Write_AnyPtr_usize_usize((*buf.borrow()).clone(), _offset, (*n.borrow()))
         });
     }
     fn Write_AnyPtr_usize_usize(&self, buf: AnyPtr, offset: usize, n: usize) -> bool {
         let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
         let offset: Value<usize> = Rc::new(RefCell::new(offset));
         let n: Value<usize> = Rc::new(RefCell::new(n));
-        if ((*offset.borrow()) > (*(*self).buf_size_.borrow()))
-            || ((*n.borrow()) > (*(*self).buf_size_.borrow()).wrapping_sub((*offset.borrow())))
+        if ((*offset.borrow()) > (*self.buf_size_.borrow()))
+            || ((*n.borrow()) > (*self.buf_size_.borrow()).wrapping_sub((*offset.borrow())))
         {
             return false;
         }
         {
-            ((*(*self).buf_.borrow()).offset((*offset.borrow()) as isize) as Ptr<u8>)
+            ((*self.buf_.borrow()).offset((*offset.borrow()) as isize) as Ptr<u8>)
                 .to_any()
                 .memcpy(&(*buf.borrow()), (*n.borrow()) as usize);
-            ((*(*self).buf_.borrow()).offset((*offset.borrow()) as isize) as Ptr<u8>)
+            ((*self.buf_.borrow()).offset((*offset.borrow()) as isize) as Ptr<u8>)
                 .to_any()
                 .clone()
         };
         let __rhs = ({
-            let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*(*self).offset_.borrow()) as u64)));
+            let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*self.offset_.borrow()) as u64)));
             let __tmp_1: Value<u64> = Rc::new(RefCell::new(
                 ((*offset.borrow()).wrapping_add((*n.borrow())) as u64),
             ));
@@ -4294,11 +4374,11 @@ impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
             }
             .read())
         } as usize);
-        (*(*self).offset_.borrow_mut()) = __rhs;
+        (*self.offset_.borrow_mut()) = __rhs;
         return true;
     }
     fn Size(&self) -> usize {
-        return (*(*self).offset_.borrow());
+        return (*self.offset_.borrow());
     }
 }
 impl Clone for woff2_WOFF2MemoryOut {

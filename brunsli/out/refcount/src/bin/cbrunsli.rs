@@ -3710,13 +3710,37 @@ impl std::cmp::Ord for brunsli_HistogramPair {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         {
             if operator_lt_128(
-                Rc::new(RefCell::new(self.clone())).as_pointer(),
-                Rc::new(RefCell::new(other.clone())).as_pointer(),
+                Rc::new(RefCell::new(brunsli_HistogramPair {
+                    idx1: self.idx1.clone(),
+                    idx2: self.idx2.clone(),
+                    cost_combo: self.cost_combo.clone(),
+                    cost_diff: self.cost_diff.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(brunsli_HistogramPair {
+                    idx1: other.idx1.clone(),
+                    idx2: other.idx2.clone(),
+                    cost_combo: other.cost_combo.clone(),
+                    cost_diff: other.cost_diff.clone(),
+                }))
+                .as_pointer(),
             ) {
                 std::cmp::Ordering::Less
             } else if operator_lt_128(
-                Rc::new(RefCell::new(other.clone())).as_pointer(),
-                Rc::new(RefCell::new(self.clone())).as_pointer(),
+                Rc::new(RefCell::new(brunsli_HistogramPair {
+                    idx1: other.idx1.clone(),
+                    idx2: other.idx2.clone(),
+                    cost_combo: other.cost_combo.clone(),
+                    cost_diff: other.cost_diff.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(brunsli_HistogramPair {
+                    idx1: self.idx1.clone(),
+                    idx2: self.idx2.clone(),
+                    cost_combo: self.cost_combo.clone(),
+                    cost_diff: self.cost_diff.clone(),
+                }))
+                .as_pointer(),
             ) {
                 std::cmp::Ordering::Greater
             } else {
@@ -3734,11 +3758,35 @@ impl std::cmp::PartialEq for brunsli_HistogramPair {
     fn eq(&self, other: &Self) -> bool {
         {
             !(operator_lt_128(
-                Rc::new(RefCell::new(self.clone())).as_pointer(),
-                Rc::new(RefCell::new(other.clone())).as_pointer(),
+                Rc::new(RefCell::new(brunsli_HistogramPair {
+                    idx1: self.idx1.clone(),
+                    idx2: self.idx2.clone(),
+                    cost_combo: self.cost_combo.clone(),
+                    cost_diff: self.cost_diff.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(brunsli_HistogramPair {
+                    idx1: other.idx1.clone(),
+                    idx2: other.idx2.clone(),
+                    cost_combo: other.cost_combo.clone(),
+                    cost_diff: other.cost_diff.clone(),
+                }))
+                .as_pointer(),
             )) && !(operator_lt_128(
-                Rc::new(RefCell::new(other.clone())).as_pointer(),
-                Rc::new(RefCell::new(self.clone())).as_pointer(),
+                Rc::new(RefCell::new(brunsli_HistogramPair {
+                    idx1: other.idx1.clone(),
+                    idx2: other.idx2.clone(),
+                    cost_combo: other.cost_combo.clone(),
+                    cost_diff: other.cost_diff.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(brunsli_HistogramPair {
+                    idx1: self.idx1.clone(),
+                    idx2: self.idx2.clone(),
+                    cost_combo: self.cost_combo.clone(),
+                    cost_diff: self.cost_diff.clone(),
+                }))
+                .as_pointer(),
             ))
         }
     }
@@ -3965,7 +4013,7 @@ pub fn CompareAndPushToQueue_132(
     if (*store_pair.borrow()) {
         let __rhs = (*(*p.borrow()).cost_combo.borrow());
         (*(*p.borrow()).cost_diff.borrow_mut()) += __rhs;
-        if (!(*(*pairs.borrow()).upgrade().deref()).is_empty())
+        if (!((*(*pairs.borrow()).upgrade().deref()).is_empty()))
             && ({
                 let _p1: Ptr<brunsli_HistogramPair> =
                     ((*pairs.borrow()).to_strong().as_pointer() as Ptr<brunsli_HistogramPair>);
@@ -5410,7 +5458,7 @@ pub fn TransformApp0Marker_149(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
 }
 pub fn TransformApp2Marker_150(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
-    if ( ( ( (*s.upgrade().deref()) .len()  == 3161_usize ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 84_usize )  != 0 ) ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 3161 - 85 ) ) as usize ) )  != 0 ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
+    if ( ( ( (*s.upgrade().deref()) .len()  == 3161_usize ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 84_usize )  != 0 ) ) ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 3161 - 85 ) ) as usize ) )  != 0 ) ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
   ;
  ;
  (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 128_u8  ) ;
@@ -5422,7 +5470,7 @@ pub fn TransformApp2Marker_150(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
 }
 pub fn TransformApp12Marker_151(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
-    if ( ( ( (*s.upgrade().deref()) .len()  == 18_usize ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 15_usize )  != 0 ) ) ) && ( ! ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 18 - 16 ) ) as usize ) )  != 0 ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
+    if ( ( ( (*s.upgrade().deref()) .len()  == 18_usize ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 15_usize )  != 0 ) ) ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 18 - 16 ) ) as usize ) )  != 0 ) ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
   ;
  ;
  (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 129_u8  ) ;
@@ -5434,7 +5482,7 @@ pub fn TransformApp12Marker_151(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
 }
 pub fn TransformApp14Marker_152(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
-    if ( ( ( (*s.upgrade().deref()) .len()  == 15_usize ) ) && ( ! ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(0_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 10_usize )  != 0 ) ) ) && ( ! ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(11_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 11 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 15 - 11 ) ) as usize ) )  != 0 ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
+    if ( ( ( (*s.upgrade().deref()) .len()  == 15_usize ) ) && ( ! ( ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(0_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 10_usize )  != 0 ) ) ) ) && ( ! ( ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(11_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 11 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 15 - 11 ) ) as usize ) )  != 0 ) ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
   ;
  ;
  (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 130_u8  ) ;
@@ -7021,7 +7069,7 @@ pub fn EncodeMetaData_174(
             Append_73(_dst, _src)
         });
     }
-    if !(*(*jpg.upgrade().deref()).tail_data.borrow()).is_empty() {
+    if !((*(*jpg.upgrade().deref()).tail_data.borrow()).is_empty()) {
         let marker: Value<Box<[u8]>> = Rc::new(RefCell::new(Box::new([217_u8])));
         ({
             Append_72(

@@ -490,13 +490,53 @@ impl std::cmp::Ord for woff2_Table {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         {
             if woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(self.clone())).as_pointer(),
-                Rc::new(RefCell::new(other.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
             ) {
                 std::cmp::Ordering::Less
             } else if woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(other.clone())).as_pointer(),
-                Rc::new(RefCell::new(self.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
             ) {
                 std::cmp::Ordering::Greater
             } else {
@@ -514,11 +554,51 @@ impl std::cmp::PartialEq for woff2_Table {
     fn eq(&self, other: &Self) -> bool {
         {
             !(woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(self.clone())).as_pointer(),
-                Rc::new(RefCell::new(other.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
             )) && !(woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(other.clone())).as_pointer(),
-                Rc::new(RefCell::new(self.clone())).as_pointer(),
+                &Rc::new(RefCell::new(woff2_Table {
+                    tag: other.tag.clone(),
+                    flags: other.flags.clone(),
+                    src_offset: other.src_offset.clone(),
+                    src_length: other.src_length.clone(),
+                    transform_length: other.transform_length.clone(),
+                    dst_offset: other.dst_offset.clone(),
+                    dst_length: other.dst_length.clone(),
+                    dst_data: other.dst_data.clone(),
+                }))
+                .as_pointer(),
+                Rc::new(RefCell::new(woff2_Table {
+                    tag: self.tag.clone(),
+                    flags: self.flags.clone(),
+                    src_offset: self.src_offset.clone(),
+                    src_length: self.src_length.clone(),
+                    transform_length: self.transform_length.clone(),
+                    dst_offset: self.dst_offset.clone(),
+                    dst_length: self.dst_length.clone(),
+                    dst_data: self.dst_data.clone(),
+                }))
+                .as_pointer(),
             ))
         }
     }
