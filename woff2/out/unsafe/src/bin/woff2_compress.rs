@@ -6,15 +6,23 @@ use std::collections::BTreeMap;
 use std::io::{Read, Seek, Write};
 use std::os::fd::{AsFd, FromRawFd, IntoRawFd};
 use std::rc::Rc;
-pub static mut kGlyfTableTag_0: u32 = unsafe { 1735162214_u32 };
-pub static mut kHeadTableTag_1: u32 = unsafe { 1751474532_u32 };
-pub static mut kLocaTableTag_2: u32 = unsafe { 1819239265_u32 };
-pub static mut kDsigTableTag_3: u32 = unsafe { 1146308935_u32 };
-pub static mut kCffTableTag_4: u32 = unsafe { 1128678944_u32 };
-pub static mut kHmtxTableTag_5: u32 = unsafe { 1752003704_u32 };
-pub static mut kHheaTableTag_6: u32 = unsafe { 1751672161_u32 };
-pub static mut kMaxpTableTag_7: u32 = unsafe { 1835104368_u32 };
-pub static mut kKnownTags_8: [u32; 63] = unsafe {
+pub static mut kGlyfTableTag_0: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1735162214_u32 });
+pub static mut kHeadTableTag_1: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1751474532_u32 });
+pub static mut kLocaTableTag_2: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1819239265_u32 });
+pub static mut kDsigTableTag_3: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1146308935_u32 });
+pub static mut kCffTableTag_4: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1128678944_u32 });
+pub static mut kHmtxTableTag_5: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1752003704_u32 });
+pub static mut kHheaTableTag_6: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1751672161_u32 });
+pub static mut kMaxpTableTag_7: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1835104368_u32 });
+pub static mut kKnownTags_8: std::cell::LazyCell<[u32; 63]> = std::cell::LazyCell::new(|| unsafe {
     [
         ((((((('c' as libc::c_char) as i32) << (24)) | ((('m' as libc::c_char) as i32) << (16)))
             | ((('a' as libc::c_char) as i32) << (8)))
@@ -206,7 +214,7 @@ pub static mut kKnownTags_8: [u32; 63] = unsafe {
             | ((('l' as libc::c_char) as i32) << (8)))
             | (('l' as libc::c_char) as i32)) as u32),
     ]
-};
+});
 #[repr(C)]
 #[derive(Copy, Clone, Default)]
 pub struct woff2_Buffer {
@@ -413,34 +421,45 @@ pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *
     }
 }
 pub unsafe fn Read255UShort_12(mut buf: *mut woff2_Buffer, mut value: *mut u32) -> bool {
-    static mut kWordCode_13: i32 = unsafe { 253 };;
-    static mut kOneMoreByteCode2_14: i32 = unsafe { 254 };;
-    static mut kOneMoreByteCode1_15: i32 = unsafe { 255 };;
-    static mut kLowestUCode_16: i32 = unsafe { 253 };;
+    static mut kWordCode_13: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });;
+    static mut kOneMoreByteCode2_14: std::cell::LazyCell<i32> =
+        std::cell::LazyCell::new(|| unsafe { 254 });;
+    static mut kOneMoreByteCode1_15: std::cell::LazyCell<i32> =
+        std::cell::LazyCell::new(|| unsafe { 255 });;
+    static mut kLowestUCode_16: std::cell::LazyCell<i32> =
+        std::cell::LazyCell::new(|| unsafe { 253 });;
     let mut code: u8 = 0_u8;
     if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
         return false;
     }
-    if ((code as i32) == (kWordCode_13)) {
+    if ((code as i32) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kWordCode_13))) {
         let mut result: u16 = 0_u16;
         if !(unsafe { woff2_Buffer::ReadU16(&mut (*buf), (&mut result as *mut u16)) }) {
             return false;
         }
         (*value) = (result as u32);
         return true;
-    } else if ((code as i32) == (kOneMoreByteCode1_15)) {
+    } else if ((code as i32)
+        == (*std::cell::LazyCell::force_mut(&mut *&raw mut kOneMoreByteCode1_15)))
+    {
         let mut result: u8 = 0_u8;
         if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut result as *mut u8)) }) {
             return false;
         }
-        (*value) = (((result as i32) + (kLowestUCode_16)) as u32);
+        (*value) = (((result as i32)
+            + (*std::cell::LazyCell::force_mut(&mut *&raw mut kLowestUCode_16)))
+            as u32);
         return true;
-    } else if ((code as i32) == (kOneMoreByteCode2_14)) {
+    } else if ((code as i32)
+        == (*std::cell::LazyCell::force_mut(&mut *&raw mut kOneMoreByteCode2_14)))
+    {
         let mut result: u8 = 0_u8;
         if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut result as *mut u8)) }) {
             return false;
         }
-        (*value) = (((result as i32) + ((kLowestUCode_16) * (2))) as u32);
+        (*value) = (((result as i32)
+            + ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLowestUCode_16)) * (2)))
+            as u32);
         return true;
     } else {
         (*value) = (code as u32);
@@ -493,11 +512,16 @@ pub unsafe fn StoreBase128_19(mut len: usize, mut offset: *mut usize, mut dst: *
         i.prefix_inc();
     }
 }
-pub static mut kWoff2Signature_20: u32 = unsafe { 2001684018_u32 };
-pub static mut kWoff2FlagsTransform_21: u32 = unsafe { (((1) << (8)) as u32) };
-pub static mut kTtcFontFlavor_22: u32 = unsafe { 1953784678_u32 };
-pub static mut kSfntHeaderSize_23: usize = unsafe { 12_usize };
-pub static mut kSfntEntrySize_24: usize = unsafe { 16_usize };
+pub static mut kWoff2Signature_20: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 2001684018_u32 });
+pub static mut kWoff2FlagsTransform_21: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { (((1) << (8)) as u32) });
+pub static mut kTtcFontFlavor_22: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1953784678_u32 });
+pub static mut kSfntHeaderSize_23: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 12_usize });
+pub static mut kSfntEntrySize_24: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 16_usize });
 #[repr(C)]
 #[derive(Copy, Clone, Default)]
 pub struct woff2_Point {
@@ -709,7 +733,8 @@ impl woff2_Font {
         }
         let mut glyf_loc: *mut u32 = {
             let mut it = output_order.as_mut_ptr();
-            while it != output_order.as_mut_ptr().add(output_order.len()) && *it != kGlyfTableTag_0
+            while it != output_order.as_mut_ptr().add(output_order.len())
+                && *it != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
             {
                 it = it.add(1);
             }
@@ -717,7 +742,8 @@ impl woff2_Font {
         };
         let mut loca_loc: *mut u32 = {
             let mut it = output_order.as_mut_ptr();
-            while it != output_order.as_mut_ptr().add(output_order.len()) && *it != kLocaTableTag_2
+            while it != output_order.as_mut_ptr().add(output_order.len())
+                && *it != (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2))
             {
                 it = it.add(1);
             }
@@ -735,7 +761,7 @@ impl woff2_Font {
                 let pos = {
                     let mut it = output_order.as_mut_ptr();
                     while it != output_order.as_mut_ptr().add(output_order.len())
-                        && *it != kGlyfTableTag_0
+                        && *it != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
                     {
                         it = it.add(1);
                     }
@@ -743,7 +769,10 @@ impl woff2_Font {
                 }
                 .add(1_i64 as usize)
                 .offset_from(output_order.as_ptr()) as usize;
-                output_order.insert(pos, kLocaTableTag_2);
+                output_order.insert(
+                    pos,
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)),
+                );
             };
         }
         return std::mem::take(&mut output_order);
@@ -804,8 +833,13 @@ pub unsafe fn ReadTrueTypeFont_33(
         }
         last_offset = (*i.first()).wrapping_add(*i.second());
     }
-    let mut head_table: *const woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) }).cast_const();
+    let mut head_table: *const woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1)),
+        )
+    })
+    .cast_const();
     if (!((head_table).is_null())) && (((*head_table).length) < (52_u32)) {
         return false;
     }
@@ -907,7 +941,7 @@ pub unsafe fn ReadFont_36(mut data: *const u8, mut len: usize, mut font: *mut wo
     if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut (*font).flavor as *mut u32)) }) {
         return false;
     }
-    if (((*font).flavor) == (kTtcFontFlavor_22)) {
+    if (((*font).flavor) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22))) {
         return false;
     }
     return (unsafe { ReadTrueTypeFont_33((&mut file as *mut woff2_Buffer), data, len, font) });
@@ -922,7 +956,9 @@ pub unsafe fn ReadFontCollection_37(
     {
         return false;
     }
-    if (((*font_collection).flavor) != (kTtcFontFlavor_22)) {
+    if (((*font_collection).flavor)
+        != (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
+    {
         {
             let __a0 = 1_usize as usize;
             (*font_collection)
@@ -995,7 +1031,10 @@ pub unsafe fn WriteTableRecord_42(
     mut dst: *mut u8,
     mut dst_size: usize,
 ) -> bool {
-    if ((dst_size) < ((*offset).wrapping_add(kSfntEntrySize_24))) {
+    if ((dst_size)
+        < ((*offset)
+            .wrapping_add((*std::cell::LazyCell::force_mut(&mut *&raw mut kSfntEntrySize_24)))))
+    {
         return false;
     }
     if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
@@ -1108,7 +1147,9 @@ pub unsafe fn WriteFontCollection_44(
     mut dst_size: usize,
 ) -> bool {
     let mut offset: usize = 0_usize;
-    if (((*font_collection).flavor) != (kTtcFontFlavor_22)) {
+    if (((*font_collection).flavor)
+        != (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
+    {
         return (unsafe {
             WriteFont_41(
                 &(&(*font_collection)).fonts[(0_usize)],
@@ -1118,7 +1159,13 @@ pub unsafe fn WriteFontCollection_44(
             )
         });
     }
-    (unsafe { StoreU32_30(kTtcFontFlavor_22, (&mut offset as *mut usize), dst) });
+    (unsafe {
+        StoreU32_30(
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)),
+            (&mut offset as *mut usize),
+            dst,
+        )
+    });
     (unsafe {
         StoreU32_30(
             (*font_collection).header_version,
@@ -1163,11 +1210,11 @@ pub unsafe fn WriteFontCollection_44(
 }
 pub unsafe fn NumGlyphs_45(font: *const woff2_Font) -> i32 {
     let mut head_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kHeadTableTag_1;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut loca_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kLocaTableTag_2;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if (((head_table).is_null()) || ((loca_table).is_null())) || (((*head_table).length) < (52_u32))
@@ -1184,7 +1231,7 @@ pub unsafe fn NumGlyphs_45(font: *const woff2_Font) -> i32 {
 }
 pub unsafe fn IndexFormat_46(font: *const woff2_Font) -> i32 {
     let mut head_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kHeadTableTag_1;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if (head_table).is_null() {
@@ -1207,15 +1254,15 @@ pub unsafe fn GetGlyphData_47(
         return false;
     }
     let mut head_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kHeadTableTag_1;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut loca_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kLocaTableTag_2;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut glyf_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kGlyfTableTag_0;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if ((((head_table).is_null()) || ((loca_table).is_null())) || ((glyf_table).is_null()))
@@ -1258,7 +1305,7 @@ pub unsafe fn GetGlyphData_47(
 pub unsafe fn RemoveDigitalSignature_48(mut font: *mut woff2_Font) -> bool {
     let mut it: UnsafeMapIterator<u32, woff2_Font_Table> = UnsafeMapIterator::find_key(
         &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
-        &kDsigTableTag_3,
+        &(*std::cell::LazyCell::force_mut(&mut *&raw mut kDsigTableTag_3)),
     );
     if it != UnsafeMapIterator::end(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
@@ -1315,19 +1362,32 @@ impl Default for woff2_Glyph {
         unsafe { woff2_Glyph::woff2_Glyph() }
     }
 }
-pub static mut kFLAG_ONCURVE_49: i32 = unsafe { 1 };
-pub static mut kFLAG_XSHORT_50: i32 = unsafe { ((1) << (1)) };
-pub static mut kFLAG_YSHORT_51: i32 = unsafe { ((1) << (2)) };
-pub static mut kFLAG_REPEAT_52: i32 = unsafe { ((1) << (3)) };
-pub static mut kFLAG_XREPEATSIGN_53: i32 = unsafe { ((1) << (4)) };
-pub static mut kFLAG_YREPEATSIGN_54: i32 = unsafe { ((1) << (5)) };
-pub static mut kFLAG_OVERLAP_SIMPLE_55: i32 = unsafe { ((1) << (6)) };
-pub static mut kFLAG_ARG_1_AND_2_ARE_WORDS_56: i32 = unsafe { ((1) << (0)) };
-pub static mut kFLAG_WE_HAVE_A_SCALE_57: i32 = unsafe { ((1) << (3)) };
-pub static mut kFLAG_MORE_COMPONENTS_58: i32 = unsafe { ((1) << (5)) };
-pub static mut kFLAG_WE_HAVE_AN_X_AND_Y_SCALE_59: i32 = unsafe { ((1) << (6)) };
-pub static mut kFLAG_WE_HAVE_A_TWO_BY_TWO_60: i32 = unsafe { ((1) << (7)) };
-pub static mut kFLAG_WE_HAVE_INSTRUCTIONS_61: i32 = unsafe { ((1) << (8)) };
+pub static mut kFLAG_ONCURVE_49: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 1 });
+pub static mut kFLAG_XSHORT_50: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (1)) });
+pub static mut kFLAG_YSHORT_51: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (2)) });
+pub static mut kFLAG_REPEAT_52: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (3)) });
+pub static mut kFLAG_XREPEATSIGN_53: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (4)) });
+pub static mut kFLAG_YREPEATSIGN_54: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (5)) });
+pub static mut kFLAG_OVERLAP_SIMPLE_55: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (6)) });
+pub static mut kFLAG_ARG_1_AND_2_ARE_WORDS_56: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (0)) });
+pub static mut kFLAG_WE_HAVE_A_SCALE_57: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (3)) });
+pub static mut kFLAG_MORE_COMPONENTS_58: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (5)) });
+pub static mut kFLAG_WE_HAVE_AN_X_AND_Y_SCALE_59: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (6)) });
+pub static mut kFLAG_WE_HAVE_A_TWO_BY_TWO_60: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (7)) });
+pub static mut kFLAG_WE_HAVE_INSTRUCTIONS_61: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (8)) });
 pub unsafe fn ReadCompositeGlyphData_62(
     mut buffer: *mut woff2_Buffer,
     mut glyph: *mut woff2_Glyph,
@@ -1336,25 +1396,43 @@ pub unsafe fn ReadCompositeGlyphData_62(
     (*glyph).composite_data = (unsafe { woff2_Buffer::buffer(&(*(buffer).cast_const())) })
         .offset((unsafe { woff2_Buffer::offset(&(*(buffer).cast_const())) }) as isize);
     let mut start_offset: usize = (unsafe { woff2_Buffer::offset(&(*(buffer).cast_const())) });
-    let mut flags: u16 = (kFLAG_MORE_COMPONENTS_58 as u16);
-    'loop_: while (((flags as i32) & (kFLAG_MORE_COMPONENTS_58)) != 0) {
+    let mut flags: u16 =
+        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_MORE_COMPONENTS_58)) as u16);
+    'loop_: while (((flags as i32)
+        & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_MORE_COMPONENTS_58)))
+        != 0)
+    {
         if !(unsafe { woff2_Buffer::ReadU16(&mut (*buffer), (&mut flags as *mut u16)) }) {
             return false;
         }
         (*glyph).have_instructions = (((*glyph).have_instructions as i32)
-            | ((((flags as i32) & (kFLAG_WE_HAVE_INSTRUCTIONS_61)) != (0)) as i32))
+            | ((((flags as i32)
+                & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_WE_HAVE_INSTRUCTIONS_61)))
+                != (0)) as i32))
             != 0;
         let mut arg_size: usize = 2_usize;
-        if (((flags as i32) & (kFLAG_ARG_1_AND_2_ARE_WORDS_56)) != 0) {
+        if (((flags as i32)
+            & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_ARG_1_AND_2_ARE_WORDS_56)))
+            != 0)
+        {
             arg_size = (arg_size).wrapping_add(4_usize);
         } else {
             arg_size = (arg_size).wrapping_add(2_usize);
         }
-        if (((flags as i32) & (kFLAG_WE_HAVE_A_SCALE_57)) != 0) {
+        if (((flags as i32)
+            & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_WE_HAVE_A_SCALE_57)))
+            != 0)
+        {
             arg_size = (arg_size).wrapping_add(2_usize);
-        } else if (((flags as i32) & (kFLAG_WE_HAVE_AN_X_AND_Y_SCALE_59)) != 0) {
+        } else if (((flags as i32)
+            & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_WE_HAVE_AN_X_AND_Y_SCALE_59)))
+            != 0)
+        {
             arg_size = (arg_size).wrapping_add(4_usize);
-        } else if (((flags as i32) & (kFLAG_WE_HAVE_A_TWO_BY_TWO_60)) != 0) {
+        } else if (((flags as i32)
+            & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_WE_HAVE_A_TWO_BY_TWO_60)))
+            != 0)
+        {
             arg_size = (arg_size).wrapping_add(8_usize);
         }
         if !(unsafe { woff2_Buffer::Skip(&mut (*buffer), arg_size) }) {
@@ -1442,7 +1520,10 @@ pub unsafe fn ReadGlyph_63(
                         if !(unsafe { woff2_Buffer::ReadU8(&mut buffer, (&mut flag as *mut u8)) }) {
                             return false;
                         }
-                        if (((flag as i32) & (kFLAG_REPEAT_52)) != 0) {
+                        if (((flag as i32)
+                            & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_REPEAT_52)))
+                            != 0)
+                        {
                             if !(unsafe {
                                 woff2_Buffer::ReadU8(&mut buffer, (&mut flag_repeat as *mut u8))
                             }) {
@@ -1453,16 +1534,18 @@ pub unsafe fn ReadGlyph_63(
                         flag_repeat.postfix_dec();
                     }
                     flags[(i as usize)][(j)] = flag;
-                    (&mut (*glyph)).contours[(i as usize)][(j)].on_curve =
-                        (((flag as i32) & (kFLAG_ONCURVE_49)) != 0);
+                    (&mut (*glyph)).contours[(i as usize)][(j)].on_curve = (((flag as i32)
+                        & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_ONCURVE_49)))
+                        != 0);
                     j.prefix_inc();
                 }
                 i.prefix_inc();
             }
         }
         if (!(flags.is_empty())) && (!(flags[(0_usize)].is_empty())) {
-            (*glyph).overlap_simple_flag_set =
-                (((flags[(0_usize)][(0_usize)] as i32) & (kFLAG_OVERLAP_SIMPLE_55)) != 0);
+            (*glyph).overlap_simple_flag_set = (((flags[(0_usize)][(0_usize)] as i32)
+                & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_OVERLAP_SIMPLE_55)))
+                != 0);
         }
         let mut prev_x: i32 = 0;
         let mut i: i32 = 0;
@@ -1470,12 +1553,18 @@ pub unsafe fn ReadGlyph_63(
             let mut j: usize = 0_usize;
             'loop_: while ((j) < ((&mut (*glyph)).contours[(i as usize)].len())) {
                 let mut flag: u8 = flags[(i as usize)][(j)];
-                if (((flag as i32) & (kFLAG_XSHORT_50)) != 0) {
+                if (((flag as i32)
+                    & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_XSHORT_50)))
+                    != 0)
+                {
                     let mut x_delta: u8 = 0_u8;
                     if !(unsafe { woff2_Buffer::ReadU8(&mut buffer, (&mut x_delta as *mut u8)) }) {
                         return false;
                     }
-                    let mut sign: i32 = if (((flag as i32) & (kFLAG_XREPEATSIGN_53)) != 0) {
+                    let mut sign: i32 = if (((flag as i32)
+                        & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_XREPEATSIGN_53)))
+                        != 0)
+                    {
                         1
                     } else {
                         -1_i32
@@ -1484,7 +1573,10 @@ pub unsafe fn ReadGlyph_63(
                         ((prev_x) + ((sign) * (x_delta as i32)));
                 } else {
                     let mut x_delta: i16 = 0_i16;
-                    if !(((flag as i32) & (kFLAG_XREPEATSIGN_53)) != 0) {
+                    if !(((flag as i32)
+                        & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_XREPEATSIGN_53)))
+                        != 0)
+                    {
                         if !(unsafe {
                             woff2_Buffer::ReadS16(&mut buffer, (&mut x_delta as *mut i16))
                         }) {
@@ -1504,12 +1596,18 @@ pub unsafe fn ReadGlyph_63(
             let mut j: usize = 0_usize;
             'loop_: while ((j) < ((&mut (*glyph)).contours[(i as usize)].len())) {
                 let mut flag: u8 = flags[(i as usize)][(j)];
-                if (((flag as i32) & (kFLAG_YSHORT_51)) != 0) {
+                if (((flag as i32)
+                    & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_YSHORT_51)))
+                    != 0)
+                {
                     let mut y_delta: u8 = 0_u8;
                     if !(unsafe { woff2_Buffer::ReadU8(&mut buffer, (&mut y_delta as *mut u8)) }) {
                         return false;
                     }
-                    let mut sign: i32 = if (((flag as i32) & (kFLAG_YREPEATSIGN_54)) != 0) {
+                    let mut sign: i32 = if (((flag as i32)
+                        & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_YREPEATSIGN_54)))
+                        != 0)
+                    {
                         1
                     } else {
                         -1_i32
@@ -1518,7 +1616,10 @@ pub unsafe fn ReadGlyph_63(
                         ((prev_y) + ((sign) * (y_delta as i32)));
                 } else {
                     let mut y_delta: i16 = 0_i16;
-                    if !(((flag as i32) & (kFLAG_YREPEATSIGN_54)) != 0) {
+                    if !(((flag as i32)
+                        & (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_YREPEATSIGN_54)))
+                        != 0)
+                    {
                         if !(unsafe {
                             woff2_Buffer::ReadS16(&mut buffer, (&mut y_delta as *mut i16))
                         }) {
@@ -1608,21 +1709,22 @@ pub unsafe fn StorePoints_67(
         'loop_: for point in 0..((*contour).len()) {
             let mut point = (*contour).as_ptr().add(point);
             let mut flag: i32 = if (*point).on_curve {
-                kFLAG_ONCURVE_49
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_ONCURVE_49))
             } else {
                 0
             };
             if ((previous_flag) == (-1_i32)) && ((*glyph).overlap_simple_flag_set) {
-                flag = ((flag) | (kFLAG_OVERLAP_SIMPLE_55));
+                flag = ((flag)
+                    | (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_OVERLAP_SIMPLE_55)));
             }
             let mut dx: i32 = (((*point).x) - (last_x));
             let mut dy: i32 = (((*point).y) - (last_y));
             if ((dx) == (0)) {
-                flag |= kFLAG_XREPEATSIGN_53;
+                flag |= (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_XREPEATSIGN_53));
             } else if ((dx) > (-256_i32)) && ((dx) < (256)) {
-                flag |= ((kFLAG_XSHORT_50)
+                flag |= ((*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_XSHORT_50))
                     | (if ((dx) > (0)) {
-                        kFLAG_XREPEATSIGN_53
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_XREPEATSIGN_53))
                     } else {
                         0
                     }));
@@ -1631,11 +1733,11 @@ pub unsafe fn StorePoints_67(
                 x_bytes = (x_bytes).wrapping_add(2_usize);
             }
             if ((dy) == (0)) {
-                flag |= kFLAG_YREPEATSIGN_54;
+                flag |= (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_YREPEATSIGN_54));
             } else if ((dy) > (-256_i32)) && ((dy) < (256)) {
-                flag |= ((kFLAG_YSHORT_51)
+                flag |= ((*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_YSHORT_51))
                     | (if ((dy) > (0)) {
-                        kFLAG_YREPEATSIGN_54
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_YREPEATSIGN_54))
                     } else {
                         0
                     }));
@@ -1646,7 +1748,8 @@ pub unsafe fn StorePoints_67(
             if ((flag) == (previous_flag)) && ((repeat_count) != (255)) {
                 (*dst.offset(((*offset).wrapping_sub(1_usize)) as isize)) =
                     (((*dst.offset(((*offset).wrapping_sub(1_usize)) as isize)) as i32)
-                        | kFLAG_REPEAT_52) as u8;
+                        | (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_REPEAT_52)))
+                        as u8;
                 repeat_count.postfix_inc();
             } else {
                 if ((repeat_count) != (0)) {
@@ -1829,10 +1932,18 @@ pub unsafe fn WriteNormalizedLoca_73(
     mut num_glyphs: i32,
     mut font: *mut woff2_Font,
 ) -> bool {
-    let mut glyf_table: *mut woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kGlyfTableTag_0) });
-    let mut loca_table: *mut woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kLocaTableTag_2) });
+    let mut glyf_table: *mut woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)),
+        )
+    });
+    let mut loca_table: *mut woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)),
+        )
+    });
     let mut glyph_sz: i32 = if ((index_fmt) == (0)) { 2 } else { 4 };
     {
         let __a0 = (((unsafe { Round4_69(((num_glyphs) + (1))) }) * (glyph_sz)) as usize) as usize;
@@ -1962,12 +2073,24 @@ pub unsafe fn MakeEditableBuffer_74(mut font: *mut woff2_Font, mut tableTag: i32
     return true;
 }
 pub unsafe fn NormalizeGlyphs_75(mut font: *mut woff2_Font) -> bool {
-    let mut head_table: *mut woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) });
-    let mut glyf_table: *mut woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kGlyfTableTag_0) });
-    let mut loca_table: *mut woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kLocaTableTag_2) });
+    let mut head_table: *mut woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1)),
+        )
+    });
+    let mut glyf_table: *mut woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)),
+        )
+    });
+    let mut loca_table: *mut woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)),
+        )
+    });
     if (head_table).is_null() {
         return false;
     }
@@ -2051,8 +2174,12 @@ pub unsafe fn ComputeHeaderChecksum_77(font: *const woff2_Font) -> u32 {
     return checksum;
 }
 pub unsafe fn FixChecksums_78(mut font: *mut woff2_Font) -> bool {
-    let mut head_table: *mut woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) });
+    let mut head_table: *mut woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1)),
+        )
+    });
     if (head_table).is_null() {
         return false;
     }
@@ -2080,7 +2207,7 @@ pub unsafe fn FixChecksums_78(mut font: *mut woff2_Font) -> bool {
             ComputeULongSum_26(_buf, _size)
         });
         file_checksum = (file_checksum).wrapping_add((*table).checksum);
-        if (((*table).tag) == (kHeadTableTag_1)) {
+        if (((*table).tag) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1))) {
             head_checksum = (*table).checksum;
         }
     }
@@ -2096,8 +2223,12 @@ pub unsafe fn FixChecksums_78(mut font: *mut woff2_Font) -> bool {
     return true;
 }
 pub unsafe fn MarkTransformed_79(mut font: *mut woff2_Font) -> bool {
-    let mut head_table: *mut woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) });
+    let mut head_table: *mut woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1)),
+        )
+    });
     if (head_table).is_null() {
         return false;
     }
@@ -2112,8 +2243,12 @@ pub unsafe fn MarkTransformed_79(mut font: *mut woff2_Font) -> bool {
     return true;
 }
 pub unsafe fn NormalizeWithoutFixingChecksums_80(mut font: *mut woff2_Font) -> bool {
-    return (((((unsafe { MakeEditableBuffer_74(font, (kHeadTableTag_1 as i32)) })
-        && (unsafe { RemoveDigitalSignature_48(font) }))
+    return (((((unsafe {
+        MakeEditableBuffer_74(
+            font,
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1)) as i32),
+        )
+    }) && (unsafe { RemoveDigitalSignature_48(font) }))
         && (unsafe { MarkTransformed_79(font) }))
         && (unsafe { NormalizeGlyphs_75(font) }))
         && (unsafe { NormalizeOffsets_76(font) }));
@@ -2140,8 +2275,10 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
             return false;
         }
         offset = ((offset as usize).wrapping_add(
-            (kSfntHeaderSize_23)
-                .wrapping_add((kSfntEntrySize_24).wrapping_mul(((*font).num_tables as usize))),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kSfntHeaderSize_23)).wrapping_add(
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kSfntEntrySize_24))
+                    .wrapping_mul(((*font).num_tables as usize)),
+            ),
         )) as u32;
     }
     'loop_: for font in 0..((*font_collection).fonts.len()) {
@@ -2167,9 +2304,12 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
     }
     return true;
 }
-pub static mut FLAG_ARG_1_AND_2_ARE_WORDS_83: i32 = unsafe { ((1) << (0)) };
-pub static mut FLAG_WE_HAVE_INSTRUCTIONS_84: i32 = unsafe { ((1) << (8)) };
-pub static mut FLAG_OVERLAP_SIMPLE_BITMAP_85: i32 = unsafe { ((1) << (0)) };
+pub static mut FLAG_ARG_1_AND_2_ARE_WORDS_83: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (0)) });
+pub static mut FLAG_WE_HAVE_INSTRUCTIONS_84: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (8)) });
+pub static mut FLAG_OVERLAP_SIMPLE_BITMAP_85: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((1) << (0)) });
 pub unsafe fn WriteBytes_86(mut out: *mut Vec<u8>, mut data: *const u8, mut len: usize) {
     if ((len) == (0_usize)) {
         return;
@@ -2270,7 +2410,7 @@ impl woff2_GlyfEncoder {
                 if self.overlap_bitmap_.is_empty() {
                     0
                 } else {
-                    FLAG_OVERLAP_SIMPLE_BITMAP_85
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut FLAG_OVERLAP_SIMPLE_BITMAP_85))
                 },
             )
         });
@@ -2548,10 +2688,20 @@ impl woff2_GlyfEncoder {
     }
 }
 pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
-    let mut glyf_table: *const woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kGlyfTableTag_0) }).cast_const();
-    let mut loca_table: *const woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kLocaTableTag_2) }).cast_const();
+    let mut glyf_table: *const woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)),
+        )
+    })
+    .cast_const();
+    let mut loca_table: *const woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)),
+        )
+    })
+    .cast_const();
     if ((loca_table).is_null()) && ((glyf_table).is_null()) {
         return true;
     }
@@ -2568,12 +2718,16 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
     }
     let mut transformed_glyf: *mut woff2_Font_Table = (&mut (*(*font)
         .tables
-        .entry(((kGlyfTableTag_0) ^ (2155905152_u32)))
+        .entry(
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)) ^ (2155905152_u32)),
+        )
         .or_default()
         .as_mut()) as *mut woff2_Font_Table);
     let mut transformed_loca: *mut woff2_Font_Table = (&mut (*(*font)
         .tables
-        .entry(((kLocaTableTag_2) ^ (2155905152_u32)))
+        .entry(
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)) ^ (2155905152_u32)),
+        )
         .or_default()
         .as_mut()) as *mut woff2_Font_Table);
     let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font)) });
@@ -2605,27 +2759,49 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
             (&mut (*transformed_glyf).buffer as *mut Vec<u8>),
         )
     });
-    let mut head_table: *const woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) }).cast_const();
+    let mut head_table: *const woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1)),
+        )
+    })
+    .cast_const();
     if ((head_table).is_null()) || (((*head_table).length) < (52_u32)) {
         return false;
     }
     (&mut (*transformed_glyf)).buffer[(7_usize)] = (*(*head_table).data.offset((51) as isize));
-    (*transformed_glyf).tag = ((kGlyfTableTag_0) ^ (2155905152_u32));
+    (*transformed_glyf).tag =
+        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)) ^ (2155905152_u32));
     (*transformed_glyf).length = ((*transformed_glyf).buffer.len() as u32);
     (*transformed_glyf).data = ((*transformed_glyf).buffer.as_mut_ptr()).cast_const();
-    (*transformed_loca).tag = ((kLocaTableTag_2) ^ (2155905152_u32));
+    (*transformed_loca).tag =
+        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)) ^ (2155905152_u32));
     (*transformed_loca).length = 0_u32;
     (*transformed_loca).data = std::ptr::null();
     return true;
 }
 pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
-    let mut glyf_table: *const woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kGlyfTableTag_0) }).cast_const();
-    let mut hmtx_table: *const woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHmtxTableTag_5) }).cast_const();
-    let mut hhea_table: *const woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHheaTableTag_6) }).cast_const();
+    let mut glyf_table: *const woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)),
+        )
+    })
+    .cast_const();
+    let mut hmtx_table: *const woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kHmtxTableTag_5)),
+        )
+    })
+    .cast_const();
+    let mut hhea_table: *const woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kHheaTableTag_6)),
+        )
+    })
+    .cast_const();
     if ((hmtx_table).is_null()) || ((glyf_table).is_null()) {
         return true;
     }
@@ -2709,7 +2885,9 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     }
     let mut transformed_hmtx: *mut woff2_Font_Table = (&mut (*(*font)
         .tables
-        .entry(((kHmtxTableTag_5) ^ (2155905152_u32)))
+        .entry(
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kHmtxTableTag_5)) ^ (2155905152_u32)),
+        )
         .or_default()
         .as_mut()) as *mut woff2_Font_Table);
     let mut flags: u8 = 0_u8;
@@ -2753,7 +2931,8 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
             (unsafe { WriteUShort_88(out, (lsb as i32)) });
         }
     }
-    (*transformed_hmtx).tag = ((kHmtxTableTag_5) ^ (2155905152_u32));
+    (*transformed_hmtx).tag =
+        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kHmtxTableTag_5)) ^ (2155905152_u32));
     (*transformed_hmtx).flag_byte = (((1) << (6)) as u8);
     (*transformed_hmtx).length = ((*transformed_hmtx).buffer.len() as u32);
     (*transformed_hmtx).data = ((*transformed_hmtx).buffer.as_mut_ptr()).cast_const();
@@ -2785,8 +2964,10 @@ impl Default for woff2_WOFF2Params {
         unsafe { woff2_WOFF2Params::woff2_WOFF2Params() }
     }
 }
-pub static mut kWoff2HeaderSize_92: usize = unsafe { 48_usize };
-pub static mut kWoff2EntrySize_93: usize = unsafe { 20_usize };
+pub static mut kWoff2HeaderSize_92: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 48_usize });
+pub static mut kWoff2EntrySize_93: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 20_usize });
 pub unsafe fn Compress_94(
     mut data: *const u8,
     len: usize,
@@ -2850,7 +3031,8 @@ pub unsafe fn TextCompress_96(
 pub unsafe fn KnownTableIndex_97(mut tag: u32) -> i32 {
     let mut i: i32 = 0;
     'loop_: while ((i) < (63)) {
-        if ((tag) == (kKnownTags_8[(i) as usize])) {
+        if ((tag) == ((*std::cell::LazyCell::force_mut(&mut *&raw mut kKnownTags_8))[(i) as usize]))
+        {
             return i;
         }
         i.prefix_inc();
@@ -2874,7 +3056,10 @@ pub unsafe fn StoreTableEntry_98(
         let _offset: *mut usize = offset;
         StoreBase128_19(_len, _offset, dst)
     });
-    if ((((*table).flags) & (kWoff2FlagsTransform_21)) != (0_u32)) {
+    if ((((*table).flags)
+        & (*std::cell::LazyCell::force_mut(&mut *&raw mut kWoff2FlagsTransform_21)))
+        != (0_u32))
+    {
         (unsafe {
             let _len: usize = ((*table).transform_length as usize);
             let _offset: *mut usize = offset;
@@ -2890,7 +3075,10 @@ pub unsafe fn TableEntrySize_99(table: *const woff2_Table) -> usize {
         5
     } as usize);
     size = (size).wrapping_add((unsafe { Base128Size_18(((*table).src_length as usize)) }));
-    if ((((*table).flags) & (kWoff2FlagsTransform_21)) != (0_u32)) {
+    if ((((*table).flags)
+        & (*std::cell::LazyCell::force_mut(&mut *&raw mut kWoff2FlagsTransform_21)))
+        != (0_u32))
+    {
         size =
             (size).wrapping_add((unsafe { Base128Size_18(((*table).transform_length as usize)) }));
     }
@@ -2903,12 +3091,14 @@ pub unsafe fn ComputeWoff2Length_100(
     mut compressed_data_length: usize,
     mut extended_metadata_length: usize,
 ) -> usize {
-    let mut size: usize = kWoff2HeaderSize_92;
+    let mut size: usize = (*std::cell::LazyCell::force_mut(&mut *&raw mut kWoff2HeaderSize_92));
     'loop_: for table in 0..((*tables).len()) {
         let mut table = (*tables).as_ptr().add(table);
         size = (size).wrapping_add((unsafe { TableEntrySize_99(table) }));
     }
-    if (((*font_collection).flavor) == (kTtcFontFlavor_22)) {
+    if (((*font_collection).flavor)
+        == (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
+    {
         size = (size).wrapping_add(4_usize);
         size = (size)
             .wrapping_add((unsafe { Size255UShort_9(((*font_collection).fonts.len() as u16)) }));
@@ -2956,7 +3146,9 @@ pub unsafe fn ComputeUncompressedLength_101(font: *const woff2_Font) -> usize {
     return size;
 }
 pub unsafe fn ComputeUncompressedLength_102(font_collection: *const woff2_FontCollection) -> usize {
-    if (((*font_collection).flavor) != (kTtcFontFlavor_22)) {
+    if (((*font_collection).flavor)
+        != (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
+    {
         return (unsafe { ComputeUncompressedLength_101(&(&(*font_collection)).fonts[(0_usize)]) });
     }
     let mut size: usize = (unsafe {
@@ -3067,11 +3259,11 @@ pub unsafe fn ConvertTTFToWOFF2_109(
         'loop_: for font in 0..(font_collection.fonts.len()) {
             let mut font = font_collection.fonts.as_mut_ptr().add(font);
             let mut glyf_table: *mut woff2_Font_Table = (unsafe {
-                let _tag: u32 = kGlyfTableTag_0;
+                let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
                 woff2_Font::FindTable_u32(&mut (*font), _tag)
             });
             let mut loca_table: *mut woff2_Font_Table = (unsafe {
-                let _tag: u32 = kLocaTableTag_2;
+                let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2));
                 woff2_Font::FindTable_u32(&mut (*font), _tag)
             });
             if !(glyf_table).is_null() {
@@ -3210,7 +3402,8 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             });
             if !((transformed_table).is_null()) {
                 table.flags = ((*transformed_table).flag_byte as u32);
-                table.flags |= kWoff2FlagsTransform_21;
+                table.flags |=
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kWoff2FlagsTransform_21));
                 table.transform_length = (*transformed_table).length;
                 transformed_data = (*transformed_table).data;
             }
@@ -3239,8 +3432,16 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     }
     (*result_length) = woff2_length;
     let mut offset: usize = 0_usize;
-    (unsafe { StoreU32_30(kWoff2Signature_20, (&mut offset as *mut usize), result) });
-    if ((font_collection.flavor) != (kTtcFontFlavor_22)) {
+    (unsafe {
+        StoreU32_30(
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kWoff2Signature_20)),
+            (&mut offset as *mut usize),
+            result,
+        )
+    });
+    if ((font_collection.flavor)
+        != (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
+    {
         (unsafe {
             StoreU32_30(
                 font_collection.fonts[(0_usize)].flavor,
@@ -3249,7 +3450,13 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             )
         });
     } else {
-        (unsafe { StoreU32_30(kTtcFontFlavor_22, (&mut offset as *mut usize), result) });
+        (unsafe {
+            StoreU32_30(
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)),
+                (&mut offset as *mut usize),
+                result,
+            )
+        });
     }
     (unsafe { StoreU32_30((woff2_length as u32), (&mut offset as *mut usize), result) });
     (unsafe { Store16_31((tables.len() as i32), (&mut offset as *mut usize), result) });
@@ -3302,7 +3509,9 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             StoreTableEntry_98(_table, _offset, _dst)
         });
     }
-    if ((font_collection.flavor) == (kTtcFontFlavor_22)) {
+    if ((font_collection.flavor)
+        == (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
+    {
         (unsafe {
             StoreU32_30(
                 font_collection.header_version,
@@ -3446,7 +3655,10 @@ pub fn main() {
         .map(|arg| arg.as_ptr() as *mut libc::c_char)
         .collect();
     argv.push(::std::ptr::null_mut());
-    unsafe { ::std::process::exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32) }
+    unsafe {
+        __cpp2rust_init_globals();
+        ::std::process::exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32)
+    }
 }
 unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     if ((argc) != (2)) {
@@ -3527,4 +3739,38 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         SetFileContents_111(outfilename.clone(), _start, _end)
     });
     return 0;
+}
+pub unsafe fn __cpp2rust_init_globals() {
+    std::cell::LazyCell::force(&*&raw const kGlyfTableTag_0);
+    std::cell::LazyCell::force(&*&raw const kHeadTableTag_1);
+    std::cell::LazyCell::force(&*&raw const kLocaTableTag_2);
+    std::cell::LazyCell::force(&*&raw const kDsigTableTag_3);
+    std::cell::LazyCell::force(&*&raw const kCffTableTag_4);
+    std::cell::LazyCell::force(&*&raw const kHmtxTableTag_5);
+    std::cell::LazyCell::force(&*&raw const kHheaTableTag_6);
+    std::cell::LazyCell::force(&*&raw const kMaxpTableTag_7);
+    std::cell::LazyCell::force(&*&raw const kKnownTags_8);
+    std::cell::LazyCell::force(&*&raw const kWoff2Signature_20);
+    std::cell::LazyCell::force(&*&raw const kWoff2FlagsTransform_21);
+    std::cell::LazyCell::force(&*&raw const kTtcFontFlavor_22);
+    std::cell::LazyCell::force(&*&raw const kSfntHeaderSize_23);
+    std::cell::LazyCell::force(&*&raw const kSfntEntrySize_24);
+    std::cell::LazyCell::force(&*&raw const kFLAG_ONCURVE_49);
+    std::cell::LazyCell::force(&*&raw const kFLAG_XSHORT_50);
+    std::cell::LazyCell::force(&*&raw const kFLAG_YSHORT_51);
+    std::cell::LazyCell::force(&*&raw const kFLAG_REPEAT_52);
+    std::cell::LazyCell::force(&*&raw const kFLAG_XREPEATSIGN_53);
+    std::cell::LazyCell::force(&*&raw const kFLAG_YREPEATSIGN_54);
+    std::cell::LazyCell::force(&*&raw const kFLAG_OVERLAP_SIMPLE_55);
+    std::cell::LazyCell::force(&*&raw const kFLAG_ARG_1_AND_2_ARE_WORDS_56);
+    std::cell::LazyCell::force(&*&raw const kFLAG_WE_HAVE_A_SCALE_57);
+    std::cell::LazyCell::force(&*&raw const kFLAG_MORE_COMPONENTS_58);
+    std::cell::LazyCell::force(&*&raw const kFLAG_WE_HAVE_AN_X_AND_Y_SCALE_59);
+    std::cell::LazyCell::force(&*&raw const kFLAG_WE_HAVE_A_TWO_BY_TWO_60);
+    std::cell::LazyCell::force(&*&raw const kFLAG_WE_HAVE_INSTRUCTIONS_61);
+    std::cell::LazyCell::force(&*&raw const FLAG_ARG_1_AND_2_ARE_WORDS_83);
+    std::cell::LazyCell::force(&*&raw const FLAG_WE_HAVE_INSTRUCTIONS_84);
+    std::cell::LazyCell::force(&*&raw const FLAG_OVERLAP_SIMPLE_BITMAP_85);
+    std::cell::LazyCell::force(&*&raw const kWoff2HeaderSize_92);
+    std::cell::LazyCell::force(&*&raw const kWoff2EntrySize_93);
 }

@@ -16,9 +16,11 @@ pub fn fib_0(n: u64) -> u64 {
     };
 }
 pub fn main() {
+    __cpp2rust_init_globals();
     std::process::exit(main_0());
 }
 fn main_0() -> i32 {
     write!(libcc2rs::cout(), "{:}\n", ({ fib_0(46_u64,) }),);
     return 0;
 }
+pub fn __cpp2rust_init_globals() {}

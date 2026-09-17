@@ -6,60 +6,77 @@ use std::collections::BTreeMap;
 use std::io::{Read, Seek, Write};
 use std::os::fd::{AsFd, FromRawFd, IntoRawFd};
 use std::rc::Rc;
-pub static mut BRUNSLI_ANS_LOG_TAB_SIZE_0: i32 = unsafe { 10 };
-pub static mut BRUNSLI_ANS_TAB_SIZE_1: i32 = unsafe { ((1) << (BRUNSLI_ANS_LOG_TAB_SIZE_0)) };
-pub static mut kFallbackVersion_2: i32 = unsafe { 1 };
-pub static mut kDCTBlockSize_3: i32 = unsafe { 64 };
-pub static mut kMaxComponents_4: i32 = unsafe { 4 };
-pub static mut kMaxQuantTables_5: i32 = unsafe { 4 };
-pub static mut kMaxHuffmanTables_6: i32 = unsafe { 4 };
-pub static mut kJpegHuffmanMaxBitLength_7: i32 = unsafe { 16 };
-pub static mut kJpegHuffmanAlphabetSize_8: i32 = unsafe { 256 };
-pub static mut kJpegDCAlphabetSize_9: i32 = unsafe { 12 };
-pub static mut kMaxDHTMarkers_10: i32 = unsafe { 512 };
-pub static mut kMaxDimPixels_11: i32 = unsafe { 65535 };
-pub static mut kDefaultQuantMatrix_12: [[u8; 64]; 2] = unsafe {
-    [
+pub static mut BRUNSLI_ANS_LOG_TAB_SIZE_0: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 10 });
+pub static mut BRUNSLI_ANS_TAB_SIZE_1: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe {
+        ((1) << (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0)))
+    });
+pub static mut kFallbackVersion_2: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 1 });
+pub static mut kDCTBlockSize_3: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 64 });
+pub static mut kMaxComponents_4: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 4 });
+pub static mut kMaxQuantTables_5: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 4 });
+pub static mut kMaxHuffmanTables_6: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 4 });
+pub static mut kJpegHuffmanMaxBitLength_7: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 16 });
+pub static mut kJpegHuffmanAlphabetSize_8: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 256 });
+pub static mut kJpegDCAlphabetSize_9: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 12 });
+pub static mut kMaxDHTMarkers_10: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 512 });
+pub static mut kMaxDimPixels_11: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 65535 });
+pub static mut kDefaultQuantMatrix_12: std::cell::LazyCell<[[u8; 64]; 2]> =
+    std::cell::LazyCell::new(|| unsafe {
         [
-            16_u8, 11_u8, 10_u8, 16_u8, 24_u8, 40_u8, 51_u8, 61_u8, 12_u8, 12_u8, 14_u8, 19_u8,
-            26_u8, 58_u8, 60_u8, 55_u8, 14_u8, 13_u8, 16_u8, 24_u8, 40_u8, 57_u8, 69_u8, 56_u8,
-            14_u8, 17_u8, 22_u8, 29_u8, 51_u8, 87_u8, 80_u8, 62_u8, 18_u8, 22_u8, 37_u8, 56_u8,
-            68_u8, 109_u8, 103_u8, 77_u8, 24_u8, 35_u8, 55_u8, 64_u8, 81_u8, 104_u8, 113_u8, 92_u8,
-            49_u8, 64_u8, 78_u8, 87_u8, 103_u8, 121_u8, 120_u8, 101_u8, 72_u8, 92_u8, 95_u8, 98_u8,
-            112_u8, 100_u8, 103_u8, 99_u8,
-        ],
+            [
+                16_u8, 11_u8, 10_u8, 16_u8, 24_u8, 40_u8, 51_u8, 61_u8, 12_u8, 12_u8, 14_u8, 19_u8,
+                26_u8, 58_u8, 60_u8, 55_u8, 14_u8, 13_u8, 16_u8, 24_u8, 40_u8, 57_u8, 69_u8, 56_u8,
+                14_u8, 17_u8, 22_u8, 29_u8, 51_u8, 87_u8, 80_u8, 62_u8, 18_u8, 22_u8, 37_u8, 56_u8,
+                68_u8, 109_u8, 103_u8, 77_u8, 24_u8, 35_u8, 55_u8, 64_u8, 81_u8, 104_u8, 113_u8,
+                92_u8, 49_u8, 64_u8, 78_u8, 87_u8, 103_u8, 121_u8, 120_u8, 101_u8, 72_u8, 92_u8,
+                95_u8, 98_u8, 112_u8, 100_u8, 103_u8, 99_u8,
+            ],
+            [
+                17_u8, 18_u8, 24_u8, 47_u8, 99_u8, 99_u8, 99_u8, 99_u8, 18_u8, 21_u8, 26_u8, 66_u8,
+                99_u8, 99_u8, 99_u8, 99_u8, 24_u8, 26_u8, 56_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8,
+                47_u8, 66_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8,
+                99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8,
+                99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8,
+                99_u8, 99_u8, 99_u8, 99_u8,
+            ],
+        ]
+    });
+pub static mut kJPEGNaturalOrder_13: std::cell::LazyCell<[u32; 80]> =
+    std::cell::LazyCell::new(|| unsafe {
         [
-            17_u8, 18_u8, 24_u8, 47_u8, 99_u8, 99_u8, 99_u8, 99_u8, 18_u8, 21_u8, 26_u8, 66_u8,
-            99_u8, 99_u8, 99_u8, 99_u8, 24_u8, 26_u8, 56_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8,
-            47_u8, 66_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8,
-            99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8,
-            99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8, 99_u8,
-            99_u8, 99_u8, 99_u8, 99_u8,
-        ],
-    ]
-};
-pub static mut kJPEGNaturalOrder_13: [u32; 80] = unsafe {
-    [
-        0_u32, 1_u32, 8_u32, 16_u32, 9_u32, 2_u32, 3_u32, 10_u32, 17_u32, 24_u32, 32_u32, 25_u32,
-        18_u32, 11_u32, 4_u32, 5_u32, 12_u32, 19_u32, 26_u32, 33_u32, 40_u32, 48_u32, 41_u32,
-        34_u32, 27_u32, 20_u32, 13_u32, 6_u32, 7_u32, 14_u32, 21_u32, 28_u32, 35_u32, 42_u32,
-        49_u32, 56_u32, 57_u32, 50_u32, 43_u32, 36_u32, 29_u32, 22_u32, 15_u32, 23_u32, 30_u32,
-        37_u32, 44_u32, 51_u32, 58_u32, 59_u32, 52_u32, 45_u32, 38_u32, 31_u32, 39_u32, 46_u32,
-        53_u32, 60_u32, 61_u32, 54_u32, 47_u32, 55_u32, 62_u32, 63_u32, 63_u32, 63_u32, 63_u32,
-        63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32,
-        63_u32, 63_u32,
-    ]
-};
-pub static mut kJPEGZigZagOrder_14: [u32; 64] = unsafe {
-    [
-        0_u32, 1_u32, 5_u32, 6_u32, 14_u32, 15_u32, 27_u32, 28_u32, 2_u32, 4_u32, 7_u32, 13_u32,
-        16_u32, 26_u32, 29_u32, 42_u32, 3_u32, 8_u32, 12_u32, 17_u32, 25_u32, 30_u32, 41_u32,
-        43_u32, 9_u32, 11_u32, 18_u32, 24_u32, 31_u32, 40_u32, 44_u32, 53_u32, 10_u32, 19_u32,
-        23_u32, 32_u32, 39_u32, 45_u32, 52_u32, 54_u32, 20_u32, 22_u32, 33_u32, 38_u32, 46_u32,
-        51_u32, 55_u32, 60_u32, 21_u32, 34_u32, 37_u32, 47_u32, 50_u32, 56_u32, 59_u32, 61_u32,
-        35_u32, 36_u32, 48_u32, 49_u32, 57_u32, 58_u32, 62_u32, 63_u32,
-    ]
-};
+            0_u32, 1_u32, 8_u32, 16_u32, 9_u32, 2_u32, 3_u32, 10_u32, 17_u32, 24_u32, 32_u32,
+            25_u32, 18_u32, 11_u32, 4_u32, 5_u32, 12_u32, 19_u32, 26_u32, 33_u32, 40_u32, 48_u32,
+            41_u32, 34_u32, 27_u32, 20_u32, 13_u32, 6_u32, 7_u32, 14_u32, 21_u32, 28_u32, 35_u32,
+            42_u32, 49_u32, 56_u32, 57_u32, 50_u32, 43_u32, 36_u32, 29_u32, 22_u32, 15_u32, 23_u32,
+            30_u32, 37_u32, 44_u32, 51_u32, 58_u32, 59_u32, 52_u32, 45_u32, 38_u32, 31_u32, 39_u32,
+            46_u32, 53_u32, 60_u32, 61_u32, 54_u32, 47_u32, 55_u32, 62_u32, 63_u32, 63_u32, 63_u32,
+            63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32, 63_u32,
+            63_u32, 63_u32, 63_u32,
+        ]
+    });
+pub static mut kJPEGZigZagOrder_14: std::cell::LazyCell<[u32; 64]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            0_u32, 1_u32, 5_u32, 6_u32, 14_u32, 15_u32, 27_u32, 28_u32, 2_u32, 4_u32, 7_u32,
+            13_u32, 16_u32, 26_u32, 29_u32, 42_u32, 3_u32, 8_u32, 12_u32, 17_u32, 25_u32, 30_u32,
+            41_u32, 43_u32, 9_u32, 11_u32, 18_u32, 24_u32, 31_u32, 40_u32, 44_u32, 53_u32, 10_u32,
+            19_u32, 23_u32, 32_u32, 39_u32, 45_u32, 52_u32, 54_u32, 20_u32, 22_u32, 33_u32, 38_u32,
+            46_u32, 51_u32, 55_u32, 60_u32, 21_u32, 34_u32, 37_u32, 47_u32, 50_u32, 56_u32, 59_u32,
+            61_u32, 35_u32, 36_u32, 48_u32, 49_u32, 57_u32, 58_u32, 62_u32, 63_u32,
+        ]
+    });
 pub type brunsli_JPEGReadError = i32;
 pub const brunsli_JPEGReadError_OK: brunsli_JPEGReadError = 0;
 pub const brunsli_JPEGReadError_SOI_NOT_FOUND: brunsli_JPEGReadError = 1;
@@ -299,590 +316,656 @@ pub unsafe fn PaddingBitsLimit_17(jpg: *const brunsli_JPEGData) -> u64 {
     return (((7_u64).wrapping_mul(num_blocks)).wrapping_mul(((*jpg).components.len() as u64)))
         .wrapping_add(256_u64);
 }
-pub static mut kBrunsliMaxNumBlocks_18: usize = unsafe { (((1_u64) << (21)) as usize) };
-pub static mut kBrunsliMaxDCAbsVal_19: i32 = unsafe { 2054 };
-pub static mut kMaxContextMapAlphabetSize_20: usize = unsafe { 272_usize };
-pub static mut kHuffmanTableBits_21: u32 = unsafe { 8_u32 };
-pub static mut kMaxHuffmanBits_22: usize = unsafe { 15_usize };
-pub static mut kBrunsliShortMarkerLimit_23: i32 = unsafe { ((64) + ((3) * (256))) };
-pub static mut kBrunsliMultibyteMarkerLimit_24: i32 = unsafe { 1024 };
-pub static mut kBrunsliWiringTypeVarint_25: u8 = unsafe { 0_u8 };
-pub static mut kBrunsliWiringTypeLengthDelimited_26: u8 = unsafe { 2_u8 };
-pub static mut kBrunsliMaxSampling_27: i32 = unsafe { 15 };
+pub static mut kBrunsliMaxNumBlocks_18: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { (((1_u64) << (21)) as usize) });
+pub static mut kBrunsliMaxDCAbsVal_19: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 2054 });
+pub static mut kMaxContextMapAlphabetSize_20: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 272_usize });
+pub static mut kHuffmanTableBits_21: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 8_u32 });
+pub static mut kMaxHuffmanBits_22: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 15_usize });
+pub static mut kBrunsliShortMarkerLimit_23: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { ((64) + ((3) * (256))) });
+pub static mut kBrunsliMultibyteMarkerLimit_24: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 1024 });
+pub static mut kBrunsliWiringTypeVarint_25: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 0_u8 });
+pub static mut kBrunsliWiringTypeLengthDelimited_26: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 2_u8 });
+pub static mut kBrunsliMaxSampling_27: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 15 });
 pub unsafe fn ValueMarker_28(mut tag: u8) -> u8 {
-    return ((((tag as i32) << (3)) | (kBrunsliWiringTypeVarint_25 as i32)) as u8);
+    return ((((tag as i32) << (3))
+        | ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliWiringTypeVarint_25)) as i32))
+        as u8);
 }
 pub unsafe fn SectionMarker_29(mut tag: u8) -> u8 {
-    return ((((tag as i32) << (3)) | (kBrunsliWiringTypeLengthDelimited_26 as i32)) as u8);
+    return ((((tag as i32) << (3))
+        | ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliWiringTypeLengthDelimited_26))
+            as i32)) as u8);
 }
-pub static mut kBrunsliSignatureTag_30: u8 = unsafe { 1_u8 };
-pub static mut kBrunsliHeaderTag_31: u8 = unsafe { 2_u8 };
-pub static mut kBrunsliMetaDataTag_32: u8 = unsafe { 3_u8 };
-pub static mut kBrunsliJPEGInternalsTag_33: u8 = unsafe { 4_u8 };
-pub static mut kBrunsliQuantDataTag_34: u8 = unsafe { 5_u8 };
-pub static mut kBrunsliHistogramDataTag_35: u8 = unsafe { 6_u8 };
-pub static mut kBrunsliDCDataTag_36: u8 = unsafe { 7_u8 };
-pub static mut kBrunsliACDataTag_37: u8 = unsafe { 8_u8 };
-pub static mut kBrunsliOriginalJpgTag_38: u8 = unsafe { 9_u8 };
-pub static mut kBrunsliHeaderWidthTag_39: u8 = unsafe { 1_u8 };
-pub static mut kBrunsliHeaderHeightTag_40: u8 = unsafe { 2_u8 };
-pub static mut kBrunsliHeaderVersionCompTag_41: u8 = unsafe { 3_u8 };
-pub static mut kBrunsliHeaderSubsamplingTag_42: u8 = unsafe { 4_u8 };
-pub static mut kBrunsliSignatureSize_43: usize = unsafe { 6_usize };
-pub static mut kMaxApp0Densities_45: usize = unsafe { 8_usize };
-pub static mut kApp0Densities_46: [u16; 8] = unsafe {
-    [
-        1_u16, 72_u16, 96_u16, 100_u16, 150_u16, 180_u16, 240_u16, 300_u16,
-    ]
-};
-pub static mut kNumStockQuantTables_47: i32 = unsafe { 8 };
-pub static mut kStockQuantizationTables_48: [[[u8; 64]; 8]; 2] = unsafe {
-    [
+pub static mut kBrunsliSignatureTag_30: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 1_u8 });
+pub static mut kBrunsliHeaderTag_31: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 2_u8 });
+pub static mut kBrunsliMetaDataTag_32: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 3_u8 });
+pub static mut kBrunsliJPEGInternalsTag_33: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 4_u8 });
+pub static mut kBrunsliQuantDataTag_34: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 5_u8 });
+pub static mut kBrunsliHistogramDataTag_35: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 6_u8 });
+pub static mut kBrunsliDCDataTag_36: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 7_u8 });
+pub static mut kBrunsliACDataTag_37: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 8_u8 });
+pub static mut kBrunsliOriginalJpgTag_38: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 9_u8 });
+pub static mut kBrunsliHeaderWidthTag_39: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 1_u8 });
+pub static mut kBrunsliHeaderHeightTag_40: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 2_u8 });
+pub static mut kBrunsliHeaderVersionCompTag_41: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 3_u8 });
+pub static mut kBrunsliHeaderSubsamplingTag_42: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 4_u8 });
+pub static mut kBrunsliSignatureSize_43: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 6_usize });
+pub static mut kMaxApp0Densities_45: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 8_usize });
+pub static mut kApp0Densities_46: std::cell::LazyCell<[u16; 8]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            1_u16, 72_u16, 96_u16, 100_u16, 150_u16, 180_u16, 240_u16, 300_u16,
+        ]
+    });
+pub static mut kNumStockQuantTables_47: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 8 });
+pub static mut kStockQuantizationTables_48: std::cell::LazyCell<[[[u8; 64]; 8]; 2]> =
+    std::cell::LazyCell::new(|| unsafe {
         [
             [
-                3_u8, 2_u8, 2_u8, 3_u8, 5_u8, 8_u8, 10_u8, 12_u8, 2_u8, 2_u8, 3_u8, 4_u8, 5_u8,
-                12_u8, 12_u8, 11_u8, 3_u8, 3_u8, 3_u8, 5_u8, 8_u8, 11_u8, 14_u8, 11_u8, 3_u8, 3_u8,
-                4_u8, 6_u8, 10_u8, 17_u8, 16_u8, 12_u8, 4_u8, 4_u8, 7_u8, 11_u8, 14_u8, 22_u8,
-                21_u8, 15_u8, 5_u8, 7_u8, 11_u8, 13_u8, 16_u8, 21_u8, 23_u8, 18_u8, 10_u8, 13_u8,
-                16_u8, 17_u8, 21_u8, 24_u8, 24_u8, 20_u8, 14_u8, 18_u8, 19_u8, 20_u8, 22_u8, 20_u8,
-                21_u8, 20_u8,
+                [
+                    3_u8, 2_u8, 2_u8, 3_u8, 5_u8, 8_u8, 10_u8, 12_u8, 2_u8, 2_u8, 3_u8, 4_u8, 5_u8,
+                    12_u8, 12_u8, 11_u8, 3_u8, 3_u8, 3_u8, 5_u8, 8_u8, 11_u8, 14_u8, 11_u8, 3_u8,
+                    3_u8, 4_u8, 6_u8, 10_u8, 17_u8, 16_u8, 12_u8, 4_u8, 4_u8, 7_u8, 11_u8, 14_u8,
+                    22_u8, 21_u8, 15_u8, 5_u8, 7_u8, 11_u8, 13_u8, 16_u8, 21_u8, 23_u8, 18_u8,
+                    10_u8, 13_u8, 16_u8, 17_u8, 21_u8, 24_u8, 24_u8, 20_u8, 14_u8, 18_u8, 19_u8,
+                    20_u8, 22_u8, 20_u8, 21_u8, 20_u8,
+                ],
+                [
+                    8_u8, 6_u8, 5_u8, 8_u8, 12_u8, 20_u8, 26_u8, 31_u8, 6_u8, 6_u8, 7_u8, 10_u8,
+                    13_u8, 29_u8, 30_u8, 28_u8, 7_u8, 7_u8, 8_u8, 12_u8, 20_u8, 29_u8, 35_u8,
+                    28_u8, 7_u8, 9_u8, 11_u8, 15_u8, 26_u8, 44_u8, 40_u8, 31_u8, 9_u8, 11_u8,
+                    19_u8, 28_u8, 34_u8, 55_u8, 52_u8, 39_u8, 12_u8, 18_u8, 28_u8, 32_u8, 41_u8,
+                    52_u8, 57_u8, 46_u8, 25_u8, 32_u8, 39_u8, 44_u8, 52_u8, 61_u8, 60_u8, 51_u8,
+                    36_u8, 46_u8, 48_u8, 49_u8, 56_u8, 50_u8, 52_u8, 50_u8,
+                ],
+                [
+                    6_u8, 4_u8, 4_u8, 6_u8, 10_u8, 16_u8, 20_u8, 24_u8, 5_u8, 5_u8, 6_u8, 8_u8,
+                    10_u8, 23_u8, 24_u8, 22_u8, 6_u8, 5_u8, 6_u8, 10_u8, 16_u8, 23_u8, 28_u8,
+                    22_u8, 6_u8, 7_u8, 9_u8, 12_u8, 20_u8, 35_u8, 32_u8, 25_u8, 7_u8, 9_u8, 15_u8,
+                    22_u8, 27_u8, 44_u8, 41_u8, 31_u8, 10_u8, 14_u8, 22_u8, 26_u8, 32_u8, 42_u8,
+                    45_u8, 37_u8, 20_u8, 26_u8, 31_u8, 35_u8, 41_u8, 48_u8, 48_u8, 40_u8, 29_u8,
+                    37_u8, 38_u8, 39_u8, 45_u8, 40_u8, 41_u8, 40_u8,
+                ],
+                [
+                    5_u8, 3_u8, 3_u8, 5_u8, 7_u8, 12_u8, 15_u8, 18_u8, 4_u8, 4_u8, 4_u8, 6_u8,
+                    8_u8, 17_u8, 18_u8, 17_u8, 4_u8, 4_u8, 5_u8, 7_u8, 12_u8, 17_u8, 21_u8, 17_u8,
+                    4_u8, 5_u8, 7_u8, 9_u8, 15_u8, 26_u8, 24_u8, 19_u8, 5_u8, 7_u8, 11_u8, 17_u8,
+                    20_u8, 33_u8, 31_u8, 23_u8, 7_u8, 11_u8, 17_u8, 19_u8, 24_u8, 31_u8, 34_u8,
+                    28_u8, 15_u8, 19_u8, 23_u8, 26_u8, 31_u8, 36_u8, 36_u8, 30_u8, 22_u8, 28_u8,
+                    29_u8, 29_u8, 34_u8, 30_u8, 31_u8, 30_u8,
+                ],
+                [
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                ],
+                [
+                    2_u8, 1_u8, 1_u8, 2_u8, 2_u8, 4_u8, 5_u8, 6_u8, 1_u8, 1_u8, 1_u8, 2_u8, 3_u8,
+                    6_u8, 6_u8, 6_u8, 1_u8, 1_u8, 2_u8, 2_u8, 4_u8, 6_u8, 7_u8, 6_u8, 1_u8, 2_u8,
+                    2_u8, 3_u8, 5_u8, 9_u8, 8_u8, 6_u8, 2_u8, 2_u8, 4_u8, 6_u8, 7_u8, 11_u8, 10_u8,
+                    8_u8, 2_u8, 4_u8, 6_u8, 6_u8, 8_u8, 10_u8, 11_u8, 9_u8, 5_u8, 6_u8, 8_u8, 9_u8,
+                    10_u8, 12_u8, 12_u8, 10_u8, 7_u8, 9_u8, 10_u8, 10_u8, 11_u8, 10_u8, 10_u8,
+                    10_u8,
+                ],
+                [
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 2_u8, 1_u8, 1_u8,
+                    1_u8, 1_u8, 1_u8, 1_u8, 2_u8, 2_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 2_u8, 2_u8,
+                    3_u8, 1_u8, 1_u8, 1_u8, 1_u8, 2_u8, 2_u8, 3_u8, 3_u8, 1_u8, 1_u8, 1_u8, 2_u8,
+                    2_u8, 3_u8, 3_u8, 3_u8, 1_u8, 1_u8, 2_u8, 2_u8, 3_u8, 3_u8, 3_u8, 3_u8,
+                ],
+                [
+                    10_u8, 7_u8, 6_u8, 10_u8, 14_u8, 24_u8, 31_u8, 37_u8, 7_u8, 7_u8, 8_u8, 11_u8,
+                    16_u8, 35_u8, 36_u8, 33_u8, 8_u8, 8_u8, 10_u8, 14_u8, 24_u8, 34_u8, 41_u8,
+                    34_u8, 8_u8, 10_u8, 13_u8, 17_u8, 31_u8, 52_u8, 48_u8, 37_u8, 11_u8, 13_u8,
+                    22_u8, 34_u8, 41_u8, 65_u8, 62_u8, 46_u8, 14_u8, 21_u8, 33_u8, 38_u8, 49_u8,
+                    62_u8, 68_u8, 55_u8, 29_u8, 38_u8, 47_u8, 52_u8, 62_u8, 73_u8, 72_u8, 61_u8,
+                    43_u8, 55_u8, 57_u8, 59_u8, 67_u8, 60_u8, 62_u8, 59_u8,
+                ],
             ],
             [
-                8_u8, 6_u8, 5_u8, 8_u8, 12_u8, 20_u8, 26_u8, 31_u8, 6_u8, 6_u8, 7_u8, 10_u8, 13_u8,
-                29_u8, 30_u8, 28_u8, 7_u8, 7_u8, 8_u8, 12_u8, 20_u8, 29_u8, 35_u8, 28_u8, 7_u8,
-                9_u8, 11_u8, 15_u8, 26_u8, 44_u8, 40_u8, 31_u8, 9_u8, 11_u8, 19_u8, 28_u8, 34_u8,
-                55_u8, 52_u8, 39_u8, 12_u8, 18_u8, 28_u8, 32_u8, 41_u8, 52_u8, 57_u8, 46_u8, 25_u8,
-                32_u8, 39_u8, 44_u8, 52_u8, 61_u8, 60_u8, 51_u8, 36_u8, 46_u8, 48_u8, 49_u8, 56_u8,
-                50_u8, 52_u8, 50_u8,
+                [
+                    9_u8, 9_u8, 9_u8, 12_u8, 11_u8, 12_u8, 24_u8, 13_u8, 13_u8, 24_u8, 50_u8,
+                    33_u8, 28_u8, 33_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
+                    50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
+                    50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
+                    50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
+                    50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
+                ],
+                [
+                    3_u8, 4_u8, 5_u8, 9_u8, 20_u8, 20_u8, 20_u8, 20_u8, 4_u8, 4_u8, 5_u8, 13_u8,
+                    20_u8, 20_u8, 20_u8, 20_u8, 5_u8, 5_u8, 11_u8, 20_u8, 20_u8, 20_u8, 20_u8,
+                    20_u8, 9_u8, 13_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8,
+                    20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8,
+                    20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8,
+                    20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8,
+                ],
+                [
+                    9_u8, 9_u8, 12_u8, 24_u8, 50_u8, 50_u8, 50_u8, 50_u8, 9_u8, 11_u8, 13_u8,
+                    33_u8, 50_u8, 50_u8, 50_u8, 50_u8, 12_u8, 13_u8, 28_u8, 50_u8, 50_u8, 50_u8,
+                    50_u8, 50_u8, 24_u8, 33_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
+                    50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
+                    50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
+                    50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
+                ],
+                [
+                    5_u8, 5_u8, 7_u8, 14_u8, 30_u8, 30_u8, 30_u8, 30_u8, 5_u8, 6_u8, 8_u8, 20_u8,
+                    30_u8, 30_u8, 30_u8, 30_u8, 7_u8, 8_u8, 17_u8, 30_u8, 30_u8, 30_u8, 30_u8,
+                    30_u8, 14_u8, 20_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8,
+                    30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8,
+                    30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8,
+                    30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8,
+                ],
+                [
+                    7_u8, 7_u8, 10_u8, 19_u8, 40_u8, 40_u8, 40_u8, 40_u8, 7_u8, 8_u8, 10_u8, 26_u8,
+                    40_u8, 40_u8, 40_u8, 40_u8, 10_u8, 10_u8, 22_u8, 40_u8, 40_u8, 40_u8, 40_u8,
+                    40_u8, 19_u8, 26_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8,
+                    40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8,
+                    40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8,
+                    40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8,
+                ],
+                [
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                    1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                ],
+                [
+                    2_u8, 2_u8, 2_u8, 5_u8, 10_u8, 10_u8, 10_u8, 10_u8, 2_u8, 2_u8, 3_u8, 7_u8,
+                    10_u8, 10_u8, 10_u8, 10_u8, 2_u8, 3_u8, 6_u8, 10_u8, 10_u8, 10_u8, 10_u8,
+                    10_u8, 5_u8, 7_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
+                    10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
+                    10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
+                    10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
+                ],
+                [
+                    10_u8, 11_u8, 14_u8, 28_u8, 59_u8, 59_u8, 59_u8, 59_u8, 11_u8, 13_u8, 16_u8,
+                    40_u8, 59_u8, 59_u8, 59_u8, 59_u8, 14_u8, 16_u8, 34_u8, 59_u8, 59_u8, 59_u8,
+                    59_u8, 59_u8, 28_u8, 40_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8,
+                    59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8,
+                    59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8,
+                    59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8,
+                ],
             ],
-            [
-                6_u8, 4_u8, 4_u8, 6_u8, 10_u8, 16_u8, 20_u8, 24_u8, 5_u8, 5_u8, 6_u8, 8_u8, 10_u8,
-                23_u8, 24_u8, 22_u8, 6_u8, 5_u8, 6_u8, 10_u8, 16_u8, 23_u8, 28_u8, 22_u8, 6_u8,
-                7_u8, 9_u8, 12_u8, 20_u8, 35_u8, 32_u8, 25_u8, 7_u8, 9_u8, 15_u8, 22_u8, 27_u8,
-                44_u8, 41_u8, 31_u8, 10_u8, 14_u8, 22_u8, 26_u8, 32_u8, 42_u8, 45_u8, 37_u8, 20_u8,
-                26_u8, 31_u8, 35_u8, 41_u8, 48_u8, 48_u8, 40_u8, 29_u8, 37_u8, 38_u8, 39_u8, 45_u8,
-                40_u8, 41_u8, 40_u8,
-            ],
-            [
-                5_u8, 3_u8, 3_u8, 5_u8, 7_u8, 12_u8, 15_u8, 18_u8, 4_u8, 4_u8, 4_u8, 6_u8, 8_u8,
-                17_u8, 18_u8, 17_u8, 4_u8, 4_u8, 5_u8, 7_u8, 12_u8, 17_u8, 21_u8, 17_u8, 4_u8,
-                5_u8, 7_u8, 9_u8, 15_u8, 26_u8, 24_u8, 19_u8, 5_u8, 7_u8, 11_u8, 17_u8, 20_u8,
-                33_u8, 31_u8, 23_u8, 7_u8, 11_u8, 17_u8, 19_u8, 24_u8, 31_u8, 34_u8, 28_u8, 15_u8,
-                19_u8, 23_u8, 26_u8, 31_u8, 36_u8, 36_u8, 30_u8, 22_u8, 28_u8, 29_u8, 29_u8, 34_u8,
-                30_u8, 31_u8, 30_u8,
-            ],
-            [
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-            ],
-            [
-                2_u8, 1_u8, 1_u8, 2_u8, 2_u8, 4_u8, 5_u8, 6_u8, 1_u8, 1_u8, 1_u8, 2_u8, 3_u8, 6_u8,
-                6_u8, 6_u8, 1_u8, 1_u8, 2_u8, 2_u8, 4_u8, 6_u8, 7_u8, 6_u8, 1_u8, 2_u8, 2_u8, 3_u8,
-                5_u8, 9_u8, 8_u8, 6_u8, 2_u8, 2_u8, 4_u8, 6_u8, 7_u8, 11_u8, 10_u8, 8_u8, 2_u8,
-                4_u8, 6_u8, 6_u8, 8_u8, 10_u8, 11_u8, 9_u8, 5_u8, 6_u8, 8_u8, 9_u8, 10_u8, 12_u8,
-                12_u8, 10_u8, 7_u8, 9_u8, 10_u8, 10_u8, 11_u8, 10_u8, 10_u8, 10_u8,
-            ],
-            [
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 2_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 2_u8, 2_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 2_u8, 2_u8, 3_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 2_u8, 2_u8, 3_u8, 3_u8, 1_u8, 1_u8, 1_u8, 2_u8, 2_u8, 3_u8, 3_u8, 3_u8,
-                1_u8, 1_u8, 2_u8, 2_u8, 3_u8, 3_u8, 3_u8, 3_u8,
-            ],
-            [
-                10_u8, 7_u8, 6_u8, 10_u8, 14_u8, 24_u8, 31_u8, 37_u8, 7_u8, 7_u8, 8_u8, 11_u8,
-                16_u8, 35_u8, 36_u8, 33_u8, 8_u8, 8_u8, 10_u8, 14_u8, 24_u8, 34_u8, 41_u8, 34_u8,
-                8_u8, 10_u8, 13_u8, 17_u8, 31_u8, 52_u8, 48_u8, 37_u8, 11_u8, 13_u8, 22_u8, 34_u8,
-                41_u8, 65_u8, 62_u8, 46_u8, 14_u8, 21_u8, 33_u8, 38_u8, 49_u8, 62_u8, 68_u8, 55_u8,
-                29_u8, 38_u8, 47_u8, 52_u8, 62_u8, 73_u8, 72_u8, 61_u8, 43_u8, 55_u8, 57_u8, 59_u8,
-                67_u8, 60_u8, 62_u8, 59_u8,
-            ],
-        ],
+        ]
+    });
+pub static mut kComponentIds123_49: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 0 });
+pub static mut kComponentIdsGray_50: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 1 });
+pub static mut kComponentIdsRGB_51: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 2 });
+pub static mut kComponentIdsCustom_52: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 3 });
+pub static mut kNumStockDCHuffmanCodes_53: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 2 });
+pub static mut kStockDCHuffmanCodeCounts_54: std::cell::LazyCell<[[i32; 16]; 2]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0],
+            [0, 1, 5, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0],
+        ]
+    });
+pub static mut kStockDCHuffmanCodeValues_55: std::cell::LazyCell<[[i32; 13]; 2]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 256],
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 256],
+        ]
+    });
+pub static mut kNumStockACHuffmanCodes_56: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 2 });
+pub static mut kStockACHuffmanCodeCounts_57: std::cell::LazyCell<[[i32; 16]; 2]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            [0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 126],
+            [0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 120],
+        ]
+    });
+pub static mut kStockACHuffmanCodeTotalCount_58: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 163 });
+pub static mut kStockACHuffmanCodeValues_59: std::cell::LazyCell<[[i32; 163]; 2]> =
+    std::cell::LazyCell::new(|| unsafe {
         [
             [
-                9_u8, 9_u8, 9_u8, 12_u8, 11_u8, 12_u8, 24_u8, 13_u8, 13_u8, 24_u8, 50_u8, 33_u8,
-                28_u8, 33_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
-                50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
-                50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
-                50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
-                50_u8, 50_u8, 50_u8, 50_u8,
+                1, 2, 3, 0, 4, 17, 5, 18, 33, 49, 65, 6, 19, 81, 97, 7, 34, 113, 20, 50, 129, 145,
+                161, 8, 35, 66, 177, 193, 21, 82, 209, 240, 36, 51, 98, 114, 130, 9, 10, 22, 23,
+                24, 25, 26, 37, 38, 39, 40, 41, 42, 52, 53, 54, 55, 56, 57, 58, 67, 68, 69, 70, 71,
+                72, 73, 74, 83, 84, 85, 86, 87, 88, 89, 90, 99, 100, 101, 102, 103, 104, 105, 106,
+                115, 116, 117, 118, 119, 120, 121, 122, 131, 132, 133, 134, 135, 136, 137, 138,
+                146, 147, 148, 149, 150, 151, 152, 153, 154, 162, 163, 164, 165, 166, 167, 168,
+                169, 170, 178, 179, 180, 181, 182, 183, 184, 185, 186, 194, 195, 196, 197, 198,
+                199, 200, 201, 202, 210, 211, 212, 213, 214, 215, 216, 217, 218, 225, 226, 227,
+                228, 229, 230, 231, 232, 233, 234, 241, 242, 243, 244, 245, 246, 247, 248, 249,
+                250, 256,
             ],
             [
-                3_u8, 4_u8, 5_u8, 9_u8, 20_u8, 20_u8, 20_u8, 20_u8, 4_u8, 4_u8, 5_u8, 13_u8, 20_u8,
-                20_u8, 20_u8, 20_u8, 5_u8, 5_u8, 11_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 9_u8,
-                13_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8,
-                20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8,
-                20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8, 20_u8,
-                20_u8, 20_u8, 20_u8,
+                0, 1, 2, 3, 17, 4, 5, 33, 49, 6, 18, 65, 81, 7, 97, 113, 19, 34, 50, 129, 8, 20,
+                66, 145, 161, 177, 193, 9, 35, 51, 82, 240, 21, 98, 114, 209, 10, 22, 36, 52, 225,
+                37, 241, 23, 24, 25, 26, 38, 39, 40, 41, 42, 53, 54, 55, 56, 57, 58, 67, 68, 69,
+                70, 71, 72, 73, 74, 83, 84, 85, 86, 87, 88, 89, 90, 99, 100, 101, 102, 103, 104,
+                105, 106, 115, 116, 117, 118, 119, 120, 121, 122, 130, 131, 132, 133, 134, 135,
+                136, 137, 138, 146, 147, 148, 149, 150, 151, 152, 153, 154, 162, 163, 164, 165,
+                166, 167, 168, 169, 170, 178, 179, 180, 181, 182, 183, 184, 185, 186, 194, 195,
+                196, 197, 198, 199, 200, 201, 202, 210, 211, 212, 213, 214, 215, 216, 217, 218,
+                226, 227, 228, 229, 230, 231, 232, 233, 234, 242, 243, 244, 245, 246, 247, 248,
+                249, 250, 256,
             ],
-            [
-                9_u8, 9_u8, 12_u8, 24_u8, 50_u8, 50_u8, 50_u8, 50_u8, 9_u8, 11_u8, 13_u8, 33_u8,
-                50_u8, 50_u8, 50_u8, 50_u8, 12_u8, 13_u8, 28_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
-                24_u8, 33_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
-                50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
-                50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8, 50_u8,
-                50_u8, 50_u8, 50_u8, 50_u8,
-            ],
-            [
-                5_u8, 5_u8, 7_u8, 14_u8, 30_u8, 30_u8, 30_u8, 30_u8, 5_u8, 6_u8, 8_u8, 20_u8,
-                30_u8, 30_u8, 30_u8, 30_u8, 7_u8, 8_u8, 17_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8,
-                14_u8, 20_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8,
-                30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8,
-                30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8, 30_u8,
-                30_u8, 30_u8, 30_u8, 30_u8,
-            ],
-            [
-                7_u8, 7_u8, 10_u8, 19_u8, 40_u8, 40_u8, 40_u8, 40_u8, 7_u8, 8_u8, 10_u8, 26_u8,
-                40_u8, 40_u8, 40_u8, 40_u8, 10_u8, 10_u8, 22_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8,
-                19_u8, 26_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8,
-                40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8,
-                40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8, 40_u8,
-                40_u8, 40_u8, 40_u8, 40_u8,
-            ],
-            [
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-            ],
-            [
-                2_u8, 2_u8, 2_u8, 5_u8, 10_u8, 10_u8, 10_u8, 10_u8, 2_u8, 2_u8, 3_u8, 7_u8, 10_u8,
-                10_u8, 10_u8, 10_u8, 2_u8, 3_u8, 6_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 5_u8,
-                7_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
-                10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
-                10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
-                10_u8, 10_u8, 10_u8,
-            ],
-            [
-                10_u8, 11_u8, 14_u8, 28_u8, 59_u8, 59_u8, 59_u8, 59_u8, 11_u8, 13_u8, 16_u8, 40_u8,
-                59_u8, 59_u8, 59_u8, 59_u8, 14_u8, 16_u8, 34_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8,
-                28_u8, 40_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8,
-                59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8,
-                59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8, 59_u8,
-                59_u8, 59_u8, 59_u8, 59_u8,
-            ],
-        ],
-    ]
-};
-pub static mut kComponentIds123_49: i32 = unsafe { 0 };
-pub static mut kComponentIdsGray_50: i32 = unsafe { 1 };
-pub static mut kComponentIdsRGB_51: i32 = unsafe { 2 };
-pub static mut kComponentIdsCustom_52: i32 = unsafe { 3 };
-pub static mut kNumStockDCHuffmanCodes_53: i32 = unsafe { 2 };
-pub static mut kStockDCHuffmanCodeCounts_54: [[i32; 16]; 2] = unsafe {
-    [
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0],
-        [0, 1, 5, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0],
-    ]
-};
-pub static mut kStockDCHuffmanCodeValues_55: [[i32; 13]; 2] = unsafe {
-    [
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 256],
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 256],
-    ]
-};
-pub static mut kNumStockACHuffmanCodes_56: i32 = unsafe { 2 };
-pub static mut kStockACHuffmanCodeCounts_57: [[i32; 16]; 2] = unsafe {
-    [
-        [0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 126],
-        [0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 120],
-    ]
-};
-pub static mut kStockACHuffmanCodeTotalCount_58: i32 = unsafe { 163 };
-pub static mut kStockACHuffmanCodeValues_59: [[i32; 163]; 2] = unsafe {
-    [
+        ]
+    });
+pub static mut kDefaultDCValues_60: std::cell::LazyCell<[u8; 16]> =
+    std::cell::LazyCell::new(|| unsafe {
         [
-            1, 2, 3, 0, 4, 17, 5, 18, 33, 49, 65, 6, 19, 81, 97, 7, 34, 113, 20, 50, 129, 145, 161,
-            8, 35, 66, 177, 193, 21, 82, 209, 240, 36, 51, 98, 114, 130, 9, 10, 22, 23, 24, 25, 26,
-            37, 38, 39, 40, 41, 42, 52, 53, 54, 55, 56, 57, 58, 67, 68, 69, 70, 71, 72, 73, 74, 83,
-            84, 85, 86, 87, 88, 89, 90, 99, 100, 101, 102, 103, 104, 105, 106, 115, 116, 117, 118,
-            119, 120, 121, 122, 131, 132, 133, 134, 135, 136, 137, 138, 146, 147, 148, 149, 150,
-            151, 152, 153, 154, 162, 163, 164, 165, 166, 167, 168, 169, 170, 178, 179, 180, 181,
-            182, 183, 184, 185, 186, 194, 195, 196, 197, 198, 199, 200, 201, 202, 210, 211, 212,
-            213, 214, 215, 216, 217, 218, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 241,
-            242, 243, 244, 245, 246, 247, 248, 249, 250, 256,
-        ],
+            0_u8, 1_u8, 2_u8, 3_u8, 4_u8, 5_u8, 6_u8, 7_u8, 8_u8, 9_u8, 10_u8, 11_u8, 12_u8, 13_u8,
+            14_u8, 15_u8,
+        ]
+    });
+pub static mut kDefaultACValues_61: std::cell::LazyCell<[u8; 256]> =
+    std::cell::LazyCell::new(|| unsafe {
         [
-            0, 1, 2, 3, 17, 4, 5, 33, 49, 6, 18, 65, 81, 7, 97, 113, 19, 34, 50, 129, 8, 20, 66,
-            145, 161, 177, 193, 9, 35, 51, 82, 240, 21, 98, 114, 209, 10, 22, 36, 52, 225, 37, 241,
-            23, 24, 25, 26, 38, 39, 40, 41, 42, 53, 54, 55, 56, 57, 58, 67, 68, 69, 70, 71, 72, 73,
-            74, 83, 84, 85, 86, 87, 88, 89, 90, 99, 100, 101, 102, 103, 104, 105, 106, 115, 116,
-            117, 118, 119, 120, 121, 122, 130, 131, 132, 133, 134, 135, 136, 137, 138, 146, 147,
-            148, 149, 150, 151, 152, 153, 154, 162, 163, 164, 165, 166, 167, 168, 169, 170, 178,
-            179, 180, 181, 182, 183, 184, 185, 186, 194, 195, 196, 197, 198, 199, 200, 201, 202,
-            210, 211, 212, 213, 214, 215, 216, 217, 218, 226, 227, 228, 229, 230, 231, 232, 233,
-            234, 242, 243, 244, 245, 246, 247, 248, 249, 250, 256,
-        ],
-    ]
-};
-pub static mut kDefaultDCValues_60: [u8; 16] = unsafe {
-    [
-        0_u8, 1_u8, 2_u8, 3_u8, 4_u8, 5_u8, 6_u8, 7_u8, 8_u8, 9_u8, 10_u8, 11_u8, 12_u8, 13_u8,
-        14_u8, 15_u8,
-    ]
-};
-pub static mut kDefaultACValues_61: [u8; 256] = unsafe {
-    [
-        1_u8, 0_u8, 2_u8, 3_u8, 17_u8, 4_u8, 5_u8, 33_u8, 18_u8, 49_u8, 65_u8, 6_u8, 81_u8, 19_u8,
-        97_u8, 7_u8, 34_u8, 113_u8, 50_u8, 129_u8, 20_u8, 145_u8, 161_u8, 8_u8, 35_u8, 66_u8,
-        177_u8, 193_u8, 21_u8, 82_u8, 209_u8, 240_u8, 36_u8, 51_u8, 98_u8, 114_u8, 9_u8, 130_u8,
-        10_u8, 22_u8, 52_u8, 225_u8, 23_u8, 37_u8, 241_u8, 24_u8, 25_u8, 26_u8, 38_u8, 39_u8,
-        40_u8, 41_u8, 42_u8, 53_u8, 54_u8, 55_u8, 56_u8, 57_u8, 58_u8, 67_u8, 68_u8, 69_u8, 70_u8,
-        71_u8, 72_u8, 73_u8, 74_u8, 83_u8, 84_u8, 85_u8, 86_u8, 87_u8, 88_u8, 89_u8, 90_u8, 99_u8,
-        100_u8, 101_u8, 102_u8, 103_u8, 104_u8, 105_u8, 106_u8, 115_u8, 116_u8, 117_u8, 118_u8,
-        119_u8, 120_u8, 121_u8, 122_u8, 131_u8, 132_u8, 133_u8, 134_u8, 135_u8, 136_u8, 137_u8,
-        138_u8, 146_u8, 147_u8, 148_u8, 149_u8, 150_u8, 151_u8, 152_u8, 153_u8, 154_u8, 162_u8,
-        163_u8, 164_u8, 165_u8, 166_u8, 167_u8, 168_u8, 169_u8, 170_u8, 178_u8, 179_u8, 180_u8,
-        181_u8, 182_u8, 183_u8, 184_u8, 185_u8, 186_u8, 194_u8, 195_u8, 196_u8, 197_u8, 198_u8,
-        199_u8, 200_u8, 201_u8, 202_u8, 210_u8, 211_u8, 212_u8, 213_u8, 214_u8, 215_u8, 216_u8,
-        217_u8, 218_u8, 226_u8, 227_u8, 228_u8, 229_u8, 230_u8, 231_u8, 232_u8, 233_u8, 234_u8,
-        242_u8, 243_u8, 244_u8, 245_u8, 246_u8, 247_u8, 248_u8, 249_u8, 250_u8, 16_u8, 32_u8,
-        48_u8, 64_u8, 80_u8, 96_u8, 112_u8, 128_u8, 144_u8, 160_u8, 176_u8, 192_u8, 208_u8, 11_u8,
-        12_u8, 13_u8, 14_u8, 15_u8, 27_u8, 28_u8, 29_u8, 30_u8, 31_u8, 43_u8, 44_u8, 45_u8, 46_u8,
-        47_u8, 59_u8, 60_u8, 61_u8, 62_u8, 63_u8, 75_u8, 76_u8, 77_u8, 78_u8, 79_u8, 91_u8, 92_u8,
-        93_u8, 94_u8, 95_u8, 107_u8, 108_u8, 109_u8, 110_u8, 111_u8, 123_u8, 124_u8, 125_u8,
-        126_u8, 127_u8, 139_u8, 140_u8, 141_u8, 142_u8, 143_u8, 155_u8, 156_u8, 157_u8, 158_u8,
-        159_u8, 171_u8, 172_u8, 173_u8, 174_u8, 175_u8, 187_u8, 188_u8, 189_u8, 190_u8, 191_u8,
-        203_u8, 204_u8, 205_u8, 206_u8, 207_u8, 219_u8, 220_u8, 221_u8, 222_u8, 223_u8, 224_u8,
-        235_u8, 236_u8, 237_u8, 238_u8, 239_u8, 251_u8, 252_u8, 253_u8, 254_u8, 255_u8,
-    ]
-};
-pub static mut kBrunsliSignature_44: [u8; 6] = unsafe {
-    [
-        (unsafe { SectionMarker_29(kBrunsliSignatureTag_30) }),
-        4_u8,
-        (('B' as libc::c_char) as u8),
-        210_u8,
-        213_u8,
-        (('N' as libc::c_char) as u8),
-    ]
-};
-pub static mut AppData_0xe0_62: [u8; 17] = unsafe {
-    [
-        224_u8,
-        0_u8,
-        16_u8,
-        (('J' as libc::c_char) as u8),
-        (('F' as libc::c_char) as u8),
-        (('I' as libc::c_char) as u8),
-        (('F' as libc::c_char) as u8),
-        0_u8,
-        1_u8,
-        1_u8,
-        0_u8,
-        0_u8,
-        1_u8,
-        0_u8,
-        1_u8,
-        0_u8,
-        0_u8,
-    ]
-};
-pub static mut AppData_0xec_64: [u8; 18] = unsafe {
-    [
-        236_u8,
-        0_u8,
-        17_u8,
-        (('D' as libc::c_char) as u8),
-        (('u' as libc::c_char) as u8),
-        (('c' as libc::c_char) as u8),
-        (('k' as libc::c_char) as u8),
-        (('y' as libc::c_char) as u8),
-        0_u8,
-        1_u8,
-        0_u8,
-        4_u8,
-        0_u8,
-        0_u8,
-        0_u8,
-        100_u8,
-        0_u8,
-        0_u8,
-    ]
-};
-pub static mut AppData_0xee_65: [u8; 15] = unsafe {
-    [
-        238_u8,
-        0_u8,
-        14_u8,
-        (('A' as libc::c_char) as u8),
-        (('d' as libc::c_char) as u8),
-        (('o' as libc::c_char) as u8),
-        (('b' as libc::c_char) as u8),
-        (('e' as libc::c_char) as u8),
-        0_u8,
-        100_u8,
-        0_u8,
-        0_u8,
-        0_u8,
-        0_u8,
-        1_u8,
-    ]
-};
-pub static mut AppData_0xe2_63: [u8; 3161] = unsafe {
-    [
-        226_u8, 12_u8, 88_u8, 73_u8, 67_u8, 67_u8, 95_u8, 80_u8, 82_u8, 79_u8, 70_u8, 73_u8, 76_u8,
-        69_u8, 0_u8, 1_u8, 1_u8, 0_u8, 0_u8, 12_u8, 72_u8, 76_u8, 105_u8, 110_u8, 111_u8, 2_u8,
-        16_u8, 0_u8, 0_u8, 109_u8, 110_u8, 116_u8, 114_u8, 82_u8, 71_u8, 66_u8, 32_u8, 88_u8,
-        89_u8, 90_u8, 32_u8, 7_u8, 206_u8, 0_u8, 2_u8, 0_u8, 9_u8, 0_u8, 6_u8, 0_u8, 49_u8, 0_u8,
-        0_u8, 97_u8, 99_u8, 115_u8, 112_u8, 77_u8, 83_u8, 70_u8, 84_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        73_u8, 69_u8, 67_u8, 32_u8, 115_u8, 82_u8, 71_u8, 66_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 0_u8, 0_u8, 246_u8, 214_u8, 0_u8, 1_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 211_u8, 45_u8, 72_u8, 80_u8, 32_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 17_u8, 99_u8,
-        112_u8, 114_u8, 116_u8, 0_u8, 0_u8, 1_u8, 80_u8, 0_u8, 0_u8, 0_u8, 51_u8, 100_u8, 101_u8,
-        115_u8, 99_u8, 0_u8, 0_u8, 1_u8, 132_u8, 0_u8, 0_u8, 0_u8, 108_u8, 119_u8, 116_u8, 112_u8,
-        116_u8, 0_u8, 0_u8, 1_u8, 240_u8, 0_u8, 0_u8, 0_u8, 20_u8, 98_u8, 107_u8, 112_u8, 116_u8,
-        0_u8, 0_u8, 2_u8, 4_u8, 0_u8, 0_u8, 0_u8, 20_u8, 114_u8, 88_u8, 89_u8, 90_u8, 0_u8, 0_u8,
-        2_u8, 24_u8, 0_u8, 0_u8, 0_u8, 20_u8, 103_u8, 88_u8, 89_u8, 90_u8, 0_u8, 0_u8, 2_u8, 44_u8,
-        0_u8, 0_u8, 0_u8, 20_u8, 98_u8, 88_u8, 89_u8, 90_u8, 0_u8, 0_u8, 2_u8, 64_u8, 0_u8, 0_u8,
-        0_u8, 20_u8, 100_u8, 109_u8, 110_u8, 100_u8, 0_u8, 0_u8, 2_u8, 84_u8, 0_u8, 0_u8, 0_u8,
-        112_u8, 100_u8, 109_u8, 100_u8, 100_u8, 0_u8, 0_u8, 2_u8, 196_u8, 0_u8, 0_u8, 0_u8, 136_u8,
-        118_u8, 117_u8, 101_u8, 100_u8, 0_u8, 0_u8, 3_u8, 76_u8, 0_u8, 0_u8, 0_u8, 134_u8, 118_u8,
-        105_u8, 101_u8, 119_u8, 0_u8, 0_u8, 3_u8, 212_u8, 0_u8, 0_u8, 0_u8, 36_u8, 108_u8, 117_u8,
-        109_u8, 105_u8, 0_u8, 0_u8, 3_u8, 248_u8, 0_u8, 0_u8, 0_u8, 20_u8, 109_u8, 101_u8, 97_u8,
-        115_u8, 0_u8, 0_u8, 4_u8, 12_u8, 0_u8, 0_u8, 0_u8, 36_u8, 116_u8, 101_u8, 99_u8, 104_u8,
-        0_u8, 0_u8, 4_u8, 48_u8, 0_u8, 0_u8, 0_u8, 12_u8, 114_u8, 84_u8, 82_u8, 67_u8, 0_u8, 0_u8,
-        4_u8, 60_u8, 0_u8, 0_u8, 8_u8, 12_u8, 103_u8, 84_u8, 82_u8, 67_u8, 0_u8, 0_u8, 4_u8, 60_u8,
-        0_u8, 0_u8, 8_u8, 12_u8, 98_u8, 84_u8, 82_u8, 67_u8, 0_u8, 0_u8, 4_u8, 60_u8, 0_u8, 0_u8,
-        8_u8, 12_u8, 116_u8, 101_u8, 120_u8, 116_u8, 0_u8, 0_u8, 0_u8, 0_u8, 67_u8, 111_u8, 112_u8,
-        121_u8, 114_u8, 105_u8, 103_u8, 104_u8, 116_u8, 32_u8, 40_u8, 99_u8, 41_u8, 32_u8, 49_u8,
-        57_u8, 57_u8, 56_u8, 32_u8, 72_u8, 101_u8, 119_u8, 108_u8, 101_u8, 116_u8, 116_u8, 45_u8,
-        80_u8, 97_u8, 99_u8, 107_u8, 97_u8, 114_u8, 100_u8, 32_u8, 67_u8, 111_u8, 109_u8, 112_u8,
-        97_u8, 110_u8, 121_u8, 0_u8, 0_u8, 100_u8, 101_u8, 115_u8, 99_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 18_u8, 115_u8, 82_u8, 71_u8, 66_u8, 32_u8, 73_u8, 69_u8, 67_u8, 54_u8,
-        49_u8, 57_u8, 54_u8, 54_u8, 45_u8, 50_u8, 46_u8, 49_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 18_u8, 115_u8, 82_u8, 71_u8, 66_u8, 32_u8, 73_u8, 69_u8,
-        67_u8, 54_u8, 49_u8, 57_u8, 54_u8, 54_u8, 45_u8, 50_u8, 46_u8, 49_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 88_u8, 89_u8, 90_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 243_u8, 81_u8,
-        0_u8, 1_u8, 0_u8, 0_u8, 0_u8, 1_u8, 22_u8, 204_u8, 88_u8, 89_u8, 90_u8, 32_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 88_u8,
-        89_u8, 90_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 111_u8, 162_u8, 0_u8, 0_u8, 56_u8,
-        245_u8, 0_u8, 0_u8, 3_u8, 144_u8, 88_u8, 89_u8, 90_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 98_u8, 153_u8, 0_u8, 0_u8, 183_u8, 133_u8, 0_u8, 0_u8, 24_u8, 218_u8, 88_u8, 89_u8,
-        90_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 36_u8, 160_u8, 0_u8, 0_u8, 15_u8, 132_u8,
-        0_u8, 0_u8, 182_u8, 207_u8, 100_u8, 101_u8, 115_u8, 99_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 22_u8, 73_u8, 69_u8, 67_u8, 32_u8, 104_u8, 116_u8, 116_u8, 112_u8, 58_u8,
-        47_u8, 47_u8, 119_u8, 119_u8, 119_u8, 46_u8, 105_u8, 101_u8, 99_u8, 46_u8, 99_u8, 104_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 22_u8, 73_u8, 69_u8,
-        67_u8, 32_u8, 104_u8, 116_u8, 116_u8, 112_u8, 58_u8, 47_u8, 47_u8, 119_u8, 119_u8, 119_u8,
-        46_u8, 105_u8, 101_u8, 99_u8, 46_u8, 99_u8, 104_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 100_u8, 101_u8, 115_u8, 99_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 46_u8, 73_u8, 69_u8, 67_u8, 32_u8, 54_u8, 49_u8,
-        57_u8, 54_u8, 54_u8, 45_u8, 50_u8, 46_u8, 49_u8, 32_u8, 68_u8, 101_u8, 102_u8, 97_u8,
-        117_u8, 108_u8, 116_u8, 32_u8, 82_u8, 71_u8, 66_u8, 32_u8, 99_u8, 111_u8, 108_u8, 111_u8,
-        117_u8, 114_u8, 32_u8, 115_u8, 112_u8, 97_u8, 99_u8, 101_u8, 32_u8, 45_u8, 32_u8, 115_u8,
-        82_u8, 71_u8, 66_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        46_u8, 73_u8, 69_u8, 67_u8, 32_u8, 54_u8, 49_u8, 57_u8, 54_u8, 54_u8, 45_u8, 50_u8, 46_u8,
-        49_u8, 32_u8, 68_u8, 101_u8, 102_u8, 97_u8, 117_u8, 108_u8, 116_u8, 32_u8, 82_u8, 71_u8,
-        66_u8, 32_u8, 99_u8, 111_u8, 108_u8, 111_u8, 117_u8, 114_u8, 32_u8, 115_u8, 112_u8, 97_u8,
-        99_u8, 101_u8, 32_u8, 45_u8, 32_u8, 115_u8, 82_u8, 71_u8, 66_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 100_u8, 101_u8, 115_u8, 99_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        44_u8, 82_u8, 101_u8, 102_u8, 101_u8, 114_u8, 101_u8, 110_u8, 99_u8, 101_u8, 32_u8, 86_u8,
-        105_u8, 101_u8, 119_u8, 105_u8, 110_u8, 103_u8, 32_u8, 67_u8, 111_u8, 110_u8, 100_u8,
-        105_u8, 116_u8, 105_u8, 111_u8, 110_u8, 32_u8, 105_u8, 110_u8, 32_u8, 73_u8, 69_u8, 67_u8,
-        54_u8, 49_u8, 57_u8, 54_u8, 54_u8, 45_u8, 50_u8, 46_u8, 49_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 44_u8, 82_u8, 101_u8, 102_u8, 101_u8, 114_u8,
-        101_u8, 110_u8, 99_u8, 101_u8, 32_u8, 86_u8, 105_u8, 101_u8, 119_u8, 105_u8, 110_u8,
-        103_u8, 32_u8, 67_u8, 111_u8, 110_u8, 100_u8, 105_u8, 116_u8, 105_u8, 111_u8, 110_u8,
-        32_u8, 105_u8, 110_u8, 32_u8, 73_u8, 69_u8, 67_u8, 54_u8, 49_u8, 57_u8, 54_u8, 54_u8,
-        45_u8, 50_u8, 46_u8, 49_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 118_u8, 105_u8, 101_u8, 119_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 19_u8, 164_u8, 254_u8,
-        0_u8, 20_u8, 95_u8, 46_u8, 0_u8, 16_u8, 207_u8, 20_u8, 0_u8, 3_u8, 237_u8, 204_u8, 0_u8,
-        4_u8, 19_u8, 11_u8, 0_u8, 3_u8, 92_u8, 158_u8, 0_u8, 0_u8, 0_u8, 1_u8, 88_u8, 89_u8, 90_u8,
-        32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 76_u8, 9_u8, 86_u8, 0_u8, 80_u8, 0_u8, 0_u8, 0_u8,
-        87_u8, 31_u8, 231_u8, 109_u8, 101_u8, 97_u8, 115_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 143_u8, 0_u8, 0_u8, 0_u8, 2_u8, 115_u8, 105_u8, 103_u8,
-        32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 67_u8, 82_u8, 84_u8, 32_u8, 99_u8, 117_u8, 114_u8, 118_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 4_u8, 0_u8, 0_u8, 0_u8, 0_u8, 5_u8, 0_u8, 10_u8, 0_u8,
-        15_u8, 0_u8, 20_u8, 0_u8, 25_u8, 0_u8, 30_u8, 0_u8, 35_u8, 0_u8, 40_u8, 0_u8, 45_u8, 0_u8,
-        50_u8, 0_u8, 55_u8, 0_u8, 59_u8, 0_u8, 64_u8, 0_u8, 69_u8, 0_u8, 74_u8, 0_u8, 79_u8, 0_u8,
-        84_u8, 0_u8, 89_u8, 0_u8, 94_u8, 0_u8, 99_u8, 0_u8, 104_u8, 0_u8, 109_u8, 0_u8, 114_u8,
-        0_u8, 119_u8, 0_u8, 124_u8, 0_u8, 129_u8, 0_u8, 134_u8, 0_u8, 139_u8, 0_u8, 144_u8, 0_u8,
-        149_u8, 0_u8, 154_u8, 0_u8, 159_u8, 0_u8, 164_u8, 0_u8, 169_u8, 0_u8, 174_u8, 0_u8, 178_u8,
-        0_u8, 183_u8, 0_u8, 188_u8, 0_u8, 193_u8, 0_u8, 198_u8, 0_u8, 203_u8, 0_u8, 208_u8, 0_u8,
-        213_u8, 0_u8, 219_u8, 0_u8, 224_u8, 0_u8, 229_u8, 0_u8, 235_u8, 0_u8, 240_u8, 0_u8, 246_u8,
-        0_u8, 251_u8, 1_u8, 1_u8, 1_u8, 7_u8, 1_u8, 13_u8, 1_u8, 19_u8, 1_u8, 25_u8, 1_u8, 31_u8,
-        1_u8, 37_u8, 1_u8, 43_u8, 1_u8, 50_u8, 1_u8, 56_u8, 1_u8, 62_u8, 1_u8, 69_u8, 1_u8, 76_u8,
-        1_u8, 82_u8, 1_u8, 89_u8, 1_u8, 96_u8, 1_u8, 103_u8, 1_u8, 110_u8, 1_u8, 117_u8, 1_u8,
-        124_u8, 1_u8, 131_u8, 1_u8, 139_u8, 1_u8, 146_u8, 1_u8, 154_u8, 1_u8, 161_u8, 1_u8, 169_u8,
-        1_u8, 177_u8, 1_u8, 185_u8, 1_u8, 193_u8, 1_u8, 201_u8, 1_u8, 209_u8, 1_u8, 217_u8, 1_u8,
-        225_u8, 1_u8, 233_u8, 1_u8, 242_u8, 1_u8, 250_u8, 2_u8, 3_u8, 2_u8, 12_u8, 2_u8, 20_u8,
-        2_u8, 29_u8, 2_u8, 38_u8, 2_u8, 47_u8, 2_u8, 56_u8, 2_u8, 65_u8, 2_u8, 75_u8, 2_u8, 84_u8,
-        2_u8, 93_u8, 2_u8, 103_u8, 2_u8, 113_u8, 2_u8, 122_u8, 2_u8, 132_u8, 2_u8, 142_u8, 2_u8,
-        152_u8, 2_u8, 162_u8, 2_u8, 172_u8, 2_u8, 182_u8, 2_u8, 193_u8, 2_u8, 203_u8, 2_u8, 213_u8,
-        2_u8, 224_u8, 2_u8, 235_u8, 2_u8, 245_u8, 3_u8, 0_u8, 3_u8, 11_u8, 3_u8, 22_u8, 3_u8,
-        33_u8, 3_u8, 45_u8, 3_u8, 56_u8, 3_u8, 67_u8, 3_u8, 79_u8, 3_u8, 90_u8, 3_u8, 102_u8, 3_u8,
-        114_u8, 3_u8, 126_u8, 3_u8, 138_u8, 3_u8, 150_u8, 3_u8, 162_u8, 3_u8, 174_u8, 3_u8, 186_u8,
-        3_u8, 199_u8, 3_u8, 211_u8, 3_u8, 224_u8, 3_u8, 236_u8, 3_u8, 249_u8, 4_u8, 6_u8, 4_u8,
-        19_u8, 4_u8, 32_u8, 4_u8, 45_u8, 4_u8, 59_u8, 4_u8, 72_u8, 4_u8, 85_u8, 4_u8, 99_u8, 4_u8,
-        113_u8, 4_u8, 126_u8, 4_u8, 140_u8, 4_u8, 154_u8, 4_u8, 168_u8, 4_u8, 182_u8, 4_u8, 196_u8,
-        4_u8, 211_u8, 4_u8, 225_u8, 4_u8, 240_u8, 4_u8, 254_u8, 5_u8, 13_u8, 5_u8, 28_u8, 5_u8,
-        43_u8, 5_u8, 58_u8, 5_u8, 73_u8, 5_u8, 88_u8, 5_u8, 103_u8, 5_u8, 119_u8, 5_u8, 134_u8,
-        5_u8, 150_u8, 5_u8, 166_u8, 5_u8, 181_u8, 5_u8, 197_u8, 5_u8, 213_u8, 5_u8, 229_u8, 5_u8,
-        246_u8, 6_u8, 6_u8, 6_u8, 22_u8, 6_u8, 39_u8, 6_u8, 55_u8, 6_u8, 72_u8, 6_u8, 89_u8, 6_u8,
-        106_u8, 6_u8, 123_u8, 6_u8, 140_u8, 6_u8, 157_u8, 6_u8, 175_u8, 6_u8, 192_u8, 6_u8, 209_u8,
-        6_u8, 227_u8, 6_u8, 245_u8, 7_u8, 7_u8, 7_u8, 25_u8, 7_u8, 43_u8, 7_u8, 61_u8, 7_u8, 79_u8,
-        7_u8, 97_u8, 7_u8, 116_u8, 7_u8, 134_u8, 7_u8, 153_u8, 7_u8, 172_u8, 7_u8, 191_u8, 7_u8,
-        210_u8, 7_u8, 229_u8, 7_u8, 248_u8, 8_u8, 11_u8, 8_u8, 31_u8, 8_u8, 50_u8, 8_u8, 70_u8,
-        8_u8, 90_u8, 8_u8, 110_u8, 8_u8, 130_u8, 8_u8, 150_u8, 8_u8, 170_u8, 8_u8, 190_u8, 8_u8,
-        210_u8, 8_u8, 231_u8, 8_u8, 251_u8, 9_u8, 16_u8, 9_u8, 37_u8, 9_u8, 58_u8, 9_u8, 79_u8,
-        9_u8, 100_u8, 9_u8, 121_u8, 9_u8, 143_u8, 9_u8, 164_u8, 9_u8, 186_u8, 9_u8, 207_u8, 9_u8,
-        229_u8, 9_u8, 251_u8, 10_u8, 17_u8, 10_u8, 39_u8, 10_u8, 61_u8, 10_u8, 84_u8, 10_u8,
-        106_u8, 10_u8, 129_u8, 10_u8, 152_u8, 10_u8, 174_u8, 10_u8, 197_u8, 10_u8, 220_u8, 10_u8,
-        243_u8, 11_u8, 11_u8, 11_u8, 34_u8, 11_u8, 57_u8, 11_u8, 81_u8, 11_u8, 105_u8, 11_u8,
-        128_u8, 11_u8, 152_u8, 11_u8, 176_u8, 11_u8, 200_u8, 11_u8, 225_u8, 11_u8, 249_u8, 12_u8,
-        18_u8, 12_u8, 42_u8, 12_u8, 67_u8, 12_u8, 92_u8, 12_u8, 117_u8, 12_u8, 142_u8, 12_u8,
-        167_u8, 12_u8, 192_u8, 12_u8, 217_u8, 12_u8, 243_u8, 13_u8, 13_u8, 13_u8, 38_u8, 13_u8,
-        64_u8, 13_u8, 90_u8, 13_u8, 116_u8, 13_u8, 142_u8, 13_u8, 169_u8, 13_u8, 195_u8, 13_u8,
-        222_u8, 13_u8, 248_u8, 14_u8, 19_u8, 14_u8, 46_u8, 14_u8, 73_u8, 14_u8, 100_u8, 14_u8,
-        127_u8, 14_u8, 155_u8, 14_u8, 182_u8, 14_u8, 210_u8, 14_u8, 238_u8, 15_u8, 9_u8, 15_u8,
-        37_u8, 15_u8, 65_u8, 15_u8, 94_u8, 15_u8, 122_u8, 15_u8, 150_u8, 15_u8, 179_u8, 15_u8,
-        207_u8, 15_u8, 236_u8, 16_u8, 9_u8, 16_u8, 38_u8, 16_u8, 67_u8, 16_u8, 97_u8, 16_u8,
-        126_u8, 16_u8, 155_u8, 16_u8, 185_u8, 16_u8, 215_u8, 16_u8, 245_u8, 17_u8, 19_u8, 17_u8,
-        49_u8, 17_u8, 79_u8, 17_u8, 109_u8, 17_u8, 140_u8, 17_u8, 170_u8, 17_u8, 201_u8, 17_u8,
-        232_u8, 18_u8, 7_u8, 18_u8, 38_u8, 18_u8, 69_u8, 18_u8, 100_u8, 18_u8, 132_u8, 18_u8,
-        163_u8, 18_u8, 195_u8, 18_u8, 227_u8, 19_u8, 3_u8, 19_u8, 35_u8, 19_u8, 67_u8, 19_u8,
-        99_u8, 19_u8, 131_u8, 19_u8, 164_u8, 19_u8, 197_u8, 19_u8, 229_u8, 20_u8, 6_u8, 20_u8,
-        39_u8, 20_u8, 73_u8, 20_u8, 106_u8, 20_u8, 139_u8, 20_u8, 173_u8, 20_u8, 206_u8, 20_u8,
-        240_u8, 21_u8, 18_u8, 21_u8, 52_u8, 21_u8, 86_u8, 21_u8, 120_u8, 21_u8, 155_u8, 21_u8,
-        189_u8, 21_u8, 224_u8, 22_u8, 3_u8, 22_u8, 38_u8, 22_u8, 73_u8, 22_u8, 108_u8, 22_u8,
-        143_u8, 22_u8, 178_u8, 22_u8, 214_u8, 22_u8, 250_u8, 23_u8, 29_u8, 23_u8, 65_u8, 23_u8,
-        101_u8, 23_u8, 137_u8, 23_u8, 174_u8, 23_u8, 210_u8, 23_u8, 247_u8, 24_u8, 27_u8, 24_u8,
-        64_u8, 24_u8, 101_u8, 24_u8, 138_u8, 24_u8, 175_u8, 24_u8, 213_u8, 24_u8, 250_u8, 25_u8,
-        32_u8, 25_u8, 69_u8, 25_u8, 107_u8, 25_u8, 145_u8, 25_u8, 183_u8, 25_u8, 221_u8, 26_u8,
-        4_u8, 26_u8, 42_u8, 26_u8, 81_u8, 26_u8, 119_u8, 26_u8, 158_u8, 26_u8, 197_u8, 26_u8,
-        236_u8, 27_u8, 20_u8, 27_u8, 59_u8, 27_u8, 99_u8, 27_u8, 138_u8, 27_u8, 178_u8, 27_u8,
-        218_u8, 28_u8, 2_u8, 28_u8, 42_u8, 28_u8, 82_u8, 28_u8, 123_u8, 28_u8, 163_u8, 28_u8,
-        204_u8, 28_u8, 245_u8, 29_u8, 30_u8, 29_u8, 71_u8, 29_u8, 112_u8, 29_u8, 153_u8, 29_u8,
-        195_u8, 29_u8, 236_u8, 30_u8, 22_u8, 30_u8, 64_u8, 30_u8, 106_u8, 30_u8, 148_u8, 30_u8,
-        190_u8, 30_u8, 233_u8, 31_u8, 19_u8, 31_u8, 62_u8, 31_u8, 105_u8, 31_u8, 148_u8, 31_u8,
-        191_u8, 31_u8, 234_u8, 32_u8, 21_u8, 32_u8, 65_u8, 32_u8, 108_u8, 32_u8, 152_u8, 32_u8,
-        196_u8, 32_u8, 240_u8, 33_u8, 28_u8, 33_u8, 72_u8, 33_u8, 117_u8, 33_u8, 161_u8, 33_u8,
-        206_u8, 33_u8, 251_u8, 34_u8, 39_u8, 34_u8, 85_u8, 34_u8, 130_u8, 34_u8, 175_u8, 34_u8,
-        221_u8, 35_u8, 10_u8, 35_u8, 56_u8, 35_u8, 102_u8, 35_u8, 148_u8, 35_u8, 194_u8, 35_u8,
-        240_u8, 36_u8, 31_u8, 36_u8, 77_u8, 36_u8, 124_u8, 36_u8, 171_u8, 36_u8, 218_u8, 37_u8,
-        9_u8, 37_u8, 56_u8, 37_u8, 104_u8, 37_u8, 151_u8, 37_u8, 199_u8, 37_u8, 247_u8, 38_u8,
-        39_u8, 38_u8, 87_u8, 38_u8, 135_u8, 38_u8, 183_u8, 38_u8, 232_u8, 39_u8, 24_u8, 39_u8,
-        73_u8, 39_u8, 122_u8, 39_u8, 171_u8, 39_u8, 220_u8, 40_u8, 13_u8, 40_u8, 63_u8, 40_u8,
-        113_u8, 40_u8, 162_u8, 40_u8, 212_u8, 41_u8, 6_u8, 41_u8, 56_u8, 41_u8, 107_u8, 41_u8,
-        157_u8, 41_u8, 208_u8, 42_u8, 2_u8, 42_u8, 53_u8, 42_u8, 104_u8, 42_u8, 155_u8, 42_u8,
-        207_u8, 43_u8, 2_u8, 43_u8, 54_u8, 43_u8, 105_u8, 43_u8, 157_u8, 43_u8, 209_u8, 44_u8,
-        5_u8, 44_u8, 57_u8, 44_u8, 110_u8, 44_u8, 162_u8, 44_u8, 215_u8, 45_u8, 12_u8, 45_u8,
-        65_u8, 45_u8, 118_u8, 45_u8, 171_u8, 45_u8, 225_u8, 46_u8, 22_u8, 46_u8, 76_u8, 46_u8,
-        130_u8, 46_u8, 183_u8, 46_u8, 238_u8, 47_u8, 36_u8, 47_u8, 90_u8, 47_u8, 145_u8, 47_u8,
-        199_u8, 47_u8, 254_u8, 48_u8, 53_u8, 48_u8, 108_u8, 48_u8, 164_u8, 48_u8, 219_u8, 49_u8,
-        18_u8, 49_u8, 74_u8, 49_u8, 130_u8, 49_u8, 186_u8, 49_u8, 242_u8, 50_u8, 42_u8, 50_u8,
-        99_u8, 50_u8, 155_u8, 50_u8, 212_u8, 51_u8, 13_u8, 51_u8, 70_u8, 51_u8, 127_u8, 51_u8,
-        184_u8, 51_u8, 241_u8, 52_u8, 43_u8, 52_u8, 101_u8, 52_u8, 158_u8, 52_u8, 216_u8, 53_u8,
-        19_u8, 53_u8, 77_u8, 53_u8, 135_u8, 53_u8, 194_u8, 53_u8, 253_u8, 54_u8, 55_u8, 54_u8,
-        114_u8, 54_u8, 174_u8, 54_u8, 233_u8, 55_u8, 36_u8, 55_u8, 96_u8, 55_u8, 156_u8, 55_u8,
-        215_u8, 56_u8, 20_u8, 56_u8, 80_u8, 56_u8, 140_u8, 56_u8, 200_u8, 57_u8, 5_u8, 57_u8,
-        66_u8, 57_u8, 127_u8, 57_u8, 188_u8, 57_u8, 249_u8, 58_u8, 54_u8, 58_u8, 116_u8, 58_u8,
-        178_u8, 58_u8, 239_u8, 59_u8, 45_u8, 59_u8, 107_u8, 59_u8, 170_u8, 59_u8, 232_u8, 60_u8,
-        39_u8, 60_u8, 101_u8, 60_u8, 164_u8, 60_u8, 227_u8, 61_u8, 34_u8, 61_u8, 97_u8, 61_u8,
-        161_u8, 61_u8, 224_u8, 62_u8, 32_u8, 62_u8, 96_u8, 62_u8, 160_u8, 62_u8, 224_u8, 63_u8,
-        33_u8, 63_u8, 97_u8, 63_u8, 162_u8, 63_u8, 226_u8, 64_u8, 35_u8, 64_u8, 100_u8, 64_u8,
-        166_u8, 64_u8, 231_u8, 65_u8, 41_u8, 65_u8, 106_u8, 65_u8, 172_u8, 65_u8, 238_u8, 66_u8,
-        48_u8, 66_u8, 114_u8, 66_u8, 181_u8, 66_u8, 247_u8, 67_u8, 58_u8, 67_u8, 125_u8, 67_u8,
-        192_u8, 68_u8, 3_u8, 68_u8, 71_u8, 68_u8, 138_u8, 68_u8, 206_u8, 69_u8, 18_u8, 69_u8,
-        85_u8, 69_u8, 154_u8, 69_u8, 222_u8, 70_u8, 34_u8, 70_u8, 103_u8, 70_u8, 171_u8, 70_u8,
-        240_u8, 71_u8, 53_u8, 71_u8, 123_u8, 71_u8, 192_u8, 72_u8, 5_u8, 72_u8, 75_u8, 72_u8,
-        145_u8, 72_u8, 215_u8, 73_u8, 29_u8, 73_u8, 99_u8, 73_u8, 169_u8, 73_u8, 240_u8, 74_u8,
-        55_u8, 74_u8, 125_u8, 74_u8, 196_u8, 75_u8, 12_u8, 75_u8, 83_u8, 75_u8, 154_u8, 75_u8,
-        226_u8, 76_u8, 42_u8, 76_u8, 114_u8, 76_u8, 186_u8, 77_u8, 2_u8, 77_u8, 74_u8, 77_u8,
-        147_u8, 77_u8, 220_u8, 78_u8, 37_u8, 78_u8, 110_u8, 78_u8, 183_u8, 79_u8, 0_u8, 79_u8,
-        73_u8, 79_u8, 147_u8, 79_u8, 221_u8, 80_u8, 39_u8, 80_u8, 113_u8, 80_u8, 187_u8, 81_u8,
-        6_u8, 81_u8, 80_u8, 81_u8, 155_u8, 81_u8, 230_u8, 82_u8, 49_u8, 82_u8, 124_u8, 82_u8,
-        199_u8, 83_u8, 19_u8, 83_u8, 95_u8, 83_u8, 170_u8, 83_u8, 246_u8, 84_u8, 66_u8, 84_u8,
-        143_u8, 84_u8, 219_u8, 85_u8, 40_u8, 85_u8, 117_u8, 85_u8, 194_u8, 86_u8, 15_u8, 86_u8,
-        92_u8, 86_u8, 169_u8, 86_u8, 247_u8, 87_u8, 68_u8, 87_u8, 146_u8, 87_u8, 224_u8, 88_u8,
-        47_u8, 88_u8, 125_u8, 88_u8, 203_u8, 89_u8, 26_u8, 89_u8, 105_u8, 89_u8, 184_u8, 90_u8,
-        7_u8, 90_u8, 86_u8, 90_u8, 166_u8, 90_u8, 245_u8, 91_u8, 69_u8, 91_u8, 149_u8, 91_u8,
-        229_u8, 92_u8, 53_u8, 92_u8, 134_u8, 92_u8, 214_u8, 93_u8, 39_u8, 93_u8, 120_u8, 93_u8,
-        201_u8, 94_u8, 26_u8, 94_u8, 108_u8, 94_u8, 189_u8, 95_u8, 15_u8, 95_u8, 97_u8, 95_u8,
-        179_u8, 96_u8, 5_u8, 96_u8, 87_u8, 96_u8, 170_u8, 96_u8, 252_u8, 97_u8, 79_u8, 97_u8,
-        162_u8, 97_u8, 245_u8, 98_u8, 73_u8, 98_u8, 156_u8, 98_u8, 240_u8, 99_u8, 67_u8, 99_u8,
-        151_u8, 99_u8, 235_u8, 100_u8, 64_u8, 100_u8, 148_u8, 100_u8, 233_u8, 101_u8, 61_u8,
-        101_u8, 146_u8, 101_u8, 231_u8, 102_u8, 61_u8, 102_u8, 146_u8, 102_u8, 232_u8, 103_u8,
-        61_u8, 103_u8, 147_u8, 103_u8, 233_u8, 104_u8, 63_u8, 104_u8, 150_u8, 104_u8, 236_u8,
-        105_u8, 67_u8, 105_u8, 154_u8, 105_u8, 241_u8, 106_u8, 72_u8, 106_u8, 159_u8, 106_u8,
-        247_u8, 107_u8, 79_u8, 107_u8, 167_u8, 107_u8, 255_u8, 108_u8, 87_u8, 108_u8, 175_u8,
-        109_u8, 8_u8, 109_u8, 96_u8, 109_u8, 185_u8, 110_u8, 18_u8, 110_u8, 107_u8, 110_u8, 196_u8,
-        111_u8, 30_u8, 111_u8, 120_u8, 111_u8, 209_u8, 112_u8, 43_u8, 112_u8, 134_u8, 112_u8,
-        224_u8, 113_u8, 58_u8, 113_u8, 149_u8, 113_u8, 240_u8, 114_u8, 75_u8, 114_u8, 166_u8,
-        115_u8, 1_u8, 115_u8, 93_u8, 115_u8, 184_u8, 116_u8, 20_u8, 116_u8, 112_u8, 116_u8, 204_u8,
-        117_u8, 40_u8, 117_u8, 133_u8, 117_u8, 225_u8, 118_u8, 62_u8, 118_u8, 155_u8, 118_u8,
-        248_u8, 119_u8, 86_u8, 119_u8, 179_u8, 120_u8, 17_u8, 120_u8, 110_u8, 120_u8, 204_u8,
-        121_u8, 42_u8, 121_u8, 137_u8, 121_u8, 231_u8, 122_u8, 70_u8, 122_u8, 165_u8, 123_u8, 4_u8,
-        123_u8, 99_u8, 123_u8, 194_u8, 124_u8, 33_u8, 124_u8, 129_u8, 124_u8, 225_u8, 125_u8,
-        65_u8, 125_u8, 161_u8, 126_u8, 1_u8, 126_u8, 98_u8, 126_u8, 194_u8, 127_u8, 35_u8, 127_u8,
-        132_u8, 127_u8, 229_u8, 128_u8, 71_u8, 128_u8, 168_u8, 129_u8, 10_u8, 129_u8, 107_u8,
-        129_u8, 205_u8, 130_u8, 48_u8, 130_u8, 146_u8, 130_u8, 244_u8, 131_u8, 87_u8, 131_u8,
-        186_u8, 132_u8, 29_u8, 132_u8, 128_u8, 132_u8, 227_u8, 133_u8, 71_u8, 133_u8, 171_u8,
-        134_u8, 14_u8, 134_u8, 114_u8, 134_u8, 215_u8, 135_u8, 59_u8, 135_u8, 159_u8, 136_u8, 4_u8,
-        136_u8, 105_u8, 136_u8, 206_u8, 137_u8, 51_u8, 137_u8, 153_u8, 137_u8, 254_u8, 138_u8,
-        100_u8, 138_u8, 202_u8, 139_u8, 48_u8, 139_u8, 150_u8, 139_u8, 252_u8, 140_u8, 99_u8,
-        140_u8, 202_u8, 141_u8, 49_u8, 141_u8, 152_u8, 141_u8, 255_u8, 142_u8, 102_u8, 142_u8,
-        206_u8, 143_u8, 54_u8, 143_u8, 158_u8, 144_u8, 6_u8, 144_u8, 110_u8, 144_u8, 214_u8,
-        145_u8, 63_u8, 145_u8, 168_u8, 146_u8, 17_u8, 146_u8, 122_u8, 146_u8, 227_u8, 147_u8,
-        77_u8, 147_u8, 182_u8, 148_u8, 32_u8, 148_u8, 138_u8, 148_u8, 244_u8, 149_u8, 95_u8,
-        149_u8, 201_u8, 150_u8, 52_u8, 150_u8, 159_u8, 151_u8, 10_u8, 151_u8, 117_u8, 151_u8,
-        224_u8, 152_u8, 76_u8, 152_u8, 184_u8, 153_u8, 36_u8, 153_u8, 144_u8, 153_u8, 252_u8,
-        154_u8, 104_u8, 154_u8, 213_u8, 155_u8, 66_u8, 155_u8, 175_u8, 156_u8, 28_u8, 156_u8,
-        137_u8, 156_u8, 247_u8, 157_u8, 100_u8, 157_u8, 210_u8, 158_u8, 64_u8, 158_u8, 174_u8,
-        159_u8, 29_u8, 159_u8, 139_u8, 159_u8, 250_u8, 160_u8, 105_u8, 160_u8, 216_u8, 161_u8,
-        71_u8, 161_u8, 182_u8, 162_u8, 38_u8, 162_u8, 150_u8, 163_u8, 6_u8, 163_u8, 118_u8, 163_u8,
-        230_u8, 164_u8, 86_u8, 164_u8, 199_u8, 165_u8, 56_u8, 165_u8, 169_u8, 166_u8, 26_u8,
-        166_u8, 139_u8, 166_u8, 253_u8, 167_u8, 110_u8, 167_u8, 224_u8, 168_u8, 82_u8, 168_u8,
-        196_u8, 169_u8, 55_u8, 169_u8, 169_u8, 170_u8, 28_u8, 170_u8, 143_u8, 171_u8, 2_u8, 171_u8,
-        117_u8, 171_u8, 233_u8, 172_u8, 92_u8, 172_u8, 208_u8, 173_u8, 68_u8, 173_u8, 184_u8,
-        174_u8, 45_u8, 174_u8, 161_u8, 175_u8, 22_u8, 175_u8, 139_u8, 176_u8, 0_u8, 176_u8, 117_u8,
-        176_u8, 234_u8, 177_u8, 96_u8, 177_u8, 214_u8, 178_u8, 75_u8, 178_u8, 194_u8, 179_u8,
-        56_u8, 179_u8, 174_u8, 180_u8, 37_u8, 180_u8, 156_u8, 181_u8, 19_u8, 181_u8, 138_u8,
-        182_u8, 1_u8, 182_u8, 121_u8, 182_u8, 240_u8, 183_u8, 104_u8, 183_u8, 224_u8, 184_u8,
-        89_u8, 184_u8, 209_u8, 185_u8, 74_u8, 185_u8, 194_u8, 186_u8, 59_u8, 186_u8, 181_u8,
-        187_u8, 46_u8, 187_u8, 167_u8, 188_u8, 33_u8, 188_u8, 155_u8, 189_u8, 21_u8, 189_u8,
-        143_u8, 190_u8, 10_u8, 190_u8, 132_u8, 190_u8, 255_u8, 191_u8, 122_u8, 191_u8, 245_u8,
-        192_u8, 112_u8, 192_u8, 236_u8, 193_u8, 103_u8, 193_u8, 227_u8, 194_u8, 95_u8, 194_u8,
-        219_u8, 195_u8, 88_u8, 195_u8, 212_u8, 196_u8, 81_u8, 196_u8, 206_u8, 197_u8, 75_u8,
-        197_u8, 200_u8, 198_u8, 70_u8, 198_u8, 195_u8, 199_u8, 65_u8, 199_u8, 191_u8, 200_u8,
-        61_u8, 200_u8, 188_u8, 201_u8, 58_u8, 201_u8, 185_u8, 202_u8, 56_u8, 202_u8, 183_u8,
-        203_u8, 54_u8, 203_u8, 182_u8, 204_u8, 53_u8, 204_u8, 181_u8, 205_u8, 53_u8, 205_u8,
-        181_u8, 206_u8, 54_u8, 206_u8, 182_u8, 207_u8, 55_u8, 207_u8, 184_u8, 208_u8, 57_u8,
-        208_u8, 186_u8, 209_u8, 60_u8, 209_u8, 190_u8, 210_u8, 63_u8, 210_u8, 193_u8, 211_u8,
-        68_u8, 211_u8, 198_u8, 212_u8, 73_u8, 212_u8, 203_u8, 213_u8, 78_u8, 213_u8, 209_u8,
-        214_u8, 85_u8, 214_u8, 216_u8, 215_u8, 92_u8, 215_u8, 224_u8, 216_u8, 100_u8, 216_u8,
-        232_u8, 217_u8, 108_u8, 217_u8, 241_u8, 218_u8, 118_u8, 218_u8, 251_u8, 219_u8, 128_u8,
-        220_u8, 5_u8, 220_u8, 138_u8, 221_u8, 16_u8, 221_u8, 150_u8, 222_u8, 28_u8, 222_u8, 162_u8,
-        223_u8, 41_u8, 223_u8, 175_u8, 224_u8, 54_u8, 224_u8, 189_u8, 225_u8, 68_u8, 225_u8,
-        204_u8, 226_u8, 83_u8, 226_u8, 219_u8, 227_u8, 99_u8, 227_u8, 235_u8, 228_u8, 115_u8,
-        228_u8, 252_u8, 229_u8, 132_u8, 230_u8, 13_u8, 230_u8, 150_u8, 231_u8, 31_u8, 231_u8,
-        169_u8, 232_u8, 50_u8, 232_u8, 188_u8, 233_u8, 70_u8, 233_u8, 208_u8, 234_u8, 91_u8,
-        234_u8, 229_u8, 235_u8, 112_u8, 235_u8, 251_u8, 236_u8, 134_u8, 237_u8, 17_u8, 237_u8,
-        156_u8, 238_u8, 40_u8, 238_u8, 180_u8, 239_u8, 64_u8, 239_u8, 204_u8, 240_u8, 88_u8,
-        240_u8, 229_u8, 241_u8, 114_u8, 241_u8, 255_u8, 242_u8, 140_u8, 243_u8, 25_u8, 243_u8,
-        167_u8, 244_u8, 52_u8, 244_u8, 194_u8, 245_u8, 80_u8, 245_u8, 222_u8, 246_u8, 109_u8,
-        246_u8, 251_u8, 247_u8, 138_u8, 248_u8, 25_u8, 248_u8, 168_u8, 249_u8, 56_u8, 249_u8,
-        199_u8, 250_u8, 87_u8, 250_u8, 231_u8, 251_u8, 119_u8, 252_u8, 7_u8, 252_u8, 152_u8,
-        253_u8, 41_u8, 253_u8, 186_u8, 254_u8, 75_u8, 254_u8, 220_u8, 255_u8, 109_u8, 255_u8,
-        255_u8,
-    ]
-};
+            1_u8, 0_u8, 2_u8, 3_u8, 17_u8, 4_u8, 5_u8, 33_u8, 18_u8, 49_u8, 65_u8, 6_u8, 81_u8,
+            19_u8, 97_u8, 7_u8, 34_u8, 113_u8, 50_u8, 129_u8, 20_u8, 145_u8, 161_u8, 8_u8, 35_u8,
+            66_u8, 177_u8, 193_u8, 21_u8, 82_u8, 209_u8, 240_u8, 36_u8, 51_u8, 98_u8, 114_u8, 9_u8,
+            130_u8, 10_u8, 22_u8, 52_u8, 225_u8, 23_u8, 37_u8, 241_u8, 24_u8, 25_u8, 26_u8, 38_u8,
+            39_u8, 40_u8, 41_u8, 42_u8, 53_u8, 54_u8, 55_u8, 56_u8, 57_u8, 58_u8, 67_u8, 68_u8,
+            69_u8, 70_u8, 71_u8, 72_u8, 73_u8, 74_u8, 83_u8, 84_u8, 85_u8, 86_u8, 87_u8, 88_u8,
+            89_u8, 90_u8, 99_u8, 100_u8, 101_u8, 102_u8, 103_u8, 104_u8, 105_u8, 106_u8, 115_u8,
+            116_u8, 117_u8, 118_u8, 119_u8, 120_u8, 121_u8, 122_u8, 131_u8, 132_u8, 133_u8, 134_u8,
+            135_u8, 136_u8, 137_u8, 138_u8, 146_u8, 147_u8, 148_u8, 149_u8, 150_u8, 151_u8, 152_u8,
+            153_u8, 154_u8, 162_u8, 163_u8, 164_u8, 165_u8, 166_u8, 167_u8, 168_u8, 169_u8, 170_u8,
+            178_u8, 179_u8, 180_u8, 181_u8, 182_u8, 183_u8, 184_u8, 185_u8, 186_u8, 194_u8, 195_u8,
+            196_u8, 197_u8, 198_u8, 199_u8, 200_u8, 201_u8, 202_u8, 210_u8, 211_u8, 212_u8, 213_u8,
+            214_u8, 215_u8, 216_u8, 217_u8, 218_u8, 226_u8, 227_u8, 228_u8, 229_u8, 230_u8, 231_u8,
+            232_u8, 233_u8, 234_u8, 242_u8, 243_u8, 244_u8, 245_u8, 246_u8, 247_u8, 248_u8, 249_u8,
+            250_u8, 16_u8, 32_u8, 48_u8, 64_u8, 80_u8, 96_u8, 112_u8, 128_u8, 144_u8, 160_u8,
+            176_u8, 192_u8, 208_u8, 11_u8, 12_u8, 13_u8, 14_u8, 15_u8, 27_u8, 28_u8, 29_u8, 30_u8,
+            31_u8, 43_u8, 44_u8, 45_u8, 46_u8, 47_u8, 59_u8, 60_u8, 61_u8, 62_u8, 63_u8, 75_u8,
+            76_u8, 77_u8, 78_u8, 79_u8, 91_u8, 92_u8, 93_u8, 94_u8, 95_u8, 107_u8, 108_u8, 109_u8,
+            110_u8, 111_u8, 123_u8, 124_u8, 125_u8, 126_u8, 127_u8, 139_u8, 140_u8, 141_u8, 142_u8,
+            143_u8, 155_u8, 156_u8, 157_u8, 158_u8, 159_u8, 171_u8, 172_u8, 173_u8, 174_u8, 175_u8,
+            187_u8, 188_u8, 189_u8, 190_u8, 191_u8, 203_u8, 204_u8, 205_u8, 206_u8, 207_u8, 219_u8,
+            220_u8, 221_u8, 222_u8, 223_u8, 224_u8, 235_u8, 236_u8, 237_u8, 238_u8, 239_u8, 251_u8,
+            252_u8, 253_u8, 254_u8, 255_u8,
+        ]
+    });
+pub static mut kBrunsliSignature_44: std::cell::LazyCell<[u8; 6]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            (unsafe {
+                SectionMarker_29(
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureTag_30)),
+                )
+            }),
+            4_u8,
+            (('B' as libc::c_char) as u8),
+            210_u8,
+            213_u8,
+            (('N' as libc::c_char) as u8),
+        ]
+    });
+pub static mut AppData_0xe0_62: std::cell::LazyCell<[u8; 17]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            224_u8,
+            0_u8,
+            16_u8,
+            (('J' as libc::c_char) as u8),
+            (('F' as libc::c_char) as u8),
+            (('I' as libc::c_char) as u8),
+            (('F' as libc::c_char) as u8),
+            0_u8,
+            1_u8,
+            1_u8,
+            0_u8,
+            0_u8,
+            1_u8,
+            0_u8,
+            1_u8,
+            0_u8,
+            0_u8,
+        ]
+    });
+pub static mut AppData_0xec_64: std::cell::LazyCell<[u8; 18]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            236_u8,
+            0_u8,
+            17_u8,
+            (('D' as libc::c_char) as u8),
+            (('u' as libc::c_char) as u8),
+            (('c' as libc::c_char) as u8),
+            (('k' as libc::c_char) as u8),
+            (('y' as libc::c_char) as u8),
+            0_u8,
+            1_u8,
+            0_u8,
+            4_u8,
+            0_u8,
+            0_u8,
+            0_u8,
+            100_u8,
+            0_u8,
+            0_u8,
+        ]
+    });
+pub static mut AppData_0xee_65: std::cell::LazyCell<[u8; 15]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            238_u8,
+            0_u8,
+            14_u8,
+            (('A' as libc::c_char) as u8),
+            (('d' as libc::c_char) as u8),
+            (('o' as libc::c_char) as u8),
+            (('b' as libc::c_char) as u8),
+            (('e' as libc::c_char) as u8),
+            0_u8,
+            100_u8,
+            0_u8,
+            0_u8,
+            0_u8,
+            0_u8,
+            1_u8,
+        ]
+    });
+pub static mut AppData_0xe2_63: std::cell::LazyCell<[u8; 3161]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            226_u8, 12_u8, 88_u8, 73_u8, 67_u8, 67_u8, 95_u8, 80_u8, 82_u8, 79_u8, 70_u8, 73_u8,
+            76_u8, 69_u8, 0_u8, 1_u8, 1_u8, 0_u8, 0_u8, 12_u8, 72_u8, 76_u8, 105_u8, 110_u8,
+            111_u8, 2_u8, 16_u8, 0_u8, 0_u8, 109_u8, 110_u8, 116_u8, 114_u8, 82_u8, 71_u8, 66_u8,
+            32_u8, 88_u8, 89_u8, 90_u8, 32_u8, 7_u8, 206_u8, 0_u8, 2_u8, 0_u8, 9_u8, 0_u8, 6_u8,
+            0_u8, 49_u8, 0_u8, 0_u8, 97_u8, 99_u8, 115_u8, 112_u8, 77_u8, 83_u8, 70_u8, 84_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 73_u8, 69_u8, 67_u8, 32_u8, 115_u8, 82_u8, 71_u8, 66_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 0_u8, 0_u8, 246_u8,
+            214_u8, 0_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 211_u8, 45_u8, 72_u8, 80_u8, 32_u8, 32_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 17_u8, 99_u8, 112_u8, 114_u8, 116_u8, 0_u8, 0_u8, 1_u8,
+            80_u8, 0_u8, 0_u8, 0_u8, 51_u8, 100_u8, 101_u8, 115_u8, 99_u8, 0_u8, 0_u8, 1_u8,
+            132_u8, 0_u8, 0_u8, 0_u8, 108_u8, 119_u8, 116_u8, 112_u8, 116_u8, 0_u8, 0_u8, 1_u8,
+            240_u8, 0_u8, 0_u8, 0_u8, 20_u8, 98_u8, 107_u8, 112_u8, 116_u8, 0_u8, 0_u8, 2_u8, 4_u8,
+            0_u8, 0_u8, 0_u8, 20_u8, 114_u8, 88_u8, 89_u8, 90_u8, 0_u8, 0_u8, 2_u8, 24_u8, 0_u8,
+            0_u8, 0_u8, 20_u8, 103_u8, 88_u8, 89_u8, 90_u8, 0_u8, 0_u8, 2_u8, 44_u8, 0_u8, 0_u8,
+            0_u8, 20_u8, 98_u8, 88_u8, 89_u8, 90_u8, 0_u8, 0_u8, 2_u8, 64_u8, 0_u8, 0_u8, 0_u8,
+            20_u8, 100_u8, 109_u8, 110_u8, 100_u8, 0_u8, 0_u8, 2_u8, 84_u8, 0_u8, 0_u8, 0_u8,
+            112_u8, 100_u8, 109_u8, 100_u8, 100_u8, 0_u8, 0_u8, 2_u8, 196_u8, 0_u8, 0_u8, 0_u8,
+            136_u8, 118_u8, 117_u8, 101_u8, 100_u8, 0_u8, 0_u8, 3_u8, 76_u8, 0_u8, 0_u8, 0_u8,
+            134_u8, 118_u8, 105_u8, 101_u8, 119_u8, 0_u8, 0_u8, 3_u8, 212_u8, 0_u8, 0_u8, 0_u8,
+            36_u8, 108_u8, 117_u8, 109_u8, 105_u8, 0_u8, 0_u8, 3_u8, 248_u8, 0_u8, 0_u8, 0_u8,
+            20_u8, 109_u8, 101_u8, 97_u8, 115_u8, 0_u8, 0_u8, 4_u8, 12_u8, 0_u8, 0_u8, 0_u8, 36_u8,
+            116_u8, 101_u8, 99_u8, 104_u8, 0_u8, 0_u8, 4_u8, 48_u8, 0_u8, 0_u8, 0_u8, 12_u8,
+            114_u8, 84_u8, 82_u8, 67_u8, 0_u8, 0_u8, 4_u8, 60_u8, 0_u8, 0_u8, 8_u8, 12_u8, 103_u8,
+            84_u8, 82_u8, 67_u8, 0_u8, 0_u8, 4_u8, 60_u8, 0_u8, 0_u8, 8_u8, 12_u8, 98_u8, 84_u8,
+            82_u8, 67_u8, 0_u8, 0_u8, 4_u8, 60_u8, 0_u8, 0_u8, 8_u8, 12_u8, 116_u8, 101_u8, 120_u8,
+            116_u8, 0_u8, 0_u8, 0_u8, 0_u8, 67_u8, 111_u8, 112_u8, 121_u8, 114_u8, 105_u8, 103_u8,
+            104_u8, 116_u8, 32_u8, 40_u8, 99_u8, 41_u8, 32_u8, 49_u8, 57_u8, 57_u8, 56_u8, 32_u8,
+            72_u8, 101_u8, 119_u8, 108_u8, 101_u8, 116_u8, 116_u8, 45_u8, 80_u8, 97_u8, 99_u8,
+            107_u8, 97_u8, 114_u8, 100_u8, 32_u8, 67_u8, 111_u8, 109_u8, 112_u8, 97_u8, 110_u8,
+            121_u8, 0_u8, 0_u8, 100_u8, 101_u8, 115_u8, 99_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 18_u8, 115_u8, 82_u8, 71_u8, 66_u8, 32_u8, 73_u8, 69_u8, 67_u8, 54_u8, 49_u8,
+            57_u8, 54_u8, 54_u8, 45_u8, 50_u8, 46_u8, 49_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 18_u8, 115_u8, 82_u8, 71_u8, 66_u8, 32_u8, 73_u8, 69_u8,
+            67_u8, 54_u8, 49_u8, 57_u8, 54_u8, 54_u8, 45_u8, 50_u8, 46_u8, 49_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 88_u8, 89_u8, 90_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 243_u8, 81_u8, 0_u8, 1_u8, 0_u8, 0_u8, 0_u8, 1_u8, 22_u8, 204_u8, 88_u8, 89_u8,
+            90_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 88_u8, 89_u8, 90_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            111_u8, 162_u8, 0_u8, 0_u8, 56_u8, 245_u8, 0_u8, 0_u8, 3_u8, 144_u8, 88_u8, 89_u8,
+            90_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 98_u8, 153_u8, 0_u8, 0_u8, 183_u8,
+            133_u8, 0_u8, 0_u8, 24_u8, 218_u8, 88_u8, 89_u8, 90_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 36_u8, 160_u8, 0_u8, 0_u8, 15_u8, 132_u8, 0_u8, 0_u8, 182_u8, 207_u8,
+            100_u8, 101_u8, 115_u8, 99_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 22_u8, 73_u8,
+            69_u8, 67_u8, 32_u8, 104_u8, 116_u8, 116_u8, 112_u8, 58_u8, 47_u8, 47_u8, 119_u8,
+            119_u8, 119_u8, 46_u8, 105_u8, 101_u8, 99_u8, 46_u8, 99_u8, 104_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 22_u8, 73_u8, 69_u8, 67_u8, 32_u8,
+            104_u8, 116_u8, 116_u8, 112_u8, 58_u8, 47_u8, 47_u8, 119_u8, 119_u8, 119_u8, 46_u8,
+            105_u8, 101_u8, 99_u8, 46_u8, 99_u8, 104_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 100_u8, 101_u8,
+            115_u8, 99_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 46_u8, 73_u8, 69_u8, 67_u8,
+            32_u8, 54_u8, 49_u8, 57_u8, 54_u8, 54_u8, 45_u8, 50_u8, 46_u8, 49_u8, 32_u8, 68_u8,
+            101_u8, 102_u8, 97_u8, 117_u8, 108_u8, 116_u8, 32_u8, 82_u8, 71_u8, 66_u8, 32_u8,
+            99_u8, 111_u8, 108_u8, 111_u8, 117_u8, 114_u8, 32_u8, 115_u8, 112_u8, 97_u8, 99_u8,
+            101_u8, 32_u8, 45_u8, 32_u8, 115_u8, 82_u8, 71_u8, 66_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 46_u8, 73_u8, 69_u8, 67_u8, 32_u8, 54_u8, 49_u8,
+            57_u8, 54_u8, 54_u8, 45_u8, 50_u8, 46_u8, 49_u8, 32_u8, 68_u8, 101_u8, 102_u8, 97_u8,
+            117_u8, 108_u8, 116_u8, 32_u8, 82_u8, 71_u8, 66_u8, 32_u8, 99_u8, 111_u8, 108_u8,
+            111_u8, 117_u8, 114_u8, 32_u8, 115_u8, 112_u8, 97_u8, 99_u8, 101_u8, 32_u8, 45_u8,
+            32_u8, 115_u8, 82_u8, 71_u8, 66_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            100_u8, 101_u8, 115_u8, 99_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 44_u8, 82_u8,
+            101_u8, 102_u8, 101_u8, 114_u8, 101_u8, 110_u8, 99_u8, 101_u8, 32_u8, 86_u8, 105_u8,
+            101_u8, 119_u8, 105_u8, 110_u8, 103_u8, 32_u8, 67_u8, 111_u8, 110_u8, 100_u8, 105_u8,
+            116_u8, 105_u8, 111_u8, 110_u8, 32_u8, 105_u8, 110_u8, 32_u8, 73_u8, 69_u8, 67_u8,
+            54_u8, 49_u8, 57_u8, 54_u8, 54_u8, 45_u8, 50_u8, 46_u8, 49_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 44_u8, 82_u8, 101_u8, 102_u8, 101_u8, 114_u8,
+            101_u8, 110_u8, 99_u8, 101_u8, 32_u8, 86_u8, 105_u8, 101_u8, 119_u8, 105_u8, 110_u8,
+            103_u8, 32_u8, 67_u8, 111_u8, 110_u8, 100_u8, 105_u8, 116_u8, 105_u8, 111_u8, 110_u8,
+            32_u8, 105_u8, 110_u8, 32_u8, 73_u8, 69_u8, 67_u8, 54_u8, 49_u8, 57_u8, 54_u8, 54_u8,
+            45_u8, 50_u8, 46_u8, 49_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 118_u8, 105_u8, 101_u8, 119_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 19_u8,
+            164_u8, 254_u8, 0_u8, 20_u8, 95_u8, 46_u8, 0_u8, 16_u8, 207_u8, 20_u8, 0_u8, 3_u8,
+            237_u8, 204_u8, 0_u8, 4_u8, 19_u8, 11_u8, 0_u8, 3_u8, 92_u8, 158_u8, 0_u8, 0_u8, 0_u8,
+            1_u8, 88_u8, 89_u8, 90_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 76_u8, 9_u8, 86_u8,
+            0_u8, 80_u8, 0_u8, 0_u8, 0_u8, 87_u8, 31_u8, 231_u8, 109_u8, 101_u8, 97_u8, 115_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 143_u8,
+            0_u8, 0_u8, 0_u8, 2_u8, 115_u8, 105_u8, 103_u8, 32_u8, 0_u8, 0_u8, 0_u8, 0_u8, 67_u8,
+            82_u8, 84_u8, 32_u8, 99_u8, 117_u8, 114_u8, 118_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            4_u8, 0_u8, 0_u8, 0_u8, 0_u8, 5_u8, 0_u8, 10_u8, 0_u8, 15_u8, 0_u8, 20_u8, 0_u8, 25_u8,
+            0_u8, 30_u8, 0_u8, 35_u8, 0_u8, 40_u8, 0_u8, 45_u8, 0_u8, 50_u8, 0_u8, 55_u8, 0_u8,
+            59_u8, 0_u8, 64_u8, 0_u8, 69_u8, 0_u8, 74_u8, 0_u8, 79_u8, 0_u8, 84_u8, 0_u8, 89_u8,
+            0_u8, 94_u8, 0_u8, 99_u8, 0_u8, 104_u8, 0_u8, 109_u8, 0_u8, 114_u8, 0_u8, 119_u8, 0_u8,
+            124_u8, 0_u8, 129_u8, 0_u8, 134_u8, 0_u8, 139_u8, 0_u8, 144_u8, 0_u8, 149_u8, 0_u8,
+            154_u8, 0_u8, 159_u8, 0_u8, 164_u8, 0_u8, 169_u8, 0_u8, 174_u8, 0_u8, 178_u8, 0_u8,
+            183_u8, 0_u8, 188_u8, 0_u8, 193_u8, 0_u8, 198_u8, 0_u8, 203_u8, 0_u8, 208_u8, 0_u8,
+            213_u8, 0_u8, 219_u8, 0_u8, 224_u8, 0_u8, 229_u8, 0_u8, 235_u8, 0_u8, 240_u8, 0_u8,
+            246_u8, 0_u8, 251_u8, 1_u8, 1_u8, 1_u8, 7_u8, 1_u8, 13_u8, 1_u8, 19_u8, 1_u8, 25_u8,
+            1_u8, 31_u8, 1_u8, 37_u8, 1_u8, 43_u8, 1_u8, 50_u8, 1_u8, 56_u8, 1_u8, 62_u8, 1_u8,
+            69_u8, 1_u8, 76_u8, 1_u8, 82_u8, 1_u8, 89_u8, 1_u8, 96_u8, 1_u8, 103_u8, 1_u8, 110_u8,
+            1_u8, 117_u8, 1_u8, 124_u8, 1_u8, 131_u8, 1_u8, 139_u8, 1_u8, 146_u8, 1_u8, 154_u8,
+            1_u8, 161_u8, 1_u8, 169_u8, 1_u8, 177_u8, 1_u8, 185_u8, 1_u8, 193_u8, 1_u8, 201_u8,
+            1_u8, 209_u8, 1_u8, 217_u8, 1_u8, 225_u8, 1_u8, 233_u8, 1_u8, 242_u8, 1_u8, 250_u8,
+            2_u8, 3_u8, 2_u8, 12_u8, 2_u8, 20_u8, 2_u8, 29_u8, 2_u8, 38_u8, 2_u8, 47_u8, 2_u8,
+            56_u8, 2_u8, 65_u8, 2_u8, 75_u8, 2_u8, 84_u8, 2_u8, 93_u8, 2_u8, 103_u8, 2_u8, 113_u8,
+            2_u8, 122_u8, 2_u8, 132_u8, 2_u8, 142_u8, 2_u8, 152_u8, 2_u8, 162_u8, 2_u8, 172_u8,
+            2_u8, 182_u8, 2_u8, 193_u8, 2_u8, 203_u8, 2_u8, 213_u8, 2_u8, 224_u8, 2_u8, 235_u8,
+            2_u8, 245_u8, 3_u8, 0_u8, 3_u8, 11_u8, 3_u8, 22_u8, 3_u8, 33_u8, 3_u8, 45_u8, 3_u8,
+            56_u8, 3_u8, 67_u8, 3_u8, 79_u8, 3_u8, 90_u8, 3_u8, 102_u8, 3_u8, 114_u8, 3_u8, 126_u8,
+            3_u8, 138_u8, 3_u8, 150_u8, 3_u8, 162_u8, 3_u8, 174_u8, 3_u8, 186_u8, 3_u8, 199_u8,
+            3_u8, 211_u8, 3_u8, 224_u8, 3_u8, 236_u8, 3_u8, 249_u8, 4_u8, 6_u8, 4_u8, 19_u8, 4_u8,
+            32_u8, 4_u8, 45_u8, 4_u8, 59_u8, 4_u8, 72_u8, 4_u8, 85_u8, 4_u8, 99_u8, 4_u8, 113_u8,
+            4_u8, 126_u8, 4_u8, 140_u8, 4_u8, 154_u8, 4_u8, 168_u8, 4_u8, 182_u8, 4_u8, 196_u8,
+            4_u8, 211_u8, 4_u8, 225_u8, 4_u8, 240_u8, 4_u8, 254_u8, 5_u8, 13_u8, 5_u8, 28_u8, 5_u8,
+            43_u8, 5_u8, 58_u8, 5_u8, 73_u8, 5_u8, 88_u8, 5_u8, 103_u8, 5_u8, 119_u8, 5_u8, 134_u8,
+            5_u8, 150_u8, 5_u8, 166_u8, 5_u8, 181_u8, 5_u8, 197_u8, 5_u8, 213_u8, 5_u8, 229_u8,
+            5_u8, 246_u8, 6_u8, 6_u8, 6_u8, 22_u8, 6_u8, 39_u8, 6_u8, 55_u8, 6_u8, 72_u8, 6_u8,
+            89_u8, 6_u8, 106_u8, 6_u8, 123_u8, 6_u8, 140_u8, 6_u8, 157_u8, 6_u8, 175_u8, 6_u8,
+            192_u8, 6_u8, 209_u8, 6_u8, 227_u8, 6_u8, 245_u8, 7_u8, 7_u8, 7_u8, 25_u8, 7_u8, 43_u8,
+            7_u8, 61_u8, 7_u8, 79_u8, 7_u8, 97_u8, 7_u8, 116_u8, 7_u8, 134_u8, 7_u8, 153_u8, 7_u8,
+            172_u8, 7_u8, 191_u8, 7_u8, 210_u8, 7_u8, 229_u8, 7_u8, 248_u8, 8_u8, 11_u8, 8_u8,
+            31_u8, 8_u8, 50_u8, 8_u8, 70_u8, 8_u8, 90_u8, 8_u8, 110_u8, 8_u8, 130_u8, 8_u8, 150_u8,
+            8_u8, 170_u8, 8_u8, 190_u8, 8_u8, 210_u8, 8_u8, 231_u8, 8_u8, 251_u8, 9_u8, 16_u8,
+            9_u8, 37_u8, 9_u8, 58_u8, 9_u8, 79_u8, 9_u8, 100_u8, 9_u8, 121_u8, 9_u8, 143_u8, 9_u8,
+            164_u8, 9_u8, 186_u8, 9_u8, 207_u8, 9_u8, 229_u8, 9_u8, 251_u8, 10_u8, 17_u8, 10_u8,
+            39_u8, 10_u8, 61_u8, 10_u8, 84_u8, 10_u8, 106_u8, 10_u8, 129_u8, 10_u8, 152_u8, 10_u8,
+            174_u8, 10_u8, 197_u8, 10_u8, 220_u8, 10_u8, 243_u8, 11_u8, 11_u8, 11_u8, 34_u8, 11_u8,
+            57_u8, 11_u8, 81_u8, 11_u8, 105_u8, 11_u8, 128_u8, 11_u8, 152_u8, 11_u8, 176_u8, 11_u8,
+            200_u8, 11_u8, 225_u8, 11_u8, 249_u8, 12_u8, 18_u8, 12_u8, 42_u8, 12_u8, 67_u8, 12_u8,
+            92_u8, 12_u8, 117_u8, 12_u8, 142_u8, 12_u8, 167_u8, 12_u8, 192_u8, 12_u8, 217_u8,
+            12_u8, 243_u8, 13_u8, 13_u8, 13_u8, 38_u8, 13_u8, 64_u8, 13_u8, 90_u8, 13_u8, 116_u8,
+            13_u8, 142_u8, 13_u8, 169_u8, 13_u8, 195_u8, 13_u8, 222_u8, 13_u8, 248_u8, 14_u8,
+            19_u8, 14_u8, 46_u8, 14_u8, 73_u8, 14_u8, 100_u8, 14_u8, 127_u8, 14_u8, 155_u8, 14_u8,
+            182_u8, 14_u8, 210_u8, 14_u8, 238_u8, 15_u8, 9_u8, 15_u8, 37_u8, 15_u8, 65_u8, 15_u8,
+            94_u8, 15_u8, 122_u8, 15_u8, 150_u8, 15_u8, 179_u8, 15_u8, 207_u8, 15_u8, 236_u8,
+            16_u8, 9_u8, 16_u8, 38_u8, 16_u8, 67_u8, 16_u8, 97_u8, 16_u8, 126_u8, 16_u8, 155_u8,
+            16_u8, 185_u8, 16_u8, 215_u8, 16_u8, 245_u8, 17_u8, 19_u8, 17_u8, 49_u8, 17_u8, 79_u8,
+            17_u8, 109_u8, 17_u8, 140_u8, 17_u8, 170_u8, 17_u8, 201_u8, 17_u8, 232_u8, 18_u8, 7_u8,
+            18_u8, 38_u8, 18_u8, 69_u8, 18_u8, 100_u8, 18_u8, 132_u8, 18_u8, 163_u8, 18_u8, 195_u8,
+            18_u8, 227_u8, 19_u8, 3_u8, 19_u8, 35_u8, 19_u8, 67_u8, 19_u8, 99_u8, 19_u8, 131_u8,
+            19_u8, 164_u8, 19_u8, 197_u8, 19_u8, 229_u8, 20_u8, 6_u8, 20_u8, 39_u8, 20_u8, 73_u8,
+            20_u8, 106_u8, 20_u8, 139_u8, 20_u8, 173_u8, 20_u8, 206_u8, 20_u8, 240_u8, 21_u8,
+            18_u8, 21_u8, 52_u8, 21_u8, 86_u8, 21_u8, 120_u8, 21_u8, 155_u8, 21_u8, 189_u8, 21_u8,
+            224_u8, 22_u8, 3_u8, 22_u8, 38_u8, 22_u8, 73_u8, 22_u8, 108_u8, 22_u8, 143_u8, 22_u8,
+            178_u8, 22_u8, 214_u8, 22_u8, 250_u8, 23_u8, 29_u8, 23_u8, 65_u8, 23_u8, 101_u8, 23_u8,
+            137_u8, 23_u8, 174_u8, 23_u8, 210_u8, 23_u8, 247_u8, 24_u8, 27_u8, 24_u8, 64_u8, 24_u8,
+            101_u8, 24_u8, 138_u8, 24_u8, 175_u8, 24_u8, 213_u8, 24_u8, 250_u8, 25_u8, 32_u8,
+            25_u8, 69_u8, 25_u8, 107_u8, 25_u8, 145_u8, 25_u8, 183_u8, 25_u8, 221_u8, 26_u8, 4_u8,
+            26_u8, 42_u8, 26_u8, 81_u8, 26_u8, 119_u8, 26_u8, 158_u8, 26_u8, 197_u8, 26_u8, 236_u8,
+            27_u8, 20_u8, 27_u8, 59_u8, 27_u8, 99_u8, 27_u8, 138_u8, 27_u8, 178_u8, 27_u8, 218_u8,
+            28_u8, 2_u8, 28_u8, 42_u8, 28_u8, 82_u8, 28_u8, 123_u8, 28_u8, 163_u8, 28_u8, 204_u8,
+            28_u8, 245_u8, 29_u8, 30_u8, 29_u8, 71_u8, 29_u8, 112_u8, 29_u8, 153_u8, 29_u8, 195_u8,
+            29_u8, 236_u8, 30_u8, 22_u8, 30_u8, 64_u8, 30_u8, 106_u8, 30_u8, 148_u8, 30_u8, 190_u8,
+            30_u8, 233_u8, 31_u8, 19_u8, 31_u8, 62_u8, 31_u8, 105_u8, 31_u8, 148_u8, 31_u8, 191_u8,
+            31_u8, 234_u8, 32_u8, 21_u8, 32_u8, 65_u8, 32_u8, 108_u8, 32_u8, 152_u8, 32_u8, 196_u8,
+            32_u8, 240_u8, 33_u8, 28_u8, 33_u8, 72_u8, 33_u8, 117_u8, 33_u8, 161_u8, 33_u8, 206_u8,
+            33_u8, 251_u8, 34_u8, 39_u8, 34_u8, 85_u8, 34_u8, 130_u8, 34_u8, 175_u8, 34_u8, 221_u8,
+            35_u8, 10_u8, 35_u8, 56_u8, 35_u8, 102_u8, 35_u8, 148_u8, 35_u8, 194_u8, 35_u8, 240_u8,
+            36_u8, 31_u8, 36_u8, 77_u8, 36_u8, 124_u8, 36_u8, 171_u8, 36_u8, 218_u8, 37_u8, 9_u8,
+            37_u8, 56_u8, 37_u8, 104_u8, 37_u8, 151_u8, 37_u8, 199_u8, 37_u8, 247_u8, 38_u8, 39_u8,
+            38_u8, 87_u8, 38_u8, 135_u8, 38_u8, 183_u8, 38_u8, 232_u8, 39_u8, 24_u8, 39_u8, 73_u8,
+            39_u8, 122_u8, 39_u8, 171_u8, 39_u8, 220_u8, 40_u8, 13_u8, 40_u8, 63_u8, 40_u8, 113_u8,
+            40_u8, 162_u8, 40_u8, 212_u8, 41_u8, 6_u8, 41_u8, 56_u8, 41_u8, 107_u8, 41_u8, 157_u8,
+            41_u8, 208_u8, 42_u8, 2_u8, 42_u8, 53_u8, 42_u8, 104_u8, 42_u8, 155_u8, 42_u8, 207_u8,
+            43_u8, 2_u8, 43_u8, 54_u8, 43_u8, 105_u8, 43_u8, 157_u8, 43_u8, 209_u8, 44_u8, 5_u8,
+            44_u8, 57_u8, 44_u8, 110_u8, 44_u8, 162_u8, 44_u8, 215_u8, 45_u8, 12_u8, 45_u8, 65_u8,
+            45_u8, 118_u8, 45_u8, 171_u8, 45_u8, 225_u8, 46_u8, 22_u8, 46_u8, 76_u8, 46_u8, 130_u8,
+            46_u8, 183_u8, 46_u8, 238_u8, 47_u8, 36_u8, 47_u8, 90_u8, 47_u8, 145_u8, 47_u8, 199_u8,
+            47_u8, 254_u8, 48_u8, 53_u8, 48_u8, 108_u8, 48_u8, 164_u8, 48_u8, 219_u8, 49_u8, 18_u8,
+            49_u8, 74_u8, 49_u8, 130_u8, 49_u8, 186_u8, 49_u8, 242_u8, 50_u8, 42_u8, 50_u8, 99_u8,
+            50_u8, 155_u8, 50_u8, 212_u8, 51_u8, 13_u8, 51_u8, 70_u8, 51_u8, 127_u8, 51_u8, 184_u8,
+            51_u8, 241_u8, 52_u8, 43_u8, 52_u8, 101_u8, 52_u8, 158_u8, 52_u8, 216_u8, 53_u8, 19_u8,
+            53_u8, 77_u8, 53_u8, 135_u8, 53_u8, 194_u8, 53_u8, 253_u8, 54_u8, 55_u8, 54_u8, 114_u8,
+            54_u8, 174_u8, 54_u8, 233_u8, 55_u8, 36_u8, 55_u8, 96_u8, 55_u8, 156_u8, 55_u8, 215_u8,
+            56_u8, 20_u8, 56_u8, 80_u8, 56_u8, 140_u8, 56_u8, 200_u8, 57_u8, 5_u8, 57_u8, 66_u8,
+            57_u8, 127_u8, 57_u8, 188_u8, 57_u8, 249_u8, 58_u8, 54_u8, 58_u8, 116_u8, 58_u8,
+            178_u8, 58_u8, 239_u8, 59_u8, 45_u8, 59_u8, 107_u8, 59_u8, 170_u8, 59_u8, 232_u8,
+            60_u8, 39_u8, 60_u8, 101_u8, 60_u8, 164_u8, 60_u8, 227_u8, 61_u8, 34_u8, 61_u8, 97_u8,
+            61_u8, 161_u8, 61_u8, 224_u8, 62_u8, 32_u8, 62_u8, 96_u8, 62_u8, 160_u8, 62_u8, 224_u8,
+            63_u8, 33_u8, 63_u8, 97_u8, 63_u8, 162_u8, 63_u8, 226_u8, 64_u8, 35_u8, 64_u8, 100_u8,
+            64_u8, 166_u8, 64_u8, 231_u8, 65_u8, 41_u8, 65_u8, 106_u8, 65_u8, 172_u8, 65_u8,
+            238_u8, 66_u8, 48_u8, 66_u8, 114_u8, 66_u8, 181_u8, 66_u8, 247_u8, 67_u8, 58_u8, 67_u8,
+            125_u8, 67_u8, 192_u8, 68_u8, 3_u8, 68_u8, 71_u8, 68_u8, 138_u8, 68_u8, 206_u8, 69_u8,
+            18_u8, 69_u8, 85_u8, 69_u8, 154_u8, 69_u8, 222_u8, 70_u8, 34_u8, 70_u8, 103_u8, 70_u8,
+            171_u8, 70_u8, 240_u8, 71_u8, 53_u8, 71_u8, 123_u8, 71_u8, 192_u8, 72_u8, 5_u8, 72_u8,
+            75_u8, 72_u8, 145_u8, 72_u8, 215_u8, 73_u8, 29_u8, 73_u8, 99_u8, 73_u8, 169_u8, 73_u8,
+            240_u8, 74_u8, 55_u8, 74_u8, 125_u8, 74_u8, 196_u8, 75_u8, 12_u8, 75_u8, 83_u8, 75_u8,
+            154_u8, 75_u8, 226_u8, 76_u8, 42_u8, 76_u8, 114_u8, 76_u8, 186_u8, 77_u8, 2_u8, 77_u8,
+            74_u8, 77_u8, 147_u8, 77_u8, 220_u8, 78_u8, 37_u8, 78_u8, 110_u8, 78_u8, 183_u8, 79_u8,
+            0_u8, 79_u8, 73_u8, 79_u8, 147_u8, 79_u8, 221_u8, 80_u8, 39_u8, 80_u8, 113_u8, 80_u8,
+            187_u8, 81_u8, 6_u8, 81_u8, 80_u8, 81_u8, 155_u8, 81_u8, 230_u8, 82_u8, 49_u8, 82_u8,
+            124_u8, 82_u8, 199_u8, 83_u8, 19_u8, 83_u8, 95_u8, 83_u8, 170_u8, 83_u8, 246_u8, 84_u8,
+            66_u8, 84_u8, 143_u8, 84_u8, 219_u8, 85_u8, 40_u8, 85_u8, 117_u8, 85_u8, 194_u8, 86_u8,
+            15_u8, 86_u8, 92_u8, 86_u8, 169_u8, 86_u8, 247_u8, 87_u8, 68_u8, 87_u8, 146_u8, 87_u8,
+            224_u8, 88_u8, 47_u8, 88_u8, 125_u8, 88_u8, 203_u8, 89_u8, 26_u8, 89_u8, 105_u8, 89_u8,
+            184_u8, 90_u8, 7_u8, 90_u8, 86_u8, 90_u8, 166_u8, 90_u8, 245_u8, 91_u8, 69_u8, 91_u8,
+            149_u8, 91_u8, 229_u8, 92_u8, 53_u8, 92_u8, 134_u8, 92_u8, 214_u8, 93_u8, 39_u8, 93_u8,
+            120_u8, 93_u8, 201_u8, 94_u8, 26_u8, 94_u8, 108_u8, 94_u8, 189_u8, 95_u8, 15_u8, 95_u8,
+            97_u8, 95_u8, 179_u8, 96_u8, 5_u8, 96_u8, 87_u8, 96_u8, 170_u8, 96_u8, 252_u8, 97_u8,
+            79_u8, 97_u8, 162_u8, 97_u8, 245_u8, 98_u8, 73_u8, 98_u8, 156_u8, 98_u8, 240_u8, 99_u8,
+            67_u8, 99_u8, 151_u8, 99_u8, 235_u8, 100_u8, 64_u8, 100_u8, 148_u8, 100_u8, 233_u8,
+            101_u8, 61_u8, 101_u8, 146_u8, 101_u8, 231_u8, 102_u8, 61_u8, 102_u8, 146_u8, 102_u8,
+            232_u8, 103_u8, 61_u8, 103_u8, 147_u8, 103_u8, 233_u8, 104_u8, 63_u8, 104_u8, 150_u8,
+            104_u8, 236_u8, 105_u8, 67_u8, 105_u8, 154_u8, 105_u8, 241_u8, 106_u8, 72_u8, 106_u8,
+            159_u8, 106_u8, 247_u8, 107_u8, 79_u8, 107_u8, 167_u8, 107_u8, 255_u8, 108_u8, 87_u8,
+            108_u8, 175_u8, 109_u8, 8_u8, 109_u8, 96_u8, 109_u8, 185_u8, 110_u8, 18_u8, 110_u8,
+            107_u8, 110_u8, 196_u8, 111_u8, 30_u8, 111_u8, 120_u8, 111_u8, 209_u8, 112_u8, 43_u8,
+            112_u8, 134_u8, 112_u8, 224_u8, 113_u8, 58_u8, 113_u8, 149_u8, 113_u8, 240_u8, 114_u8,
+            75_u8, 114_u8, 166_u8, 115_u8, 1_u8, 115_u8, 93_u8, 115_u8, 184_u8, 116_u8, 20_u8,
+            116_u8, 112_u8, 116_u8, 204_u8, 117_u8, 40_u8, 117_u8, 133_u8, 117_u8, 225_u8, 118_u8,
+            62_u8, 118_u8, 155_u8, 118_u8, 248_u8, 119_u8, 86_u8, 119_u8, 179_u8, 120_u8, 17_u8,
+            120_u8, 110_u8, 120_u8, 204_u8, 121_u8, 42_u8, 121_u8, 137_u8, 121_u8, 231_u8, 122_u8,
+            70_u8, 122_u8, 165_u8, 123_u8, 4_u8, 123_u8, 99_u8, 123_u8, 194_u8, 124_u8, 33_u8,
+            124_u8, 129_u8, 124_u8, 225_u8, 125_u8, 65_u8, 125_u8, 161_u8, 126_u8, 1_u8, 126_u8,
+            98_u8, 126_u8, 194_u8, 127_u8, 35_u8, 127_u8, 132_u8, 127_u8, 229_u8, 128_u8, 71_u8,
+            128_u8, 168_u8, 129_u8, 10_u8, 129_u8, 107_u8, 129_u8, 205_u8, 130_u8, 48_u8, 130_u8,
+            146_u8, 130_u8, 244_u8, 131_u8, 87_u8, 131_u8, 186_u8, 132_u8, 29_u8, 132_u8, 128_u8,
+            132_u8, 227_u8, 133_u8, 71_u8, 133_u8, 171_u8, 134_u8, 14_u8, 134_u8, 114_u8, 134_u8,
+            215_u8, 135_u8, 59_u8, 135_u8, 159_u8, 136_u8, 4_u8, 136_u8, 105_u8, 136_u8, 206_u8,
+            137_u8, 51_u8, 137_u8, 153_u8, 137_u8, 254_u8, 138_u8, 100_u8, 138_u8, 202_u8, 139_u8,
+            48_u8, 139_u8, 150_u8, 139_u8, 252_u8, 140_u8, 99_u8, 140_u8, 202_u8, 141_u8, 49_u8,
+            141_u8, 152_u8, 141_u8, 255_u8, 142_u8, 102_u8, 142_u8, 206_u8, 143_u8, 54_u8, 143_u8,
+            158_u8, 144_u8, 6_u8, 144_u8, 110_u8, 144_u8, 214_u8, 145_u8, 63_u8, 145_u8, 168_u8,
+            146_u8, 17_u8, 146_u8, 122_u8, 146_u8, 227_u8, 147_u8, 77_u8, 147_u8, 182_u8, 148_u8,
+            32_u8, 148_u8, 138_u8, 148_u8, 244_u8, 149_u8, 95_u8, 149_u8, 201_u8, 150_u8, 52_u8,
+            150_u8, 159_u8, 151_u8, 10_u8, 151_u8, 117_u8, 151_u8, 224_u8, 152_u8, 76_u8, 152_u8,
+            184_u8, 153_u8, 36_u8, 153_u8, 144_u8, 153_u8, 252_u8, 154_u8, 104_u8, 154_u8, 213_u8,
+            155_u8, 66_u8, 155_u8, 175_u8, 156_u8, 28_u8, 156_u8, 137_u8, 156_u8, 247_u8, 157_u8,
+            100_u8, 157_u8, 210_u8, 158_u8, 64_u8, 158_u8, 174_u8, 159_u8, 29_u8, 159_u8, 139_u8,
+            159_u8, 250_u8, 160_u8, 105_u8, 160_u8, 216_u8, 161_u8, 71_u8, 161_u8, 182_u8, 162_u8,
+            38_u8, 162_u8, 150_u8, 163_u8, 6_u8, 163_u8, 118_u8, 163_u8, 230_u8, 164_u8, 86_u8,
+            164_u8, 199_u8, 165_u8, 56_u8, 165_u8, 169_u8, 166_u8, 26_u8, 166_u8, 139_u8, 166_u8,
+            253_u8, 167_u8, 110_u8, 167_u8, 224_u8, 168_u8, 82_u8, 168_u8, 196_u8, 169_u8, 55_u8,
+            169_u8, 169_u8, 170_u8, 28_u8, 170_u8, 143_u8, 171_u8, 2_u8, 171_u8, 117_u8, 171_u8,
+            233_u8, 172_u8, 92_u8, 172_u8, 208_u8, 173_u8, 68_u8, 173_u8, 184_u8, 174_u8, 45_u8,
+            174_u8, 161_u8, 175_u8, 22_u8, 175_u8, 139_u8, 176_u8, 0_u8, 176_u8, 117_u8, 176_u8,
+            234_u8, 177_u8, 96_u8, 177_u8, 214_u8, 178_u8, 75_u8, 178_u8, 194_u8, 179_u8, 56_u8,
+            179_u8, 174_u8, 180_u8, 37_u8, 180_u8, 156_u8, 181_u8, 19_u8, 181_u8, 138_u8, 182_u8,
+            1_u8, 182_u8, 121_u8, 182_u8, 240_u8, 183_u8, 104_u8, 183_u8, 224_u8, 184_u8, 89_u8,
+            184_u8, 209_u8, 185_u8, 74_u8, 185_u8, 194_u8, 186_u8, 59_u8, 186_u8, 181_u8, 187_u8,
+            46_u8, 187_u8, 167_u8, 188_u8, 33_u8, 188_u8, 155_u8, 189_u8, 21_u8, 189_u8, 143_u8,
+            190_u8, 10_u8, 190_u8, 132_u8, 190_u8, 255_u8, 191_u8, 122_u8, 191_u8, 245_u8, 192_u8,
+            112_u8, 192_u8, 236_u8, 193_u8, 103_u8, 193_u8, 227_u8, 194_u8, 95_u8, 194_u8, 219_u8,
+            195_u8, 88_u8, 195_u8, 212_u8, 196_u8, 81_u8, 196_u8, 206_u8, 197_u8, 75_u8, 197_u8,
+            200_u8, 198_u8, 70_u8, 198_u8, 195_u8, 199_u8, 65_u8, 199_u8, 191_u8, 200_u8, 61_u8,
+            200_u8, 188_u8, 201_u8, 58_u8, 201_u8, 185_u8, 202_u8, 56_u8, 202_u8, 183_u8, 203_u8,
+            54_u8, 203_u8, 182_u8, 204_u8, 53_u8, 204_u8, 181_u8, 205_u8, 53_u8, 205_u8, 181_u8,
+            206_u8, 54_u8, 206_u8, 182_u8, 207_u8, 55_u8, 207_u8, 184_u8, 208_u8, 57_u8, 208_u8,
+            186_u8, 209_u8, 60_u8, 209_u8, 190_u8, 210_u8, 63_u8, 210_u8, 193_u8, 211_u8, 68_u8,
+            211_u8, 198_u8, 212_u8, 73_u8, 212_u8, 203_u8, 213_u8, 78_u8, 213_u8, 209_u8, 214_u8,
+            85_u8, 214_u8, 216_u8, 215_u8, 92_u8, 215_u8, 224_u8, 216_u8, 100_u8, 216_u8, 232_u8,
+            217_u8, 108_u8, 217_u8, 241_u8, 218_u8, 118_u8, 218_u8, 251_u8, 219_u8, 128_u8, 220_u8,
+            5_u8, 220_u8, 138_u8, 221_u8, 16_u8, 221_u8, 150_u8, 222_u8, 28_u8, 222_u8, 162_u8,
+            223_u8, 41_u8, 223_u8, 175_u8, 224_u8, 54_u8, 224_u8, 189_u8, 225_u8, 68_u8, 225_u8,
+            204_u8, 226_u8, 83_u8, 226_u8, 219_u8, 227_u8, 99_u8, 227_u8, 235_u8, 228_u8, 115_u8,
+            228_u8, 252_u8, 229_u8, 132_u8, 230_u8, 13_u8, 230_u8, 150_u8, 231_u8, 31_u8, 231_u8,
+            169_u8, 232_u8, 50_u8, 232_u8, 188_u8, 233_u8, 70_u8, 233_u8, 208_u8, 234_u8, 91_u8,
+            234_u8, 229_u8, 235_u8, 112_u8, 235_u8, 251_u8, 236_u8, 134_u8, 237_u8, 17_u8, 237_u8,
+            156_u8, 238_u8, 40_u8, 238_u8, 180_u8, 239_u8, 64_u8, 239_u8, 204_u8, 240_u8, 88_u8,
+            240_u8, 229_u8, 241_u8, 114_u8, 241_u8, 255_u8, 242_u8, 140_u8, 243_u8, 25_u8, 243_u8,
+            167_u8, 244_u8, 52_u8, 244_u8, 194_u8, 245_u8, 80_u8, 245_u8, 222_u8, 246_u8, 109_u8,
+            246_u8, 251_u8, 247_u8, 138_u8, 248_u8, 25_u8, 248_u8, 168_u8, 249_u8, 56_u8, 249_u8,
+            199_u8, 250_u8, 87_u8, 250_u8, 231_u8, 251_u8, 119_u8, 252_u8, 7_u8, 252_u8, 152_u8,
+            253_u8, 41_u8, 253_u8, 186_u8, 254_u8, 75_u8, 254_u8, 220_u8, 255_u8, 109_u8, 255_u8,
+            255_u8,
+        ]
+    });
 pub unsafe fn BrunsliUnalignedRead16_66(mut p: *const ::libc::c_void) -> u16 {
     let mut t: u16 = 0_u16;
     {
@@ -997,50 +1080,58 @@ pub unsafe fn BrunsliSuppressUnusedFunctions_75() {
     &(Some(BrunsliUnalignedRead64_69));
     &(Some(BrunsliUnalignedWrite64_70));
 }
-pub static mut kNormalizeThreshold_76: u8 = unsafe { 254_u8 };
-pub static mut kDivLut17_77: [u16; 255] = unsafe {
-    [
-        0_u16, 0_u16, 0_u16, 43690_u16, 32768_u16, 26214_u16, 21845_u16, 18724_u16, 16384_u16,
-        14563_u16, 13107_u16, 11915_u16, 10922_u16, 10082_u16, 9362_u16, 8738_u16, 8192_u16,
-        7710_u16, 7281_u16, 6898_u16, 6553_u16, 6241_u16, 5957_u16, 5698_u16, 5461_u16, 5242_u16,
-        5041_u16, 4854_u16, 4681_u16, 4519_u16, 4369_u16, 4228_u16, 4096_u16, 3971_u16, 3855_u16,
-        3744_u16, 3640_u16, 3542_u16, 3449_u16, 3360_u16, 3276_u16, 3196_u16, 3120_u16, 3048_u16,
-        2978_u16, 2912_u16, 2849_u16, 2788_u16, 2730_u16, 2674_u16, 2621_u16, 2570_u16, 2520_u16,
-        2473_u16, 2427_u16, 2383_u16, 2340_u16, 2299_u16, 2259_u16, 2221_u16, 2184_u16, 2148_u16,
-        2114_u16, 2080_u16, 2048_u16, 2016_u16, 1985_u16, 1956_u16, 1927_u16, 1899_u16, 1872_u16,
-        1846_u16, 1820_u16, 1795_u16, 1771_u16, 1747_u16, 1724_u16, 1702_u16, 1680_u16, 1659_u16,
-        1638_u16, 1618_u16, 1598_u16, 1579_u16, 1560_u16, 1542_u16, 1524_u16, 1506_u16, 1489_u16,
-        1472_u16, 1456_u16, 1440_u16, 1424_u16, 1409_u16, 1394_u16, 1379_u16, 1365_u16, 1351_u16,
-        1337_u16, 1323_u16, 1310_u16, 1297_u16, 1285_u16, 1272_u16, 1260_u16, 1248_u16, 1236_u16,
-        1224_u16, 1213_u16, 1202_u16, 1191_u16, 1180_u16, 1170_u16, 1159_u16, 1149_u16, 1139_u16,
-        1129_u16, 1120_u16, 1110_u16, 1101_u16, 1092_u16, 1083_u16, 1074_u16, 1065_u16, 1057_u16,
-        1048_u16, 1040_u16, 1032_u16, 1024_u16, 1016_u16, 1008_u16, 1000_u16, 992_u16, 985_u16,
-        978_u16, 970_u16, 963_u16, 956_u16, 949_u16, 942_u16, 936_u16, 929_u16, 923_u16, 916_u16,
-        910_u16, 903_u16, 897_u16, 891_u16, 885_u16, 879_u16, 873_u16, 868_u16, 862_u16, 856_u16,
-        851_u16, 845_u16, 840_u16, 834_u16, 829_u16, 824_u16, 819_u16, 814_u16, 809_u16, 804_u16,
-        799_u16, 794_u16, 789_u16, 784_u16, 780_u16, 775_u16, 771_u16, 766_u16, 762_u16, 757_u16,
-        753_u16, 748_u16, 744_u16, 740_u16, 736_u16, 732_u16, 728_u16, 724_u16, 720_u16, 716_u16,
-        712_u16, 708_u16, 704_u16, 700_u16, 697_u16, 693_u16, 689_u16, 686_u16, 682_u16, 679_u16,
-        675_u16, 672_u16, 668_u16, 665_u16, 661_u16, 658_u16, 655_u16, 652_u16, 648_u16, 645_u16,
-        642_u16, 639_u16, 636_u16, 633_u16, 630_u16, 627_u16, 624_u16, 621_u16, 618_u16, 615_u16,
-        612_u16, 609_u16, 606_u16, 604_u16, 601_u16, 598_u16, 595_u16, 593_u16, 590_u16, 587_u16,
-        585_u16, 582_u16, 579_u16, 577_u16, 574_u16, 572_u16, 569_u16, 567_u16, 564_u16, 562_u16,
-        560_u16, 557_u16, 555_u16, 553_u16, 550_u16, 548_u16, 546_u16, 543_u16, 541_u16, 539_u16,
-        537_u16, 534_u16, 532_u16, 530_u16, 528_u16, 526_u16, 524_u16, 522_u16, 520_u16, 518_u16,
-        516_u16,
-    ]
-};
+pub static mut kNormalizeThreshold_76: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 254_u8 });
+pub static mut kDivLut17_77: std::cell::LazyCell<[u16; 255]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            0_u16, 0_u16, 0_u16, 43690_u16, 32768_u16, 26214_u16, 21845_u16, 18724_u16, 16384_u16,
+            14563_u16, 13107_u16, 11915_u16, 10922_u16, 10082_u16, 9362_u16, 8738_u16, 8192_u16,
+            7710_u16, 7281_u16, 6898_u16, 6553_u16, 6241_u16, 5957_u16, 5698_u16, 5461_u16,
+            5242_u16, 5041_u16, 4854_u16, 4681_u16, 4519_u16, 4369_u16, 4228_u16, 4096_u16,
+            3971_u16, 3855_u16, 3744_u16, 3640_u16, 3542_u16, 3449_u16, 3360_u16, 3276_u16,
+            3196_u16, 3120_u16, 3048_u16, 2978_u16, 2912_u16, 2849_u16, 2788_u16, 2730_u16,
+            2674_u16, 2621_u16, 2570_u16, 2520_u16, 2473_u16, 2427_u16, 2383_u16, 2340_u16,
+            2299_u16, 2259_u16, 2221_u16, 2184_u16, 2148_u16, 2114_u16, 2080_u16, 2048_u16,
+            2016_u16, 1985_u16, 1956_u16, 1927_u16, 1899_u16, 1872_u16, 1846_u16, 1820_u16,
+            1795_u16, 1771_u16, 1747_u16, 1724_u16, 1702_u16, 1680_u16, 1659_u16, 1638_u16,
+            1618_u16, 1598_u16, 1579_u16, 1560_u16, 1542_u16, 1524_u16, 1506_u16, 1489_u16,
+            1472_u16, 1456_u16, 1440_u16, 1424_u16, 1409_u16, 1394_u16, 1379_u16, 1365_u16,
+            1351_u16, 1337_u16, 1323_u16, 1310_u16, 1297_u16, 1285_u16, 1272_u16, 1260_u16,
+            1248_u16, 1236_u16, 1224_u16, 1213_u16, 1202_u16, 1191_u16, 1180_u16, 1170_u16,
+            1159_u16, 1149_u16, 1139_u16, 1129_u16, 1120_u16, 1110_u16, 1101_u16, 1092_u16,
+            1083_u16, 1074_u16, 1065_u16, 1057_u16, 1048_u16, 1040_u16, 1032_u16, 1024_u16,
+            1016_u16, 1008_u16, 1000_u16, 992_u16, 985_u16, 978_u16, 970_u16, 963_u16, 956_u16,
+            949_u16, 942_u16, 936_u16, 929_u16, 923_u16, 916_u16, 910_u16, 903_u16, 897_u16,
+            891_u16, 885_u16, 879_u16, 873_u16, 868_u16, 862_u16, 856_u16, 851_u16, 845_u16,
+            840_u16, 834_u16, 829_u16, 824_u16, 819_u16, 814_u16, 809_u16, 804_u16, 799_u16,
+            794_u16, 789_u16, 784_u16, 780_u16, 775_u16, 771_u16, 766_u16, 762_u16, 757_u16,
+            753_u16, 748_u16, 744_u16, 740_u16, 736_u16, 732_u16, 728_u16, 724_u16, 720_u16,
+            716_u16, 712_u16, 708_u16, 704_u16, 700_u16, 697_u16, 693_u16, 689_u16, 686_u16,
+            682_u16, 679_u16, 675_u16, 672_u16, 668_u16, 665_u16, 661_u16, 658_u16, 655_u16,
+            652_u16, 648_u16, 645_u16, 642_u16, 639_u16, 636_u16, 633_u16, 630_u16, 627_u16,
+            624_u16, 621_u16, 618_u16, 615_u16, 612_u16, 609_u16, 606_u16, 604_u16, 601_u16,
+            598_u16, 595_u16, 593_u16, 590_u16, 587_u16, 585_u16, 582_u16, 579_u16, 577_u16,
+            574_u16, 572_u16, 569_u16, 567_u16, 564_u16, 562_u16, 560_u16, 557_u16, 555_u16,
+            553_u16, 550_u16, 548_u16, 546_u16, 543_u16, 541_u16, 539_u16, 537_u16, 534_u16,
+            532_u16, 530_u16, 528_u16, 526_u16, 524_u16, 522_u16, 520_u16, 518_u16, 516_u16,
+        ]
+    });
 pub unsafe fn FastDivide_78(mut numerator: u32, mut denominator: u8) -> u8 {
-    let mut result: u32 =
-        (((numerator).wrapping_mul((kDivLut17_77[(denominator) as usize] as u32))) >> (17));
+    let mut result: u32 = (((numerator).wrapping_mul(
+        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDivLut17_77))[(denominator) as usize]
+            as u32),
+    )) >> (17));
     if !((result) < (256_u32)) {
         (unsafe { BrunsliDumpAndAbort_79(c"context.cc".as_ptr(), 55, c"FastDivide".as_ptr()) });
         'loop_: while true {}
     };
     return (result as u8);
 }
-pub static mut kInitProb_80: u8 = unsafe { 134_u8 };
-pub static mut kInitProbCount_81: u8 = unsafe { 3_u8 };
+pub static mut kInitProb_80: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 134_u8 });
+pub static mut kInitProbCount_81: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 3_u8 });
 #[repr(C)]
 #[derive(Clone)]
 pub struct brunsli_Prob {
@@ -1051,17 +1142,20 @@ pub struct brunsli_Prob {
 impl brunsli_Prob {
     pub unsafe fn brunsli_Prob() -> Self {
         let mut this = Self {
-            prob8: kInitProb_80,
-            total: kInitProbCount_81,
-            count: (((kInitProb_80 as i32) * (kInitProbCount_81 as i32)) as u16),
+            prob8: (*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProb_80)),
+            total: (*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProbCount_81)),
+            count: ((((*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProb_80)) as i32)
+                * ((*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProbCount_81)) as i32))
+                as u16),
         };
         this
     }
     pub unsafe fn destructor(&mut self) {}
     pub unsafe fn Init(&mut self, mut probability: u8) {
         self.prob8 = probability;
-        self.total = kInitProbCount_81;
-        self.count = (((kInitProbCount_81 as i32) * (probability as i32)) as u16);
+        self.total = (*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProbCount_81));
+        self.count = ((((*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProbCount_81)) as i32)
+            * (probability as i32)) as u16);
     }
     pub unsafe fn Add(&mut self, mut val: i32) {
         self.total.prefix_inc();
@@ -1075,9 +1169,13 @@ impl brunsli_Prob {
             let _denominator: u8 = self.total;
             FastDivide_78(_numerator, _denominator)
         });
-        if ((self.total as i32) == (kNormalizeThreshold_76 as i32)) {
+        if ((self.total as i32)
+            == ((*std::cell::LazyCell::force_mut(&mut *&raw mut kNormalizeThreshold_76)) as i32))
+        {
             self.count = ((self.count as i32) >> 1) as u16;
-            self.total = (((kNormalizeThreshold_76 as i32) >> (1)) as u8);
+            self.total = ((((*std::cell::LazyCell::force_mut(&mut *&raw mut kNormalizeThreshold_76))
+                as i32)
+                >> (1)) as u8);
         }
     }
     pub unsafe fn get_proba(&self) -> u8 {
@@ -1089,195 +1187,242 @@ impl Default for brunsli_Prob {
         unsafe { brunsli_Prob::brunsli_Prob() }
     }
 }
-pub static mut kMaxAverageContext_82: usize = unsafe { 8_usize };
-pub static mut kNumAvrgContexts_83: usize =
-    unsafe { (kMaxAverageContext_82).wrapping_add(1_usize) };
-pub static mut kNumNonZeroBits_84: usize = unsafe { 6_usize };
-pub static mut kNumNonZeroTreeSize_85: usize =
-    unsafe { (((((1_u32) << (kNumNonZeroBits_84)) as u32).wrapping_sub((1_u32 as u32))) as usize) };
-pub static mut kNumNonZeroQuant_86: usize = unsafe { 2_usize };
-pub static mut kNumNonZeroContextMax_87: usize =
-    unsafe { (kNumNonZeroTreeSize_85).wrapping_div(kNumNonZeroQuant_86) };
-pub static mut kNumNonZeroContextCount_88: usize =
-    unsafe { (kNumNonZeroContextMax_87).wrapping_add(1_usize) };
-pub static mut kNonzeroBuckets_89: [u8; 64] = unsafe {
-    [
-        0_u8, 1_u8, 2_u8, 3_u8, 4_u8, 4_u8, 5_u8, 5_u8, 5_u8, 6_u8, 6_u8, 6_u8, 6_u8, 7_u8, 7_u8,
-        7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 8_u8, 8_u8, 8_u8, 8_u8, 8_u8, 8_u8, 8_u8, 8_u8, 8_u8,
-        8_u8, 8_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8,
-        10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
-        10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
-    ]
-};
-pub static mut kNumNonzeroBuckets_90: u8 = unsafe { 11_u8 };
-pub static mut kNumSchemes_91: i32 = unsafe { 7 };
-pub static mut kFreqContext_92: [[u8; 64]; 7] = unsafe {
-    [
+pub static mut kMaxAverageContext_82: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 8_usize });
+pub static mut kNumAvrgContexts_83: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe {
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82))
+            .wrapping_add(1_usize)
+    });
+pub static mut kNumNonZeroBits_84: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 6_usize });
+pub static mut kNumNonZeroTreeSize_85: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe {
+        (((((1_u32) << (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroBits_84)))
+            as u32)
+            .wrapping_sub((1_u32 as u32))) as usize)
+    });
+pub static mut kNumNonZeroQuant_86: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 2_usize });
+pub static mut kNumNonZeroContextMax_87: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe {
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroTreeSize_85))
+            .wrapping_div((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroQuant_86)))
+    });
+pub static mut kNumNonZeroContextCount_88: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe {
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroContextMax_87))
+            .wrapping_add(1_usize)
+    });
+pub static mut kNonzeroBuckets_89: std::cell::LazyCell<[u8; 64]> =
+    std::cell::LazyCell::new(|| unsafe {
         [
+            0_u8, 1_u8, 2_u8, 3_u8, 4_u8, 4_u8, 5_u8, 5_u8, 5_u8, 6_u8, 6_u8, 6_u8, 6_u8, 7_u8,
+            7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 8_u8, 8_u8, 8_u8, 8_u8, 8_u8, 8_u8, 8_u8,
+            8_u8, 8_u8, 8_u8, 8_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8, 9_u8,
+            9_u8, 9_u8, 9_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
+            10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8, 10_u8,
+        ]
+    });
+pub static mut kNumNonzeroBuckets_90: std::cell::LazyCell<u8> =
+    std::cell::LazyCell::new(|| unsafe { 11_u8 });
+pub static mut kNumSchemes_91: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 7 });
+pub static mut kFreqContext_92: std::cell::LazyCell<[[u8; 64]; 7]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            [
+                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            ],
+            [
+                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 0_u8, 0_u8,
+            ],
+            [
+                0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 2_u8, 2_u8, 2_u8, 2_u8,
+                2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 3_u8, 3_u8,
+                3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8,
+                3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8,
+                3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 1_u8, 1_u8, 1_u8,
+            ],
+            [
+                0_u8, 1_u8, 1_u8, 2_u8, 2_u8, 2_u8, 3_u8, 3_u8, 3_u8, 3_u8, 4_u8, 4_u8, 4_u8, 4_u8,
+                4_u8, 4_u8, 5_u8, 5_u8, 5_u8, 5_u8, 5_u8, 5_u8, 5_u8, 5_u8, 6_u8, 6_u8, 6_u8, 6_u8,
+                6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 7_u8, 7_u8,
+                7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8,
+                7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 2_u8, 2_u8, 2_u8,
+            ],
+            [
+                0_u8, 1_u8, 2_u8, 3_u8, 4_u8, 4_u8, 5_u8, 5_u8, 6_u8, 6_u8, 7_u8, 7_u8, 8_u8, 8_u8,
+                8_u8, 8_u8, 9_u8, 9_u8, 9_u8, 9_u8, 10_u8, 10_u8, 10_u8, 10_u8, 11_u8, 11_u8,
+                11_u8, 11_u8, 12_u8, 12_u8, 12_u8, 12_u8, 13_u8, 13_u8, 13_u8, 13_u8, 13_u8, 13_u8,
+                13_u8, 13_u8, 14_u8, 14_u8, 14_u8, 14_u8, 14_u8, 14_u8, 14_u8, 14_u8, 15_u8, 15_u8,
+                15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8,
+                15_u8, 15_u8,
+            ],
+            [
+                0_u8, 1_u8, 2_u8, 3_u8, 4_u8, 5_u8, 6_u8, 7_u8, 8_u8, 9_u8, 10_u8, 11_u8, 12_u8,
+                13_u8, 14_u8, 15_u8, 16_u8, 16_u8, 17_u8, 17_u8, 18_u8, 18_u8, 19_u8, 19_u8, 20_u8,
+                20_u8, 21_u8, 21_u8, 22_u8, 22_u8, 23_u8, 23_u8, 24_u8, 24_u8, 24_u8, 24_u8, 25_u8,
+                25_u8, 25_u8, 25_u8, 26_u8, 26_u8, 26_u8, 26_u8, 27_u8, 27_u8, 27_u8, 27_u8, 28_u8,
+                28_u8, 28_u8, 28_u8, 29_u8, 29_u8, 29_u8, 29_u8, 30_u8, 30_u8, 30_u8, 30_u8, 31_u8,
+                31_u8, 31_u8, 31_u8,
+            ],
+            [
+                0_u8, 1_u8, 2_u8, 3_u8, 4_u8, 5_u8, 6_u8, 7_u8, 8_u8, 9_u8, 10_u8, 11_u8, 12_u8,
+                13_u8, 14_u8, 15_u8, 16_u8, 17_u8, 18_u8, 19_u8, 20_u8, 21_u8, 22_u8, 23_u8, 24_u8,
+                25_u8, 26_u8, 27_u8, 28_u8, 29_u8, 30_u8, 31_u8, 32_u8, 33_u8, 34_u8, 35_u8, 36_u8,
+                37_u8, 38_u8, 39_u8, 40_u8, 41_u8, 42_u8, 43_u8, 44_u8, 45_u8, 46_u8, 47_u8, 48_u8,
+                49_u8, 50_u8, 51_u8, 52_u8, 53_u8, 54_u8, 55_u8, 56_u8, 57_u8, 58_u8, 59_u8, 60_u8,
+                61_u8, 62_u8, 63_u8,
+            ],
+        ]
+    });
+pub static mut kNumNonzeroContext_93: std::cell::LazyCell<[[u16; 64]; 7]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            [
+                0_u16, 1_u16, 1_u16, 2_u16, 2_u16, 2_u16, 3_u16, 3_u16, 3_u16, 3_u16, 4_u16, 4_u16,
+                4_u16, 4_u16, 4_u16, 4_u16, 5_u16, 5_u16, 5_u16, 5_u16, 5_u16, 5_u16, 5_u16, 5_u16,
+                6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16,
+                6_u16, 6_u16, 6_u16, 6_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16,
+                7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16,
+                7_u16, 7_u16, 7_u16, 7_u16,
+            ],
+            [
+                0_u16, 2_u16, 2_u16, 4_u16, 4_u16, 4_u16, 6_u16, 6_u16, 6_u16, 6_u16, 8_u16, 8_u16,
+                8_u16, 8_u16, 8_u16, 8_u16, 10_u16, 10_u16, 10_u16, 10_u16, 10_u16, 10_u16, 10_u16,
+                10_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16,
+                12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 14_u16, 14_u16, 14_u16,
+                14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16,
+                14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16,
+                14_u16,
+            ],
+            [
+                0_u16, 4_u16, 4_u16, 8_u16, 8_u16, 8_u16, 12_u16, 12_u16, 12_u16, 12_u16, 16_u16,
+                16_u16, 16_u16, 16_u16, 16_u16, 16_u16, 20_u16, 20_u16, 20_u16, 20_u16, 20_u16,
+                20_u16, 20_u16, 20_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16,
+                24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 28_u16,
+                28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16,
+                28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16,
+                28_u16, 28_u16, 28_u16,
+            ],
+            [
+                0_u16, 8_u16, 8_u16, 16_u16, 16_u16, 16_u16, 24_u16, 24_u16, 24_u16, 24_u16,
+                32_u16, 32_u16, 32_u16, 32_u16, 32_u16, 32_u16, 40_u16, 40_u16, 40_u16, 40_u16,
+                40_u16, 40_u16, 40_u16, 40_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16,
+                48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16,
+                55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16,
+                55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16,
+                55_u16, 55_u16, 55_u16, 55_u16,
+            ],
+            [
+                0_u16, 16_u16, 16_u16, 32_u16, 32_u16, 32_u16, 48_u16, 48_u16, 48_u16, 48_u16,
+                64_u16, 64_u16, 64_u16, 64_u16, 64_u16, 64_u16, 80_u16, 80_u16, 80_u16, 80_u16,
+                80_u16, 80_u16, 80_u16, 80_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16,
+                95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16,
+                109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16,
+                109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16,
+                109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16,
+            ],
+            [
+                0_u16, 32_u16, 32_u16, 64_u16, 64_u16, 64_u16, 96_u16, 96_u16, 96_u16, 96_u16,
+                127_u16, 127_u16, 127_u16, 127_u16, 127_u16, 127_u16, 157_u16, 157_u16, 157_u16,
+                157_u16, 157_u16, 157_u16, 157_u16, 157_u16, 185_u16, 185_u16, 185_u16, 185_u16,
+                185_u16, 185_u16, 185_u16, 185_u16, 185_u16, 185_u16, 185_u16, 185_u16, 185_u16,
+                185_u16, 185_u16, 185_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16,
+                211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16,
+                211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16,
+            ],
+            [
+                0_u16, 64_u16, 64_u16, 127_u16, 127_u16, 127_u16, 188_u16, 188_u16, 188_u16,
+                188_u16, 246_u16, 246_u16, 246_u16, 246_u16, 246_u16, 246_u16, 300_u16, 300_u16,
+                300_u16, 300_u16, 300_u16, 300_u16, 300_u16, 300_u16, 348_u16, 348_u16, 348_u16,
+                348_u16, 348_u16, 348_u16, 348_u16, 348_u16, 348_u16, 348_u16, 348_u16, 348_u16,
+                348_u16, 348_u16, 348_u16, 348_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16,
+                388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16,
+                388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16,
+                388_u16,
+            ],
+        ]
+    });
+pub static mut kNumNonzeroContextSkip_94: std::cell::LazyCell<[u16; 7]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [8_u16, 15_u16, 31_u16, 61_u16, 120_u16, 231_u16, 412_u16]
+    });
+pub static mut kContextAlgorithm_95: std::cell::LazyCell<[u8; 128]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 0_u8, 0_u8, 2_u8, 3_u8, 1_u8, 1_u8, 1_u8, 0_u8,
+            0_u8, 0_u8, 2_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 2_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
             0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        ],
-        [
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-            1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-            1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-            1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 0_u8, 0_u8,
-        ],
-        [
-            0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 2_u8, 2_u8, 2_u8, 2_u8,
-            2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 2_u8, 3_u8, 3_u8,
-            3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8,
-            3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8,
-            3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 1_u8, 1_u8, 1_u8,
-        ],
-        [
-            0_u8, 1_u8, 1_u8, 2_u8, 2_u8, 2_u8, 3_u8, 3_u8, 3_u8, 3_u8, 4_u8, 4_u8, 4_u8, 4_u8,
-            4_u8, 4_u8, 5_u8, 5_u8, 5_u8, 5_u8, 5_u8, 5_u8, 5_u8, 5_u8, 6_u8, 6_u8, 6_u8, 6_u8,
-            6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 6_u8, 7_u8, 7_u8,
-            7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 7_u8,
-            7_u8, 7_u8, 7_u8, 7_u8, 7_u8, 2_u8, 2_u8, 2_u8,
-        ],
-        [
-            0_u8, 1_u8, 2_u8, 3_u8, 4_u8, 4_u8, 5_u8, 5_u8, 6_u8, 6_u8, 7_u8, 7_u8, 8_u8, 8_u8,
-            8_u8, 8_u8, 9_u8, 9_u8, 9_u8, 9_u8, 10_u8, 10_u8, 10_u8, 10_u8, 11_u8, 11_u8, 11_u8,
-            11_u8, 12_u8, 12_u8, 12_u8, 12_u8, 13_u8, 13_u8, 13_u8, 13_u8, 13_u8, 13_u8, 13_u8,
-            13_u8, 14_u8, 14_u8, 14_u8, 14_u8, 14_u8, 14_u8, 14_u8, 14_u8, 15_u8, 15_u8, 15_u8,
-            15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8, 15_u8,
-            15_u8,
-        ],
-        [
-            0_u8, 1_u8, 2_u8, 3_u8, 4_u8, 5_u8, 6_u8, 7_u8, 8_u8, 9_u8, 10_u8, 11_u8, 12_u8, 13_u8,
-            14_u8, 15_u8, 16_u8, 16_u8, 17_u8, 17_u8, 18_u8, 18_u8, 19_u8, 19_u8, 20_u8, 20_u8,
-            21_u8, 21_u8, 22_u8, 22_u8, 23_u8, 23_u8, 24_u8, 24_u8, 24_u8, 24_u8, 25_u8, 25_u8,
-            25_u8, 25_u8, 26_u8, 26_u8, 26_u8, 26_u8, 27_u8, 27_u8, 27_u8, 27_u8, 28_u8, 28_u8,
-            28_u8, 28_u8, 29_u8, 29_u8, 29_u8, 29_u8, 30_u8, 30_u8, 30_u8, 30_u8, 31_u8, 31_u8,
-            31_u8, 31_u8,
-        ],
-        [
-            0_u8, 1_u8, 2_u8, 3_u8, 4_u8, 5_u8, 6_u8, 7_u8, 8_u8, 9_u8, 10_u8, 11_u8, 12_u8, 13_u8,
-            14_u8, 15_u8, 16_u8, 17_u8, 18_u8, 19_u8, 20_u8, 21_u8, 22_u8, 23_u8, 24_u8, 25_u8,
-            26_u8, 27_u8, 28_u8, 29_u8, 30_u8, 31_u8, 32_u8, 33_u8, 34_u8, 35_u8, 36_u8, 37_u8,
-            38_u8, 39_u8, 40_u8, 41_u8, 42_u8, 43_u8, 44_u8, 45_u8, 46_u8, 47_u8, 48_u8, 49_u8,
-            50_u8, 51_u8, 52_u8, 53_u8, 54_u8, 55_u8, 56_u8, 57_u8, 58_u8, 59_u8, 60_u8, 61_u8,
-            62_u8, 63_u8,
-        ],
-    ]
-};
-pub static mut kNumNonzeroContext_93: [[u16; 64]; 7] = unsafe {
-    [
-        [
-            0_u16, 1_u16, 1_u16, 2_u16, 2_u16, 2_u16, 3_u16, 3_u16, 3_u16, 3_u16, 4_u16, 4_u16,
-            4_u16, 4_u16, 4_u16, 4_u16, 5_u16, 5_u16, 5_u16, 5_u16, 5_u16, 5_u16, 5_u16, 5_u16,
-            6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16, 6_u16,
-            6_u16, 6_u16, 6_u16, 6_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16,
-            7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16, 7_u16,
-            7_u16, 7_u16, 7_u16, 7_u16,
-        ],
-        [
-            0_u16, 2_u16, 2_u16, 4_u16, 4_u16, 4_u16, 6_u16, 6_u16, 6_u16, 6_u16, 8_u16, 8_u16,
-            8_u16, 8_u16, 8_u16, 8_u16, 10_u16, 10_u16, 10_u16, 10_u16, 10_u16, 10_u16, 10_u16,
-            10_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16,
-            12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 12_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16,
-            14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16,
-            14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16, 14_u16,
-        ],
-        [
-            0_u16, 4_u16, 4_u16, 8_u16, 8_u16, 8_u16, 12_u16, 12_u16, 12_u16, 12_u16, 16_u16,
-            16_u16, 16_u16, 16_u16, 16_u16, 16_u16, 20_u16, 20_u16, 20_u16, 20_u16, 20_u16, 20_u16,
-            20_u16, 20_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16,
-            24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 24_u16, 28_u16, 28_u16, 28_u16, 28_u16,
-            28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16,
-            28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16, 28_u16,
-        ],
-        [
-            0_u16, 8_u16, 8_u16, 16_u16, 16_u16, 16_u16, 24_u16, 24_u16, 24_u16, 24_u16, 32_u16,
-            32_u16, 32_u16, 32_u16, 32_u16, 32_u16, 40_u16, 40_u16, 40_u16, 40_u16, 40_u16, 40_u16,
-            40_u16, 40_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16,
-            48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 48_u16, 55_u16, 55_u16, 55_u16, 55_u16,
-            55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16,
-            55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16, 55_u16,
-        ],
-        [
-            0_u16, 16_u16, 16_u16, 32_u16, 32_u16, 32_u16, 48_u16, 48_u16, 48_u16, 48_u16, 64_u16,
-            64_u16, 64_u16, 64_u16, 64_u16, 64_u16, 80_u16, 80_u16, 80_u16, 80_u16, 80_u16, 80_u16,
-            80_u16, 80_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16,
-            95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 95_u16, 109_u16, 109_u16, 109_u16,
-            109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16,
-            109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16, 109_u16,
-            109_u16, 109_u16, 109_u16,
-        ],
-        [
-            0_u16, 32_u16, 32_u16, 64_u16, 64_u16, 64_u16, 96_u16, 96_u16, 96_u16, 96_u16, 127_u16,
-            127_u16, 127_u16, 127_u16, 127_u16, 127_u16, 157_u16, 157_u16, 157_u16, 157_u16,
-            157_u16, 157_u16, 157_u16, 157_u16, 185_u16, 185_u16, 185_u16, 185_u16, 185_u16,
-            185_u16, 185_u16, 185_u16, 185_u16, 185_u16, 185_u16, 185_u16, 185_u16, 185_u16,
-            185_u16, 185_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16,
-            211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16,
-            211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16, 211_u16,
-        ],
-        [
-            0_u16, 64_u16, 64_u16, 127_u16, 127_u16, 127_u16, 188_u16, 188_u16, 188_u16, 188_u16,
-            246_u16, 246_u16, 246_u16, 246_u16, 246_u16, 246_u16, 300_u16, 300_u16, 300_u16,
-            300_u16, 300_u16, 300_u16, 300_u16, 300_u16, 348_u16, 348_u16, 348_u16, 348_u16,
-            348_u16, 348_u16, 348_u16, 348_u16, 348_u16, 348_u16, 348_u16, 348_u16, 348_u16,
-            348_u16, 348_u16, 348_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16,
-            388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16,
-            388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16, 388_u16,
-        ],
-    ]
-};
-pub static mut kNumNonzeroContextSkip_94: [u16; 7] =
-    unsafe { [8_u16, 15_u16, 31_u16, 61_u16, 120_u16, 231_u16, 412_u16] };
-pub static mut kContextAlgorithm_95: [u8; 128] = unsafe {
-    [
-        0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 0_u8, 0_u8, 2_u8, 3_u8, 1_u8, 1_u8, 1_u8, 0_u8, 0_u8,
-        0_u8, 2_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 2_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 2_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 0_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8,
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-    ]
-};
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+            1_u8, 1_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 2_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8,
+        ]
+    });
 pub unsafe fn ZeroDensityContext_96(
     mut nonzeros_left: usize,
     mut k: usize,
     mut bits: usize,
 ) -> u16 {
-    return (((kNumNonzeroContext_93[(bits)][(nonzeros_left)] as i32)
-        + (kFreqContext_92[(bits)][(k)] as i32)) as u16);
+    return ((((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonzeroContext_93))[(bits)]
+        [(nonzeros_left)] as i32)
+        + ((*std::cell::LazyCell::force_mut(&mut *&raw mut kFreqContext_92))[(bits)][(k)] as i32))
+        as u16);
 }
 pub unsafe fn WeightedAverageContextDC_97(mut vals: *const i32, mut x: i32) -> i32 {
     let mut sum: i32 = (((((1) + (*vals.offset(((x) - (2)) as isize)))
         + (*vals.offset(((x) - (1)) as isize)))
         + (*vals.offset((x) as isize)))
         + (*vals.offset(((x) + (1)) as isize)));
-    if (((sum) >> (kMaxAverageContext_82)) != (0)) {
-        return (kMaxAverageContext_82 as i32);
+    if (((sum) >> (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82))) != (0)) {
+        return ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82)) as i32);
     }
     return (unsafe { Log2FloorNonZero_74((sum as u32)) });
 }
 pub unsafe fn WeightedAverageContext_98(mut vals: *const i32, mut prev_row_delta: i32) -> i32 {
     let mut sum: i32 = ((((((4) + (*vals.offset((0) as isize)))
-        + (((*vals.offset((-kDCTBlockSize_3) as isize))
-            + (*vals.offset((prev_row_delta) as isize)))
+        + (((*vals.offset(
+            (-(*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) as isize,
+        )) + (*vals.offset((prev_row_delta) as isize)))
             * (2)))
-        + (*vals.offset(((-2_i32) * (kDCTBlockSize_3)) as isize)))
-        + (*vals.offset(((prev_row_delta) - (kDCTBlockSize_3)) as isize)))
-        + (*vals.offset(((prev_row_delta) + (kDCTBlockSize_3)) as isize)));
-    if (((sum) >> ((kMaxAverageContext_82).wrapping_add(2_usize))) != (0)) {
-        return (kMaxAverageContext_82 as i32);
+        + (*vals.offset(
+            ((-2_i32) * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) as isize,
+        )))
+        + (*vals.offset(
+            ((prev_row_delta) - (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                as isize,
+        )))
+        + (*vals.offset(
+            ((prev_row_delta) + (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                as isize,
+        )));
+    if (((sum)
+        >> ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82))
+            .wrapping_add(2_usize)))
+        != (0))
+    {
+        return ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82)) as i32);
     }
     return ((unsafe { Log2FloorNonZero_74((sum as u32)) }) - (2));
 }
-pub static mut kACPredictPrecisionBits_99: i32 = unsafe { 13 };
-pub static mut kACPredictPrecision_100: i32 = unsafe { ((1) << (kACPredictPrecisionBits_99)) };
+pub static mut kACPredictPrecisionBits_99: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 13 });
+pub static mut kACPredictPrecision_100: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe {
+        ((1) << (*std::cell::LazyCell::force_mut(&mut *&raw mut kACPredictPrecisionBits_99)))
+    });
 pub unsafe fn ACPredictContext_101(mut p: i64, mut avg_ctx: *mut usize, mut sgn: *mut usize) {
     let mut multiplier: i32 = 0_i32;
     if ((p) >= (0_i64)) {
@@ -1287,15 +1432,19 @@ pub unsafe fn ACPredictContext_101(mut p: i64, mut avg_ctx: *mut usize, mut sgn:
         p = -p;
     }
     let mut ctx: usize = 0_usize;
-    if ((p) >= (((1_u32) << (kMaxAverageContext_82)) as i64)) {
-        ctx = kMaxAverageContext_82;
+    if ((p)
+        >= (((1_u32) << (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82)))
+            as i64))
+    {
+        ctx = (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82));
     } else {
         ctx = ((unsafe {
             Log2FloorNonZero_74(((2_u32).wrapping_mul((p as u32))).wrapping_add(1_u32))
         }) as usize);
     }
     (*avg_ctx) = ctx;
-    (*sgn) = (kMaxAverageContext_82).wrapping_add((multiplier as usize).wrapping_mul(ctx));
+    (*sgn) = (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82))
+        .wrapping_add((multiplier as usize).wrapping_mul(ctx));
 }
 pub unsafe fn ACPredictContextCol_102(
     mut prev: *const i16,
@@ -1331,7 +1480,10 @@ pub unsafe fn ACPredictContextCol_102(
         + ((terms[(7) as usize] as i64) * ((*mult.offset((7) as isize)) as i64)));
     (unsafe {
         ACPredictContext_101(
-            (((*prev.offset((0) as isize)) as i64) - ((delta) / (kACPredictPrecision_100 as i64))),
+            (((*prev.offset((0) as isize)) as i64)
+                - ((delta)
+                    / ((*std::cell::LazyCell::force_mut(&mut *&raw mut kACPredictPrecision_100))
+                        as i64))),
             avg_ctx,
             sgn,
         )
@@ -1371,7 +1523,10 @@ pub unsafe fn ACPredictContextRow_103(
         + ((terms[(7) as usize] as i64) * ((*mult.offset((7) as isize)) as i64)));
     (unsafe {
         ACPredictContext_101(
-            (((*prev.offset((0) as isize)) as i64) - ((delta) / (kACPredictPrecision_100 as i64))),
+            (((*prev.offset((0) as isize)) as i64)
+                - ((delta)
+                    / ((*std::cell::LazyCell::force_mut(&mut *&raw mut kACPredictPrecision_100))
+                        as i64))),
             avg_ctx,
             sgn,
         )
@@ -1393,15 +1548,18 @@ pub unsafe fn NumNonzerosContext_104(mut prev: *const u8, mut x: i32, mut y: i32
             + (1))
             / (2)) as usize);
     }
-    if !((prediction) <= (kNumNonZeroTreeSize_85)) {
+    if !((prediction) <= (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroTreeSize_85))) {
         (unsafe {
             BrunsliDumpAndAbort_79(c"context.cc".as_ptr(), 305, c"NumNonzerosContext".as_ptr())
         });
         'loop_: while true {}
     };
-    return (((prediction).wrapping_div(kNumNonZeroQuant_86)) as u8);
+    return (((prediction)
+        .wrapping_div((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroQuant_86))))
+        as u8);
 }
-pub static mut kNumIsEmptyBlockContexts_105: i32 = unsafe { 3 };
+pub static mut kNumIsEmptyBlockContexts_105: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 3 });
 pub unsafe fn IsEmptyBlockContext_106(mut prev: *const i32, mut x: i32) -> i32 {
     return ((*prev.offset(((x) - (1)) as isize)) + (*prev.offset((x) as isize)));
 }
@@ -1422,7 +1580,9 @@ impl brunsli_ComponentStateDC {
         let mut this = Self {
             width: 0,
             is_zero_prob: brunsli_Prob::brunsli_Prob(),
-            is_empty_block_prob: (0..(kNumIsEmptyBlockContexts_105 as usize) as usize)
+            is_empty_block_prob: (0..((*std::cell::LazyCell::force_mut(
+                &mut *&raw mut kNumIsEmptyBlockContexts_105,
+            )) as usize) as usize)
                 .map(|_| <brunsli_Prob>::default())
                 .collect::<Vec<_>>(),
             sign_prob: (0..(9_usize) as usize)
@@ -1489,17 +1649,26 @@ impl brunsli_ComponentState {
             order: [0_u32; 64],
             mult_row: [0_i32; 64],
             mult_col: [0_i32; 64],
-            is_zero_prob: (0..(((kNumNonzeroBuckets_90 as i32) * (kDCTBlockSize_3)) as usize)
-                as usize)
+            is_zero_prob: (0..((((*std::cell::LazyCell::force_mut(
+                &mut *&raw mut kNumNonzeroBuckets_90,
+            )) as i32)
+                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                as usize) as usize)
                 .map(|_| <brunsli_Prob>::default())
                 .collect::<Vec<_>>(),
-            sign_prob: (0..(((((2_usize).wrapping_mul(kMaxAverageContext_82) as usize)
+            sign_prob: (0..(((((2_usize).wrapping_mul(
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82)),
+            ) as usize)
                 .wrapping_add(1_usize)) as usize)
-                .wrapping_mul((kDCTBlockSize_3 as usize))) as usize)
+                .wrapping_mul(
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize),
+                )) as usize)
                 .map(|_| <brunsli_Prob>::default())
                 .collect::<Vec<_>>(),
             num_nonzero_prob: std::array::from_fn::<_, 2016, _>(|_| brunsli_Prob::brunsli_Prob()),
-            first_extra_bit_prob: (0..(((10) * (kDCTBlockSize_3)) as usize) as usize)
+            first_extra_bit_prob: (0..(((10)
+                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                as usize) as usize)
                 .map(|_| <brunsli_Prob>::default())
                 .collect::<Vec<_>>(),
             prev_is_nonempty: Vec::new(),
@@ -1521,26 +1690,44 @@ impl brunsli_ComponentState {
             self.prev_num_nonzeros.resize_with(__a0, || <u8>::default())
         };
         {
-            let __a0 = ((((kDCTBlockSize_3) * (2)) * ((w) + (3))) as usize) as usize;
+            let __a0 = ((((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) * (2))
+                * ((w) + (3))) as usize) as usize;
             self.prev_abs_coeff.resize_with(__a0, || <i32>::default())
         };
         {
-            let __a0 = (((kDCTBlockSize_3) * ((w) + (1))) as usize) as usize;
+            let __a0 = (((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                * ((w) + (1))) as usize) as usize;
             self.prev_sign.resize_with(__a0, || <i32>::default())
         };
     }
     pub unsafe fn SizeInBytes(mut w: i32) -> usize {
-        return ((((((4) + (((10) + ((3) * (w))) * (kDCTBlockSize_3))) + ((2) * (w))) as usize)
+        return ((((((4)
+            + (((10) + ((3) * (w)))
+                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))))
+            + ((2) * (w))) as usize)
             .wrapping_mul((::std::mem::size_of::<i32>() as usize)) as u64)
             .wrapping_add(
-                ((((((((kNumNonzeroBuckets_90 as usize)
-                    .wrapping_add(((2_usize).wrapping_mul(kMaxAverageContext_82) as usize))
+                (((((((((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonzeroBuckets_90))
                     as usize)
-                    .wrapping_add(11_usize)) as usize)
-                    .wrapping_mul((kDCTBlockSize_3 as usize)) as usize)
                     .wrapping_add(
-                        ((kNumNonZeroContextCount_88).wrapping_mul(kNumNonZeroTreeSize_85)
+                        ((2_usize).wrapping_mul(
+                            (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82)),
+                        ) as usize),
+                    ) as usize)
+                    .wrapping_add(11_usize)) as usize)
+                    .wrapping_mul(
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
                             as usize),
+                    ) as usize)
+                    .wrapping_add(
+                        ((*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kNumNonZeroContextCount_88,
+                        ))
+                        .wrapping_mul(
+                            (*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kNumNonZeroTreeSize_85,
+                            )),
+                        ) as usize),
                     )) as u64)
                     .wrapping_mul((::std::mem::size_of::<brunsli_Prob>() as u64))
                     as u64),
@@ -1559,9 +1746,14 @@ impl Default for brunsli_ComponentState {
         unsafe { brunsli_ComponentState::brunsli_ComponentState() }
     }
 }
-pub static mut kSqrt2_107: f64 = unsafe { 1.414213562E+0 };
-pub static mut kSqrt2FixedPoint_108: i32 =
-    unsafe { (((kSqrt2_107) * (kACPredictPrecision_100 as f64)) as i32) };
+pub static mut kSqrt2_107: std::cell::LazyCell<f64> =
+    std::cell::LazyCell::new(|| unsafe { 1.414213562E+0 });
+pub static mut kSqrt2FixedPoint_108: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe {
+        (((*std::cell::LazyCell::force_mut(&mut *&raw mut kSqrt2_107))
+            * ((*std::cell::LazyCell::force_mut(&mut *&raw mut kACPredictPrecision_100)) as f64))
+            as i32)
+    });
 pub unsafe fn ComputeACPredictMultipliers_109(
     mut quant: *const i32,
     mut mult_row: *mut i32,
@@ -1573,11 +1765,11 @@ pub unsafe fn ComputeACPredictMultipliers_109(
         'loop_: while ((x) < (8_usize)) {
             (*mult_row.offset(((x).wrapping_add((8_usize).wrapping_mul(y))) as isize)) = (((*quant
                 .offset(((x).wrapping_add((8_usize).wrapping_mul(y))) as isize))
-                * (kSqrt2FixedPoint_108))
+                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kSqrt2FixedPoint_108)))
                 / (*quant.offset(((y).wrapping_mul(8_usize)) as isize)));
             (*mult_col.offset((((x).wrapping_mul(8_usize)).wrapping_add(y)) as isize)) = (((*quant
                 .offset(((x).wrapping_add((8_usize).wrapping_mul(y))) as isize))
-                * (kSqrt2FixedPoint_108))
+                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kSqrt2FixedPoint_108)))
                 / (*quant.offset((x) as isize)));
             x.prefix_inc();
         }
@@ -1604,7 +1796,7 @@ impl brunsli_ComponentStateDC {
         }
     }
 }
-pub static mut kInitProb_110: [u8; 64] = unsafe {
+pub static mut kInitProb_110: std::cell::LazyCell<[u8; 64]> = std::cell::LazyCell::new(|| unsafe {
     [
         228_u8, 216_u8, 216_u8, 195_u8, 192_u8, 189_u8, 182_u8, 184_u8, 179_u8, 176_u8, 171_u8,
         168_u8, 166_u8, 159_u8, 156_u8, 151_u8, 151_u8, 150_u8, 150_u8, 146_u8, 144_u8, 138_u8,
@@ -1613,274 +1805,304 @@ pub static mut kInitProb_110: [u8; 64] = unsafe {
         111_u8, 111_u8, 112_u8, 111_u8, 110_u8, 110_u8, 110_u8, 111_u8, 111_u8, 114_u8, 110_u8,
         111_u8, 112_u8, 113_u8, 116_u8, 120_u8, 126_u8, 131_u8, 147_u8, 160_u8,
     ]
-};
-pub static mut kInitProbNonzero_111: [[u8; 63]; 32] = unsafe {
-    [
+});
+pub static mut kInitProbNonzero_111: std::cell::LazyCell<[[u8; 63]; 32]> =
+    std::cell::LazyCell::new(|| unsafe {
         [
-            251_u8, 252_u8, 117_u8, 249_u8, 161_u8, 136_u8, 83_u8, 238_u8, 184_u8, 126_u8, 137_u8,
-            129_u8, 140_u8, 119_u8, 70_u8, 213_u8, 160_u8, 175_u8, 174_u8, 130_u8, 166_u8, 134_u8,
-            122_u8, 125_u8, 131_u8, 144_u8, 136_u8, 133_u8, 139_u8, 123_u8, 79_u8, 216_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            254_u8, 252_u8, 174_u8, 232_u8, 189_u8, 155_u8, 122_u8, 177_u8, 204_u8, 173_u8, 146_u8,
-            149_u8, 141_u8, 133_u8, 103_u8, 109_u8, 167_u8, 187_u8, 168_u8, 142_u8, 154_u8, 147_u8,
-            125_u8, 139_u8, 144_u8, 138_u8, 138_u8, 153_u8, 141_u8, 133_u8, 90_u8, 121_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            251_u8, 240_u8, 197_u8, 176_u8, 184_u8, 177_u8, 114_u8, 89_u8, 194_u8, 165_u8, 153_u8,
-            161_u8, 158_u8, 136_u8, 92_u8, 95_u8, 123_u8, 171_u8, 160_u8, 140_u8, 148_u8, 136_u8,
-            129_u8, 139_u8, 145_u8, 136_u8, 143_u8, 134_u8, 138_u8, 124_u8, 92_u8, 154_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            247_u8, 220_u8, 201_u8, 110_u8, 194_u8, 176_u8, 147_u8, 59_u8, 175_u8, 171_u8, 156_u8,
-            157_u8, 152_u8, 146_u8, 115_u8, 114_u8, 88_u8, 151_u8, 164_u8, 141_u8, 153_u8, 135_u8,
-            141_u8, 131_u8, 146_u8, 139_u8, 140_u8, 145_u8, 138_u8, 137_u8, 112_u8, 184_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            238_u8, 179_u8, 203_u8, 63_u8, 194_u8, 173_u8, 149_u8, 71_u8, 139_u8, 169_u8, 154_u8,
-            159_u8, 150_u8, 146_u8, 117_u8, 143_u8, 78_u8, 122_u8, 152_u8, 137_u8, 149_u8, 138_u8,
-            138_u8, 133_u8, 134_u8, 142_u8, 142_u8, 142_u8, 148_u8, 128_u8, 118_u8, 199_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            227_u8, 127_u8, 200_u8, 44_u8, 192_u8, 170_u8, 148_u8, 100_u8, 102_u8, 161_u8, 156_u8,
-            153_u8, 148_u8, 149_u8, 124_u8, 160_u8, 88_u8, 101_u8, 134_u8, 132_u8, 149_u8, 145_u8,
-            134_u8, 134_u8, 136_u8, 141_u8, 138_u8, 142_u8, 144_u8, 137_u8, 116_u8, 208_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            214_u8, 86_u8, 195_u8, 44_u8, 187_u8, 163_u8, 148_u8, 126_u8, 81_u8, 147_u8, 156_u8,
-            152_u8, 150_u8, 144_u8, 121_u8, 172_u8, 96_u8, 95_u8, 117_u8, 122_u8, 145_u8, 152_u8,
-            136_u8, 133_u8, 135_u8, 135_u8, 131_u8, 142_u8, 141_u8, 135_u8, 114_u8, 217_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            198_u8, 56_u8, 191_u8, 54_u8, 171_u8, 162_u8, 147_u8, 144_u8, 74_u8, 128_u8, 152_u8,
-            149_u8, 150_u8, 142_u8, 119_u8, 177_u8, 101_u8, 100_u8, 106_u8, 111_u8, 135_u8, 154_u8,
-            136_u8, 137_u8, 136_u8, 132_u8, 133_u8, 142_u8, 144_u8, 130_u8, 117_u8, 222_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            176_u8, 40_u8, 189_u8, 73_u8, 147_u8, 159_u8, 148_u8, 152_u8, 79_u8, 106_u8, 147_u8,
-            149_u8, 151_u8, 139_u8, 123_u8, 188_u8, 108_u8, 110_u8, 106_u8, 97_u8, 125_u8, 151_u8,
-            137_u8, 138_u8, 135_u8, 135_u8, 134_u8, 136_u8, 140_u8, 131_u8, 116_u8, 221_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            148_u8, 33_u8, 185_u8, 88_u8, 117_u8, 158_u8, 145_u8, 163_u8, 95_u8, 91_u8, 137_u8,
-            146_u8, 150_u8, 140_u8, 120_u8, 197_u8, 115_u8, 116_u8, 114_u8, 92_u8, 114_u8, 144_u8,
-            130_u8, 133_u8, 132_u8, 133_u8, 129_u8, 140_u8, 138_u8, 130_u8, 111_u8, 224_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            117_u8, 31_u8, 180_u8, 104_u8, 93_u8, 150_u8, 143_u8, 166_u8, 99_u8, 85_u8, 124_u8,
-            139_u8, 148_u8, 142_u8, 118_u8, 201_u8, 105_u8, 120_u8, 120_u8, 90_u8, 107_u8, 135_u8,
-            127_u8, 130_u8, 131_u8, 131_u8, 132_u8, 140_u8, 142_u8, 133_u8, 114_u8, 229_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            87_u8, 35_u8, 170_u8, 110_u8, 78_u8, 141_u8, 144_u8, 176_u8, 106_u8, 90_u8, 112_u8,
-            132_u8, 143_u8, 138_u8, 119_u8, 204_u8, 111_u8, 121_u8, 125_u8, 90_u8, 105_u8, 131_u8,
-            124_u8, 122_u8, 129_u8, 128_u8, 129_u8, 137_u8, 138_u8, 133_u8, 114_u8, 227_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            63_u8, 42_u8, 159_u8, 123_u8, 73_u8, 127_u8, 142_u8, 191_u8, 105_u8, 91_u8, 105_u8,
-            123_u8, 139_u8, 137_u8, 120_u8, 209_u8, 117_u8, 110_u8, 122_u8, 98_u8, 110_u8, 125_u8,
-            115_u8, 123_u8, 122_u8, 126_u8, 128_u8, 134_u8, 141_u8, 129_u8, 113_u8, 229_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            45_u8, 53_u8, 146_u8, 135_u8, 71_u8, 114_u8, 138_u8, 193_u8, 100_u8, 98_u8, 98_u8,
-            113_u8, 133_u8, 135_u8, 118_u8, 222_u8, 113_u8, 111_u8, 139_u8, 103_u8, 107_u8, 126_u8,
-            111_u8, 119_u8, 121_u8, 122_u8, 127_u8, 135_u8, 141_u8, 128_u8, 114_u8, 242_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            33_u8, 60_u8, 132_u8, 138_u8, 75_u8, 100_u8, 134_u8, 203_u8, 112_u8, 99_u8, 98_u8,
-            105_u8, 126_u8, 131_u8, 115_u8, 229_u8, 107_u8, 93_u8, 121_u8, 106_u8, 108_u8, 122_u8,
-            106_u8, 109_u8, 114_u8, 116_u8, 127_u8, 133_u8, 143_u8, 128_u8, 110_u8, 242_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            24_u8, 70_u8, 118_u8, 134_u8, 76_u8, 87_u8, 130_u8, 201_u8, 110_u8, 96_u8, 99_u8,
-            97_u8, 119_u8, 130_u8, 111_u8, 229_u8, 97_u8, 104_u8, 125_u8, 102_u8, 112_u8, 125_u8,
-            101_u8, 109_u8, 113_u8, 114_u8, 125_u8, 129_u8, 142_u8, 127_u8, 112_u8, 241_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            17_u8, 65_u8, 100_u8, 121_u8, 80_u8, 75_u8, 124_u8, 174_u8, 117_u8, 100_u8, 94_u8,
-            93_u8, 114_u8, 128_u8, 110_u8, 216_u8, 103_u8, 94_u8, 113_u8, 122_u8, 118_u8, 126_u8,
-            113_u8, 108_u8, 105_u8, 108_u8, 122_u8, 128_u8, 141_u8, 125_u8, 113_u8, 238_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            12_u8, 70_u8, 82_u8, 132_u8, 78_u8, 65_u8, 118_u8, 155_u8, 136_u8, 103_u8, 97_u8,
-            89_u8, 106_u8, 124_u8, 111_u8, 215_u8, 115_u8, 123_u8, 129_u8, 99_u8, 104_u8, 127_u8,
-            110_u8, 108_u8, 101_u8, 109_u8, 118_u8, 126_u8, 136_u8, 123_u8, 110_u8, 233_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            8_u8, 66_u8, 61_u8, 117_u8, 91_u8, 59_u8, 108_u8, 195_u8, 101_u8, 112_u8, 99_u8, 99_u8,
-            99_u8, 116_u8, 106_u8, 230_u8, 127_u8, 99_u8, 144_u8, 101_u8, 118_u8, 137_u8, 117_u8,
-            111_u8, 106_u8, 104_u8, 116_u8, 121_u8, 134_u8, 122_u8, 110_u8, 223_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            6_u8, 78_u8, 42_u8, 146_u8, 101_u8, 54_u8, 94_u8, 201_u8, 116_u8, 102_u8, 110_u8,
-            94_u8, 92_u8, 108_u8, 103_u8, 214_u8, 108_u8, 111_u8, 127_u8, 102_u8, 121_u8, 132_u8,
-            120_u8, 121_u8, 95_u8, 98_u8, 110_u8, 121_u8, 129_u8, 117_u8, 107_u8, 235_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            5_u8, 93_u8, 29_u8, 145_u8, 102_u8, 52_u8, 77_u8, 216_u8, 108_u8, 115_u8, 108_u8,
-            102_u8, 89_u8, 97_u8, 94_u8, 229_u8, 89_u8, 103_u8, 139_u8, 120_u8, 103_u8, 151_u8,
-            102_u8, 100_u8, 97_u8, 96_u8, 99_u8, 111_u8, 125_u8, 116_u8, 104_u8, 242_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            4_u8, 105_u8, 21_u8, 145_u8, 100_u8, 54_u8, 64_u8, 217_u8, 100_u8, 122_u8, 128_u8,
-            87_u8, 88_u8, 91_u8, 87_u8, 230_u8, 112_u8, 80_u8, 148_u8, 95_u8, 146_u8, 123_u8,
-            96_u8, 140_u8, 90_u8, 91_u8, 98_u8, 106_u8, 122_u8, 111_u8, 100_u8, 249_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            4_u8, 130_u8, 14_u8, 142_u8, 104_u8, 56_u8, 51_u8, 208_u8, 116_u8, 135_u8, 100_u8,
-            89_u8, 82_u8, 84_u8, 75_u8, 239_u8, 85_u8, 85_u8, 122_u8, 125_u8, 94_u8, 144_u8,
-            151_u8, 136_u8, 92_u8, 97_u8, 104_u8, 109_u8, 113_u8, 110_u8, 91_u8, 246_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            3_u8, 126_u8, 9_u8, 172_u8, 105_u8, 57_u8, 39_u8, 219_u8, 95_u8, 120_u8, 118_u8, 96_u8,
-            93_u8, 75_u8, 66_u8, 241_u8, 102_u8, 134_u8, 96_u8, 156_u8, 146_u8, 162_u8, 130_u8,
-            112_u8, 82_u8, 89_u8, 97_u8, 101_u8, 116_u8, 103_u8, 82_u8, 254_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            3_u8, 149_u8, 7_u8, 182_u8, 122_u8, 54_u8, 29_u8, 224_u8, 103_u8, 100_u8, 113_u8,
-            96_u8, 90_u8, 74_u8, 55_u8, 250_u8, 127_u8, 94_u8, 118_u8, 93_u8, 135_u8, 160_u8,
-            113_u8, 130_u8, 95_u8, 117_u8, 106_u8, 96_u8, 111_u8, 97_u8, 77_u8, 242_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            3_u8, 150_u8, 4_u8, 170_u8, 138_u8, 59_u8, 20_u8, 229_u8, 91_u8, 150_u8, 107_u8, 98_u8,
-            92_u8, 68_u8, 48_u8, 245_u8, 113_u8, 64_u8, 114_u8, 111_u8, 134_u8, 127_u8, 102_u8,
-            104_u8, 85_u8, 118_u8, 103_u8, 107_u8, 102_u8, 91_u8, 72_u8, 245_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            3_u8, 171_u8, 3_u8, 165_u8, 137_u8, 62_u8, 14_u8, 211_u8, 96_u8, 127_u8, 132_u8,
-            121_u8, 95_u8, 62_u8, 37_u8, 248_u8, 102_u8, 57_u8, 144_u8, 85_u8, 127_u8, 191_u8,
-            102_u8, 97_u8, 127_u8, 104_u8, 91_u8, 102_u8, 107_u8, 81_u8, 64_u8, 254_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            2_u8, 166_u8, 2_u8, 196_u8, 122_u8, 65_u8, 10_u8, 243_u8, 102_u8, 93_u8, 117_u8, 92_u8,
-            96_u8, 63_u8, 29_u8, 251_u8, 169_u8, 159_u8, 149_u8, 96_u8, 91_u8, 139_u8, 157_u8,
-            40_u8, 100_u8, 89_u8, 120_u8, 92_u8, 109_u8, 79_u8, 58_u8, 247_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            2_u8, 176_u8, 2_u8, 189_u8, 118_u8, 48_u8, 7_u8, 219_u8, 68_u8, 43_u8, 109_u8, 96_u8,
-            129_u8, 75_u8, 19_u8, 254_u8, 2_u8, 3_u8, 185_u8, 6_u8, 102_u8, 127_u8, 127_u8, 127_u8,
-            1_u8, 131_u8, 83_u8, 99_u8, 107_u8, 80_u8, 45_u8, 254_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            1_u8, 205_u8, 2_u8, 208_u8, 64_u8, 89_u8, 4_u8, 223_u8, 29_u8, 169_u8, 29_u8, 123_u8,
-            118_u8, 76_u8, 11_u8, 240_u8, 202_u8, 243_u8, 65_u8, 6_u8, 12_u8, 243_u8, 96_u8, 55_u8,
-            102_u8, 102_u8, 114_u8, 102_u8, 107_u8, 74_u8, 31_u8, 247_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            1_u8, 216_u8, 1_u8, 214_u8, 127_u8, 94_u8, 2_u8, 234_u8, 145_u8, 3_u8, 127_u8, 106_u8,
-            155_u8, 80_u8, 4_u8, 247_u8, 4_u8, 65_u8, 86_u8, 127_u8, 127_u8, 127_u8, 127_u8,
-            102_u8, 127_u8, 143_u8, 143_u8, 108_u8, 113_u8, 80_u8, 16_u8, 216_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-        [
-            2_u8, 199_u8, 1_u8, 222_u8, 93_u8, 94_u8, 1_u8, 232_u8, 2_u8, 65_u8, 74_u8, 139_u8,
-            201_u8, 48_u8, 2_u8, 254_u8, 169_u8, 127_u8, 52_u8, 243_u8, 251_u8, 249_u8, 102_u8,
-            86_u8, 202_u8, 153_u8, 65_u8, 65_u8, 146_u8, 69_u8, 8_u8, 238_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-            128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
-        ],
-    ]
-};
+            [
+                251_u8, 252_u8, 117_u8, 249_u8, 161_u8, 136_u8, 83_u8, 238_u8, 184_u8, 126_u8,
+                137_u8, 129_u8, 140_u8, 119_u8, 70_u8, 213_u8, 160_u8, 175_u8, 174_u8, 130_u8,
+                166_u8, 134_u8, 122_u8, 125_u8, 131_u8, 144_u8, 136_u8, 133_u8, 139_u8, 123_u8,
+                79_u8, 216_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8,
+            ],
+            [
+                254_u8, 252_u8, 174_u8, 232_u8, 189_u8, 155_u8, 122_u8, 177_u8, 204_u8, 173_u8,
+                146_u8, 149_u8, 141_u8, 133_u8, 103_u8, 109_u8, 167_u8, 187_u8, 168_u8, 142_u8,
+                154_u8, 147_u8, 125_u8, 139_u8, 144_u8, 138_u8, 138_u8, 153_u8, 141_u8, 133_u8,
+                90_u8, 121_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8,
+            ],
+            [
+                251_u8, 240_u8, 197_u8, 176_u8, 184_u8, 177_u8, 114_u8, 89_u8, 194_u8, 165_u8,
+                153_u8, 161_u8, 158_u8, 136_u8, 92_u8, 95_u8, 123_u8, 171_u8, 160_u8, 140_u8,
+                148_u8, 136_u8, 129_u8, 139_u8, 145_u8, 136_u8, 143_u8, 134_u8, 138_u8, 124_u8,
+                92_u8, 154_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8,
+            ],
+            [
+                247_u8, 220_u8, 201_u8, 110_u8, 194_u8, 176_u8, 147_u8, 59_u8, 175_u8, 171_u8,
+                156_u8, 157_u8, 152_u8, 146_u8, 115_u8, 114_u8, 88_u8, 151_u8, 164_u8, 141_u8,
+                153_u8, 135_u8, 141_u8, 131_u8, 146_u8, 139_u8, 140_u8, 145_u8, 138_u8, 137_u8,
+                112_u8, 184_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8,
+            ],
+            [
+                238_u8, 179_u8, 203_u8, 63_u8, 194_u8, 173_u8, 149_u8, 71_u8, 139_u8, 169_u8,
+                154_u8, 159_u8, 150_u8, 146_u8, 117_u8, 143_u8, 78_u8, 122_u8, 152_u8, 137_u8,
+                149_u8, 138_u8, 138_u8, 133_u8, 134_u8, 142_u8, 142_u8, 142_u8, 148_u8, 128_u8,
+                118_u8, 199_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8,
+            ],
+            [
+                227_u8, 127_u8, 200_u8, 44_u8, 192_u8, 170_u8, 148_u8, 100_u8, 102_u8, 161_u8,
+                156_u8, 153_u8, 148_u8, 149_u8, 124_u8, 160_u8, 88_u8, 101_u8, 134_u8, 132_u8,
+                149_u8, 145_u8, 134_u8, 134_u8, 136_u8, 141_u8, 138_u8, 142_u8, 144_u8, 137_u8,
+                116_u8, 208_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8,
+            ],
+            [
+                214_u8, 86_u8, 195_u8, 44_u8, 187_u8, 163_u8, 148_u8, 126_u8, 81_u8, 147_u8,
+                156_u8, 152_u8, 150_u8, 144_u8, 121_u8, 172_u8, 96_u8, 95_u8, 117_u8, 122_u8,
+                145_u8, 152_u8, 136_u8, 133_u8, 135_u8, 135_u8, 131_u8, 142_u8, 141_u8, 135_u8,
+                114_u8, 217_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8,
+            ],
+            [
+                198_u8, 56_u8, 191_u8, 54_u8, 171_u8, 162_u8, 147_u8, 144_u8, 74_u8, 128_u8,
+                152_u8, 149_u8, 150_u8, 142_u8, 119_u8, 177_u8, 101_u8, 100_u8, 106_u8, 111_u8,
+                135_u8, 154_u8, 136_u8, 137_u8, 136_u8, 132_u8, 133_u8, 142_u8, 144_u8, 130_u8,
+                117_u8, 222_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8,
+            ],
+            [
+                176_u8, 40_u8, 189_u8, 73_u8, 147_u8, 159_u8, 148_u8, 152_u8, 79_u8, 106_u8,
+                147_u8, 149_u8, 151_u8, 139_u8, 123_u8, 188_u8, 108_u8, 110_u8, 106_u8, 97_u8,
+                125_u8, 151_u8, 137_u8, 138_u8, 135_u8, 135_u8, 134_u8, 136_u8, 140_u8, 131_u8,
+                116_u8, 221_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8,
+            ],
+            [
+                148_u8, 33_u8, 185_u8, 88_u8, 117_u8, 158_u8, 145_u8, 163_u8, 95_u8, 91_u8, 137_u8,
+                146_u8, 150_u8, 140_u8, 120_u8, 197_u8, 115_u8, 116_u8, 114_u8, 92_u8, 114_u8,
+                144_u8, 130_u8, 133_u8, 132_u8, 133_u8, 129_u8, 140_u8, 138_u8, 130_u8, 111_u8,
+                224_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                117_u8, 31_u8, 180_u8, 104_u8, 93_u8, 150_u8, 143_u8, 166_u8, 99_u8, 85_u8, 124_u8,
+                139_u8, 148_u8, 142_u8, 118_u8, 201_u8, 105_u8, 120_u8, 120_u8, 90_u8, 107_u8,
+                135_u8, 127_u8, 130_u8, 131_u8, 131_u8, 132_u8, 140_u8, 142_u8, 133_u8, 114_u8,
+                229_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                87_u8, 35_u8, 170_u8, 110_u8, 78_u8, 141_u8, 144_u8, 176_u8, 106_u8, 90_u8, 112_u8,
+                132_u8, 143_u8, 138_u8, 119_u8, 204_u8, 111_u8, 121_u8, 125_u8, 90_u8, 105_u8,
+                131_u8, 124_u8, 122_u8, 129_u8, 128_u8, 129_u8, 137_u8, 138_u8, 133_u8, 114_u8,
+                227_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                63_u8, 42_u8, 159_u8, 123_u8, 73_u8, 127_u8, 142_u8, 191_u8, 105_u8, 91_u8, 105_u8,
+                123_u8, 139_u8, 137_u8, 120_u8, 209_u8, 117_u8, 110_u8, 122_u8, 98_u8, 110_u8,
+                125_u8, 115_u8, 123_u8, 122_u8, 126_u8, 128_u8, 134_u8, 141_u8, 129_u8, 113_u8,
+                229_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                45_u8, 53_u8, 146_u8, 135_u8, 71_u8, 114_u8, 138_u8, 193_u8, 100_u8, 98_u8, 98_u8,
+                113_u8, 133_u8, 135_u8, 118_u8, 222_u8, 113_u8, 111_u8, 139_u8, 103_u8, 107_u8,
+                126_u8, 111_u8, 119_u8, 121_u8, 122_u8, 127_u8, 135_u8, 141_u8, 128_u8, 114_u8,
+                242_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                33_u8, 60_u8, 132_u8, 138_u8, 75_u8, 100_u8, 134_u8, 203_u8, 112_u8, 99_u8, 98_u8,
+                105_u8, 126_u8, 131_u8, 115_u8, 229_u8, 107_u8, 93_u8, 121_u8, 106_u8, 108_u8,
+                122_u8, 106_u8, 109_u8, 114_u8, 116_u8, 127_u8, 133_u8, 143_u8, 128_u8, 110_u8,
+                242_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                24_u8, 70_u8, 118_u8, 134_u8, 76_u8, 87_u8, 130_u8, 201_u8, 110_u8, 96_u8, 99_u8,
+                97_u8, 119_u8, 130_u8, 111_u8, 229_u8, 97_u8, 104_u8, 125_u8, 102_u8, 112_u8,
+                125_u8, 101_u8, 109_u8, 113_u8, 114_u8, 125_u8, 129_u8, 142_u8, 127_u8, 112_u8,
+                241_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                17_u8, 65_u8, 100_u8, 121_u8, 80_u8, 75_u8, 124_u8, 174_u8, 117_u8, 100_u8, 94_u8,
+                93_u8, 114_u8, 128_u8, 110_u8, 216_u8, 103_u8, 94_u8, 113_u8, 122_u8, 118_u8,
+                126_u8, 113_u8, 108_u8, 105_u8, 108_u8, 122_u8, 128_u8, 141_u8, 125_u8, 113_u8,
+                238_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                12_u8, 70_u8, 82_u8, 132_u8, 78_u8, 65_u8, 118_u8, 155_u8, 136_u8, 103_u8, 97_u8,
+                89_u8, 106_u8, 124_u8, 111_u8, 215_u8, 115_u8, 123_u8, 129_u8, 99_u8, 104_u8,
+                127_u8, 110_u8, 108_u8, 101_u8, 109_u8, 118_u8, 126_u8, 136_u8, 123_u8, 110_u8,
+                233_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                8_u8, 66_u8, 61_u8, 117_u8, 91_u8, 59_u8, 108_u8, 195_u8, 101_u8, 112_u8, 99_u8,
+                99_u8, 99_u8, 116_u8, 106_u8, 230_u8, 127_u8, 99_u8, 144_u8, 101_u8, 118_u8,
+                137_u8, 117_u8, 111_u8, 106_u8, 104_u8, 116_u8, 121_u8, 134_u8, 122_u8, 110_u8,
+                223_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                6_u8, 78_u8, 42_u8, 146_u8, 101_u8, 54_u8, 94_u8, 201_u8, 116_u8, 102_u8, 110_u8,
+                94_u8, 92_u8, 108_u8, 103_u8, 214_u8, 108_u8, 111_u8, 127_u8, 102_u8, 121_u8,
+                132_u8, 120_u8, 121_u8, 95_u8, 98_u8, 110_u8, 121_u8, 129_u8, 117_u8, 107_u8,
+                235_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8,
+            ],
+            [
+                5_u8, 93_u8, 29_u8, 145_u8, 102_u8, 52_u8, 77_u8, 216_u8, 108_u8, 115_u8, 108_u8,
+                102_u8, 89_u8, 97_u8, 94_u8, 229_u8, 89_u8, 103_u8, 139_u8, 120_u8, 103_u8, 151_u8,
+                102_u8, 100_u8, 97_u8, 96_u8, 99_u8, 111_u8, 125_u8, 116_u8, 104_u8, 242_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8,
+            ],
+            [
+                4_u8, 105_u8, 21_u8, 145_u8, 100_u8, 54_u8, 64_u8, 217_u8, 100_u8, 122_u8, 128_u8,
+                87_u8, 88_u8, 91_u8, 87_u8, 230_u8, 112_u8, 80_u8, 148_u8, 95_u8, 146_u8, 123_u8,
+                96_u8, 140_u8, 90_u8, 91_u8, 98_u8, 106_u8, 122_u8, 111_u8, 100_u8, 249_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+            ],
+            [
+                4_u8, 130_u8, 14_u8, 142_u8, 104_u8, 56_u8, 51_u8, 208_u8, 116_u8, 135_u8, 100_u8,
+                89_u8, 82_u8, 84_u8, 75_u8, 239_u8, 85_u8, 85_u8, 122_u8, 125_u8, 94_u8, 144_u8,
+                151_u8, 136_u8, 92_u8, 97_u8, 104_u8, 109_u8, 113_u8, 110_u8, 91_u8, 246_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8,
+            ],
+            [
+                3_u8, 126_u8, 9_u8, 172_u8, 105_u8, 57_u8, 39_u8, 219_u8, 95_u8, 120_u8, 118_u8,
+                96_u8, 93_u8, 75_u8, 66_u8, 241_u8, 102_u8, 134_u8, 96_u8, 156_u8, 146_u8, 162_u8,
+                130_u8, 112_u8, 82_u8, 89_u8, 97_u8, 101_u8, 116_u8, 103_u8, 82_u8, 254_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+            ],
+            [
+                3_u8, 149_u8, 7_u8, 182_u8, 122_u8, 54_u8, 29_u8, 224_u8, 103_u8, 100_u8, 113_u8,
+                96_u8, 90_u8, 74_u8, 55_u8, 250_u8, 127_u8, 94_u8, 118_u8, 93_u8, 135_u8, 160_u8,
+                113_u8, 130_u8, 95_u8, 117_u8, 106_u8, 96_u8, 111_u8, 97_u8, 77_u8, 242_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+            ],
+            [
+                3_u8, 150_u8, 4_u8, 170_u8, 138_u8, 59_u8, 20_u8, 229_u8, 91_u8, 150_u8, 107_u8,
+                98_u8, 92_u8, 68_u8, 48_u8, 245_u8, 113_u8, 64_u8, 114_u8, 111_u8, 134_u8, 127_u8,
+                102_u8, 104_u8, 85_u8, 118_u8, 103_u8, 107_u8, 102_u8, 91_u8, 72_u8, 245_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8,
+            ],
+            [
+                3_u8, 171_u8, 3_u8, 165_u8, 137_u8, 62_u8, 14_u8, 211_u8, 96_u8, 127_u8, 132_u8,
+                121_u8, 95_u8, 62_u8, 37_u8, 248_u8, 102_u8, 57_u8, 144_u8, 85_u8, 127_u8, 191_u8,
+                102_u8, 97_u8, 127_u8, 104_u8, 91_u8, 102_u8, 107_u8, 81_u8, 64_u8, 254_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+            ],
+            [
+                2_u8, 166_u8, 2_u8, 196_u8, 122_u8, 65_u8, 10_u8, 243_u8, 102_u8, 93_u8, 117_u8,
+                92_u8, 96_u8, 63_u8, 29_u8, 251_u8, 169_u8, 159_u8, 149_u8, 96_u8, 91_u8, 139_u8,
+                157_u8, 40_u8, 100_u8, 89_u8, 120_u8, 92_u8, 109_u8, 79_u8, 58_u8, 247_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+            ],
+            [
+                2_u8, 176_u8, 2_u8, 189_u8, 118_u8, 48_u8, 7_u8, 219_u8, 68_u8, 43_u8, 109_u8,
+                96_u8, 129_u8, 75_u8, 19_u8, 254_u8, 2_u8, 3_u8, 185_u8, 6_u8, 102_u8, 127_u8,
+                127_u8, 127_u8, 1_u8, 131_u8, 83_u8, 99_u8, 107_u8, 80_u8, 45_u8, 254_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+            ],
+            [
+                1_u8, 205_u8, 2_u8, 208_u8, 64_u8, 89_u8, 4_u8, 223_u8, 29_u8, 169_u8, 29_u8,
+                123_u8, 118_u8, 76_u8, 11_u8, 240_u8, 202_u8, 243_u8, 65_u8, 6_u8, 12_u8, 243_u8,
+                96_u8, 55_u8, 102_u8, 102_u8, 114_u8, 102_u8, 107_u8, 74_u8, 31_u8, 247_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+            ],
+            [
+                1_u8, 216_u8, 1_u8, 214_u8, 127_u8, 94_u8, 2_u8, 234_u8, 145_u8, 3_u8, 127_u8,
+                106_u8, 155_u8, 80_u8, 4_u8, 247_u8, 4_u8, 65_u8, 86_u8, 127_u8, 127_u8, 127_u8,
+                127_u8, 102_u8, 127_u8, 143_u8, 143_u8, 108_u8, 113_u8, 80_u8, 16_u8, 216_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8,
+            ],
+            [
+                2_u8, 199_u8, 1_u8, 222_u8, 93_u8, 94_u8, 1_u8, 232_u8, 2_u8, 65_u8, 74_u8, 139_u8,
+                201_u8, 48_u8, 2_u8, 254_u8, 169_u8, 127_u8, 52_u8, 243_u8, 251_u8, 249_u8, 102_u8,
+                86_u8, 202_u8, 153_u8, 65_u8, 65_u8, 146_u8, 69_u8, 8_u8, 238_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+                128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8, 128_u8,
+            ],
+        ]
+    });
 impl brunsli_ComponentState {
     unsafe fn InitAll(&mut self) {
         let mut i: i32 = 0;
-        'loop_: while ((i) < (kNumNonzeroBuckets_90 as i32)) {
+        'loop_: while ((i)
+            < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonzeroBuckets_90)) as i32))
+        {
             let mut k: i32 = 0;
-            'loop_: while ((k) < (kDCTBlockSize_3)) {
-                let v: i32 = ((kInitProb_110[(k) as usize] as i32) + ((9) * ((i) - (7))));
+            'loop_: while ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+            {
+                let v: i32 = (((*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProb_110))
+                    [(k) as usize] as i32)
+                    + ((9) * ((i) - (7))));
                 if !((v) <= (255)) {
                     (unsafe {
                         BrunsliDumpAndAbort_79(c"context.cc".as_ptr(), 227, c"InitAll".as_ptr())
@@ -1889,7 +2111,9 @@ impl brunsli_ComponentState {
                 };
                 (unsafe {
                     brunsli_Prob::Init(
-                        &mut self.is_zero_prob[((((i) * (kDCTBlockSize_3)) + (k)) as usize)],
+                        &mut self.is_zero_prob[((((i)
+                            * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                            + (k)) as usize)],
                         (v as u8),
                     )
                 });
@@ -1899,11 +2123,21 @@ impl brunsli_ComponentState {
         }
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (self.sign_prob.len())) {
-            if ((i) < ((kMaxAverageContext_82).wrapping_mul((kDCTBlockSize_3 as usize)))) {
+            if ((i)
+                < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82))
+                    .wrapping_mul(
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                            as usize),
+                    )))
+            {
                 (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 108_u8) });
             } else if ((i)
-                < ((((kMaxAverageContext_82).wrapping_add(1_usize)) as usize)
-                    .wrapping_mul((kDCTBlockSize_3 as usize))))
+                < ((((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82))
+                    .wrapping_add(1_usize)) as usize)
+                    .wrapping_mul(
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                            as usize),
+                    )))
             {
                 (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 128_u8) });
             } else {
@@ -1917,15 +2151,22 @@ impl brunsli_ComponentState {
             i.prefix_inc();
         }
         let mut i: usize = 0_usize;
-        'loop_: while ((i) < (kNumNonZeroContextCount_88)) {
-            let mut non_zero_probs: *mut brunsli_Prob = self
-                .num_nonzero_prob
-                .as_mut_ptr()
-                .offset(((i).wrapping_mul(kNumNonZeroTreeSize_85)) as isize);
+        'loop_: while ((i)
+            < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroContextCount_88)))
+        {
+            let mut non_zero_probs: *mut brunsli_Prob = self.num_nonzero_prob.as_mut_ptr().offset(
+                ((i).wrapping_mul(
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroTreeSize_85)),
+                )) as isize,
+            );
             let mut j: usize = 0_usize;
-            'loop_: while ((j) < (kNumNonZeroTreeSize_85)) {
+            'loop_: while ((j)
+                < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroTreeSize_85)))
+            {
                 (unsafe {
-                    let _probability: u8 = kInitProbNonzero_111[(i)][(j)];
+                    let _probability: u8 =
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProbNonzero_111))[(i)]
+                            [(j)];
                     brunsli_Prob::Init(&mut (*non_zero_probs.offset((j) as isize)), _probability)
                 });
                 j.prefix_inc();
@@ -2110,7 +2351,7 @@ pub unsafe fn PredictWithAdaptiveMedian_115(
     mut y: i32,
     mut stride: i32,
 ) -> i32 {
-    let offset1: i32 = -kDCTBlockSize_3;
+    let offset1: i32 = -(*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3));
     let offset2: i32 = -stride;
     let offset3: i32 = ((offset2) + (offset1));
     if ((y) != (0)) {
@@ -2133,18 +2374,26 @@ pub unsafe fn PredictWithAdaptiveMedian_115(
     }
     panic!("ub: non-void function does not return a value")
 }
-pub static mut kQFactorBits_116: usize = unsafe { 6_usize };
-pub static mut kQFactorLimit_117: usize = unsafe { (((1_u32) << (kQFactorBits_116)) as usize) };
+pub static mut kQFactorBits_116: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 6_usize });
+pub static mut kQFactorLimit_117: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe {
+        (((1_u32) << (*std::cell::LazyCell::force_mut(&mut *&raw mut kQFactorBits_116))) as usize)
+    });
 pub unsafe fn FillQuantMatrix_118(mut is_chroma: bool, mut q: u32, mut dst: *mut u8) {
-    if !(((q) >= (0_u32)) && ((q as usize) < (kQFactorLimit_117))) {
+    if !(((q) >= (0_u32))
+        && ((q as usize) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kQFactorLimit_117))))
+    {
         (unsafe {
             BrunsliDumpAndAbort_79(c"quant_matrix.cc".as_ptr(), 18, c"FillQuantMatrix".as_ptr())
         });
         'loop_: while true {}
     };
-    let in_: *const u8 = kDefaultQuantMatrix_12[(is_chroma) as usize].as_ptr();
+    let in_: *const u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultQuantMatrix_12))
+        [(is_chroma) as usize]
+        .as_ptr();
     let mut i: i32 = 0;
-    'loop_: while ((i) < (kDCTBlockSize_3)) {
+    'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
         let v: u32 =
             (((((*in_.offset((i) as isize)) as u32).wrapping_mul(q)).wrapping_add(32_u32)) >> (6));
         (*dst.offset((i) as isize)) = (if ((v) < (1_u32)) {
@@ -2162,17 +2411,21 @@ pub unsafe fn FindBestMatrix_119(
 ) -> u32 {
     let mut best_q: u32 = 0_u32;
     let kMaxDiffCost: usize = 33_usize;
-    let kWorstLen: usize = (((kDCTBlockSize_3) + (1)) as usize)
+    let kWorstLen: usize = (((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+        + (1)) as usize)
         .wrapping_mul((((kMaxDiffCost).wrapping_add(1_usize)) as usize));
     let mut best_len: usize = kWorstLen;
     let mut q: u32 = 0_u32;
-    'loop_: while ((q as usize) < (kQFactorLimit_117)) {
+    'loop_: while ((q as usize)
+        < (*std::cell::LazyCell::force_mut(&mut *&raw mut kQFactorLimit_117)))
+    {
         (unsafe { FillQuantMatrix_118(is_chroma, q, dst) });
         let mut last_diff: i32 = 0;
         let mut len: usize = 0_usize;
         let mut k: i32 = 0;
-        'loop_: while ((k) < (kDCTBlockSize_3)) {
-            let j: i32 = (kJPEGNaturalOrder_13[(k) as usize] as i32);
+        'loop_: while ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
+            let j: i32 = ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                [(k) as usize] as i32);
             let new_diff: i32 =
                 ((*src.offset((j) as isize)) - ((*dst.offset((j) as isize)) as i32));
             let mut diff: i32 = ((new_diff) - (last_diff));
@@ -2280,14 +2533,18 @@ impl brunsli_ANSCoder {
     pub unsafe fn PutSymbol(&mut self, t: brunsli_ANSEncSymbolInfo, mut nbits: *mut u8) -> u32 {
         let mut bits: u32 = 0_u32;
         (*nbits) = 0_u8;
-        if (((self.state_) >> ((32) - (BRUNSLI_ANS_LOG_TAB_SIZE_0))) >= (t.freq_ as u32)) {
+        if (((self.state_)
+            >> ((32)
+                - (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0))))
+            >= (t.freq_ as u32))
+        {
             bits = ((self.state_) & (65535_u32));
             self.state_ >>= 16;
             (*nbits) = 16_u8;
         }
         self.state_ = ((((self.state_).wrapping_div((t.freq_ as u32)))
-            << (BRUNSLI_ANS_LOG_TAB_SIZE_0))
-            .wrapping_add(((self.state_).wrapping_rem((t.freq_ as u32)))))
+            << (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0)))
+        .wrapping_add(((self.state_).wrapping_rem((t.freq_ as u32)))))
         .wrapping_add((t.start_ as u32));
         return bits;
     }
@@ -2300,7 +2557,8 @@ impl Default for brunsli_ANSCoder {
         unsafe { brunsli_ANSCoder::brunsli_ANSCoder() }
     }
 }
-pub static mut kMaxNumSymbolsForSmallCode_121: i32 = unsafe { 4 };
+pub static mut kMaxNumSymbolsForSmallCode_121: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 4 });
 pub unsafe fn ANSBuildInfoTable_122(
     mut counts: *const i32,
     mut alphabet_size: i32,
@@ -2334,7 +2592,7 @@ pub unsafe fn BuildAndStoreANSEncodingData_123(
             (&mut counts[(0_usize)] as *mut i32),
             (&mut omit_pos as *mut i32),
             18,
-            BRUNSLI_ANS_LOG_TAB_SIZE_0,
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0)),
             (&mut num_symbols as *mut i32),
             symbols.as_mut_ptr(),
         )
@@ -2356,272 +2614,274 @@ pub unsafe fn BuildAndStoreANSEncodingData_123(
         )
     });
 }
-pub static mut kLog2Table_126: [f32; 256] = unsafe {
-    [
-        0.0E+0,
-        0.0E+0,
-        1.0E+0,
-        1.584962487E+0,
-        2.0E+0,
-        2.321928024E+0,
-        2.584962606E+0,
-        2.807354927E+0,
-        3.0E+0,
-        3.169924974E+0,
-        3.321928024E+0,
-        3.459431648E+0,
-        3.584962606E+0,
-        3.700439692E+0,
-        3.807354927E+0,
-        3.906890631E+0,
-        4.0E+0,
-        4.087462902E+0,
-        4.169925213E+0,
-        4.247927666E+0,
-        4.321928024E+0,
-        4.392317295E+0,
-        4.459431648E+0,
-        4.523561954E+0,
-        4.584962368E+0,
-        4.643856049E+0,
-        4.70043993E+0,
-        4.754887581E+0,
-        4.807354927E+0,
-        4.857981205E+0,
-        4.906890392E+0,
-        4.954196453E+0,
-        5.0E+0,
-        5.044394016E+0,
-        5.087462902E+0,
-        5.129282951E+0,
-        5.169925213E+0,
-        5.209453583E+0,
-        5.247927666E+0,
-        5.285402298E+0,
-        5.321928024E+0,
-        5.357552052E+0,
-        5.392317295E+0,
-        5.426264763E+0,
-        5.459431648E+0,
-        5.491853237E+0,
-        5.523561954E+0,
-        5.554588795E+0,
-        5.584962368E+0,
-        5.614709854E+0,
-        5.643856049E+0,
-        5.67242527E+0,
-        5.70043993E+0,
-        5.727920532E+0,
-        5.754887581E+0,
-        5.781359673E+0,
-        5.807354927E+0,
-        5.832890034E+0,
-        5.857981205E+0,
-        5.882643223E+0,
-        5.906890392E+0,
-        5.930737495E+0,
-        5.954196453E+0,
-        5.97728014E+0,
-        6.0E+0,
-        6.022367954E+0,
-        6.044394016E+0,
-        6.066089153E+0,
-        6.087462902E+0,
-        6.108524323E+0,
-        6.129282951E+0,
-        6.149746895E+0,
-        6.169925213E+0,
-        6.189824581E+0,
-        6.209453583E+0,
-        6.228818893E+0,
-        6.247927666E+0,
-        6.266786575E+0,
-        6.285402298E+0,
-        6.303780556E+0,
-        6.321928024E+0,
-        6.339849949E+0,
-        6.357552052E+0,
-        6.375039577E+0,
-        6.392317295E+0,
-        6.409390926E+0,
-        6.426264763E+0,
-        6.442943573E+0,
-        6.459431648E+0,
-        6.47573328E+0,
-        6.491853237E+0,
-        6.507794857E+0,
-        6.523561954E+0,
-        6.539158821E+0,
-        6.554588795E+0,
-        6.56985569E+0,
-        6.584962368E+0,
-        6.599912643E+0,
-        6.614709854E+0,
-        6.629356384E+0,
-        6.643856049E+0,
-        6.658211708E+0,
-        6.67242527E+0,
-        6.686500549E+0,
-        6.70043993E+0,
-        6.714245319E+0,
-        6.727920532E+0,
-        6.741466999E+0,
-        6.754887581E+0,
-        6.768184185E+0,
-        6.781359673E+0,
-        6.794415951E+0,
-        6.807354927E+0,
-        6.820178986E+0,
-        6.832890034E+0,
-        6.845489979E+0,
-        6.857981205E+0,
-        6.870364666E+0,
-        6.882643223E+0,
-        6.894817829E+0,
-        6.906890392E+0,
-        6.918863297E+0,
-        6.930737495E+0,
-        6.94251442E+0,
-        6.954196453E+0,
-        6.965784073E+0,
-        6.97728014E+0,
-        6.988684654E+0,
-        7.0E+0,
-        7.011227131E+0,
-        7.022367954E+0,
-        7.033422947E+0,
-        7.044394016E+0,
-        7.055282593E+0,
-        7.066089153E+0,
-        7.076815605E+0,
-        7.087462902E+0,
-        7.098031998E+0,
-        7.108524323E+0,
-        7.118941307E+0,
-        7.129282951E+0,
-        7.139551163E+0,
-        7.149746895E+0,
-        7.159871101E+0,
-        7.169925213E+0,
-        7.179909229E+0,
-        7.189824581E+0,
-        7.199672222E+0,
-        7.209453583E+0,
-        7.219168663E+0,
-        7.228818893E+0,
-        7.238404751E+0,
-        7.247927666E+0,
-        7.257387638E+0,
-        7.266786575E+0,
-        7.276124477E+0,
-        7.285402298E+0,
-        7.294620514E+0,
-        7.303780556E+0,
-        7.3128829E+0,
-        7.321928024E+0,
-        7.330916882E+0,
-        7.339849949E+0,
-        7.34872818E+0,
-        7.357552052E+0,
-        7.366322041E+0,
-        7.375039577E+0,
-        7.383704185E+0,
-        7.392317295E+0,
-        7.400879383E+0,
-        7.409390926E+0,
-        7.417852402E+0,
-        7.426264763E+0,
-        7.43462801E+0,
-        7.442943573E+0,
-        7.451210976E+0,
-        7.459431648E+0,
-        7.467605591E+0,
-        7.47573328E+0,
-        7.48381567E+0,
-        7.491853237E+0,
-        7.499845982E+0,
-        7.507794857E+0,
-        7.515699863E+0,
-        7.523561954E+0,
-        7.531381607E+0,
-        7.539158821E+0,
-        7.54689455E+0,
-        7.554588795E+0,
-        7.562242508E+0,
-        7.56985569E+0,
-        7.577428818E+0,
-        7.584962368E+0,
-        7.592456818E+0,
-        7.599912643E+0,
-        7.607330322E+0,
-        7.614709854E+0,
-        7.622051716E+0,
-        7.629356384E+0,
-        7.636624813E+0,
-        7.643856049E+0,
-        7.651051521E+0,
-        7.658211708E+0,
-        7.665336132E+0,
-        7.67242527E+0,
-        7.679480076E+0,
-        7.686500549E+0,
-        7.693487167E+0,
-        7.70043993E+0,
-        7.707359314E+0,
-        7.714245319E+0,
-        7.721099377E+0,
-        7.727920532E+0,
-        7.73470974E+0,
-        7.741466999E+0,
-        7.748192787E+0,
-        7.754887581E+0,
-        7.76155138E+0,
-        7.768184185E+0,
-        7.774786949E+0,
-        7.781359673E+0,
-        7.787902355E+0,
-        7.794415951E+0,
-        7.800899982E+0,
-        7.807354927E+0,
-        7.813781261E+0,
-        7.820178986E+0,
-        7.826548576E+0,
-        7.832890034E+0,
-        7.839203835E+0,
-        7.845489979E+0,
-        7.851748943E+0,
-        7.857981205E+0,
-        7.864186287E+0,
-        7.870364666E+0,
-        7.876516819E+0,
-        7.882643223E+0,
-        7.888743401E+0,
-        7.894817829E+0,
-        7.900866985E+0,
-        7.906890392E+0,
-        7.912889481E+0,
-        7.918863297E+0,
-        7.924812317E+0,
-        7.930737495E+0,
-        7.936637878E+0,
-        7.94251442E+0,
-        7.948367119E+0,
-        7.954196453E+0,
-        7.960001945E+0,
-        7.965784073E+0,
-        7.971543789E+0,
-        7.97728014E+0,
-        7.982993603E+0,
-        7.988684654E+0,
-        7.994353294E+0,
-    ]
-};
+pub static mut kLog2Table_126: std::cell::LazyCell<[f32; 256]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            0.0E+0,
+            0.0E+0,
+            1.0E+0,
+            1.584962487E+0,
+            2.0E+0,
+            2.321928024E+0,
+            2.584962606E+0,
+            2.807354927E+0,
+            3.0E+0,
+            3.169924974E+0,
+            3.321928024E+0,
+            3.459431648E+0,
+            3.584962606E+0,
+            3.700439692E+0,
+            3.807354927E+0,
+            3.906890631E+0,
+            4.0E+0,
+            4.087462902E+0,
+            4.169925213E+0,
+            4.247927666E+0,
+            4.321928024E+0,
+            4.392317295E+0,
+            4.459431648E+0,
+            4.523561954E+0,
+            4.584962368E+0,
+            4.643856049E+0,
+            4.70043993E+0,
+            4.754887581E+0,
+            4.807354927E+0,
+            4.857981205E+0,
+            4.906890392E+0,
+            4.954196453E+0,
+            5.0E+0,
+            5.044394016E+0,
+            5.087462902E+0,
+            5.129282951E+0,
+            5.169925213E+0,
+            5.209453583E+0,
+            5.247927666E+0,
+            5.285402298E+0,
+            5.321928024E+0,
+            5.357552052E+0,
+            5.392317295E+0,
+            5.426264763E+0,
+            5.459431648E+0,
+            5.491853237E+0,
+            5.523561954E+0,
+            5.554588795E+0,
+            5.584962368E+0,
+            5.614709854E+0,
+            5.643856049E+0,
+            5.67242527E+0,
+            5.70043993E+0,
+            5.727920532E+0,
+            5.754887581E+0,
+            5.781359673E+0,
+            5.807354927E+0,
+            5.832890034E+0,
+            5.857981205E+0,
+            5.882643223E+0,
+            5.906890392E+0,
+            5.930737495E+0,
+            5.954196453E+0,
+            5.97728014E+0,
+            6.0E+0,
+            6.022367954E+0,
+            6.044394016E+0,
+            6.066089153E+0,
+            6.087462902E+0,
+            6.108524323E+0,
+            6.129282951E+0,
+            6.149746895E+0,
+            6.169925213E+0,
+            6.189824581E+0,
+            6.209453583E+0,
+            6.228818893E+0,
+            6.247927666E+0,
+            6.266786575E+0,
+            6.285402298E+0,
+            6.303780556E+0,
+            6.321928024E+0,
+            6.339849949E+0,
+            6.357552052E+0,
+            6.375039577E+0,
+            6.392317295E+0,
+            6.409390926E+0,
+            6.426264763E+0,
+            6.442943573E+0,
+            6.459431648E+0,
+            6.47573328E+0,
+            6.491853237E+0,
+            6.507794857E+0,
+            6.523561954E+0,
+            6.539158821E+0,
+            6.554588795E+0,
+            6.56985569E+0,
+            6.584962368E+0,
+            6.599912643E+0,
+            6.614709854E+0,
+            6.629356384E+0,
+            6.643856049E+0,
+            6.658211708E+0,
+            6.67242527E+0,
+            6.686500549E+0,
+            6.70043993E+0,
+            6.714245319E+0,
+            6.727920532E+0,
+            6.741466999E+0,
+            6.754887581E+0,
+            6.768184185E+0,
+            6.781359673E+0,
+            6.794415951E+0,
+            6.807354927E+0,
+            6.820178986E+0,
+            6.832890034E+0,
+            6.845489979E+0,
+            6.857981205E+0,
+            6.870364666E+0,
+            6.882643223E+0,
+            6.894817829E+0,
+            6.906890392E+0,
+            6.918863297E+0,
+            6.930737495E+0,
+            6.94251442E+0,
+            6.954196453E+0,
+            6.965784073E+0,
+            6.97728014E+0,
+            6.988684654E+0,
+            7.0E+0,
+            7.011227131E+0,
+            7.022367954E+0,
+            7.033422947E+0,
+            7.044394016E+0,
+            7.055282593E+0,
+            7.066089153E+0,
+            7.076815605E+0,
+            7.087462902E+0,
+            7.098031998E+0,
+            7.108524323E+0,
+            7.118941307E+0,
+            7.129282951E+0,
+            7.139551163E+0,
+            7.149746895E+0,
+            7.159871101E+0,
+            7.169925213E+0,
+            7.179909229E+0,
+            7.189824581E+0,
+            7.199672222E+0,
+            7.209453583E+0,
+            7.219168663E+0,
+            7.228818893E+0,
+            7.238404751E+0,
+            7.247927666E+0,
+            7.257387638E+0,
+            7.266786575E+0,
+            7.276124477E+0,
+            7.285402298E+0,
+            7.294620514E+0,
+            7.303780556E+0,
+            7.3128829E+0,
+            7.321928024E+0,
+            7.330916882E+0,
+            7.339849949E+0,
+            7.34872818E+0,
+            7.357552052E+0,
+            7.366322041E+0,
+            7.375039577E+0,
+            7.383704185E+0,
+            7.392317295E+0,
+            7.400879383E+0,
+            7.409390926E+0,
+            7.417852402E+0,
+            7.426264763E+0,
+            7.43462801E+0,
+            7.442943573E+0,
+            7.451210976E+0,
+            7.459431648E+0,
+            7.467605591E+0,
+            7.47573328E+0,
+            7.48381567E+0,
+            7.491853237E+0,
+            7.499845982E+0,
+            7.507794857E+0,
+            7.515699863E+0,
+            7.523561954E+0,
+            7.531381607E+0,
+            7.539158821E+0,
+            7.54689455E+0,
+            7.554588795E+0,
+            7.562242508E+0,
+            7.56985569E+0,
+            7.577428818E+0,
+            7.584962368E+0,
+            7.592456818E+0,
+            7.599912643E+0,
+            7.607330322E+0,
+            7.614709854E+0,
+            7.622051716E+0,
+            7.629356384E+0,
+            7.636624813E+0,
+            7.643856049E+0,
+            7.651051521E+0,
+            7.658211708E+0,
+            7.665336132E+0,
+            7.67242527E+0,
+            7.679480076E+0,
+            7.686500549E+0,
+            7.693487167E+0,
+            7.70043993E+0,
+            7.707359314E+0,
+            7.714245319E+0,
+            7.721099377E+0,
+            7.727920532E+0,
+            7.73470974E+0,
+            7.741466999E+0,
+            7.748192787E+0,
+            7.754887581E+0,
+            7.76155138E+0,
+            7.768184185E+0,
+            7.774786949E+0,
+            7.781359673E+0,
+            7.787902355E+0,
+            7.794415951E+0,
+            7.800899982E+0,
+            7.807354927E+0,
+            7.813781261E+0,
+            7.820178986E+0,
+            7.826548576E+0,
+            7.832890034E+0,
+            7.839203835E+0,
+            7.845489979E+0,
+            7.851748943E+0,
+            7.857981205E+0,
+            7.864186287E+0,
+            7.870364666E+0,
+            7.876516819E+0,
+            7.882643223E+0,
+            7.888743401E+0,
+            7.894817829E+0,
+            7.900866985E+0,
+            7.906890392E+0,
+            7.912889481E+0,
+            7.918863297E+0,
+            7.924812317E+0,
+            7.930737495E+0,
+            7.936637878E+0,
+            7.94251442E+0,
+            7.948367119E+0,
+            7.954196453E+0,
+            7.960001945E+0,
+            7.965784073E+0,
+            7.971543789E+0,
+            7.97728014E+0,
+            7.982993603E+0,
+            7.988684654E+0,
+            7.994353294E+0,
+        ]
+    });
 pub unsafe fn FastLog2_127(mut v: i32) -> f64 {
     if ((v)
         < (((::std::mem::size_of::<[f32; 256]>() as usize)
             .wrapping_div((::std::mem::size_of::<f32>() as usize))) as i32))
     {
-        return (kLog2Table_126[(v) as usize] as f64);
+        return ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLog2Table_126))[(v) as usize]
+            as f64);
     }
     return (v as f64).log2();
 }
@@ -3128,7 +3388,8 @@ pub unsafe fn ClusterHistograms_137(
             i.prefix_inc();
         }
     }
-    static mut kMinClustersForHistogramRemap_138: usize = unsafe { 24_usize };;
+    static mut kMinClustersForHistogramRemap_138: std::cell::LazyCell<usize> =
+        std::cell::LazyCell::new(|| unsafe { 24_usize });;
     let mut num_clusters: usize = 0_usize;
     if ((block_group_offsets.len()) > (1_usize)) {
         let mut i: usize = 0_usize;
@@ -3152,7 +3413,12 @@ pub unsafe fn ClusterHistograms_137(
                     max_histograms,
                 )
             });
-            if ((nclusters) >= (2_usize)) && ((nclusters) < (kMinClustersForHistogramRemap_138)) {
+            if ((nclusters) >= (2_usize))
+                && ((nclusters)
+                    < (*std::cell::LazyCell::force_mut(
+                        &mut *&raw mut kMinClustersForHistogramRemap_138,
+                    )))
+            {
                 (unsafe {
                     let _in: *const brunsli_internal_enc_Histogram =
                         (&(&(*in_))[(offset)] as *const brunsli_internal_enc_Histogram);
@@ -3180,7 +3446,12 @@ pub unsafe fn ClusterHistograms_137(
                 max_histograms,
             )
         });
-        if ((num_clusters) >= (2_usize)) && ((num_clusters) < (kMinClustersForHistogramRemap_138)) {
+        if ((num_clusters) >= (2_usize))
+            && ((num_clusters)
+                < (*std::cell::LazyCell::force_mut(
+                    &mut *&raw mut kMinClustersForHistogramRemap_138,
+                )))
+        {
             (unsafe {
                 HistogramRemap_135(
                     (&(&(*in_))[(0_usize)] as *const brunsli_internal_enc_Histogram),
@@ -3260,7 +3531,8 @@ impl Default for brunsli_internal_enc_Histogram {
         unsafe { brunsli_internal_enc_Histogram::brunsli_internal_enc_Histogram() }
     }
 }
-static mut kMaxNumberOfHistograms_139: usize = unsafe { 256_usize };
+static mut kMaxNumberOfHistograms_139: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 256_usize });
 #[repr(C)]
 #[derive(Clone, Default)]
 pub struct brunsli_internal_enc_EntropyCodes {
@@ -3281,10 +3553,12 @@ impl brunsli_internal_enc_EntropyCodes {
         };
         (unsafe {
             let _in: *const Vec<brunsli_internal_enc_Histogram> = histograms;
-            let _num_contexts: usize = kNumAvrgContexts_83;
+            let _num_contexts: usize =
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumAvrgContexts_83));
             let _num_blocks: usize = num_bands;
             let _block_group_offsets: Vec<u64> = (*offsets).clone();
-            let _max_histograms: usize = kMaxNumberOfHistograms_139;
+            let _max_histograms: usize =
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxNumberOfHistograms_139));
             let _out: *mut Vec<brunsli_internal_enc_Histogram> =
                 (&mut this.clustered_ as *mut Vec<brunsli_internal_enc_Histogram>);
             let _histogram_symbols: *mut Vec<u32> = (&mut this.context_map_ as *mut Vec<u32>);
@@ -3321,7 +3595,8 @@ impl Default for brunsli_internal_enc_EntropySource {
         unsafe { brunsli_internal_enc_EntropySource::brunsli_internal_enc_EntropySource() }
     }
 }
-static mut kSlackForOneBlock_140: usize = unsafe { 1024_usize };
+static mut kSlackForOneBlock_140: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 1024_usize });
 #[repr(C)]
 #[derive(Copy, Clone)]
 struct brunsli_internal_enc_DataStream_CodeWord {
@@ -3393,9 +3668,12 @@ pub struct brunsli_internal_enc_State {
     pub num_contexts: usize,
     pub use_legacy_context_model: bool,
 }
-pub static mut kNumDirectCodes_141: i32 = unsafe { 8 };
-pub static mut kBrotliQuality_142: i32 = unsafe { 6 };
-pub static mut kBrotliWindowBits_143: i32 = unsafe { 18 };
+pub static mut kNumDirectCodes_141: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 8 });
+pub static mut kBrotliQuality_142: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 6 });
+pub static mut kBrotliWindowBits_143: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 18 });
 pub unsafe fn EstimateAuxDataSize_144(jpg: *const brunsli_JPEGData) -> usize {
     let mut size: usize = (((((*jpg).marker_order.len())
         .wrapping_add((272_usize).wrapping_mul((*jpg).huffman_code.len())))
@@ -3485,7 +3763,8 @@ pub unsafe fn TransformApp0Marker_149(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
             9_usize as usize,
         );
         let sb = core::slice::from_raw_parts(
-            (AppData_0xe0_62.as_ptr() as *const u8 as *const ::libc::c_void) as *const u8,
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xe0_62)).as_ptr() as *const u8
+                as *const ::libc::c_void) as *const u8,
             9_usize as usize,
         );
         let mut diff = 0_i32;
@@ -3513,8 +3792,13 @@ pub unsafe fn TransformApp0Marker_149(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
         let mut y_dens: i32 = (((y_dens_hi as i32) << (8)) + (y_dens_lo as i32));
         let mut density_ix: i32 = -1_i32;
         let mut k: usize = 0_usize;
-        'loop_: while ((k) < (kMaxApp0Densities_45)) {
-            if ((x_dens) == (kApp0Densities_46[(k)] as i32)) && ((y_dens) == (x_dens)) {
+        'loop_: while ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxApp0Densities_45)))
+        {
+            if ((x_dens)
+                == ((*std::cell::LazyCell::force_mut(&mut *&raw mut kApp0Densities_46))[(k)]
+                    as i32))
+                && ((y_dens) == (x_dens))
+            {
                 density_ix = (k as i32);
             }
             k.prefix_inc();
@@ -3540,7 +3824,8 @@ pub unsafe fn TransformApp2Marker_150(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
                 84_usize as usize,
             );
             let sb = core::slice::from_raw_parts(
-                (AppData_0xe2_63.as_ptr() as *const u8 as *const ::libc::c_void) as *const u8,
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xe2_63)).as_ptr()
+                    as *const u8 as *const ::libc::c_void) as *const u8,
                 84_usize as usize,
             );
             let mut diff = 0_i32;
@@ -3559,8 +3844,10 @@ pub unsafe fn TransformApp2Marker_150(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
                 (((3161) - (85)) as usize) as usize,
             );
             let sb = core::slice::from_raw_parts(
-                (AppData_0xe2_63.as_ptr().offset((85) as isize) as *const u8
-                    as *const ::libc::c_void) as *const u8,
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xe2_63))
+                    .as_ptr()
+                    .offset((85) as isize) as *const u8 as *const ::libc::c_void)
+                    as *const u8,
                 (((3161) - (85)) as usize) as usize,
             );
             let mut diff = 0_i32;
@@ -3591,7 +3878,8 @@ pub unsafe fn TransformApp12Marker_151(s: *const Vec<u8>, mut out: *mut Vec<u8>)
                 15_usize as usize,
             );
             let sb = core::slice::from_raw_parts(
-                (AppData_0xec_64.as_ptr() as *const u8 as *const ::libc::c_void) as *const u8,
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xec_64)).as_ptr()
+                    as *const u8 as *const ::libc::c_void) as *const u8,
                 15_usize as usize,
             );
             let mut diff = 0_i32;
@@ -3610,8 +3898,10 @@ pub unsafe fn TransformApp12Marker_151(s: *const Vec<u8>, mut out: *mut Vec<u8>)
                 (((18) - (16)) as usize) as usize,
             );
             let sb = core::slice::from_raw_parts(
-                (AppData_0xec_64.as_ptr().offset((16) as isize) as *const u8
-                    as *const ::libc::c_void) as *const u8,
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xec_64))
+                    .as_ptr()
+                    .offset((16) as isize) as *const u8 as *const ::libc::c_void)
+                    as *const u8,
                 (((18) - (16)) as usize) as usize,
             );
             let mut diff = 0_i32;
@@ -3643,7 +3933,8 @@ pub unsafe fn TransformApp14Marker_152(s: *const Vec<u8>, mut out: *mut Vec<u8>)
                 10_usize as usize,
             );
             let sb = core::slice::from_raw_parts(
-                (AppData_0xee_65.as_ptr() as *const u8 as *const ::libc::c_void) as *const u8,
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xee_65)).as_ptr()
+                    as *const u8 as *const ::libc::c_void) as *const u8,
                 10_usize as usize,
             );
             let mut diff = 0_i32;
@@ -3662,8 +3953,10 @@ pub unsafe fn TransformApp14Marker_152(s: *const Vec<u8>, mut out: *mut Vec<u8>)
                 (((15) - (11)) as usize) as usize,
             );
             let sb = core::slice::from_raw_parts(
-                (AppData_0xee_65.as_ptr().offset((11) as isize) as *const u8
-                    as *const ::libc::c_void) as *const u8,
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xee_65))
+                    .as_ptr()
+                    .offset((11) as isize) as *const u8 as *const ::libc::c_void)
+                    as *const u8,
                 (((15) - (11)) as usize) as usize,
             );
             let mut diff = 0_i32;
@@ -3731,13 +4024,16 @@ pub unsafe fn GetQuantTableId_154(
     mut dst: *mut u8,
 ) -> i32 {
     let mut j: i32 = 0;
-    'loop_: while ((j) < (kNumStockQuantTables_47)) {
+    'loop_: while ((j) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockQuantTables_47)))
+    {
         let mut match_found: bool = true;
         let mut k: i32 = 0;
-        'loop_: while (match_found) && ((k) < (kDCTBlockSize_3)) {
+        'loop_: while (match_found)
+            && ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+        {
             if (((&(*q)).values[(k as usize)])
-                != (kStockQuantizationTables_48[(is_chroma) as usize][(j) as usize][(k) as usize]
-                    as i32))
+                != ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStockQuantizationTables_48))
+                    [(is_chroma) as usize][(j) as usize][(k) as usize] as i32))
             {
                 match_found = false;
             }
@@ -3748,9 +4044,12 @@ pub unsafe fn GetQuantTableId_154(
         }
         j.prefix_inc();
     }
-    return (((kNumStockQuantTables_47 as u32).wrapping_add(
-        (unsafe { FindBestMatrix_119((&(&(*q)).values[(0_usize)] as *const i32), is_chroma, dst) }),
-    )) as i32);
+    return ((((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockQuantTables_47)) as u32)
+        .wrapping_add(
+            (unsafe {
+                FindBestMatrix_119((&(&(*q)).values[(0_usize)] as *const i32), is_chroma, dst)
+            }),
+        )) as i32);
 }
 pub unsafe fn EncodeVarint_155(mut n: i32, mut max_bits: i32, mut storage: *mut brunsli_Storage) {
     let mut b: i32 = 0_i32;
@@ -3809,8 +4108,9 @@ pub unsafe fn EncodeQuantTables_157(
     'loop_: while ((i) < ((*jpg).quant.len())) {
         let q: *const brunsli_JPEGQuantTable = &(&(*jpg)).quant[(i)];
         let mut k: i32 = 0;
-        'loop_: while ((k) < (kDCTBlockSize_3)) {
-            let j: i32 = (kJPEGNaturalOrder_13[(k) as usize] as i32);
+        'loop_: while ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
+            let j: i32 = ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                [(k) as usize] as i32);
             if (((&(*q)).values[(j as usize)]) == (0)) {
                 return false;
             }
@@ -3826,15 +4126,19 @@ pub unsafe fn EncodeQuantTables_157(
         (unsafe {
             WriteBits_120(
                 1_usize,
-                (((code) >= (kNumStockQuantTables_47)) as u64),
+                (((code)
+                    >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockQuantTables_47)))
+                    as u64),
                 storage,
             )
         });
-        if ((code) < (kNumStockQuantTables_47)) {
+        if ((code) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockQuantTables_47))) {
             (unsafe { WriteBits_120(3_usize, (code as u64), storage) });
         } else {
-            let mut q_factor: usize = (((code) - (kNumStockQuantTables_47)) as usize);
-            if !((q_factor) < (kQFactorLimit_117)) {
+            let mut q_factor: usize = (((code)
+                - (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockQuantTables_47)))
+                as usize);
+            if !((q_factor) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kQFactorLimit_117))) {
                 (unsafe {
                     BrunsliDumpAndAbort_79(
                         c"brunsli_encode.cc".as_ptr(),
@@ -3844,11 +4148,19 @@ pub unsafe fn EncodeQuantTables_157(
                 });
                 'loop_: while true {}
             };
-            (unsafe { WriteBits_120(kQFactorBits_116, (q_factor as u64), storage) });
+            (unsafe {
+                WriteBits_120(
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kQFactorBits_116)),
+                    (q_factor as u64),
+                    storage,
+                )
+            });
             let mut last_diff: i32 = 0;
             let mut k: i32 = 0;
-            'loop_: while ((k) < (kDCTBlockSize_3)) {
-                let j: i32 = (kJPEGNaturalOrder_13[(k) as usize] as i32);
+            'loop_: while ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+            {
+                let j: i32 = ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                    [(k) as usize] as i32);
                 let new_diff: i32 =
                     (((&(*q)).values[(j as usize)]) - (quant_approx[(j) as usize] as i32));
                 let mut diff: i32 = ((new_diff) - (last_diff));
@@ -3897,18 +4209,23 @@ pub unsafe fn EncodeHuffmanCode_158(
     }
     let mut is_dc_table: i32 = (((((*huff).slot_id) >> (4)) == (0)) as i32);
     let mut total_count: i32 = 0;
-    let mut space: i32 = ((1) << (kJpegHuffmanMaxBitLength_7));
-    let mut max_len: i32 = kJpegHuffmanMaxBitLength_7;
+    let mut space: i32 =
+        ((1) << (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)));
+    let mut max_len: i32 =
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7));
     let mut max_count: i32 = if (is_dc_table != 0) {
-        kJpegDCAlphabetSize_9
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9))
     } else {
-        kJpegHuffmanAlphabetSize_8
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8))
     };
     let mut found_match: i32 = 0;
     let mut stock_table_idx: i32 = 0;
     if (is_dc_table != 0) {
         let mut i: i32 = 0;
-        'loop_: while ((i) < (kNumStockDCHuffmanCodes_53)) && (!(found_match != 0)) {
+        'loop_: while ((i)
+            < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockDCHuffmanCodes_53)))
+            && (!(found_match != 0))
+        {
             if (({
                 let sa = core::slice::from_raw_parts(
                     ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const i32
@@ -3916,8 +4233,10 @@ pub unsafe fn EncodeHuffmanCode_158(
                     ::std::mem::size_of::<[i32; 16]>() as usize,
                 );
                 let sb = core::slice::from_raw_parts(
-                    (kStockDCHuffmanCodeCounts_54[(i) as usize].as_ptr() as *const i32
-                        as *const ::libc::c_void) as *const u8,
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStockDCHuffmanCodeCounts_54))
+                        [(i) as usize]
+                        .as_ptr() as *const i32 as *const ::libc::c_void)
+                        as *const u8,
                     ::std::mem::size_of::<[i32; 16]>() as usize,
                 );
                 let mut diff = 0_i32;
@@ -3936,7 +4255,10 @@ pub unsafe fn EncodeHuffmanCode_158(
                         ::std::mem::size_of::<[i32; 13]>() as usize,
                     );
                     let sb = core::slice::from_raw_parts(
-                        (kStockDCHuffmanCodeValues_55[(i) as usize].as_ptr() as *const i32
+                        ((*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kStockDCHuffmanCodeValues_55,
+                        ))[(i) as usize]
+                            .as_ptr() as *const i32
                             as *const ::libc::c_void) as *const u8,
                         ::std::mem::size_of::<[i32; 13]>() as usize,
                     );
@@ -3957,7 +4279,10 @@ pub unsafe fn EncodeHuffmanCode_158(
         }
     } else {
         let mut i: i32 = 0;
-        'loop_: while ((i) < (kNumStockACHuffmanCodes_56)) && (!(found_match != 0)) {
+        'loop_: while ((i)
+            < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockACHuffmanCodes_56)))
+            && (!(found_match != 0))
+        {
             if (({
                 let sa = core::slice::from_raw_parts(
                     ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const i32
@@ -3965,8 +4290,10 @@ pub unsafe fn EncodeHuffmanCode_158(
                     ::std::mem::size_of::<[i32; 16]>() as usize,
                 );
                 let sb = core::slice::from_raw_parts(
-                    (kStockACHuffmanCodeCounts_57[(i) as usize].as_ptr() as *const i32
-                        as *const ::libc::c_void) as *const u8,
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStockACHuffmanCodeCounts_57))
+                        [(i) as usize]
+                        .as_ptr() as *const i32 as *const ::libc::c_void)
+                        as *const u8,
                     ::std::mem::size_of::<[i32; 16]>() as usize,
                 );
                 let mut diff = 0_i32;
@@ -3985,7 +4312,10 @@ pub unsafe fn EncodeHuffmanCode_158(
                         ::std::mem::size_of::<[i32; 163]>() as usize,
                     );
                     let sb = core::slice::from_raw_parts(
-                        (kStockACHuffmanCodeValues_59[(i) as usize].as_ptr() as *const i32
+                        ((*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kStockACHuffmanCodeValues_59,
+                        ))[(i) as usize]
+                            .as_ptr() as *const i32
                             as *const ::libc::c_void) as *const u8,
                         ::std::mem::size_of::<[i32; 163]>() as usize,
                     );
@@ -4017,14 +4347,18 @@ pub unsafe fn EncodeHuffmanCode_158(
         return false;
     }
     (unsafe { WriteBits_120(4_usize, (((max_len) - (1)) as u64), storage) });
-    space -= ((1) << ((kJpegHuffmanMaxBitLength_7) - (max_len)));
+    space -= ((1)
+        << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7))
+            - (max_len)));
     let mut i: i32 = 1;
     'loop_: while ((i) <= (max_len)) {
         let mut count: i32 =
             (((&(*huff)).counts[(i as usize)]) - (if ((i) == (max_len)) { 1 } else { 0 }));
         let mut count_limit: i32 = {
             let mut __tmp_0: i32 = ((max_count) - (total_count));
-            let mut __tmp_1: i32 = ((space) >> ((kJpegHuffmanMaxBitLength_7) - (i)));
+            let mut __tmp_1: i32 = ((space)
+                >> ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7))
+                    - (i)));
             (*if *&mut __tmp_0 <= *&mut __tmp_1 {
                 (&mut __tmp_0) as *const _
             } else {
@@ -4056,11 +4390,17 @@ pub unsafe fn EncodeHuffmanCode_158(
             let mut nbits: i32 = ((unsafe { Log2FloorNonZero_74((count_limit as u32)) }) + (1));
             (unsafe { WriteBits_120((nbits as usize), (count as u64), storage) });
             total_count += count;
-            space -= ((count) * ((1) << ((kJpegHuffmanMaxBitLength_7) - (i))));
+            space -= ((count)
+                * ((1)
+                    << ((*std::cell::LazyCell::force_mut(
+                        &mut *&raw mut kJpegHuffmanMaxBitLength_7,
+                    )) - (i))));
         }
         i.prefix_inc();
     }
-    if (((&(*huff)).values[(total_count as usize)]) != (kJpegHuffmanAlphabetSize_8)) {
+    if (((&(*huff)).values[(total_count as usize)])
+        != (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8)))
+    {
         return false;
     }
     let mut p: brunsli_PermutationCoder = brunsli_PermutationCoder::brunsli_PermutationCoder();
@@ -4069,16 +4409,32 @@ pub unsafe fn EncodeHuffmanCode_158(
             &mut p,
             if (is_dc_table != 0) {
                 core::slice::from_raw_parts(
-                    kDefaultDCValues_60.as_ptr(),
-                    (kDefaultDCValues_60.as_ptr().add(kDefaultDCValues_60.len()))
-                        .offset_from(kDefaultDCValues_60.as_ptr()) as usize,
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultDCValues_60)).as_ptr(),
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultDCValues_60))
+                        .as_ptr()
+                        .add(
+                            (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultDCValues_60))
+                                .len(),
+                        ))
+                    .offset_from(
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultDCValues_60))
+                            .as_ptr(),
+                    ) as usize,
                 )
                 .to_vec()
             } else {
                 core::slice::from_raw_parts(
-                    kDefaultACValues_61.as_ptr(),
-                    (kDefaultACValues_61.as_ptr().add(kDefaultACValues_61.len()))
-                        .offset_from(kDefaultACValues_61.as_ptr()) as usize,
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultACValues_61)).as_ptr(),
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultACValues_61))
+                        .as_ptr()
+                        .add(
+                            (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultACValues_61))
+                                .len(),
+                        ))
+                    .offset_from(
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultACValues_61))
+                            .as_ptr(),
+                    ) as usize,
                 )
                 .to_vec()
             },
@@ -4178,21 +4534,21 @@ pub unsafe fn EncodeScanInfo_159(
 }
 pub unsafe fn MatchComponentIds_160(comps: *const Vec<brunsli_JPEGComponent>) -> i32 {
     if (((*comps).len()) == (1_usize)) && (((&(*comps))[(0_usize)].id) == (1)) {
-        return kComponentIdsGray_50;
+        return (*std::cell::LazyCell::force_mut(&mut *&raw mut kComponentIdsGray_50));
     }
     if (((*comps).len()) == (3_usize)) {
         if ((((&(*comps))[(0_usize)].id) == (1)) && (((&(*comps))[(1_usize)].id) == (2)))
             && (((&(*comps))[(2_usize)].id) == (3))
         {
-            return kComponentIds123_49;
+            return (*std::cell::LazyCell::force_mut(&mut *&raw mut kComponentIds123_49));
         } else if ((((&(*comps))[(0_usize)].id) == (('R' as libc::c_char) as i32))
             && (((&(*comps))[(1_usize)].id) == (('G' as libc::c_char) as i32)))
             && (((&(*comps))[(2_usize)].id) == (('B' as libc::c_char) as i32))
         {
-            return kComponentIdsRGB_51;
+            return (*std::cell::LazyCell::force_mut(&mut *&raw mut kComponentIdsRGB_51));
         }
     }
-    return kComponentIdsCustom_52;
+    return (*std::cell::LazyCell::force_mut(&mut *&raw mut kComponentIdsCustom_52));
 }
 pub unsafe fn JumpToByteBoundary_161(mut storage: *mut brunsli_Storage) {
     let mut nbits: i32 = ((((*storage).pos) & (7_usize)) as i32);
@@ -4229,7 +4585,9 @@ pub unsafe fn EncodeAuxData_162(
     if have_dri {
         (unsafe { WriteBits_120(16_usize, ((*jpg).restart_interval as u64), storage) });
     }
-    if !(((*jpg).huffman_code.len()) < (kMaxDHTMarkers_10 as usize)) {
+    if !(((*jpg).huffman_code.len())
+        < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxDHTMarkers_10)) as usize))
+    {
         (unsafe {
             BrunsliDumpAndAbort_79(
                 c"brunsli_encode.cc".as_ptr(),
@@ -4279,7 +4637,7 @@ pub unsafe fn EncodeAuxData_162(
     }
     let mut comp_ids: i32 = (unsafe { MatchComponentIds_160(&(*jpg).components) });
     (unsafe { WriteBits_120(2_usize, (comp_ids as u64), storage) });
-    if ((comp_ids) == (kComponentIdsCustom_52)) {
+    if ((comp_ids) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kComponentIdsCustom_52))) {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).components.len())) {
             (unsafe { WriteBits_120(8_usize, ((&(*jpg)).components[(i)].id as u64), storage) });
@@ -4369,14 +4727,16 @@ impl brunsli_internal_enc_Histogram {
     }
 }
 pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const Vec<i32>, mut order: *mut u32) {
-    let mut pos_and_val: Vec<(i32, i32)> = (0..(kDCTBlockSize_3 as usize) as usize)
-        .map(|_| <(i32, i32)>::default())
-        .collect::<Vec<_>>();
+    let mut pos_and_val: Vec<(i32, i32)> =
+        (0..((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize) as usize)
+            .map(|_| <(i32, i32)>::default())
+            .collect::<Vec<_>>();
     let mut i: i32 = 0;
-    'loop_: while ((i) < (kDCTBlockSize_3)) {
+    'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
         pos_and_val[(i as usize)].0 = i;
         pos_and_val[(i as usize)].1 =
-            (&(*num_zeros))[(kJPEGNaturalOrder_13[(i) as usize] as usize)];
+            (&(*num_zeros))[((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                [(i) as usize] as usize)];
         i.prefix_inc();
     }
     {
@@ -4403,8 +4763,12 @@ pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const Vec<i32>, mut order: *mut 
         })
     };
     let mut i: usize = 0_usize;
-    'loop_: while ((i) < (kDCTBlockSize_3 as usize)) {
-        (*order.offset((i) as isize)) = kJPEGNaturalOrder_13[(pos_and_val[(i)].0) as usize];
+    'loop_: while ((i)
+        < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize))
+    {
+        (*order.offset((i) as isize)) =
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                [(pos_and_val[(i)].0) as usize];
         i.prefix_inc();
     }
 }
@@ -4412,7 +4776,9 @@ impl brunsli_internal_enc_EntropySource {
     pub unsafe fn Resize(&mut self, mut num_bands: usize) {
         self.num_bands_ = num_bands;
         {
-            let __a0 = (num_bands).wrapping_mul(kNumAvrgContexts_83) as usize;
+            let __a0 = (num_bands)
+                .wrapping_mul((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumAvrgContexts_83)))
+                as usize;
             self.histograms_
                 .resize_with(__a0, || <brunsli_internal_enc_Histogram>::default())
         };
@@ -4509,11 +4875,18 @@ impl brunsli_internal_enc_DataStream {
 }
 impl brunsli_internal_enc_DataStream {
     pub unsafe fn ResizeForBlock(&mut self) {
-        if (((self.pos_ as usize).wrapping_add(kSlackForOneBlock_140)) > (self.code_words_.len())) {
-            static mut kGrowMult_165: f64 = unsafe { 1.2E+0 };;
-            let new_size: usize = (((kGrowMult_165) * (self.code_words_.capacity() as f64))
+        if (((self.pos_ as usize)
+            .wrapping_add((*std::cell::LazyCell::force_mut(&mut *&raw mut kSlackForOneBlock_140))))
+            > (self.code_words_.len()))
+        {
+            static mut kGrowMult_165: std::cell::LazyCell<f64> =
+                std::cell::LazyCell::new(|| unsafe { 1.2E+0 });;
+            let new_size: usize = (((*std::cell::LazyCell::force_mut(&mut *&raw mut kGrowMult_165))
+                * (self.code_words_.capacity() as f64))
                 as usize)
-                .wrapping_add(kSlackForOneBlock_140);
+                .wrapping_add(
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kSlackForOneBlock_140)),
+                );
             {
                 let __a0 = new_size as usize;
                 self.code_words_.resize_with(__a0, || {
@@ -4531,7 +4904,9 @@ impl brunsli_internal_enc_DataStream {
         mut context: usize,
         mut s: *mut brunsli_internal_enc_EntropySource,
     ) {
-        let mut histo_ix: usize = ((band).wrapping_mul(kNumAvrgContexts_83)).wrapping_add(context);
+        let mut histo_ix: usize = ((band)
+            .wrapping_mul((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumAvrgContexts_83))))
+        .wrapping_add(context);
         let mut word: brunsli_internal_enc_DataStream_CodeWord =
             brunsli_internal_enc_DataStream_CodeWord::brunsli_internal_enc_DataStream_CodeWord();
         word.context = (histo_ix as u32);
@@ -4680,7 +5055,10 @@ pub unsafe fn EncodeNumNonzeros_166(
     mut p: *mut brunsli_Prob,
     mut data_stream: *mut brunsli_internal_enc_DataStream,
 ) {
-    if !((val) < (((1_u32) << (kNumNonZeroBits_84)) as usize)) {
+    if !((val)
+        < (((1_u32) << (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroBits_84)))
+            as usize))
+    {
         (unsafe {
             BrunsliDumpAndAbort_79(
                 c"brunsli_encode.cc".as_ptr(),
@@ -4692,7 +5070,9 @@ pub unsafe fn EncodeNumNonzeros_166(
     };
     let mut bst: *mut brunsli_Prob = p.offset(-((1) as isize));
     let mut ctx: usize = 1_usize;
-    let mut mask: usize = (((1) << ((kNumNonZeroBits_84).wrapping_sub(1_usize))) as usize);
+    let mut mask: usize = (((1)
+        << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroBits_84))
+            .wrapping_sub(1_usize))) as usize);
     'loop_: while ((mask) != (0_usize)) {
         let bit: i32 = ((((val) & (mask)) != (0_usize)) as i32);
         (unsafe {
@@ -4709,7 +5089,9 @@ pub unsafe fn EncodeNumNonzeros_166(
 pub unsafe fn CollectAllCoeffs_167(mut coeffs: *const i16) -> i16 {
     let mut all_coeffs: i16 = 0_i16;
     let mut k: i32 = 1;
-    'loop_: while ((all_coeffs as i32) == (0)) && ((k) < (kDCTBlockSize_3)) {
+    'loop_: while ((all_coeffs as i32) == (0))
+        && ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+    {
         all_coeffs = ((all_coeffs as i32) | ((*coeffs.offset((k) as isize)) as i32)) as i16;
         k.prefix_inc();
     }
@@ -4721,19 +5103,22 @@ pub unsafe fn EncodeCoeffOrder_168(
 ) {
     let mut order_zigzag: [u32; 64] = [0_u32; 64];
     let mut i: usize = 0_usize;
-    'loop_: while ((i) < (kDCTBlockSize_3 as usize)) {
-        order_zigzag[(i)] = kJPEGZigZagOrder_14[(*order.offset((i) as isize)) as usize];
+    'loop_: while ((i)
+        < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize))
+    {
+        order_zigzag[(i)] = (*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGZigZagOrder_14))
+            [(*order.offset((i) as isize)) as usize];
         i.prefix_inc();
     }
     let mut lehmer: [u32; 64] = [0_u32; 64];
     (unsafe {
         ComputeLehmerCode_112(
             (order_zigzag.as_mut_ptr()).cast_const(),
-            (kDCTBlockSize_3 as usize),
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize),
             lehmer.as_mut_ptr(),
         )
     });
-    let mut tail: i32 = ((kDCTBlockSize_3) - (1));
+    let mut tail: i32 = ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) - (1));
     'loop_: while ((tail) >= (1)) && ((lehmer[(tail) as usize]) == (0_u32)) {
         tail.prefix_dec();
     }
@@ -4742,11 +5127,11 @@ pub unsafe fn EncodeCoeffOrder_168(
         lehmer[(i) as usize].prefix_inc();
         i.prefix_inc();
     }
-    static mut kSpan_169: i32 = unsafe { 16 };;
+    static mut kSpan_169: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 16 });;
     let mut i: i32 = 0;
-    'loop_: while ((i) < (kDCTBlockSize_3)) {
+    'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
         let start: i32 = if ((i) > (0)) { i } else { 1 };
-        let end: i32 = ((i) + (kSpan_169));
+        let end: i32 = ((i) + (*std::cell::LazyCell::force_mut(&mut *&raw mut kSpan_169)));
         let mut has_non_zero: i32 = 0;
         let mut j: i32 = start;
         'loop_: while ((j) < (end)) {
@@ -4755,7 +5140,7 @@ pub unsafe fn EncodeCoeffOrder_168(
         }
         if !(has_non_zero != 0) {
             (unsafe { brunsli_internal_enc_DataStream::AddBits(&mut (*data_stream), 1, 0) });
-            i += kSpan_169;
+            i += (*std::cell::LazyCell::force_mut(&mut *&raw mut kSpan_169));
             continue 'loop_;
         } else {
             (unsafe { brunsli_internal_enc_DataStream::AddBits(&mut (*data_stream), 1, 1) });
@@ -4763,7 +5148,9 @@ pub unsafe fn EncodeCoeffOrder_168(
         let mut j: i32 = start;
         'loop_: while ((j) < (end)) {
             let mut v: i32 = 0_i32;
-            if !((lehmer[(j) as usize]) <= (kDCTBlockSize_3 as u32)) {
+            if !((lehmer[(j) as usize])
+                <= ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as u32))
+            {
                 (unsafe {
                     BrunsliDumpAndAbort_79(
                         c"brunsli_encode.cc".as_ptr(),
@@ -4781,7 +5168,7 @@ pub unsafe fn EncodeCoeffOrder_168(
             (unsafe { brunsli_internal_enc_DataStream::AddBits(&mut (*data_stream), 3, v) });
             j.prefix_inc();
         }
-        i += kSpan_169;
+        i += (*std::cell::LazyCell::force_mut(&mut *&raw mut kSpan_169));
     }
 }
 pub unsafe fn FrameTypeCode_170(jpg: *const brunsli_JPEGData) -> u32 {
@@ -4798,23 +5185,28 @@ pub unsafe fn FrameTypeCode_170(jpg: *const brunsli_JPEGData) -> u32 {
     return code;
 }
 pub unsafe fn EncodeSignature_171(mut len: usize, mut data: *mut u8, mut pos: *mut usize) -> bool {
-    if ((len) < (kBrunsliSignatureSize_43))
-        || ((*pos) > ((len).wrapping_sub(kBrunsliSignatureSize_43)))
+    if ((len) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)))
+        || ((*pos)
+            > ((len).wrapping_sub(
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)),
+            )))
     {
         return false;
     }
     {
-        if kBrunsliSignatureSize_43 != 0 {
+        if (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)) != 0 {
             ::std::ptr::copy_nonoverlapping(
-                (kBrunsliSignature_44.as_ptr() as *const u8 as *const ::libc::c_void),
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignature_44)).as_ptr()
+                    as *const u8 as *const ::libc::c_void),
                 ((&mut (*data.offset((*pos) as isize)) as *mut u8) as *mut u8
                     as *mut ::libc::c_void),
-                kBrunsliSignatureSize_43 as usize,
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)) as usize,
             )
         }
         ((&mut (*data.offset((*pos) as isize)) as *mut u8) as *mut u8 as *mut ::libc::c_void)
     };
-    (*pos) = (*pos).wrapping_add(kBrunsliSignatureSize_43);
+    (*pos) = (*pos)
+        .wrapping_add((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)));
     return true;
 }
 pub unsafe fn EncodeValue_172(
@@ -4840,13 +5232,18 @@ pub unsafe fn EncodeHeader_173(
 ) -> bool {
     &(state);
     let mut version: usize = ((*jpg).version as usize);
-    let mut is_fallback: bool = (((version) & (1_usize)) == (kFallbackVersion_2 as usize));
-    if (is_fallback) && ((version) != (kFallbackVersion_2 as usize)) {
+    let mut is_fallback: bool = (((version) & (1_usize))
+        == ((*std::cell::LazyCell::force_mut(&mut *&raw mut kFallbackVersion_2)) as usize));
+    if (is_fallback)
+        && ((version)
+            != ((*std::cell::LazyCell::force_mut(&mut *&raw mut kFallbackVersion_2)) as usize))
+    {
         return false;
     }
     if (((!(is_fallback)) && ((((*jpg).width) == (0)) || (((*jpg).height) == (0))))
         || ((*jpg).components.is_empty()))
-        || (((*jpg).components.len()) > (kMaxComponents_4 as usize))
+        || (((*jpg).components.len())
+            > ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxComponents_4)) as usize))
     {
         return false;
     }
@@ -4858,7 +5255,7 @@ pub unsafe fn EncodeHeader_173(
     let mut subsampling: usize = ((unsafe { FrameTypeCode_170(jpg) }) as usize);
     let mut pos: usize = 0_usize;
     (unsafe {
-        let _tag: u8 = kBrunsliHeaderWidthTag_39;
+        let _tag: u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHeaderWidthTag_39));
         let _data: *mut u8 = data;
         EncodeValue_172(
             _tag,
@@ -4868,7 +5265,7 @@ pub unsafe fn EncodeHeader_173(
         )
     });
     (unsafe {
-        let _tag: u8 = kBrunsliHeaderHeightTag_40;
+        let _tag: u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHeaderHeightTag_40));
         let _data: *mut u8 = data;
         EncodeValue_172(
             _tag,
@@ -4878,12 +5275,14 @@ pub unsafe fn EncodeHeader_173(
         )
     });
     (unsafe {
-        let _tag: u8 = kBrunsliHeaderVersionCompTag_41;
+        let _tag: u8 =
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHeaderVersionCompTag_41));
         let _data: *mut u8 = data;
         EncodeValue_172(_tag, version_comp, _data, (&mut pos as *mut usize))
     });
     (unsafe {
-        let _tag: u8 = kBrunsliHeaderSubsamplingTag_42;
+        let _tag: u8 =
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHeaderSubsamplingTag_42));
         let _data: *mut u8 = data;
         EncodeValue_172(_tag, subsampling, _data, (&mut pos as *mut usize))
     });
@@ -4914,7 +5313,9 @@ pub unsafe fn EncodeMetaData_174(
         });
         i.prefix_inc();
     }
-    if ((transformed_marker_count) > (kBrunsliShortMarkerLimit_23 as usize)) {
+    if ((transformed_marker_count)
+        > ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliShortMarkerLimit_23)) as usize))
+    {
         write!(
             std::fs::File::from_raw_fd(
                 std::io::stderr()
@@ -4930,7 +5331,10 @@ pub unsafe fn EncodeMetaData_174(
     }
     let mut other_app_count: usize =
         (((*jpg).app_data.len() as u64).wrapping_sub((transformed_marker_count as u64)) as usize);
-    if ((other_app_count) > (kBrunsliMultibyteMarkerLimit_24 as usize)) {
+    if ((other_app_count)
+        > ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMultibyteMarkerLimit_24))
+            as usize))
+    {
         write!(
             std::fs::File::from_raw_fd(
                 std::io::stderr()
@@ -4945,7 +5349,10 @@ pub unsafe fn EncodeMetaData_174(
         return false;
     }
     let mut com_count: usize = (*jpg).com_data.len();
-    if ((com_count) > (kBrunsliMultibyteMarkerLimit_24 as usize)) {
+    if ((com_count)
+        > ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMultibyteMarkerLimit_24))
+            as usize))
+    {
         write!(
             std::fs::File::from_raw_fd(
                 std::io::stderr()
@@ -4983,8 +5390,8 @@ pub unsafe fn EncodeMetaData_174(
     let mut pos: usize = (unsafe { EncodeBase128_147(metadata.len(), data) });
     let mut compressed_size: usize = (*len).wrapping_sub(pos);
     if !(::brotli_sys::BrotliEncoderCompress(
-        kBrotliQuality_142,
-        kBrotliWindowBits_143,
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrotliQuality_142)),
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrotliWindowBits_143)),
         ::brotli_sys::BROTLI_MODE_GENERIC,
         metadata.len(),
         (metadata.as_mut_ptr()).cast_const(),
@@ -5195,49 +5602,64 @@ pub unsafe fn EncodeSection_180(
 pub unsafe fn SampleNumNonZeros_181(mut m: *mut brunsli_internal_enc_ComponentMeta) -> usize {
     let mut num_blocks: usize = ((((*m).width_in_blocks) * ((*m).height_in_blocks)) as usize);
     if ((num_blocks) < (((32) * (32)) as usize)) {
-        return (kDCTBlockSize_3 as usize).wrapping_mul(num_blocks);
+        return ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize)
+            .wrapping_mul(num_blocks);
     }
     let mut coeffs: *const i16 = (*m).ac_coeffs;
     let mut stride: usize = ((*m).ac_stride as usize);
     let mut width_in_blocks: usize = ((*m).width_in_blocks as usize);
     let num_zeros: *mut Vec<i32> = &mut (*m).num_zeros;
-    static mut kStride_182: i32 = unsafe { 5 };;
+    static mut kStride_182: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 5 });;
     let mut total_nonzeros: usize = 0_usize;
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (num_blocks)) {
         let mut x: usize = (i).wrapping_rem(width_in_blocks);
         let mut y: usize = (i).wrapping_div(width_in_blocks);
         let mut block: *const i16 = coeffs
-            .offset(((x).wrapping_mul((kDCTBlockSize_3 as usize))) as isize)
+            .offset(
+                ((x).wrapping_mul(
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize),
+                )) as isize,
+            )
             .offset(((y).wrapping_mul(stride)) as isize);
         let mut k: usize = 0_usize;
-        'loop_: while ((k) < (kDCTBlockSize_3 as usize)) {
+        'loop_: while ((k)
+            < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize))
+        {
             if (((*block.offset((k) as isize)) as i32) == (0)) {
                 (&mut (*num_zeros))[(k)].prefix_inc();
             }
             k.prefix_inc();
         }
-        total_nonzeros = (total_nonzeros).wrapping_add((kDCTBlockSize_3 as usize));
-        i = (i).wrapping_add((kStride_182 as usize));
+        total_nonzeros = (total_nonzeros).wrapping_add(
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize),
+        );
+        i = (i)
+            .wrapping_add(((*std::cell::LazyCell::force_mut(&mut *&raw mut kStride_182)) as usize));
     }
     let mut i: usize = 0_usize;
-    'loop_: while ((i) < (kDCTBlockSize_3 as usize)) {
+    'loop_: while ((i)
+        < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize))
+    {
         total_nonzeros = (total_nonzeros).wrapping_sub(((&mut (*num_zeros))[(i)] as usize));
         i.prefix_inc();
     }
     (&mut (*num_zeros))[(0_usize)] = 0;
-    return (total_nonzeros).wrapping_mul((kStride_182 as usize));
+    return (total_nonzeros)
+        .wrapping_mul(((*std::cell::LazyCell::force_mut(&mut *&raw mut kStride_182)) as usize));
 }
 pub unsafe fn SelectContextBits_183(mut num_symbols: usize) -> i32 {
-    static mut kContextBits_184: [i32; 33] = unsafe {
-        [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6,
-            6, 6, 6, 6,
-        ]
-    };;
+    static mut kContextBits_184: std::cell::LazyCell<[i32; 33]> =
+        std::cell::LazyCell::new(|| unsafe {
+            [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6,
+                6, 6, 6, 6, 6,
+            ]
+        });;
     let mut log2_size: usize = ((unsafe { Log2FloorNonZero_74((num_symbols as u32)) }) as usize);
-    let mut scheme: i32 = kContextBits_184[(log2_size)];
-    if !((scheme) < (kNumSchemes_91)) {
+    let mut scheme: i32 =
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kContextBits_184))[(log2_size)];
+    if !((scheme) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumSchemes_91))) {
         (unsafe {
             BrunsliDumpAndAbort_79(
                 c"brunsli_encode.cc".as_ptr(),
@@ -5268,7 +5690,9 @@ pub unsafe fn PredictDCCoeffs_185(mut state: *mut brunsli_internal_enc_State) ->
             'loop_: while ((x) < (width)) {
                 let mut err: i32 = (((*coeffs.offset((0) as isize)) as i32)
                     - (unsafe { PredictWithAdaptiveMedian_115(coeffs, x, y, ac_stride) }));
-                if ((err.abs()) > (kBrunsliMaxDCAbsVal_19)) {
+                if ((err.abs())
+                    > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxDCAbsVal_19)))
+                {
                     write!(
                         std::fs::File::from_raw_fd(
                             std::io::stderr()
@@ -5283,7 +5707,9 @@ pub unsafe fn PredictDCCoeffs_185(mut state: *mut brunsli_internal_enc_State) ->
                     );
                     return false;
                 }
-                coeffs = (coeffs).wrapping_add(kDCTBlockSize_3 as usize);
+                coeffs = (coeffs).wrapping_add(
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize,
+                );
                 (*(pred_errors.postfix_inc())) = (err as i16);
                 x.prefix_inc();
             }
@@ -5316,17 +5742,21 @@ pub unsafe fn CalculateMeta_186(
         (*m).width_in_blocks = (((*jpg).MCU_cols) * ((*m).h_samp));
         (*m).height_in_blocks = (((*jpg).MCU_rows) * ((*m).v_samp));
         (*m).ac_coeffs = (&(&(*c)).coeffs[(0_usize)] as *const i16);
-        (*m).ac_stride = (((*m).width_in_blocks) * (kDCTBlockSize_3));
+        (*m).ac_stride = (((*m).width_in_blocks)
+            * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)));
         (*m).dc_stride = (*m).width_in_blocks;
         (*m).b_stride = (*m).width_in_blocks;
         {
-            if (kDCTBlockSize_3 as usize).wrapping_mul((::std::mem::size_of::<i32>() as usize)) != 0
+            if ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize)
+                .wrapping_mul((::std::mem::size_of::<i32>() as usize))
+                != 0
             {
                 ::std::ptr::copy_nonoverlapping(
                     ((&(&(*q)).values[(0_usize)] as *const i32) as *const i32
                         as *const ::libc::c_void),
                     ((*m).quant.as_mut_ptr() as *mut i32 as *mut ::libc::c_void),
-                    (kDCTBlockSize_3 as usize).wrapping_mul((::std::mem::size_of::<i32>() as usize))
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize)
+                        .wrapping_mul((::std::mem::size_of::<i32>() as usize))
                         as usize,
                 )
             }
@@ -5450,7 +5880,11 @@ pub unsafe fn EncodeDC_187(mut state: *mut brunsli_internal_enc_State) {
                                 )
                             });
                             let zdens_ctx: usize = i;
-                            if ((absval) <= (kNumDirectCodes_141)) {
+                            if ((absval)
+                                <= (*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kNumDirectCodes_141,
+                                )))
+                            {
                                 (unsafe {
                                     let _code: usize = (((absval) - (1)) as usize);
                                     let _band: usize = zdens_ctx;
@@ -5468,11 +5902,18 @@ pub unsafe fn EncodeDC_187(mut state: *mut brunsli_internal_enc_State) {
                             } else {
                                 let mut nbits: i32 = ((unsafe {
                                     Log2FloorNonZero_74(
-                                        ((((absval) - (kNumDirectCodes_141)) + (1)) as u32),
+                                        ((((absval)
+                                            - (*std::cell::LazyCell::force_mut(
+                                                &mut *&raw mut kNumDirectCodes_141,
+                                            )))
+                                            + (1)) as u32),
                                     )
                                 }) - (1));
                                 (unsafe {
-                                    let _code: usize = (((kNumDirectCodes_141) + (nbits)) as usize);
+                                    let _code: usize = (((*std::cell::LazyCell::force_mut(
+                                        &mut *&raw mut kNumDirectCodes_141,
+                                    )) + (nbits))
+                                        as usize);
                                     let _band: usize = zdens_ctx;
                                     let _context: usize = (avrg_ctx as usize);
                                     let _s: *mut brunsli_internal_enc_EntropySource =
@@ -5485,8 +5926,11 @@ pub unsafe fn EncodeDC_187(mut state: *mut brunsli_internal_enc_State) {
                                         _s,
                                     )
                                 });
-                                let mut extra_bits: i32 =
-                                    ((absval) - (((kNumDirectCodes_141) - (1)) + ((2) << (nbits))));
+                                let mut extra_bits: i32 = ((absval)
+                                    - (((*std::cell::LazyCell::force_mut(
+                                        &mut *&raw mut kNumDirectCodes_141,
+                                    )) - (1))
+                                        + ((2) << (nbits))));
                                 let mut first_extra_bit: i32 = (((extra_bits) >> (nbits)) & (1));
                                 (unsafe {
                                     let _p: *mut brunsli_Prob =
@@ -5518,7 +5962,9 @@ pub unsafe fn EncodeDC_187(mut state: *mut brunsli_internal_enc_State) {
                     (*prev_abs.offset((x) as isize)) = absval;
                     block_state.prefix_inc();
                     dc_coeffs_in.prefix_inc();
-                    ac_coeffs_in = (ac_coeffs_in).wrapping_add(kDCTBlockSize_3 as usize);
+                    ac_coeffs_in = (ac_coeffs_in).wrapping_add(
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize,
+                    );
                     x.prefix_inc();
                 }
                 iy.prefix_inc();
@@ -5535,13 +5981,16 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
     let mcu_rows: i32 = (((&(*meta))[(0_usize)].height_in_blocks) / ((&(*meta))[(0_usize)].v_samp));
     let entropy_source: *mut brunsli_internal_enc_EntropySource = &mut (*state).entropy_source;
     let data_stream: *mut brunsli_internal_enc_DataStream = &mut (*state).data_stream_ac;
-    let mut context_modes: *const u8 = kContextAlgorithm_95.as_ptr().offset(
-        (if (*state).use_legacy_context_model {
-            64
-        } else {
-            0
-        }) as isize,
-    );
+    let mut context_modes: *const u8 =
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kContextAlgorithm_95))
+            .as_ptr()
+            .offset(
+                (if (*state).use_legacy_context_model {
+                    64
+                } else {
+                    0
+                }) as isize,
+            );
     let mut num_code_words: usize = 0_usize;
     let mut comps: Vec<brunsli_ComponentState> = (0..(num_components) as usize)
         .map(|_| <brunsli_ComponentState>::default())
@@ -5598,21 +6047,24 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
             let mut y: i32 = ((mcu_y) * ((*m).v_samp));
             let ac_stride: i32 = (*m).ac_stride;
             let b_stride: i32 = (*m).b_stride;
-            let mut prev_row_delta: i32 =
-                ((((1) - ((2) * ((y) & (1)))) * ((width) + (3))) * (kDCTBlockSize_3));
+            let mut prev_row_delta: i32 = ((((1) - ((2) * ((y) & (1)))) * ((width) + (3)))
+                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)));
             let mut iy: i32 = 0;
             'loop_: while ((iy) < ((*m).v_samp)) {
                 let mut coeffs_in: *const i16 = (*m).ac_coeffs.offset(((y) * (ac_stride)) as isize);
                 let mut block_state: *const u8 =
                     ((*m).block_state.offset(((y) * (b_stride)) as isize)).cast_const();
                 let mut prev_row_coeffs: *const i16 = coeffs_in.offset(-((ac_stride) as isize));
-                let mut prev_col_coeffs: *const i16 =
-                    coeffs_in.offset(-((kDCTBlockSize_3) as isize));
-                let mut prev_sgn: *mut i32 =
-                    (&mut (&mut (*c)).prev_sign[(kDCTBlockSize_3 as usize)] as *mut i32);
-                let mut prev_abs: *mut i32 = (&mut (&mut (*c)).prev_abs_coeff
-                    [((((((y) & (1)) * ((width) + (3))) + (2)) * (kDCTBlockSize_3)) as usize)]
+                let mut prev_col_coeffs: *const i16 = coeffs_in.offset(
+                    -((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as isize),
+                );
+                let mut prev_sgn: *mut i32 = (&mut (&mut (*c)).prev_sign
+                    [((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize)]
                     as *mut i32);
+                let mut prev_abs: *mut i32 =
+                    (&mut (&mut (*c)).prev_abs_coeff[((((((y) & (1)) * ((width) + (3))) + (2))
+                        * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                        as usize)] as *mut i32);
                 let mut x: i32 = 0;
                 'loop_: while ((x) < (width)) {
                     (unsafe {
@@ -5631,7 +6083,9 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                     let is_empty_block: bool = ((*block_state) != 0);
                     if !(is_empty_block) {
                         let mut k: i32 = 1;
-                        'loop_: while ((k) < (kDCTBlockSize_3)) {
+                        'loop_: while ((k)
+                            < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                        {
                             let k_nat: i32 = ((*cur_order.offset((k) as isize)) as i32);
                             coeffs[(k) as usize] = (*coeffs_in.offset((k_nat) as isize));
                             if (coeffs[(k) as usize] != 0) {
@@ -5650,15 +6104,18 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                             EncodeNumNonzeros_166(
                                 (last_nz as usize),
                                 (*c).num_nonzero_prob.as_mut_ptr().offset(
-                                    ((kNumNonZeroTreeSize_85)
-                                        .wrapping_mul((nzero_context as usize)))
+                                    ((*std::cell::LazyCell::force_mut(
+                                        &mut *&raw mut kNumNonZeroTreeSize_85,
+                                    ))
+                                    .wrapping_mul((nzero_context as usize)))
                                         as isize,
                                 ),
                                 (data_stream),
                             )
                         });
                     }
-                    let mut k: i32 = ((kDCTBlockSize_3) - (1));
+                    let mut k: i32 =
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) - (1));
                     'loop_: while ((k) > (last_nz)) {
                         (*prev_sgn.offset((k) as isize)) = 0;
                         (*prev_abs.offset((k) as isize)) = 0;
@@ -5679,9 +6136,15 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                         let mut coeff: i16 = coeffs[(k) as usize];
                         let is_zero: i32 = (((coeff as i32) == (0)) as i32);
                         if ((k) < (last_nz)) {
-                            let bucket: i32 =
-                                (kNonzeroBuckets_89[((num_nzeros).wrapping_sub(1_usize))] as i32);
-                            let is_zero_ctx: i32 = (((bucket) * (kDCTBlockSize_3)) + (k));
+                            let bucket: i32 = ((*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kNonzeroBuckets_89,
+                            ))[((num_nzeros).wrapping_sub(1_usize))]
+                                as i32);
+                            let is_zero_ctx: i32 = (((bucket)
+                                * (*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kDCTBlockSize_3,
+                                )))
+                                + (k));
                             let p: *mut brunsli_Prob = (&mut (&mut (*c)).is_zero_prob
                                 [(is_zero_ctx as usize)]
                                 as *mut brunsli_Prob);
@@ -5706,7 +6169,9 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                             let mut context_type: usize =
                                 ((*context_modes.offset((k_nat) as isize)) as usize);
                             let mut avg_ctx: usize = 0_usize;
-                            let mut sign_ctx: usize = kMaxAverageContext_82;
+                            let mut sign_ctx: usize = (*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kMaxAverageContext_82,
+                            ));
                             if (((context_type) & (1_usize)) != 0) && ((y) > (0)) {
                                 if ((y) > (0)) {
                                     let mut offset: usize = (((k_nat) & (7)) as usize);
@@ -5757,11 +6222,17 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                                     WeightedAverageContext_98(_vals, _prev_row_delta)
                                 }) as usize);
                                 sign_ctx = ((((*prev_sgn.offset((k) as isize)) * (3))
-                                    + (*prev_sgn.offset(((k) - (kDCTBlockSize_3)) as isize)))
-                                    as usize);
+                                    + (*prev_sgn.offset(
+                                        ((k) - (*std::cell::LazyCell::force_mut(
+                                            &mut *&raw mut kDCTBlockSize_3,
+                                        ))) as isize,
+                                    ))) as usize);
                             }
-                            sign_ctx = ((sign_ctx).wrapping_mul((kDCTBlockSize_3 as usize)))
-                                .wrapping_add((k as usize));
+                            sign_ctx = ((sign_ctx).wrapping_mul(
+                                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                                    as usize),
+                            ))
+                            .wrapping_add((k as usize));
                             let sign_p: *mut brunsli_Prob =
                                 (&mut (&mut (*c)).sign_prob[(sign_ctx)] as *mut brunsli_Prob);
                             (unsafe {
@@ -5783,7 +6254,11 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                                     )
                                 }) as usize),
                             );
-                            if ((absval) <= (kNumDirectCodes_141)) {
+                            if ((absval)
+                                <= (*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kNumDirectCodes_141,
+                                )))
+                            {
                                 (unsafe {
                                     let _code: usize = (((absval) - (1)) as usize);
                                     let _band: usize = zdens_ctx;
@@ -5799,11 +6274,18 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                                     )
                                 });
                             } else {
-                                let base_code: i32 = (((absval) - (kNumDirectCodes_141)) + (1));
+                                let base_code: i32 = (((absval)
+                                    - (*std::cell::LazyCell::force_mut(
+                                        &mut *&raw mut kNumDirectCodes_141,
+                                    )))
+                                    + (1));
                                 let nbits: i32 =
                                     ((unsafe { Log2FloorNonZero_74((base_code as u32)) }) - (1));
                                 (unsafe {
-                                    let _code: usize = (((kNumDirectCodes_141) + (nbits)) as usize);
+                                    let _code: usize = (((*std::cell::LazyCell::force_mut(
+                                        &mut *&raw mut kNumDirectCodes_141,
+                                    )) + (nbits))
+                                        as usize);
                                     let _band: usize = zdens_ctx;
                                     let _context: usize = ((avg_ctx as u32) as usize);
                                     let _s: *mut brunsli_internal_enc_EntropySource =
@@ -5853,7 +6335,9 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                         }
                         k.prefix_dec();
                     }
-                    if !((num_nzeros) <= (kNumNonZeroTreeSize_85)) {
+                    if !((num_nzeros)
+                        <= (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroTreeSize_85)))
+                    {
                         (unsafe {
                             BrunsliDumpAndAbort_79(
                                 c"brunsli_encode.cc".as_ptr(),
@@ -5865,11 +6349,21 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                     };
                     (&mut (*c)).prev_num_nonzeros[(x as usize)] = (num_nzeros as u8);
                     block_state.prefix_inc();
-                    coeffs_in = (coeffs_in).wrapping_add(kDCTBlockSize_3 as usize);
-                    prev_sgn = (prev_sgn).wrapping_add(kDCTBlockSize_3 as usize);
-                    prev_abs = (prev_abs).wrapping_add(kDCTBlockSize_3 as usize);
-                    prev_row_coeffs = (prev_row_coeffs).wrapping_add(kDCTBlockSize_3 as usize);
-                    prev_col_coeffs = (prev_col_coeffs).wrapping_add(kDCTBlockSize_3 as usize);
+                    coeffs_in = (coeffs_in).wrapping_add(
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize,
+                    );
+                    prev_sgn = (prev_sgn).wrapping_add(
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize,
+                    );
+                    prev_abs = (prev_abs).wrapping_add(
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize,
+                    );
+                    prev_row_coeffs = (prev_row_coeffs).wrapping_add(
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize,
+                    );
+                    prev_col_coeffs = (prev_col_coeffs).wrapping_add(
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize,
+                    );
                     x.prefix_inc();
                 }
                 prev_row_delta *= -1_i32;
@@ -5913,7 +6407,11 @@ pub unsafe fn BrunsliSerialize_190(
 ) -> bool {
     let mut pos: usize = 0_usize;
     let mut ok: bool = true;
-    if !(((skip_sections) & ((1_u32) << (kBrunsliSignatureTag_30 as i32))) != 0) {
+    if !(((skip_sections)
+        & ((1_u32)
+            << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureTag_30)) as i32)))
+        != 0)
+    {
         ok = (unsafe {
             let _len: usize = (*len);
             let _data: *mut u8 = data;
@@ -5924,52 +6422,11 @@ pub unsafe fn BrunsliSerialize_190(
             return false;
         }
     }
-    if !(((skip_sections) & ((1_u32) << (kBrunsliHeaderTag_31 as i32))) != 0) {
-        ok = (unsafe {
-            (|tag: u8,
-              fn_: Option<
-                unsafe fn(
-                    *const brunsli_JPEGData,
-                    *mut brunsli_internal_enc_State,
-                    *mut u8,
-                    *mut usize,
-                ) -> bool,
-            >,
-              size: usize| {
-                return (unsafe {
-                    let _jpg: *const brunsli_JPEGData = jpg;
-                    let _s: *mut brunsli_internal_enc_State = state;
-                    let _tag: u8 = tag;
-                    let _write_section: Option<
-                        unsafe fn(
-                            *const brunsli_JPEGData,
-                            *mut brunsli_internal_enc_State,
-                            *mut u8,
-                            *mut usize,
-                        ) -> bool,
-                    > = fn_;
-                    let _section_size_bytes: usize = size;
-                    let _len: usize = (*len);
-                    let _data: *mut u8 = data;
-                    let _pos: *mut usize = (&mut pos as *mut usize);
-                    EncodeSection_180(
-                        _jpg,
-                        _s,
-                        _tag,
-                        _write_section,
-                        _section_size_bytes,
-                        _len,
-                        _data,
-                        _pos,
-                    )
-                });
-            })(kBrunsliHeaderTag_31, Some(EncodeHeader_173), 1_usize)
-        });
-        if !(ok) {
-            return false;
-        }
-    }
-    if !(((skip_sections) & ((1_u32) << (kBrunsliJPEGInternalsTag_33 as i32))) != 0) {
+    if !(((skip_sections)
+        & ((1_u32)
+            << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHeaderTag_31)) as i32)))
+        != 0)
+    {
         ok = (unsafe {
             (|tag: u8,
               fn_: Option<
@@ -6009,7 +6466,61 @@ pub unsafe fn BrunsliSerialize_190(
                     )
                 });
             })(
-                kBrunsliJPEGInternalsTag_33,
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHeaderTag_31)),
+                Some(EncodeHeader_173),
+                1_usize,
+            )
+        });
+        if !(ok) {
+            return false;
+        }
+    }
+    if !(((skip_sections)
+        & ((1_u32)
+            << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliJPEGInternalsTag_33))
+                as i32)))
+        != 0)
+    {
+        ok = (unsafe {
+            (|tag: u8,
+              fn_: Option<
+                unsafe fn(
+                    *const brunsli_JPEGData,
+                    *mut brunsli_internal_enc_State,
+                    *mut u8,
+                    *mut usize,
+                ) -> bool,
+            >,
+              size: usize| {
+                return (unsafe {
+                    let _jpg: *const brunsli_JPEGData = jpg;
+                    let _s: *mut brunsli_internal_enc_State = state;
+                    let _tag: u8 = tag;
+                    let _write_section: Option<
+                        unsafe fn(
+                            *const brunsli_JPEGData,
+                            *mut brunsli_internal_enc_State,
+                            *mut u8,
+                            *mut usize,
+                        ) -> bool,
+                    > = fn_;
+                    let _section_size_bytes: usize = size;
+                    let _len: usize = (*len);
+                    let _data: *mut u8 = data;
+                    let _pos: *mut usize = (&mut pos as *mut usize);
+                    EncodeSection_180(
+                        _jpg,
+                        _s,
+                        _tag,
+                        _write_section,
+                        _section_size_bytes,
+                        _len,
+                        _data,
+                        _pos,
+                    )
+                });
+            })(
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliJPEGInternalsTag_33)),
                 Some(EncodeJPEGInternals_175),
                 (unsafe { Base128Size_146((unsafe { EstimateAuxDataSize_144(jpg) })) }),
             )
@@ -6018,9 +6529,13 @@ pub unsafe fn BrunsliSerialize_190(
             return false;
         }
     }
-    if !(((skip_sections) & ((1_u32) << (kBrunsliMetaDataTag_32 as i32))) != 0) {
+    if !(((skip_sections)
+        & ((1_u32)
+            << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMetaDataTag_32)) as i32)))
+        != 0)
+    {
         ok = (unsafe {
-            let _tag: u8 = kBrunsliMetaDataTag_32;
+            let _tag: u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMetaDataTag_32));
             let _fn: Option<
                 unsafe fn(
                     *const brunsli_JPEGData,
@@ -6073,7 +6588,11 @@ pub unsafe fn BrunsliSerialize_190(
             return false;
         }
     }
-    if !(((skip_sections) & ((1_u32) << (kBrunsliQuantDataTag_34 as i32))) != 0) {
+    if !(((skip_sections)
+        & ((1_u32)
+            << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliQuantDataTag_34)) as i32)))
+        != 0)
+    {
         ok = (unsafe {
             (|tag: u8,
               fn_: Option<
@@ -6112,15 +6631,25 @@ pub unsafe fn BrunsliSerialize_190(
                         _pos,
                     )
                 });
-            })(kBrunsliQuantDataTag_34, Some(EncodeQuantData_176), 2_usize)
+            })(
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliQuantDataTag_34)),
+                Some(EncodeQuantData_176),
+                2_usize,
+            )
         });
         if !(ok) {
             return false;
         }
     }
-    if !(((skip_sections) & ((1_u32) << (kBrunsliHistogramDataTag_35 as i32))) != 0) {
+    if !(((skip_sections)
+        & ((1_u32)
+            << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHistogramDataTag_35))
+                as i32)))
+        != 0)
+    {
         ok = (unsafe {
-            let _tag: u8 = kBrunsliHistogramDataTag_35;
+            let _tag: u8 =
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHistogramDataTag_35));
             let _fn: Option<
                 unsafe fn(
                     *const brunsli_JPEGData,
@@ -6173,9 +6702,13 @@ pub unsafe fn BrunsliSerialize_190(
             return false;
         }
     }
-    if !(((skip_sections) & ((1_u32) << (kBrunsliDCDataTag_36 as i32))) != 0) {
+    if !(((skip_sections)
+        & ((1_u32)
+            << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliDCDataTag_36)) as i32)))
+        != 0)
+    {
         ok = (unsafe {
-            let _tag: u8 = kBrunsliDCDataTag_36;
+            let _tag: u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliDCDataTag_36));
             let _fn: Option<
                 unsafe fn(
                     *const brunsli_JPEGData,
@@ -6228,9 +6761,13 @@ pub unsafe fn BrunsliSerialize_190(
             return false;
         }
     }
-    if !(((skip_sections) & ((1_u32) << (kBrunsliACDataTag_37 as i32))) != 0) {
+    if !(((skip_sections)
+        & ((1_u32)
+            << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliACDataTag_37)) as i32)))
+        != 0)
+    {
         ok = (unsafe {
-            let _tag: u8 = kBrunsliACDataTag_37;
+            let _tag: u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliACDataTag_37));
             let _fn: Option<
                 unsafe fn(
                     *const brunsli_JPEGData,
@@ -6322,7 +6859,8 @@ pub unsafe fn BrunsliEncodeJpeg_191(
     'loop_: while ((i) < (num_components)) {
         (&mut (*meta))[(i)].context_offset = num_contexts;
         num_contexts = (num_contexts).wrapping_add(
-            (kNumNonzeroContextSkip_94[((&mut (*meta))[(i)].context_bits) as usize] as usize),
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonzeroContextSkip_94))
+                [((&mut (*meta))[(i)].context_bits) as usize] as usize),
         );
         i.prefix_inc();
     }
@@ -6375,10 +6913,12 @@ pub unsafe fn BrunsliEncodeJpeg_191(
         BrunsliSerialize_190(_state, _jpg, 0_u32, _data, _len)
     });
 }
-pub static mut kMaxBypassHeaderSize_192: usize = unsafe { (((5) * (6)) as usize) };
+pub static mut kMaxBypassHeaderSize_192: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { (((5) * (6)) as usize) });
 pub unsafe fn GetBrunsliBypassSize_193(mut jpg_size: usize) -> usize {
-    return ((jpg_size).wrapping_add(kBrunsliSignatureSize_43))
-        .wrapping_add(kMaxBypassHeaderSize_192);
+    return ((jpg_size)
+        .wrapping_add((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43))))
+    .wrapping_add((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxBypassHeaderSize_192)));
 }
 pub unsafe fn EncodeOriginalJpg_194(
     jpg: *const brunsli_JPEGData,
@@ -6437,14 +6977,14 @@ pub unsafe fn BrunsliEncodeJpegBypass_195(
         jpg.components[(0_usize)].h_samp_factor = 1;
         jpg.components[(0_usize)].v_samp_factor = 1;
     }
-    jpg.version = kFallbackVersion_2;
+    jpg.version = (*std::cell::LazyCell::force_mut(&mut *&raw mut kFallbackVersion_2));
     jpg.original_jpg = jpg_data;
     jpg.original_jpg_size = jpg_data_len;
     let mut state: brunsli_internal_enc_State = <brunsli_internal_enc_State>::default();
     if !(unsafe {
         let _jpg: *const brunsli_JPEGData = &jpg;
         let _s: *mut brunsli_internal_enc_State = (&mut state as *mut brunsli_internal_enc_State);
-        let _tag: u8 = kBrunsliHeaderTag_31;
+        let _tag: u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHeaderTag_31));
         let _write_section: Option<
             unsafe fn(
                 *const brunsli_JPEGData,
@@ -6463,7 +7003,7 @@ pub unsafe fn BrunsliEncodeJpegBypass_195(
     if !(unsafe {
         let _jpg: *const brunsli_JPEGData = &jpg;
         let _s: *mut brunsli_internal_enc_State = (&mut state as *mut brunsli_internal_enc_State);
-        let _tag: u8 = kBrunsliOriginalJpgTag_38;
+        let _tag: u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliOriginalJpgTag_38));
         let _write_section: Option<
             unsafe fn(
                 *const brunsli_JPEGData,
@@ -6752,28 +7292,32 @@ pub unsafe fn EncodeContextMap_164(
 pub unsafe fn GetPopulationCountPrecision_203(mut logcount: u32) -> u32 {
     return (((logcount).wrapping_add(1_u32)) >> (1));
 }
-pub static mut kHistogramLengthBitLengths_204: [u8; 16] = unsafe {
-    [
-        8_u8, 8_u8, 6_u8, 6_u8, 6_u8, 5_u8, 4_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 4_u8, 5_u8,
-        7_u8,
-    ]
-};
-pub static mut kHistogramLengthSymbols_205: [u16; 16] = unsafe {
-    [
-        127_u16, 255_u16, 15_u16, 47_u16, 31_u16, 7_u16, 3_u16, 0_u16, 4_u16, 2_u16, 6_u16, 1_u16,
-        5_u16, 11_u16, 23_u16, 63_u16,
-    ]
-};
-pub static mut kLogCountBitLengths_206: [u8; 11] = unsafe {
-    [
-        5_u8, 4_u8, 4_u8, 4_u8, 3_u8, 3_u8, 2_u8, 3_u8, 3_u8, 6_u8, 6_u8,
-    ]
-};
-pub static mut kLogCountSymbols_207: [u16; 11] = unsafe {
-    [
-        15_u16, 3_u16, 11_u16, 7_u16, 2_u16, 6_u16, 0_u16, 1_u16, 5_u16, 31_u16, 63_u16,
-    ]
-};
+pub static mut kHistogramLengthBitLengths_204: std::cell::LazyCell<[u8; 16]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            8_u8, 8_u8, 6_u8, 6_u8, 6_u8, 5_u8, 4_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 3_u8, 4_u8,
+            5_u8, 7_u8,
+        ]
+    });
+pub static mut kHistogramLengthSymbols_205: std::cell::LazyCell<[u16; 16]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            127_u16, 255_u16, 15_u16, 47_u16, 31_u16, 7_u16, 3_u16, 0_u16, 4_u16, 2_u16, 6_u16,
+            1_u16, 5_u16, 11_u16, 23_u16, 63_u16,
+        ]
+    });
+pub static mut kLogCountBitLengths_206: std::cell::LazyCell<[u8; 11]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            5_u8, 4_u8, 4_u8, 4_u8, 3_u8, 3_u8, 2_u8, 3_u8, 3_u8, 6_u8, 6_u8,
+        ]
+    });
+pub static mut kLogCountSymbols_207: std::cell::LazyCell<[u16; 11]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            15_u16, 3_u16, 11_u16, 7_u16, 2_u16, 6_u16, 0_u16, 1_u16, 5_u16, 31_u16, 63_u16,
+        ]
+    });
 pub unsafe fn SmallestIncrement_208(mut count: i32) -> i32 {
     if !((count) > (0)) {
         (unsafe {
@@ -6957,7 +7501,9 @@ pub unsafe fn NormalizeCounts_124(
     'loop_: while ((n) < (length)) {
         total = (total).wrapping_add(((*counts.offset((n) as isize)) as u64));
         if ((*counts.offset((n) as isize)) > (0)) {
-            if ((symbol_count) < (kMaxNumSymbolsForSmallCode_121)) {
+            if ((symbol_count)
+                < (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxNumSymbolsForSmallCode_121)))
+            {
                 (*symbols.offset((symbol_count) as isize)) = n;
             }
             symbol_count.prefix_inc();
@@ -7056,7 +7602,8 @@ pub unsafe fn EncodeCounts_125(
         if ((num_symbols) == (2)) {
             (unsafe {
                 WriteBits_120(
-                    (BRUNSLI_ANS_LOG_TAB_SIZE_0 as usize),
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0))
+                        as usize),
                     ((*counts.offset((*symbols.offset((0) as isize)) as isize)) as u64),
                     storage,
                 )
@@ -7072,7 +7619,9 @@ pub unsafe fn EncodeCounts_125(
         let mut omit_log: i32 = 0;
         let mut i: i32 = 0;
         'loop_: while ((i) < (18)) {
-            if !((*counts.offset((i) as isize)) <= (BRUNSLI_ANS_TAB_SIZE_1)) {
+            if !((*counts.offset((i) as isize))
+                <= (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_TAB_SIZE_1)))
+            {
                 (unsafe {
                     BrunsliDumpAndAbort_79(
                         c"histogram_encode.cc".as_ptr(),
@@ -7121,16 +7670,22 @@ pub unsafe fn EncodeCounts_125(
         logcounts[(omit_pos) as usize] = omit_log;
         (unsafe {
             let _n_bits: usize =
-                (kHistogramLengthBitLengths_204[((length) - (3)) as usize] as usize);
-            let _bits: u64 = (kHistogramLengthSymbols_205[((length) - (3)) as usize] as u64);
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kHistogramLengthBitLengths_204))
+                    [((length) - (3)) as usize] as usize);
+            let _bits: u64 =
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kHistogramLengthSymbols_205))
+                    [((length) - (3)) as usize] as u64);
             WriteBits_120(_n_bits, _bits, storage)
         });
         let mut i: i32 = 0;
         'loop_: while ((i) < (length)) {
             (unsafe {
                 let _n_bits: usize =
-                    (kLogCountBitLengths_206[(logcounts[(i) as usize]) as usize] as usize);
-                let _bits: u64 = (kLogCountSymbols_207[(logcounts[(i) as usize]) as usize] as u64);
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountBitLengths_206))
+                        [(logcounts[(i) as usize]) as usize] as usize);
+                let _bits: u64 =
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountSymbols_207))
+                        [(logcounts[(i) as usize]) as usize] as u64);
                 WriteBits_120(_n_bits, _bits, storage)
             });
             i.prefix_inc();
@@ -7167,11 +7722,13 @@ pub unsafe fn PopulationCost_131(mut data: *const i32, mut total_count: i32) -> 
     if ((total_count) == (0)) {
         return 7_f64;
     }
-    let mut entropy_bits: f64 = (((total_count) * (BRUNSLI_ANS_LOG_TAB_SIZE_0)) as f64);
+    let mut entropy_bits: f64 = (((total_count)
+        * (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0)))
+        as f64);
     let mut histogram_bits: i32 = 0;
     let mut count: i32 = 0;
     let mut length: i32 = 0;
-    if ((total_count) > (BRUNSLI_ANS_TAB_SIZE_1)) {
+    if ((total_count) > (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_TAB_SIZE_1))) {
         let mut total: u64 = (total_count as u64);
         let mut i: i32 = 0;
         'loop_: while ((i) < (18)) {
@@ -7185,16 +7742,21 @@ pub unsafe fn PopulationCost_131(mut data: *const i32, mut total_count: i32) -> 
             return 7_f64;
         }
         length.prefix_inc();
-        let max0: u64 =
-            (((total).wrapping_mul((length as u64))) >> (BRUNSLI_ANS_LOG_TAB_SIZE_0 as u64));
-        let max1: u64 =
-            (((max0).wrapping_mul((length as u64))) >> (BRUNSLI_ANS_LOG_TAB_SIZE_0 as u64));
+        let max0: u64 = (((total).wrapping_mul((length as u64)))
+            >> ((*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0))
+                as u64));
+        let max1: u64 = (((max0).wrapping_mul((length as u64)))
+            >> ((*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0))
+                as u64));
         let min_base: u64 = ((((total).wrapping_add(max0)).wrapping_add(max1))
-            >> (BRUNSLI_ANS_LOG_TAB_SIZE_0 as u64));
+            >> ((*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0))
+                as u64));
         total = (total).wrapping_add((min_base).wrapping_mul((count as u64)));
         let kFixBits: i64 = 32_i64;
         let kFixOne: i64 = ((1_i64) << (kFixBits));
-        let kDescaleBits: i64 = ((kFixBits) - (BRUNSLI_ANS_LOG_TAB_SIZE_0 as i64));
+        let kDescaleBits: i64 = ((kFixBits)
+            - ((*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0))
+                as i64));
         let kDescaleOne: i64 = ((1_i64) << (kDescaleBits));
         let kDescaleMask: i64 = ((kDescaleOne) - (1_i64));
         let mult: u32 = (((kFixOne as u64).wrapping_div(total)) as u32);
@@ -7243,16 +7805,21 @@ pub unsafe fn PopulationCost_131(mut data: *const i32, mut total_count: i32) -> 
                 let mut log2floor: i32 = (log2count as i32);
                 entropy_bits -= (((*data.offset((i) as isize)) as f64) * (log2count));
                 histogram_bits += log2floor;
-                histogram_bits += (kLogCountBitLengths_206[((log2floor) + (1)) as usize] as i32);
+                histogram_bits +=
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountBitLengths_206))
+                        [((log2floor) + (1)) as usize] as i32);
                 cumul = (((c) & (kDescaleMask as u64)) as u32);
             } else {
-                histogram_bits += (kLogCountBitLengths_206[(0) as usize] as i32);
+                histogram_bits +=
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountBitLengths_206))
+                        [(0) as usize] as i32);
             }
             i.prefix_inc();
         }
     } else {
         let mut log2norm: f64 =
-            ((BRUNSLI_ANS_LOG_TAB_SIZE_0 as f64) - (unsafe { FastLog2_127(total_count) }));
+            (((*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0)) as f64)
+                - (unsafe { FastLog2_127(total_count) }));
         if ((*data.offset((0) as isize)) > (0)) {
             let mut log2count: f64 =
                 ((unsafe { FastLog2_127((*data.offset((0) as isize))) }) + (log2norm));
@@ -7267,17 +7834,25 @@ pub unsafe fn PopulationCost_131(mut data: *const i32, mut total_count: i32) -> 
                     ((unsafe { FastLog2_127((*data.offset((i) as isize))) }) + (log2norm));
                 let mut log2floor: i32 = (log2count as i32);
                 entropy_bits -= (((*data.offset((i) as isize)) as f64) * (log2count));
-                if ((log2floor) >= (BRUNSLI_ANS_LOG_TAB_SIZE_0)) {
-                    log2floor = ((BRUNSLI_ANS_LOG_TAB_SIZE_0) - (1));
+                if ((log2floor)
+                    >= (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0)))
+                {
+                    log2floor = ((*std::cell::LazyCell::force_mut(
+                        &mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0,
+                    )) - (1));
                 }
                 histogram_bits = ((histogram_bits as u32)
                     .wrapping_add((unsafe { GetPopulationCountPrecision_203((log2floor as u32)) })))
                     as i32;
-                histogram_bits += (kLogCountBitLengths_206[((log2floor) + (1)) as usize] as i32);
+                histogram_bits +=
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountBitLengths_206))
+                        [((log2floor) + (1)) as usize] as i32);
                 length = i;
                 count.prefix_inc();
             } else {
-                histogram_bits += (kLogCountBitLengths_206[(0) as usize] as i32);
+                histogram_bits +=
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountBitLengths_206))
+                        [(0) as usize] as i32);
             }
             i.prefix_inc();
         }
@@ -7287,33 +7862,41 @@ pub unsafe fn PopulationCost_131(mut data: *const i32, mut total_count: i32) -> 
         return 7_f64;
     }
     if ((count) == (2)) {
-        return (((((entropy_bits as i32) + (1)) + (12)) + (BRUNSLI_ANS_LOG_TAB_SIZE_0)) as f64);
+        return (((((entropy_bits as i32) + (1)) + (12))
+            + (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0)))
+            as f64);
     }
-    histogram_bits += (kHistogramLengthBitLengths_204[((length) - (3)) as usize] as i32);
+    histogram_bits +=
+        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kHistogramLengthBitLengths_204))
+            [((length) - (3)) as usize] as i32);
     return ((((histogram_bits) + (entropy_bits as i32)) + (1)) as f64);
 }
-pub static mut kCodeLengthCodes_211: i32 = unsafe { 18 };
+pub static mut kCodeLengthCodes_211: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 18 });
 pub unsafe fn StoreHuffmanTreeOfHuffmanTreeToBitMask_212(
     num_codes: i32,
     mut code_length_bitdepth: *const u8,
     mut storage: *mut brunsli_Storage,
 ) {
-    static mut kStorageOrder_213: [u8; 18] = unsafe {
-        [
-            1_u8, 2_u8, 3_u8, 4_u8, 0_u8, 5_u8, 17_u8, 6_u8, 16_u8, 7_u8, 8_u8, 9_u8, 10_u8, 11_u8,
-            12_u8, 13_u8, 14_u8, 15_u8,
-        ]
-    };;
-    static mut kHuffmanBitLengthHuffmanCodeSymbols_214: [u8; 6] =
-        unsafe { [0_u8, 7_u8, 3_u8, 2_u8, 1_u8, 15_u8] };;
-    static mut kHuffmanBitLengthHuffmanCodeBitLengths_215: [u8; 6] =
-        unsafe { [2_u8, 4_u8, 3_u8, 2_u8, 2_u8, 4_u8] };;
-    let mut codes_to_store: usize = (kCodeLengthCodes_211 as usize);
+    static mut kStorageOrder_213: std::cell::LazyCell<[u8; 18]> =
+        std::cell::LazyCell::new(|| unsafe {
+            [
+                1_u8, 2_u8, 3_u8, 4_u8, 0_u8, 5_u8, 17_u8, 6_u8, 16_u8, 7_u8, 8_u8, 9_u8, 10_u8,
+                11_u8, 12_u8, 13_u8, 14_u8, 15_u8,
+            ]
+        });;
+    static mut kHuffmanBitLengthHuffmanCodeSymbols_214: std::cell::LazyCell<[u8; 6]> =
+        std::cell::LazyCell::new(|| unsafe { [0_u8, 7_u8, 3_u8, 2_u8, 1_u8, 15_u8] });;
+    static mut kHuffmanBitLengthHuffmanCodeBitLengths_215: std::cell::LazyCell<[u8; 6]> =
+        std::cell::LazyCell::new(|| unsafe { [2_u8, 4_u8, 3_u8, 2_u8, 2_u8, 4_u8] });;
+    let mut codes_to_store: usize =
+        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kCodeLengthCodes_211)) as usize);
     if ((num_codes) > (1)) {
         'loop_: while ((codes_to_store) > (0_usize)) {
-            if (((*code_length_bitdepth
-                .offset((kStorageOrder_213[((codes_to_store).wrapping_sub(1_usize))]) as isize))
-                as i32)
+            if (((*code_length_bitdepth.offset(
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStorageOrder_213))
+                    [((codes_to_store).wrapping_sub(1_usize))]) as isize,
+            )) as i32)
                 != (0))
             {
                 break;
@@ -7322,12 +7905,22 @@ pub unsafe fn StoreHuffmanTreeOfHuffmanTreeToBitMask_212(
         }
     }
     let mut skip_some: usize = 0_usize;
-    if (((*code_length_bitdepth.offset((kStorageOrder_213[(0) as usize]) as isize)) as i32) == (0))
-        && (((*code_length_bitdepth.offset((kStorageOrder_213[(1) as usize]) as isize)) as i32)
+    if (((*code_length_bitdepth.offset(
+        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStorageOrder_213))[(0) as usize])
+            as isize,
+    )) as i32)
+        == (0))
+        && (((*code_length_bitdepth.offset(
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStorageOrder_213))[(1) as usize])
+                as isize,
+        )) as i32)
             == (0))
     {
         skip_some = 2_usize;
-        if (((*code_length_bitdepth.offset((kStorageOrder_213[(2) as usize]) as isize)) as i32)
+        if (((*code_length_bitdepth.offset(
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStorageOrder_213))[(2) as usize])
+                as isize,
+        )) as i32)
             == (0))
         {
             skip_some = 3_usize;
@@ -7336,11 +7929,16 @@ pub unsafe fn StoreHuffmanTreeOfHuffmanTreeToBitMask_212(
     (unsafe { WriteBits_120(2_usize, (skip_some as u64), storage) });
     let mut i: usize = skip_some;
     'loop_: while ((i) < (codes_to_store)) {
-        let mut l: usize =
-            ((*code_length_bitdepth.offset((kStorageOrder_213[(i)]) as isize)) as usize);
+        let mut l: usize = ((*code_length_bitdepth.offset(
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStorageOrder_213))[(i)]) as isize,
+        )) as usize);
         (unsafe {
-            let _n_bits: usize = (kHuffmanBitLengthHuffmanCodeBitLengths_215[(l)] as usize);
-            let _bits: u64 = (kHuffmanBitLengthHuffmanCodeSymbols_214[(l)] as u64);
+            let _n_bits: usize = ((*std::cell::LazyCell::force_mut(
+                &mut *&raw mut kHuffmanBitLengthHuffmanCodeBitLengths_215,
+            ))[(l)] as usize);
+            let _bits: u64 = ((*std::cell::LazyCell::force_mut(
+                &mut *&raw mut kHuffmanBitLengthHuffmanCodeSymbols_214,
+            ))[(l)] as u64);
             WriteBits_120(_n_bits, _bits, storage)
         });
         i.prefix_inc();
@@ -7530,7 +8128,7 @@ pub unsafe fn StoreHuffmanTree_218(
     let mut num_codes: i32 = 0;
     let mut code: i32 = 0;
     let mut i: i32 = 0;
-    'loop_: while ((i) < (kCodeLengthCodes_211)) {
+    'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kCodeLengthCodes_211))) {
         if (huffman_tree_histogram[(i) as usize] != 0) {
             if ((num_codes) == (0)) {
                 code = i;
@@ -7553,7 +8151,7 @@ pub unsafe fn StoreHuffmanTree_218(
     (unsafe {
         CreateHuffmanTree_220(
             (&mut huffman_tree_histogram[(0) as usize] as *mut u32).cast_const(),
-            (kCodeLengthCodes_211 as usize),
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kCodeLengthCodes_211)) as usize),
             5,
             (&mut code_length_bitdepth[(0) as usize] as *mut u8),
         )
@@ -7561,7 +8159,7 @@ pub unsafe fn StoreHuffmanTree_218(
     (unsafe {
         ConvertBitDepthsToSymbols_221(
             (code_length_bitdepth.as_mut_ptr()).cast_const(),
-            (kCodeLengthCodes_211 as usize),
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kCodeLengthCodes_211)) as usize),
             (&mut code_length_bitdepth_symbols[(0) as usize] as *mut u16),
         )
     });
@@ -8042,18 +8640,20 @@ pub unsafe fn WriteHuffmanTree_219(
     }
 }
 pub unsafe fn ReverseBits_228(mut num_bits: i32, mut bits: u16) -> u16 {
-    static mut kLut_229: [usize; 16] = unsafe {
+    static mut kLut_229: std::cell::LazyCell<[usize; 16]> = std::cell::LazyCell::new(|| unsafe {
         [
             0_usize, 8_usize, 4_usize, 12_usize, 2_usize, 10_usize, 6_usize, 14_usize, 1_usize,
             9_usize, 5_usize, 13_usize, 3_usize, 11_usize, 7_usize, 15_usize,
         ]
-    };;
-    let mut retval: usize = kLut_229[((bits as i32) & (15)) as usize];
+    });;
+    let mut retval: usize =
+        (*std::cell::LazyCell::force_mut(&mut *&raw mut kLut_229))[((bits as i32) & (15)) as usize];
     let mut i: i32 = 4;
     'loop_: while ((i) < (num_bits)) {
         retval <<= 4;
         bits = (((bits as i32) >> (4)) as u16);
-        retval |= kLut_229[((bits as i32) & (15)) as usize];
+        retval |= (*std::cell::LazyCell::force_mut(&mut *&raw mut kLut_229))
+            [((bits as i32) & (15)) as usize];
         i += 4;
     }
     retval >>= ((-num_bits) & (3));
@@ -8100,8 +8700,10 @@ pub unsafe fn ConvertBitDepthsToSymbols_221(
         i.prefix_inc();
     }
 }
-pub static mut kJpegHuffmanRootTableBits_230: i32 = unsafe { 8 };
-pub static mut kJpegHuffmanLutSize_231: i32 = unsafe { 1024 };
+pub static mut kJpegHuffmanRootTableBits_230: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 8 });
+pub static mut kJpegHuffmanLutSize_231: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 1024 });
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct brunsli_HuffmanTableEntry {
@@ -8193,7 +8795,9 @@ pub unsafe fn ProcessSOF_235(
         (*jpg).error = brunsli_JPEGReadError_INVALID_PRECISION;
         return false;
     };
-    if ((height) < (1)) || ((height) > (kMaxDimPixels_11)) {
+    if ((height) < (1))
+        || ((height) > (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxDimPixels_11)))
+    {
         write!(
             std::fs::File::from_raw_fd(
                 std::io::stderr()
@@ -8208,7 +8812,9 @@ pub unsafe fn ProcessSOF_235(
         (*jpg).error = brunsli_JPEGReadError_INVALID_HEIGHT;
         return false;
     };
-    if ((width) < (1)) || ((width) > (kMaxDimPixels_11)) {
+    if ((width) < (1))
+        || ((width) > (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxDimPixels_11)))
+    {
         write!(
             std::fs::File::from_raw_fd(
                 std::io::stderr()
@@ -8223,7 +8829,9 @@ pub unsafe fn ProcessSOF_235(
         (*jpg).error = brunsli_JPEGReadError_INVALID_WIDTH;
         return false;
     };
-    if ((num_components) < (1)) || ((num_components) > (kMaxComponents_4)) {
+    if ((num_components) < (1))
+        || ((num_components) > (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxComponents_4)))
+    {
         write!(
             std::fs::File::from_raw_fd(
                 std::io::stderr()
@@ -8289,7 +8897,10 @@ pub unsafe fn ProcessSOF_235(
         let mut factor: i32 = (unsafe { ReadUint8_233(data, pos) });
         let mut h_samp_factor: i32 = ((factor) >> (4));
         let mut v_samp_factor: i32 = ((factor) & (15));
-        if ((h_samp_factor) < (1)) || ((h_samp_factor) > (kBrunsliMaxSampling_27)) {
+        if ((h_samp_factor) < (1))
+            || ((h_samp_factor)
+                > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxSampling_27)))
+        {
             write!(
                 std::fs::File::from_raw_fd(
                     std::io::stderr()
@@ -8304,7 +8915,10 @@ pub unsafe fn ProcessSOF_235(
             (*jpg).error = brunsli_JPEGReadError_INVALID_SAMP_FACTOR;
             return false;
         };
-        if ((v_samp_factor) < (1)) || ((v_samp_factor) > (kBrunsliMaxSampling_27)) {
+        if ((v_samp_factor) < (1))
+            || ((v_samp_factor)
+                > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxSampling_27)))
+        {
             write!(
                 std::fs::File::from_raw_fd(
                     std::io::stderr()
@@ -8368,7 +8982,9 @@ pub unsafe fn ProcessSOF_235(
         (*c).height_in_blocks = ((((*jpg).MCU_rows) * ((*c).v_samp_factor)) as u32);
         let num_blocks: u64 =
             ((*c).width_in_blocks as u64).wrapping_mul(((*c).height_in_blocks as u64));
-        if ((num_blocks as usize) > (kBrunsliMaxNumBlocks_18)) {
+        if ((num_blocks as usize)
+            > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxNumBlocks_18)))
+        {
             write!(
                 std::fs::File::from_raw_fd(
                     std::io::stderr()
@@ -8385,8 +9001,9 @@ pub unsafe fn ProcessSOF_235(
         (*c).num_blocks = ((num_blocks as i32) as u32);
         if ((mode as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
             {
-                let __a0 =
-                    ((((*c).num_blocks).wrapping_mul((kDCTBlockSize_3 as u32))) as usize) as usize;
+                let __a0 = ((((*c).num_blocks).wrapping_mul(
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as u32),
+                )) as usize) as usize;
                 (*c).coeffs.resize_with(__a0, || <i16>::default())
             };
         }
@@ -8732,7 +9349,11 @@ pub unsafe fn ProcessDHT_237(
         return false;
     }
     'loop_: while ((*pos) < ((start_pos).wrapping_add(marker_len))) {
-        if (((*pos).wrapping_add((((1) + (kJpegHuffmanMaxBitLength_7)) as usize))) > (len)) {
+        if (((*pos).wrapping_add(
+            (((1) + (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)))
+                as usize),
+        )) > (len))
+        {
             write!(
                 std::fs::File::from_raw_fd(
                     std::io::stderr()
@@ -8743,7 +9364,9 @@ pub unsafe fn ProcessDHT_237(
                 ),
                 "Unexpected end of input: pos={:} need={:} len={:}\n",
                 (*pos),
-                ((1) + (kJpegHuffmanMaxBitLength_7)),
+                ((1) + (*std::cell::LazyCell::force_mut(
+                    &mut *&raw mut kJpegHuffmanMaxBitLength_7
+                ))),
                 len,
             );
             (*jpg).error = brunsli_JPEGReadError_UNEXPECTED_EOF;
@@ -8771,9 +9394,9 @@ pub unsafe fn ProcessDHT_237(
                 (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX;
                 return false;
             };
-            huff_lut = (&mut (&mut (*ac_huff_lut))
-                [(((huffman_index) * (kJpegHuffmanLutSize_231)) as usize)]
-                as *mut brunsli_HuffmanTableEntry);
+            huff_lut = (&mut (&mut (*ac_huff_lut))[(((huffman_index)
+                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanLutSize_231)))
+                as usize)] as *mut brunsli_HuffmanTableEntry);
         } else {
             if ((huffman_index) < (0)) || ((huffman_index) > (3)) {
                 write!(
@@ -8790,27 +9413,37 @@ pub unsafe fn ProcessDHT_237(
                 (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX;
                 return false;
             };
-            huff_lut = (&mut (&mut (*dc_huff_lut))
-                [(((huffman_index) * (kJpegHuffmanLutSize_231)) as usize)]
-                as *mut brunsli_HuffmanTableEntry);
+            huff_lut = (&mut (&mut (*dc_huff_lut))[(((huffman_index)
+                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanLutSize_231)))
+                as usize)] as *mut brunsli_HuffmanTableEntry);
         }
         huff.counts[(0_usize)] = 0;
         let mut total_count: i32 = 0;
-        let mut space: i32 = ((1) << (kJpegHuffmanMaxBitLength_7));
+        let mut space: i32 =
+            ((1) << (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)));
         let mut max_depth: i32 = 1;
         let mut i: i32 = 1;
-        'loop_: while ((i) <= (kJpegHuffmanMaxBitLength_7)) {
+        'loop_: while ((i)
+            <= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)))
+        {
             let mut count: i32 = (unsafe { ReadUint8_233(data, pos) });
             if ((count) != (0)) {
                 max_depth = i;
             }
             huff.counts[(i as usize)] = count;
             total_count += count;
-            space -= ((count) * ((1) << ((kJpegHuffmanMaxBitLength_7) - (i))));
+            space -= ((count)
+                * ((1)
+                    << ((*std::cell::LazyCell::force_mut(
+                        &mut *&raw mut kJpegHuffmanMaxBitLength_7,
+                    )) - (i))));
             i.prefix_inc();
         }
         if (is_ac_table != 0) {
-            if ((total_count) < (0)) || ((total_count) > (kJpegHuffmanAlphabetSize_8)) {
+            if ((total_count) < (0))
+                || ((total_count)
+                    > (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8)))
+            {
                 write!(
                     std::fs::File::from_raw_fd(
                         std::io::stderr()
@@ -8826,7 +9459,10 @@ pub unsafe fn ProcessDHT_237(
                 return false;
             };
         } else {
-            if ((total_count) < (0)) || ((total_count) > (kJpegDCAlphabetSize_9)) {
+            if ((total_count) < (0))
+                || ((total_count)
+                    > (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9)))
+            {
                 write!(
                     std::fs::File::from_raw_fd(
                         std::io::stderr()
@@ -8866,7 +9502,11 @@ pub unsafe fn ProcessDHT_237(
         'loop_: while ((i) < (total_count)) {
             let mut value: u8 = ((unsafe { ReadUint8_233(data, pos) }) as u8);
             if !(is_ac_table != 0) {
-                if ((value as i32) < (0)) || ((value as i32) > ((kJpegDCAlphabetSize_9) - (1))) {
+                if ((value as i32) < (0))
+                    || ((value as i32)
+                        > ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9))
+                            - (1)))
+                {
                     write!(
                         std::fs::File::from_raw_fd(
                             std::io::stderr()
@@ -8916,8 +9556,11 @@ pub unsafe fn ProcessDHT_237(
             i.prefix_inc();
         }
         huff.counts[(max_depth as usize)].prefix_inc();
-        huff.values[(total_count as usize)] = kJpegHuffmanAlphabetSize_8;
-        space -= ((1) << ((kJpegHuffmanMaxBitLength_7) - (max_depth)));
+        huff.values[(total_count as usize)] =
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8));
+        space -= ((1)
+            << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7))
+                - (max_depth)));
         if ((space) < (0)) {
             write!(
                 std::fs::File::from_raw_fd(
@@ -8933,7 +9576,9 @@ pub unsafe fn ProcessDHT_237(
             return false;
         } else if ((space) > (0)) && (((*huff_lut.offset((0) as isize)).value as i32) != (65535)) {
             let mut i: i32 = 0;
-            'loop_: while ((i) < (kJpegHuffmanLutSize_231)) {
+            'loop_: while ((i)
+                < (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanLutSize_231)))
+            {
                 (*huff_lut.offset((i) as isize)).bits = 0_u8;
                 (*huff_lut.offset((i) as isize)).value = 65535_u16;
                 i.prefix_inc();
@@ -9010,7 +9655,8 @@ pub unsafe fn ProcessDQT_239(
         return false;
     }
     'loop_: while ((*pos) < ((start_pos).wrapping_add(marker_len)))
-        && (((*jpg).quant.len()) < (kMaxQuantTables_5 as usize))
+        && (((*jpg).quant.len())
+            < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxQuantTables_5)) as usize))
     {
         if (((*pos).wrapping_add(((1) as usize))) > (len)) {
             write!(
@@ -9062,8 +9708,11 @@ pub unsafe fn ProcessDQT_239(
             (*jpg).error = brunsli_JPEGReadError_INVALID_QUANT_TBL_INDEX;
             return false;
         };
-        if (((*pos).wrapping_add(((((quant_table_precision) + (1)) * (kDCTBlockSize_3)) as usize)))
-            > (len))
+        if (((*pos).wrapping_add(
+            ((((quant_table_precision) + (1))
+                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                as usize),
+        )) > (len))
         {
             write!(
                 std::fs::File::from_raw_fd(
@@ -9075,7 +9724,8 @@ pub unsafe fn ProcessDQT_239(
                 ),
                 "Unexpected end of input: pos={:} need={:} len={:}\n",
                 (*pos),
-                (((quant_table_precision) + (1)) * (kDCTBlockSize_3)),
+                (((quant_table_precision) + (1))
+                    * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))),
                 len,
             );
             (*jpg).error = brunsli_JPEGReadError_UNEXPECTED_EOF;
@@ -9085,7 +9735,7 @@ pub unsafe fn ProcessDQT_239(
         table.index = quant_table_index;
         table.precision = quant_table_precision;
         let mut i: i32 = 0;
-        'loop_: while ((i) < (kDCTBlockSize_3)) {
+        'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
             let mut quant_val: i32 = if (quant_table_precision != 0) {
                 (unsafe { ReadUint16_234(data, pos) })
             } else {
@@ -9106,7 +9756,8 @@ pub unsafe fn ProcessDQT_239(
                 (*jpg).error = brunsli_JPEGReadError_INVALID_QUANT_VAL;
                 return false;
             };
-            table.values[(kJPEGNaturalOrder_13[(i) as usize] as usize)] = quant_val;
+            table.values[((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                [(i) as usize] as usize)] = quant_val;
             i.prefix_inc();
         }
         table.is_last = ((*pos) == ((start_pos).wrapping_add(marker_len)));
@@ -9512,7 +10163,7 @@ pub unsafe fn DecodeDCTBlock_245(
     let mut eobrun_allowed: bool = ((Ss) > (0));
     if ((Ss) == (0)) {
         let mut s: i32 = (unsafe { ReadSymbol_243(dc_huff, br) });
-        if ((s) >= (kJpegDCAlphabetSize_9)) {
+        if ((s) >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9))) {
             write!(
                 std::fs::File::from_raw_fd(
                     std::io::stderr()
@@ -9564,7 +10215,7 @@ pub unsafe fn DecodeDCTBlock_245(
     let mut k: i32 = Ss;
     'loop_: while ((k) <= (Se)) {
         let mut sr: i32 = (unsafe { ReadSymbol_243(ac_huff, br) });
-        if ((sr) >= (kJpegHuffmanAlphabetSize_8)) {
+        if ((sr) >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8))) {
             write!(
                 std::fs::File::from_raw_fd(
                     std::io::stderr()
@@ -9601,7 +10252,9 @@ pub unsafe fn DecodeDCTBlock_245(
                 (*jpg).error = brunsli_JPEGReadError_OUT_OF_BAND_COEFF;
                 return false;
             }
-            if (((s) + (Al)) >= (kJpegDCAlphabetSize_9)) {
+            if (((s) + (Al))
+                >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9)))
+            {
                 write!(
                     std::fs::File::from_raw_fd(
                         std::io::stderr()
@@ -9620,8 +10273,10 @@ pub unsafe fn DecodeDCTBlock_245(
             }
             let mut bits: i32 = (unsafe { brunsli_BitReaderState::ReadBits(&mut (*br), s) });
             let mut coeff: i32 = (unsafe { HuffExtend_244(bits, s) });
-            (*coeffs.offset((kJPEGNaturalOrder_13[(k) as usize]) as isize)) =
-                (((coeff) * (Am)) as i16);
+            (*coeffs.offset(
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                    [(k) as usize]) as isize,
+            )) = (((coeff) * (Am)) as i16);
             (*num_zero_runs) = 0;
         } else if ((r) == (15)) {
             k += 15;
@@ -9687,7 +10342,8 @@ pub unsafe fn RefineDCTBlock_246(
     if ((*eobrun) <= (0)) {
         'loop_: while ((k) <= (Se)) {
             s = (unsafe { ReadSymbol_243(ac_huff, br) });
-            if ((s) >= (kJpegHuffmanAlphabetSize_8)) {
+            if ((s) >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8)))
+            {
                 write!(
                     std::fs::File::from_raw_fd(
                         std::io::stderr()
@@ -9758,8 +10414,10 @@ pub unsafe fn RefineDCTBlock_246(
             let mut __do_while = true;
             'loop_: while __do_while || ((k) <= (Se)) {
                 __do_while = false;
-                let mut thiscoef: i16 =
-                    (*coeffs.offset((kJPEGNaturalOrder_13[(k) as usize]) as isize));
+                let mut thiscoef: i16 = (*coeffs.offset(
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                        [(k) as usize]) as isize,
+                ));
                 if ((thiscoef as i32) != (0)) {
                     if ((unsafe { brunsli_BitReaderState::ReadBits(&mut (*br), 1) }) != 0) {
                         if (((thiscoef as i32) & (p1)) == (0)) {
@@ -9770,7 +10428,10 @@ pub unsafe fn RefineDCTBlock_246(
                             }
                         }
                     }
-                    (*coeffs.offset((kJPEGNaturalOrder_13[(k) as usize]) as isize)) = thiscoef;
+                    (*coeffs.offset(
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                            [(k) as usize]) as isize,
+                    )) = thiscoef;
                 } else {
                     if ((r.prefix_dec()) < (0)) {
                         break;
@@ -9796,7 +10457,10 @@ pub unsafe fn RefineDCTBlock_246(
                     (*jpg).error = brunsli_JPEGReadError_OUT_OF_BAND_COEFF;
                     return false;
                 }
-                (*coeffs.offset((kJPEGNaturalOrder_13[(k) as usize]) as isize)) = (s as i16);
+                (*coeffs.offset(
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                        [(k) as usize]) as isize,
+                )) = (s as i16);
             }
             k.postfix_inc();
         }
@@ -9817,7 +10481,10 @@ pub unsafe fn RefineDCTBlock_246(
     }
     if ((*eobrun) > (0)) {
         'loop_: while ((k) <= (Se)) {
-            let mut thiscoef: i16 = (*coeffs.offset((kJPEGNaturalOrder_13[(k) as usize]) as isize));
+            let mut thiscoef: i16 = (*coeffs.offset(
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                    [(k) as usize]) as isize,
+            ));
             if ((thiscoef as i32) != (0)) {
                 if ((unsafe { brunsli_BitReaderState::ReadBits(&mut (*br), 1) }) != 0) {
                     if (((thiscoef as i32) & (p1)) == (0)) {
@@ -9828,7 +10495,10 @@ pub unsafe fn RefineDCTBlock_246(
                         }
                     }
                 }
-                (*coeffs.offset((kJPEGNaturalOrder_13[(k) as usize]) as isize)) = thiscoef;
+                (*coeffs.offset(
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                        [(k) as usize]) as isize,
+                )) = thiscoef;
             }
             k.postfix_inc();
         }
@@ -10086,12 +10756,14 @@ pub unsafe fn ProcessScan_248(
                 let mut c: *mut brunsli_JPEGComponent = (&mut (&mut (*jpg)).components
                     [((*si).comp_idx as usize)]
                     as *mut brunsli_JPEGComponent);
-                let mut dc_lut: *const brunsli_HuffmanTableEntry = (&(&(*dc_huff_lut))
-                    [((((*si).dc_tbl_idx) * (kJpegHuffmanLutSize_231)) as usize)]
-                    as *const brunsli_HuffmanTableEntry);
-                let mut ac_lut: *const brunsli_HuffmanTableEntry = (&(&(*ac_huff_lut))
-                    [((((*si).ac_tbl_idx) * (kJpegHuffmanLutSize_231)) as usize)]
-                    as *const brunsli_HuffmanTableEntry);
+                let mut dc_lut: *const brunsli_HuffmanTableEntry =
+                    (&(&(*dc_huff_lut))[((((*si).dc_tbl_idx)
+                        * (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanLutSize_231)))
+                        as usize)] as *const brunsli_HuffmanTableEntry);
+                let mut ac_lut: *const brunsli_HuffmanTableEntry =
+                    (&(&(*ac_huff_lut))[((((*si).ac_tbl_idx)
+                        * (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanLutSize_231)))
+                        as usize)] as *const brunsli_HuffmanTableEntry);
                 let mut nblocks_y: i32 = if is_interleaved {
                     (*c).v_samp_factor
                 } else {
@@ -10114,8 +10786,9 @@ pub unsafe fn ProcessScan_248(
                             as i32);
                         let mut reset_state: bool = false;
                         let mut num_zero_runs: i32 = 0;
-                        let mut coeffs: *mut i16 = (&mut (&mut (*c)).coeffs
-                            [(((block_idx) * (kDCTBlockSize_3)) as usize)]
+                        let mut coeffs: *mut i16 = (&mut (&mut (*c)).coeffs[(((block_idx)
+                            * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                            as usize)]
                             as *mut i16);
                         if ((Ah) == (0)) {
                             if !(unsafe {
@@ -10262,22 +10935,25 @@ pub unsafe fn FixupIndexes_249(mut jpg: *mut brunsli_JPEGData) -> bool {
     return true;
 }
 pub unsafe fn FindNextMarker_250(mut data: *const u8, len: usize, mut pos: usize) -> usize {
-    static mut kIsValidMarker_251: [u8; 64] = unsafe {
-        [
-            1_u8, 1_u8, 1_u8, 0_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 1_u8, 1_u8, 1_u8,
-            0_u8, 1_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-            1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 0_u8,
-        ]
-    };;
+    static mut kIsValidMarker_251: std::cell::LazyCell<[u8; 64]> =
+        std::cell::LazyCell::new(|| unsafe {
+            [
+                1_u8, 1_u8, 1_u8, 0_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+                0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 1_u8, 1_u8, 1_u8,
+                0_u8, 1_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 0_u8,
+            ]
+        });;
     let mut num_skipped: usize = 0_usize;
     'loop_: while (((pos).wrapping_add(1_usize)) < (len))
         && (((((*data.offset((pos) as isize)) as i32) != (255))
             || (((*data.offset(((pos).wrapping_add(1_usize)) as isize)) as i32) < (192)))
-            || (!(kIsValidMarker_251[(((*data.offset(((pos).wrapping_add(1_usize)) as isize))
+            || (!((*std::cell::LazyCell::force_mut(&mut *&raw mut kIsValidMarker_251))[(((*data
+                .offset(((pos).wrapping_add(1_usize)) as isize))
                 as i32)
-                - (192)) as usize]
+                - (192))
+                as usize]
                 != 0)))
     {
         pos.prefix_inc();
@@ -10331,7 +11007,8 @@ pub unsafe fn ReadJpeg_196(
         (*jpg).error = brunsli_JPEGReadError_SOI_NOT_FOUND;
         return false;
     }
-    let mut lut_size: i32 = ((kMaxHuffmanTables_6) * (kJpegHuffmanLutSize_231));
+    let mut lut_size: i32 = ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxHuffmanTables_6))
+        * (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanLutSize_231)));
     let mut dc_huff_lut: Vec<brunsli_HuffmanTableEntry> = (0..(lut_size as usize) as usize)
         .map(|_| <brunsli_HuffmanTableEntry>::default())
         .collect::<Vec<_>>();
@@ -10566,7 +11243,9 @@ pub unsafe fn ReadJpeg_196(
             (*jpg).error = brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR;
             return false;
         }
-        if (((*jpg).huffman_code.len()) >= (kMaxDHTMarkers_10 as usize)) {
+        if (((*jpg).huffman_code.len())
+            >= ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxDHTMarkers_10)) as usize))
+        {
             write!(
                 std::fs::File::from_raw_fd(
                     std::io::stderr()
@@ -10584,8 +11263,12 @@ pub unsafe fn ReadJpeg_196(
     return true;
 }
 pub unsafe fn NextTableBitSize_252(mut count: *const i32, mut len: i32) -> i32 {
-    let mut left: i32 = ((1) << ((len) - (kJpegHuffmanRootTableBits_230)));
-    'loop_: while ((len) < (kJpegHuffmanMaxBitLength_7)) {
+    let mut left: i32 = ((1)
+        << ((len)
+            - (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanRootTableBits_230))));
+    'loop_: while ((len)
+        < (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)))
+    {
         left -= (*count.offset((len) as isize));
         if ((left) <= (0)) {
             break;
@@ -10593,7 +11276,8 @@ pub unsafe fn NextTableBitSize_252(mut count: *const i32, mut len: i32) -> i32 {
         len.prefix_inc();
         left <<= 1;
     }
-    return ((len) - (kJpegHuffmanRootTableBits_230));
+    return ((len)
+        - (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanRootTableBits_230)));
 }
 pub unsafe fn BuildJpegHuffmanTable_238(
     mut count: *const i32,
@@ -10616,13 +11300,15 @@ pub unsafe fn BuildJpegHuffmanTable_238(
     ];
     let mut total_count: i32 = 0;
     len = 1;
-    'loop_: while ((len) <= (kJpegHuffmanMaxBitLength_7)) {
+    'loop_: while ((len)
+        <= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)))
+    {
         tmp_count[(len) as usize] = (*count.offset((len) as isize));
         total_count += tmp_count[(len) as usize];
         len.prefix_inc();
     }
     table = lut;
-    table_bits = kJpegHuffmanRootTableBits_230;
+    table_bits = (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanRootTableBits_230));
     table_size = ((1) << (table_bits));
     if ((total_count) == (1)) {
         code.bits = 0_u8;
@@ -10637,11 +11323,16 @@ pub unsafe fn BuildJpegHuffmanTable_238(
     key = 0;
     idx = 0;
     len = 1;
-    'loop_: while ((len) <= (kJpegHuffmanRootTableBits_230)) {
+    'loop_: while ((len)
+        <= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanRootTableBits_230)))
+    {
         'loop_: while ((tmp_count[(len) as usize]) > (0)) {
             code.bits = (len as u8);
             code.value = ((*symbols.offset((idx.postfix_inc()) as isize)) as u16);
-            reps = ((1) << ((kJpegHuffmanRootTableBits_230) - (len)));
+            reps = ((1)
+                << ((*std::cell::LazyCell::force_mut(
+                    &mut *&raw mut kJpegHuffmanRootTableBits_230,
+                )) - (len)));
             'loop_: while (reps.postfix_dec() != 0) {
                 (*table.offset((key.postfix_inc()) as isize)) = (code).clone();
             }
@@ -10652,8 +11343,10 @@ pub unsafe fn BuildJpegHuffmanTable_238(
     table = (table).wrapping_add(table_size as usize);
     table_size = 0;
     low = 0;
-    len = ((kJpegHuffmanRootTableBits_230) + (1));
-    'loop_: while ((len) <= (kJpegHuffmanMaxBitLength_7)) {
+    len = ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanRootTableBits_230)) + (1));
+    'loop_: while ((len)
+        <= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)))
+    {
         'loop_: while ((tmp_count[(len) as usize]) > (0)) {
             if ((low) >= (table_size)) {
                 table = (table).wrapping_add(table_size as usize);
@@ -10661,15 +11354,19 @@ pub unsafe fn BuildJpegHuffmanTable_238(
                     (unsafe { NextTableBitSize_252((tmp_count.as_mut_ptr()).cast_const(), len) });
                 table_size = ((1) << (table_bits));
                 low = 0;
-                (*lut.offset((key) as isize)).bits =
-                    (((table_bits) + (kJpegHuffmanRootTableBits_230)) as u8);
+                (*lut.offset((key) as isize)).bits = (((table_bits)
+                    + (*std::cell::LazyCell::force_mut(
+                        &mut *&raw mut kJpegHuffmanRootTableBits_230,
+                    ))) as u8);
                 (*lut.offset((key) as isize)).value = (((((table as usize - lut as usize)
                     / ::std::mem::size_of::<brunsli_HuffmanTableEntry>())
                     as i64)
                     - (key as i64)) as u16);
                 key.prefix_inc();
             }
-            code.bits = (((len) - (kJpegHuffmanRootTableBits_230)) as u8);
+            code.bits = (((len)
+                - (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanRootTableBits_230)))
+                as u8);
             code.value = ((*symbols.offset((idx.postfix_inc()) as isize)) as u16);
             reps = ((1) << ((table_bits) - (code.bits as i32)));
             'loop_: while (reps.postfix_dec() != 0) {
@@ -10920,7 +11617,10 @@ pub fn main() {
         .map(|arg| arg.as_ptr() as *mut libc::c_char)
         .collect();
     argv.push(::std::ptr::null_mut());
-    unsafe { ::std::process::exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32) }
+    unsafe {
+        __cpp2rust_init_globals();
+        ::std::process::exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32)
+    }
 }
 unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     if ((argc) != (2)) && ((argc) != (3)) {
@@ -10956,4 +11656,109 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     };
     let mut ok: bool = (unsafe { ProcessFile_257(&file_name, &outfile_name) });
     return if ok { 0 } else { 1 };
+}
+pub unsafe fn __cpp2rust_init_globals() {
+    std::cell::LazyCell::force(&*&raw const BRUNSLI_ANS_LOG_TAB_SIZE_0);
+    std::cell::LazyCell::force(&*&raw const BRUNSLI_ANS_TAB_SIZE_1);
+    std::cell::LazyCell::force(&*&raw const kFallbackVersion_2);
+    std::cell::LazyCell::force(&*&raw const kDCTBlockSize_3);
+    std::cell::LazyCell::force(&*&raw const kMaxComponents_4);
+    std::cell::LazyCell::force(&*&raw const kMaxQuantTables_5);
+    std::cell::LazyCell::force(&*&raw const kMaxHuffmanTables_6);
+    std::cell::LazyCell::force(&*&raw const kJpegHuffmanMaxBitLength_7);
+    std::cell::LazyCell::force(&*&raw const kJpegHuffmanAlphabetSize_8);
+    std::cell::LazyCell::force(&*&raw const kJpegDCAlphabetSize_9);
+    std::cell::LazyCell::force(&*&raw const kMaxDHTMarkers_10);
+    std::cell::LazyCell::force(&*&raw const kMaxDimPixels_11);
+    std::cell::LazyCell::force(&*&raw const kDefaultQuantMatrix_12);
+    std::cell::LazyCell::force(&*&raw const kJPEGNaturalOrder_13);
+    std::cell::LazyCell::force(&*&raw const kJPEGZigZagOrder_14);
+    std::cell::LazyCell::force(&*&raw const kBrunsliMaxNumBlocks_18);
+    std::cell::LazyCell::force(&*&raw const kBrunsliMaxDCAbsVal_19);
+    std::cell::LazyCell::force(&*&raw const kMaxContextMapAlphabetSize_20);
+    std::cell::LazyCell::force(&*&raw const kHuffmanTableBits_21);
+    std::cell::LazyCell::force(&*&raw const kMaxHuffmanBits_22);
+    std::cell::LazyCell::force(&*&raw const kBrunsliShortMarkerLimit_23);
+    std::cell::LazyCell::force(&*&raw const kBrunsliMultibyteMarkerLimit_24);
+    std::cell::LazyCell::force(&*&raw const kBrunsliWiringTypeVarint_25);
+    std::cell::LazyCell::force(&*&raw const kBrunsliWiringTypeLengthDelimited_26);
+    std::cell::LazyCell::force(&*&raw const kBrunsliMaxSampling_27);
+    std::cell::LazyCell::force(&*&raw const kBrunsliSignatureTag_30);
+    std::cell::LazyCell::force(&*&raw const kBrunsliHeaderTag_31);
+    std::cell::LazyCell::force(&*&raw const kBrunsliMetaDataTag_32);
+    std::cell::LazyCell::force(&*&raw const kBrunsliJPEGInternalsTag_33);
+    std::cell::LazyCell::force(&*&raw const kBrunsliQuantDataTag_34);
+    std::cell::LazyCell::force(&*&raw const kBrunsliHistogramDataTag_35);
+    std::cell::LazyCell::force(&*&raw const kBrunsliDCDataTag_36);
+    std::cell::LazyCell::force(&*&raw const kBrunsliACDataTag_37);
+    std::cell::LazyCell::force(&*&raw const kBrunsliOriginalJpgTag_38);
+    std::cell::LazyCell::force(&*&raw const kBrunsliHeaderWidthTag_39);
+    std::cell::LazyCell::force(&*&raw const kBrunsliHeaderHeightTag_40);
+    std::cell::LazyCell::force(&*&raw const kBrunsliHeaderVersionCompTag_41);
+    std::cell::LazyCell::force(&*&raw const kBrunsliHeaderSubsamplingTag_42);
+    std::cell::LazyCell::force(&*&raw const kBrunsliSignatureSize_43);
+    std::cell::LazyCell::force(&*&raw const kMaxApp0Densities_45);
+    std::cell::LazyCell::force(&*&raw const kApp0Densities_46);
+    std::cell::LazyCell::force(&*&raw const kNumStockQuantTables_47);
+    std::cell::LazyCell::force(&*&raw const kStockQuantizationTables_48);
+    std::cell::LazyCell::force(&*&raw const kComponentIds123_49);
+    std::cell::LazyCell::force(&*&raw const kComponentIdsGray_50);
+    std::cell::LazyCell::force(&*&raw const kComponentIdsRGB_51);
+    std::cell::LazyCell::force(&*&raw const kComponentIdsCustom_52);
+    std::cell::LazyCell::force(&*&raw const kNumStockDCHuffmanCodes_53);
+    std::cell::LazyCell::force(&*&raw const kStockDCHuffmanCodeCounts_54);
+    std::cell::LazyCell::force(&*&raw const kStockDCHuffmanCodeValues_55);
+    std::cell::LazyCell::force(&*&raw const kNumStockACHuffmanCodes_56);
+    std::cell::LazyCell::force(&*&raw const kStockACHuffmanCodeCounts_57);
+    std::cell::LazyCell::force(&*&raw const kStockACHuffmanCodeTotalCount_58);
+    std::cell::LazyCell::force(&*&raw const kStockACHuffmanCodeValues_59);
+    std::cell::LazyCell::force(&*&raw const kDefaultDCValues_60);
+    std::cell::LazyCell::force(&*&raw const kDefaultACValues_61);
+    std::cell::LazyCell::force(&*&raw const kBrunsliSignature_44);
+    std::cell::LazyCell::force(&*&raw const AppData_0xe0_62);
+    std::cell::LazyCell::force(&*&raw const AppData_0xec_64);
+    std::cell::LazyCell::force(&*&raw const AppData_0xee_65);
+    std::cell::LazyCell::force(&*&raw const AppData_0xe2_63);
+    std::cell::LazyCell::force(&*&raw const kNormalizeThreshold_76);
+    std::cell::LazyCell::force(&*&raw const kDivLut17_77);
+    std::cell::LazyCell::force(&*&raw const kInitProb_80);
+    std::cell::LazyCell::force(&*&raw const kInitProbCount_81);
+    std::cell::LazyCell::force(&*&raw const kMaxAverageContext_82);
+    std::cell::LazyCell::force(&*&raw const kNumAvrgContexts_83);
+    std::cell::LazyCell::force(&*&raw const kNumNonZeroBits_84);
+    std::cell::LazyCell::force(&*&raw const kNumNonZeroTreeSize_85);
+    std::cell::LazyCell::force(&*&raw const kNumNonZeroQuant_86);
+    std::cell::LazyCell::force(&*&raw const kNumNonZeroContextMax_87);
+    std::cell::LazyCell::force(&*&raw const kNumNonZeroContextCount_88);
+    std::cell::LazyCell::force(&*&raw const kNonzeroBuckets_89);
+    std::cell::LazyCell::force(&*&raw const kNumNonzeroBuckets_90);
+    std::cell::LazyCell::force(&*&raw const kNumSchemes_91);
+    std::cell::LazyCell::force(&*&raw const kFreqContext_92);
+    std::cell::LazyCell::force(&*&raw const kNumNonzeroContext_93);
+    std::cell::LazyCell::force(&*&raw const kNumNonzeroContextSkip_94);
+    std::cell::LazyCell::force(&*&raw const kContextAlgorithm_95);
+    std::cell::LazyCell::force(&*&raw const kACPredictPrecisionBits_99);
+    std::cell::LazyCell::force(&*&raw const kACPredictPrecision_100);
+    std::cell::LazyCell::force(&*&raw const kNumIsEmptyBlockContexts_105);
+    std::cell::LazyCell::force(&*&raw const kSqrt2_107);
+    std::cell::LazyCell::force(&*&raw const kSqrt2FixedPoint_108);
+    std::cell::LazyCell::force(&*&raw const kInitProb_110);
+    std::cell::LazyCell::force(&*&raw const kInitProbNonzero_111);
+    std::cell::LazyCell::force(&*&raw const kQFactorBits_116);
+    std::cell::LazyCell::force(&*&raw const kQFactorLimit_117);
+    std::cell::LazyCell::force(&*&raw const kMaxNumSymbolsForSmallCode_121);
+    std::cell::LazyCell::force(&*&raw const kLog2Table_126);
+    std::cell::LazyCell::force(&*&raw const kMaxNumberOfHistograms_139);
+    std::cell::LazyCell::force(&*&raw const kSlackForOneBlock_140);
+    std::cell::LazyCell::force(&*&raw const kNumDirectCodes_141);
+    std::cell::LazyCell::force(&*&raw const kBrotliQuality_142);
+    std::cell::LazyCell::force(&*&raw const kBrotliWindowBits_143);
+    std::cell::LazyCell::force(&*&raw const kMaxBypassHeaderSize_192);
+    std::cell::LazyCell::force(&*&raw const kHistogramLengthBitLengths_204);
+    std::cell::LazyCell::force(&*&raw const kHistogramLengthSymbols_205);
+    std::cell::LazyCell::force(&*&raw const kLogCountBitLengths_206);
+    std::cell::LazyCell::force(&*&raw const kLogCountSymbols_207);
+    std::cell::LazyCell::force(&*&raw const kCodeLengthCodes_211);
+    std::cell::LazyCell::force(&*&raw const kJpegHuffmanRootTableBits_230);
+    std::cell::LazyCell::force(&*&raw const kJpegHuffmanLutSize_231);
 }

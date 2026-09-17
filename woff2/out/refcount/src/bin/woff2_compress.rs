@@ -5183,6 +5183,7 @@ pub fn main() {
             .collect(),
     ));
     (*argv.borrow_mut()).push(Ptr::null());
+    __cpp2rust_init_globals();
     ::std::process::exit(main_0(::std::env::args().len() as i32, argv.as_pointer()));
 }
 fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
@@ -6214,4 +6215,38 @@ impl woff2_TableImpl for Ptr<woff2_Table> {
             _lhs < (*(*other.upgrade().deref()).tag.borrow())
         };
     }
+}
+pub fn __cpp2rust_init_globals() {
+    let _ = kGlyfTableTag_0.with(|_| ());
+    let _ = kHeadTableTag_1.with(|_| ());
+    let _ = kLocaTableTag_2.with(|_| ());
+    let _ = kDsigTableTag_3.with(|_| ());
+    let _ = kCffTableTag_4.with(|_| ());
+    let _ = kHmtxTableTag_5.with(|_| ());
+    let _ = kHheaTableTag_6.with(|_| ());
+    let _ = kMaxpTableTag_7.with(|_| ());
+    let _ = kKnownTags_8.with(|_| ());
+    let _ = kWoff2Signature_20.with(|_| ());
+    let _ = kWoff2FlagsTransform_21.with(|_| ());
+    let _ = kTtcFontFlavor_22.with(|_| ());
+    let _ = kSfntHeaderSize_23.with(|_| ());
+    let _ = kSfntEntrySize_24.with(|_| ());
+    let _ = kFLAG_ONCURVE_49.with(|_| ());
+    let _ = kFLAG_XSHORT_50.with(|_| ());
+    let _ = kFLAG_YSHORT_51.with(|_| ());
+    let _ = kFLAG_REPEAT_52.with(|_| ());
+    let _ = kFLAG_XREPEATSIGN_53.with(|_| ());
+    let _ = kFLAG_YREPEATSIGN_54.with(|_| ());
+    let _ = kFLAG_OVERLAP_SIMPLE_55.with(|_| ());
+    let _ = kFLAG_ARG_1_AND_2_ARE_WORDS_56.with(|_| ());
+    let _ = kFLAG_WE_HAVE_A_SCALE_57.with(|_| ());
+    let _ = kFLAG_MORE_COMPONENTS_58.with(|_| ());
+    let _ = kFLAG_WE_HAVE_AN_X_AND_Y_SCALE_59.with(|_| ());
+    let _ = kFLAG_WE_HAVE_A_TWO_BY_TWO_60.with(|_| ());
+    let _ = kFLAG_WE_HAVE_INSTRUCTIONS_61.with(|_| ());
+    let _ = FLAG_ARG_1_AND_2_ARE_WORDS_83.with(|_| ());
+    let _ = FLAG_WE_HAVE_INSTRUCTIONS_84.with(|_| ());
+    let _ = FLAG_OVERLAP_SIMPLE_BITMAP_85.with(|_| ());
+    let _ = kWoff2HeaderSize_92.with(|_| ());
+    let _ = kWoff2EntrySize_93.with(|_| ());
 }

@@ -17211,6 +17211,7 @@ pub fn main() {
             .collect(),
     ));
     (*argv.borrow_mut()).push(Ptr::null());
+    __cpp2rust_init_globals();
     ::std::process::exit(main_0(::std::env::args().len() as i32, argv.as_pointer()));
 }
 fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
@@ -18688,4 +18689,108 @@ pub trait brunsli_internal_dec_StateImpl {
 }
 impl brunsli_internal_dec_StateImpl for Ptr<brunsli_internal_dec_State> {
     fn destructor(&self) {}
+}
+pub fn __cpp2rust_init_globals() {
+    let _ = BRUNSLI_ANS_LOG_TAB_SIZE_0.with(|_| ());
+    let _ = BRUNSLI_ANS_TAB_SIZE_1.with(|_| ());
+    let _ = kFallbackVersion_2.with(|_| ());
+    let _ = kDCTBlockSize_3.with(|_| ());
+    let _ = kMaxComponents_4.with(|_| ());
+    let _ = kMaxQuantTables_5.with(|_| ());
+    let _ = kMaxHuffmanTables_6.with(|_| ());
+    let _ = kJpegHuffmanMaxBitLength_7.with(|_| ());
+    let _ = kJpegHuffmanAlphabetSize_8.with(|_| ());
+    let _ = kJpegDCAlphabetSize_9.with(|_| ());
+    let _ = kMaxDHTMarkers_10.with(|_| ());
+    let _ = kMaxDimPixels_11.with(|_| ());
+    let _ = kDefaultQuantMatrix_12.with(|_| ());
+    let _ = kJPEGNaturalOrder_13.with(|_| ());
+    let _ = kJPEGZigZagOrder_14.with(|_| ());
+    let _ = kBrunsliMaxNumBlocks_18.with(|_| ());
+    let _ = kBrunsliMaxDCAbsVal_19.with(|_| ());
+    let _ = kMaxContextMapAlphabetSize_20.with(|_| ());
+    let _ = kHuffmanTableBits_21.with(|_| ());
+    let _ = kMaxHuffmanBits_22.with(|_| ());
+    let _ = kBrunsliShortMarkerLimit_23.with(|_| ());
+    let _ = kBrunsliMultibyteMarkerLimit_24.with(|_| ());
+    let _ = kBrunsliWiringTypeVarint_25.with(|_| ());
+    let _ = kBrunsliWiringTypeLengthDelimited_26.with(|_| ());
+    let _ = kBrunsliMaxSampling_27.with(|_| ());
+    let _ = kBrunsliSignatureTag_30.with(|_| ());
+    let _ = kBrunsliHeaderTag_31.with(|_| ());
+    let _ = kBrunsliMetaDataTag_32.with(|_| ());
+    let _ = kBrunsliJPEGInternalsTag_33.with(|_| ());
+    let _ = kBrunsliQuantDataTag_34.with(|_| ());
+    let _ = kBrunsliHistogramDataTag_35.with(|_| ());
+    let _ = kBrunsliDCDataTag_36.with(|_| ());
+    let _ = kBrunsliACDataTag_37.with(|_| ());
+    let _ = kBrunsliOriginalJpgTag_38.with(|_| ());
+    let _ = kBrunsliHeaderWidthTag_39.with(|_| ());
+    let _ = kBrunsliHeaderHeightTag_40.with(|_| ());
+    let _ = kBrunsliHeaderVersionCompTag_41.with(|_| ());
+    let _ = kBrunsliHeaderSubsamplingTag_42.with(|_| ());
+    let _ = kBrunsliSignatureSize_43.with(|_| ());
+    let _ = kMaxApp0Densities_45.with(|_| ());
+    let _ = kApp0Densities_46.with(|_| ());
+    let _ = kNumStockQuantTables_47.with(|_| ());
+    let _ = kStockQuantizationTables_48.with(|_| ());
+    let _ = kComponentIds123_49.with(|_| ());
+    let _ = kComponentIdsGray_50.with(|_| ());
+    let _ = kComponentIdsRGB_51.with(|_| ());
+    let _ = kComponentIdsCustom_52.with(|_| ());
+    let _ = kNumStockDCHuffmanCodes_53.with(|_| ());
+    let _ = kStockDCHuffmanCodeCounts_54.with(|_| ());
+    let _ = kStockDCHuffmanCodeValues_55.with(|_| ());
+    let _ = kNumStockACHuffmanCodes_56.with(|_| ());
+    let _ = kStockACHuffmanCodeCounts_57.with(|_| ());
+    let _ = kStockACHuffmanCodeTotalCount_58.with(|_| ());
+    let _ = kStockACHuffmanCodeValues_59.with(|_| ());
+    let _ = kDefaultDCValues_60.with(|_| ());
+    let _ = kDefaultACValues_61.with(|_| ());
+    let _ = kBrunsliSignature_44.with(|_| ());
+    let _ = AppData_0xe0_62.with(|_| ());
+    let _ = AppData_0xec_64.with(|_| ());
+    let _ = AppData_0xee_65.with(|_| ());
+    let _ = AppData_0xe2_63.with(|_| ());
+    let _ = kNormalizeThreshold_76.with(|_| ());
+    let _ = kDivLut17_77.with(|_| ());
+    let _ = kInitProb_80.with(|_| ());
+    let _ = kInitProbCount_81.with(|_| ());
+    let _ = kMaxAverageContext_82.with(|_| ());
+    let _ = kNumAvrgContexts_83.with(|_| ());
+    let _ = kNumNonZeroBits_84.with(|_| ());
+    let _ = kNumNonZeroTreeSize_85.with(|_| ());
+    let _ = kNumNonZeroQuant_86.with(|_| ());
+    let _ = kNumNonZeroContextMax_87.with(|_| ());
+    let _ = kNumNonZeroContextCount_88.with(|_| ());
+    let _ = kNonzeroBuckets_89.with(|_| ());
+    let _ = kNumNonzeroBuckets_90.with(|_| ());
+    let _ = kNumSchemes_91.with(|_| ());
+    let _ = kFreqContext_92.with(|_| ());
+    let _ = kNumNonzeroContext_93.with(|_| ());
+    let _ = kNumNonzeroContextSkip_94.with(|_| ());
+    let _ = kContextAlgorithm_95.with(|_| ());
+    let _ = kACPredictPrecisionBits_99.with(|_| ());
+    let _ = kACPredictPrecision_100.with(|_| ());
+    let _ = kNumIsEmptyBlockContexts_105.with(|_| ());
+    let _ = kSqrt2_107.with(|_| ());
+    let _ = kSqrt2FixedPoint_108.with(|_| ());
+    let _ = kInitProb_110.with(|_| ());
+    let _ = kInitProbNonzero_111.with(|_| ());
+    let _ = kQFactorBits_116.with(|_| ());
+    let _ = kQFactorLimit_117.with(|_| ());
+    let _ = kBitMask_120.with(|_| ());
+    let _ = kNumDirectCodes_135.with(|_| ());
+    let _ = kCoeffAlphabetSize_136.with(|_| ());
+    let _ = kKnownSectionTags_137.with(|_| ());
+    let _ = kKnownHeaderVarintTags_138.with(|_| ());
+    let _ = kBufferMaxReadAhead_199.with(|_| ());
+    let _ = kLengthTree_210.with(|_| ());
+    let _ = kLogCountTree_211.with(|_| ());
+    let _ = kCodeLengthCodes_213.with(|_| ());
+    let _ = kCodeLengthCodeOrder_214.with(|_| ());
+    let _ = kDefaultCodeLength_215.with(|_| ());
+    let _ = kCodeLengthRepeatCode_216.with(|_| ());
+    let _ = kJpegPrecision_224.with(|_| ());
+    let _ = kBitWriterChunkSize_225.with(|_| ());
 }

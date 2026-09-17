@@ -6,15 +6,23 @@ use std::collections::BTreeMap;
 use std::io::{Read, Seek, Write};
 use std::os::fd::{AsFd, FromRawFd, IntoRawFd};
 use std::rc::Rc;
-pub static mut kGlyfTableTag_0: u32 = unsafe { 1735162214_u32 };
-pub static mut kHeadTableTag_1: u32 = unsafe { 1751474532_u32 };
-pub static mut kLocaTableTag_2: u32 = unsafe { 1819239265_u32 };
-pub static mut kDsigTableTag_3: u32 = unsafe { 1146308935_u32 };
-pub static mut kCffTableTag_4: u32 = unsafe { 1128678944_u32 };
-pub static mut kHmtxTableTag_5: u32 = unsafe { 1752003704_u32 };
-pub static mut kHheaTableTag_6: u32 = unsafe { 1751672161_u32 };
-pub static mut kMaxpTableTag_7: u32 = unsafe { 1835104368_u32 };
-pub static mut kKnownTags_8: [u32; 63] = unsafe {
+pub static mut kGlyfTableTag_0: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1735162214_u32 });
+pub static mut kHeadTableTag_1: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1751474532_u32 });
+pub static mut kLocaTableTag_2: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1819239265_u32 });
+pub static mut kDsigTableTag_3: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1146308935_u32 });
+pub static mut kCffTableTag_4: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1128678944_u32 });
+pub static mut kHmtxTableTag_5: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1752003704_u32 });
+pub static mut kHheaTableTag_6: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1751672161_u32 });
+pub static mut kMaxpTableTag_7: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1835104368_u32 });
+pub static mut kKnownTags_8: std::cell::LazyCell<[u32; 63]> = std::cell::LazyCell::new(|| unsafe {
     [
         ((((((('c' as libc::c_char) as i32) << (24)) | ((('m' as libc::c_char) as i32) << (16)))
             | ((('a' as libc::c_char) as i32) << (8)))
@@ -206,7 +214,7 @@ pub static mut kKnownTags_8: [u32; 63] = unsafe {
             | ((('l' as libc::c_char) as i32) << (8)))
             | (('l' as libc::c_char) as i32)) as u32),
     ]
-};
+});
 #[repr(C)]
 #[derive(Copy, Clone, Default)]
 pub struct woff2_Buffer {
@@ -413,34 +421,45 @@ pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *
     }
 }
 pub unsafe fn Read255UShort_12(mut buf: *mut woff2_Buffer, mut value: *mut u32) -> bool {
-    static mut kWordCode_13: i32 = unsafe { 253 };;
-    static mut kOneMoreByteCode2_14: i32 = unsafe { 254 };;
-    static mut kOneMoreByteCode1_15: i32 = unsafe { 255 };;
-    static mut kLowestUCode_16: i32 = unsafe { 253 };;
+    static mut kWordCode_13: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });;
+    static mut kOneMoreByteCode2_14: std::cell::LazyCell<i32> =
+        std::cell::LazyCell::new(|| unsafe { 254 });;
+    static mut kOneMoreByteCode1_15: std::cell::LazyCell<i32> =
+        std::cell::LazyCell::new(|| unsafe { 255 });;
+    static mut kLowestUCode_16: std::cell::LazyCell<i32> =
+        std::cell::LazyCell::new(|| unsafe { 253 });;
     let mut code: u8 = 0_u8;
     if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
         return false;
     }
-    if ((code as i32) == (kWordCode_13)) {
+    if ((code as i32) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kWordCode_13))) {
         let mut result: u16 = 0_u16;
         if !(unsafe { woff2_Buffer::ReadU16(&mut (*buf), (&mut result as *mut u16)) }) {
             return false;
         }
         (*value) = (result as u32);
         return true;
-    } else if ((code as i32) == (kOneMoreByteCode1_15)) {
+    } else if ((code as i32)
+        == (*std::cell::LazyCell::force_mut(&mut *&raw mut kOneMoreByteCode1_15)))
+    {
         let mut result: u8 = 0_u8;
         if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut result as *mut u8)) }) {
             return false;
         }
-        (*value) = (((result as i32) + (kLowestUCode_16)) as u32);
+        (*value) = (((result as i32)
+            + (*std::cell::LazyCell::force_mut(&mut *&raw mut kLowestUCode_16)))
+            as u32);
         return true;
-    } else if ((code as i32) == (kOneMoreByteCode2_14)) {
+    } else if ((code as i32)
+        == (*std::cell::LazyCell::force_mut(&mut *&raw mut kOneMoreByteCode2_14)))
+    {
         let mut result: u8 = 0_u8;
         if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut result as *mut u8)) }) {
             return false;
         }
-        (*value) = (((result as i32) + ((kLowestUCode_16) * (2))) as u32);
+        (*value) = (((result as i32)
+            + ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLowestUCode_16)) * (2)))
+            as u32);
         return true;
     } else {
         (*value) = (code as u32);
@@ -493,11 +512,16 @@ pub unsafe fn StoreBase128_19(mut len: usize, mut offset: *mut usize, mut dst: *
         i.prefix_inc();
     }
 }
-pub static mut kWoff2Signature_20: u32 = unsafe { 2001684018_u32 };
-pub static mut kWoff2FlagsTransform_21: u32 = unsafe { (((1) << (8)) as u32) };
-pub static mut kTtcFontFlavor_22: u32 = unsafe { 1953784678_u32 };
-pub static mut kSfntHeaderSize_23: usize = unsafe { 12_usize };
-pub static mut kSfntEntrySize_24: usize = unsafe { 16_usize };
+pub static mut kWoff2Signature_20: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 2001684018_u32 });
+pub static mut kWoff2FlagsTransform_21: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { (((1) << (8)) as u32) });
+pub static mut kTtcFontFlavor_22: std::cell::LazyCell<u32> =
+    std::cell::LazyCell::new(|| unsafe { 1953784678_u32 });
+pub static mut kSfntHeaderSize_23: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 12_usize });
+pub static mut kSfntEntrySize_24: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 16_usize });
 #[repr(C)]
 #[derive(Copy, Clone, Default)]
 pub struct woff2_Point {
@@ -709,7 +733,8 @@ impl woff2_Font {
         }
         let mut glyf_loc: *mut u32 = {
             let mut it = output_order.as_mut_ptr();
-            while it != output_order.as_mut_ptr().add(output_order.len()) && *it != kGlyfTableTag_0
+            while it != output_order.as_mut_ptr().add(output_order.len())
+                && *it != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
             {
                 it = it.add(1);
             }
@@ -717,7 +742,8 @@ impl woff2_Font {
         };
         let mut loca_loc: *mut u32 = {
             let mut it = output_order.as_mut_ptr();
-            while it != output_order.as_mut_ptr().add(output_order.len()) && *it != kLocaTableTag_2
+            while it != output_order.as_mut_ptr().add(output_order.len())
+                && *it != (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2))
             {
                 it = it.add(1);
             }
@@ -735,7 +761,7 @@ impl woff2_Font {
                 let pos = {
                     let mut it = output_order.as_mut_ptr();
                     while it != output_order.as_mut_ptr().add(output_order.len())
-                        && *it != kGlyfTableTag_0
+                        && *it != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
                     {
                         it = it.add(1);
                     }
@@ -743,7 +769,10 @@ impl woff2_Font {
                 }
                 .add(1_i64 as usize)
                 .offset_from(output_order.as_ptr()) as usize;
-                output_order.insert(pos, kLocaTableTag_2);
+                output_order.insert(
+                    pos,
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)),
+                );
             };
         }
         return std::mem::take(&mut output_order);
@@ -804,8 +833,13 @@ pub unsafe fn ReadTrueTypeFont_33(
         }
         last_offset = (*i.first()).wrapping_add(*i.second());
     }
-    let mut head_table: *const woff2_Font_Table =
-        (unsafe { woff2_Font::FindTable_u32(&mut (*font), kHeadTableTag_1) }).cast_const();
+    let mut head_table: *const woff2_Font_Table = (unsafe {
+        woff2_Font::FindTable_u32(
+            &mut (*font),
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1)),
+        )
+    })
+    .cast_const();
     if (!((head_table).is_null())) && (((*head_table).length) < (52_u32)) {
         return false;
     }
@@ -907,7 +941,7 @@ pub unsafe fn ReadFont_36(mut data: *const u8, mut len: usize, mut font: *mut wo
     if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut (*font).flavor as *mut u32)) }) {
         return false;
     }
-    if (((*font).flavor) == (kTtcFontFlavor_22)) {
+    if (((*font).flavor) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22))) {
         return false;
     }
     return (unsafe { ReadTrueTypeFont_33((&mut file as *mut woff2_Buffer), data, len, font) });
@@ -922,7 +956,9 @@ pub unsafe fn ReadFontCollection_37(
     {
         return false;
     }
-    if (((*font_collection).flavor) != (kTtcFontFlavor_22)) {
+    if (((*font_collection).flavor)
+        != (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
+    {
         {
             let __a0 = 1_usize as usize;
             (*font_collection)
@@ -995,7 +1031,10 @@ pub unsafe fn WriteTableRecord_42(
     mut dst: *mut u8,
     mut dst_size: usize,
 ) -> bool {
-    if ((dst_size) < ((*offset).wrapping_add(kSfntEntrySize_24))) {
+    if ((dst_size)
+        < ((*offset)
+            .wrapping_add((*std::cell::LazyCell::force_mut(&mut *&raw mut kSfntEntrySize_24)))))
+    {
         return false;
     }
     if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
@@ -1108,7 +1147,9 @@ pub unsafe fn WriteFontCollection_44(
     mut dst_size: usize,
 ) -> bool {
     let mut offset: usize = 0_usize;
-    if (((*font_collection).flavor) != (kTtcFontFlavor_22)) {
+    if (((*font_collection).flavor)
+        != (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
+    {
         return (unsafe {
             WriteFont_41(
                 &(&(*font_collection)).fonts[(0_usize)],
@@ -1118,7 +1159,13 @@ pub unsafe fn WriteFontCollection_44(
             )
         });
     }
-    (unsafe { StoreU32_30(kTtcFontFlavor_22, (&mut offset as *mut usize), dst) });
+    (unsafe {
+        StoreU32_30(
+            (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)),
+            (&mut offset as *mut usize),
+            dst,
+        )
+    });
     (unsafe {
         StoreU32_30(
             (*font_collection).header_version,
@@ -1163,11 +1210,11 @@ pub unsafe fn WriteFontCollection_44(
 }
 pub unsafe fn NumGlyphs_45(font: *const woff2_Font) -> i32 {
     let mut head_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kHeadTableTag_1;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut loca_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kLocaTableTag_2;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if (((head_table).is_null()) || ((loca_table).is_null())) || (((*head_table).length) < (52_u32))
@@ -1184,7 +1231,7 @@ pub unsafe fn NumGlyphs_45(font: *const woff2_Font) -> i32 {
 }
 pub unsafe fn IndexFormat_46(font: *const woff2_Font) -> i32 {
     let mut head_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kHeadTableTag_1;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if (head_table).is_null() {
@@ -1207,15 +1254,15 @@ pub unsafe fn GetGlyphData_47(
         return false;
     }
     let mut head_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kHeadTableTag_1;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut loca_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kLocaTableTag_2;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     let mut glyf_table: *const woff2_Font_Table = (unsafe {
-        let _tag: u32 = kGlyfTableTag_0;
+        let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
         woff2_Font::FindTable_u32_const(&(*font), _tag)
     });
     if ((((head_table).is_null()) || ((loca_table).is_null())) || ((glyf_table).is_null()))
@@ -1258,7 +1305,7 @@ pub unsafe fn GetGlyphData_47(
 pub unsafe fn RemoveDigitalSignature_48(mut font: *mut woff2_Font) -> bool {
     let mut it: UnsafeMapIterator<u32, woff2_Font_Table> = UnsafeMapIterator::find_key(
         &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
-        &kDsigTableTag_3,
+        &(*std::cell::LazyCell::force_mut(&mut *&raw mut kDsigTableTag_3)),
     );
     if it != UnsafeMapIterator::end(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
@@ -1339,7 +1386,10 @@ pub fn main() {
         .map(|arg| arg.as_ptr() as *mut libc::c_char)
         .collect();
     argv.push(::std::ptr::null_mut());
-    unsafe { ::std::process::exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32) }
+    unsafe {
+        __cpp2rust_init_globals();
+        ::std::process::exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32)
+    }
 }
 unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     if ((argc) != (2)) {
@@ -1526,7 +1576,8 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
                 return 1;
             }
         } else {
-            tag = kKnownTags_8[((flags as i32) & (63)) as usize];
+            tag = (*std::cell::LazyCell::force_mut(&mut *&raw mut kKnownTags_8))
+                [((flags as i32) & (63)) as usize];
         }
         {
             let a0_clone = tag.clone();
@@ -1549,7 +1600,9 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
             origLength,
         );
         let mut xform_version: u8 = ((((flags as i32) >> (6)) & (3)) as u8);
-        if ((tag) == (kGlyfTableTag_0)) || ((tag) == (kLocaTableTag_2)) {
+        if ((tag) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)))
+            || ((tag) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)))
+        {
             if ((xform_version as i32) == (0)) {
                 if !(unsafe {
                     ReadBase128_17(
@@ -1575,7 +1628,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         printf(c"\n".as_ptr() as *const i8);
         i.postfix_inc();
     }
-    if ((flavor) == (kTtcFontFlavor_22)) {
+    if ((flavor) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22))) {
         let mut version: u32 = 0_u32;
         let mut numFonts: u32 = 0_u32;
         if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut version as *mut u32)) }) {
@@ -1645,4 +1698,20 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         (unsafe { woff2_Buffer::offset(&file) }),
     );
     return 0;
+}
+pub unsafe fn __cpp2rust_init_globals() {
+    std::cell::LazyCell::force(&*&raw const kGlyfTableTag_0);
+    std::cell::LazyCell::force(&*&raw const kHeadTableTag_1);
+    std::cell::LazyCell::force(&*&raw const kLocaTableTag_2);
+    std::cell::LazyCell::force(&*&raw const kDsigTableTag_3);
+    std::cell::LazyCell::force(&*&raw const kCffTableTag_4);
+    std::cell::LazyCell::force(&*&raw const kHmtxTableTag_5);
+    std::cell::LazyCell::force(&*&raw const kHheaTableTag_6);
+    std::cell::LazyCell::force(&*&raw const kMaxpTableTag_7);
+    std::cell::LazyCell::force(&*&raw const kKnownTags_8);
+    std::cell::LazyCell::force(&*&raw const kWoff2Signature_20);
+    std::cell::LazyCell::force(&*&raw const kWoff2FlagsTransform_21);
+    std::cell::LazyCell::force(&*&raw const kTtcFontFlavor_22);
+    std::cell::LazyCell::force(&*&raw const kSfntHeaderSize_23);
+    std::cell::LazyCell::force(&*&raw const kSfntEntrySize_24);
 }

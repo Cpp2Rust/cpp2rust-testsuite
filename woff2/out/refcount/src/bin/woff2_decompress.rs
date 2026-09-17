@@ -4454,6 +4454,7 @@ pub fn main() {
             .collect(),
     ));
     (*argv.borrow_mut()).push(Ptr::null());
+    __cpp2rust_init_globals();
     ::std::process::exit(main_0(::std::env::args().len() as i32, argv.as_pointer()));
 }
 fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
@@ -4807,4 +4808,40 @@ impl woff2_WOFF2StringOutImpl for Ptr<woff2_WOFF2StringOut> {
                 (*(*(*self).upgrade().deref()).max_size_.borrow());
         }
     }
+}
+pub fn __cpp2rust_init_globals() {
+    let _ = kGlyfTableTag_0.with(|_| ());
+    let _ = kHeadTableTag_1.with(|_| ());
+    let _ = kLocaTableTag_2.with(|_| ());
+    let _ = kDsigTableTag_3.with(|_| ());
+    let _ = kCffTableTag_4.with(|_| ());
+    let _ = kHmtxTableTag_5.with(|_| ());
+    let _ = kHheaTableTag_6.with(|_| ());
+    let _ = kMaxpTableTag_7.with(|_| ());
+    let _ = kKnownTags_8.with(|_| ());
+    let _ = kWoff2Signature_20.with(|_| ());
+    let _ = kWoff2FlagsTransform_21.with(|_| ());
+    let _ = kTtcFontFlavor_22.with(|_| ());
+    let _ = kSfntHeaderSize_23.with(|_| ());
+    let _ = kSfntEntrySize_24.with(|_| ());
+    let _ = kDefaultMaxSize_28.with(|_| ());
+    let _ = kGlyfOnCurve_36.with(|_| ());
+    let _ = kGlyfXShort_37.with(|_| ());
+    let _ = kGlyfYShort_38.with(|_| ());
+    let _ = kGlyfRepeat_39.with(|_| ());
+    let _ = kGlyfThisXIsSame_40.with(|_| ());
+    let _ = kGlyfThisYIsSame_41.with(|_| ());
+    let _ = kOverlapSimple_42.with(|_| ());
+    let _ = FLAG_ARG_1_AND_2_ARE_WORDS_43.with(|_| ());
+    let _ = FLAG_WE_HAVE_A_SCALE_44.with(|_| ());
+    let _ = FLAG_MORE_COMPONENTS_45.with(|_| ());
+    let _ = FLAG_WE_HAVE_AN_X_AND_Y_SCALE_46.with(|_| ());
+    let _ = FLAG_WE_HAVE_A_TWO_BY_TWO_47.with(|_| ());
+    let _ = FLAG_WE_HAVE_INSTRUCTIONS_48.with(|_| ());
+    let _ = FLAG_OVERLAP_SIMPLE_BITMAP_49.with(|_| ());
+    let _ = kCheckSumAdjustmentOffset_50.with(|_| ());
+    let _ = kEndPtsOfContoursOffset_51.with(|_| ());
+    let _ = kCompositeGlyphBegin_52.with(|_| ());
+    let _ = kDefaultGlyphBuf_53.with(|_| ());
+    let _ = kMaxPlausibleCompressionRatio_54.with(|_| ());
 }

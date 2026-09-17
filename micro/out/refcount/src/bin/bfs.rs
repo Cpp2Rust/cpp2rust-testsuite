@@ -180,6 +180,7 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
     return (*pred.borrow()).clone();
 }
 pub fn main() {
+    __cpp2rust_init_globals();
     std::process::exit(main_0());
 }
 fn main_0() -> i32 {
@@ -339,3 +340,4 @@ impl QueueImpl for Ptr<Queue> {
             == (*(*(*self).upgrade().deref()).back.borrow()));
     }
 }
+pub fn __cpp2rust_init_globals() {}

@@ -31,6 +31,7 @@ pub fn sum_1(array: Ptr<Option<Value<Box<[i32]>>>>, N: i32) -> i64 {
     return (*sum.borrow());
 }
 pub fn main() {
+    __cpp2rust_init_globals();
     std::process::exit(main_0());
 }
 fn main_0() -> i32 {
@@ -51,3 +52,4 @@ fn main_0() -> i32 {
     write!(libcc2rs::cout(), "Sum: {:}\n", (*out.borrow()),);
     return 0;
 }
+pub fn __cpp2rust_init_globals() {}
