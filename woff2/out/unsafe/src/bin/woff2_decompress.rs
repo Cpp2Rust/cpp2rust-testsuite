@@ -891,7 +891,7 @@ pub unsafe fn StorePoints_58(
     let mut y_bytes: u32 = 0_u32;
     let mut i: u32 = 0_u32;
     'loop_: while ((i) < (n_points)) {
-        let point: *const woff2_Point = &(*points.offset((i) as isize)) as *const woff2_Point;
+        let point: *const woff2_Point = &(*points.offset((i) as isize));
         let mut flag: i32 = if (*point).on_curve {
             kGlyfOnCurve_36
         } else {
@@ -1646,11 +1646,11 @@ pub unsafe fn ReconstructGlyf_63(
     }
     (*glyf_table).dst_length =
         (((unsafe { (*out).Size() }).wrapping_sub(((*glyf_table).dst_offset as usize))) as u32);
-    (*loca_table).dst_offset = ((unsafe { (*out).Size() }) as u32).clone();
+    (*loca_table).dst_offset = ((unsafe { (*out).Size() }) as u32);
     loca_values[((*info).num_glyphs as usize)] = (*glyf_table).dst_length;
     if ((!(unsafe {
         StoreLoca_62(
-            &loca_values as *const Vec<u32>,
+            &loca_values,
             ((*info).index_format as i32),
             loca_checksum,
             out,
@@ -1978,7 +1978,7 @@ pub unsafe fn Tables_73(
             tables.push((table));
         }
     }
-    return tables;
+    return std::mem::take(&mut tables);
 }
 pub unsafe fn ReconstructFont_74(
     mut transformed_buf: *mut u8,
@@ -2019,7 +2019,7 @@ pub unsafe fn ReconstructFont_74(
     let mut loca_checksum: u32 = 0_u32;
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (tables.len())) {
-        let table: *mut woff2_Table = &mut (*tables[(i)]) as *mut woff2_Table;
+        let table: *mut woff2_Table = &mut (*tables[(i)]);
         let mut checksum_key: (u32, u32) = ((*table).tag.into(), (*table).src_offset.into());
         let mut reused: bool = UnsafeMapIterator::find_key(
             &(*metadata).checksums as *const BTreeMap<(u32, u32), Box<u32>>,
@@ -2113,7 +2113,7 @@ pub unsafe fn ReconstructFont_74(
                         let _transformed_size: usize = ((*table).src_length as usize);
                         let _num_glyphs: u16 = (*info).num_glyphs;
                         let _num_hmetrics: u16 = (*info).num_hmetrics;
-                        let _x_mins: *const Vec<i16> = &(*info).x_mins as *const Vec<i16>;
+                        let _x_mins: *const Vec<i16> = &(*info).x_mins;
                         ReconstructTransformedHmtx_67(
                             _transformed_buf,
                             _transformed_size,
@@ -2134,13 +2134,13 @@ pub unsafe fn ReconstructFont_74(
             }
             (*(*metadata)
                 .checksums
-                .entry(checksum_key)
+                .entry((checksum_key).clone())
                 .or_default()
                 .as_mut()) = checksum;
         } else {
             checksum = (*(*metadata)
                 .checksums
-                .entry(checksum_key)
+                .entry((checksum_key).clone())
                 .or_default()
                 .as_mut());
         }
@@ -2176,7 +2176,7 @@ pub unsafe fn ReconstructFont_74(
         {
             return false;
         }
-        dest_offset = (unsafe { (*out).Size() }).clone();
+        dest_offset = (unsafe { (*out).Size() });
         i.postfix_inc();
     }
     let mut head_table: *mut woff2_Table =
@@ -2337,8 +2337,7 @@ pub unsafe fn ReadWOFF2Header_75(
         };
         let mut i: u32 = 0_u32;
         'loop_: while ((i) < (num_fonts)) {
-            let ttc_font: *mut woff2_TtcFont =
-                &mut (&mut (*hdr)).ttc_fonts[(i as usize)] as *mut woff2_TtcFont;
+            let ttc_font: *mut woff2_TtcFont = &mut (&mut (*hdr)).ttc_fonts[(i as usize)];
             let mut num_tables: u32 = 0_u32;
             if ((((!(unsafe {
                 Read255UShort_12(
@@ -2380,8 +2379,7 @@ pub unsafe fn ReadWOFF2Header_75(
                     return false;
                 }
                 (&mut (*ttc_font)).table_indices[(j as usize)] = (table_idx as u16);
-                let table: *const woff2_Table =
-                    &(&mut (*hdr)).tables[(table_idx as usize)] as *const woff2_Table;
+                let table: *const woff2_Table = &(&mut (*hdr)).tables[(table_idx as usize)];
                 if (((*table).tag) == (kLocaTableTag_2)) {
                     loca_idx = table_idx;
                 }
@@ -2405,8 +2403,7 @@ pub unsafe fn ReadWOFF2Header_75(
             i.postfix_inc();
         }
     }
-    let first_table_offset: u64 =
-        (unsafe { ComputeOffsetToFirstTable_72(&(*hdr) as *const woff2_WOFF2Header) });
+    let first_table_offset: u64 = (unsafe { ComputeOffsetToFirstTable_72(&(*hdr)) });
     (*hdr).compressed_offset = ((unsafe { woff2_Buffer::offset(&file) }) as u64);
     if (((((*hdr).compressed_offset) > (<u32>::MAX as u64)) as i64) != 0) {
         return false;
@@ -2454,11 +2451,8 @@ pub unsafe fn WriteHeaders_76(
     mut hdr: *mut woff2_WOFF2Header,
     mut out: *mut dyn woff2_WOFF2Out,
 ) -> bool {
-    let mut output: Vec<u8> = vec![
-        0_u8;
-        (unsafe { ComputeOffsetToFirstTable_72(&(*hdr) as *const woff2_WOFF2Header,) })
-            as usize
-    ];
+    let mut output: Vec<u8> =
+        vec![0_u8; (unsafe { ComputeOffsetToFirstTable_72(&(*hdr),) }) as usize];
     let mut sorted_tables: Vec<woff2_Table> = (*hdr).tables.clone();
     if ((*hdr).header_version != 0) {
         'loop_: for ttc_font in 0..((*hdr).ttc_fonts.len()) {
@@ -2492,7 +2486,7 @@ pub unsafe fn WriteHeaders_76(
     if ((*hdr).header_version != 0) {
         offset = (unsafe { StoreU32_31(result, offset, (*hdr).flavor) });
         offset = (unsafe { StoreU32_31(result, offset, (*hdr).header_version) });
-        offset = (unsafe { StoreU32_31(result, offset, ((*hdr).ttc_fonts.len() as u32)) }).clone();
+        offset = (unsafe { StoreU32_31(result, offset, ((*hdr).ttc_fonts.len() as u32)) });
         let mut offset_table: usize = offset;
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*hdr).ttc_fonts.len())) {
@@ -2512,8 +2506,7 @@ pub unsafe fn WriteHeaders_76(
         };
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*hdr).ttc_fonts.len())) {
-            let ttc_font: *mut woff2_TtcFont =
-                &mut (&mut (*hdr)).ttc_fonts[(i)] as *mut woff2_TtcFont;
+            let ttc_font: *mut woff2_TtcFont = &mut (&mut (*hdr)).ttc_fonts[(i)];
             offset_table = (unsafe { StoreU32_31(result, offset_table, (offset as u32)) });
             (*ttc_font).dst_offset = (offset as u32);
             offset = (unsafe {

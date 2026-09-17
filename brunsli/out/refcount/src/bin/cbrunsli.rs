@@ -825,7 +825,6 @@ thread_local!(
 thread_local!(
     pub static kBrunsliSignatureSize_43: Value<usize> = Rc::new(RefCell::new(6_usize));
 );
-thread_local!();
 thread_local!(
     pub static kMaxApp0Densities_45: Value<usize> = Rc::new(RefCell::new(8_usize));
 );
@@ -1086,10 +1085,6 @@ thread_local!(
         235_u8, 236_u8, 237_u8, 238_u8, 239_u8, 251_u8, 252_u8, 253_u8, 254_u8, 255_u8,
     ])));
 );
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 thread_local!(
     pub static kBrunsliSignature_44: Value<Box<[u8]>> = Rc::new(RefCell::new(Box::new([
         ({ SectionMarker_29((*kBrunsliSignatureTag_30.with(Value::clone).borrow())) }),
@@ -1429,7 +1424,7 @@ pub fn BrunsliUnalignedRead16_66(p: AnyPtr) -> u16 {
         ((t.as_pointer()) as Ptr<u16>)
             .to_any()
             .memcpy(&(*p.borrow()), ::std::mem::size_of::<u16>() as usize);
-        ((t.as_pointer()) as Ptr<u16>).to_any().clone()
+        ((t.as_pointer()) as Ptr<u16>).to_any()
     };
     return (*t.borrow());
 }
@@ -1451,7 +1446,7 @@ pub fn BrunsliUnalignedRead32_68(p: AnyPtr) -> u32 {
         ((t.as_pointer()) as Ptr<u32>)
             .to_any()
             .memcpy(&(*p.borrow()), ::std::mem::size_of::<u32>() as usize);
-        ((t.as_pointer()) as Ptr<u32>).to_any().clone()
+        ((t.as_pointer()) as Ptr<u32>).to_any()
     };
     return (*t.borrow());
 }
@@ -1462,7 +1457,7 @@ pub fn BrunsliUnalignedRead64_69(p: AnyPtr) -> u64 {
         ((t.as_pointer()) as Ptr<u64>)
             .to_any()
             .memcpy(&(*p.borrow()), ::std::mem::size_of::<u64>() as usize);
-        ((t.as_pointer()) as Ptr<u64>).to_any().clone()
+        ((t.as_pointer()) as Ptr<u64>).to_any()
     };
     return (*t.borrow());
 }
@@ -1484,7 +1479,6 @@ pub fn Append_71(dst: Ptr<Vec<u8>>, begin: Ptr<u8>, end: Ptr<u8>) {
     {
         let start_idx = ((*dst.borrow()).to_strong().as_pointer() as Ptr<u8>)
             .to_end()
-            .clone()
             .get_offset();
         let count = (*end.borrow()).get_offset() - (*begin.borrow()).get_offset();
         let temp_vec: Vec<u8> = PtrValueIter::new(&(*begin.borrow()), count).collect();
@@ -2388,12 +2382,20 @@ impl Clone for brunsli_ComponentState {
         let __this: Value<brunsli_ComponentState> = Rc::new(RefCell::new(Self {
             width: Rc::new(RefCell::new((*self.width.borrow()))),
             context_offset: Rc::new(RefCell::new((*self.context_offset.borrow()))),
-            order: Rc::new(RefCell::new((*self.order.borrow()).clone())),
-            mult_row: Rc::new(RefCell::new((*self.mult_row.borrow()).clone())),
-            mult_col: Rc::new(RefCell::new((*self.mult_col.borrow()).clone())),
+            order: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 64, _>(
+                |__i: usize| (*self.order.borrow())[(__i) as usize],
+            )))),
+            mult_row: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 64, _>(
+                |__i: usize| (*self.mult_row.borrow())[(__i) as usize],
+            )))),
+            mult_col: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 64, _>(
+                |__i: usize| (*self.mult_col.borrow())[(__i) as usize],
+            )))),
             is_zero_prob: Rc::new(RefCell::new((*self.is_zero_prob.borrow()).clone())),
             sign_prob: Rc::new(RefCell::new((*self.sign_prob.borrow()).clone())),
-            num_nonzero_prob: Rc::new(RefCell::new((*self.num_nonzero_prob.borrow()).clone())),
+            num_nonzero_prob: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 2016, _>(
+                |__i: usize| ((*self.num_nonzero_prob.borrow())[(__i) as usize]).clone(),
+            )))),
             first_extra_bit_prob: Rc::new(RefCell::new(
                 (*self.first_extra_bit_prob.borrow()).clone(),
             )),
@@ -2898,7 +2900,7 @@ pub fn ComputeLehmerCode_112(sigma: Ptr<u32>, len: usize, code: Ptr<u32>) {
             as u32);
         (*code.borrow()).offset((*i.borrow()) as isize).write(__rhs);
         {
-            let idx = (*it.borrow()).clone().get_offset();
+            let idx = (*it.borrow()).get_offset();
             (items.as_pointer() as Ptr<Vec<u32>>).with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
             (items.as_pointer() as Ptr<Vec<u32>>)
                 .to_strong()
@@ -2940,7 +2942,6 @@ pub fn DecodeLehmerCode_113(code: Ptr<u32>, len: usize, sigma: Ptr<u32>) -> bool
         {
             let idx = (items.as_pointer() as Ptr<u32>)
                 .offset(((*index.borrow()) as i64) as isize)
-                .clone()
                 .get_offset();
             (items.as_pointer() as Ptr<Vec<u32>>).with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
             (items.as_pointer() as Ptr<Vec<u32>>)
@@ -3024,11 +3025,6 @@ pub fn PredictWithAdaptiveMedian_115(coeffs: Ptr<i16>, x: i32, y: i32, stride: i
     }
     panic!("ub: non-void function does not return a value")
 }
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 thread_local!(
     pub static kQFactorBits_116: Value<usize> = Rc::new(RefCell::new(6_usize));
 );
@@ -3266,7 +3262,9 @@ pub struct brunsli_ANSTable {
 impl Clone for brunsli_ANSTable {
     fn clone(&self) -> Self {
         let __this: Value<brunsli_ANSTable> = Rc::new(RefCell::new(Self {
-            info_: Rc::new(RefCell::new((*self.info_.borrow()).clone())),
+            info_: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 18, _>(
+                |__i: usize| ((*self.info_.borrow())[(__i) as usize]).clone(),
+            )))),
         }));
         let this: Ptr<brunsli_ANSTable> = __this.as_pointer();
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
@@ -3424,11 +3422,6 @@ pub fn BuildAndStoreANSEncodingData_123(
         )
     });
 }
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 thread_local!(
     pub static kLog2Table_126: Value<Box<[f32]>> = Rc::new(RefCell::new(Box::new([
         0.0E+0,
@@ -4072,8 +4065,8 @@ pub fn HistogramCombine_133(
             if count <= 1 {
                 (clusters.as_pointer() as Ptr<u64>).to_end()
             } else {
-                let mut write_ptr = (clusters.as_pointer() as Ptr<u64>).clone();
                 let mut iter = PtrValueIter::new(&(clusters.as_pointer() as Ptr<u64>), count);
+                let mut write_ptr = (clusters.as_pointer() as Ptr<u64>);
                 let mut last_unique = iter.next().unwrap();
 
                 // the first unique value is already in place
@@ -4184,9 +4177,7 @@ pub fn HistogramCombine_133(
             .offset((*best_idx2.borrow()) as isize)
             .read());
         {
-            let _ptr = (*cluster_size.borrow())
-                .offset((*best_idx1.borrow()) as isize)
-                .clone();
+            let _ptr = (*cluster_size.borrow()).offset((*best_idx1.borrow()) as isize);
             _ptr.write(_ptr.read() + __rhs)
         };
         let i: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -4206,7 +4197,7 @@ pub fn HistogramCombine_133(
         'loop_: while (*cluster.borrow()) != (clusters.as_pointer() as Ptr<u64>).to_end() {
             if ((((*cluster.borrow()).read()) as usize) >= (*best_idx2.borrow())) {
                 {
-                    let idx = (*cluster.borrow()).clone().get_offset();
+                    let idx = (*cluster.borrow()).get_offset();
                     (clusters.as_pointer() as Ptr<Vec<u64>>)
                         .with_mut(|__v: &mut Vec<u64>| __v.remove(idx));
                     (clusters.as_pointer() as Ptr<Vec<u64>>)
@@ -4330,8 +4321,8 @@ pub fn HistogramRemap_135(
             if count <= 1 {
                 (all_symbols.as_pointer() as Ptr<i32>).to_end()
             } else {
-                let mut write_ptr = (all_symbols.as_pointer() as Ptr<i32>).clone();
                 let mut iter = PtrValueIter::new(&(all_symbols.as_pointer() as Ptr<i32>), count);
+                let mut write_ptr = (all_symbols.as_pointer() as Ptr<i32>);
                 let mut last_unique = iter.next().unwrap();
 
                 // the first unique value is already in place
@@ -4373,7 +4364,7 @@ pub fn HistogramRemap_135(
             }),
         ));
         'loop_: for mut k in all_symbols.as_pointer() as Ptr<i32> {
-            let k: Value<i32> = Rc::new(RefCell::new(k.read().clone()));
+            let k: Value<i32> = Rc::new(RefCell::new(k.read()));
             let cur_bits: Value<f64> = Rc::new(RefCell::new(
                 ({
                     let _histogram: Ptr<brunsli_internal_enc_Histogram> =
@@ -4395,7 +4386,7 @@ pub fn HistogramRemap_135(
         (*i.borrow_mut()).prefix_inc();
     }
     'loop_: for mut k in all_symbols.as_pointer() as Ptr<i32> {
-        let k: Value<i32> = Rc::new(RefCell::new(k.read().clone()));
+        let k: Value<i32> = Rc::new(RefCell::new(k.read()));
         ({
             brunsli_internal_enc_HistogramImpl::Clear(
                 &(*out.borrow()).offset((*k.borrow()) as isize),
@@ -4440,8 +4431,7 @@ pub fn HistogramReindex_136(out: Ptr<Vec<brunsli_internal_enc_Histogram>>, symbo
                     __v.entry(
                         (((((*symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
                             .offset((*i.borrow()))
-                            .read()) as i32)
-                            .clone(),
+                            .read()) as i32),
                     )
                     .or_insert_with(|| Rc::new(RefCell::new(<i32>::default())))
                     .as_pointer()
@@ -4479,8 +4469,7 @@ pub fn HistogramReindex_136(out: Ptr<Vec<brunsli_internal_enc_Histogram>>, symbo
                 __v.entry(
                     (((((*symbols.borrow()).to_strong().as_pointer()) as Ptr<u32>)
                         .offset((*i.borrow()))
-                        .read()) as i32)
-                        .clone(),
+                        .read()) as i32),
                 )
                 .or_insert_with(|| Rc::new(RefCell::new(<i32>::default())))
                 .as_pointer()
@@ -4820,7 +4809,9 @@ impl brunsli_internal_enc_Histogram {
 impl Clone for brunsli_internal_enc_Histogram {
     fn clone(&self) -> Self {
         let __this: Value<brunsli_internal_enc_Histogram> = Rc::new(RefCell::new(Self {
-            data_: Rc::new(RefCell::new((*self.data_.borrow()).clone())),
+            data_: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 18, _>(
+                |__i: usize| (*self.data_.borrow())[(__i) as usize],
+            )))),
             total_count_: Rc::new(RefCell::new((*self.total_count_.borrow()))),
             bit_cost_: Rc::new(RefCell::new((*self.bit_cost_.borrow()))),
         }));
@@ -5458,37 +5449,37 @@ pub fn TransformApp0Marker_149(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
 }
 pub fn TransformApp2Marker_150(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
-    if ( ( ( (*s.upgrade().deref()) .len()  == 3161_usize ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 84_usize )  != 0 ) ) ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 3161 - 85 ) ) as usize ) )  != 0 ) ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
+    if ( ( ( (*s.upgrade().deref()) .len()  == 3161_usize ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 84_usize )  != 0 ) ) ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xe2_63.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 85 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 3161 - 85 ) ) as usize ) )  != 0 ) ) ) { let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
   ;
  ;
  (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 128_u8  ) ;
- (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(84_usize ) .read() )  ) ;
- ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write((*code.borrow()) .clone())  ;
-  return true   ;
+ (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( ( (s .to_strong().as_pointer()  as Ptr<u8>).offset(84_usize ) .read() )  ) ;
+ ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write(((*code.borrow()) ).clone())  ;
+ return true   ;
  }
     return false;
 }
 pub fn TransformApp12Marker_151(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
-    if ( ( ( (*s.upgrade().deref()) .len()  == 18_usize ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 15_usize )  != 0 ) ) ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 18 - 16 ) ) as usize ) )  != 0 ) ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
+    if ( ( ( (*s.upgrade().deref()) .len()  == 18_usize ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)   as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 15_usize )  != 0 ) ) ) ) && ( ! ( ( ((s .to_strong().as_pointer()  as Ptr<u8>)  . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xec_64.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 16 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 18 - 16 ) ) as usize ) )  != 0 ) ) ) { let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
   ;
  ;
  (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 129_u8  ) ;
- (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(15_usize ) .read() )  ) ;
- ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write((*code.borrow()) .clone())  ;
-  return true   ;
+ (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( ( (s .to_strong().as_pointer()  as Ptr<u8>).offset(15_usize ) .read() )  ) ;
+ ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write(((*code.borrow()) ).clone())  ;
+ return true   ;
  }
     return false;
 }
 pub fn TransformApp14Marker_152(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
-    if ( ( ( (*s.upgrade().deref()) .len()  == 15_usize ) ) && ( ! ( ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(0_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 10_usize )  != 0 ) ) ) ) && ( ! ( ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(11_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 11 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 15 - 11 ) ) as usize ) )  != 0 ) ) ) {  let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
+    if ( ( ( (*s.upgrade().deref()) .len()  == 15_usize ) ) && ( ! ( ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(0_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   )  as Ptr::<u8>  ).to_any() , 10_usize )  != 0 ) ) ) ) && ( ! ( ( (( (s .to_strong().as_pointer()  as Ptr<u8>).offset(11_usize )  )  as Ptr::<u8>  ).to_any() .memcmp(&(( AppData_0xee_65.with(Value::clone) .as_pointer()  as Ptr::<u8>   ) . offset ( ( 11 ) as isize )  as Ptr::<u8>  ).to_any() , ( ( ( 15 - 11 ) ) as usize ) )  != 0 ) ) ) { let code : Value<Vec<u8> > = Rc::new(RefCell::new((0..(2_usize ) as usize).map(|_| <u8>::default()).collect::<Vec<_>>() )) ;
   ;
  ;
  (code .as_pointer()  as Ptr<u8>).offset(0_usize ) .write( 130_u8  ) ;
- (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( (  (s .to_strong().as_pointer()  as Ptr<u8>).offset(10_usize ) .read() )  ) ;
- ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write((*code.borrow()) .clone())  ;
-  return true   ;
+ (code .as_pointer()  as Ptr<u8>).offset(1_usize ) .write( ( (s .to_strong().as_pointer()  as Ptr<u8>).offset(10_usize ) .read() )  ) ;
+ ((*out.borrow()) .to_strong().as_pointer()  as Ptr<Vec<u8>>).write(((*code.borrow()) ).clone())  ;
+ return true   ;
  }
     return false;
 }
@@ -5502,7 +5493,7 @@ pub fn TransformAppMarker_153(s: Ptr<Vec<u8>>, transformed_marker_count: Ptr<usi
         TransformApp0Marker_149(_s, _out)
     }) {
         (*transformed_marker_count.borrow()).with_mut(|__v| __v.postfix_inc());
-        return (*out.borrow_mut()).clone();
+        return std::mem::take(&mut (*out.borrow_mut()));
     }
     if ({
         let _s: Ptr<Vec<u8>> = (s).clone();
@@ -5510,7 +5501,7 @@ pub fn TransformAppMarker_153(s: Ptr<Vec<u8>>, transformed_marker_count: Ptr<usi
         TransformApp2Marker_150(_s, _out)
     }) {
         (*transformed_marker_count.borrow()).with_mut(|__v| __v.postfix_inc());
-        return (*out.borrow_mut()).clone();
+        return std::mem::take(&mut (*out.borrow_mut()));
     }
     if ({
         let _s: Ptr<Vec<u8>> = (s).clone();
@@ -5518,7 +5509,7 @@ pub fn TransformAppMarker_153(s: Ptr<Vec<u8>>, transformed_marker_count: Ptr<usi
         TransformApp12Marker_151(_s, _out)
     }) {
         (*transformed_marker_count.borrow()).with_mut(|__v| __v.postfix_inc());
-        return (*out.borrow_mut()).clone();
+        return std::mem::take(&mut (*out.borrow_mut()));
     }
     if ({
         let _s: Ptr<Vec<u8>> = (s).clone();
@@ -5526,7 +5517,7 @@ pub fn TransformAppMarker_153(s: Ptr<Vec<u8>>, transformed_marker_count: Ptr<usi
         TransformApp14Marker_152(_s, _out)
     }) {
         (*transformed_marker_count.borrow()).with_mut(|__v| __v.postfix_inc());
-        return (*out.borrow_mut()).clone();
+        return std::mem::take(&mut (*out.borrow_mut()));
     }
     return (*s.upgrade().deref()).clone();
 }
@@ -6633,12 +6624,15 @@ pub fn ComputeCoeffOrder_163(num_zeros: Ptr<Vec<i32>>, order: Ptr<u32>) {
         (pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>)
             .to_end()
             .get_offset(),
-        (|a: Ptr<(Value<i32>, Value<i32>)>, b: Ptr<(Value<i32>, Value<i32>)>| {
-            return {
-                let _lhs = (*(*a.upgrade().deref()).1.borrow());
-                _lhs < (*(*b.upgrade().deref()).1.borrow())
-            };
-        }),
+        |x, y| {
+            (|a: Ptr<(Value<i32>, Value<i32>)>, b: Ptr<(Value<i32>, Value<i32>)>| {
+                return {
+                    let _lhs = (*(*a.upgrade().deref()).1.borrow());
+                    _lhs < (*(*b.upgrade().deref()).1.borrow())
+                };
+            })
+            .call(x, y)
+        },
     );
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < ((*kDCTBlockSize_3.with(Value::clone).borrow()) as usize)) {
@@ -6875,9 +6869,7 @@ pub fn EncodeSignature_171(len: usize, data: Ptr<u8>, pos: Ptr<usize>) -> bool {
                     .to_any(),
                 (*kBrunsliSignatureSize_43.with(Value::clone).borrow()) as usize,
             );
-        (((*data.borrow()).offset(((*pos.borrow()).read()) as isize)) as Ptr<u8>)
-            .to_any()
-            .clone()
+        (((*data.borrow()).offset(((*pos.borrow()).read()) as isize)) as Ptr<u8>).to_any()
     };
     {
         let rhs_0 = ((*pos.borrow()).read())
@@ -7609,9 +7601,7 @@ pub fn CalculateMeta_186(
                         .wrapping_mul((::std::mem::size_of::<i32>() as usize))
                         as usize,
                 );
-            (((*m.upgrade().deref()).quant.as_pointer() as Ptr<i32>) as Ptr<i32>)
-                .to_any()
-                .clone()
+            (((*m.upgrade().deref()).quant.as_pointer() as Ptr<i32>) as Ptr<i32>).to_any()
         };
         (*i.borrow_mut()).prefix_inc();
     }
@@ -8635,7 +8625,8 @@ pub fn PrepareEntropyCodes_189(
                 .as_pointer(),
             group_context_offsets.as_pointer(),
         )
-    });
+    })
+    .take();
 }
 pub fn BrunsliSerialize_190(
     state: Ptr<brunsli_internal_enc_State>,
@@ -9075,7 +9066,7 @@ pub fn BrunsliEncodeJpeg_191(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
     ({ EncodeDC_187((state.as_pointer())) });
     ({ EncodeAC_188((state.as_pointer())) });
     let entropy_codes: Value<Option<Value<brunsli_internal_enc_EntropyCodes>>> = Rc::new(
-        RefCell::new(({ PrepareEntropyCodes_189((state.as_pointer())) })),
+        RefCell::new(({ PrepareEntropyCodes_189((state.as_pointer())) }).take()),
     );
     (*(*state.borrow()).entropy_codes.borrow_mut()) = (*entropy_codes.borrow()).as_pointer();
     return ({
@@ -9118,7 +9109,7 @@ pub fn EncodeOriginalJpg_194(
             &((*(*jpg.upgrade().deref()).original_jpg.borrow()).clone() as Ptr<u8>).to_any(),
             (*(*jpg.upgrade().deref()).original_jpg_size.borrow()) as usize,
         );
-        ((*data.borrow()).clone() as Ptr<u8>).to_any().clone()
+        ((*data.borrow()).clone() as Ptr<u8>).to_any()
     };
     let __rhs = (*(*jpg.upgrade().deref()).original_jpg_size.borrow());
     (*len.borrow()).write(__rhs);
@@ -9223,11 +9214,6 @@ pub fn BrunsliEncodeJpegBypass_195(
     (*len.borrow()).write(__rhs);
     return true;
 }
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 #[derive(Default)]
 pub struct brunsli_HuffmanTree {
     pub total_count: Value<u32>,
@@ -9409,7 +9395,7 @@ pub fn MoveToFrontTransform_200(v: Ptr<Vec<u32>>) -> Vec<u32> {
         ({ MoveToFront_199((mtf.as_pointer()), (*index.borrow())) });
         (*i.borrow_mut()).prefix_inc();
     }
-    return (*result.borrow_mut()).clone();
+    return std::mem::take(&mut (*result.borrow_mut()));
 }
 pub fn RunLengthCodeZeros_201(
     v_in: Ptr<Vec<u32>>,
@@ -9587,9 +9573,7 @@ pub fn EncodeContextMap_164(
         ((symbol_histogram.as_pointer() as Ptr<u32>) as Ptr<u32>)
             .to_any()
             .memset((0) as u8, ::std::mem::size_of::<[u32; 272]>() as usize);
-        ((symbol_histogram.as_pointer() as Ptr<u32>) as Ptr<u32>)
-            .to_any()
-            .clone()
+        ((symbol_histogram.as_pointer() as Ptr<u32>) as Ptr<u32>).to_any()
     };
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < (*rle_symbols.borrow()).len()) {
@@ -9626,17 +9610,13 @@ pub fn EncodeContextMap_164(
         ((bit_depths.as_pointer() as Ptr<u8>) as Ptr<u8>)
             .to_any()
             .memset((0) as u8, ::std::mem::size_of::<[u8; 272]>() as usize);
-        ((bit_depths.as_pointer() as Ptr<u8>) as Ptr<u8>)
-            .to_any()
-            .clone()
+        ((bit_depths.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any()
     };
     {
         ((bit_codes.as_pointer() as Ptr<u16>) as Ptr<u16>)
             .to_any()
             .memset((0) as u8, ::std::mem::size_of::<[u16; 272]>() as usize);
-        ((bit_codes.as_pointer() as Ptr<u16>) as Ptr<u16>)
-            .to_any()
-            .clone()
+        ((bit_codes.as_pointer() as Ptr<u16>) as Ptr<u16>).to_any()
     };
     ({
         BuildAndStoreHuffmanTree_202(
@@ -9790,7 +9770,7 @@ pub fn RebalanceHistogram_209(
                 _lhs & ((*inc.borrow()) - 1)
             };
             {
-                let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize).clone();
+                let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize);
                 _ptr.write(_ptr.read() - __rhs)
             };
             let target: Value<f32> = Rc::new(RefCell::new(if false {
@@ -9815,7 +9795,7 @@ pub fn RebalanceHistogram_209(
             {
                 let __rhs = (*inc.borrow());
                 {
-                    let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize).clone();
+                    let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize);
                     _ptr.write(_ptr.read() + __rhs)
                 };
             }
@@ -9847,9 +9827,7 @@ pub fn RebalanceHistogram_209(
     };
     let __rhs = ((*sum.borrow()) - (*table_size.borrow()));
     {
-        let _ptr = (*counts.borrow())
-            .offset((*remainder_pos.borrow()) as isize)
-            .clone();
+        let _ptr = (*counts.borrow()).offset((*remainder_pos.borrow()) as isize);
         _ptr.write(_ptr.read() - __rhs)
     };
     let __rhs = (*remainder_pos.borrow());
@@ -9919,7 +9897,7 @@ pub fn RebalanceHistogram_210(
                 _lhs & ((*inc.borrow()) - 1)
             };
             {
-                let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize).clone();
+                let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize);
                 _ptr.write(_ptr.read() - __rhs)
             };
             let target: Value<f32> = Rc::new(RefCell::new(if true {
@@ -9944,7 +9922,7 @@ pub fn RebalanceHistogram_210(
             {
                 let __rhs = (*inc.borrow());
                 {
-                    let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize).clone();
+                    let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize);
                     _ptr.write(_ptr.read() + __rhs)
                 };
             }
@@ -9976,9 +9954,7 @@ pub fn RebalanceHistogram_210(
     };
     let __rhs = ((*sum.borrow()) - (*table_size.borrow()));
     {
-        let _ptr = (*counts.borrow())
-            .offset((*remainder_pos.borrow()) as isize)
-            .clone();
+        let _ptr = (*counts.borrow()).offset((*remainder_pos.borrow()) as isize);
         _ptr.write(_ptr.read() - __rhs)
     };
     let __rhs = (*remainder_pos.borrow());
@@ -10522,11 +10498,6 @@ pub fn PopulationCost_131(data: Ptr<i32>, total_count: i32) -> f64 {
         [((*length.borrow()) - 3) as usize] as i32);
     return ((((*histogram_bits.borrow()) + ((*entropy_bits.borrow()) as i32)) + 1) as f64);
 }
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 thread_local!(
     pub static kCodeLengthCodes_211: Value<i32> = Rc::new(RefCell::new(18));
 );
@@ -11128,7 +11099,7 @@ pub fn CreateHuffmanTree_220(data: Ptr<u32>, length: usize, tree_limit: i32, dep
             (tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
                 .to_end()
                 .get_offset(),
-            Compare_223,
+            |x, y| Compare_223.call(x, y),
         );
         let sentinel: Value<brunsli_HuffmanTree> = Rc::new(RefCell::new(
             brunsli_HuffmanTree::brunsli_HuffmanTree({ <u32>::MAX }, { (-1_i32 as i16) }, {
@@ -11694,11 +11665,6 @@ pub fn ConvertBitDepthsToSymbols_221(depth: Ptr<u8>, len: usize, bits: Ptr<u16>)
         (*i.borrow_mut()).prefix_inc();
     }
 }
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 thread_local!(
     pub static kJpegHuffmanRootTableBits_230: Value<i32> = Rc::new(RefCell::new(8));
 );
@@ -13963,9 +13929,7 @@ pub fn ProcessScan_248(
                             ((last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
                                 .to_any()
                                 .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
-                            ((last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
-                                .to_any()
-                                .clone()
+                            ((last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>).to_any()
                         };
                         if ((*eobrun.borrow()) > 0) {
                             write!(libcc2rs::cerr(), "End-of-block run too long.\n",);
@@ -14413,23 +14377,20 @@ pub fn ReadJpeg_196(
                 .inter_marker_data
                 .as_pointer() as Ptr<Vec<Value<Vec<u8>>>>)
                 .with_mut(|__v: &mut Vec<Value<Vec<u8>>>| {
-                    __v.push(Rc::new(RefCell::new(
-                        {
-                            let __count = (*data.borrow())
+                    __v.push(Rc::new(RefCell::new({
+                        let __count = (*data.borrow())
+                            .offset((*pos.borrow()) as isize)
+                            .offset((*num_skipped.borrow()) as isize)
+                            .get_offset()
+                            - (*data.borrow())
                                 .offset((*pos.borrow()) as isize)
-                                .offset((*num_skipped.borrow()) as isize)
-                                .get_offset()
-                                - (*data.borrow())
-                                    .offset((*pos.borrow()) as isize)
-                                    .get_offset();
-                            PtrValueIter::new(
-                                &(*data.borrow()).offset((*pos.borrow()) as isize),
-                                __count,
-                            )
-                            .collect::<Vec<_>>()
-                        }
-                        .clone(),
-                    )))
+                                .get_offset();
+                        PtrValueIter::new(
+                            &(*data.borrow()).offset((*pos.borrow()) as isize),
+                            __count,
+                        )
+                        .collect::<Vec<_>>()
+                    })))
                 });
             {
                 let rhs_0 = (*pos.borrow()).wrapping_add((*num_skipped.borrow()));
@@ -15620,7 +15581,6 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         {
             let idx = ((*(*self).upgrade().deref()).values_.as_pointer() as Ptr<u8>)
                 .offset(((*code.borrow()) as i64) as isize)
-                .clone()
                 .get_offset();
             ((*(*self).upgrade().deref()).values_.as_pointer() as Ptr<Vec<u8>>)
                 .with_mut(|__v: &mut Vec<u8>| __v.remove(idx));
@@ -15665,7 +15625,7 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         let __rhs = ({ brunsli_PermutationCoderImpl::num_bits(self) });
         (*nbits.borrow()).write(__rhs);
         {
-            let idx = (*it.borrow()).clone().get_offset();
+            let idx = (*it.borrow()).get_offset();
             ((*(*self).upgrade().deref()).values_.as_pointer() as Ptr<Vec<u8>>)
                 .with_mut(|__v: &mut Vec<u8>| __v.remove(idx));
             ((*(*self).upgrade().deref()).values_.as_pointer() as Ptr<Vec<u8>>)
@@ -15770,7 +15730,6 @@ impl brunsli_StorageImpl for Ptr<brunsli_Storage> {
                 .offset(((*(*(*self).upgrade().deref()).pos.borrow()) >> 3) as isize)
                 as Ptr<u8>)
                 .to_any()
-                .clone()
         };
         {
             let rhs_0 = (*(*(*self).upgrade().deref()).pos.borrow())
@@ -16202,7 +16161,8 @@ impl brunsli_internal_enc_EntropySourceImpl for Ptr<brunsli_internal_enc_Entropy
                 { (offsets).clone() },
             ),
         )
-        .to_owned_opt();
+        .to_owned_opt()
+        .take();
     }
     fn Merge(&self, other: Ptr<brunsli_internal_enc_EntropySource>) {
         if !({
@@ -16251,9 +16211,7 @@ impl brunsli_internal_enc_HistogramImpl for Ptr<brunsli_internal_enc_Histogram> 
             (((*(*self).upgrade().deref()).data_.as_pointer() as Ptr<i32>) as Ptr<i32>)
                 .to_any()
                 .memset((0) as u8, ::std::mem::size_of::<[i32; 18]>() as usize);
-            (((*(*self).upgrade().deref()).data_.as_pointer() as Ptr<i32>) as Ptr<i32>)
-                .to_any()
-                .clone()
+            (((*(*self).upgrade().deref()).data_.as_pointer() as Ptr<i32>) as Ptr<i32>).to_any()
         };
         (*(*(*self).upgrade().deref()).total_count_.borrow_mut()) = 0;
     }

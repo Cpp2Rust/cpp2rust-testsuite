@@ -30,7 +30,6 @@ thread_local!(
 thread_local!(
     pub static kMaxpTableTag_7: Value<u32> = Rc::new(RefCell::new(1835104368_u32));
 );
-thread_local!();
 thread_local!(
     pub static kKnownTags_8: Value<Box<[u32]>> = Rc::new(RefCell::new(Box::new([
         ((((((('c' as u8) as i32) << 24) | ((('m' as u8) as i32) << 16))
@@ -307,7 +306,7 @@ pub fn Store255UShort_11(val: i32, offset: Ptr<usize>, dst: Ptr<u8>) {
     let packed: Value<Vec<u8>> = Rc::new(RefCell::new(Vec::new()));
     ({ Write255UShort_10((packed.as_pointer()), (*val.borrow())) });
     'loop_: for mut packed_byte in packed.as_pointer() as Ptr<u8> {
-        let packed_byte: Value<u8> = Rc::new(RefCell::new(packed_byte.read().clone()));
+        let packed_byte: Value<u8> = Rc::new(RefCell::new(packed_byte.read()));
         let __rhs = (*packed_byte.borrow());
         (*dst.borrow())
             .offset(((*offset.borrow()).with_mut(|__v| __v.postfix_inc())) as isize)
@@ -826,16 +825,13 @@ pub fn StoreBytes_35(data: Ptr<u8>, len: usize, offset: Ptr<usize>, dst: Ptr<u8>
                 &((*data.borrow()).clone() as Ptr<u8>).to_any(),
                 (*len.borrow()) as usize,
             );
-        (((*dst.borrow()).offset(((*offset.borrow()).read()) as isize)) as Ptr<u8>)
-            .to_any()
-            .clone()
+        (((*dst.borrow()).offset(((*offset.borrow()).read()) as isize)) as Ptr<u8>).to_any()
     };
     {
         let rhs_0 = ((*offset.borrow()).read()).wrapping_add((*len.borrow()));
         (*offset.borrow()).write(rhs_0)
     };
 }
-thread_local!();
 thread_local!(
     pub static kGlyfOnCurve_36: Value<i32> = Rc::new(RefCell::new((1 << 0)));
 );
@@ -2597,7 +2593,7 @@ pub fn FindTable_65(tables: Ptr<Vec<Ptr<woff2_Table>>>, tag: u32) -> Ptr<woff2_T
     let tables: Value<Ptr<Vec<Ptr<woff2_Table>>>> = Rc::new(RefCell::new(tables));
     let tag: Value<u32> = Rc::new(RefCell::new(tag));
     'loop_: for mut table in (*tables.borrow()).to_strong().as_pointer() as Ptr<Ptr<woff2_Table>> {
-        let table: Value<Ptr<woff2_Table>> = Rc::new(RefCell::new(table.read().clone()));
+        let table: Value<Ptr<woff2_Table>> = Rc::new(RefCell::new(table.read()));
         if {
             let _lhs = (*(*(*table.borrow()).upgrade().deref()).tag.borrow());
             _lhs == (*tag.borrow())
@@ -3052,7 +3048,7 @@ pub fn Tables_73(hdr: Ptr<woff2_WOFF2Header>, font_index: usize) -> Vec<Ptr<woff
         .table_indices
         .as_pointer() as Ptr<u16>
         {
-            let index: Value<u16> = Rc::new(RefCell::new(index.read().clone()));
+            let index: Value<u16> = Rc::new(RefCell::new(index.read()));
             (*tables.borrow_mut()).push(
                 (((*(*hdr.borrow()).upgrade().deref()).tables.as_pointer() as Ptr<woff2_Table>)
                     .offset(((*index.borrow()) as usize))),
@@ -3065,7 +3061,7 @@ pub fn Tables_73(hdr: Ptr<woff2_WOFF2Header>, font_index: usize) -> Vec<Ptr<woff
             (*tables.borrow_mut()).push((table));
         }
     }
-    return (*tables.borrow_mut()).clone();
+    return std::mem::take(&mut (*tables.borrow_mut()));
 }
 pub fn ReconstructFont_74(
     transformed_buf: Ptr<u8>,
@@ -3390,7 +3386,7 @@ pub fn ReconstructFont_74(
                     .table_entry_by_tag
                     .as_pointer() as Ptr<BTreeMap<u32, Value<u32>>>)
                     .with_mut(|__v: &mut BTreeMap<u32, Value<u32>>| {
-                        __v.entry((*(*table.upgrade().deref()).tag.borrow()).clone())
+                        __v.entry((*(*table.upgrade().deref()).tag.borrow()))
                             .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
                             .as_pointer()
                     })
@@ -3801,7 +3797,7 @@ pub fn WriteHeaders_76(
             'loop_: for mut table_index in
                 (*ttc_font.upgrade().deref()).table_indices.as_pointer() as Ptr<u16>
             {
-                let table_index: Value<u16> = Rc::new(RefCell::new(table_index.read().clone()));
+                let table_index: Value<u16> = Rc::new(RefCell::new(table_index.read()));
                 let __rhs = (*table_index.borrow());
                 (sorted_index_by_tag.as_pointer() as Ptr<BTreeMap<u32, Value<u16>>>)
                     .with_mut(|__v: &mut BTreeMap<u32, Value<u16>>| {
@@ -3812,8 +3808,7 @@ pub fn WriteHeaders_76(
                                 .upgrade()
                                 .deref())
                             .tag
-                            .borrow())
-                            .clone(),
+                            .borrow()),
                         )
                         .or_insert_with(|| Rc::new(RefCell::new(<u16>::default())))
                         .as_pointer()
@@ -3920,7 +3915,7 @@ pub fn WriteHeaders_76(
             'loop_: for table_index in
                 (*ttc_font.upgrade().deref()).table_indices.as_pointer() as Ptr<u16>
             {
-                let table_index: Value<u16> = Rc::new(RefCell::new(table_index.read().clone()));
+                let table_index: Value<u16> = Rc::new(RefCell::new(table_index.read()));
                 let tag: Value<u32> = Rc::new(RefCell::new(
                     (*(*((*(*hdr.borrow()).upgrade().deref()).tables.as_pointer()
                         as Ptr<woff2_Table>)
@@ -3939,7 +3934,7 @@ pub fn WriteHeaders_76(
                 .table_entry_by_tag
                 .as_pointer() as Ptr<BTreeMap<u32, Value<u32>>>)
                     .with_mut(|__v: &mut BTreeMap<u32, Value<u32>>| {
-                        __v.entry((*tag.borrow()).clone())
+                        __v.entry((*tag.borrow()))
                             .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
                             .as_pointer()
                     })
@@ -4002,8 +3997,7 @@ pub fn WriteHeaders_76(
                             .upgrade()
                             .deref())
                         .tag
-                        .borrow())
-                        .clone(),
+                        .borrow()),
                     )
                     .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
                     .as_pointer()
@@ -4358,9 +4352,7 @@ impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
             ((*self.buf_.borrow()).offset((*offset.borrow()) as isize) as Ptr<u8>)
                 .to_any()
                 .memcpy(&(*buf.borrow()), (*n.borrow()) as usize);
-            ((*self.buf_.borrow()).offset((*offset.borrow()) as isize) as Ptr<u8>)
-                .to_any()
-                .clone()
+            ((*self.buf_.borrow()).offset((*offset.borrow()) as isize) as Ptr<u8>).to_any()
         };
         let __rhs = ({
             let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*self.offset_.borrow()) as u64)));
@@ -4496,8 +4488,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
                 .to_vec();
             __tmp1.push(0);
             __tmp1
-        }
-        .clone();
+        };
         __tmp2.pop();
         __tmp2.extend(Ptr::from_string_literal(b".ttf").to_c_string_iterator());
         __tmp2.push(0);
@@ -4604,7 +4595,7 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                         .to_any(),
                     (*n_bytes.borrow()) as usize,
                 );
-                ((*data.borrow()).clone() as Ptr<u8>).to_any().clone()
+                ((*data.borrow()).clone() as Ptr<u8>).to_any()
             };
         }
         {
@@ -4645,7 +4636,7 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                     .to_any(),
                 ::std::mem::size_of::<u16>() as usize,
             );
-            ((*value.borrow()).clone() as Ptr<u16>).to_any().clone()
+            ((*value.borrow()).clone() as Ptr<u16>).to_any()
         };
         let __rhs = u16::from_be(((*value.borrow()).read()));
         (*value.borrow()).write(__rhs);
@@ -4707,7 +4698,7 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                     .to_any(),
                 ::std::mem::size_of::<u32>() as usize,
             );
-            ((*value.borrow()).clone() as Ptr<u32>).to_any().clone()
+            ((*value.borrow()).clone() as Ptr<u32>).to_any()
         };
         let __rhs = u32::from_be(((*value.borrow()).read()));
         (*value.borrow()).write(__rhs);
@@ -4737,7 +4728,7 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                     .to_any(),
                 ::std::mem::size_of::<u32>() as usize,
             );
-            ((*value.borrow()).clone() as Ptr<u32>).to_any().clone()
+            ((*value.borrow()).clone() as Ptr<u32>).to_any()
         };
         {
             let rhs_0 = (*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(4_usize);
@@ -4761,7 +4752,7 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                     .to_any(),
                 ::std::mem::size_of::<u64>() as usize,
             );
-            ((*value.borrow()).clone() as Ptr<u64>).to_any().clone()
+            ((*value.borrow()).clone() as Ptr<u64>).to_any()
         };
         {
             let rhs_0 = (*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(8_usize);

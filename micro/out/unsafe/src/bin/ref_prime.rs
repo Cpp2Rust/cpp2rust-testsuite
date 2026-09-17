@@ -20,7 +20,7 @@ pub unsafe fn largest_prime_1(n: *const i32) -> i32 {
     let mut max: i32 = -1_i32;
     let mut i: i32 = 0;
     'loop_: while ((i) < (*n)) {
-        if (unsafe { is_prime_0(&i as *const i32) }) {
+        if (unsafe { is_prime_0(&i) }) {
             max = i;
         }
         i.prefix_inc();
@@ -34,7 +34,7 @@ pub fn main() {
 }
 unsafe fn main_0() -> i32 {
     let mut N: i32 = 270000;
-    let mut largest: i32 = (unsafe { largest_prime_1(&N as *const i32) });
+    let mut largest: i32 = (unsafe { largest_prime_1(&N) });
     write!(
         std::fs::File::from_raw_fd(
             std::io::stdout()

@@ -37,7 +37,7 @@ unsafe fn main_0() -> i32 {
                 .map(|_| <i32>::default())
                 .collect::<Box<[_]>>(),
         );
-        (unsafe { initialize_0(&mut array as *mut Option<Box<[i32]>>, N) });
+        (unsafe { initialize_0(&mut array, N) });
         out += (unsafe { sum_1((&mut array as *mut Option<Box<[i32]>>), N) });
         k.prefix_inc();
     }

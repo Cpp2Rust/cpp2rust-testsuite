@@ -173,7 +173,7 @@ unsafe fn main_0() -> i32 {
         }
         r.prefix_inc();
     }
-    let mut pred: *mut u32 = (unsafe { BFS_0(&graph as *const Graph, 0_u32) });
+    let mut pred: *mut u32 = (unsafe { BFS_0(&graph, 0_u32) });
     let mut i: u32 = 0_u32;
     'loop_: while ((i as usize) < (V)) {
         let mut head: *mut GraphNode = (*graph.adj.offset((i) as isize));

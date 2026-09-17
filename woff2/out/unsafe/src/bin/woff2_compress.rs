@@ -698,7 +698,7 @@ impl woff2_Font {
         'loop_: for i in
             UnsafeMapIterator::begin(&self.tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
         {
-            let table: *const woff2_Font_Table = &*i.second() as *const woff2_Font_Table;
+            let table: *const woff2_Font_Table = &*i.second();
             if ((((*table).tag) & (2155905152_u32)) != 0) {
                 continue 'loop_;
             }
@@ -746,7 +746,7 @@ impl woff2_Font {
                 output_order.insert(pos, kLocaTableTag_2);
             };
         }
-        return output_order;
+        return std::mem::take(&mut output_order);
     }
 }
 pub unsafe fn ReadTrueTypeFont_33(
@@ -827,7 +827,7 @@ pub unsafe fn ReadCollectionFont_34(
     'loop_: for entry in
         UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
-        let table: *mut woff2_Font_Table = &mut *entry.second() as *mut woff2_Font_Table;
+        let table: *mut woff2_Font_Table = &mut *entry.second();
         if UnsafeMapIterator::find_key(
             &(*all_tables) as *const BTreeMap<u32, Box<*mut woff2_Font_Table>>,
             &(*table).offset,
@@ -887,7 +887,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
         if !(unsafe { woff2_Buffer::set_offset(&mut (*file), (offset as usize)) }) {
             return false;
         }
-        let font: *mut woff2_Font = &mut (*font_it.postfix_inc()) as *mut woff2_Font;
+        let font: *mut woff2_Font = &mut (*font_it.postfix_inc());
         if !(unsafe {
             ReadCollectionFont_34(
                 file,
@@ -929,8 +929,7 @@ pub unsafe fn ReadFontCollection_37(
                 .fonts
                 .resize_with(__a0, || <woff2_Font>::default())
         };
-        let font: *mut woff2_Font =
-            &mut (&mut (*font_collection)).fonts[(0_usize)] as *mut woff2_Font;
+        let font: *mut woff2_Font = &mut (&mut (*font_collection)).fonts[(0_usize)];
         (*font).flavor = (*font_collection).flavor;
         return (unsafe {
             ReadTrueTypeFont_33((&mut file as *mut woff2_Buffer), data, len, (font))
@@ -947,7 +946,7 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
     'loop_: for i in
         UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
-        let table: *const woff2_Font_Table = &*i.second() as *const woff2_Font_Table;
+        let table: *const woff2_Font_Table = &*i.second();
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((((*table).length) & (3_u32)))) & (3_u32)) as usize);
         let mut end_offset: usize = ((padding_size).wrapping_add(((*table).offset as usize)))
@@ -1096,12 +1095,7 @@ pub unsafe fn WriteFont_41(
         if !(unsafe {
             let _offset: *mut usize = offset;
             let _dst_size: usize = dst_size;
-            WriteTable_43(
-                &*i.second() as *const woff2_Font_Table,
-                _offset,
-                dst,
-                _dst_size,
-            )
+            WriteTable_43(&*i.second(), _offset, dst, _dst_size)
         }) {
             return false;
         }
@@ -1117,7 +1111,7 @@ pub unsafe fn WriteFontCollection_44(
     if (((*font_collection).flavor) != (kTtcFontFlavor_22)) {
         return (unsafe {
             WriteFont_41(
-                &(&(*font_collection)).fonts[(0_usize)] as *const woff2_Font,
+                &(&(*font_collection)).fonts[(0_usize)],
                 (&mut offset as *mut usize),
                 dst,
                 dst_size,
@@ -1152,7 +1146,7 @@ pub unsafe fn WriteFontCollection_44(
     }
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*font_collection).fonts.len())) {
-        let font: *const woff2_Font = &(&(*font_collection)).fonts[(i)] as *const woff2_Font;
+        let font: *const woff2_Font = &(&(*font_collection)).fonts[(i)];
         (unsafe { StoreU32_30((offset as u32), (&mut offset_table as *mut usize), dst) });
         if !(unsafe {
             let _font: *const woff2_Font = font;
@@ -1272,7 +1266,7 @@ pub unsafe fn RemoveDigitalSignature_48(mut font: *mut woff2_Font) -> bool {
             &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
             &it.clone(),
         );
-        (*font).num_tables = ((*font).tables.len() as u16).clone();
+        (*font).num_tables = ((*font).tables.len() as u16);
     }
     return true;
 }
@@ -1867,7 +1861,7 @@ pub unsafe fn WriteNormalizedLoca_73(
         let mut glyph_data: *const u8 = std::ptr::null();
         let mut glyph_size: usize = 0_usize;
         if (!(unsafe {
-            let _font: *const woff2_Font = &(*font) as *const woff2_Font;
+            let _font: *const woff2_Font = &(*font);
             let _glyph_index: i32 = i;
             let _glyph_data: *mut *const u8 = (&mut glyph_data as *mut *const u8);
             let _glyph_size: *mut usize = (&mut glyph_size as *mut usize);
@@ -1883,7 +1877,7 @@ pub unsafe fn WriteNormalizedLoca_73(
             ((*glyf_table).buffer.len()).wrapping_sub((glyf_offset as usize));
         if !(unsafe {
             StoreGlyph_68(
-                &glyph as *const woff2_Glyph,
+                &glyph,
                 glyf_dst.offset((glyf_offset) as isize),
                 (&mut glyf_dst_size as *mut usize),
             )
@@ -1992,7 +1986,7 @@ pub unsafe fn NormalizeGlyphs_75(mut font: *mut woff2_Font) -> bool {
         return true;
     }
     let mut index_fmt: i32 = ((*(*head_table).data.offset((51) as isize)) as i32);
-    let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font) as *const woff2_Font) });
+    let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font)) });
     let mut max_normalized_glyf_size: usize =
         ((((1.1E+0) * ((*glyf_table).length as f64)) + (((2) * (num_glyphs)) as f64)) as usize);
     {
@@ -2018,8 +2012,7 @@ pub unsafe fn NormalizeOffsets_76(mut font: *mut woff2_Font) -> bool {
     {
         let mut tag =
             (unsafe { woff2_Font::OutputOrderedTags(&(&(*(font).cast_const()))) })[tag].clone();
-        let table: *mut woff2_Font_Table =
-            &mut (*(*font).tables.entry(tag).or_default().as_mut()) as *mut woff2_Font_Table;
+        let table: *mut woff2_Font_Table = &mut (*(*font).tables.entry(tag).or_default().as_mut());
         (*table).offset = offset;
         offset = (offset).wrapping_add((unsafe { Round4_71((*table).length) }));
     }
@@ -2091,8 +2084,7 @@ pub unsafe fn FixChecksums_78(mut font: *mut woff2_Font) -> bool {
             head_checksum = (*table).checksum;
         }
     }
-    file_checksum = (file_checksum)
-        .wrapping_add((unsafe { ComputeHeaderChecksum_77(&(*font) as *const woff2_Font) }));
+    file_checksum = (file_checksum).wrapping_add((unsafe { ComputeHeaderChecksum_77(&(*font)) }));
     offset = 8_usize;
     (unsafe {
         StoreU32_30(
@@ -2157,7 +2149,7 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
         'loop_: for tag in 0..((unsafe { woff2_Font::OutputOrderedTags(&(*font)) }).len()) {
             let mut tag = (unsafe { woff2_Font::OutputOrderedTags(&(&(*font))) })[tag].clone();
             let table: *mut woff2_Font_Table =
-                &mut (*(*font).tables.entry(tag).or_default().as_mut()) as *mut woff2_Font_Table;
+                &mut (*(*font).tables.entry(tag).or_default().as_mut());
             if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
                 (*table).offset = (*(*table).reuse_of).offset;
             } else {
@@ -2298,48 +2290,48 @@ impl woff2_GlyfEncoder {
         (unsafe { WriteLong_89(result, (self.instruction_stream_.len() as i32)) });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.n_contour_stream_ as *const Vec<u8>;
+            let _in: *const Vec<u8> = &self.n_contour_stream_;
             WriteBytes_87(_out, _in)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.n_points_stream_ as *const Vec<u8>;
+            let _in: *const Vec<u8> = &self.n_points_stream_;
             WriteBytes_87(_out, _in)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.flag_byte_stream_ as *const Vec<u8>;
+            let _in: *const Vec<u8> = &self.flag_byte_stream_;
             WriteBytes_87(_out, _in)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.glyph_stream_ as *const Vec<u8>;
+            let _in: *const Vec<u8> = &self.glyph_stream_;
             WriteBytes_87(_out, _in)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.composite_stream_ as *const Vec<u8>;
+            let _in: *const Vec<u8> = &self.composite_stream_;
             WriteBytes_87(_out, _in)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.bbox_bitmap_ as *const Vec<u8>;
+            let _in: *const Vec<u8> = &self.bbox_bitmap_;
             WriteBytes_87(_out, _in)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.bbox_stream_ as *const Vec<u8>;
+            let _in: *const Vec<u8> = &self.bbox_stream_;
             WriteBytes_87(_out, _in)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.instruction_stream_ as *const Vec<u8>;
+            let _in: *const Vec<u8> = &self.instruction_stream_;
             WriteBytes_87(_out, _in)
         });
         if !(self.overlap_bitmap_.is_empty()) {
             (unsafe {
                 let _out: *mut Vec<u8> = result;
-                let _in: *const Vec<u8> = &self.overlap_bitmap_ as *const Vec<u8>;
+                let _in: *const Vec<u8> = &self.overlap_bitmap_;
                 WriteBytes_87(_out, _in)
             });
         }
@@ -2584,7 +2576,7 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
         .entry(((kLocaTableTag_2) ^ (2155905152_u32)))
         .or_default()
         .as_mut()) as *mut woff2_Font_Table);
-    let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font) as *const woff2_Font) });
+    let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font)) });
     let mut encoder: woff2_GlyfEncoder = woff2_GlyfEncoder::woff2_GlyfEncoder({ num_glyphs });
     let mut i: i32 = 0;
     'loop_: while ((i) < (num_glyphs)) {
@@ -2592,7 +2584,7 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
         let mut glyph_data: *const u8 = std::ptr::null();
         let mut glyph_size: usize = 0_usize;
         if (!(unsafe {
-            let _font: *const woff2_Font = &(*font) as *const woff2_Font;
+            let _font: *const woff2_Font = &(*font);
             let _glyph_index: i32 = i;
             let _glyph_data: *mut *const u8 = (&mut glyph_data as *mut *const u8);
             let _glyph_size: *mut usize = (&mut glyph_size as *mut usize);
@@ -2604,7 +2596,7 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
         {
             return false;
         }
-        (unsafe { woff2_GlyfEncoder::Encode(&mut encoder, i, &glyph as *const woff2_Glyph) });
+        (unsafe { woff2_GlyfEncoder::Encode(&mut encoder, i, &glyph) });
         i.prefix_inc();
     }
     (unsafe {
@@ -2620,7 +2612,7 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
     }
     (&mut (*transformed_glyf)).buffer[(7_usize)] = (*(*head_table).data.offset((51) as isize));
     (*transformed_glyf).tag = ((kGlyfTableTag_0) ^ (2155905152_u32));
-    (*transformed_glyf).length = ((*transformed_glyf).buffer.len() as u32).clone();
+    (*transformed_glyf).length = ((*transformed_glyf).buffer.len() as u32);
     (*transformed_glyf).data = ((*transformed_glyf).buffer.as_mut_ptr()).cast_const();
     (*transformed_loca).tag = ((kLocaTableTag_2) ^ (2155905152_u32));
     (*transformed_loca).length = 0_u32;
@@ -2651,7 +2643,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     if ((num_hmetrics as i32) < (1)) {
         return false;
     }
-    let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font) as *const woff2_Font) });
+    let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font)) });
     let mut advance_widths: Vec<u16> = Vec::new();
     let mut proportional_lsbs: Vec<i16> = Vec::new();
     let mut monospace_lsbs: Vec<i16> = Vec::new();
@@ -2665,7 +2657,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
         let mut glyph_data: *const u8 = std::ptr::null();
         let mut glyph_size: usize = 0_usize;
         if (!(unsafe {
-            let _font: *const woff2_Font = &(*font) as *const woff2_Font;
+            let _font: *const woff2_Font = &(*font);
             let _glyph_index: i32 = i;
             let _glyph_data: *mut *const u8 = (&mut glyph_data as *mut *const u8);
             let _glyph_size: *mut usize = (&mut glyph_size as *mut usize);
@@ -2763,7 +2755,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     }
     (*transformed_hmtx).tag = ((kHmtxTableTag_5) ^ (2155905152_u32));
     (*transformed_hmtx).flag_byte = (((1) << (6)) as u8);
-    (*transformed_hmtx).length = ((*transformed_hmtx).buffer.len() as u32).clone();
+    (*transformed_hmtx).length = ((*transformed_hmtx).buffer.len() as u32);
     (*transformed_hmtx).data = ((*transformed_hmtx).buffer.as_mut_ptr()).cast_const();
     return true;
 }
@@ -2929,13 +2921,15 @@ pub unsafe fn ComputeWoff2Length_100(
             'loop_: for entry in UnsafeMapIterator::begin(
                 &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
             ) {
-                let table: *const woff2_Font_Table = &*entry.second() as *const woff2_Font_Table;
+                let table: *const woff2_Font_Table = &*entry.second();
                 if ((((*table).tag) & (2155905152_u32)) != 0) {
                     continue 'loop_;
                 }
                 let mut tag_offset: (u32, u32) = ((*table).tag.into(), (*table).offset.into());
-                let mut table_index: u16 =
-                    (*index_by_tag_offset.entry(tag_offset).or_default().as_mut());
+                let mut table_index: u16 = (*index_by_tag_offset
+                    .entry((tag_offset).clone())
+                    .or_default()
+                    .as_mut());
                 size = (size).wrapping_add((unsafe { Size255UShort_9(table_index) }));
             }
         }
@@ -2950,7 +2944,7 @@ pub unsafe fn ComputeUncompressedLength_101(font: *const woff2_Font) -> usize {
     'loop_: for entry in
         UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
-        let table: *const woff2_Font_Table = &*entry.second() as *const woff2_Font_Table;
+        let table: *const woff2_Font_Table = &*entry.second();
         if ((((*table).tag) & (2155905152_u32)) != 0) {
             continue 'loop_;
         }
@@ -2963,11 +2957,7 @@ pub unsafe fn ComputeUncompressedLength_101(font: *const woff2_Font) -> usize {
 }
 pub unsafe fn ComputeUncompressedLength_102(font_collection: *const woff2_FontCollection) -> usize {
     if (((*font_collection).flavor) != (kTtcFontFlavor_22)) {
-        return (unsafe {
-            ComputeUncompressedLength_101(
-                &(&(*font_collection)).fonts[(0_usize)] as *const woff2_Font,
-            )
-        });
+        return (unsafe { ComputeUncompressedLength_101(&(&(*font_collection)).fonts[(0_usize)]) });
     }
     let mut size: usize = (unsafe {
         let _header_version: u32 = (*font_collection).header_version;
@@ -2985,7 +2975,7 @@ pub unsafe fn ComputeTotalTransformLength_103(font: *const woff2_Font) -> usize 
     'loop_: for i in
         UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
-        let table: *const woff2_Font_Table = &*i.second() as *const woff2_Font_Table;
+        let table: *const woff2_Font_Table = &*i.second();
         if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
             continue 'loop_;
         }
@@ -3042,13 +3032,7 @@ pub unsafe fn ConvertTTFToWOFF2_108(
     return (unsafe {
         let _length: usize = length;
         let _result_length: *mut usize = result_length;
-        ConvertTTFToWOFF2_109(
-            data,
-            _length,
-            result,
-            _result_length,
-            &params as *const woff2_WOFF2Params,
-        )
+        ConvertTTFToWOFF2_109(data, _length, result, _result_length, &params)
     });
 }
 pub unsafe fn ConvertTTFToWOFF2_109(
@@ -3207,8 +3191,10 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             ) == UnsafeMapIterator::end(
                 &index_by_tag_offset as *const BTreeMap<(u32, u32), Box<u16>>,
             ) {
-                (*index_by_tag_offset.entry(tag_offset).or_default().as_mut()) =
-                    (tables.len() as u16).clone();
+                (*index_by_tag_offset
+                    .entry((tag_offset).clone())
+                    .or_default()
+                    .as_mut()) = (tables.len() as u16);
             } else {
                 return false;
             }
@@ -3236,8 +3222,8 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     }
     let mut woff2_length: usize = (unsafe {
         ComputeWoff2Length_100(
-            &font_collection as *const woff2_FontCollection,
-            &tables as *const Vec<woff2_Table>,
+            &font_collection,
+            &tables,
             index_by_tag_offset.clone(),
             (total_compressed_length as usize),
             (compressed_metadata_buf_length as usize),
@@ -3270,9 +3256,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     (unsafe { Store16_31(0, (&mut offset as *mut usize), result) });
     (unsafe {
         StoreU32_30(
-            ((unsafe {
-                ComputeUncompressedLength_102(&font_collection as *const woff2_FontCollection)
-            }) as u32),
+            ((unsafe { ComputeUncompressedLength_102(&font_collection) }) as u32),
             (&mut offset as *mut usize),
             result,
         )
@@ -3339,7 +3323,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             'loop_: for entry in UnsafeMapIterator::begin(
                 &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
             ) {
-                let table: *const woff2_Font_Table = &*entry.second() as *const woff2_Font_Table;
+                let table: *const woff2_Font_Table = &*entry.second();
                 if ((((*table).tag) & (2155905152_u32)) != 0) {
                     continue 'loop_;
                 }
@@ -3352,7 +3336,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             'loop_: for entry in UnsafeMapIterator::begin(
                 &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
             ) {
-                let table: *const woff2_Font_Table = &*entry.second() as *const woff2_Font_Table;
+                let table: *const woff2_Font_Table = &*entry.second();
                 if ((((*table).tag) & (2155905152_u32)) != 0) {
                     continue 'loop_;
                 }
@@ -3379,7 +3363,10 @@ pub unsafe fn ConvertTTFToWOFF2_109(
                     );
                     return false;
                 }
-                let mut index: u16 = (*index_by_tag_offset.entry(tag_offset).or_default().as_mut());
+                let mut index: u16 = (*index_by_tag_offset
+                    .entry((tag_offset).clone())
+                    .or_default()
+                    .as_mut());
                 (unsafe { Store255UShort_11((index as i32), (&mut offset as *mut usize), result) });
             }
         }
@@ -3523,7 +3510,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
             (input.len() - 1),
             output_data,
             (&mut output_size as *mut usize),
-            &params as *const woff2_WOFF2Params,
+            &params,
         )
     }) {
         printf(c"Compression failed.\n".as_ptr() as *const i8);

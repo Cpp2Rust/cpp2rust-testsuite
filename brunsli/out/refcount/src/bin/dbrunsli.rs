@@ -825,7 +825,6 @@ thread_local!(
 thread_local!(
     pub static kBrunsliSignatureSize_43: Value<usize> = Rc::new(RefCell::new(6_usize));
 );
-thread_local!();
 thread_local!(
     pub static kMaxApp0Densities_45: Value<usize> = Rc::new(RefCell::new(8_usize));
 );
@@ -1086,10 +1085,6 @@ thread_local!(
         235_u8, 236_u8, 237_u8, 238_u8, 239_u8, 251_u8, 252_u8, 253_u8, 254_u8, 255_u8,
     ])));
 );
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 thread_local!(
     pub static kBrunsliSignature_44: Value<Box<[u8]>> = Rc::new(RefCell::new(Box::new([
         ({ SectionMarker_29((*kBrunsliSignatureTag_30.with(Value::clone).borrow())) }),
@@ -1429,7 +1424,7 @@ pub fn BrunsliUnalignedRead16_66(p: AnyPtr) -> u16 {
         ((t.as_pointer()) as Ptr<u16>)
             .to_any()
             .memcpy(&(*p.borrow()), ::std::mem::size_of::<u16>() as usize);
-        ((t.as_pointer()) as Ptr<u16>).to_any().clone()
+        ((t.as_pointer()) as Ptr<u16>).to_any()
     };
     return (*t.borrow());
 }
@@ -1451,7 +1446,7 @@ pub fn BrunsliUnalignedRead32_68(p: AnyPtr) -> u32 {
         ((t.as_pointer()) as Ptr<u32>)
             .to_any()
             .memcpy(&(*p.borrow()), ::std::mem::size_of::<u32>() as usize);
-        ((t.as_pointer()) as Ptr<u32>).to_any().clone()
+        ((t.as_pointer()) as Ptr<u32>).to_any()
     };
     return (*t.borrow());
 }
@@ -1462,7 +1457,7 @@ pub fn BrunsliUnalignedRead64_69(p: AnyPtr) -> u64 {
         ((t.as_pointer()) as Ptr<u64>)
             .to_any()
             .memcpy(&(*p.borrow()), ::std::mem::size_of::<u64>() as usize);
-        ((t.as_pointer()) as Ptr<u64>).to_any().clone()
+        ((t.as_pointer()) as Ptr<u64>).to_any()
     };
     return (*t.borrow());
 }
@@ -1484,7 +1479,6 @@ pub fn Append_71(dst: Ptr<Vec<u8>>, begin: Ptr<u8>, end: Ptr<u8>) {
     {
         let start_idx = ((*dst.borrow()).to_strong().as_pointer() as Ptr<u8>)
             .to_end()
-            .clone()
             .get_offset();
         let count = (*end.borrow()).get_offset() - (*begin.borrow()).get_offset();
         let temp_vec: Vec<u8> = PtrValueIter::new(&(*begin.borrow()), count).collect();
@@ -2388,12 +2382,20 @@ impl Clone for brunsli_ComponentState {
         let __this: Value<brunsli_ComponentState> = Rc::new(RefCell::new(Self {
             width: Rc::new(RefCell::new((*self.width.borrow()))),
             context_offset: Rc::new(RefCell::new((*self.context_offset.borrow()))),
-            order: Rc::new(RefCell::new((*self.order.borrow()).clone())),
-            mult_row: Rc::new(RefCell::new((*self.mult_row.borrow()).clone())),
-            mult_col: Rc::new(RefCell::new((*self.mult_col.borrow()).clone())),
+            order: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 64, _>(
+                |__i: usize| (*self.order.borrow())[(__i) as usize],
+            )))),
+            mult_row: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 64, _>(
+                |__i: usize| (*self.mult_row.borrow())[(__i) as usize],
+            )))),
+            mult_col: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 64, _>(
+                |__i: usize| (*self.mult_col.borrow())[(__i) as usize],
+            )))),
             is_zero_prob: Rc::new(RefCell::new((*self.is_zero_prob.borrow()).clone())),
             sign_prob: Rc::new(RefCell::new((*self.sign_prob.borrow()).clone())),
-            num_nonzero_prob: Rc::new(RefCell::new((*self.num_nonzero_prob.borrow()).clone())),
+            num_nonzero_prob: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 2016, _>(
+                |__i: usize| ((*self.num_nonzero_prob.borrow())[(__i) as usize]).clone(),
+            )))),
             first_extra_bit_prob: Rc::new(RefCell::new(
                 (*self.first_extra_bit_prob.borrow()).clone(),
             )),
@@ -2898,7 +2900,7 @@ pub fn ComputeLehmerCode_112(sigma: Ptr<u32>, len: usize, code: Ptr<u32>) {
             as u32);
         (*code.borrow()).offset((*i.borrow()) as isize).write(__rhs);
         {
-            let idx = (*it.borrow()).clone().get_offset();
+            let idx = (*it.borrow()).get_offset();
             (items.as_pointer() as Ptr<Vec<u32>>).with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
             (items.as_pointer() as Ptr<Vec<u32>>)
                 .to_strong()
@@ -2940,7 +2942,6 @@ pub fn DecodeLehmerCode_113(code: Ptr<u32>, len: usize, sigma: Ptr<u32>) -> bool
         {
             let idx = (items.as_pointer() as Ptr<u32>)
                 .offset(((*index.borrow()) as i64) as isize)
-                .clone()
                 .get_offset();
             (items.as_pointer() as Ptr<Vec<u32>>).with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
             (items.as_pointer() as Ptr<Vec<u32>>)
@@ -3024,11 +3025,6 @@ pub fn PredictWithAdaptiveMedian_115(coeffs: Ptr<i16>, x: i32, y: i32, stride: i
     }
     panic!("ub: non-void function does not return a value")
 }
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 thread_local!(
     pub static kQFactorBits_116: Value<usize> = Rc::new(RefCell::new(6_usize));
 );
@@ -3325,7 +3321,9 @@ impl brunsli_ANSDecodingData {
 impl Clone for brunsli_ANSDecodingData {
     fn clone(&self) -> Self {
         let __this: Value<brunsli_ANSDecodingData> = Rc::new(RefCell::new(Self {
-            map_: Rc::new(RefCell::new((*self.map_.borrow()).clone())),
+            map_: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 1024, _>(
+                |__i: usize| ((*self.map_.borrow())[(__i) as usize]).clone(),
+            )))),
         }));
         let this: Ptr<brunsli_ANSDecodingData> = __this.as_pointer();
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
@@ -3727,11 +3725,6 @@ impl ByteRepr for brunsli_BrunsliDecoder {
         }
     }
 }
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 #[derive()]
 pub struct brunsli_BinaryArithmeticDecoder {
     low_: Value<u32>,
@@ -3976,6 +3969,20 @@ pub struct brunsli_Arena_brunsli_HuffmanCode_ {
     pub capacity: Value<usize>,
     pub storage: Value<Option<Value<Box<[brunsli_HuffmanCode]>>>>,
 }
+impl brunsli_Arena_brunsli_HuffmanCode_ {
+    pub fn Arena_pmutbrunsli_Arena_brunsli_HuffmanCode(
+        _a0: Ptr<brunsli_Arena_brunsli_HuffmanCode_>,
+    ) -> Self {
+        let __this: Value<brunsli_Arena_brunsli_HuffmanCode_> = Rc::new(RefCell::new(Self {
+            capacity: Rc::new(RefCell::new((*(*_a0.upgrade().deref()).capacity.borrow()))),
+            storage: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).storage.borrow_mut()).take(),
+            )),
+        }));
+        let this: Ptr<brunsli_Arena_brunsli_HuffmanCode_> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
+    }
+}
 impl ByteRepr for brunsli_Arena_brunsli_HuffmanCode_ {
     fn byte_size() -> usize {
         16
@@ -4055,6 +4062,21 @@ impl brunsli_internal_dec_OutputChunk {
         (*(*this.upgrade().deref()).len.borrow_mut()) = (*bytes.borrow()).len();
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
+    pub fn OutputChunk_pmutbrunsli_internal_dec_OutputChunk(
+        _a0: Ptr<brunsli_internal_dec_OutputChunk>,
+    ) -> Self {
+        let __this: Value<brunsli_internal_dec_OutputChunk> = Rc::new(RefCell::new(Self {
+            next: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).next.borrow()).clone(),
+            )),
+            len: Rc::new(RefCell::new((*(*_a0.upgrade().deref()).len.borrow()))),
+            buffer: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).buffer.borrow_mut()).take(),
+            )),
+        }));
+        let this: Ptr<brunsli_internal_dec_OutputChunk> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
+    }
 }
 impl Default for brunsli_internal_dec_OutputChunk {
     fn default() -> Self {
@@ -4088,8 +4110,12 @@ pub struct brunsli_HuffmanCodeTable {
 impl Clone for brunsli_HuffmanCodeTable {
     fn clone(&self) -> Self {
         let __this: Value<brunsli_HuffmanCodeTable> = Rc::new(RefCell::new(Self {
-            depth: Rc::new(RefCell::new((*self.depth.borrow()).clone())),
-            code: Rc::new(RefCell::new((*self.code.borrow()).clone())),
+            depth: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 256, _>(
+                |__i: usize| (*self.depth.borrow())[(__i) as usize],
+            )))),
+            code: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 256, _>(
+                |__i: usize| (*self.code.borrow())[(__i) as usize],
+            )))),
         }));
         let this: Ptr<brunsli_HuffmanCodeTable> = __this.as_pointer();
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
@@ -4131,6 +4157,33 @@ pub struct brunsli_internal_dec_BitWriter {
     pub pos: Value<usize>,
     pub put_buffer: Value<u64>,
     pub put_bits: Value<i32>,
+}
+impl brunsli_internal_dec_BitWriter {
+    pub fn BitWriter_pmutbrunsli_internal_dec_BitWriter(
+        _a0: Ptr<brunsli_internal_dec_BitWriter>,
+    ) -> Self {
+        let __this: Value<brunsli_internal_dec_BitWriter> = Rc::new(RefCell::new(Self {
+            healthy: Rc::new(RefCell::new((*(*_a0.upgrade().deref()).healthy.borrow()))),
+            output: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).output.borrow()).clone(),
+            )),
+            chunk: Rc::new(RefCell::new(
+                brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk(
+                    { (*_a0.upgrade().deref()).chunk.as_pointer() },
+                ),
+            )),
+            data: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).data.borrow()).clone(),
+            )),
+            pos: Rc::new(RefCell::new((*(*_a0.upgrade().deref()).pos.borrow()))),
+            put_buffer: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).put_buffer.borrow()),
+            )),
+            put_bits: Rc::new(RefCell::new((*(*_a0.upgrade().deref()).put_bits.borrow()))),
+        }));
+        let this: Ptr<brunsli_internal_dec_BitWriter> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
+    }
 }
 impl ByteRepr for brunsli_internal_dec_BitWriter {
     fn byte_size() -> usize {
@@ -4221,6 +4274,50 @@ pub struct brunsli_internal_dec_EncodeScanState {
     pub next_reset_point_pos: Value<usize>,
     pub next_reset_point: Value<i32>,
 }
+impl brunsli_internal_dec_EncodeScanState {
+    pub fn EncodeScanState_pmutbrunsli_internal_dec_EncodeScanState(
+        _a0: Ptr<brunsli_internal_dec_EncodeScanState>,
+    ) -> Self {
+        let __this: Value<brunsli_internal_dec_EncodeScanState> = Rc::new(RefCell::new(Self {
+            stage: Rc::new(RefCell::new((*(*_a0.upgrade().deref()).stage.borrow()))),
+            mcu_y: Rc::new(RefCell::new((*(*_a0.upgrade().deref()).mcu_y.borrow()))),
+            bw: Rc::new(RefCell::new(
+                brunsli_internal_dec_BitWriter::BitWriter_pmutbrunsli_internal_dec_BitWriter({
+                    (*_a0.upgrade().deref()).bw.as_pointer()
+                }),
+            )),
+            last_dc_coeff: Rc::new(RefCell::new(Box::new(std::array::from_fn::<_, 4, _>(
+                |__i: usize| (*(*_a0.upgrade().deref()).last_dc_coeff.borrow())[(__i) as usize],
+            )))),
+            restarts_to_go: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).restarts_to_go.borrow()),
+            )),
+            next_restart_marker: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).next_restart_marker.borrow()),
+            )),
+            block_scan_index: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).block_scan_index.borrow()),
+            )),
+            coding_state: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).coding_state.borrow()).clone(),
+            )),
+            extra_zero_runs_pos: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).extra_zero_runs_pos.borrow()),
+            )),
+            next_extra_zero_run_index: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).next_extra_zero_run_index.borrow()),
+            )),
+            next_reset_point_pos: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).next_reset_point_pos.borrow()),
+            )),
+            next_reset_point: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).next_reset_point.borrow()),
+            )),
+        }));
+        let this: Ptr<brunsli_internal_dec_EncodeScanState> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
+    }
+}
 impl Default for brunsli_internal_dec_EncodeScanState {
     fn default() -> Self {
         brunsli_internal_dec_EncodeScanState {
@@ -4309,6 +4406,15 @@ pub struct brunsli_internal_dec_SerializationState {
     pub seen_dri_marker: Value<bool>,
     pub is_progressive: Value<bool>,
     pub scan_state: Value<brunsli_internal_dec_EncodeScanState>,
+}
+impl brunsli_internal_dec_SerializationState {
+    pub fn SerializationState_pmutbrunsli_internal_dec_SerializationState(
+        _a0: Ptr<brunsli_internal_dec_SerializationState>,
+    ) -> Self {
+        let __this : Value<brunsli_internal_dec_SerializationState> = Rc::new(RefCell::new(Self { stage : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . stage .borrow()) )) , output_queue : Rc::new(RefCell::new(std::mem::take(&mut (*(*_a0.upgrade().deref()) . output_queue .borrow_mut()) ) )) , section_index : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . section_index .borrow()) )) , dht_index : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . dht_index .borrow()) )) , dqt_index : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . dqt_index .borrow()) )) , app_index : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . app_index .borrow()) )) , com_index : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . com_index .borrow()) )) , data_index : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . data_index .borrow()) )) , scan_index : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . scan_index .borrow()) )) , dc_huff_table : Rc::new(RefCell::new(std::mem::take(&mut (*(*_a0.upgrade().deref()) . dc_huff_table .borrow_mut()) ) )) , ac_huff_table : Rc::new(RefCell::new(std::mem::take(&mut (*(*_a0.upgrade().deref()) . ac_huff_table .borrow_mut()) ) )) , pad_bits : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . pad_bits .borrow()) ).clone())) , pad_bits_end : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . pad_bits_end .borrow()) ).clone())) , seen_dri_marker : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . seen_dri_marker .borrow()) )) , is_progressive : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . is_progressive .borrow()) )) , scan_state : Rc::new(RefCell::new(brunsli_internal_dec_EncodeScanState :: EncodeScanState_pmutbrunsli_internal_dec_EncodeScanState ( { (*_a0.upgrade().deref()) . scan_state  .as_pointer()   } , ) )) , } )) ;
+        let this: Ptr<brunsli_internal_dec_SerializationState> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
+    }
 }
 impl ByteRepr for brunsli_internal_dec_SerializationState {
     fn byte_size() -> usize {
@@ -4946,6 +5052,35 @@ pub struct brunsli_internal_dec_HistogramDataState {
     pub counts: Value<Vec<u32>>,
     pub arena: Value<brunsli_Arena_brunsli_HuffmanCode_>,
 }
+impl brunsli_internal_dec_HistogramDataState {
+    pub fn HistogramDataState_pmutbrunsli_internal_dec_HistogramDataState(
+        _a0: Ptr<brunsli_internal_dec_HistogramDataState>,
+    ) -> Self {
+        let __this: Value<brunsli_internal_dec_HistogramDataState> = Rc::new(RefCell::new(Self {
+            stage: Rc::new(RefCell::new((*(*_a0.upgrade().deref()).stage.borrow()))),
+            br: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).br.borrow()).clone(),
+            )),
+            max_run_length_prefix: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).max_run_length_prefix.borrow()),
+            )),
+            entropy: Rc::new(RefCell::new(
+                (*(*_a0.upgrade().deref()).entropy.borrow_mut()).take(),
+            )),
+            i: Rc::new(RefCell::new((*(*_a0.upgrade().deref()).i.borrow()))),
+            counts: Rc::new(RefCell::new(std::mem::take(
+                &mut (*(*_a0.upgrade().deref()).counts.borrow_mut()),
+            ))),
+            arena: Rc::new(RefCell::new(
+                brunsli_Arena_brunsli_HuffmanCode_::Arena_pmutbrunsli_Arena_brunsli_HuffmanCode({
+                    (*_a0.upgrade().deref()).arena.as_pointer()
+                }),
+            )),
+        }));
+        let this: Ptr<brunsli_internal_dec_HistogramDataState> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
+    }
+}
 impl ByteRepr for brunsli_internal_dec_HistogramDataState {
     fn byte_size() -> usize {
         104
@@ -5051,6 +5186,15 @@ pub struct brunsli_internal_dec_InternalState {
     pub last_stage: Value<brunsli_internal_dec_Stage>,
     pub buffer: Value<brunsli_internal_dec_Buffer>,
     pub serialization: Value<brunsli_internal_dec_SerializationState>,
+}
+impl brunsli_internal_dec_InternalState {
+    pub fn InternalState_pmutbrunsli_internal_dec_InternalState(
+        _a0: Ptr<brunsli_internal_dec_InternalState>,
+    ) -> Self {
+        let __this : Value<brunsli_internal_dec_InternalState> = Rc::new(RefCell::new(Self { ac_dc : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . ac_dc .borrow()) ).clone() )) , section : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . section .borrow()) ).clone() )) , header : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . header .borrow()) ).clone() )) , fallback : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . fallback .borrow()) ).clone() )) , section_header : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . section_header .borrow()) ).clone() )) , metadata : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . metadata .borrow()) ).clone() )) , internals : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . internals .borrow()) ).clone() )) , quant : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . quant .borrow()) ).clone() )) , histogram : Rc::new(RefCell::new(brunsli_internal_dec_HistogramDataState :: HistogramDataState_pmutbrunsli_internal_dec_HistogramDataState ( { (*_a0.upgrade().deref()) . histogram  .as_pointer()   } , ) )) , context_map_ : Rc::new(RefCell::new(std::mem::take(&mut (*(*_a0.upgrade().deref()) . context_map_ .borrow_mut()) ) )) , entropy_codes_ : Rc::new(RefCell::new(std::mem::take(&mut (*(*_a0.upgrade().deref()) . entropy_codes_ .borrow_mut()) ) )) , block_state_ : Rc::new(RefCell::new(std::mem::take(&mut (*(*_a0.upgrade().deref()) . block_state_ .borrow_mut()) ) )) , is_meta_warm : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . is_meta_warm .borrow()) )) , shallow_histograms : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . shallow_histograms .borrow()) )) , num_contexts : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . num_contexts .borrow()) )) , num_histograms : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . num_histograms .borrow()) )) , subdecoders_initialized : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . subdecoders_initialized .borrow()) )) , ans_decoder : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . ans_decoder .borrow()) ).clone() )) , bit_reader : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . bit_reader .borrow()) ).clone() )) , arith_decoder : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . arith_decoder .borrow()) ).clone() )) , result : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . result .borrow()) )) , last_stage : Rc::new(RefCell::new((*(*_a0.upgrade().deref()) . last_stage .borrow()) )) , buffer : Rc::new(RefCell::new(((*(*_a0.upgrade().deref()) . buffer .borrow()) ).clone() )) , serialization : Rc::new(RefCell::new(brunsli_internal_dec_SerializationState :: SerializationState_pmutbrunsli_internal_dec_SerializationState ( { (*_a0.upgrade().deref()) . serialization  .as_pointer()   } , ) )) , } )) ;
+        let this: Ptr<brunsli_internal_dec_InternalState> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
+    }
 }
 impl ByteRepr for brunsli_internal_dec_InternalState {
     fn byte_size() -> usize {
@@ -5509,7 +5653,7 @@ pub fn GenerateApp0Marker_147(app0_status: u8) -> Vec<u8> {
     (app0_marker.as_pointer() as Ptr<u8>)
         .offset(12_usize)
         .write(__rhs);
-    return (*app0_marker.borrow_mut()).clone();
+    return std::mem::take(&mut (*app0_marker.borrow_mut()));
 }
 pub fn GenerateAppMarker_148(marker: u8, code: u8) -> Vec<u8> {
     let marker: Value<u8> = Rc::new(RefCell::new(marker));
@@ -5571,7 +5715,7 @@ pub fn GenerateAppMarker_148(marker: u8, code: u8) -> Vec<u8> {
             .offset(10_usize)
             .write((*code.borrow()));
     }
-    return (*s.borrow_mut()).clone();
+    return std::mem::take(&mut (*s.borrow_mut()));
 }
 pub fn ProcessMetaData_149(
     data: Ptr<u8>,
@@ -5626,8 +5770,7 @@ pub fn ProcessMetaData_149(
                                                 .marker
                                                 .borrow()),
                                         )
-                                    })
-                                    .clone(),
+                                    }),
                                 )))
                             });
                         continue 'loop_;
@@ -5692,8 +5835,7 @@ pub fn ProcessMetaData_149(
                                         (*(*(*state.borrow()).upgrade().deref()).marker.borrow()),
                                         (*code.borrow()),
                                     )
-                                })
-                                .clone(),
+                                }),
                             )))
                         });
                     (*(*(*state.borrow()).upgrade().deref()).stage.borrow_mut()) =
@@ -5964,7 +6106,6 @@ pub fn DecodeHuffmanCode_150(
                                     as Ptr<i32>)
                                     .offset(1_usize)) as Ptr<i32>)
                                     .to_any()
-                                    .clone()
                             };
                             {
                                 ((((*(*huff.borrow()).upgrade().deref()).values.as_pointer()
@@ -5988,7 +6129,6 @@ pub fn DecodeHuffmanCode_150(
                                     as Ptr<i32>)
                                     .offset(0_usize)) as Ptr<i32>)
                                     .to_any()
-                                    .clone()
                             };
                         } else {
                             let huff_table_idx: Value<i32> = Rc::new(RefCell::new(
@@ -6017,7 +6157,6 @@ pub fn DecodeHuffmanCode_150(
                                     as Ptr<i32>)
                                     .offset(1_usize)) as Ptr<i32>)
                                     .to_any()
-                                    .clone()
                             };
                             {
                                 ((((*(*huff.borrow()).upgrade().deref()).values.as_pointer()
@@ -6041,7 +6180,6 @@ pub fn DecodeHuffmanCode_150(
                                     as Ptr<i32>)
                                     .offset(0_usize)) as Ptr<i32>)
                                     .to_any()
-                                    .clone()
                             };
                         }
                         (*(*js.upgrade().deref()).stage.borrow_mut()) =
@@ -6357,73 +6495,73 @@ pub fn DecodeScanInfo_151(
     'loop_: while true {
         'switch: {
             let __match_cond = ((*(*js.upgrade().deref()).stage.borrow()) as i32);
-            match __match_cond { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 ) )  =>  { {  let si : Value<Ptr<brunsli_JPEGScanInfo> > = Rc::new(RefCell::new(( ((*(*jpg.borrow()) .upgrade().deref()) . scan_info  .as_pointer()  as Ptr<brunsli_JPEGScanInfo>).offset((*(*js.upgrade().deref()) . i .borrow()) )  ) )) ;
+            match __match_cond { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 ) )  =>  { { let si : Value<Ptr<brunsli_JPEGScanInfo> > = Rc::new(RefCell::new(( ((*(*jpg.borrow()) .upgrade().deref()) . scan_info  .as_pointer()  as Ptr<brunsli_JPEGScanInfo>).offset((*(*js.upgrade().deref()) . i .borrow()) )  ) )) ;
   ;
  ;
- if ! (  { BrunsliBitReaderCanRead_134 ( ((*br.borrow()) ).clone() , 22_usize  , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
- } (*(*(*si.borrow()) .upgrade().deref()) . Ss .borrow_mut())  = ( ( (  { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 6_u32  , ) } )  as i32 ) )  ;
- (*(*(*si.borrow()) .upgrade().deref()) . Se .borrow_mut())  = ( ( (  { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 6_u32  , ) } )  as i32 ) )  ;
- (*(*(*si.borrow()) .upgrade().deref()) . Ah .borrow_mut())  = ( ( (  { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 4_u32  , ) } )  as i32 ) )  ;
- (*(*(*si.borrow()) .upgrade().deref()) . Al .borrow_mut())  = ( ( (  { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 4_u32  , ) } )  as i32 ) )  ;
- (*(*(*si.borrow()) .upgrade().deref()) . num_components .borrow_mut())  = ( ( ( (  { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 2_u32  , ) } )  ) . wrapping_add ( 1_u32 ) ) as usize )  ;
+ if ! ( ( { BrunsliBitReaderCanRead_134 ( ((*br.borrow()) ).clone() , 22_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
+ } (*(*(*si.borrow()) .upgrade().deref()) . Ss .borrow_mut())  = ( ( ( { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 6_u32  , ) } )  as i32 ) )  ;
+ (*(*(*si.borrow()) .upgrade().deref()) . Se .borrow_mut())  = ( ( ( { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 6_u32  , ) } )  as i32 ) )  ;
+ (*(*(*si.borrow()) .upgrade().deref()) . Ah .borrow_mut())  = ( ( ( { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 4_u32  , ) } )  as i32 ) )  ;
+ (*(*(*si.borrow()) .upgrade().deref()) . Al .borrow_mut())  = ( ( ( { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 4_u32  , ) } )  as i32 ) )  ;
+ (*(*(*si.borrow()) .upgrade().deref()) . num_components .borrow_mut())  = ( ( ( ( { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 2_u32  , ) } )  ) . wrapping_add ( 1_u32 ) ) as usize )  ;
  (*(*js.upgrade().deref()) . j .borrow_mut())  = 0_usize  ;
  (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT  ;
  ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT as i32 ) )  =>  { {  let si : Value<Ptr<brunsli_JPEGScanInfo> > = Rc::new(RefCell::new(( ((*(*jpg.borrow()) .upgrade().deref()) . scan_info  .as_pointer()  as Ptr<brunsli_JPEGScanInfo>).offset((*(*js.upgrade().deref()) . i .borrow()) )  ) )) ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT as i32 ) )  =>  { { let si : Value<Ptr<brunsli_JPEGScanInfo> > = Rc::new(RefCell::new(( ((*(*jpg.borrow()) .upgrade().deref()) . scan_info  .as_pointer()  as Ptr<brunsli_JPEGScanInfo>).offset((*(*js.upgrade().deref()) . i .borrow()) )  ) )) ;
   ;
  ;
- if { let _lhs = (*(*js.upgrade().deref()) . j .borrow()) ; _lhs < (*(*(*si.borrow()) .upgrade().deref()) . num_components .borrow())  } { if ! (  { BrunsliBitReaderCanRead_134 ( ((*br.borrow()) ).clone() , 6_usize  , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
- } (*( * ((*(*si.borrow()) .upgrade().deref()) . components  .as_pointer()  as Ptr<brunsli_JPEGComponentScanInfo>).offset((*(*js.upgrade().deref()) . j .borrow()) ) .upgrade().deref() ) . comp_idx .borrow_mut())  = ( ( (  { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 2_u32  , ) } )  as u8 ) )  ;
- (*( * ((*(*si.borrow()) .upgrade().deref()) . components  .as_pointer()  as Ptr<brunsli_JPEGComponentScanInfo>).offset((*(*js.upgrade().deref()) . j .borrow()) ) .upgrade().deref() ) . dc_tbl_idx .borrow_mut())  = ( ( (  { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 2_u32  , ) } )  as i32 ) )  ;
- (*( * ((*(*si.borrow()) .upgrade().deref()) . components  .as_pointer()  as Ptr<brunsli_JPEGComponentScanInfo>).offset((*(*js.upgrade().deref()) . j .borrow()) ) .upgrade().deref() ) . ac_tbl_idx .borrow_mut())  = ( ( (  { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 2_u32  , ) } )  as i32 ) )  ;
+ if { let _lhs = (*(*js.upgrade().deref()) . j .borrow()) ; _lhs < (*(*(*si.borrow()) .upgrade().deref()) . num_components .borrow())  } { if ! ( ( { BrunsliBitReaderCanRead_134 ( ((*br.borrow()) ).clone() , 6_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
+ } (*( * ((*(*si.borrow()) .upgrade().deref()) . components  .as_pointer()  as Ptr<brunsli_JPEGComponentScanInfo>).offset((*(*js.upgrade().deref()) . j .borrow()) ) .upgrade().deref() ) . comp_idx .borrow_mut())  = ( ( ( { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 2_u32  , ) } )  as u8 ) )  ;
+ (*( * ((*(*si.borrow()) .upgrade().deref()) . components  .as_pointer()  as Ptr<brunsli_JPEGComponentScanInfo>).offset((*(*js.upgrade().deref()) . j .borrow()) ) .upgrade().deref() ) . dc_tbl_idx .borrow_mut())  = ( ( ( { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 2_u32  , ) } )  as i32 ) )  ;
+ (*( * ((*(*si.borrow()) .upgrade().deref()) . components  .as_pointer()  as Ptr<brunsli_JPEGComponentScanInfo>).offset((*(*js.upgrade().deref()) . j .borrow()) ) .upgrade().deref() ) . ac_tbl_idx .borrow_mut())  = ( ( ( { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 2_u32  , ) } )  as i32 ) )  ;
  (*(*js.upgrade().deref()) . j .borrow_mut())  . postfix_inc () ;
  } else { (*(*js.upgrade().deref()) . last_block_idx .borrow_mut())  = - 1_i32  ;
  (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION  ;
  } ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION as i32 ) )  =>  { { if ! (  { BrunsliBitReaderCanRead_134 ( ((*br.borrow()) ).clone() , 1_usize  , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
- } if ( (  { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 1_u32  , ) } )  != 0 ) { (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA  ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION as i32 ) )  =>  { { if ! ( ( { BrunsliBitReaderCanRead_134 ( ((*br.borrow()) ).clone() , 1_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
+ } if ( ( { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 1_u32  , ) } )  != 0 ) { (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA  ;
  } else { (*(*js.upgrade().deref()) . last_block_idx .borrow_mut())  = 0  ;
  (*(*js.upgrade().deref()) . last_num .borrow_mut())  = 0  ;
  (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION  ;
  } ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA as i32 ) )  =>  { {  let si : Value<Ptr<brunsli_JPEGScanInfo> > = Rc::new(RefCell::new(( ((*(*jpg.borrow()) .upgrade().deref()) . scan_info  .as_pointer()  as Ptr<brunsli_JPEGScanInfo>).offset((*(*js.upgrade().deref()) . i .borrow()) )  ) )) ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA as i32 ) )  =>  { { let si : Value<Ptr<brunsli_JPEGScanInfo> > = Rc::new(RefCell::new(( ((*(*jpg.borrow()) .upgrade().deref()) . scan_info  .as_pointer()  as Ptr<brunsli_JPEGScanInfo>).offset((*(*js.upgrade().deref()) . i .borrow()) )  ) )) ;
   ;
  ;
- if ! (  { DecodeVarint_144 ( ( (*js.upgrade().deref()) . varint  .as_pointer()  )  , ((*br.borrow()) ).clone() , 28_usize  , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
- }  let block_idx : Value<i32 > = Rc::new(RefCell::new(( { let _lhs = (*(*js.upgrade().deref()) . last_block_idx .borrow()) ; _lhs + ( ( (*(*(*js.upgrade().deref()) . varint .borrow()) . value .borrow()) as i32 ) )  } + 1 ) )) ;
+ if ! ( ( { DecodeVarint_144 ( ( (*js.upgrade().deref()) . varint  .as_pointer()  )  , ((*br.borrow()) ).clone() , 28_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
+ } let block_idx : Value<i32 > = Rc::new(RefCell::new(( { let _lhs = (*(*js.upgrade().deref()) . last_block_idx .borrow()) ; _lhs + ( ( (*(*(*js.upgrade().deref()) . varint .borrow()) . value .borrow()) as i32 ) )  } + 1 ) )) ;
   ;
  ;
- (*(*si.borrow()) .upgrade().deref()) . reset_points  .as_pointer()  .with_mut(|__v: &mut  Vec<i32>   | __v.push( (*block_idx.borrow_mut()) as i32 ))  ;
+ (*(*si.borrow()) .upgrade().deref()) . reset_points  .as_pointer()  .with_mut ( |__v: &mut  Vec<i32>   | __v.push ( (*block_idx.borrow_mut()) as i32  ) )  ;
  (*(*js.upgrade().deref()) . last_block_idx .borrow_mut())  = (*block_idx.borrow())  ;
- if ( (*(*js.upgrade().deref()) . last_block_idx .borrow()) > ( ( 1 << 30 ) ) ) {  return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN   ;
+ if ( (*(*js.upgrade().deref()) . last_block_idx .borrow()) > ( ( 1 << 30 ) ) ) { return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN   ;
  } (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION  ;
  ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION as i32 ) )  =>  { { if ! (  { BrunsliBitReaderCanRead_134 ( ((*br.borrow()) ).clone() , 1_usize  , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
- } if ( (  { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 1_u32  , ) } )  != 0 ) { (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA  ;
- } else { (  { (*maybe_add_zero_run.borrow_mut()) ( ) } ) ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION as i32 ) )  =>  { { if ! ( ( { BrunsliBitReaderCanRead_134 ( ((*br.borrow()) ).clone() , 1_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
+ } if ( ( { BrunsliBitReaderRead_126 ( ((*br.borrow()) ).clone() , 1_u32  , ) } )  != 0 ) { (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA  ;
+ } else { ( { (*maybe_add_zero_run.borrow_mut()) ( ) } ) ;
  (*(*js.upgrade().deref()) . i .borrow_mut())  . prefix_inc () ;
  if { let _lhs = (*(*js.upgrade().deref()) . i .borrow()) ; _lhs < (*(*js.upgrade().deref()) . num_scans .borrow())  } { (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON  ;
  ;
  continue 'loop_ ;
- }  return brunsli_BrunsliStatus_BRUNSLI_OK   ;
+ } return brunsli_BrunsliStatus_BRUNSLI_OK   ;
  } ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA as i32 ) )  =>  { { if ! (  { DecodeVarint_144 ( ( (*js.upgrade().deref()) . varint  .as_pointer()  )  , ((*br.borrow()) ).clone() , 28_usize  , ) } )  {  return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
- }  let block_idx : Value<i32 > = Rc::new(RefCell::new({ let _lhs = (*(*js.upgrade().deref()) . last_block_idx .borrow()) ; _lhs + ( ( (*(*(*js.upgrade().deref()) . varint .borrow()) . value .borrow()) as i32 ) )  } )) ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA as i32 ) )  =>  { { if ! ( ( { DecodeVarint_144 ( ( (*js.upgrade().deref()) . varint  .as_pointer()  )  , ((*br.borrow()) ).clone() , 28_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
+ } let block_idx : Value<i32 > = Rc::new(RefCell::new({ let _lhs = (*(*js.upgrade().deref()) . last_block_idx .borrow()) ; _lhs + ( ( (*(*(*js.upgrade().deref()) . varint .borrow()) . value .borrow()) as i32 ) )  } )) ;
   ;
  ;
- if { let _lhs = (*block_idx.borrow()) ; _lhs > (*(*js.upgrade().deref()) . last_block_idx .borrow())  } { (  { (*maybe_add_zero_run.borrow_mut()) ( ) } ) ;
+ if { let _lhs = (*block_idx.borrow()) ; _lhs > (*(*js.upgrade().deref()) . last_block_idx .borrow())  } { ( { (*maybe_add_zero_run.borrow_mut()) ( ) } ) ;
  } (*(*js.upgrade().deref()) . last_num .borrow_mut())  . prefix_inc () ;
  (*(*js.upgrade().deref()) . last_block_idx .borrow_mut())  = (*block_idx.borrow())  ;
- if ( (*(*js.upgrade().deref()) . last_block_idx .borrow()) > ( ( 1 << 30 ) ) ) {  return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN   ;
+ if ( (*(*js.upgrade().deref()) . last_block_idx .borrow()) > ( ( 1 << 30 ) ) ) { return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN   ;
  } (*(*js.upgrade().deref()) . stage .borrow_mut())  = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION  ;
  ;
  continue 'loop_ ;
- } }, _ =>  {  return brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR   ;
+ } }, _ =>  { return brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR   ;
  }, }
         };
     }
@@ -6837,7 +6975,7 @@ pub fn DecodeDC_157(
                         (*(*s.upgrade().deref()).bit_reader.borrow_mut()) = (*br.borrow()).clone();
                         (*(*s.upgrade().deref()).arith_decoder.borrow_mut()) =
                             (*ac.borrow()).clone();
-                        return (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone();
+                        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                     }
                     let is_empty_ctx: Value<i32> = Rc::new(RefCell::new(
                         ({
@@ -8606,7 +8744,7 @@ pub fn DecodeMetaDataSection_180(
                 };
                 (*(*ms.upgrade().deref()).brotli.borrow_mut()) = std::ptr::null_mut();
                 (*(*ms.upgrade().deref()).decompression_stage.borrow_mut()) =
-                    (brunsli_internal_dec_MetadataDecompressionStage_DONE).clone();
+                    brunsli_internal_dec_MetadataDecompressionStage_DONE;
                 return (*result.borrow());
             }),
         ));
@@ -8657,9 +8795,7 @@ pub fn DecodeMetaDataSection_180(
             }));
             if (((*result.borrow()) as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_ERROR as i32)) {
                 return ({
-                    (*finish_decompression.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                    )
+                    (*finish_decompression.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             let chunk_size: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -8684,9 +8820,7 @@ pub fn DecodeMetaDataSection_180(
                 _lhs > (*(*ms.upgrade().deref()).metadata_size.borrow())
             } {
                 return ({
-                    (*finish_decompression.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                    )
+                    (*finish_decompression.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             let consumed_bytes: Value<usize> = Rc::new(RefCell::new(
@@ -8705,9 +8839,7 @@ pub fn DecodeMetaDataSection_180(
             ));
             if !(*chunk_ok.borrow()) {
                 return ({
-                    (*finish_decompression.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                    )
+                    (*finish_decompression.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             if (((*result.borrow()) as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_SUCCESS as i32))
@@ -8715,7 +8847,7 @@ pub fn DecodeMetaDataSection_180(
                 if (({ RemainingSectionLength_174((*state.borrow()).clone()) }) != 0_usize) {
                     return ({
                         (*finish_decompression.borrow_mut())(
-                            (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
+                            brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN,
                         )
                     });
                 }
@@ -8725,19 +8857,19 @@ pub fn DecodeMetaDataSection_180(
                 } {
                     return ({
                         (*finish_decompression.borrow_mut())(
-                            (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
+                            brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN,
                         )
                     });
                 }
                 if !({ brunsli_internal_dec_MetadataStateImpl::CanFinish(&ms) }) {
                     return ({
                         (*finish_decompression.borrow_mut())(
-                            (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
+                            brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN,
                         )
                     });
                 }
                 return ({
-                    (*finish_decompression.borrow_mut())((brunsli_BrunsliStatus_BRUNSLI_OK).clone())
+                    (*finish_decompression.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_OK)
                 });
             }
             if (((*result.borrow()) as i32)
@@ -8759,9 +8891,7 @@ pub fn DecodeMetaDataSection_180(
             };
             if (({ RemainingSectionLength_174((*state.borrow()).clone()) }) == 0_usize) {
                 return ({
-                    (*finish_decompression.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                    )
+                    (*finish_decompression.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
@@ -8931,7 +9061,7 @@ pub fn DecodeJPEGInternalsSection_184(
             if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 6_usize) }) {
                 return ({
                     (*suspend_bit_reader.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
+                        brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA,
                     )
                 });
             }
@@ -8970,7 +9100,7 @@ pub fn DecodeJPEGInternalsSection_184(
             if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 16_usize) }) {
                 return ({
                     (*suspend_bit_reader.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
+                        brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA,
                     )
                 });
             }
@@ -9004,9 +9134,7 @@ pub fn DecodeJPEGInternalsSection_184(
         } {
             write!(libcc2rs::cerr(), "Invalid number of DHT markers\n",);
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         if ((*(*js.upgrade().deref()).num_scans.borrow()) > 0_usize) {
@@ -9041,9 +9169,7 @@ pub fn DecodeJPEGInternalsSection_184(
     {
         if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 2_usize) }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let num_quant_tables: Value<i32> = Rc::new(RefCell::new(
@@ -9072,9 +9198,7 @@ pub fn DecodeJPEGInternalsSection_184(
         }
         if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 7_usize) }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let q: Value<Ptr<brunsli_JPEGQuantTable>> = Rc::new(RefCell::new(
@@ -9099,9 +9223,7 @@ pub fn DecodeJPEGInternalsSection_184(
                 (*(*(*q.borrow()).upgrade().deref()).precision.borrow()),
             );
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (*(*js.upgrade().deref()).i.borrow_mut()).prefix_inc();
@@ -9111,9 +9233,7 @@ pub fn DecodeJPEGInternalsSection_184(
     {
         if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 2_usize) }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let comp_ids: Value<i32> = Rc::new(RefCell::new(
@@ -9134,9 +9254,7 @@ pub fn DecodeJPEGInternalsSection_184(
                 (*comp_ids.borrow()),
             );
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (*(*js.upgrade().deref()).stage.borrow_mut()) =
@@ -9219,7 +9337,7 @@ pub fn DecodeJPEGInternalsSection_184(
             if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 8_usize) }) {
                 return ({
                     (*suspend_bit_reader.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
+                        brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA,
                     )
                 });
             }
@@ -9246,9 +9364,7 @@ pub fn DecodeJPEGInternalsSection_184(
             )
         }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let __rhs = (*(*(*js.upgrade().deref()).varint.borrow()).value.borrow());
@@ -9266,9 +9382,7 @@ pub fn DecodeJPEGInternalsSection_184(
                 (*(*js.upgrade().deref()).num_padding_bits.borrow()),
             );
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (*(*js.upgrade().deref()).i.borrow_mut()) = 0_usize;
@@ -9285,7 +9399,7 @@ pub fn DecodeJPEGInternalsSection_184(
             if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 1_usize) }) {
                 return ({
                     (*suspend_bit_reader.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
+                        brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA,
                     )
                 });
             }
@@ -9297,7 +9411,7 @@ pub fn DecodeJPEGInternalsSection_184(
                 });
             (*(*js.upgrade().deref()).i.borrow_mut()).prefix_inc();
         }
-        ({ (*suspend_bit_reader.borrow_mut())((brunsli_BrunsliStatus_BRUNSLI_OK).clone()) });
+        ({ (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_OK) });
         ({ BrunsliBitReaderFinish_131((*br.borrow()).clone()) });
         if !({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) }) {
             return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
@@ -9306,7 +9420,7 @@ pub fn DecodeJPEGInternalsSection_184(
         (*(*js.upgrade().deref()).stage.borrow_mut()) =
             brunsli_internal_dec_JpegInternalsState_Stage_ITERATE_MARKERS;
     } else {
-        ({ (*suspend_bit_reader.borrow_mut())((brunsli_BrunsliStatus_BRUNSLI_OK).clone()) });
+        ({ (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_OK) });
     }
     'loop_: while true {
         switch!(match ((*(*js.upgrade().deref()).stage.borrow()) as i32) {
@@ -9492,9 +9606,7 @@ pub fn DecodeQuantDataSection_186(
     {
         if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 2_usize) }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let num_quant_tables: Value<usize> = Rc::new(RefCell::new(
@@ -9506,9 +9618,7 @@ pub fn DecodeQuantDataSection_186(
             _lhs != (*num_quant_tables.borrow())
         } {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         {
@@ -9539,7 +9649,7 @@ pub fn DecodeQuantDataSection_186(
                     if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 4_usize) }) {
                         return ({
                             (*suspend_bit_reader.borrow_mut())(
-                                (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
+                                brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA,
                             )
                         });
                     }
@@ -9596,7 +9706,7 @@ pub fn DecodeQuantDataSection_186(
                     if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 6_usize) }) {
                         return ({
                             (*suspend_bit_reader.borrow_mut())(
-                                (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
+                                brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA,
                             )
                         });
                     }
@@ -9629,7 +9739,7 @@ pub fn DecodeQuantDataSection_186(
                     if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 1_usize) }) {
                         return ({
                             (*suspend_bit_reader.borrow_mut())(
-                                (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
+                                brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA,
                             )
                         });
                     }
@@ -9648,7 +9758,7 @@ pub fn DecodeQuantDataSection_186(
                     if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 1_usize) }) {
                         return ({
                             (*suspend_bit_reader.borrow_mut())(
-                                (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
+                                brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA,
                             )
                         });
                     }
@@ -9674,7 +9784,7 @@ pub fn DecodeQuantDataSection_186(
                     }) {
                         return ({
                             (*suspend_bit_reader.borrow_mut())(
-                                (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
+                                brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA,
                             )
                         });
                     }
@@ -9716,7 +9826,7 @@ pub fn DecodeQuantDataSection_186(
                     if ((*quant_value.borrow()) <= 0) {
                         return ({
                             (*suspend_bit_reader.borrow_mut())(
-                                (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
+                                brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN,
                             )
                         });
                     }
@@ -9726,7 +9836,7 @@ pub fn DecodeQuantDataSection_186(
                     if ((*quant_value.borrow()) >= 65536) {
                         return ({
                             (*suspend_bit_reader.borrow_mut())(
-                                (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
+                                brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN,
                             )
                         });
                     }
@@ -9750,7 +9860,7 @@ pub fn DecodeQuantDataSection_186(
                     } {
                         return ({
                             (*suspend_bit_reader.borrow_mut())(
-                                (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
+                                brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN,
                             )
                         });
                     }
@@ -9784,9 +9894,7 @@ pub fn DecodeQuantDataSection_186(
         ));
         if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 2_usize) }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         (*(*(*c.borrow()).upgrade().deref()).quant_idx.borrow_mut()) =
@@ -9796,9 +9904,7 @@ pub fn DecodeQuantDataSection_186(
             _lhs >= (*(*(*jpg.borrow()).upgrade().deref()).quant.borrow()).len()
         } {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (*(*qs.upgrade().deref()).i.borrow_mut()).prefix_inc();
@@ -9815,7 +9921,7 @@ pub fn DecodeQuantDataSection_186(
         });
         'loop_: while true {}
     };
-    ({ (*suspend_bit_reader.borrow_mut())((brunsli_BrunsliStatus_BRUNSLI_OK).clone()) });
+    ({ (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_OK) });
     ({ BrunsliBitReaderFinish_131((*br.borrow()).clone()) });
     if !({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) }) {
         return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
@@ -9841,7 +9947,7 @@ pub fn DecodeHistogramDataSection_187(
         == (brunsli_internal_dec_HistogramDataState_Stage_INIT as i32))
     {
         ({ BrunsliBitReaderInit_127((*br.borrow()).clone()) });
-        if !(!(*(*(*jpg.borrow()).upgrade().deref()).components.borrow()).is_empty()) {
+        if !(!((*(*(*jpg.borrow()).upgrade().deref()).components.borrow()).is_empty())) {
             ({
                 BrunsliDumpAndAbort_79(
                     Ptr::from_string_literal(b"brunsli_decode.cc"),
@@ -9904,9 +10010,7 @@ pub fn DecodeHistogramDataSection_187(
             )
         }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         let i: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -9916,9 +10020,7 @@ pub fn DecodeHistogramDataSection_187(
             ));
             if ((*scheme.borrow()) >= ((*kNumSchemes_91.with(Value::clone).borrow()) as usize)) {
                 return ({
-                    (*suspend_bit_reader.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                    )
+                    (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             let m: Ptr<brunsli_internal_dec_ComponentMeta> =
@@ -9939,9 +10041,7 @@ pub fn DecodeHistogramDataSection_187(
         }
         if !({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (*(*hs.upgrade().deref()).stage.borrow_mut()) =
@@ -9952,18 +10052,14 @@ pub fn DecodeHistogramDataSection_187(
     {
         if !({ BrunsliBitReaderCanRead_134((*br.borrow()).clone(), 11_usize) }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         (*(*s.upgrade().deref()).num_histograms.borrow_mut()) =
             ((({ DecodeVarLenUint8_143((*br.borrow()).clone()) }).wrapping_add(1_u32)) as usize);
         if !({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         if (*(*s.upgrade().deref()).shallow_histograms.borrow()) {
@@ -10008,12 +10104,10 @@ pub fn DecodeHistogramDataSection_187(
     if (((*(*hs.upgrade().deref()).stage.borrow()) as i32)
         == (brunsli_internal_dec_HistogramDataState_Stage_SKIP_CONTENT as i32))
     {
-        ({ (*suspend_bit_reader.borrow_mut())((brunsli_BrunsliStatus_BRUNSLI_OK).clone()) });
+        ({ (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_OK) });
         if !({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         ({
@@ -10039,14 +10133,12 @@ pub fn DecodeHistogramDataSection_187(
             )
         }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
         (*(*hs.upgrade().deref()).max_run_length_prefix.borrow_mut()) = 0_usize;
         let use_rle_for_zeros: Value<bool> = Rc::new(RefCell::new(
-            !!(({ BrunsliBitReaderRead_126((*br.borrow()).clone(), 1_u32) }) != 0),
+            !(!(({ BrunsliBitReaderRead_126((*br.borrow()).clone(), 1_u32) }) != 0)),
         ));
         if (*use_rle_for_zeros.borrow()) {
             (*(*hs.upgrade().deref()).max_run_length_prefix.borrow_mut()) = ((({
@@ -10074,9 +10166,7 @@ pub fn DecodeHistogramDataSection_187(
             )
         }) {
             return ({
-                (*suspend_bit_reader.borrow_mut())(
-                    (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                )
+                (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
         (*(*hs.upgrade().deref()).i.borrow_mut()) = 0_usize;
@@ -10128,7 +10218,7 @@ pub fn DecodeHistogramDataSection_187(
             }) {
                 return ({
                     (*suspend_bit_reader.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA).clone(),
+                        brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA,
                     )
                 });
             }
@@ -10140,9 +10230,7 @@ pub fn DecodeHistogramDataSection_187(
                 )
             }) {
                 return ({
-                    (*suspend_bit_reader.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                    )
+                    (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             if !({
@@ -10155,9 +10243,7 @@ pub fn DecodeHistogramDataSection_187(
                 )
             }) {
                 return ({
-                    (*suspend_bit_reader.borrow_mut())(
-                        (brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN).clone(),
-                    )
+                    (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             (*(*hs.upgrade().deref()).i.borrow_mut()).prefix_inc();
@@ -10170,7 +10256,7 @@ pub fn DecodeHistogramDataSection_187(
             &mut Vec::new(),
             &mut (*(*hs.upgrade().deref()).counts.borrow_mut()),
         );
-        ({ (*suspend_bit_reader.borrow_mut())((brunsli_BrunsliStatus_BRUNSLI_OK).clone()) });
+        ({ (*suspend_bit_reader.borrow_mut())(brunsli_BrunsliStatus_BRUNSLI_OK) });
         ({ BrunsliBitReaderFinish_131((*br.borrow()).clone()) });
         if !({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) }) {
             return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
@@ -10441,7 +10527,7 @@ pub fn DecodeOriginalJpg_192(
                             .original_jpg
                             .borrow_mut()) = Ptr::<u8>::null();
                         (*(*fs.upgrade().deref()).stage.borrow_mut()) =
-                            (brunsli_internal_dec_FallbackState_Stage_DONE as usize).clone();
+                            (brunsli_internal_dec_FallbackState_Stage_DONE as usize);
                         break 'switch;
                     }
                     (*(*fs.upgrade().deref()).stage.borrow_mut()) =
@@ -10539,7 +10625,7 @@ pub fn DecodeOriginalJpg_192(
                             .borrow_mut()) =
                             ((*fs.upgrade().deref()).storage.as_pointer() as Ptr<u8>);
                         (*(*fs.upgrade().deref()).stage.borrow_mut()) =
-                            (brunsli_internal_dec_FallbackState_Stage_DONE as usize).clone();
+                            (brunsli_internal_dec_FallbackState_Stage_DONE as usize);
                         break 'switch;
                     }
                     return ({
@@ -11236,9 +11322,7 @@ pub fn WarmupMeta_196(jpg: Ptr<brunsli_JPEGData>, state: Ptr<brunsli_internal_de
                             .wrapping_mul((::std::mem::size_of::<i32>() as usize))
                             as usize,
                     );
-                (((*m.upgrade().deref()).quant.as_pointer() as Ptr<i32>) as Ptr<i32>)
-                    .to_any()
-                    .clone()
+                (((*m.upgrade().deref()).quant.as_pointer() as Ptr<i32>) as Ptr<i32>).to_any()
             };
             (*c.borrow_mut()).prefix_inc();
         }
@@ -11396,7 +11480,6 @@ pub fn LoadInput_200(state: Ptr<brunsli_internal_dec_State>) {
         (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>)
             .offset((*(*b.upgrade().deref()).data_len.borrow()) as isize) as Ptr<u8>)
             .to_any()
-            .clone()
     };
     (*(*(*state.borrow()).upgrade().deref()).data.borrow_mut()) =
         ((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>);
@@ -11479,9 +11562,7 @@ pub fn UnloadInput_201(
                         .to_any(),
                     (*(*b.upgrade().deref()).data_len.borrow()) as usize,
                 );
-            (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>) as Ptr<u8>)
-                .to_any()
-                .clone()
+            (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any()
         };
         {
             let rhs_0 =
@@ -11551,7 +11632,7 @@ pub fn UnloadInput_201(
             (*(*b.upgrade().deref()).external_pos.borrow_mut()) = rhs_0
         };
     }
-    if !(!(*(*b.upgrade().deref()).data.borrow()).is_empty()) {
+    if !(!((*(*b.upgrade().deref()).data.borrow()).is_empty())) {
         ({
             BrunsliDumpAndAbort_79(
                 Ptr::from_string_literal(b"brunsli_decode.cc"),
@@ -11574,9 +11655,7 @@ pub fn UnloadInput_201(
                         .to_any(),
                     (*(*b.upgrade().deref()).data_len.borrow()) as usize,
                 );
-            (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>) as Ptr<u8>)
-                .to_any()
-                .clone()
+            (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any()
         };
     }
     if !({
@@ -11700,7 +11779,7 @@ pub fn BrunsliDecodeJpeg_204(
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<usize> = Rc::new(RefCell::new(len));
     let jpg: Value<Ptr<brunsli_JPEGData>> = Rc::new(RefCell::new(jpg));
-    if !!(*data.borrow()).is_null() {
+    if !(!(*data.borrow()).is_null()) {
         return brunsli_BrunsliStatus_BRUNSLI_INVALID_PARAM;
     }
     let state: Value<brunsli_internal_dec_State> = Rc::new(RefCell::new(
@@ -11713,7 +11792,7 @@ pub fn BrunsliDecodeJpeg_204(
 pub fn BrunsliEstimateDecoderPeakMemoryUsage_205(data: Ptr<u8>, len: usize) -> usize {
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<usize> = Rc::new(RefCell::new(len));
-    if !!(*data.borrow()).is_null() {
+    if !(!(*data.borrow()).is_null()) {
         return (brunsli_BrunsliStatus_BRUNSLI_INVALID_PARAM as usize);
     }
     let state: Value<brunsli_internal_dec_State> = Rc::new(RefCell::new(
@@ -11794,11 +11873,6 @@ pub fn BrunsliEstimateDecoderPeakMemoryUsage_205(data: Ptr<u8>, len: usize) -> u
     })) as usize);
 }
 impl brunsli_BrunsliDecoder {}
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 pub fn MoveToFront_207(v: Ptr<u8>, index: u8) {
     let v: Value<Ptr<u8>> = Rc::new(RefCell::new(v));
     let index: Value<u8> = Rc::new(RefCell::new(index));
@@ -12004,7 +12078,7 @@ pub fn ReadHistogram_189(
     let precision_bits: Value<u32> = Rc::new(RefCell::new(precision_bits));
     let counts: Value<Ptr<Vec<u32>>> = Rc::new(RefCell::new(counts));
     let br: Value<Ptr<brunsli_BrunsliBitReader>> = Rc::new(RefCell::new(br));
-    if !(!(*(*counts.borrow()).upgrade().deref()).is_empty()) {
+    if !(!((*(*counts.borrow()).upgrade().deref()).is_empty())) {
         ({
             BrunsliDumpAndAbort_79(
                 Ptr::from_string_literal(b"histogram_decode.cc"),
@@ -12017,7 +12091,7 @@ pub fn ReadHistogram_189(
     let space: Value<u32> = Rc::new(RefCell::new((1_u32 << (*precision_bits.borrow()))));
     let length: Value<usize> = Rc::new(RefCell::new((*(*counts.borrow()).upgrade().deref()).len()));
     {
-        let mut __a0 = ((*counts.borrow()).to_strong().as_pointer() as Ptr<u32>).clone();
+        let mut __a0 = ((*counts.borrow()).to_strong().as_pointer() as Ptr<u32>);
         while __a0 != ((*counts.borrow()).to_strong().as_pointer() as Ptr<u32>).to_end() {
             let v = 0.clone();
             __a0.write(v);
@@ -12197,11 +12271,6 @@ impl ByteRepr for brunsli_HuffmanDecodingData {
         }
     }
 }
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 thread_local!(
     pub static kCodeLengthCodes_213: Value<i32> = Rc::new(RefCell::new(18));
 );
@@ -12347,9 +12416,7 @@ pub fn ReadHuffmanCodeLengths_217(
                         ((*repeat_code_len.borrow()) as i32) as u8,
                         (*repeat_delta.borrow()) as usize,
                     );
-                (((*code_lengths.borrow()).offset((*symbol.borrow()) as isize)) as Ptr<u8>)
-                    .to_any()
-                    .clone()
+                (((*code_lengths.borrow()).offset((*symbol.borrow()) as isize)) as Ptr<u8>).to_any()
             };
             {
                 let rhs_0 = (*symbol.borrow()).wrapping_add((*repeat_delta.borrow()));
@@ -12373,9 +12440,7 @@ pub fn ReadHuffmanCodeLengths_217(
                 (0) as u8,
                 ((*num_symbols.borrow()).wrapping_sub((*symbol.borrow()))) as usize,
             );
-        (((*code_lengths.borrow()).offset((*symbol.borrow()) as isize)) as Ptr<u8>)
-            .to_any()
-            .clone()
+        (((*code_lengths.borrow()).offset((*symbol.borrow()) as isize)) as Ptr<u8>).to_any()
     };
     return ({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) });
 }
@@ -12617,17 +12682,11 @@ pub fn ReadSimpleCode_219(
             (((*table.borrow()).offset((*table_size.borrow()) as isize))
                 as Ptr<brunsli_HuffmanCode>)
                 .to_any()
-                .clone()
         };
         (*table_size.borrow_mut()) <<= 1;
     }
     return ({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) });
 }
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 pub fn GetNextKey_221(key: i32, len: usize) -> i32 {
     let key: Value<i32> = Rc::new(RefCell::new(key));
     let len: Value<usize> = Rc::new(RefCell::new(len));
@@ -12832,7 +12891,6 @@ pub fn BuildHuffmanTable_218(
             (((*table.borrow()).offset((*table_size.borrow()) as isize))
                 as Ptr<brunsli_HuffmanCode>)
                 .to_any()
-                .clone()
         };
         (*table_size.borrow_mut()) <<= 1;
     }
@@ -12896,11 +12954,6 @@ pub fn BuildHuffmanTable_218(
     }
     return ((*total_size.borrow()) as u32);
 }
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
-thread_local!();
 impl brunsli_internal_dec_OutputChunk {
     pub fn brunsli_internal_dec_OutputChunk4(bytes: Ptr<Vec<u8>>) -> Self {
         let __this: Value<brunsli_internal_dec_OutputChunk> = Rc::new(RefCell::new(Self {
@@ -12940,10 +12993,17 @@ pub fn BitWriterInit_228(
     let output_queue: Value<Ptr<Vec<brunsli_internal_dec_OutputChunk>>> =
         Rc::new(RefCell::new(output_queue));
     (*(*(*bw.borrow()).upgrade().deref()).output.borrow_mut()) = (*output_queue.borrow()).clone();
-    (*(*(*bw.borrow()).upgrade().deref()).chunk.borrow_mut()) =
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
-            Some((*kBitWriterChunkSize_225.with(Value::clone).borrow()))
-        });
+    ({
+        let _arg0: Value<brunsli_internal_dec_OutputChunk> = Rc::new(RefCell::new(
+            brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
+                Some((*kBitWriterChunkSize_225.with(Value::clone).borrow()))
+            }),
+        ));
+        brunsli_internal_dec_OutputChunkImpl::operator_assign_pmutbrunsli_internal_dec_OutputChunk(
+            &(*(*bw.borrow()).upgrade().deref()).chunk.as_pointer(),
+            _arg0.as_pointer(),
+        )
+    });
     (*(*(*bw.borrow()).upgrade().deref()).pos.borrow_mut()) = 0_usize;
     (*(*(*bw.borrow()).upgrade().deref()).put_buffer.borrow_mut()) = 0_u64;
     (*(*(*bw.borrow()).upgrade().deref()).put_bits.borrow_mut()) = 64;
@@ -12962,18 +13022,27 @@ pub fn SwapBuffer_229(bw: Ptr<brunsli_internal_dec_BitWriter>) {
     (*(*(*(*bw.borrow()).upgrade().deref()).chunk.borrow())
         .len
         .borrow_mut()) = __rhs;
-    (*(*(*bw.borrow()).upgrade().deref()).output.borrow())
-        .to_strong()
-        .as_pointer()
-        .with_mut(|__v: &mut Vec<brunsli_internal_dec_OutputChunk>| {
-            __v.push(std::mem::take(
-                &mut (*(*(*bw.borrow()).upgrade().deref()).chunk.borrow_mut()),
-            ))
-        });
-    (*(*(*bw.borrow()).upgrade().deref()).chunk.borrow_mut()) =
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
-            Some((*kBitWriterChunkSize_225.with(Value::clone).borrow()))
-        });
+    {
+        let __arg =
+            brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk({
+                (*(*bw.borrow()).upgrade().deref()).chunk.as_pointer()
+            });
+        (*(*(*bw.borrow()).upgrade().deref()).output.borrow())
+            .to_strong()
+            .as_pointer()
+            .with_mut(|__v: &mut Vec<brunsli_internal_dec_OutputChunk>| __v.push(__arg))
+    };
+    ({
+        let _arg0: Value<brunsli_internal_dec_OutputChunk> = Rc::new(RefCell::new(
+            brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
+                Some((*kBitWriterChunkSize_225.with(Value::clone).borrow()))
+            }),
+        ));
+        brunsli_internal_dec_OutputChunkImpl::operator_assign_pmutbrunsli_internal_dec_OutputChunk(
+            &(*(*bw.borrow()).upgrade().deref()).chunk.as_pointer(),
+            _arg0.as_pointer(),
+        )
+    });
     let __rhs = ((*(*(*(*bw.borrow()).upgrade().deref()).chunk.borrow())
         .buffer
         .borrow())
@@ -13178,7 +13247,7 @@ pub fn JumpToByteBoundary_235(
             }
             {
                 let rhs_0 = (((*pad_pattern.borrow()) as i32)
-                    | (!!((((*src.borrow_mut()).postfix_inc()).read()) != 0) as i32))
+                    | (!(!((((*src.borrow_mut()).postfix_inc()).read()) != 0)) as i32))
                     as u8;
                 (*pad_pattern.borrow_mut()) = rhs_0
             };
@@ -13223,19 +13292,28 @@ pub fn BitWriterFinish_236(bw: Ptr<brunsli_internal_dec_BitWriter>) {
     (*(*(*(*bw.borrow()).upgrade().deref()).chunk.borrow())
         .len
         .borrow_mut()) = __rhs;
-    (*(*(*bw.borrow()).upgrade().deref()).output.borrow())
-        .to_strong()
-        .as_pointer()
-        .with_mut(|__v: &mut Vec<brunsli_internal_dec_OutputChunk>| {
-            __v.push(std::mem::take(
-                &mut (*(*(*bw.borrow()).upgrade().deref()).chunk.borrow_mut()),
-            ))
-        });
-    (*(*(*bw.borrow()).upgrade().deref()).chunk.borrow_mut()) =
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk1(
-            { Ptr::<u8>::null() },
-            { 0_usize },
-        );
+    {
+        let __arg =
+            brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk({
+                (*(*bw.borrow()).upgrade().deref()).chunk.as_pointer()
+            });
+        (*(*(*bw.borrow()).upgrade().deref()).output.borrow())
+            .to_strong()
+            .as_pointer()
+            .with_mut(|__v: &mut Vec<brunsli_internal_dec_OutputChunk>| __v.push(__arg))
+    };
+    ({
+        let _arg0: Value<brunsli_internal_dec_OutputChunk> = Rc::new(RefCell::new(
+            brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk1(
+                { Ptr::<u8>::null() },
+                { 0_usize },
+            ),
+        ));
+        brunsli_internal_dec_OutputChunkImpl::operator_assign_pmutbrunsli_internal_dec_OutputChunk(
+            &(*(*bw.borrow()).upgrade().deref()).chunk.as_pointer(),
+            _arg0.as_pointer(),
+        )
+    });
     (*(*(*bw.borrow()).upgrade().deref()).data.borrow_mut()) = Ptr::<u8>::null();
     (*(*(*bw.borrow()).upgrade().deref()).pos.borrow_mut()) = 0_usize;
 }
@@ -14173,7 +14251,11 @@ pub fn EncodeDRI_247(
     (*(*(*state.borrow()).upgrade().deref())
         .output_queue
         .borrow_mut())
-    .push(std::mem::take(&mut (*dri_marker.borrow_mut())));
+    .push(
+        brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk({
+            dri_marker.as_pointer()
+        }),
+    );
     return true;
 }
 pub fn EncodeRestart_248(marker: u8, state: Ptr<brunsli_internal_dec_SerializationState>) -> bool {
@@ -14845,9 +14927,7 @@ pub fn DoEncodeScan_255(
             (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
                 .to_any()
                 .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
-            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
-                .to_any()
-                .clone()
+            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>).to_any()
         };
         (*(*ss.upgrade().deref()).stage.borrow_mut()) =
             brunsli_internal_dec_EncodeScanState_Stage_BODY;
@@ -15006,7 +15086,6 @@ pub fn DoEncodeScan_255(
                         .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
                     (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
                         .to_any()
-                        .clone()
                 };
             }
             let i: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -15314,9 +15393,7 @@ pub fn DoEncodeScan_256(
             (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
                 .to_any()
                 .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
-            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
-                .to_any()
-                .clone()
+            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>).to_any()
         };
         (*(*ss.upgrade().deref()).stage.borrow_mut()) =
             brunsli_internal_dec_EncodeScanState_Stage_BODY;
@@ -15475,7 +15552,6 @@ pub fn DoEncodeScan_256(
                         .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
                     (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
                         .to_any()
-                        .clone()
                 };
             }
             let i: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -15783,9 +15859,7 @@ pub fn DoEncodeScan_257(
             (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
                 .to_any()
                 .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
-            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
-                .to_any()
-                .clone()
+            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>).to_any()
         };
         (*(*ss.upgrade().deref()).stage.borrow_mut()) =
             brunsli_internal_dec_EncodeScanState_Stage_BODY;
@@ -15944,7 +16018,6 @@ pub fn DoEncodeScan_257(
                         .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
                     (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
                         .to_any()
-                        .clone()
                 };
             }
             let i: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -16425,9 +16498,7 @@ pub fn PushOutput_260(
                         &((*(*chunk.upgrade().deref()).next.borrow()).clone() as Ptr<u8>).to_any(),
                         (*to_copy.borrow()) as usize,
                     );
-                (((*next_out.borrow()).read()).clone() as Ptr<u8>)
-                    .to_any()
-                    .clone()
+                (((*next_out.borrow()).read()).clone() as Ptr<u8>).to_any()
             };
             let __rhs = (*to_copy.borrow());
             {
@@ -16563,7 +16634,7 @@ pub fn SerializeJpeg_206(
                                 brunsli_internal_dec_SerializationState_Stage_ERROR;
                             break;
                         }
-                        (*ss.upgrade().deref()) . output_queue  .as_pointer()  .with_mut(|__v: &mut  Vec<brunsli_internal_dec_OutputChunk>   | __v.push( brunsli_internal_dec_OutputChunk :: brunsli_internal_dec_OutputChunk1 ( {  ((*(*jpg.upgrade().deref()) . original_jpg .borrow()) ).clone()  } , {  (*(*jpg.upgrade().deref()) . original_jpg_size .borrow())   } , )  ))  ;
+                        (*ss.upgrade().deref()) . output_queue  .as_pointer()  .with_mut ( |__v: &mut  Vec<brunsli_internal_dec_OutputChunk>   | __v.push ( brunsli_internal_dec_OutputChunk :: brunsli_internal_dec_OutputChunk1 ( { ((*(*jpg.upgrade().deref()) . original_jpg .borrow()) ).clone()  } , { (*(*jpg.upgrade().deref()) . original_jpg_size .borrow())   } , )   ) )  ;
                         (*(*ss.upgrade().deref()).stage.borrow_mut()) =
                             brunsli_internal_dec_SerializationState_Stage_DONE;
                         break;
@@ -16604,7 +16675,7 @@ pub fn SerializeJpeg_206(
                     ({ EncodeSOI_241((ss).clone()) });
                     ({ (*maybe_push_output.borrow_mut())() });
                     (*(*ss.upgrade().deref()).stage.borrow_mut()) =
-                        (brunsli_internal_dec_SerializationState_Stage_SERIALIZE_SECTION).clone();
+                        brunsli_internal_dec_SerializationState_Stage_SERIALIZE_SECTION;
                     break;
                 }
             }
@@ -16676,7 +16747,7 @@ pub fn SerializeJpeg_206(
             }
             __v if __v == (brunsli_internal_dec_SerializationState_Stage_DONE as i32) => {
                 {
-                    if !(*(*ss.upgrade().deref()).output_queue.borrow()).is_empty() {
+                    if !((*(*ss.upgrade().deref()).output_queue.borrow()).is_empty()) {
                         return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_OUTPUT;
                     } else {
                         return brunsli_internal_dec_SerializationStatus_DONE;
@@ -17263,6 +17334,10 @@ impl brunsli_ANSDecodingDataImpl for Ptr<brunsli_ANSDecodingData> {
 pub trait brunsli_Arena_brunsli_HuffmanCode_Impl {
     fn reserve(&self, limit: usize);
     fn reset(&self);
+    fn operator_assign_pmutbrunsli_Arena_brunsli_HuffmanCode(
+        &self,
+        _a0: Ptr<brunsli_Arena_brunsli_HuffmanCode_>,
+    ) -> Ptr<brunsli_Arena_brunsli_HuffmanCode_>;
     fn data(&self) -> Ptr<brunsli_HuffmanCode>;
 }
 impl brunsli_Arena_brunsli_HuffmanCode_Impl for Ptr<brunsli_Arena_brunsli_HuffmanCode_> {
@@ -17281,6 +17356,17 @@ impl brunsli_Arena_brunsli_HuffmanCode_Impl for Ptr<brunsli_Arena_brunsli_Huffma
     fn reset(&self) {
         (*(*(*self).upgrade().deref()).capacity.borrow_mut()) = 0_usize;
         (*(*(*self).upgrade().deref()).storage.borrow_mut()) = None;
+    }
+    fn operator_assign_pmutbrunsli_Arena_brunsli_HuffmanCode(
+        &self,
+        _a0: Ptr<brunsli_Arena_brunsli_HuffmanCode_>,
+    ) -> Ptr<brunsli_Arena_brunsli_HuffmanCode_> {
+        let __rhs = (*(*_a0.upgrade().deref()).capacity.borrow());
+        (*(*(*self).upgrade().deref()).capacity.borrow_mut()) = __rhs;
+        ((*(*self).upgrade().deref()).storage.as_pointer()
+            as Ptr<Option<Value<Box<[brunsli_HuffmanCode]>>>>)
+            .write((*(*_a0.upgrade().deref()).storage.borrow_mut()).take());
+        return (*self).clone();
     }
     fn data(&self) -> Ptr<brunsli_HuffmanCode> {
         return (*(*(*self).upgrade().deref()).storage.borrow()).as_pointer();
@@ -17418,7 +17504,7 @@ impl brunsli_BrunsliDecoderImpl for Ptr<brunsli_BrunsliDecoder> {
         let jpg: Value<Ptr<brunsli_JPEGData>> = Rc::new(RefCell::new(
             (*(*(*self).upgrade().deref()).jpg_.borrow()).as_pointer(),
         ));
-        if !!(*jpg.borrow()).is_null() {
+        if !(!(*jpg.borrow()).is_null()) {
             ({
                 BrunsliDumpAndAbort_79(
                     Ptr::from_string_literal(b"brunsli_decode.cc"),
@@ -17431,7 +17517,7 @@ impl brunsli_BrunsliDecoderImpl for Ptr<brunsli_BrunsliDecoder> {
         let state: Value<Ptr<brunsli_internal_dec_State>> = Rc::new(RefCell::new(
             (*(*(*self).upgrade().deref()).state_.borrow()).as_pointer(),
         ));
-        if !!(*state.borrow()).is_null() {
+        if !(!(*state.borrow()).is_null()) {
             ({
                 BrunsliDumpAndAbort_79(
                     Ptr::from_string_literal(b"brunsli_decode.cc"),
@@ -18153,7 +18239,6 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         {
             let idx = ((*(*self).upgrade().deref()).values_.as_pointer() as Ptr<u8>)
                 .offset(((*code.borrow()) as i64) as isize)
-                .clone()
                 .get_offset();
             ((*(*self).upgrade().deref()).values_.as_pointer() as Ptr<Vec<u8>>)
                 .with_mut(|__v: &mut Vec<u8>| __v.remove(idx));
@@ -18198,7 +18283,7 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         let __rhs = ({ brunsli_PermutationCoderImpl::num_bits(self) });
         (*nbits.borrow()).write(__rhs);
         {
-            let idx = (*it.borrow()).clone().get_offset();
+            let idx = (*it.borrow()).get_offset();
             ((*(*self).upgrade().deref()).values_.as_pointer() as Ptr<Vec<u8>>)
                 .with_mut(|__v: &mut Vec<u8>| __v.remove(idx));
             ((*(*self).upgrade().deref()).values_.as_pointer() as Ptr<Vec<u8>>)
@@ -18298,6 +18383,206 @@ impl brunsli_WordSourceImpl for Ptr<brunsli_WordSource> {
         return ((*projected_end.borrow()) <= (*(*(*self).upgrade().deref()).len_.borrow()));
     }
 }
+pub trait brunsli_internal_dec_BitWriterImpl {
+    fn operator_assign_pmutbrunsli_internal_dec_BitWriter(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_BitWriter>,
+    ) -> Ptr<brunsli_internal_dec_BitWriter>;
+}
+impl brunsli_internal_dec_BitWriterImpl for Ptr<brunsli_internal_dec_BitWriter> {
+    fn operator_assign_pmutbrunsli_internal_dec_BitWriter(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_BitWriter>,
+    ) -> Ptr<brunsli_internal_dec_BitWriter> {
+        let __rhs = (*(*_a0.upgrade().deref()).healthy.borrow());
+        (*(*(*self).upgrade().deref()).healthy.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).output.borrow()).clone();
+        (*(*(*self).upgrade().deref()).output.borrow_mut()) = __rhs;
+        ({
+            let _arg0: Ptr<brunsli_internal_dec_OutputChunk> =
+                (*_a0.upgrade().deref()).chunk.as_pointer();
+            brunsli_internal_dec_OutputChunkImpl :: operator_assign_pmutbrunsli_internal_dec_OutputChunk ( &(*(* self ) .upgrade().deref()) . chunk  .as_pointer()  , _arg0 , )
+        });
+        let __rhs = (*(*_a0.upgrade().deref()).data.borrow()).clone();
+        (*(*(*self).upgrade().deref()).data.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).pos.borrow());
+        (*(*(*self).upgrade().deref()).pos.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).put_buffer.borrow());
+        (*(*(*self).upgrade().deref()).put_buffer.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).put_bits.borrow());
+        (*(*(*self).upgrade().deref()).put_bits.borrow_mut()) = __rhs;
+        return (*self).clone();
+    }
+}
+pub trait brunsli_internal_dec_EncodeScanStateImpl {
+    fn operator_assign_pmutbrunsli_internal_dec_EncodeScanState(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_EncodeScanState>,
+    ) -> Ptr<brunsli_internal_dec_EncodeScanState>;
+}
+impl brunsli_internal_dec_EncodeScanStateImpl for Ptr<brunsli_internal_dec_EncodeScanState> {
+    fn operator_assign_pmutbrunsli_internal_dec_EncodeScanState(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_EncodeScanState>,
+    ) -> Ptr<brunsli_internal_dec_EncodeScanState> {
+        let __rhs = (*(*_a0.upgrade().deref()).stage.borrow());
+        (*(*(*self).upgrade().deref()).stage.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).mcu_y.borrow());
+        (*(*(*self).upgrade().deref()).mcu_y.borrow_mut()) = __rhs;
+        ({
+            let _arg0: Ptr<brunsli_internal_dec_BitWriter> =
+                (*_a0.upgrade().deref()).bw.as_pointer();
+            brunsli_internal_dec_BitWriterImpl::operator_assign_pmutbrunsli_internal_dec_BitWriter(
+                &(*(*self).upgrade().deref()).bw.as_pointer(),
+                _arg0,
+            )
+        });
+        {
+            (((*(*self).upgrade().deref()).last_dc_coeff.as_pointer()) as Ptr<i16>)
+                .to_any()
+                .memcpy(
+                    &(((*_a0.upgrade().deref()).last_dc_coeff.as_pointer()) as Ptr<i16>).to_any(),
+                    8_usize as usize,
+                );
+            (((*(*self).upgrade().deref()).last_dc_coeff.as_pointer()) as Ptr<i16>).to_any()
+        };
+        let __rhs = (*(*_a0.upgrade().deref()).restarts_to_go.borrow());
+        (*(*(*self).upgrade().deref()).restarts_to_go.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).next_restart_marker.borrow());
+        (*(*(*self).upgrade().deref())
+            .next_restart_marker
+            .borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).block_scan_index.borrow());
+        (*(*(*self).upgrade().deref()).block_scan_index.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).coding_state.borrow()).clone();
+        (*(*(*self).upgrade().deref()).coding_state.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).extra_zero_runs_pos.borrow());
+        (*(*(*self).upgrade().deref())
+            .extra_zero_runs_pos
+            .borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).next_extra_zero_run_index.borrow());
+        (*(*(*self).upgrade().deref())
+            .next_extra_zero_run_index
+            .borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).next_reset_point_pos.borrow());
+        (*(*(*self).upgrade().deref())
+            .next_reset_point_pos
+            .borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).next_reset_point.borrow());
+        (*(*(*self).upgrade().deref()).next_reset_point.borrow_mut()) = __rhs;
+        return (*self).clone();
+    }
+}
+pub trait brunsli_internal_dec_HistogramDataStateImpl {
+    fn operator_assign_pmutbrunsli_internal_dec_HistogramDataState(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_HistogramDataState>,
+    ) -> Ptr<brunsli_internal_dec_HistogramDataState>;
+}
+impl brunsli_internal_dec_HistogramDataStateImpl for Ptr<brunsli_internal_dec_HistogramDataState> {
+    fn operator_assign_pmutbrunsli_internal_dec_HistogramDataState(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_HistogramDataState>,
+    ) -> Ptr<brunsli_internal_dec_HistogramDataState> {
+        let __rhs = (*(*_a0.upgrade().deref()).stage.borrow());
+        (*(*(*self).upgrade().deref()).stage.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).br.borrow()).clone();
+        (*(*(*self).upgrade().deref()).br.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).max_run_length_prefix.borrow());
+        (*(*(*self).upgrade().deref())
+            .max_run_length_prefix
+            .borrow_mut()) = __rhs;
+        ((*(*self).upgrade().deref()).entropy.as_pointer()
+            as Ptr<Option<Value<brunsli_HuffmanDecodingData>>>)
+            .write((*(*_a0.upgrade().deref()).entropy.borrow_mut()).take());
+        let __rhs = (*(*_a0.upgrade().deref()).i.borrow());
+        (*(*(*self).upgrade().deref()).i.borrow_mut()) = __rhs;
+        ((*(*self).upgrade().deref()).counts.as_pointer() as Ptr<Vec<u32>>).write(std::mem::take(
+            &mut (*(*_a0.upgrade().deref()).counts.borrow_mut()),
+        ));
+        ({
+            let _arg0: Ptr<brunsli_Arena_brunsli_HuffmanCode_> =
+                (*_a0.upgrade().deref()).arena.as_pointer();
+            brunsli_Arena_brunsli_HuffmanCode_Impl :: operator_assign_pmutbrunsli_Arena_brunsli_HuffmanCode ( &(*(* self ) .upgrade().deref()) . arena  .as_pointer()  , _arg0 , )
+        });
+        return (*self).clone();
+    }
+}
+pub trait brunsli_internal_dec_InternalStateImpl {
+    fn operator_assign_pmutbrunsli_internal_dec_InternalState(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_InternalState>,
+    ) -> Ptr<brunsli_internal_dec_InternalState>;
+}
+impl brunsli_internal_dec_InternalStateImpl for Ptr<brunsli_internal_dec_InternalState> {
+    fn operator_assign_pmutbrunsli_internal_dec_InternalState(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_InternalState>,
+    ) -> Ptr<brunsli_internal_dec_InternalState> {
+        let __rhs = (*(*_a0.upgrade().deref()).ac_dc.borrow()).clone();
+        (*(*(*self).upgrade().deref()).ac_dc.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).section.borrow()).clone();
+        (*(*(*self).upgrade().deref()).section.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).header.borrow()).clone();
+        (*(*(*self).upgrade().deref()).header.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).fallback.borrow()).clone();
+        (*(*(*self).upgrade().deref()).fallback.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).section_header.borrow()).clone();
+        (*(*(*self).upgrade().deref()).section_header.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).metadata.borrow()).clone();
+        (*(*(*self).upgrade().deref()).metadata.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).internals.borrow()).clone();
+        (*(*(*self).upgrade().deref()).internals.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).quant.borrow()).clone();
+        (*(*(*self).upgrade().deref()).quant.borrow_mut()) = __rhs;
+        ({
+            let _arg0: Ptr<brunsli_internal_dec_HistogramDataState> =
+                (*_a0.upgrade().deref()).histogram.as_pointer();
+            brunsli_internal_dec_HistogramDataStateImpl :: operator_assign_pmutbrunsli_internal_dec_HistogramDataState ( &(*(* self ) .upgrade().deref()) . histogram  .as_pointer()  , _arg0 , )
+        });
+        ((*(*self).upgrade().deref()).context_map_.as_pointer() as Ptr<Vec<u8>>).write(
+            std::mem::take(&mut (*(*_a0.upgrade().deref()).context_map_.borrow_mut())),
+        );
+        ((*(*self).upgrade().deref()).entropy_codes_.as_pointer()
+            as Ptr<Vec<brunsli_ANSDecodingData>>)
+            .write(std::mem::take(
+                &mut (*(*_a0.upgrade().deref()).entropy_codes_.borrow_mut()),
+            ));
+        ((*(*self).upgrade().deref()).block_state_.as_pointer() as Ptr<Vec<Value<Vec<u8>>>>).write(
+            std::mem::take(&mut (*(*_a0.upgrade().deref()).block_state_.borrow_mut())),
+        );
+        let __rhs = (*(*_a0.upgrade().deref()).is_meta_warm.borrow());
+        (*(*(*self).upgrade().deref()).is_meta_warm.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).shallow_histograms.borrow());
+        (*(*(*self).upgrade().deref()).shallow_histograms.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).num_contexts.borrow());
+        (*(*(*self).upgrade().deref()).num_contexts.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).num_histograms.borrow());
+        (*(*(*self).upgrade().deref()).num_histograms.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).subdecoders_initialized.borrow());
+        (*(*(*self).upgrade().deref())
+            .subdecoders_initialized
+            .borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).ans_decoder.borrow()).clone();
+        (*(*(*self).upgrade().deref()).ans_decoder.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).bit_reader.borrow()).clone();
+        (*(*(*self).upgrade().deref()).bit_reader.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).arith_decoder.borrow()).clone();
+        (*(*(*self).upgrade().deref()).arith_decoder.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).result.borrow());
+        (*(*(*self).upgrade().deref()).result.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).last_stage.borrow());
+        (*(*(*self).upgrade().deref()).last_stage.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).buffer.borrow()).clone();
+        (*(*(*self).upgrade().deref()).buffer.borrow_mut()) = __rhs;
+        ({
+            let _arg0: Ptr<brunsli_internal_dec_SerializationState> =
+                (*_a0.upgrade().deref()).serialization.as_pointer();
+            brunsli_internal_dec_SerializationStateImpl :: operator_assign_pmutbrunsli_internal_dec_SerializationState ( &(*(* self ) .upgrade().deref()) . serialization  .as_pointer()  , _arg0 , )
+        });
+        return (*self).clone();
+    }
+}
 pub trait brunsli_internal_dec_MetadataStateImpl {
     fn destructor(&self);
     fn CanFinish(&self) -> bool;
@@ -18318,6 +18603,84 @@ impl brunsli_internal_dec_MetadataStateImpl for Ptr<brunsli_internal_dec_Metadat
             };
             (*(*(*self).upgrade().deref()).brotli.borrow_mut()) = std::ptr::null_mut();
         }
+    }
+}
+pub trait brunsli_internal_dec_OutputChunkImpl {
+    fn operator_assign_pmutbrunsli_internal_dec_OutputChunk(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_OutputChunk>,
+    ) -> Ptr<brunsli_internal_dec_OutputChunk>;
+}
+impl brunsli_internal_dec_OutputChunkImpl for Ptr<brunsli_internal_dec_OutputChunk> {
+    fn operator_assign_pmutbrunsli_internal_dec_OutputChunk(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_OutputChunk>,
+    ) -> Ptr<brunsli_internal_dec_OutputChunk> {
+        let __rhs = (*(*_a0.upgrade().deref()).next.borrow()).clone();
+        (*(*(*self).upgrade().deref()).next.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).len.borrow());
+        (*(*(*self).upgrade().deref()).len.borrow_mut()) = __rhs;
+        ((*(*self).upgrade().deref()).buffer.as_pointer() as Ptr<Option<Value<Vec<u8>>>>)
+            .write((*(*_a0.upgrade().deref()).buffer.borrow_mut()).take());
+        return (*self).clone();
+    }
+}
+pub trait brunsli_internal_dec_SerializationStateImpl {
+    fn operator_assign_pmutbrunsli_internal_dec_SerializationState(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_SerializationState>,
+    ) -> Ptr<brunsli_internal_dec_SerializationState>;
+}
+impl brunsli_internal_dec_SerializationStateImpl for Ptr<brunsli_internal_dec_SerializationState> {
+    fn operator_assign_pmutbrunsli_internal_dec_SerializationState(
+        &self,
+        _a0: Ptr<brunsli_internal_dec_SerializationState>,
+    ) -> Ptr<brunsli_internal_dec_SerializationState> {
+        let __rhs = (*(*_a0.upgrade().deref()).stage.borrow());
+        (*(*(*self).upgrade().deref()).stage.borrow_mut()) = __rhs;
+        ((*(*self).upgrade().deref()).output_queue.as_pointer()
+            as Ptr<Vec<brunsli_internal_dec_OutputChunk>>)
+            .write(std::mem::take(
+                &mut (*(*_a0.upgrade().deref()).output_queue.borrow_mut()),
+            ));
+        let __rhs = (*(*_a0.upgrade().deref()).section_index.borrow());
+        (*(*(*self).upgrade().deref()).section_index.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).dht_index.borrow());
+        (*(*(*self).upgrade().deref()).dht_index.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).dqt_index.borrow());
+        (*(*(*self).upgrade().deref()).dqt_index.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).app_index.borrow());
+        (*(*(*self).upgrade().deref()).app_index.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).com_index.borrow());
+        (*(*(*self).upgrade().deref()).com_index.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).data_index.borrow());
+        (*(*(*self).upgrade().deref()).data_index.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).scan_index.borrow());
+        (*(*(*self).upgrade().deref()).scan_index.borrow_mut()) = __rhs;
+        ((*(*self).upgrade().deref()).dc_huff_table.as_pointer()
+            as Ptr<Vec<brunsli_HuffmanCodeTable>>)
+            .write(std::mem::take(
+                &mut (*(*_a0.upgrade().deref()).dc_huff_table.borrow_mut()),
+            ));
+        ((*(*self).upgrade().deref()).ac_huff_table.as_pointer()
+            as Ptr<Vec<brunsli_HuffmanCodeTable>>)
+            .write(std::mem::take(
+                &mut (*(*_a0.upgrade().deref()).ac_huff_table.borrow_mut()),
+            ));
+        let __rhs = (*(*_a0.upgrade().deref()).pad_bits.borrow()).clone();
+        (*(*(*self).upgrade().deref()).pad_bits.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).pad_bits_end.borrow()).clone();
+        (*(*(*self).upgrade().deref()).pad_bits_end.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).seen_dri_marker.borrow());
+        (*(*(*self).upgrade().deref()).seen_dri_marker.borrow_mut()) = __rhs;
+        let __rhs = (*(*_a0.upgrade().deref()).is_progressive.borrow());
+        (*(*(*self).upgrade().deref()).is_progressive.borrow_mut()) = __rhs;
+        ({
+            let _arg0: Ptr<brunsli_internal_dec_EncodeScanState> =
+                (*_a0.upgrade().deref()).scan_state.as_pointer();
+            brunsli_internal_dec_EncodeScanStateImpl :: operator_assign_pmutbrunsli_internal_dec_EncodeScanState ( &(*(* self ) .upgrade().deref()) . scan_state  .as_pointer()  , _arg0 , )
+        });
+        return (*self).clone();
     }
 }
 pub trait brunsli_internal_dec_StateImpl {

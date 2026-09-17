@@ -698,7 +698,7 @@ impl woff2_Font {
         'loop_: for i in
             UnsafeMapIterator::begin(&self.tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
         {
-            let table: *const woff2_Font_Table = &*i.second() as *const woff2_Font_Table;
+            let table: *const woff2_Font_Table = &*i.second();
             if ((((*table).tag) & (2155905152_u32)) != 0) {
                 continue 'loop_;
             }
@@ -746,7 +746,7 @@ impl woff2_Font {
                 output_order.insert(pos, kLocaTableTag_2);
             };
         }
-        return output_order;
+        return std::mem::take(&mut output_order);
     }
 }
 pub unsafe fn ReadTrueTypeFont_33(
@@ -827,7 +827,7 @@ pub unsafe fn ReadCollectionFont_34(
     'loop_: for entry in
         UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
-        let table: *mut woff2_Font_Table = &mut *entry.second() as *mut woff2_Font_Table;
+        let table: *mut woff2_Font_Table = &mut *entry.second();
         if UnsafeMapIterator::find_key(
             &(*all_tables) as *const BTreeMap<u32, Box<*mut woff2_Font_Table>>,
             &(*table).offset,
@@ -887,7 +887,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
         if !(unsafe { woff2_Buffer::set_offset(&mut (*file), (offset as usize)) }) {
             return false;
         }
-        let font: *mut woff2_Font = &mut (*font_it.postfix_inc()) as *mut woff2_Font;
+        let font: *mut woff2_Font = &mut (*font_it.postfix_inc());
         if !(unsafe {
             ReadCollectionFont_34(
                 file,
@@ -929,8 +929,7 @@ pub unsafe fn ReadFontCollection_37(
                 .fonts
                 .resize_with(__a0, || <woff2_Font>::default())
         };
-        let font: *mut woff2_Font =
-            &mut (&mut (*font_collection)).fonts[(0_usize)] as *mut woff2_Font;
+        let font: *mut woff2_Font = &mut (&mut (*font_collection)).fonts[(0_usize)];
         (*font).flavor = (*font_collection).flavor;
         return (unsafe {
             ReadTrueTypeFont_33((&mut file as *mut woff2_Buffer), data, len, (font))
@@ -947,7 +946,7 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
     'loop_: for i in
         UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
     {
-        let table: *const woff2_Font_Table = &*i.second() as *const woff2_Font_Table;
+        let table: *const woff2_Font_Table = &*i.second();
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((((*table).length) & (3_u32)))) & (3_u32)) as usize);
         let mut end_offset: usize = ((padding_size).wrapping_add(((*table).offset as usize)))
@@ -1096,12 +1095,7 @@ pub unsafe fn WriteFont_41(
         if !(unsafe {
             let _offset: *mut usize = offset;
             let _dst_size: usize = dst_size;
-            WriteTable_43(
-                &*i.second() as *const woff2_Font_Table,
-                _offset,
-                dst,
-                _dst_size,
-            )
+            WriteTable_43(&*i.second(), _offset, dst, _dst_size)
         }) {
             return false;
         }
@@ -1117,7 +1111,7 @@ pub unsafe fn WriteFontCollection_44(
     if (((*font_collection).flavor) != (kTtcFontFlavor_22)) {
         return (unsafe {
             WriteFont_41(
-                &(&(*font_collection)).fonts[(0_usize)] as *const woff2_Font,
+                &(&(*font_collection)).fonts[(0_usize)],
                 (&mut offset as *mut usize),
                 dst,
                 dst_size,
@@ -1152,7 +1146,7 @@ pub unsafe fn WriteFontCollection_44(
     }
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*font_collection).fonts.len())) {
-        let font: *const woff2_Font = &(&(*font_collection)).fonts[(i)] as *const woff2_Font;
+        let font: *const woff2_Font = &(&(*font_collection)).fonts[(i)];
         (unsafe { StoreU32_30((offset as u32), (&mut offset_table as *mut usize), dst) });
         if !(unsafe {
             let _font: *const woff2_Font = font;
@@ -1272,7 +1266,7 @@ pub unsafe fn RemoveDigitalSignature_48(mut font: *mut woff2_Font) -> bool {
             &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
             &it.clone(),
         );
-        (*font).num_tables = ((*font).tables.len() as u16).clone();
+        (*font).num_tables = ((*font).tables.len() as u16);
     }
     return true;
 }
