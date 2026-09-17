@@ -332,7 +332,7 @@ pub fn Read255UShort_12(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
     if !({ woff2_BufferImpl::ReadU8(&(*buf.borrow()), (code.as_pointer())) }) {
         return false;
     }
-    if (((*code.borrow()) as i32) == (*kWordCode_13.with(Value::clone).borrow())) {
+    if (((*code.borrow()) as i32) == kWordCode_13.with(|rc| rc.borrow().clone())) {
         let result: Value<u16> = Rc::new(RefCell::new(0_u16));
         if !({ woff2_BufferImpl::ReadU16(&(*buf.borrow()), (result.as_pointer())) }) {
             return false;
@@ -340,22 +340,22 @@ pub fn Read255UShort_12(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
         let __rhs = ((*result.borrow()) as u32);
         (*value.borrow()).write(__rhs);
         return true;
-    } else if (((*code.borrow()) as i32) == (*kOneMoreByteCode1_15.with(Value::clone).borrow())) {
+    } else if (((*code.borrow()) as i32) == kOneMoreByteCode1_15.with(|rc| rc.borrow().clone())) {
         let result: Value<u8> = Rc::new(RefCell::new(0_u8));
         if !({ woff2_BufferImpl::ReadU8(&(*buf.borrow()), (result.as_pointer())) }) {
             return false;
         }
         let __rhs =
-            ((((*result.borrow()) as i32) + (*kLowestUCode_16.with(Value::clone).borrow())) as u32);
+            ((((*result.borrow()) as i32) + kLowestUCode_16.with(|rc| rc.borrow().clone())) as u32);
         (*value.borrow()).write(__rhs);
         return true;
-    } else if (((*code.borrow()) as i32) == (*kOneMoreByteCode2_14.with(Value::clone).borrow())) {
+    } else if (((*code.borrow()) as i32) == kOneMoreByteCode2_14.with(|rc| rc.borrow().clone())) {
         let result: Value<u8> = Rc::new(RefCell::new(0_u8));
         if !({ woff2_BufferImpl::ReadU8(&(*buf.borrow()), (result.as_pointer())) }) {
             return false;
         }
         let __rhs = ((((*result.borrow()) as i32)
-            + ((*kLowestUCode_16.with(Value::clone).borrow()) * 2)) as u32);
+            + (kLowestUCode_16.with(|rc| rc.borrow().clone()) * 2)) as u32);
         (*value.borrow()).write(__rhs);
         return true;
     } else {
@@ -1307,7 +1307,7 @@ pub fn StorePoints_58(
     let dst_size: Value<usize> = Rc::new(RefCell::new(dst_size));
     let glyph_size: Value<Ptr<usize>> = Rc::new(RefCell::new(glyph_size));
     let flag_offset: Value<u32> = Rc::new(RefCell::new(
-        (((((*kEndPtsOfContoursOffset_51.with(Value::clone).borrow())
+        (((((kEndPtsOfContoursOffset_51.with(|rc| rc.borrow().clone()))
             .wrapping_add((((2_u32).wrapping_mul((*n_contours.borrow()))) as usize)))
         .wrapping_add(2_usize))
         .wrapping_add(((*instruction_length.borrow()) as usize))) as u32),
@@ -1323,13 +1323,13 @@ pub fn StorePoints_58(
         let point: Ptr<woff2_Point> = (*points.borrow()).offset((*i.borrow()) as isize);
         let flag: Value<i32> = Rc::new(RefCell::new(
             if (*(*point.upgrade().deref()).on_curve.borrow()) {
-                (*kGlyfOnCurve_36.with(Value::clone).borrow())
+                kGlyfOnCurve_36.with(|rc| rc.borrow().clone())
             } else {
                 0
             },
         ));
         if (*has_overlap_bit.borrow()) && ((*i.borrow()) == 0_u32) {
-            (*flag.borrow_mut()) |= (*kOverlapSimple_42.with(Value::clone).borrow());
+            (*flag.borrow_mut()) |= kOverlapSimple_42.with(|rc| rc.borrow().clone());
         }
         let dx: Value<i32> = Rc::new(RefCell::new({
             let _lhs = (*(*point.upgrade().deref()).x.borrow());
@@ -1340,11 +1340,11 @@ pub fn StorePoints_58(
             _lhs - (*last_y.borrow())
         }));
         if ((*dx.borrow()) == 0) {
-            (*flag.borrow_mut()) |= (*kGlyfThisXIsSame_40.with(Value::clone).borrow());
+            (*flag.borrow_mut()) |= kGlyfThisXIsSame_40.with(|rc| rc.borrow().clone());
         } else if ((*dx.borrow()) > -256_i32) && ((*dx.borrow()) < 256) {
-            (*flag.borrow_mut()) |= ((*kGlyfXShort_37.with(Value::clone).borrow())
+            (*flag.borrow_mut()) |= (kGlyfXShort_37.with(|rc| rc.borrow().clone())
                 | (if ((*dx.borrow()) > 0) {
-                    (*kGlyfThisXIsSame_40.with(Value::clone).borrow())
+                    kGlyfThisXIsSame_40.with(|rc| rc.borrow().clone())
                 } else {
                     0
                 }));
@@ -1359,11 +1359,11 @@ pub fn StorePoints_58(
             };
         }
         if ((*dy.borrow()) == 0) {
-            (*flag.borrow_mut()) |= (*kGlyfThisYIsSame_41.with(Value::clone).borrow());
+            (*flag.borrow_mut()) |= kGlyfThisYIsSame_41.with(|rc| rc.borrow().clone());
         } else if ((*dy.borrow()) > -256_i32) && ((*dy.borrow()) < 256) {
-            (*flag.borrow_mut()) |= ((*kGlyfYShort_38.with(Value::clone).borrow())
+            (*flag.borrow_mut()) |= (kGlyfYShort_38.with(|rc| rc.borrow().clone())
                 | (if ((*dy.borrow()) > 0) {
-                    (*kGlyfThisYIsSame_41.with(Value::clone).borrow())
+                    kGlyfThisYIsSame_41.with(|rc| rc.borrow().clone())
                 } else {
                     0
                 }));
@@ -1382,7 +1382,7 @@ pub fn StorePoints_58(
                 let rhs_0 = ((((*dst.borrow())
                     .offset(((*flag_offset.borrow()).wrapping_sub(1_u32)) as isize)
                     .read()) as i32)
-                    | (*kGlyfRepeat_39.with(Value::clone).borrow()))
+                    | kGlyfRepeat_39.with(|rc| rc.borrow().clone()))
                     as u8;
                 (*dst.borrow())
                     .offset(((*flag_offset.borrow()).wrapping_sub(1_u32)) as isize)
@@ -1616,10 +1616,10 @@ pub fn SizeOfComposite_60(
     ));
     let we_have_instructions: Value<bool> = Rc::new(RefCell::new(false));
     let flags: Value<u16> = Rc::new(RefCell::new(
-        ((*FLAG_MORE_COMPONENTS_45.with(Value::clone).borrow()) as u16),
+        (FLAG_MORE_COMPONENTS_45.with(|rc| rc.borrow().clone()) as u16),
     ));
     'loop_: while ((((*flags.borrow()) as i32)
-        & (*FLAG_MORE_COMPONENTS_45.with(Value::clone).borrow()))
+        & FLAG_MORE_COMPONENTS_45.with(|rc| rc.borrow().clone()))
         != 0)
     {
         if ((!({ woff2_BufferImpl::ReadU16(&composite_stream.as_pointer(), (flags.as_pointer())) })
@@ -1631,14 +1631,14 @@ pub fn SizeOfComposite_60(
         {
             let rhs_0 = (((*we_have_instructions.borrow()) as i32)
                 | (((((*flags.borrow()) as i32)
-                    & (*FLAG_WE_HAVE_INSTRUCTIONS_48.with(Value::clone).borrow()))
+                    & FLAG_WE_HAVE_INSTRUCTIONS_48.with(|rc| rc.borrow().clone()))
                     != 0) as i32))
                 != 0;
             (*we_have_instructions.borrow_mut()) = rhs_0
         };
         let arg_size: Value<usize> = Rc::new(RefCell::new(2_usize));
         if ((((*flags.borrow()) as i32)
-            & (*FLAG_ARG_1_AND_2_ARE_WORDS_43.with(Value::clone).borrow()))
+            & FLAG_ARG_1_AND_2_ARE_WORDS_43.with(|rc| rc.borrow().clone()))
             != 0)
         {
             {
@@ -1651,7 +1651,7 @@ pub fn SizeOfComposite_60(
                 (*arg_size.borrow_mut()) = rhs_0
             };
         }
-        if ((((*flags.borrow()) as i32) & (*FLAG_WE_HAVE_A_SCALE_44.with(Value::clone).borrow()))
+        if ((((*flags.borrow()) as i32) & FLAG_WE_HAVE_A_SCALE_44.with(|rc| rc.borrow().clone()))
             != 0)
         {
             {
@@ -1659,7 +1659,7 @@ pub fn SizeOfComposite_60(
                 (*arg_size.borrow_mut()) = rhs_0
             };
         } else if ((((*flags.borrow()) as i32)
-            & (*FLAG_WE_HAVE_AN_X_AND_Y_SCALE_46.with(Value::clone).borrow()))
+            & FLAG_WE_HAVE_AN_X_AND_Y_SCALE_46.with(|rc| rc.borrow().clone()))
             != 0)
         {
             {
@@ -1667,7 +1667,7 @@ pub fn SizeOfComposite_60(
                 (*arg_size.borrow_mut()) = rhs_0
             };
         } else if ((((*flags.borrow()) as i32)
-            & (*FLAG_WE_HAVE_A_TWO_BY_TWO_47.with(Value::clone).borrow()))
+            & FLAG_WE_HAVE_A_TWO_BY_TWO_47.with(|rc| rc.borrow().clone()))
             != 0)
         {
             {
@@ -1826,7 +1826,7 @@ pub fn ReconstructGlyf_63(
     )));
     let version: Value<u16> = <Value<u16>>::default();
     let substreams: Value<Vec<(Value<Ptr<u8>>, Value<u64>)>> = Rc::new(RefCell::new(
-        (0..((*kNumSubStreams_64.with(Value::clone).borrow()) as usize) as usize)
+        (0..(kNumSubStreams_64.with(|rc| rc.borrow().clone()) as usize) as usize)
             .map(|_| <(Value<Ptr<u8>>, Value<u64>)>::default())
             .collect::<Vec<_>>(),
     ));
@@ -1843,7 +1843,7 @@ pub fn ReconstructGlyf_63(
     }
     let has_overlap_bitmap: Value<bool> = Rc::new(RefCell::new(
         ((((*flags.borrow()) as i32)
-            & (*FLAG_OVERLAP_SIMPLE_BITMAP_49.with(Value::clone).borrow()))
+            & FLAG_OVERLAP_SIMPLE_BITMAP_49.with(|rc| rc.borrow().clone()))
             != 0),
     ));
     if ((((!({
@@ -1887,7 +1887,7 @@ pub fn ReconstructGlyf_63(
         return false;
     }
     let offset: Value<u32> = Rc::new(RefCell::new(
-        (((2 + (*kNumSubStreams_64.with(Value::clone).borrow())) * 4) as u32),
+        (((2 + kNumSubStreams_64.with(|rc| rc.borrow().clone())) * 4) as u32),
     ));
     if ((({
         let _lhs = (*offset.borrow());
@@ -1900,7 +1900,7 @@ pub fn ReconstructGlyf_63(
         return false;
     }
     let i: Value<i32> = Rc::new(RefCell::new(0));
-    'loop_: while ((*i.borrow()) < (*kNumSubStreams_64.with(Value::clone).borrow())) {
+    'loop_: while ((*i.borrow()) < kNumSubStreams_64.with(|rc| rc.borrow().clone())) {
         let substream_size: Value<u32> = <Value<u32>>::default();
         if ((!({ woff2_BufferImpl::ReadU32(&file.as_pointer(), (substream_size.as_pointer())) })
             as i64)
@@ -2118,7 +2118,7 @@ pub fn ReconstructGlyf_63(
         return false;
     }
     let glyph_buf_size: Value<usize> = Rc::new(RefCell::new(
-        (*kDefaultGlyphBuf_53.with(Value::clone).borrow()),
+        kDefaultGlyphBuf_53.with(|rc| rc.borrow().clone()),
     ));
     let glyph_buf: Value<Option<Value<Box<[u8]>>>> = Rc::new(RefCell::new(
         Ptr::alloc_array(
@@ -2421,7 +2421,7 @@ pub fn ReconstructGlyf_63(
                     )
                 });
             }
-            (*glyph_size.borrow_mut()) = (*kEndPtsOfContoursOffset_51.with(Value::clone).borrow());
+            (*glyph_size.borrow_mut()) = kEndPtsOfContoursOffset_51.with(|rc| rc.borrow().clone());
             let end_point: Value<i32> = Rc::new(RefCell::new(-1_i32));
             let contour_ix: Value<u32> = Rc::new(RefCell::new(0_u32));
             'loop_: while ((*contour_ix.borrow()) < ((*n_contours.borrow()) as u32)) {
@@ -2843,21 +2843,21 @@ pub fn ReadTableDirectory_69(
                 return false;
             }
         } else {
-            (*tag.borrow_mut()) = (*kKnownTags_8.with(Value::clone).borrow())
+            (*tag.borrow_mut()) = kKnownTags_8.with(|rc| rc.borrow().clone())
                 [(((*flag_byte.borrow()) as i32) & 63) as usize];
         }
         let flags: Value<u32> = Rc::new(RefCell::new(0_u32));
         let xform_version: Value<u8> = Rc::new(RefCell::new(
             (((((*flag_byte.borrow()) as i32) >> 6) & 3) as u8),
         ));
-        if ((*tag.borrow()) == (*kGlyfTableTag_0.with(Value::clone).borrow()))
-            || ((*tag.borrow()) == (*kLocaTableTag_2.with(Value::clone).borrow()))
+        if ((*tag.borrow()) == kGlyfTableTag_0.with(|rc| rc.borrow().clone()))
+            || ((*tag.borrow()) == kLocaTableTag_2.with(|rc| rc.borrow().clone()))
         {
             if (((*xform_version.borrow()) as i32) == 0) {
-                (*flags.borrow_mut()) |= (*kWoff2FlagsTransform_21.with(Value::clone).borrow());
+                (*flags.borrow_mut()) |= kWoff2FlagsTransform_21.with(|rc| rc.borrow().clone());
             }
         } else if (((*xform_version.borrow()) as i32) != 0) {
-            (*flags.borrow_mut()) |= (*kWoff2FlagsTransform_21.with(Value::clone).borrow());
+            (*flags.borrow_mut()) |= kWoff2FlagsTransform_21.with(|rc| rc.borrow().clone());
         }
         (*flags.borrow_mut()) |= ((*xform_version.borrow()) as u32);
         let dst_length: Value<u32> = <Value<u32>>::default();
@@ -2867,14 +2867,14 @@ pub fn ReadTableDirectory_69(
             return false;
         }
         let transform_length: Value<u32> = Rc::new(RefCell::new((*dst_length.borrow())));
-        if (((*flags.borrow()) & (*kWoff2FlagsTransform_21.with(Value::clone).borrow())) != 0_u32) {
+        if (((*flags.borrow()) & kWoff2FlagsTransform_21.with(|rc| rc.borrow().clone())) != 0_u32) {
             if ((!({ ReadBase128_17((*file.borrow()).clone(), (transform_length.as_pointer())) })
                 as i64)
                 != 0)
             {
                 return false;
             }
-            if (((((*tag.borrow()) == (*kLocaTableTag_2.with(Value::clone).borrow()))
+            if (((((*tag.borrow()) == kLocaTableTag_2.with(|rc| rc.borrow().clone()))
                 && ((*transform_length.borrow()) != 0)) as i64)
                 != 0)
             {
@@ -3005,8 +3005,8 @@ pub fn StoreTableEntry_71(result: Ptr<u8>, offset: u32, tag: u32) -> usize {
 }
 pub fn ComputeOffsetToFirstTable_72(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
     let offset: Value<u64> = Rc::new(RefCell::new(
-        ((*kSfntHeaderSize_23.with(Value::clone).borrow()) as u64).wrapping_add(
-            ((*kSfntEntrySize_24.with(Value::clone).borrow()) as u64)
+        (kSfntHeaderSize_23.with(|rc| rc.borrow().clone()) as u64).wrapping_add(
+            (kSfntEntrySize_24.with(|rc| rc.borrow().clone()) as u64)
                 .wrapping_mul(((*(*hdr.upgrade().deref()).num_tables.borrow()) as u64)),
         ),
     ));
@@ -3017,7 +3017,7 @@ pub fn ComputeOffsetToFirstTable_72(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
             CollectionHeaderSize_27(_header_version, _num_fonts)
         }) as u64)
             .wrapping_add(
-                ((*kSfntHeaderSize_23.with(Value::clone).borrow()) as u64)
+                (kSfntHeaderSize_23.with(|rc| rc.borrow().clone()) as u64)
                     .wrapping_mul(((*(*hdr.upgrade().deref()).ttc_fonts.borrow()).len() as u64)),
             );
         'loop_: for mut ttc_font in
@@ -3025,7 +3025,7 @@ pub fn ComputeOffsetToFirstTable_72(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
         {
             {
                 let rhs_0 = (*offset.borrow()).wrapping_add(
-                    ((*kSfntEntrySize_24.with(Value::clone).borrow()) as u64).wrapping_mul(
+                    (kSfntEntrySize_24.with(|rc| rc.borrow().clone()) as u64).wrapping_mul(
                         ((*(*ttc_font.upgrade().deref()).table_indices.borrow()).len() as u64),
                     ),
                 );
@@ -3096,7 +3096,7 @@ pub fn ReconstructFont_74(
         ({
             FindTable_65(
                 (tables.as_pointer()),
-                (*kGlyfTableTag_0.with(Value::clone).borrow()),
+                kGlyfTableTag_0.with(|rc| rc.borrow().clone()),
             )
         }),
     ));
@@ -3104,7 +3104,7 @@ pub fn ReconstructFont_74(
         ({
             FindTable_65(
                 (tables.as_pointer()),
-                (*kLocaTableTag_2.with(Value::clone).borrow()),
+                kLocaTableTag_2.with(|rc| rc.borrow().clone()),
             )
         }),
     ));
@@ -3121,11 +3121,11 @@ pub fn ReconstructFont_74(
         if ((({
             let _lhs = ({
                 let _lhs = (*(*(*glyf_table.borrow()).upgrade().deref()).flags.borrow());
-                _lhs & (*kWoff2FlagsTransform_21.with(Value::clone).borrow())
+                _lhs & kWoff2FlagsTransform_21.with(|rc| rc.borrow().clone())
             });
             _lhs != ({
                 let _lhs = (*(*(*loca_table.borrow()).upgrade().deref()).flags.borrow());
-                _lhs & (*kWoff2FlagsTransform_21.with(Value::clone).borrow())
+                _lhs & kWoff2FlagsTransform_21.with(|rc| rc.borrow().clone())
             })
         }) as i64)
             != 0)
@@ -3196,7 +3196,7 @@ pub fn ReconstructFont_74(
         }
         if {
             let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-            _lhs == (*kHheaTableTag_6.with(Value::clone).borrow())
+            _lhs == kHheaTableTag_6.with(|rc| rc.borrow().clone())
         } {
             if !({
                 let _data: Ptr<u8> = (*transformed_buf.borrow())
@@ -3219,13 +3219,13 @@ pub fn ReconstructFont_74(
             if {
                 let _lhs = ({
                     let _lhs = (*(*table.upgrade().deref()).flags.borrow());
-                    _lhs & (*kWoff2FlagsTransform_21.with(Value::clone).borrow())
+                    _lhs & kWoff2FlagsTransform_21.with(|rc| rc.borrow().clone())
                 });
-                _lhs != (*kWoff2FlagsTransform_21.with(Value::clone).borrow())
+                _lhs != kWoff2FlagsTransform_21.with(|rc| rc.borrow().clone())
             } {
                 if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*kHeadTableTag_1.with(Value::clone).borrow())
+                    _lhs == kHeadTableTag_1.with(|rc| rc.borrow().clone())
                 } {
                     if ((((*(*table.upgrade().deref()).src_length.borrow()) < 12_u32) as i64) != 0)
                     {
@@ -3263,7 +3263,7 @@ pub fn ReconstructFont_74(
             } else {
                 if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*kGlyfTableTag_0.with(Value::clone).borrow())
+                    _lhs == kGlyfTableTag_0.with(|rc| rc.borrow().clone())
                 } {
                     (*(*table.upgrade().deref()).dst_offset.borrow_mut()) =
                         ((*dest_offset.borrow()) as u32);
@@ -3271,7 +3271,7 @@ pub fn ReconstructFont_74(
                         ({
                             FindTable_65(
                                 (tables.as_pointer()),
-                                (*kLocaTableTag_2.with(Value::clone).borrow()),
+                                kLocaTableTag_2.with(|rc| rc.borrow().clone()),
                             )
                         }),
                     ));
@@ -3295,12 +3295,12 @@ pub fn ReconstructFont_74(
                     }
                 } else if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*kLocaTableTag_2.with(Value::clone).borrow())
+                    _lhs == kLocaTableTag_2.with(|rc| rc.borrow().clone())
                 } {
                     (*checksum.borrow_mut()) = (*loca_checksum.borrow());
                 } else if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*kHmtxTableTag_5.with(Value::clone).borrow())
+                    _lhs == kHmtxTableTag_5.with(|rc| rc.borrow().clone())
                 } {
                     (*(*table.upgrade().deref()).dst_offset.borrow_mut()) =
                         ((*dest_offset.borrow()) as u32);
@@ -3425,7 +3425,7 @@ pub fn ReconstructFont_74(
         ({
             FindTable_65(
                 (tables.as_pointer()),
-                (*kHeadTableTag_1.with(Value::clone).borrow()),
+                kHeadTableTag_1.with(|rc| rc.borrow().clone()),
             )
         }),
     ));
@@ -3475,7 +3475,7 @@ pub fn ReadWOFF2Header_75(data: Ptr<u8>, length: usize, hdr: Ptr<woff2_WOFF2Head
     )));
     let signature: Value<u32> = <Value<u32>>::default();
     if (((((!({ woff2_BufferImpl::ReadU32(&file.as_pointer(), (signature.as_pointer())) }))
-        || ((*signature.borrow()) != (*kWoff2Signature_20.with(Value::clone).borrow())))
+        || ((*signature.borrow()) != kWoff2Signature_20.with(|rc| rc.borrow().clone())))
         || (!({
             woff2_BufferImpl::ReadU32(
                 &file.as_pointer(),
@@ -3596,7 +3596,7 @@ pub fn ReadWOFF2Header_75(data: Ptr<u8>, length: usize, hdr: Ptr<woff2_WOFF2Head
         .borrow_mut()) = 0_u32;
     if {
         let _lhs = (*(*(*hdr.borrow()).upgrade().deref()).flavor.borrow());
-        _lhs == (*kTtcFontFlavor_22.with(Value::clone).borrow())
+        _lhs == kTtcFontFlavor_22.with(|rc| rc.borrow().clone())
     } {
         if ((!({
             woff2_BufferImpl::ReadU32(
@@ -3678,13 +3678,13 @@ pub fn ReadWOFF2Header_75(data: Ptr<u8>, length: usize, hdr: Ptr<woff2_WOFF2Head
                         .offset(((*table_idx.borrow()) as usize));
                 if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*kLocaTableTag_2.with(Value::clone).borrow())
+                    _lhs == kLocaTableTag_2.with(|rc| rc.borrow().clone())
                 } {
                     (*loca_idx.borrow_mut()) = (*table_idx.borrow());
                 }
                 if {
                     let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                    _lhs == (*kGlyfTableTag_0.with(Value::clone).borrow())
+                    _lhs == kGlyfTableTag_0.with(|rc| rc.borrow().clone())
                 } {
                     (*glyf_idx.borrow_mut()) = (*table_idx.borrow());
                 }
@@ -4106,7 +4106,7 @@ pub fn ConvertWOFF2ToTTF_79(data: Ptr<u8>, length: usize, out: PtrDyn<dyn woff2_
         (((*(*hdr.borrow()).uncompressed_size.borrow()) as f32) / ((*length.borrow()) as f32)),
     ));
     if ((*compression_ratio.borrow())
-        > (*kMaxPlausibleCompressionRatio_54.with(Value::clone).borrow()))
+        > kMaxPlausibleCompressionRatio_54.with(|rc| rc.borrow().clone()))
     {
         eprintln!(
             "Implausible compression ratio {:.1}",
@@ -4173,7 +4173,7 @@ impl woff2_WOFF2StringOut {
         let __this: Value<woff2_WOFF2StringOut> = Rc::new(RefCell::new(Self {
             buf_: Rc::new(RefCell::new((*buf.borrow()).clone())),
             max_size_: Rc::new(RefCell::new(
-                (*kDefaultMaxSize_28.with(Value::clone).borrow()),
+                kDefaultMaxSize_28.with(|rc| rc.borrow().clone()),
             )),
             offset_: Rc::new(RefCell::new(0_usize)),
         }));
@@ -4514,7 +4514,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
                     }) as u64),
                 ));
                 let __tmp_1: Value<u64> = Rc::new(RefCell::new(
-                    ((*kDefaultMaxSize_28.with(Value::clone).borrow()) as u64),
+                    (kDefaultMaxSize_28.with(|rc| rc.borrow().clone()) as u64),
                 ));
                 (if __tmp_0.as_pointer().read() <= __tmp_1.as_pointer().read() {
                     __tmp_0.as_pointer()

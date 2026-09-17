@@ -332,7 +332,7 @@ pub fn Read255UShort_12(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
     if !({ woff2_BufferImpl::ReadU8(&(*buf.borrow()), (code.as_pointer())) }) {
         return false;
     }
-    if (((*code.borrow()) as i32) == (*kWordCode_13.with(Value::clone).borrow())) {
+    if (((*code.borrow()) as i32) == kWordCode_13.with(|rc| rc.borrow().clone())) {
         let result: Value<u16> = Rc::new(RefCell::new(0_u16));
         if !({ woff2_BufferImpl::ReadU16(&(*buf.borrow()), (result.as_pointer())) }) {
             return false;
@@ -340,22 +340,22 @@ pub fn Read255UShort_12(buf: Ptr<woff2_Buffer>, value: Ptr<u32>) -> bool {
         let __rhs = ((*result.borrow()) as u32);
         (*value.borrow()).write(__rhs);
         return true;
-    } else if (((*code.borrow()) as i32) == (*kOneMoreByteCode1_15.with(Value::clone).borrow())) {
+    } else if (((*code.borrow()) as i32) == kOneMoreByteCode1_15.with(|rc| rc.borrow().clone())) {
         let result: Value<u8> = Rc::new(RefCell::new(0_u8));
         if !({ woff2_BufferImpl::ReadU8(&(*buf.borrow()), (result.as_pointer())) }) {
             return false;
         }
         let __rhs =
-            ((((*result.borrow()) as i32) + (*kLowestUCode_16.with(Value::clone).borrow())) as u32);
+            ((((*result.borrow()) as i32) + kLowestUCode_16.with(|rc| rc.borrow().clone())) as u32);
         (*value.borrow()).write(__rhs);
         return true;
-    } else if (((*code.borrow()) as i32) == (*kOneMoreByteCode2_14.with(Value::clone).borrow())) {
+    } else if (((*code.borrow()) as i32) == kOneMoreByteCode2_14.with(|rc| rc.borrow().clone())) {
         let result: Value<u8> = Rc::new(RefCell::new(0_u8));
         if !({ woff2_BufferImpl::ReadU8(&(*buf.borrow()), (result.as_pointer())) }) {
             return false;
         }
         let __rhs = ((((*result.borrow()) as i32)
-            + ((*kLowestUCode_16.with(Value::clone).borrow()) * 2)) as u32);
+            + (kLowestUCode_16.with(|rc| rc.borrow().clone()) * 2)) as u32);
         (*value.borrow()).write(__rhs);
         return true;
     } else {
@@ -1052,7 +1052,7 @@ pub fn ReadTrueTypeFont_33(
         ({
             woff2_FontImpl::FindTable_u32(
                 &(*font.borrow()),
-                (*kHeadTableTag_1.with(Value::clone).borrow()),
+                kHeadTableTag_1.with(|rc| rc.borrow().clone()),
             )
         }),
     ));
@@ -1235,7 +1235,7 @@ pub fn ReadFont_36(data: Ptr<u8>, len: usize, font: Ptr<woff2_Font>) -> bool {
     }
     if {
         let _lhs = (*(*(*font.borrow()).upgrade().deref()).flavor.borrow());
-        _lhs == (*kTtcFontFlavor_22.with(Value::clone).borrow())
+        _lhs == kTtcFontFlavor_22.with(|rc| rc.borrow().clone())
     } {
         return false;
     }
@@ -1274,7 +1274,7 @@ pub fn ReadFontCollection_37(
         let _lhs = (*(*(*font_collection.borrow()).upgrade().deref())
             .flavor
             .borrow());
-        _lhs != (*kTtcFontFlavor_22.with(Value::clone).borrow())
+        _lhs != kTtcFontFlavor_22.with(|rc| rc.borrow().clone())
     } {
         {
             let __a0 = 1_usize as usize;
@@ -1385,7 +1385,7 @@ pub fn WriteTableRecord_42(
     if {
         let _lhs = (*dst_size.borrow());
         _lhs < ((*offset.borrow()).read())
-            .wrapping_add((*kSfntEntrySize_24.with(Value::clone).borrow()))
+            .wrapping_add(kSfntEntrySize_24.with(|rc| rc.borrow().clone()))
     } {
         return false;
     }
@@ -1597,7 +1597,7 @@ pub fn WriteFontCollection_44(
     let offset: Value<usize> = Rc::new(RefCell::new(0_usize));
     if {
         let _lhs = (*(*font_collection.upgrade().deref()).flavor.borrow());
-        _lhs != (*kTtcFontFlavor_22.with(Value::clone).borrow())
+        _lhs != kTtcFontFlavor_22.with(|rc| rc.borrow().clone())
     } {
         return ({
             WriteFont_41(
@@ -1611,7 +1611,7 @@ pub fn WriteFontCollection_44(
     }
     ({
         StoreU32_30(
-            (*kTtcFontFlavor_22.with(Value::clone).borrow()),
+            kTtcFontFlavor_22.with(|rc| rc.borrow().clone()),
             (offset.as_pointer()),
             (*dst.borrow()).clone(),
         )
@@ -1675,13 +1675,13 @@ pub fn WriteFontCollection_44(
 pub fn NumGlyphs_45(font: Ptr<woff2_Font>) -> i32 {
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            let _tag: u32 = (*kHeadTableTag_1.with(Value::clone).borrow());
+            let _tag: u32 = kHeadTableTag_1.with(|rc| rc.borrow().clone());
             woff2_FontImpl::FindTable_u32_const(&font, _tag)
         }),
     ));
     let loca_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            let _tag: u32 = (*kLocaTableTag_2.with(Value::clone).borrow());
+            let _tag: u32 = kLocaTableTag_2.with(|rc| rc.borrow().clone());
             woff2_FontImpl::FindTable_u32_const(&font, _tag)
         }),
     ));
@@ -1707,7 +1707,7 @@ pub fn NumGlyphs_45(font: Ptr<woff2_Font>) -> i32 {
 pub fn IndexFormat_46(font: Ptr<woff2_Font>) -> i32 {
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            let _tag: u32 = (*kHeadTableTag_1.with(Value::clone).borrow());
+            let _tag: u32 = kHeadTableTag_1.with(|rc| rc.borrow().clone());
             woff2_FontImpl::FindTable_u32_const(&font, _tag)
         }),
     ));
@@ -1732,19 +1732,19 @@ pub fn GetGlyphData_47(
     }
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            let _tag: u32 = (*kHeadTableTag_1.with(Value::clone).borrow());
+            let _tag: u32 = kHeadTableTag_1.with(|rc| rc.borrow().clone());
             woff2_FontImpl::FindTable_u32_const(&font, _tag)
         }),
     ));
     let loca_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            let _tag: u32 = (*kLocaTableTag_2.with(Value::clone).borrow());
+            let _tag: u32 = kLocaTableTag_2.with(|rc| rc.borrow().clone());
             woff2_FontImpl::FindTable_u32_const(&font, _tag)
         }),
     ));
     let glyf_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            let _tag: u32 = (*kGlyfTableTag_0.with(Value::clone).borrow());
+            let _tag: u32 = kGlyfTableTag_0.with(|rc| rc.borrow().clone());
             woff2_FontImpl::FindTable_u32_const(&font, _tag)
         }),
     ));
@@ -1818,7 +1818,7 @@ pub fn RemoveDigitalSignature_48(font: Ptr<woff2_Font>) -> bool {
         Rc::new(RefCell::new(RefcountMapIter::find_key(
             ((*(*font.borrow()).upgrade().deref()).tables.as_pointer()
                 as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
-            &(*kDsigTableTag_3.with(Value::clone).borrow()),
+            &kDsigTableTag_3.with(|rc| rc.borrow().clone()),
         )));
     if (*it.borrow())
         != RefcountMapIter::end(
@@ -2060,7 +2060,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
                 return 1;
             }
         } else {
-            (*tag.borrow_mut()) = (*kKnownTags_8.with(Value::clone).borrow())
+            (*tag.borrow_mut()) = kKnownTags_8.with(|rc| rc.borrow().clone())
                 [(((*flags.borrow()) as i32) & 63) as usize];
         }
         {
@@ -2082,8 +2082,8 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         let xform_version: Value<u8> = Rc::new(RefCell::new(
             (((((*flags.borrow()) as i32) >> 6) & 3) as u8),
         ));
-        if ((*tag.borrow()) == (*kGlyfTableTag_0.with(Value::clone).borrow()))
-            || ((*tag.borrow()) == (*kLocaTableTag_2.with(Value::clone).borrow()))
+        if ((*tag.borrow()) == kGlyfTableTag_0.with(|rc| rc.borrow().clone()))
+            || ((*tag.borrow()) == kLocaTableTag_2.with(|rc| rc.borrow().clone()))
         {
             if (((*xform_version.borrow()) as i32) == 0) {
                 if !({ ReadBase128_17((file.as_pointer()), (transformLength.as_pointer())) }) {
@@ -2100,7 +2100,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         println!("");
         (*i.borrow_mut()).postfix_inc();
     }
-    if ((*flavor.borrow()) == (*kTtcFontFlavor_22.with(Value::clone).borrow())) {
+    if ((*flavor.borrow()) == kTtcFontFlavor_22.with(|rc| rc.borrow().clone())) {
         let version: Value<u32> = <Value<u32>>::default();
         let numFonts: Value<u32> = <Value<u32>>::default();
         if !({ woff2_BufferImpl::ReadU32(&file.as_pointer(), (version.as_pointer())) }) {
@@ -2457,7 +2457,7 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                             < (output_order.as_pointer() as Ptr<u32>)
                                 .to_end()
                                 .get_offset() as usize
-                            && value_0.read() == (*kGlyfTableTag_0.with(Value::clone).borrow())
+                            && value_0.read() == kGlyfTableTag_0.with(|rc| rc.borrow().clone())
                     })
                     .unwrap_or(
                         (output_order.as_pointer() as Ptr<u32>)
@@ -2477,7 +2477,7 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                             < (output_order.as_pointer() as Ptr<u32>)
                                 .to_end()
                                 .get_offset() as usize
-                            && value_0.read() == (*kLocaTableTag_2.with(Value::clone).borrow())
+                            && value_0.read() == kLocaTableTag_2.with(|rc| rc.borrow().clone())
                     })
                     .unwrap_or(
                         (output_order.as_pointer() as Ptr<u32>)
@@ -2510,7 +2510,7 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                                         .to_end()
                                         .get_offset() as usize
                                     && value_0.read()
-                                        == (*kGlyfTableTag_0.with(Value::clone).borrow())
+                                        == kGlyfTableTag_0.with(|rc| rc.borrow().clone())
                             })
                             .unwrap_or(
                                 (output_order.as_pointer() as Ptr<u32>)
@@ -2521,7 +2521,7 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                     .offset(1_i64 as isize)
                     .get_offset();
                 (*output_order.borrow_mut())
-                    .insert(__off, (*kLocaTableTag_2.with(Value::clone).borrow()));
+                    .insert(__off, kLocaTableTag_2.with(|rc| rc.borrow().clone()));
                 (output_order.as_pointer() as Ptr<u32>)
                     .offset(
                         (output_order.as_pointer() as Ptr<u32>)
@@ -2534,7 +2534,7 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                                         .to_end()
                                         .get_offset() as usize
                                     && value_0.read()
-                                        == (*kGlyfTableTag_0.with(Value::clone).borrow())
+                                        == kGlyfTableTag_0.with(|rc| rc.borrow().clone())
                             })
                             .unwrap_or(
                                 (output_order.as_pointer() as Ptr<u32>)
