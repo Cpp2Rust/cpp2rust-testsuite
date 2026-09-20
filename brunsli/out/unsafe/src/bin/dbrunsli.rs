@@ -3004,6 +3004,23 @@ pub const brunsli_internal_dec_SerializationStatus_DONE: brunsli_internal_dec_Se
     3;
 #[repr(C)]
 #[derive(Default)]
+pub struct brunsli_internal_dec_State {
+    pub stage: brunsli_internal_dec_Stage,
+    pub tags_met: u32,
+    pub skip_tags: u32,
+    pub data: *const u8,
+    pub len: usize,
+    pub pos: usize,
+    pub context_map: *const u8,
+    pub entropy_codes: *const brunsli_ANSDecodingData,
+    pub use_legacy_context_model: bool,
+    pub is_storage_allocated: bool,
+    pub meta: Vec<brunsli_internal_dec_ComponentMeta>,
+    pub internal: Option<Box<brunsli_internal_dec_InternalState>>,
+}
+impl brunsli_internal_dec_State {}
+#[repr(C)]
+#[derive(Default)]
 pub struct brunsli_Arena_brunsli_HuffmanCode_ {
     pub capacity: usize,
     pub storage: Option<Box<[brunsli_HuffmanCode]>>,
@@ -3040,6 +3057,11 @@ impl brunsli_Arena_brunsli_HuffmanCode_ {
         self.storage = (*_a0).storage.take();
         return &mut (*(self as *mut brunsli_Arena_brunsli_HuffmanCode_));
     }
+}
+#[repr(C)]
+#[derive(Clone, Default)]
+pub struct brunsli_HuffmanDecodingData {
+    pub table_: Vec<brunsli_HuffmanCode>,
 }
 #[repr(C)]
 #[derive()]
@@ -3432,6 +3454,40 @@ pub const brunsli_internal_dec_MetadataDecompressionStage_DECOMPRESSING:
     brunsli_internal_dec_MetadataDecompressionStage = 2;
 pub const brunsli_internal_dec_MetadataDecompressionStage_DONE:
     brunsli_internal_dec_MetadataDecompressionStage = 3;
+pub type brunsli_internal_dec_MetadataState_Stage = u32;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_MARKER:
+    brunsli_internal_dec_MetadataState_Stage = 0;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_TAIL:
+    brunsli_internal_dec_MetadataState_Stage = 1;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_CODE:
+    brunsli_internal_dec_MetadataState_Stage = 2;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_HI:
+    brunsli_internal_dec_MetadataState_Stage = 3;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_LO:
+    brunsli_internal_dec_MetadataState_Stage = 4;
+pub const brunsli_internal_dec_MetadataState_Stage_READ_MULTIBYTE:
+    brunsli_internal_dec_MetadataState_Stage = 5;
+#[repr(C)]
+#[derive(Copy, Clone, Default)]
+pub struct brunsli_internal_dec_MetadataState {
+    pub short_marker_count: usize,
+    pub marker: u8,
+    pub length_hi: u8,
+    pub remaining_multibyte_length: usize,
+    pub multibyte_sink: *mut Vec<u8>,
+    pub stage: usize,
+    pub brotli: *mut ::brotli_sys::BrotliDecoderState,
+    pub metadata_size: usize,
+    pub decompressed_size: usize,
+    pub result: brunsli_BrunsliStatus,
+    pub decompression_stage: brunsli_internal_dec_MetadataDecompressionStage,
+}
+impl brunsli_internal_dec_MetadataState {
+    pub unsafe fn CanFinish(&mut self) -> bool {
+        return ((self.stage) == (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize))
+            || ((self.stage) == (brunsli_internal_dec_MetadataState_Stage_READ_TAIL as usize));
+    }
+}
 pub type brunsli_internal_dec_VarintState_Stage = u32;
 pub const brunsli_internal_dec_VarintState_Stage_INIT: brunsli_internal_dec_VarintState_Stage = 0;
 pub const brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION:
@@ -3667,7 +3723,7 @@ impl brunsli_internal_dec_InternalState {
     pub unsafe fn InternalState_pmutbrunsli_internal_dec_InternalState_rv(
         _a0: *mut brunsli_internal_dec_InternalState,
     ) -> Self {
-        let mut this = Self { ac_dc : ( * _a0 ) . ac_dc  .clone() , section : ( * _a0 ) . section  , header : ( * _a0 ) . header  .clone() , fallback : ( * _a0 ) . fallback  .clone() , section_header : ( * _a0 ) . section_header  , metadata : ( * _a0 ) . metadata  .clone() , internals : ( * _a0 ) . internals  .clone() , quant : ( * _a0 ) . quant  .clone() , histogram : brunsli_internal_dec_HistogramDataState :: HistogramDataState_pmutbrunsli_internal_dec_HistogramDataState_rv ( { & mut ( * _a0 ) . histogram   } , ) , context_map_ : std::mem::take(&mut ( * _a0 ) . context_map_  ) , entropy_codes_ : std::mem::take(&mut ( * _a0 ) . entropy_codes_  ) , block_state_ : std::mem::take(&mut ( * _a0 ) . block_state_  ) , is_meta_warm : ( * _a0 ) . is_meta_warm  , shallow_histograms : ( * _a0 ) . shallow_histograms  , num_contexts : ( * _a0 ) . num_contexts  , num_histograms : ( * _a0 ) . num_histograms  , subdecoders_initialized : ( * _a0 ) . subdecoders_initialized  , ans_decoder : ( * _a0 ) . ans_decoder  .clone() , bit_reader : ( * _a0 ) . bit_reader  .clone() , arith_decoder : ( * _a0 ) . arith_decoder  , result : ( * _a0 ) . result  , last_stage : ( * _a0 ) . last_stage  , buffer : ( * _a0 ) . buffer  .clone() , serialization : brunsli_internal_dec_SerializationState :: SerializationState_pmutbrunsli_internal_dec_SerializationState_rv ( { & mut ( * _a0 ) . serialization   } , ) , } ;
+        let mut this = Self { ac_dc : ( * _a0 ) . ac_dc  .clone() , section : ( * _a0 ) . section  , header : ( * _a0 ) . header  .clone() , fallback : ( * _a0 ) . fallback  .clone() , section_header : ( * _a0 ) . section_header  , metadata : ( * _a0 ) . metadata  , internals : ( * _a0 ) . internals  .clone() , quant : ( * _a0 ) . quant  .clone() , histogram : brunsli_internal_dec_HistogramDataState :: HistogramDataState_pmutbrunsli_internal_dec_HistogramDataState_rv ( { & mut ( * _a0 ) . histogram   } , ) , context_map_ : std::mem::take(&mut ( * _a0 ) . context_map_  ) , entropy_codes_ : std::mem::take(&mut ( * _a0 ) . entropy_codes_  ) , block_state_ : std::mem::take(&mut ( * _a0 ) . block_state_  ) , is_meta_warm : ( * _a0 ) . is_meta_warm  , shallow_histograms : ( * _a0 ) . shallow_histograms  , num_contexts : ( * _a0 ) . num_contexts  , num_histograms : ( * _a0 ) . num_histograms  , subdecoders_initialized : ( * _a0 ) . subdecoders_initialized  , ans_decoder : ( * _a0 ) . ans_decoder  .clone() , bit_reader : ( * _a0 ) . bit_reader  .clone() , arith_decoder : ( * _a0 ) . arith_decoder  , result : ( * _a0 ) . result  , last_stage : ( * _a0 ) . last_stage  , buffer : ( * _a0 ) . buffer  .clone() , serialization : brunsli_internal_dec_SerializationState :: SerializationState_pmutbrunsli_internal_dec_SerializationState_rv ( { & mut ( * _a0 ) . serialization   } , ) , } ;
         this
     }
     pub unsafe fn operator_assign_pmutbrunsli_internal_dec_InternalState_rv(
@@ -3679,7 +3735,7 @@ impl brunsli_internal_dec_InternalState {
         self.header = ((*_a0).header).clone();
         self.fallback = ((*_a0).fallback).clone();
         self.section_header = (*_a0).section_header;
-        self.metadata = ((*_a0).metadata).clone();
+        self.metadata = (*_a0).metadata;
         self.internals = ((*_a0).internals).clone();
         self.quant = ((*_a0).quant).clone();
         (unsafe {
@@ -8748,11 +8804,6 @@ impl brunsli_Arena_brunsli_HuffmanCode_ {
             .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr());
     }
 }
-#[repr(C)]
-#[derive(Clone, Default)]
-pub struct brunsli_HuffmanDecodingData {
-    pub table_: Vec<brunsli_HuffmanCode>,
-}
 pub static mut kCodeLengthCodes_213: std::cell::LazyCell<i32> =
     std::cell::LazyCell::new(|| unsafe { 18 });
 pub static mut kCodeLengthCodeOrder_214: std::cell::LazyCell<[u8; 18]> =
@@ -12114,22 +12165,6 @@ pub unsafe fn SerializeJpeg_206(
     }
     panic!("ub: non-void function does not return a value")
 }
-#[repr(C)]
-#[derive()]
-pub struct brunsli_internal_dec_State {
-    pub stage: brunsli_internal_dec_Stage,
-    pub tags_met: u32,
-    pub skip_tags: u32,
-    pub data: *const u8,
-    pub len: usize,
-    pub pos: usize,
-    pub context_map: *const u8,
-    pub entropy_codes: *const brunsli_ANSDecodingData,
-    pub use_legacy_context_model: bool,
-    pub is_storage_allocated: bool,
-    pub meta: Vec<brunsli_internal_dec_ComponentMeta>,
-    pub internal: Option<Box<brunsli_internal_dec_InternalState>>,
-}
 impl brunsli_internal_dec_State {
     pub unsafe fn brunsli_internal_dec_State() -> Self {
         let mut this = Self {
@@ -12150,45 +12185,6 @@ impl brunsli_internal_dec_State {
             )),
         };
         this
-    }
-}
-impl Default for brunsli_internal_dec_State {
-    fn default() -> Self {
-        unsafe { brunsli_internal_dec_State::brunsli_internal_dec_State() }
-    }
-}
-pub type brunsli_internal_dec_MetadataState_Stage = u32;
-pub const brunsli_internal_dec_MetadataState_Stage_READ_MARKER:
-    brunsli_internal_dec_MetadataState_Stage = 0;
-pub const brunsli_internal_dec_MetadataState_Stage_READ_TAIL:
-    brunsli_internal_dec_MetadataState_Stage = 1;
-pub const brunsli_internal_dec_MetadataState_Stage_READ_CODE:
-    brunsli_internal_dec_MetadataState_Stage = 2;
-pub const brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_HI:
-    brunsli_internal_dec_MetadataState_Stage = 3;
-pub const brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_LO:
-    brunsli_internal_dec_MetadataState_Stage = 4;
-pub const brunsli_internal_dec_MetadataState_Stage_READ_MULTIBYTE:
-    brunsli_internal_dec_MetadataState_Stage = 5;
-#[repr(C)]
-#[derive(Clone, Default)]
-pub struct brunsli_internal_dec_MetadataState {
-    pub short_marker_count: usize,
-    pub marker: u8,
-    pub length_hi: u8,
-    pub remaining_multibyte_length: usize,
-    pub multibyte_sink: *mut Vec<u8>,
-    pub stage: usize,
-    pub brotli: *mut ::brotli_sys::BrotliDecoderState,
-    pub metadata_size: usize,
-    pub decompressed_size: usize,
-    pub result: brunsli_BrunsliStatus,
-    pub decompression_stage: brunsli_internal_dec_MetadataDecompressionStage,
-}
-impl brunsli_internal_dec_MetadataState {
-    pub unsafe fn CanFinish(&mut self) -> bool {
-        return ((self.stage) == (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize))
-            || ((self.stage) == (brunsli_internal_dec_MetadataState_Stage_READ_TAIL as usize));
     }
 }
 impl brunsli_internal_dec_State {}

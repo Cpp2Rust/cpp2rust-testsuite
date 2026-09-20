@@ -3163,6 +3163,41 @@ pub fn FindBestMatrix_119(src: Ptr<i32>, is_chroma: bool, dst: Ptr<u8>) -> u32 {
     });
     return (*best_q.borrow());
 }
+#[derive(Default)]
+pub struct brunsli_Storage {
+    pub data: Value<Ptr<u8>>,
+    pub length: Value<usize>,
+    pub pos: Value<usize>,
+}
+impl brunsli_Storage {}
+impl Clone for brunsli_Storage {
+    fn clone(&self) -> Self {
+        let __this: Value<brunsli_Storage> = Rc::new(RefCell::new(Self {
+            data: Rc::new(RefCell::new((*self.data.borrow()).clone())),
+            length: Rc::new(RefCell::new((*self.length.borrow()))),
+            pos: Rc::new(RefCell::new((*self.pos.borrow()))),
+        }));
+        let this: Ptr<brunsli_Storage> = __this.as_pointer();
+        Rc::try_unwrap(__this).ok().unwrap().into_inner()
+    }
+}
+impl ByteRepr for brunsli_Storage {
+    fn byte_size() -> usize {
+        24
+    }
+    fn to_bytes(&self, buf: &mut [u8]) {
+        (*self.data.borrow()).to_bytes(&mut buf[0..8]);
+        (*self.length.borrow()).to_bytes(&mut buf[8..16]);
+        (*self.pos.borrow()).to_bytes(&mut buf[16..24]);
+    }
+    fn from_bytes(buf: &[u8]) -> Self {
+        Self {
+            data: Rc::new(RefCell::new(<Ptr<u8>>::from_bytes(&buf[0..8]))),
+            length: Rc::new(RefCell::new(<usize>::from_bytes(&buf[8..16]))),
+            pos: Rc::new(RefCell::new(<usize>::from_bytes(&buf[16..24]))),
+        }
+    }
+}
 pub fn WriteBits_120(n_bits: usize, bits: u64, storage: Ptr<brunsli_Storage>) {
     let n_bits: Value<usize> = Rc::new(RefCell::new(n_bits));
     let bits: Value<u64> = Rc::new(RefCell::new(bits));
@@ -14792,12 +14827,6 @@ pub fn BuildJpegHuffmanTable_238(
         (*len.borrow_mut()).prefix_inc();
     }
 }
-#[derive(Default)]
-pub struct brunsli_Storage {
-    pub data: Value<Ptr<u8>>,
-    pub length: Value<usize>,
-    pub pos: Value<usize>,
-}
 impl brunsli_Storage {
     pub fn brunsli_Storage(data: Ptr<u8>, length: usize) -> Self {
         let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
@@ -14820,34 +14849,6 @@ impl brunsli_Storage {
         };
         (*data.borrow()).offset((0) as isize).write(0_u8);
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
-    }
-}
-impl Clone for brunsli_Storage {
-    fn clone(&self) -> Self {
-        let __this: Value<brunsli_Storage> = Rc::new(RefCell::new(Self {
-            data: Rc::new(RefCell::new((*self.data.borrow()).clone())),
-            length: Rc::new(RefCell::new((*self.length.borrow()))),
-            pos: Rc::new(RefCell::new((*self.pos.borrow()))),
-        }));
-        let this: Ptr<brunsli_Storage> = __this.as_pointer();
-        Rc::try_unwrap(__this).ok().unwrap().into_inner()
-    }
-}
-impl ByteRepr for brunsli_Storage {
-    fn byte_size() -> usize {
-        24
-    }
-    fn to_bytes(&self, buf: &mut [u8]) {
-        (*self.data.borrow()).to_bytes(&mut buf[0..8]);
-        (*self.length.borrow()).to_bytes(&mut buf[8..16]);
-        (*self.pos.borrow()).to_bytes(&mut buf[16..24]);
-    }
-    fn from_bytes(buf: &[u8]) -> Self {
-        Self {
-            data: Rc::new(RefCell::new(<Ptr<u8>>::from_bytes(&buf[0..8]))),
-            length: Rc::new(RefCell::new(<usize>::from_bytes(&buf[8..16]))),
-            pos: Rc::new(RefCell::new(<usize>::from_bytes(&buf[16..24]))),
-        }
     }
 }
 impl brunsli_Storage {}
@@ -15700,9 +15701,13 @@ impl brunsli_ProbImpl for Ptr<brunsli_Prob> {
     }
 }
 pub trait brunsli_StorageImpl {
-    fn destructor(&self);
+    fn destructor(&self) {
+        unimplemented!()
+    }
     fn GetBytesUsed(&self) -> usize;
-    fn AppendBytes(&self, src: Ptr<u8>, len: usize);
+    fn AppendBytes(&self, src: Ptr<u8>, len: usize) {
+        unimplemented!()
+    }
 }
 impl brunsli_StorageImpl for Ptr<brunsli_Storage> {
     fn GetBytesUsed(&self) -> usize {

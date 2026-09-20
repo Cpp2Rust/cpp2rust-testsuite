@@ -2463,6 +2463,18 @@ pub unsafe fn FindBestMatrix_119(
     (unsafe { FillQuantMatrix_118(is_chroma, best_q, dst) });
     return best_q;
 }
+#[repr(C)]
+#[derive(Copy, Clone, Default)]
+pub struct brunsli_Storage {
+    pub data: *mut u8,
+    pub length: usize,
+    pub pos: usize,
+}
+impl brunsli_Storage {
+    pub unsafe fn GetBytesUsed(&self) -> usize {
+        return (((self.pos).wrapping_add(7_usize)) >> (3));
+    }
+}
 pub unsafe fn WriteBits_120(mut n_bits: usize, mut bits: u64, mut storage: *mut brunsli_Storage) {
     if true {
     } else {
@@ -11377,13 +11389,6 @@ pub unsafe fn BuildJpegHuffmanTable_238(
         len.prefix_inc();
     }
 }
-#[repr(C)]
-#[derive(Clone, Default)]
-pub struct brunsli_Storage {
-    pub data: *mut u8,
-    pub length: usize,
-    pub pos: usize,
-}
 impl brunsli_Storage {
     pub unsafe fn brunsli_Storage(mut data: *mut u8, mut length: usize) -> Self {
         let mut this = Self {
@@ -11397,9 +11402,6 @@ impl brunsli_Storage {
         };
         (*data.offset((0) as isize)) = 0_u8;
         this
-    }
-    pub unsafe fn GetBytesUsed(&self) -> usize {
-        return (((self.pos).wrapping_add(7_usize)) >> (3));
     }
 }
 impl brunsli_Storage {}
