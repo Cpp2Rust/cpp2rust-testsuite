@@ -175,8 +175,8 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
             (*head.borrow_mut()) = __rhs;
         }
     }
-    (*visited.borrow()).delete_array();
-    (*(*Q.borrow()).elems.borrow()).delete_array();
+    (*visited.borrow()).delete();
+    (*(*Q.borrow()).elems.borrow()).delete();
     return (*pred.borrow()).clone();
 }
 pub fn main() {
@@ -272,8 +272,8 @@ fn main_0() -> i32 {
         );
         (*i.borrow_mut()).prefix_inc();
     }
-    (*(*graph.borrow()).adj.borrow()).delete_array();
-    (*pred.borrow()).delete_array();
+    (*(*graph.borrow()).adj.borrow()).delete();
+    (*pred.borrow()).delete();
     return 0;
 }
 pub trait GraphImpl {

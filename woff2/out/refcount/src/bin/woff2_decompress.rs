@@ -1829,7 +1829,7 @@ pub fn StoreLoca_62(
         _lhs < (*loca_values.upgrade().deref()).len()
     } {
         let value: Value<u32> = Rc::new(RefCell::new(
-            ((loca_values.to_strong().as_pointer() as Ptr<u32>)
+            ((loca_values.decay() as Ptr<u32>)
                 .offset((*i.borrow()))
                 .read()),
         ));
@@ -2664,7 +2664,7 @@ pub fn ReconstructGlyf_63(
 pub fn FindTable_65(tables: Ptr<Vec<Ptr<woff2_Table>>>, tag: u32) -> Ptr<woff2_Table> {
     let tables: Value<Ptr<Vec<Ptr<woff2_Table>>>> = Rc::new(RefCell::new(tables));
     let tag: Value<u32> = Rc::new(RefCell::new(tag));
-    'loop_: for mut table in (*tables.borrow()).to_strong().as_pointer() as Ptr<Ptr<woff2_Table>> {
+    'loop_: for mut table in (*tables.borrow()).decay() as Ptr<Ptr<woff2_Table>> {
         let table: Value<Ptr<woff2_Table>> = Rc::new(RefCell::new(table.read()));
         if {
             let _lhs = (*(*(*table.borrow()).upgrade().deref()).tag.borrow());
@@ -2769,7 +2769,7 @@ pub fn ReconstructTransformedHmtx_67(
                 return false;
             }
         } else {
-            (*lsb.borrow_mut()) = ((x_mins.to_strong().as_pointer() as Ptr<i16>)
+            (*lsb.borrow_mut()) = ((x_mins.decay() as Ptr<i16>)
                 .offset(((*i.borrow()) as usize))
                 .read());
         }
@@ -2790,7 +2790,7 @@ pub fn ReconstructTransformedHmtx_67(
                 return false;
             }
         } else {
-            (*lsb.borrow_mut()) = ((x_mins.to_strong().as_pointer() as Ptr<i16>)
+            (*lsb.borrow_mut()) = ((x_mins.decay() as Ptr<i16>)
                 .offset(((*i.borrow()) as usize))
                 .read());
         }
@@ -2898,8 +2898,7 @@ pub fn ReadTableDirectory_69(
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < (*num_tables.borrow())) {
         let table: Value<Ptr<woff2_Table>> = Rc::new(RefCell::new(
-            ((((*tables.borrow()).to_strong().as_pointer()) as Ptr<woff2_Table>)
-                .offset((*i.borrow()))),
+            ((((*tables.borrow()).decay()) as Ptr<woff2_Table>).offset((*i.borrow()))),
         ));
         let flag_byte: Value<u8> = <Value<u8>>::default();
         if ((!({ woff2_BufferImpl::ReadU8(&(*file.borrow()), (flag_byte.as_pointer())) }) as i64)
@@ -4143,7 +4142,7 @@ pub fn ConvertWOFF2ToTTF_78(
         ConvertWOFF2ToTTF_79(
             (*data.borrow()).clone(),
             (*length.borrow()),
-            ((out.as_pointer()).to_strong() as Value<dyn woff2_WOFF2Out>).as_pointer_dyn(),
+            (out.as_pointer()).to_dyn::<dyn woff2_WOFF2Out>(|w| w),
         )
     });
 }
@@ -4393,7 +4392,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             ConvertWOFF2ToTTF_79(
                 (*raw_input.borrow()).clone(),
                 ((*input.borrow()).len() - 1),
-                ((out.as_pointer()).to_strong() as Value<dyn woff2_WOFF2Out>).as_pointer_dyn(),
+                (out.as_pointer()).to_dyn::<dyn woff2_WOFF2Out>(|w| w),
             )
         }),
     ));

@@ -1099,12 +1099,10 @@ pub fn ReadCollectionFont_34(
     {
         let table: Ptr<woff2_Font_Table> = entry.second().as_pointer();
         if RefcountMapIter::find_key(
-            ((*all_tables.borrow()).to_strong().as_pointer()
-                as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>),
+            ((*all_tables.borrow()).clone() as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>),
             &(*(*table.upgrade().deref()).offset.borrow()),
         ) == RefcountMapIter::end(
-            ((*all_tables.borrow()).to_strong().as_pointer()
-                as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>),
+            ((*all_tables.borrow()).clone() as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>),
         ) {
             let __rhs = ({
                 woff2_FontImpl::FindTable_u32(
@@ -2492,9 +2490,7 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                 let idx = (*loca_loc.borrow()).get_offset();
                 (output_order.as_pointer() as Ptr<Vec<u32>>)
                     .with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
-                (output_order.as_pointer() as Ptr<Vec<u32>>)
-                    .to_strong()
-                    .as_pointer() as Ptr<u32>
+                (output_order.as_pointer() as Ptr<Vec<u32>>).decay()
             };
             {
                 let __off = (output_order.as_pointer() as Ptr<u32>)
