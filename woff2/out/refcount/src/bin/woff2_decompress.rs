@@ -4463,7 +4463,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             let mut __tmp1 = (*filename.borrow())[(0_usize) as usize
                 ..::std::cmp::min(
                     (0_usize + {
-                        let __lookup: Vec<u8> = Ptr::from_string_literal(b".")
+                        let __lookup: Vec<u8> = Ptr::<u8>::from_string_literal(b".")
                             .to_c_string_iterator()
                             .collect();
                         (*filename.borrow())
@@ -4479,7 +4479,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             __tmp1
         };
         __tmp2.pop();
-        __tmp2.extend(Ptr::from_string_literal(b".ttf").to_c_string_iterator());
+        __tmp2.extend(Ptr::<u8>::from_string_literal(b".ttf").to_c_string_iterator());
         __tmp2.push(0);
         __tmp2
     }));

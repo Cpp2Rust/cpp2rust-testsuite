@@ -4100,7 +4100,7 @@ impl woff2_WOFF2Params {
     pub fn woff2_WOFF2Params() -> Self {
         let __this: Value<woff2_WOFF2Params> = Rc::new(RefCell::new(Self {
             extended_metadata: Rc::new(RefCell::new(
-                Ptr::from_string_literal(b"")
+                Ptr::<u8>::from_string_literal(b"")
                     .to_c_string_iterator()
                     .chain(std::iter::once(0))
                     .collect::<Vec<u8>>(),
@@ -4504,7 +4504,7 @@ pub fn MaxWOFF2CompressedSize_104(data: Ptr<u8>, length: usize) -> usize {
     let length: Value<usize> = Rc::new(RefCell::new(length));
     return ({
         let _extended_metadata: Value<Vec<u8>> = Rc::new(RefCell::new(
-            Ptr::from_string_literal(b"")
+            Ptr::<u8>::from_string_literal(b"")
                 .to_c_string_iterator()
                 .chain(std::iter::once(0))
                 .collect::<Vec<u8>>(),
@@ -5185,7 +5185,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             let mut __tmp1 = (*filename.borrow())[(0_usize) as usize
                 ..::std::cmp::min(
                     (0_usize + {
-                        let __lookup: Vec<u8> = Ptr::from_string_literal(b".")
+                        let __lookup: Vec<u8> = Ptr::<u8>::from_string_literal(b".")
                             .to_c_string_iterator()
                             .collect();
                         (*filename.borrow())
@@ -5201,7 +5201,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             __tmp1
         };
         __tmp2.pop();
-        __tmp2.extend(Ptr::from_string_literal(b".woff2").to_c_string_iterator());
+        __tmp2.extend(Ptr::<u8>::from_string_literal(b".woff2").to_c_string_iterator());
         __tmp2.push(0);
         __tmp2
     }));
