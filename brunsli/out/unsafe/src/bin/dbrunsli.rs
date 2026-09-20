@@ -3023,7 +3023,7 @@ impl brunsli_Arena_brunsli_HuffmanCode_ {
         self.capacity = 0_usize;
         self.storage = None;
     }
-    pub unsafe fn Arena_pmutbrunsli_Arena_brunsli_HuffmanCode(
+    pub unsafe fn Arena_pmutbrunsli_Arena_brunsli_HuffmanCode__rv(
         _a0: *mut brunsli_Arena_brunsli_HuffmanCode_,
     ) -> Self {
         let mut this = Self {
@@ -3032,7 +3032,7 @@ impl brunsli_Arena_brunsli_HuffmanCode_ {
         };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_Arena_brunsli_HuffmanCode(
+    pub unsafe fn operator_assign_pmutbrunsli_Arena_brunsli_HuffmanCode__rv(
         &mut self,
         _a0: *mut brunsli_Arena_brunsli_HuffmanCode_,
     ) -> *mut brunsli_Arena_brunsli_HuffmanCode_ {
@@ -3098,7 +3098,7 @@ impl brunsli_internal_dec_OutputChunk {
         this.len = bytes.len();
         this
     }
-    pub unsafe fn OutputChunk_pmutbrunsli_internal_dec_OutputChunk(
+    pub unsafe fn OutputChunk_pmutbrunsli_internal_dec_OutputChunk_rv(
         _a0: *mut brunsli_internal_dec_OutputChunk,
     ) -> Self {
         let mut this = Self {
@@ -3108,7 +3108,7 @@ impl brunsli_internal_dec_OutputChunk {
         };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_OutputChunk(
+    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_OutputChunk_rv(
         &mut self,
         _a0: *mut brunsli_internal_dec_OutputChunk,
     ) -> *mut brunsli_internal_dec_OutputChunk {
@@ -3149,24 +3149,13 @@ pub struct brunsli_internal_dec_BitWriter {
     pub put_bits: i32,
 }
 impl brunsli_internal_dec_BitWriter {
-    pub unsafe fn BitWriter_pmutbrunsli_internal_dec_BitWriter(
+    pub unsafe fn BitWriter_pmutbrunsli_internal_dec_BitWriter_rv(
         _a0: *mut brunsli_internal_dec_BitWriter,
     ) -> Self {
-        let mut this = Self {
-            healthy: (*_a0).healthy,
-            output: (*_a0).output,
-            chunk:
-                brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk(
-                    { &mut (*_a0).chunk },
-                ),
-            data: (*_a0).data,
-            pos: (*_a0).pos,
-            put_buffer: (*_a0).put_buffer,
-            put_bits: (*_a0).put_bits,
-        };
+        let mut this = Self { healthy : ( * _a0 ) . healthy  , output : ( * _a0 ) . output  , chunk : brunsli_internal_dec_OutputChunk :: OutputChunk_pmutbrunsli_internal_dec_OutputChunk_rv ( { & mut ( * _a0 ) . chunk   } , ) , data : ( * _a0 ) . data  , pos : ( * _a0 ) . pos  , put_buffer : ( * _a0 ) . put_buffer  , put_bits : ( * _a0 ) . put_bits  , } ;
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_BitWriter(
+    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_BitWriter_rv(
         &mut self,
         _a0: *mut brunsli_internal_dec_BitWriter,
     ) -> *mut brunsli_internal_dec_BitWriter {
@@ -3174,10 +3163,7 @@ impl brunsli_internal_dec_BitWriter {
         self.output = (*_a0).output;
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_OutputChunk = &mut (*_a0).chunk;
-            brunsli_internal_dec_OutputChunk::operator_assign_pmutbrunsli_internal_dec_OutputChunk(
-                &mut self.chunk,
-                _arg0,
-            )
+            brunsli_internal_dec_OutputChunk :: operator_assign_pmutbrunsli_internal_dec_OutputChunk_rv ( &mut self . chunk   , _arg0 , )
         });
         self.data = (*_a0).data;
         self.pos = (*_a0).pos;
@@ -3216,13 +3202,13 @@ pub struct brunsli_internal_dec_EncodeScanState {
     pub next_reset_point: i32,
 }
 impl brunsli_internal_dec_EncodeScanState {
-    pub unsafe fn EncodeScanState_pmutbrunsli_internal_dec_EncodeScanState(
+    pub unsafe fn EncodeScanState_pmutbrunsli_internal_dec_EncodeScanState_rv(
         _a0: *mut brunsli_internal_dec_EncodeScanState,
     ) -> Self {
         let mut this = Self {
             stage: (*_a0).stage,
             mcu_y: (*_a0).mcu_y,
-            bw: brunsli_internal_dec_BitWriter::BitWriter_pmutbrunsli_internal_dec_BitWriter({
+            bw: brunsli_internal_dec_BitWriter::BitWriter_pmutbrunsli_internal_dec_BitWriter_rv({
                 &mut (*_a0).bw
             }),
             last_dc_coeff: std::array::from_fn::<_, 4, _>(|__i: usize| (*_a0).last_dc_coeff[(__i)]),
@@ -3237,7 +3223,7 @@ impl brunsli_internal_dec_EncodeScanState {
         };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_EncodeScanState(
+    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_EncodeScanState_rv(
         &mut self,
         _a0: *mut brunsli_internal_dec_EncodeScanState,
     ) -> *mut brunsli_internal_dec_EncodeScanState {
@@ -3245,7 +3231,7 @@ impl brunsli_internal_dec_EncodeScanState {
         self.mcu_y = (*_a0).mcu_y;
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_BitWriter = &mut (*_a0).bw;
-            brunsli_internal_dec_BitWriter::operator_assign_pmutbrunsli_internal_dec_BitWriter(
+            brunsli_internal_dec_BitWriter::operator_assign_pmutbrunsli_internal_dec_BitWriter_rv(
                 &mut self.bw,
                 _arg0,
             )
@@ -3321,13 +3307,13 @@ pub struct brunsli_internal_dec_SerializationState {
     pub scan_state: brunsli_internal_dec_EncodeScanState,
 }
 impl brunsli_internal_dec_SerializationState {
-    pub unsafe fn SerializationState_pmutbrunsli_internal_dec_SerializationState(
+    pub unsafe fn SerializationState_pmutbrunsli_internal_dec_SerializationState_rv(
         _a0: *mut brunsli_internal_dec_SerializationState,
     ) -> Self {
-        let mut this = Self { stage : ( * _a0 ) . stage  , output_queue : std::mem::take(&mut ( * _a0 ) . output_queue  ) , section_index : ( * _a0 ) . section_index  , dht_index : ( * _a0 ) . dht_index  , dqt_index : ( * _a0 ) . dqt_index  , app_index : ( * _a0 ) . app_index  , com_index : ( * _a0 ) . com_index  , data_index : ( * _a0 ) . data_index  , scan_index : ( * _a0 ) . scan_index  , dc_huff_table : std::mem::take(&mut ( * _a0 ) . dc_huff_table  ) , ac_huff_table : std::mem::take(&mut ( * _a0 ) . ac_huff_table  ) , pad_bits : ( * _a0 ) . pad_bits  , pad_bits_end : ( * _a0 ) . pad_bits_end  , seen_dri_marker : ( * _a0 ) . seen_dri_marker  , is_progressive : ( * _a0 ) . is_progressive  , scan_state : brunsli_internal_dec_EncodeScanState :: EncodeScanState_pmutbrunsli_internal_dec_EncodeScanState ( { & mut ( * _a0 ) . scan_state   } , ) , } ;
+        let mut this = Self { stage : ( * _a0 ) . stage  , output_queue : std::mem::take(&mut ( * _a0 ) . output_queue  ) , section_index : ( * _a0 ) . section_index  , dht_index : ( * _a0 ) . dht_index  , dqt_index : ( * _a0 ) . dqt_index  , app_index : ( * _a0 ) . app_index  , com_index : ( * _a0 ) . com_index  , data_index : ( * _a0 ) . data_index  , scan_index : ( * _a0 ) . scan_index  , dc_huff_table : std::mem::take(&mut ( * _a0 ) . dc_huff_table  ) , ac_huff_table : std::mem::take(&mut ( * _a0 ) . ac_huff_table  ) , pad_bits : ( * _a0 ) . pad_bits  , pad_bits_end : ( * _a0 ) . pad_bits_end  , seen_dri_marker : ( * _a0 ) . seen_dri_marker  , is_progressive : ( * _a0 ) . is_progressive  , scan_state : brunsli_internal_dec_EncodeScanState :: EncodeScanState_pmutbrunsli_internal_dec_EncodeScanState_rv ( { & mut ( * _a0 ) . scan_state   } , ) , } ;
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_SerializationState(
+    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_SerializationState_rv(
         &mut self,
         _a0: *mut brunsli_internal_dec_SerializationState,
     ) -> *mut brunsli_internal_dec_SerializationState {
@@ -3348,7 +3334,7 @@ impl brunsli_internal_dec_SerializationState {
         self.is_progressive = (*_a0).is_progressive;
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_EncodeScanState = &mut (*_a0).scan_state;
-            brunsli_internal_dec_EncodeScanState :: operator_assign_pmutbrunsli_internal_dec_EncodeScanState ( &mut self . scan_state   , _arg0 , )
+            brunsli_internal_dec_EncodeScanState :: operator_assign_pmutbrunsli_internal_dec_EncodeScanState_rv ( &mut self . scan_state   , _arg0 , )
         });
         return &mut (*(self as *mut brunsli_internal_dec_SerializationState));
     }
@@ -3605,7 +3591,7 @@ pub struct brunsli_internal_dec_HistogramDataState {
     pub arena: brunsli_Arena_brunsli_HuffmanCode_,
 }
 impl brunsli_internal_dec_HistogramDataState {
-    pub unsafe fn HistogramDataState_pmutbrunsli_internal_dec_HistogramDataState(
+    pub unsafe fn HistogramDataState_pmutbrunsli_internal_dec_HistogramDataState_rv(
         _a0: *mut brunsli_internal_dec_HistogramDataState,
     ) -> Self {
         let mut this = Self {
@@ -3615,13 +3601,14 @@ impl brunsli_internal_dec_HistogramDataState {
             entropy: (*_a0).entropy.take(),
             i: (*_a0).i,
             counts: std::mem::take(&mut (*_a0).counts),
-            arena: brunsli_Arena_brunsli_HuffmanCode_::Arena_pmutbrunsli_Arena_brunsli_HuffmanCode(
-                { &mut (*_a0).arena },
-            ),
+            arena:
+                brunsli_Arena_brunsli_HuffmanCode_::Arena_pmutbrunsli_Arena_brunsli_HuffmanCode__rv(
+                    { &mut (*_a0).arena },
+                ),
         };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_HistogramDataState(
+    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_HistogramDataState_rv(
         &mut self,
         _a0: *mut brunsli_internal_dec_HistogramDataState,
     ) -> *mut brunsli_internal_dec_HistogramDataState {
@@ -3633,7 +3620,7 @@ impl brunsli_internal_dec_HistogramDataState {
         self.counts = std::mem::take(&mut (*_a0).counts);
         (unsafe {
             let _arg0: *mut brunsli_Arena_brunsli_HuffmanCode_ = &mut (*_a0).arena;
-            brunsli_Arena_brunsli_HuffmanCode_ :: operator_assign_pmutbrunsli_Arena_brunsli_HuffmanCode ( &mut self . arena   , _arg0 , )
+            brunsli_Arena_brunsli_HuffmanCode_ :: operator_assign_pmutbrunsli_Arena_brunsli_HuffmanCode__rv ( &mut self . arena   , _arg0 , )
         });
         return &mut (*(self as *mut brunsli_internal_dec_HistogramDataState));
     }
@@ -3677,13 +3664,13 @@ pub struct brunsli_internal_dec_InternalState {
     pub serialization: brunsli_internal_dec_SerializationState,
 }
 impl brunsli_internal_dec_InternalState {
-    pub unsafe fn InternalState_pmutbrunsli_internal_dec_InternalState(
+    pub unsafe fn InternalState_pmutbrunsli_internal_dec_InternalState_rv(
         _a0: *mut brunsli_internal_dec_InternalState,
     ) -> Self {
-        let mut this = Self { ac_dc : ( * _a0 ) . ac_dc  .clone() , section : ( * _a0 ) . section  , header : ( * _a0 ) . header  .clone() , fallback : ( * _a0 ) . fallback  .clone() , section_header : ( * _a0 ) . section_header  , metadata : ( * _a0 ) . metadata  .clone() , internals : ( * _a0 ) . internals  .clone() , quant : ( * _a0 ) . quant  .clone() , histogram : brunsli_internal_dec_HistogramDataState :: HistogramDataState_pmutbrunsli_internal_dec_HistogramDataState ( { & mut ( * _a0 ) . histogram   } , ) , context_map_ : std::mem::take(&mut ( * _a0 ) . context_map_  ) , entropy_codes_ : std::mem::take(&mut ( * _a0 ) . entropy_codes_  ) , block_state_ : std::mem::take(&mut ( * _a0 ) . block_state_  ) , is_meta_warm : ( * _a0 ) . is_meta_warm  , shallow_histograms : ( * _a0 ) . shallow_histograms  , num_contexts : ( * _a0 ) . num_contexts  , num_histograms : ( * _a0 ) . num_histograms  , subdecoders_initialized : ( * _a0 ) . subdecoders_initialized  , ans_decoder : ( * _a0 ) . ans_decoder  .clone() , bit_reader : ( * _a0 ) . bit_reader  .clone() , arith_decoder : ( * _a0 ) . arith_decoder  , result : ( * _a0 ) . result  , last_stage : ( * _a0 ) . last_stage  , buffer : ( * _a0 ) . buffer  .clone() , serialization : brunsli_internal_dec_SerializationState :: SerializationState_pmutbrunsli_internal_dec_SerializationState ( { & mut ( * _a0 ) . serialization   } , ) , } ;
+        let mut this = Self { ac_dc : ( * _a0 ) . ac_dc  .clone() , section : ( * _a0 ) . section  , header : ( * _a0 ) . header  .clone() , fallback : ( * _a0 ) . fallback  .clone() , section_header : ( * _a0 ) . section_header  , metadata : ( * _a0 ) . metadata  .clone() , internals : ( * _a0 ) . internals  .clone() , quant : ( * _a0 ) . quant  .clone() , histogram : brunsli_internal_dec_HistogramDataState :: HistogramDataState_pmutbrunsli_internal_dec_HistogramDataState_rv ( { & mut ( * _a0 ) . histogram   } , ) , context_map_ : std::mem::take(&mut ( * _a0 ) . context_map_  ) , entropy_codes_ : std::mem::take(&mut ( * _a0 ) . entropy_codes_  ) , block_state_ : std::mem::take(&mut ( * _a0 ) . block_state_  ) , is_meta_warm : ( * _a0 ) . is_meta_warm  , shallow_histograms : ( * _a0 ) . shallow_histograms  , num_contexts : ( * _a0 ) . num_contexts  , num_histograms : ( * _a0 ) . num_histograms  , subdecoders_initialized : ( * _a0 ) . subdecoders_initialized  , ans_decoder : ( * _a0 ) . ans_decoder  .clone() , bit_reader : ( * _a0 ) . bit_reader  .clone() , arith_decoder : ( * _a0 ) . arith_decoder  , result : ( * _a0 ) . result  , last_stage : ( * _a0 ) . last_stage  , buffer : ( * _a0 ) . buffer  .clone() , serialization : brunsli_internal_dec_SerializationState :: SerializationState_pmutbrunsli_internal_dec_SerializationState_rv ( { & mut ( * _a0 ) . serialization   } , ) , } ;
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_InternalState(
+    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_InternalState_rv(
         &mut self,
         _a0: *mut brunsli_internal_dec_InternalState,
     ) -> *mut brunsli_internal_dec_InternalState {
@@ -3697,7 +3684,7 @@ impl brunsli_internal_dec_InternalState {
         self.quant = ((*_a0).quant).clone();
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_HistogramDataState = &mut (*_a0).histogram;
-            brunsli_internal_dec_HistogramDataState :: operator_assign_pmutbrunsli_internal_dec_HistogramDataState ( &mut self . histogram   , _arg0 , )
+            brunsli_internal_dec_HistogramDataState :: operator_assign_pmutbrunsli_internal_dec_HistogramDataState_rv ( &mut self . histogram   , _arg0 , )
         });
         self.context_map_ = std::mem::take(&mut (*_a0).context_map_);
         self.entropy_codes_ = std::mem::take(&mut (*_a0).entropy_codes_);
@@ -3715,7 +3702,7 @@ impl brunsli_internal_dec_InternalState {
         self.buffer = ((*_a0).buffer).clone();
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_SerializationState = &mut (*_a0).serialization;
-            brunsli_internal_dec_SerializationState :: operator_assign_pmutbrunsli_internal_dec_SerializationState ( &mut self . serialization   , _arg0 , )
+            brunsli_internal_dec_SerializationState :: operator_assign_pmutbrunsli_internal_dec_SerializationState_rv ( &mut self . serialization   , _arg0 , )
         });
         return &mut (*(self as *mut brunsli_internal_dec_InternalState));
     }
@@ -9537,7 +9524,7 @@ pub unsafe fn BitWriterInit_228(
             brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
                 Some((*std::cell::LazyCell::force_mut(&mut *&raw mut kBitWriterChunkSize_225)))
             });
-        brunsli_internal_dec_OutputChunk::operator_assign_pmutbrunsli_internal_dec_OutputChunk(
+        brunsli_internal_dec_OutputChunk::operator_assign_pmutbrunsli_internal_dec_OutputChunk_rv(
             &mut (*bw).chunk,
             &mut _arg0,
         )
@@ -9552,9 +9539,9 @@ pub unsafe fn SwapBuffer_229(mut bw: *mut brunsli_internal_dec_BitWriter) {
     (*bw).chunk.len = (*bw).pos;
     {
         let __arg =
-            brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk({
-                &mut (*bw).chunk
-            });
+            brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk_rv(
+                { &mut (*bw).chunk },
+            );
         (*(*bw).output).push(__arg)
     };
     (unsafe {
@@ -9562,7 +9549,7 @@ pub unsafe fn SwapBuffer_229(mut bw: *mut brunsli_internal_dec_BitWriter) {
             brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
                 Some((*std::cell::LazyCell::force_mut(&mut *&raw mut kBitWriterChunkSize_225)))
             });
-        brunsli_internal_dec_OutputChunk::operator_assign_pmutbrunsli_internal_dec_OutputChunk(
+        brunsli_internal_dec_OutputChunk::operator_assign_pmutbrunsli_internal_dec_OutputChunk_rv(
             &mut (*bw).chunk,
             &mut _arg0,
         )
@@ -9717,9 +9704,9 @@ pub unsafe fn BitWriterFinish_236(mut bw: *mut brunsli_internal_dec_BitWriter) {
     (*bw).chunk.len = (*bw).pos;
     {
         let __arg =
-            brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk({
-                &mut (*bw).chunk
-            });
+            brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk_rv(
+                { &mut (*bw).chunk },
+            );
         (*(*bw).output).push(__arg)
     };
     (unsafe {
@@ -9728,7 +9715,7 @@ pub unsafe fn BitWriterFinish_236(mut bw: *mut brunsli_internal_dec_BitWriter) {
                 { std::ptr::null() },
                 { 0_usize },
             );
-        brunsli_internal_dec_OutputChunk::operator_assign_pmutbrunsli_internal_dec_OutputChunk(
+        brunsli_internal_dec_OutputChunk::operator_assign_pmutbrunsli_internal_dec_OutputChunk_rv(
             &mut (*bw).chunk,
             &mut _arg0,
         )
@@ -10182,7 +10169,7 @@ pub unsafe fn EncodeDRI_247(
             ]
         });
     (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk({
+        brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk_rv({
             &mut dri_marker
         }),
     );
