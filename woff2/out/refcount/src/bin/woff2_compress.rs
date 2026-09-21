@@ -4091,12 +4091,11 @@ pub struct woff2_WOFF2Params {
 impl woff2_WOFF2Params {
     pub fn woff2_WOFF2Params() -> Self {
         let __this: Value<woff2_WOFF2Params> = Rc::new(RefCell::new(Self {
-            extended_metadata: Rc::new(RefCell::new(
-                Ptr::<u8>::from_string_literal(b"")
-                    .to_c_string_iterator()
-                    .chain(std::iter::once(0))
-                    .collect::<Vec<u8>>(),
-            )),
+            extended_metadata: Rc::new(RefCell::new({
+                let mut __bytes = Ptr::<u8>::from_string_literal(b"").to_c_bytes();
+                __bytes.push(0);
+                __bytes
+            })),
             brotli_quality: Rc::new(RefCell::new(11)),
             allow_transforms: Rc::new(RefCell::new(true)),
         }));
@@ -4495,12 +4494,11 @@ pub fn MaxWOFF2CompressedSize_104(data: Ptr<u8>, length: usize) -> usize {
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let length: Value<usize> = Rc::new(RefCell::new(length));
     return ({
-        let _extended_metadata: Value<Vec<u8>> = Rc::new(RefCell::new(
-            Ptr::<u8>::from_string_literal(b"")
-                .to_c_string_iterator()
-                .chain(std::iter::once(0))
-                .collect::<Vec<u8>>(),
-        ));
+        let _extended_metadata: Value<Vec<u8>> = Rc::new(RefCell::new({
+            let mut __bytes = Ptr::<u8>::from_string_literal(b"").to_c_bytes();
+            __bytes.push(0);
+            __bytes
+        }));
         MaxWOFF2CompressedSize_105(
             (*data.borrow()).clone(),
             (*length.borrow()),
@@ -5166,26 +5164,23 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         eprintln!("One argument, the input filename, must be provided.");
         return 1;
     }
-    let filename: Value<Vec<u8>> = Rc::new(RefCell::new(
-        ((*argv.borrow()).offset((1) as isize).read())
-            .to_c_string_iterator()
-            .chain(std::iter::once(0))
-            .collect::<Vec<u8>>(),
-    ));
+    let filename: Value<Vec<u8>> = Rc::new(RefCell::new({
+        let mut __bytes = ((*argv.borrow()).offset((1) as isize).read()).to_c_bytes();
+        __bytes.push(0);
+        __bytes
+    }));
     let outfilename: Value<Vec<u8>> = Rc::new(RefCell::new({
         let mut __tmp2 = {
             let mut __tmp1 = (*filename.borrow())[(0_usize) as usize
                 ..::std::cmp::min(
-                    (0_usize + {
-                        let __lookup: Vec<u8> = Ptr::<u8>::from_string_literal(b".")
-                            .to_c_string_iterator()
-                            .collect();
-                        (*filename.borrow())
-                            .iter()
-                            .take((*filename.borrow()).len().saturating_sub(1))
-                            .rposition(|&x| __lookup.contains(&x))
-                            .unwrap_or(usize::MAX)
-                    }) as usize,
+                    (0_usize
+                        + Ptr::<u8>::from_string_literal(b".").with_c_str(|__lookup| {
+                            (*filename.borrow())
+                                .iter()
+                                .take((*filename.borrow()).len().saturating_sub(1))
+                                .rposition(|&x| __lookup.contains(&x))
+                                .unwrap_or(usize::MAX)
+                        })) as usize,
                     (*filename.borrow()).len().saturating_sub(1),
                 )]
                 .to_vec();
@@ -5193,7 +5188,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             __tmp1
         };
         __tmp2.pop();
-        __tmp2.extend(Ptr::<u8>::from_string_literal(b".woff2").to_c_string_iterator());
+        Ptr::<u8>::from_string_literal(b".woff2").with_c_str(|__s| __tmp2.extend_from_slice(__s));
         __tmp2.push(0);
         __tmp2
     }));

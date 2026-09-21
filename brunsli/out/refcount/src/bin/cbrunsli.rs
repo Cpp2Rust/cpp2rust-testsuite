@@ -14998,12 +14998,11 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         eprintln!("Usage: cbrunsli FILE [OUTPUT_FILE, default=FILE.brn]");
         return 1;
     }
-    let file_name: Value<Vec<u8>> = Rc::new(RefCell::new(
-        ((*argv.borrow()).offset((1) as isize).read())
-            .to_c_string_iterator()
-            .chain(std::iter::once(0))
-            .collect::<Vec<u8>>(),
-    ));
+    let file_name: Value<Vec<u8>> = Rc::new(RefCell::new({
+        let mut __bytes = ((*argv.borrow()).offset((1) as isize).read()).to_c_bytes();
+        __bytes.push(0);
+        __bytes
+    }));
     if (*file_name.borrow()).len() <= 1 {
         eprintln!("Empty input file name.");
         return 1;
@@ -15012,15 +15011,16 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         {
             let mut r = (*file_name.borrow()).clone();
             r.pop();
-            r.extend(Ptr::<u8>::from_string_literal(b".brn").to_c_string_iterator());
+            Ptr::<u8>::from_string_literal(b".brn").with_c_str(|__s| r.extend_from_slice(__s));
             r.push(0);
             r
         }
     } else {
-        ((*argv.borrow()).offset((2) as isize).read())
-            .to_c_string_iterator()
-            .chain(std::iter::once(0))
-            .collect::<Vec<u8>>()
+        {
+            let mut __bytes = ((*argv.borrow()).offset((2) as isize).read()).to_c_bytes();
+            __bytes.push(0);
+            __bytes
+        }
     }));
     let ok: Value<bool> = Rc::new(RefCell::new(
         ({ ProcessFile_257(file_name.as_pointer(), outfile_name.as_pointer()) }),

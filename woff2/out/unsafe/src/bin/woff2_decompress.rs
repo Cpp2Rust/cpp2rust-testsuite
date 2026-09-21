@@ -643,11 +643,6 @@ impl woff2_WOFF2StringOut {
         return self.max_size_;
     }
 }
-unsafe impl woff2_WOFF2Out for woff2_WOFF2StringOut {
-    unsafe fn Size(&mut self) -> usize {
-        return self.offset_;
-    }
-}
 #[repr(C)]
 #[derive(Copy, Clone, Default)]
 pub struct woff2_WOFF2MemoryOut {
@@ -656,11 +651,6 @@ pub struct woff2_WOFF2MemoryOut {
     offset_: usize,
 }
 impl woff2_WOFF2MemoryOut {}
-unsafe impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
-    unsafe fn Size(&mut self) -> usize {
-        return self.offset_;
-    }
-}
 pub unsafe fn Round4_29(mut value: u64) -> u64 {
     if (((<u64>::MAX as u64).wrapping_sub(value)) < (3_u64)) {
         return value;
@@ -2990,6 +2980,110 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         });
     }
     return if ok { 0 } else { 1 };
+}
+unsafe impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
+    unsafe fn Size(&mut self) -> usize {
+        return self.offset_;
+    }
+    unsafe fn Write_pconstlibcc_void_usize(
+        &mut self,
+        buf: *const ::libc::c_void,
+        n: usize,
+    ) -> bool {
+        return (unsafe {
+            let _offset: usize = self.offset_;
+            self.Write_pconstlibcc_void_usize_usize(buf, _offset, n)
+        });
+    }
+    unsafe fn Write_pconstlibcc_void_usize_usize(
+        &mut self,
+        buf: *const ::libc::c_void,
+        offset: usize,
+        n: usize,
+    ) -> bool {
+        if ((offset) > (self.buf_size_)) || ((n) > ((self.buf_size_).wrapping_sub(offset))) {
+            return false;
+        }
+        {
+            if n != 0 {
+                ::std::ptr::copy_nonoverlapping(
+                    buf,
+                    (self.buf_.offset((offset) as isize) as *mut u8 as *mut ::libc::c_void),
+                    n as usize,
+                )
+            }
+            (self.buf_.offset((offset) as isize) as *mut u8 as *mut ::libc::c_void)
+        };
+        self.offset_ = ({
+            let mut __tmp_0: u64 = (self.offset_ as u64);
+            let mut __tmp_1: u64 = ((offset).wrapping_add(n) as u64);
+            (*if *&mut __tmp_0 >= *&mut __tmp_1 {
+                (&mut __tmp_0) as *const _
+            } else {
+                (&mut __tmp_1) as *const _
+            })
+        } as usize);
+        return true;
+    }
+}
+unsafe impl woff2_WOFF2Out for woff2_WOFF2StringOut {
+    unsafe fn Size(&mut self) -> usize {
+        return self.offset_;
+    }
+    unsafe fn Write_pconstlibcc_void_usize(
+        &mut self,
+        buf: *const ::libc::c_void,
+        n: usize,
+    ) -> bool {
+        return (unsafe {
+            let _offset: usize = self.offset_;
+            self.Write_pconstlibcc_void_usize_usize(buf, _offset, n)
+        });
+    }
+    unsafe fn Write_pconstlibcc_void_usize_usize(
+        &mut self,
+        buf: *const ::libc::c_void,
+        offset: usize,
+        n: usize,
+    ) -> bool {
+        if ((offset) > (self.max_size_)) || ((n) > ((self.max_size_).wrapping_sub(offset))) {
+            return false;
+        }
+        if ((offset) == ((*(self.buf_).cast_const()).len() - 1)) {
+            (*self.buf_).splice((*self.buf_).len().saturating_sub(1)..(*self.buf_).len(), {
+                let mut v =
+                    ::std::slice::from_raw_parts((buf as *const libc::c_char), n as usize).to_vec();
+                v.push(0);
+                v
+            });
+        } else {
+            if (((offset).wrapping_add(n)) > ((*(self.buf_).cast_const()).len() - 1)) {
+                (*self.buf_).splice(
+                    (*self.buf_).len() - 1..(*self.buf_).len() - 1,
+                    ::std::vec::from_elem(
+                        (0 as libc::c_char),
+                        (((offset).wrapping_add(n) as u64)
+                            .wrapping_sub((((*(self.buf_).cast_const()).len() - 1) as u64))
+                            as usize) as usize,
+                    ),
+                );
+            }
+            (*self.buf_).splice(
+                offset as usize..offset as usize + n as usize,
+                ::std::slice::from_raw_parts((buf as *const libc::c_char), n as usize).to_vec(),
+            );
+        }
+        self.offset_ = ({
+            let mut __tmp_0: u64 = (self.offset_ as u64);
+            let mut __tmp_1: u64 = ((offset).wrapping_add(n) as u64);
+            (*if *&mut __tmp_0 >= *&mut __tmp_1 {
+                (&mut __tmp_0) as *const _
+            } else {
+                (&mut __tmp_1) as *const _
+            })
+        } as usize);
+        return true;
+    }
 }
 pub unsafe fn __cpp2rust_init_globals() {
     std::cell::LazyCell::force(&*&raw const kGlyfTableTag_0);

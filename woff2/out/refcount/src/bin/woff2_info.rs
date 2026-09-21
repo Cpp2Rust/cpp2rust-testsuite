@@ -1876,10 +1876,11 @@ pub fn SetFileContents_50(filename: Vec<u8>, start: Ptr<u8>, end: Ptr<u8>) {
 pub fn PrintTag_51(tag: i32) -> Vec<u8> {
     let tag: Value<i32> = Rc::new(RefCell::new(tag));
     if ((((*tag.borrow()) as u32) & 2155905152_u32) != 0) {
-        return Ptr::<u8>::from_string_literal(b"_xfm")
-            .to_c_string_iterator()
-            .chain(std::iter::once(0))
-            .collect::<Vec<u8>>();
+        return {
+            let mut __bytes = Ptr::<u8>::from_string_literal(b"_xfm").to_c_bytes();
+            __bytes.push(0);
+            __bytes
+        };
     }
     let printable: Value<Box<[u8]>> = Rc::new(RefCell::new(Box::new([
         ((((*tag.borrow()) >> 24) & 255) as u8),
@@ -1916,26 +1917,23 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         eprintln!("One argument, the input filename, must be provided.");
         return 1;
     }
-    let filename: Value<Vec<u8>> = Rc::new(RefCell::new(
-        ((*argv.borrow()).offset((1) as isize).read())
-            .to_c_string_iterator()
-            .chain(std::iter::once(0))
-            .collect::<Vec<u8>>(),
-    ));
+    let filename: Value<Vec<u8>> = Rc::new(RefCell::new({
+        let mut __bytes = ((*argv.borrow()).offset((1) as isize).read()).to_c_bytes();
+        __bytes.push(0);
+        __bytes
+    }));
     let outfilename: Value<Vec<u8>> = Rc::new(RefCell::new({
         let mut __tmp2 = {
             let mut __tmp1 = (*filename.borrow())[(0_usize) as usize
                 ..::std::cmp::min(
-                    (0_usize + {
-                        let __lookup: Vec<u8> = Ptr::<u8>::from_string_literal(b".")
-                            .to_c_string_iterator()
-                            .collect();
-                        (*filename.borrow())
-                            .iter()
-                            .take((*filename.borrow()).len().saturating_sub(1))
-                            .rposition(|&x| __lookup.contains(&x))
-                            .unwrap_or(usize::MAX)
-                    }) as usize,
+                    (0_usize
+                        + Ptr::<u8>::from_string_literal(b".").with_c_str(|__lookup| {
+                            (*filename.borrow())
+                                .iter()
+                                .take((*filename.borrow()).len().saturating_sub(1))
+                                .rposition(|&x| __lookup.contains(&x))
+                                .unwrap_or(usize::MAX)
+                        })) as usize,
                     (*filename.borrow()).len().saturating_sub(1),
                 )]
                 .to_vec();
@@ -1943,7 +1941,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             __tmp1
         };
         __tmp2.pop();
-        __tmp2.extend(Ptr::<u8>::from_string_literal(b".woff2").to_c_string_iterator());
+        Ptr::<u8>::from_string_literal(b".woff2").with_c_str(|__s| __tmp2.extend_from_slice(__s));
         __tmp2.push(0);
         __tmp2
     }));

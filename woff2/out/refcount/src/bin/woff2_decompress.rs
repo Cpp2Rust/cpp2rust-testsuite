@@ -736,11 +736,6 @@ pub struct woff2_WOFF2StringOut {
     offset_: Value<usize>,
 }
 impl woff2_WOFF2StringOut {}
-impl woff2_WOFF2Out for woff2_WOFF2StringOut {
-    fn Size(&self) -> usize {
-        return (*self.offset_.borrow());
-    }
-}
 impl Clone for woff2_WOFF2StringOut {
     fn clone(&self) -> Self {
         let __this: Value<woff2_WOFF2StringOut> = Rc::new(RefCell::new(Self {
@@ -776,11 +771,6 @@ pub struct woff2_WOFF2MemoryOut {
     offset_: Value<usize>,
 }
 impl woff2_WOFF2MemoryOut {}
-impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
-    fn Size(&self) -> usize {
-        return (*self.offset_.borrow());
-    }
-}
 impl Clone for woff2_WOFF2MemoryOut {
     fn clone(&self) -> Self {
         let __this: Value<woff2_WOFF2MemoryOut> = Rc::new(RefCell::new(Self {
@@ -4318,26 +4308,23 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         eprintln!("One argument, the input filename, must be provided.");
         return 1;
     }
-    let filename: Value<Vec<u8>> = Rc::new(RefCell::new(
-        ((*argv.borrow()).offset((1) as isize).read())
-            .to_c_string_iterator()
-            .chain(std::iter::once(0))
-            .collect::<Vec<u8>>(),
-    ));
+    let filename: Value<Vec<u8>> = Rc::new(RefCell::new({
+        let mut __bytes = ((*argv.borrow()).offset((1) as isize).read()).to_c_bytes();
+        __bytes.push(0);
+        __bytes
+    }));
     let outfilename: Value<Vec<u8>> = Rc::new(RefCell::new({
         let mut __tmp2 = {
             let mut __tmp1 = (*filename.borrow())[(0_usize) as usize
                 ..::std::cmp::min(
-                    (0_usize + {
-                        let __lookup: Vec<u8> = Ptr::<u8>::from_string_literal(b".")
-                            .to_c_string_iterator()
-                            .collect();
-                        (*filename.borrow())
-                            .iter()
-                            .take((*filename.borrow()).len().saturating_sub(1))
-                            .rposition(|&x| __lookup.contains(&x))
-                            .unwrap_or(usize::MAX)
-                    }) as usize,
+                    (0_usize
+                        + Ptr::<u8>::from_string_literal(b".").with_c_str(|__lookup| {
+                            (*filename.borrow())
+                                .iter()
+                                .take((*filename.borrow()).len().saturating_sub(1))
+                                .rposition(|&x| __lookup.contains(&x))
+                                .unwrap_or(usize::MAX)
+                        })) as usize,
                     (*filename.borrow()).len().saturating_sub(1),
                 )]
                 .to_vec();
@@ -4345,7 +4332,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             __tmp1
         };
         __tmp2.pop();
-        __tmp2.extend(Ptr::<u8>::from_string_literal(b".ttf").to_c_string_iterator());
+        Ptr::<u8>::from_string_literal(b".ttf").with_c_str(|__s| __tmp2.extend_from_slice(__s));
         __tmp2.push(0);
         __tmp2
     }));
@@ -4405,6 +4392,147 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         });
     }
     return if (*ok.borrow()) { 0 } else { 1 };
+}
+impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
+    fn Size(&self) -> usize {
+        return (*self.offset_.borrow());
+    }
+    fn Write_AnyPtr_usize(&self, buf: AnyPtr, n: usize) -> bool {
+        let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
+        let n: Value<usize> = Rc::new(RefCell::new(n));
+        return ({
+            let _offset: usize = (*self.offset_.borrow());
+            self.Write_AnyPtr_usize_usize((*buf.borrow()).clone(), _offset, (*n.borrow()))
+        });
+    }
+    fn Write_AnyPtr_usize_usize(&self, buf: AnyPtr, offset: usize, n: usize) -> bool {
+        let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
+        let offset: Value<usize> = Rc::new(RefCell::new(offset));
+        let n: Value<usize> = Rc::new(RefCell::new(n));
+        if ((*offset.borrow()) > (*self.buf_size_.borrow()))
+            || ((*n.borrow()) > (*self.buf_size_.borrow()).wrapping_sub((*offset.borrow())))
+        {
+            return false;
+        }
+        {
+            ((*self.buf_.borrow()).offset((*offset.borrow()) as isize) as Ptr<u8>)
+                .to_any()
+                .memcpy(&(*buf.borrow()), (*n.borrow()) as usize);
+            ((*self.buf_.borrow()).offset((*offset.borrow()) as isize) as Ptr<u8>).to_any()
+        };
+        let __rhs = ({
+            let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*self.offset_.borrow()) as u64)));
+            let __tmp_1: Value<u64> = Rc::new(RefCell::new(
+                ((*offset.borrow()).wrapping_add((*n.borrow())) as u64),
+            ));
+            (if __tmp_0.as_pointer().read() >= __tmp_1.as_pointer().read() {
+                __tmp_0.as_pointer()
+            } else {
+                __tmp_1.as_pointer()
+            }
+            .read())
+        } as usize);
+        (*self.offset_.borrow_mut()) = __rhs;
+        return true;
+    }
+}
+impl woff2_WOFF2Out for woff2_WOFF2StringOut {
+    fn Size(&self) -> usize {
+        return (*self.offset_.borrow());
+    }
+    fn Write_AnyPtr_usize(&self, buf: AnyPtr, n: usize) -> bool {
+        let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
+        let n: Value<usize> = Rc::new(RefCell::new(n));
+        return ({
+            let _offset: usize = (*self.offset_.borrow());
+            self.Write_AnyPtr_usize_usize((*buf.borrow()).clone(), _offset, (*n.borrow()))
+        });
+    }
+    fn Write_AnyPtr_usize_usize(&self, buf: AnyPtr, offset: usize, n: usize) -> bool {
+        let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
+        let offset: Value<usize> = Rc::new(RefCell::new(offset));
+        let n: Value<usize> = Rc::new(RefCell::new(n));
+        if ((*offset.borrow()) > (*self.max_size_.borrow()))
+            || ((*n.borrow()) > (*self.max_size_.borrow()).wrapping_sub((*offset.borrow())))
+        {
+            return false;
+        }
+        if {
+            let _lhs = (*offset.borrow());
+            _lhs == ((*(*self.buf_.borrow()).upgrade().deref()).len() - 1)
+        } {
+            {
+                ((*self.buf_.borrow()).clone() as Ptr<Vec<u8>>).with_mut(|__v: &mut Vec<u8>| {
+                    __v.pop();
+                    __v.extend(
+                        (*buf.borrow())
+                            .reinterpret_cast::<u8>()
+                            .map(|c| c.read())
+                            .take((*n.borrow()) as usize),
+                    );
+                    __v.push(0);
+                });
+                ((*self.buf_.borrow()).clone() as Ptr<Vec<u8>>)
+            };
+        } else {
+            if {
+                let _lhs = (*offset.borrow()).wrapping_add((*n.borrow()));
+                _lhs > ((*(*self.buf_.borrow()).upgrade().deref()).len() - 1)
+            } {
+                {
+                    (*self.buf_.borrow()).with_mut(|__v: &mut Vec<u8>| __v.pop());
+                    (*self.buf_.borrow()).with_mut(|__v: &mut Vec<u8>| {
+                        __v.resize(
+                            (*(*self.buf_.borrow()).upgrade().deref()).len()
+                                + (((*offset.borrow()).wrapping_add((*n.borrow())) as u64)
+                                    .wrapping_sub(
+                                        (((*(*self.buf_.borrow()).upgrade().deref()).len() - 1)
+                                            as u64),
+                                    ) as usize) as usize,
+                            0_u8,
+                        )
+                    });
+                    (*self.buf_.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(0));
+                    (*(*self.buf_.borrow()).upgrade().deref()).clone()
+                };
+            }
+            {
+                let pos = (*offset.borrow()) as usize;
+                let end = std::cmp::min(
+                    pos + (*n.borrow()) as usize,
+                    (*((*self.buf_.borrow()).clone() as Ptr<Vec<u8>>)
+                        .upgrade()
+                        .deref())
+                    .len()
+                    .saturating_sub(1),
+                );
+                ((*self.buf_.borrow()).clone() as Ptr<Vec<u8>>).with_mut(|__v: &mut Vec<u8>| {
+                    __v.splice(
+                        pos..end,
+                        (*buf.borrow())
+                            .reinterpret_cast::<u8>()
+                            .map(|c| c.read())
+                            .take((*n.borrow()) as usize),
+                    );
+                });
+                ((*self.buf_.borrow()).clone() as Ptr<Vec<u8>>)
+            };
+        }
+        let __rhs = ({
+            let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*self.offset_.borrow()) as u64)));
+            let __tmp_1: Value<u64> = Rc::new(RefCell::new(
+                ((*offset.borrow()).wrapping_add((*n.borrow())) as u64),
+            ));
+            (if __tmp_0.as_pointer().read() >= __tmp_1.as_pointer().read() {
+                __tmp_0.as_pointer()
+            } else {
+                __tmp_1.as_pointer()
+            }
+            .read())
+        } as usize);
+        (*self.offset_.borrow_mut()) = __rhs;
+        return true;
+    }
 }
 pub trait woff2_BufferImpl {
     fn Skip(&self, n_bytes: usize) -> bool;
