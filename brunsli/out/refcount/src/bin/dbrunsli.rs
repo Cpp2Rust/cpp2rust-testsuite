@@ -1509,7 +1509,7 @@ pub fn Log2FloorNonZero_74(n: u32) -> i32 {
 }
 pub fn BrunsliSuppressUnusedFunctions_75() {
     &((FnPtr::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>::new(Append_73))
-        .cast::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>(None));
+        .cast::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>());
     &(FnPtr::<fn()>::new(BrunsliSuppressUnusedFunctions_75));
     &(FnPtr::<fn(AnyPtr) -> u16>::new(BrunsliUnalignedRead16_66));
     &(FnPtr::<fn(AnyPtr, u16)>::new(BrunsliUnalignedWrite16_67));
@@ -7197,11 +7197,11 @@ pub fn DecodeDC_157(
                                             .entropy_codes
                                             .borrow())
                                         .offset((*entropy_ix.borrow()) as isize);
-                                    let _in: Ptr<brunsli_WordSource> = (*in_.borrow()).clone();
+                                    let _in_: Ptr<brunsli_WordSource> = (*in_.borrow()).clone();
                                     brunsli_ANSDecoderImpl::ReadSymbol(
                                         &ans.as_pointer(),
                                         _code,
-                                        _in,
+                                        _in_,
                                     )
                                 }),
                             ));
@@ -7288,8 +7288,10 @@ pub fn DecodeDC_157(
                     (*x.borrow_mut()).prefix_inc();
                 }
                 (*(*ac_dc_state.upgrade().deref()).next_x.borrow_mut()) = 0;
-                (*iy.borrow_mut()).prefix_inc();
-                (*y.borrow_mut()).prefix_inc();
+                {
+                    (*iy.borrow_mut()).prefix_inc();
+                    (*y.borrow_mut()).prefix_inc()
+                };
             }
             (*(*ac_dc_state.upgrade().deref()).next_iy.borrow_mut()) = 0;
             (*i.borrow_mut()).prefix_inc();
@@ -7649,8 +7651,8 @@ pub fn DecodeAcBlock_159(cookie: Ptr<brunsli_AcBlockCookie>) -> usize {
                     let _code: Ptr<brunsli_ANSDecodingData> =
                         (*(*c.borrow()).entropy_codes.borrow())
                             .offset((*entropy_ix.borrow()) as isize);
-                    let _in: Ptr<brunsli_WordSource> = (*in_.borrow()).clone();
-                    brunsli_ANSDecoderImpl::ReadSymbol(&ans.as_pointer(), _code, _in)
+                    let _in_: Ptr<brunsli_WordSource> = (*in_.borrow()).clone();
+                    brunsli_ANSDecoderImpl::ReadSymbol(&ans.as_pointer(), _code, _in_)
                 }),
             ));
             if ((*code.borrow()) < kNumDirectCodes_135.with(|rc| *rc.borrow())) {
@@ -8024,8 +8026,10 @@ pub fn DecodeAC_160(
                 }
                 (*(*c.borrow()).prev_row_delta.borrow_mut()) *= -1_i32;
                 (*(*ac_dc_state.upgrade().deref()).next_x.borrow_mut()) = 0;
-                (*iy.borrow_mut()).prefix_inc();
-                (*(*c.borrow()).y.borrow_mut()).prefix_inc();
+                {
+                    (*iy.borrow_mut()).prefix_inc();
+                    (*(*c.borrow()).y.borrow_mut()).prefix_inc()
+                };
             }
             (*(*ac_dc_state.upgrade().deref()).next_iy.borrow_mut()) = 0;
             (*i.borrow_mut()).prefix_inc();
@@ -12943,8 +12947,10 @@ pub fn BuildHuffmanTable_218(
     }
     (*mask.borrow_mut()) = ((*total_size.borrow()) - 1);
     (*low.borrow_mut()) = -1_i32;
-    (*len.borrow_mut()) = (*root_bits.borrow()).wrapping_add(1_usize);
-    (*step.borrow_mut()) = 2;
+    {
+        (*len.borrow_mut()) = (*root_bits.borrow()).wrapping_add(1_usize);
+        (*step.borrow_mut()) = 2
+    };
     'loop_: while ((*len.borrow()) <= (*max_length.borrow())) {
         'loop_: while ((((*count.borrow()).offset((*len.borrow()) as isize).read()) as i32) != 0) {
             if (((*key.borrow()) & (*mask.borrow())) != (*low.borrow())) {
@@ -12996,8 +13002,10 @@ pub fn BuildHuffmanTable_218(
                 .offset((*len.borrow()) as isize)
                 .with_mut(|__v| __v.prefix_dec());
         }
-        (*len.borrow_mut()).prefix_inc();
-        (*step.borrow_mut()) <<= 1;
+        {
+            (*len.borrow_mut()).prefix_inc();
+            (*step.borrow_mut()) <<= 1
+        };
     }
     return ((*total_size.borrow()) as u32);
 }
@@ -17187,8 +17195,10 @@ impl brunsli_ANSDecodingDataImpl for Ptr<brunsli_ANSDecodingData> {
                 (*(*(*(*self).upgrade().deref()).map_.borrow())[(*pos.borrow()) as usize]
                     .offset_
                     .borrow_mut()) = ((*j.borrow()) as u16);
-                (*j.borrow_mut()).prefix_inc();
-                (*pos.borrow_mut()).prefix_inc();
+                {
+                    (*j.borrow_mut()).prefix_inc();
+                    (*pos.borrow_mut()).prefix_inc()
+                };
             }
             (*i.borrow_mut()).prefix_inc();
         }
@@ -18044,7 +18054,7 @@ impl brunsli_JPEGOutputImpl for Ptr<brunsli_JPEGOutput> {
         let bytes_written: Value<usize> = Rc::new(RefCell::new(
             ({
                 let _arg0: AnyPtr = (*(*(*self).upgrade().deref()).data.borrow()).clone();
-                (*(*(*(*self).upgrade().deref()).cb.borrow()))(
+                (*(*(*self).upgrade().deref()).cb.borrow()).call(
                     _arg0,
                     (*buf.borrow()).clone(),
                     (*len.borrow()),

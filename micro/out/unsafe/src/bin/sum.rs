@@ -19,8 +19,10 @@ unsafe fn main_0() -> i32 {
     let mut j: u64 = N;
     'loop_: while ((i) < (j)) {
         sum = (sum).wrapping_add((i).wrapping_add(j));
-        i.prefix_inc();
-        j.prefix_dec();
+        {
+            i.prefix_inc();
+            j.prefix_dec()
+        };
     }
     write!(
         std::fs::File::from_raw_fd(

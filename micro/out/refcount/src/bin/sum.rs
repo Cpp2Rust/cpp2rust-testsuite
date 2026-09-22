@@ -20,8 +20,10 @@ fn main_0() -> i32 {
             let rhs_0 = (*sum.borrow()).wrapping_add((*i.borrow()).wrapping_add((*j.borrow())));
             (*sum.borrow_mut()) = rhs_0
         };
-        (*i.borrow_mut()).prefix_inc();
-        (*j.borrow_mut()).prefix_dec();
+        {
+            (*i.borrow_mut()).prefix_inc();
+            (*j.borrow_mut()).prefix_dec()
+        };
     }
     write!(libcc2rs::cout(), "Sum: {:}\n", (*sum.borrow()),);
     return 0;

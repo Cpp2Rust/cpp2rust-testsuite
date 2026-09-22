@@ -5735,51 +5735,51 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
         });
         ({
             let _out: Ptr<Vec<u8>> = (*result.borrow()).clone();
-            let _in: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).n_contour_stream_.as_pointer();
-            WriteBytes_87(_out, _in)
+            let _in_: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).n_contour_stream_.as_pointer();
+            WriteBytes_87(_out, _in_)
         });
         ({
             let _out: Ptr<Vec<u8>> = (*result.borrow()).clone();
-            let _in: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).n_points_stream_.as_pointer();
-            WriteBytes_87(_out, _in)
+            let _in_: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).n_points_stream_.as_pointer();
+            WriteBytes_87(_out, _in_)
         });
         ({
             let _out: Ptr<Vec<u8>> = (*result.borrow()).clone();
-            let _in: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).flag_byte_stream_.as_pointer();
-            WriteBytes_87(_out, _in)
+            let _in_: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).flag_byte_stream_.as_pointer();
+            WriteBytes_87(_out, _in_)
         });
         ({
             let _out: Ptr<Vec<u8>> = (*result.borrow()).clone();
-            let _in: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).glyph_stream_.as_pointer();
-            WriteBytes_87(_out, _in)
+            let _in_: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).glyph_stream_.as_pointer();
+            WriteBytes_87(_out, _in_)
         });
         ({
             let _out: Ptr<Vec<u8>> = (*result.borrow()).clone();
-            let _in: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).composite_stream_.as_pointer();
-            WriteBytes_87(_out, _in)
+            let _in_: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).composite_stream_.as_pointer();
+            WriteBytes_87(_out, _in_)
         });
         ({
             let _out: Ptr<Vec<u8>> = (*result.borrow()).clone();
-            let _in: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).bbox_bitmap_.as_pointer();
-            WriteBytes_87(_out, _in)
+            let _in_: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).bbox_bitmap_.as_pointer();
+            WriteBytes_87(_out, _in_)
         });
         ({
             let _out: Ptr<Vec<u8>> = (*result.borrow()).clone();
-            let _in: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).bbox_stream_.as_pointer();
-            WriteBytes_87(_out, _in)
+            let _in_: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).bbox_stream_.as_pointer();
+            WriteBytes_87(_out, _in_)
         });
         ({
             let _out: Ptr<Vec<u8>> = (*result.borrow()).clone();
-            let _in: Ptr<Vec<u8>> = (*(*self).upgrade().deref())
+            let _in_: Ptr<Vec<u8>> = (*(*self).upgrade().deref())
                 .instruction_stream_
                 .as_pointer();
-            WriteBytes_87(_out, _in)
+            WriteBytes_87(_out, _in_)
         });
         if !((*(*(*self).upgrade().deref()).overlap_bitmap_.borrow()).is_empty()) {
             ({
                 let _out: Ptr<Vec<u8>> = (*result.borrow()).clone();
-                let _in: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).overlap_bitmap_.as_pointer();
-                WriteBytes_87(_out, _in)
+                let _in_: Ptr<Vec<u8>> = (*(*self).upgrade().deref()).overlap_bitmap_.as_pointer();
+                WriteBytes_87(_out, _in_)
             });
         }
     }

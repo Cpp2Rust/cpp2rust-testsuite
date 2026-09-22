@@ -2430,49 +2430,49 @@ impl woff2_GlyfEncoder {
         (unsafe { WriteLong_89(result, (self.instruction_stream_.len() as i32)) });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.n_contour_stream_;
-            WriteBytes_87(_out, _in)
+            let _in_: *const Vec<u8> = &self.n_contour_stream_;
+            WriteBytes_87(_out, _in_)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.n_points_stream_;
-            WriteBytes_87(_out, _in)
+            let _in_: *const Vec<u8> = &self.n_points_stream_;
+            WriteBytes_87(_out, _in_)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.flag_byte_stream_;
-            WriteBytes_87(_out, _in)
+            let _in_: *const Vec<u8> = &self.flag_byte_stream_;
+            WriteBytes_87(_out, _in_)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.glyph_stream_;
-            WriteBytes_87(_out, _in)
+            let _in_: *const Vec<u8> = &self.glyph_stream_;
+            WriteBytes_87(_out, _in_)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.composite_stream_;
-            WriteBytes_87(_out, _in)
+            let _in_: *const Vec<u8> = &self.composite_stream_;
+            WriteBytes_87(_out, _in_)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.bbox_bitmap_;
-            WriteBytes_87(_out, _in)
+            let _in_: *const Vec<u8> = &self.bbox_bitmap_;
+            WriteBytes_87(_out, _in_)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.bbox_stream_;
-            WriteBytes_87(_out, _in)
+            let _in_: *const Vec<u8> = &self.bbox_stream_;
+            WriteBytes_87(_out, _in_)
         });
         (unsafe {
             let _out: *mut Vec<u8> = result;
-            let _in: *const Vec<u8> = &self.instruction_stream_;
-            WriteBytes_87(_out, _in)
+            let _in_: *const Vec<u8> = &self.instruction_stream_;
+            WriteBytes_87(_out, _in_)
         });
         if !(self.overlap_bitmap_.is_empty()) {
             (unsafe {
                 let _out: *mut Vec<u8> = result;
-                let _in: *const Vec<u8> = &self.overlap_bitmap_;
-                WriteBytes_87(_out, _in)
+                let _in_: *const Vec<u8> = &self.overlap_bitmap_;
+                WriteBytes_87(_out, _in_)
             });
         }
     }

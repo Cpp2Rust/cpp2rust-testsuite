@@ -1509,7 +1509,7 @@ pub fn Log2FloorNonZero_74(n: u32) -> i32 {
 }
 pub fn BrunsliSuppressUnusedFunctions_75() {
     &((FnPtr::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>::new(Append_73))
-        .cast::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>(None));
+        .cast::<fn(Ptr<Vec<u8>>, Ptr<Vec<u8>>)>());
     &(FnPtr::<fn()>::new(BrunsliSuppressUnusedFunctions_75));
     &(FnPtr::<fn(AnyPtr) -> u16>::new(BrunsliUnalignedRead16_66));
     &(FnPtr::<fn(AnyPtr, u16)>::new(BrunsliUnalignedWrite16_67));
@@ -4629,14 +4629,14 @@ pub fn ClusterHistograms_137(
                     < kMinClustersForHistogramRemap_138.with(|rc| *rc.borrow()))
             {
                 ({
-                    let _in: Ptr<brunsli_internal_enc_Histogram> = ((in_.decay()
+                    let _in_: Ptr<brunsli_internal_enc_Histogram> = ((in_.decay()
                         as Ptr<brunsli_internal_enc_Histogram>)
                         .offset((*offset.borrow())));
                     let _symbols: Ptr<u32> = ((((*histogram_symbols.borrow()).decay())
                         as Ptr<u32>)
                         .offset((*offset.borrow())));
                     HistogramRemap_135(
-                        _in,
+                        _in_,
                         (*length.borrow()),
                         ((((*out.borrow()).decay()) as Ptr<brunsli_internal_enc_Histogram>)
                             .offset(0_usize)),
@@ -4877,7 +4877,7 @@ impl brunsli_internal_enc_EntropyCodes {
         }));
         let this: Ptr<brunsli_internal_enc_EntropyCodes> = __this.as_pointer();
         ({
-            let _in: Ptr<Vec<brunsli_internal_enc_Histogram>> = (histograms).clone();
+            let _in_: Ptr<Vec<brunsli_internal_enc_Histogram>> = (histograms).clone();
             let _num_contexts: usize = kNumAvrgContexts_83.with(|rc| *rc.borrow());
             let _num_blocks: usize = (*num_bands.borrow());
             let _block_group_offsets: Vec<u64> = (*offsets.upgrade().deref()).clone();
@@ -4887,7 +4887,7 @@ impl brunsli_internal_enc_EntropyCodes {
             let _histogram_symbols: Ptr<Vec<u32>> =
                 ((*this.upgrade().deref()).context_map_.as_pointer());
             ClusterHistograms_137(
-                _in,
+                _in_,
                 _num_contexts,
                 _num_blocks,
                 _block_group_offsets,
@@ -7358,7 +7358,7 @@ pub fn EncodeSection_180(
         let _arg1: Ptr<brunsli_internal_enc_State> = (*s.borrow()).clone();
         let _arg2: Ptr<u8> = ((*data.borrow()).offset(((*pos.borrow()).read()) as isize));
         let _arg3: Ptr<usize> = (section_size.as_pointer());
-        (*(*write_section.borrow()))(_arg0, _arg1, _arg2, _arg3)
+        (*write_section.borrow()).call(_arg0, _arg1, _arg2, _arg3)
     }) {
         return false;
     }
@@ -7921,8 +7921,10 @@ pub fn EncodeDC_187(state: Ptr<brunsli_internal_enc_State>) {
                     (*ac_coeffs_in.borrow_mut()) += kDCTBlockSize_3.with(|rc| *rc.borrow());
                     (*x.borrow_mut()).prefix_inc();
                 }
-                (*iy.borrow_mut()).prefix_inc();
-                (*y.borrow_mut()).prefix_inc();
+                {
+                    (*iy.borrow_mut()).prefix_inc();
+                    (*y.borrow_mut()).prefix_inc()
+                };
             }
             (*i.borrow_mut()).prefix_inc();
         }
@@ -8584,8 +8586,10 @@ pub fn EncodeAC_188(state: Ptr<brunsli_internal_enc_State>) {
                     (*x.borrow_mut()).prefix_inc();
                 }
                 (*prev_row_delta.borrow_mut()) *= -1_i32;
-                (*iy.borrow_mut()).prefix_inc();
-                (*y.borrow_mut()).prefix_inc();
+                {
+                    (*iy.borrow_mut()).prefix_inc();
+                    (*y.borrow_mut()).prefix_inc()
+                };
             }
             (*i.borrow_mut()).prefix_inc();
         }
@@ -8751,7 +8755,7 @@ pub fn BrunsliSerialize_190(
     {
         (*ok.borrow_mut()) = ({
             let _tag: u8 = kBrunsliMetaDataTag_32.with(|rc| *rc.borrow());
-            let _fn: FnPtr<
+            let _fn_: FnPtr<
                 fn(
                     Ptr<brunsli_JPEGData>,
                     Ptr<brunsli_internal_enc_State>,
@@ -8768,7 +8772,7 @@ pub fn BrunsliSerialize_190(
             >::new(EncodeMetaData_174);
             let _size: usize =
                 ({ Base128Size_146(((*len.borrow()).read()).wrapping_sub((*pos.borrow()))) });
-            (*encode_section.borrow_mut())(_tag, _fn, _size)
+            (*encode_section.borrow_mut())(_tag, _fn_, _size)
         })
         .clone();
         if !(*ok.borrow()) {
@@ -8803,7 +8807,7 @@ pub fn BrunsliSerialize_190(
     {
         (*ok.borrow_mut()) = ({
             let _tag: u8 = kBrunsliHistogramDataTag_35.with(|rc| *rc.borrow());
-            let _fn: FnPtr<
+            let _fn_: FnPtr<
                 fn(
                     Ptr<brunsli_JPEGData>,
                     Ptr<brunsli_internal_enc_State>,
@@ -8820,7 +8824,7 @@ pub fn BrunsliSerialize_190(
             >::new(EncodeHistogramData_177);
             let _size: usize =
                 ({ Base128Size_146(((*len.borrow()).read()).wrapping_sub((*pos.borrow()))) });
-            (*encode_section.borrow_mut())(_tag, _fn, _size)
+            (*encode_section.borrow_mut())(_tag, _fn_, _size)
         })
         .clone();
         if !(*ok.borrow()) {
@@ -8833,7 +8837,7 @@ pub fn BrunsliSerialize_190(
     {
         (*ok.borrow_mut()) = ({
             let _tag: u8 = kBrunsliDCDataTag_36.with(|rc| *rc.borrow());
-            let _fn: FnPtr<
+            let _fn_: FnPtr<
                 fn(
                     Ptr<brunsli_JPEGData>,
                     Ptr<brunsli_internal_enc_State>,
@@ -8850,7 +8854,7 @@ pub fn BrunsliSerialize_190(
             >::new(EncodeDCData_178);
             let _size: usize =
                 ({ Base128Size_146(((*len.borrow()).read()).wrapping_sub((*pos.borrow()))) });
-            (*encode_section.borrow_mut())(_tag, _fn, _size)
+            (*encode_section.borrow_mut())(_tag, _fn_, _size)
         })
         .clone();
         if !(*ok.borrow()) {
@@ -8863,7 +8867,7 @@ pub fn BrunsliSerialize_190(
     {
         (*ok.borrow_mut()) = ({
             let _tag: u8 = kBrunsliACDataTag_37.with(|rc| *rc.borrow());
-            let _fn: FnPtr<
+            let _fn_: FnPtr<
                 fn(
                     Ptr<brunsli_JPEGData>,
                     Ptr<brunsli_internal_enc_State>,
@@ -8880,7 +8884,7 @@ pub fn BrunsliSerialize_190(
             >::new(EncodeACData_179);
             let _size: usize =
                 ({ Base128Size_146(((*len.borrow()).read()).wrapping_sub((*pos.borrow()))) });
-            (*encode_section.borrow_mut())(_tag, _fn, _size)
+            (*encode_section.borrow_mut())(_tag, _fn_, _size)
         })
         .clone();
         if !(*ok.borrow()) {

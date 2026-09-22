@@ -2649,8 +2649,10 @@ impl brunsli_ANSDecodingData {
                 self.map_[(pos)].symbol_ = (i as u8);
                 self.map_[(pos)].freq_ = ((&(*counts))[(i)] as u16);
                 self.map_[(pos)].offset_ = (j as u16);
-                j.prefix_inc();
-                pos.prefix_inc();
+                {
+                    j.prefix_inc();
+                    pos.prefix_inc()
+                };
             }
             i.prefix_inc();
         }
@@ -4975,8 +4977,8 @@ pub unsafe fn DecodeDC_157(
                             let mut code: i32 = (unsafe {
                                 let _code: *const brunsli_ANSDecodingData =
                                     &(*(*state).entropy_codes.offset((entropy_ix) as isize));
-                                let _in: *mut brunsli_WordSource = in_;
-                                brunsli_ANSDecoder::ReadSymbol(&mut ans, _code, _in)
+                                let _in_: *mut brunsli_WordSource = in_;
+                                brunsli_ANSDecoder::ReadSymbol(&mut ans, _code, _in_)
                             });
                             if ((code)
                                 < (*std::cell::LazyCell::force_mut(
@@ -5035,8 +5037,10 @@ pub unsafe fn DecodeDC_157(
                     x.prefix_inc();
                 }
                 (*ac_dc_state).next_x = 0;
-                iy.prefix_inc();
-                y.prefix_inc();
+                {
+                    iy.prefix_inc();
+                    y.prefix_inc()
+                };
             }
             (*ac_dc_state).next_iy = 0;
             i.prefix_inc();
@@ -5227,8 +5231,8 @@ pub unsafe fn DecodeAcBlock_159(cookie: *const brunsli_AcBlockCookie) -> usize {
             let mut code: i32 = (unsafe {
                 let _code: *const brunsli_ANSDecodingData =
                     &(*c.entropy_codes.offset((entropy_ix) as isize));
-                let _in: *mut brunsli_WordSource = in_;
-                brunsli_ANSDecoder::ReadSymbol(&mut ans, _code, _in)
+                let _in_: *mut brunsli_WordSource = in_;
+                brunsli_ANSDecoder::ReadSymbol(&mut ans, _code, _in_)
             });
             if ((code) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumDirectCodes_135))) {
                 abs_val = ((code) + (1));
@@ -5465,8 +5469,10 @@ pub unsafe fn DecodeAC_160(
                 }
                 c.prev_row_delta *= -1_i32;
                 (*ac_dc_state).next_x = 0;
-                iy.prefix_inc();
-                c.y.prefix_inc();
+                {
+                    iy.prefix_inc();
+                    c.y.prefix_inc()
+                };
             }
             (*ac_dc_state).next_iy = 0;
             i.prefix_inc();
@@ -9505,8 +9511,10 @@ pub unsafe fn BuildHuffmanTable_218(
     }
     mask = ((total_size) - (1));
     low = -1_i32;
-    len = (root_bits).wrapping_add(1_usize);
-    step = 2;
+    {
+        len = (root_bits).wrapping_add(1_usize);
+        step = 2
+    };
     'loop_: while ((len) <= (max_length)) {
         'loop_: while (((*count.offset((len) as isize)) as i32) != (0)) {
             if (((key) & (mask)) != (low)) {
@@ -9536,8 +9544,10 @@ pub unsafe fn BuildHuffmanTable_218(
             key = (unsafe { GetNextKey_221(key, len) });
             (*count.offset((len) as isize)).prefix_dec();
         }
-        len.prefix_inc();
-        step <<= 1;
+        {
+            len.prefix_inc();
+            step <<= 1
+        };
     }
     return (total_size as u32);
 }

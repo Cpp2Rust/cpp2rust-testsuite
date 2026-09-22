@@ -3432,12 +3432,12 @@ pub unsafe fn ClusterHistograms_137(
                     )))
             {
                 (unsafe {
-                    let _in: *const brunsli_internal_enc_Histogram =
+                    let _in_: *const brunsli_internal_enc_Histogram =
                         (&(&(*in_))[(offset)] as *const brunsli_internal_enc_Histogram);
                     let _symbols: *mut u32 =
                         (&mut (&mut (*histogram_symbols))[(offset)] as *mut u32);
                     HistogramRemap_135(
-                        _in,
+                        _in_,
                         length,
                         (&mut (&mut (*out))[(0_usize)] as *mut brunsli_internal_enc_Histogram),
                         _symbols,
@@ -3564,7 +3564,7 @@ impl brunsli_internal_enc_EntropyCodes {
             ans_tables_: Vec::new(),
         };
         (unsafe {
-            let _in: *const Vec<brunsli_internal_enc_Histogram> = histograms;
+            let _in_: *const Vec<brunsli_internal_enc_Histogram> = histograms;
             let _num_contexts: usize =
                 (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumAvrgContexts_83));
             let _num_blocks: usize = num_bands;
@@ -3575,7 +3575,7 @@ impl brunsli_internal_enc_EntropyCodes {
                 (&mut this.clustered_ as *mut Vec<brunsli_internal_enc_Histogram>);
             let _histogram_symbols: *mut Vec<u32> = (&mut this.context_map_ as *mut Vec<u32>);
             ClusterHistograms_137(
-                _in,
+                _in_,
                 _num_contexts,
                 _num_blocks,
                 _block_group_offsets,
@@ -5979,8 +5979,10 @@ pub unsafe fn EncodeDC_187(mut state: *mut brunsli_internal_enc_State) {
                     );
                     x.prefix_inc();
                 }
-                iy.prefix_inc();
-                y.prefix_inc();
+                {
+                    iy.prefix_inc();
+                    y.prefix_inc()
+                };
             }
             i.prefix_inc();
         }
@@ -6379,8 +6381,10 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                     x.prefix_inc();
                 }
                 prev_row_delta *= -1_i32;
-                iy.prefix_inc();
-                y.prefix_inc();
+                {
+                    iy.prefix_inc();
+                    y.prefix_inc()
+                };
             }
             i.prefix_inc();
         }
@@ -6548,7 +6552,7 @@ pub unsafe fn BrunsliSerialize_190(
     {
         ok = (unsafe {
             let _tag: u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMetaDataTag_32));
-            let _fn: Option<
+            let _fn_: Option<
                 unsafe fn(
                     *const brunsli_JPEGData,
                     *mut brunsli_internal_enc_State,
@@ -6594,7 +6598,7 @@ pub unsafe fn BrunsliSerialize_190(
                         _pos,
                     )
                 });
-            })(_tag, _fn, _size)
+            })(_tag, _fn_, _size)
         });
         if !(ok) {
             return false;
@@ -6662,7 +6666,7 @@ pub unsafe fn BrunsliSerialize_190(
         ok = (unsafe {
             let _tag: u8 =
                 (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHistogramDataTag_35));
-            let _fn: Option<
+            let _fn_: Option<
                 unsafe fn(
                     *const brunsli_JPEGData,
                     *mut brunsli_internal_enc_State,
@@ -6708,7 +6712,7 @@ pub unsafe fn BrunsliSerialize_190(
                         _pos,
                     )
                 });
-            })(_tag, _fn, _size)
+            })(_tag, _fn_, _size)
         });
         if !(ok) {
             return false;
@@ -6721,7 +6725,7 @@ pub unsafe fn BrunsliSerialize_190(
     {
         ok = (unsafe {
             let _tag: u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliDCDataTag_36));
-            let _fn: Option<
+            let _fn_: Option<
                 unsafe fn(
                     *const brunsli_JPEGData,
                     *mut brunsli_internal_enc_State,
@@ -6767,7 +6771,7 @@ pub unsafe fn BrunsliSerialize_190(
                         _pos,
                     )
                 });
-            })(_tag, _fn, _size)
+            })(_tag, _fn_, _size)
         });
         if !(ok) {
             return false;
@@ -6780,7 +6784,7 @@ pub unsafe fn BrunsliSerialize_190(
     {
         ok = (unsafe {
             let _tag: u8 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliACDataTag_37));
-            let _fn: Option<
+            let _fn_: Option<
                 unsafe fn(
                     *const brunsli_JPEGData,
                     *mut brunsli_internal_enc_State,
@@ -6826,7 +6830,7 @@ pub unsafe fn BrunsliSerialize_190(
                         _pos,
                     )
                 });
-            })(_tag, _fn, _size)
+            })(_tag, _fn_, _size)
         });
         if !(ok) {
             return false;
