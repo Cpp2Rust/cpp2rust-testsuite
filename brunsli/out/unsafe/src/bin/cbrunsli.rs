@@ -133,9 +133,9 @@ impl Default for brunsli_JPEGQuantTable {
     fn default() -> Self {
         brunsli_JPEGQuantTable {
             values: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
-            precision: 0_i32,
-            index: 0_i32,
-            is_last: false,
+            precision: 0,
+            index: 0,
+            is_last: true,
         }
     }
 }
@@ -152,8 +152,8 @@ impl Default for brunsli_JPEGHuffmanCode {
         brunsli_JPEGHuffmanCode {
             counts: std::array::from_fn::<_, 17, _>(|_| Default::default()).to_vec(),
             values: std::array::from_fn::<_, 257, _>(|_| Default::default()).to_vec(),
-            slot_id: 0_i32,
-            is_last: false,
+            slot_id: 0,
+            is_last: true,
         }
     }
 }
@@ -209,7 +209,7 @@ pub struct brunsli_JPEGComponent {
     pub coeffs: Vec<i16>,
 }
 impl brunsli_JPEGComponent {
-    pub unsafe fn brunsli_JPEGComponent() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             id: 0,
             h_samp_factor: 1,
@@ -225,7 +225,7 @@ impl brunsli_JPEGComponent {
 }
 impl Default for brunsli_JPEGComponent {
     fn default() -> Self {
-        unsafe { brunsli_JPEGComponent::brunsli_JPEGComponent() }
+        unsafe { brunsli_JPEGComponent::new() }
     }
 }
 #[repr(C)]
@@ -255,7 +255,7 @@ pub struct brunsli_JPEGData {
     pub padding_bits: Vec<i32>,
 }
 impl brunsli_JPEGData {
-    pub unsafe fn brunsli_JPEGData() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             width: 0,
             height: 0,
@@ -285,7 +285,7 @@ impl brunsli_JPEGData {
 }
 impl Default for brunsli_JPEGData {
     fn default() -> Self {
-        unsafe { brunsli_JPEGData::brunsli_JPEGData() }
+        unsafe { brunsli_JPEGData::new() }
     }
 }
 pub unsafe fn JPEGDataIs420_15(jpg: *const brunsli_JPEGData) -> bool {
@@ -1140,7 +1140,7 @@ pub struct brunsli_Prob {
     count: u16,
 }
 impl brunsli_Prob {
-    pub unsafe fn brunsli_Prob() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             prob8: (*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProb_80)),
             total: (*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProbCount_81)),
@@ -1184,7 +1184,7 @@ impl brunsli_Prob {
 }
 impl Default for brunsli_Prob {
     fn default() -> Self {
-        unsafe { brunsli_Prob::brunsli_Prob() }
+        unsafe { brunsli_Prob::new() }
     }
 }
 pub static mut kMaxAverageContext_82: std::cell::LazyCell<usize> =
@@ -1576,10 +1576,10 @@ pub struct brunsli_ComponentStateDC {
     pub prev_sign: Vec<i32>,
 }
 impl brunsli_ComponentStateDC {
-    pub unsafe fn brunsli_ComponentStateDC() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             width: 0,
-            is_zero_prob: brunsli_Prob::brunsli_Prob(),
+            is_zero_prob: brunsli_Prob::new(),
             is_empty_block_prob: (0..((*std::cell::LazyCell::force_mut(
                 &mut *&raw mut kNumIsEmptyBlockContexts_105,
             )) as usize) as usize)
@@ -1621,7 +1621,7 @@ impl brunsli_ComponentStateDC {
 }
 impl Default for brunsli_ComponentStateDC {
     fn default() -> Self {
-        unsafe { brunsli_ComponentStateDC::brunsli_ComponentStateDC() }
+        unsafe { brunsli_ComponentStateDC::new() }
     }
 }
 #[repr(C)]
@@ -1642,7 +1642,7 @@ pub struct brunsli_ComponentState {
     pub prev_sign: Vec<i32>,
 }
 impl brunsli_ComponentState {
-    pub unsafe fn brunsli_ComponentState() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             width: 0,
             context_offset: 0_i32,
@@ -1665,7 +1665,7 @@ impl brunsli_ComponentState {
                 )) as usize)
                 .map(|_| <brunsli_Prob>::default())
                 .collect::<Vec<_>>(),
-            num_nonzero_prob: std::array::from_fn::<_, 2016, _>(|_| brunsli_Prob::brunsli_Prob()),
+            num_nonzero_prob: std::array::from_fn::<_, 2016, _>(|_| brunsli_Prob::new()),
             first_extra_bit_prob: (0..(((10)
                 * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
                 as usize) as usize)
@@ -1743,7 +1743,7 @@ impl brunsli_ComponentState {
 }
 impl Default for brunsli_ComponentState {
     fn default() -> Self {
-        unsafe { brunsli_ComponentState::brunsli_ComponentState() }
+        unsafe { brunsli_ComponentState::new() }
     }
 }
 pub static mut kSqrt2_107: std::cell::LazyCell<f64> =
@@ -2181,7 +2181,7 @@ pub struct brunsli_PermutationCoder {
     values_: Vec<u8>,
 }
 impl brunsli_PermutationCoder {
-    pub unsafe fn brunsli_PermutationCoder() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             values_: Vec::new(),
         };
@@ -2250,7 +2250,7 @@ impl brunsli_PermutationCoder {
 }
 impl Default for brunsli_PermutationCoder {
     fn default() -> Self {
-        unsafe { brunsli_PermutationCoder::brunsli_PermutationCoder() }
+        unsafe { brunsli_PermutationCoder::new() }
     }
 }
 pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code: *mut u32) {
@@ -2536,7 +2536,7 @@ pub struct brunsli_ANSCoder {
     state_: u32,
 }
 impl brunsli_ANSCoder {
-    pub unsafe fn brunsli_ANSCoder() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             state_: ((19_u32) << (16)),
         };
@@ -2566,7 +2566,7 @@ impl brunsli_ANSCoder {
 }
 impl Default for brunsli_ANSCoder {
     fn default() -> Self {
-        unsafe { brunsli_ANSCoder::brunsli_ANSCoder() }
+        unsafe { brunsli_ANSCoder::new() }
     }
 }
 pub static mut kMaxNumSymbolsForSmallCode_121: std::cell::LazyCell<i32> =
@@ -3528,7 +3528,7 @@ pub struct brunsli_internal_enc_Histogram {
     pub bit_cost_: f64,
 }
 impl brunsli_internal_enc_Histogram {
-    pub unsafe fn brunsli_internal_enc_Histogram() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             data_: [0_i32; 18],
             total_count_: 0_i32,
@@ -3540,7 +3540,7 @@ impl brunsli_internal_enc_Histogram {
 }
 impl Default for brunsli_internal_enc_Histogram {
     fn default() -> Self {
-        unsafe { brunsli_internal_enc_Histogram::brunsli_internal_enc_Histogram() }
+        unsafe { brunsli_internal_enc_Histogram::new() }
     }
 }
 static mut kMaxNumberOfHistograms_139: std::cell::LazyCell<usize> =
@@ -3553,7 +3553,7 @@ pub struct brunsli_internal_enc_EntropyCodes {
     ans_tables_: Vec<brunsli_ANSTable>,
 }
 impl brunsli_internal_enc_EntropyCodes {
-    pub unsafe fn brunsli_internal_enc_EntropyCodes(
+    pub unsafe fn new(
         histograms: *const Vec<brunsli_internal_enc_Histogram>,
         mut num_bands: usize,
         offsets: *const Vec<u64>,
@@ -3594,7 +3594,7 @@ pub struct brunsli_internal_enc_EntropySource {
     histograms_: Vec<brunsli_internal_enc_Histogram>,
 }
 impl brunsli_internal_enc_EntropySource {
-    pub unsafe fn brunsli_internal_enc_EntropySource() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             num_bands_: 0_usize,
             histograms_: Vec::new(),
@@ -3604,7 +3604,7 @@ impl brunsli_internal_enc_EntropySource {
 }
 impl Default for brunsli_internal_enc_EntropySource {
     fn default() -> Self {
-        unsafe { brunsli_internal_enc_EntropySource::brunsli_internal_enc_EntropySource() }
+        unsafe { brunsli_internal_enc_EntropySource::new() }
     }
 }
 static mut kSlackForOneBlock_140: std::cell::LazyCell<usize> =
@@ -3618,7 +3618,7 @@ struct brunsli_internal_enc_DataStream_CodeWord {
     pub nbits: u8,
 }
 impl brunsli_internal_enc_DataStream_CodeWord {
-    pub unsafe fn brunsli_internal_enc_DataStream_CodeWord() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             context: 0_u32,
             value: 0_u16,
@@ -3630,9 +3630,7 @@ impl brunsli_internal_enc_DataStream_CodeWord {
 }
 impl Default for brunsli_internal_enc_DataStream_CodeWord {
     fn default() -> Self {
-        unsafe {
-            brunsli_internal_enc_DataStream_CodeWord::brunsli_internal_enc_DataStream_CodeWord()
-        }
+        unsafe { brunsli_internal_enc_DataStream_CodeWord::new() }
     }
 }
 #[repr(C)]
@@ -3649,7 +3647,7 @@ pub struct brunsli_internal_enc_DataStream {
     code_words_: Vec<brunsli_internal_enc_DataStream_CodeWord>,
 }
 impl brunsli_internal_enc_DataStream {
-    pub unsafe fn brunsli_internal_enc_DataStream() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             pos_: 3,
             bw_pos_: 0,
@@ -3666,11 +3664,11 @@ impl brunsli_internal_enc_DataStream {
 }
 impl Default for brunsli_internal_enc_DataStream {
     fn default() -> Self {
-        unsafe { brunsli_internal_enc_DataStream::brunsli_internal_enc_DataStream() }
+        unsafe { brunsli_internal_enc_DataStream::new() }
     }
 }
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct brunsli_internal_enc_State {
     pub entropy_source: brunsli_internal_enc_EntropySource,
     pub entropy_codes: *mut brunsli_internal_enc_EntropyCodes,
@@ -3679,6 +3677,19 @@ pub struct brunsli_internal_enc_State {
     pub meta: Vec<brunsli_internal_enc_ComponentMeta>,
     pub num_contexts: usize,
     pub use_legacy_context_model: bool,
+}
+impl Default for brunsli_internal_enc_State {
+    fn default() -> Self {
+        brunsli_internal_enc_State {
+            entropy_source: <brunsli_internal_enc_EntropySource>::default(),
+            entropy_codes: std::ptr::null_mut(),
+            data_stream_dc: <brunsli_internal_enc_DataStream>::default(),
+            data_stream_ac: <brunsli_internal_enc_DataStream>::default(),
+            meta: Default::default(),
+            num_contexts: 0_usize,
+            use_legacy_context_model: false,
+        }
+    }
 }
 pub static mut kNumDirectCodes_141: std::cell::LazyCell<i32> =
     std::cell::LazyCell::new(|| unsafe { 8 });
@@ -4415,7 +4426,7 @@ pub unsafe fn EncodeHuffmanCode_158(
     {
         return false;
     }
-    let mut p: brunsli_PermutationCoder = brunsli_PermutationCoder::brunsli_PermutationCoder();
+    let mut p: brunsli_PermutationCoder = brunsli_PermutationCoder::new();
     (unsafe {
         brunsli_PermutationCoder::Init(
             &mut p,
@@ -4809,13 +4820,11 @@ impl brunsli_internal_enc_EntropySource {
         let mut histograms: Vec<brunsli_internal_enc_Histogram> = Vec::new();
         std::mem::swap(&mut histograms, &mut self.histograms_);
         return Some(Box::from_raw(
-            (Box::leak(Box::new(
-                brunsli_internal_enc_EntropyCodes::brunsli_internal_enc_EntropyCodes(
-                    { &histograms },
-                    { self.num_bands_ },
-                    { offsets },
-                ),
-            )) as *mut brunsli_internal_enc_EntropyCodes),
+            (Box::leak(Box::new(brunsli_internal_enc_EntropyCodes::new(
+                { &histograms },
+                { self.num_bands_ },
+                { offsets },
+            ))) as *mut brunsli_internal_enc_EntropyCodes),
         ))
         .take();
     }
@@ -4920,7 +4929,7 @@ impl brunsli_internal_enc_DataStream {
             .wrapping_mul((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumAvrgContexts_83))))
         .wrapping_add(context);
         let mut word: brunsli_internal_enc_DataStream_CodeWord =
-            brunsli_internal_enc_DataStream_CodeWord::brunsli_internal_enc_DataStream_CodeWord();
+            brunsli_internal_enc_DataStream_CodeWord::new();
         word.context = (histo_ix as u32);
         word.code = ((code as u32) as u8);
         word.nbits = 0_u8;
@@ -4941,8 +4950,7 @@ impl brunsli_internal_enc_DataStream {
         self.bw_bitpos_ += nbits;
         if ((self.bw_bitpos_) > (16)) {
             let mut word: brunsli_internal_enc_DataStream_CodeWord =
-                brunsli_internal_enc_DataStream_CodeWord::brunsli_internal_enc_DataStream_CodeWord(
-                );
+                brunsli_internal_enc_DataStream_CodeWord::new();
             word.context = 0_u32;
             word.code = 0_u8;
             word.nbits = 16_u8;
@@ -5004,7 +5012,7 @@ impl brunsli_internal_enc_DataStream {
     ) {
         (unsafe { brunsli_internal_enc_DataStream::FlushBitWriter(self) });
         (unsafe { brunsli_internal_enc_DataStream::FlushArithmeticCoder(self) });
-        let mut ans: brunsli_ANSCoder = brunsli_ANSCoder::brunsli_ANSCoder();
+        let mut ans: brunsli_ANSCoder = brunsli_ANSCoder::new();
         let mut i: i32 = ((self.pos_) - (1));
         'loop_: while ((i) >= (0)) {
             let word: *mut brunsli_internal_enc_DataStream_CodeWord = (&mut self.code_words_
@@ -5437,7 +5445,7 @@ pub unsafe fn EncodeJPEGInternals_175(
     mut len: *mut usize,
 ) -> bool {
     &(state);
-    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage({ data }, { (*len) });
+    let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     if !(unsafe {
         let _jpg: *const brunsli_JPEGData = jpg;
         let _storage: *mut brunsli_Storage = (&mut storage as *mut brunsli_Storage);
@@ -5455,7 +5463,7 @@ pub unsafe fn EncodeQuantData_176(
     mut len: *mut usize,
 ) -> bool {
     &(state);
-    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage({ data }, { (*len) });
+    let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     if !(unsafe {
         let _jpg: *const brunsli_JPEGData = jpg;
         let _storage: *mut brunsli_Storage = (&mut storage as *mut brunsli_Storage);
@@ -5472,7 +5480,7 @@ pub unsafe fn EncodeHistogramData_177(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage({ data }, { (*len) });
+    let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*jpg).components.len())) {
         (unsafe {
@@ -5506,7 +5514,7 @@ pub unsafe fn EncodeDCData_178(
     mut len: *mut usize,
 ) -> bool {
     &(*jpg);
-    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage({ data }, { (*len) });
+    let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     (unsafe {
         let _s: *mut brunsli_internal_enc_EntropyCodes = (*state).entropy_codes;
         brunsli_internal_enc_DataStream::EncodeCodeWords(
@@ -5525,7 +5533,7 @@ pub unsafe fn EncodeACData_179(
     mut len: *mut usize,
 ) -> bool {
     &(*jpg);
-    let mut storage: brunsli_Storage = brunsli_Storage::brunsli_Storage({ data }, { (*len) });
+    let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     (unsafe {
         let _s: *mut brunsli_internal_enc_EntropyCodes = (*state).entropy_codes;
         brunsli_internal_enc_DataStream::EncodeCodeWords(
@@ -6974,7 +6982,7 @@ pub unsafe fn BrunsliEncodeJpegBypass_195(
     }) {
         return false;
     }
-    let mut jpg: brunsli_JPEGData = brunsli_JPEGData::brunsli_JPEGData();
+    let mut jpg: brunsli_JPEGData = brunsli_JPEGData::new();
     if !(unsafe {
         ReadJpeg_196(
             jpg_data,
@@ -7056,7 +7064,7 @@ pub struct brunsli_HuffmanTree {
     pub index_right_or_value: i16,
 }
 impl brunsli_HuffmanTree {
-    pub unsafe fn brunsli_HuffmanTree(mut count: u32, mut left: i16, mut right: i16) -> Self {
+    pub unsafe fn new(mut count: u32, mut left: i16, mut right: i16) -> Self {
         let mut this = Self {
             total_count: count,
             index_left: left,
@@ -8307,11 +8315,9 @@ pub unsafe fn CreateHuffmanTree_220(
                         (&mut __tmp_1) as *const _
                     })
                 };
-                tree.push(brunsli_HuffmanTree::brunsli_HuffmanTree(
-                    { count },
-                    { (-1_i32 as i16) },
-                    { (i as i16) },
-                ));
+                tree.push(brunsli_HuffmanTree::new({ count }, { (-1_i32 as i16) }, {
+                    (i as i16)
+                }));
             };
         }
         let n: usize = tree.len();
@@ -8341,9 +8347,7 @@ pub unsafe fn CreateHuffmanTree_220(
             })
         };
         let sentinel: brunsli_HuffmanTree =
-            brunsli_HuffmanTree::brunsli_HuffmanTree({ <u32>::MAX }, { (-1_i32 as i16) }, {
-                (-1_i32 as i16)
-            });
+            brunsli_HuffmanTree::new({ <u32>::MAX }, { (-1_i32 as i16) }, { (-1_i32 as i16) });
         {
             let a0_clone = sentinel.clone();
             tree.push(a0_clone)
@@ -8727,7 +8731,7 @@ pub struct brunsli_HuffmanTableEntry {
     pub value: u16,
 }
 impl brunsli_HuffmanTableEntry {
-    pub unsafe fn brunsli_HuffmanTableEntry() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             bits: 0_u8,
             value: 65535_u16,
@@ -8737,7 +8741,7 @@ impl brunsli_HuffmanTableEntry {
 }
 impl Default for brunsli_HuffmanTableEntry {
     fn default() -> Self {
-        unsafe { brunsli_HuffmanTableEntry::brunsli_HuffmanTableEntry() }
+        unsafe { brunsli_HuffmanTableEntry::new() }
     }
 }
 pub unsafe fn DivCeil_232(mut a: i32, mut b: i32) -> i32 {
@@ -10010,7 +10014,7 @@ pub struct brunsli_BitReaderState {
     pub next_marker_pos_: usize,
 }
 impl brunsli_BitReaderState {
-    pub unsafe fn brunsli_BitReaderState(mut data: *const u8, len: usize, mut pos: usize) -> Self {
+    pub unsafe fn new(mut data: *const u8, len: usize, mut pos: usize) -> Self {
         let mut this = Self {
             data_: data,
             len_: len,
@@ -10619,8 +10623,7 @@ pub unsafe fn ProcessScan_248(
         });
     }
     let mut last_dc_coeff: [i16; 4] = [0_i16, 0_i16, 0_i16, 0_i16];
-    let mut br: brunsli_BitReaderState =
-        brunsli_BitReaderState::brunsli_BitReaderState({ data }, { len }, { (*pos) });
+    let mut br: brunsli_BitReaderState = brunsli_BitReaderState::new({ data }, { len }, { (*pos) });
     let mut restarts_to_go: i32 = (*jpg).restart_interval;
     let mut next_restart_marker: i32 = 0;
     let mut eobrun: i32 = -1_i32;
@@ -10843,7 +10846,10 @@ pub unsafe fn ProcessScan_248(
                             }
                         }
                         if reset_state {
-                            (*scan_info).reset_points.push(block_scan_index as i32);
+                            {
+                                let __init = block_scan_index;
+                                (*scan_info).reset_points.push(__init)
+                            };
                         }
                         if ((num_zero_runs) > (0)) {
                             let mut info: brunsli_JPEGScanInfo_ExtraZeroRunInfo =
@@ -11300,8 +11306,7 @@ pub unsafe fn BuildJpegHuffmanTable_238(
     mut symbols: *const i32,
     mut lut: *mut brunsli_HuffmanTableEntry,
 ) {
-    let mut code: brunsli_HuffmanTableEntry =
-        brunsli_HuffmanTableEntry::brunsli_HuffmanTableEntry();
+    let mut code: brunsli_HuffmanTableEntry = brunsli_HuffmanTableEntry::new();
     let mut table: *mut brunsli_HuffmanTableEntry = std::ptr::null_mut();
     let mut len: i32 = 0_i32;
     let mut idx: i32 = 0_i32;
@@ -11394,7 +11399,7 @@ pub unsafe fn BuildJpegHuffmanTable_238(
     }
 }
 impl brunsli_Storage {
-    pub unsafe fn brunsli_Storage(mut data: *mut u8, mut length: usize) -> Self {
+    pub unsafe fn new(mut data: *mut u8, mut length: usize) -> Self {
         let mut this = Self {
             data: data,
             length: length,
@@ -11567,7 +11572,7 @@ pub unsafe fn ProcessFile_257(
     }
     let mut output: Vec<libc::c_char> = vec![0];
     {
-        let mut jpg: brunsli_JPEGData = brunsli_JPEGData::brunsli_JPEGData();
+        let mut jpg: brunsli_JPEGData = brunsli_JPEGData::new();
         let mut input_data: *const u8 = (input.as_ptr() as *const u8);
         ok = (unsafe {
             ReadJpeg_196(

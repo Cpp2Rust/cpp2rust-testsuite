@@ -109,7 +109,7 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
     let Q: Value<Queue> = Rc::new(RefCell::new(Queue {
         elems: Rc::new(RefCell::new(Ptr::alloc_array(
             (0..((*(*graph.upgrade().deref()).V.borrow()) as usize))
-                .map(|_| <u32>::default())
+                .map(|_| 0_u32)
                 .collect::<Box<[u32]>>(),
         ))),
         front: Rc::new(RefCell::new(0_usize)),
@@ -120,12 +120,12 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
     }));
     let visited: Value<Ptr<bool>> = Rc::new(RefCell::new(Ptr::alloc_array(
         (0..((*(*graph.upgrade().deref()).V.borrow()) as usize))
-            .map(|_| <bool>::default())
+            .map(|_| false)
             .collect::<Box<[bool]>>(),
     )));
     let pred: Value<Ptr<u32>> = Rc::new(RefCell::new(Ptr::alloc_array(
         (0..((*(*graph.upgrade().deref()).V.borrow()) as usize))
-            .map(|_| <u32>::default())
+            .map(|_| 0_u32)
             .collect::<Box<[u32]>>(),
     )));
     let i: Value<u32> = Rc::new(RefCell::new(0_u32));

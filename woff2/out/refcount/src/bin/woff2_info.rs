@@ -230,7 +230,7 @@ pub struct woff2_Buffer {
     offset_: Value<usize>,
 }
 impl woff2_Buffer {
-    pub fn woff2_Buffer(data: Ptr<u8>, len: usize) -> Self {
+    pub fn new(data: Ptr<u8>, len: usize) -> Self {
         let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
         let len: Value<usize> = Rc::new(RefCell::new(len));
         let __this: Value<woff2_Buffer> = Rc::new(RefCell::new(Self {
@@ -1156,7 +1156,7 @@ pub fn ReadTrueTypeCollection_35(
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<usize> = Rc::new(RefCell::new(len));
     let font_collection: Value<Ptr<woff2_FontCollection>> = Rc::new(RefCell::new(font_collection));
-    let num_fonts: Value<u32> = <Value<u32>>::default();
+    let num_fonts: Value<u32> = Rc::new(RefCell::new(0_u32));
     if (!({
         woff2_BufferImpl::ReadU32(
             &(*file.borrow()),
@@ -1171,7 +1171,7 @@ pub fn ReadTrueTypeCollection_35(
     let offsets: Value<Vec<u32>> = Rc::new(RefCell::new(Vec::new()));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < ((*num_fonts.borrow()) as usize)) {
-        let offset: Value<u32> = <Value<u32>>::default();
+        let offset: Value<u32> = Rc::new(RefCell::new(0_u32));
         if !({ woff2_BufferImpl::ReadU32(&(*file.borrow()), (offset.as_pointer())) }) {
             return false;
         }
@@ -1219,7 +1219,7 @@ pub fn ReadFont_36(data: Ptr<u8>, len: usize, font: Ptr<woff2_Font>) -> bool {
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<usize> = Rc::new(RefCell::new(len));
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
-    let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+    let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
         { (*data.borrow()).clone() },
         { (*len.borrow()) },
     )));
@@ -1254,7 +1254,7 @@ pub fn ReadFontCollection_37(
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let len: Value<usize> = Rc::new(RefCell::new(len));
     let font_collection: Value<Ptr<woff2_FontCollection>> = Rc::new(RefCell::new(font_collection));
-    let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+    let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
         { (*data.borrow()).clone() },
         { (*len.borrow()) },
     )));
@@ -1752,13 +1752,13 @@ pub fn GetGlyphData_47(
         return false;
     }
     let index_fmt: Value<i32> = Rc::new(RefCell::new(({ IndexFormat_46((font).clone()) })));
-    let loca_buf: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+    let loca_buf: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
         { (*(*(*loca_table.borrow()).upgrade().deref()).data.borrow()).clone() },
         { ((*(*(*loca_table.borrow()).upgrade().deref()).length.borrow()) as usize) },
     )));
     if ((*index_fmt.borrow()) == 0) {
-        let offset1: Value<u16> = <Value<u16>>::default();
-        let offset2: Value<u16> = <Value<u16>>::default();
+        let offset1: Value<u16> = Rc::new(RefCell::new(0_u16));
+        let offset2: Value<u16> = Rc::new(RefCell::new(0_u16));
         if ((((!({
             woff2_BufferImpl::Skip(
                 &loca_buf.as_pointer(),
@@ -1782,8 +1782,8 @@ pub fn GetGlyphData_47(
         let __rhs = ((2 * (((*offset2.borrow()) as i32) - ((*offset1.borrow()) as i32))) as usize);
         (*glyph_size.borrow()).write(__rhs);
     } else {
-        let offset1: Value<u32> = <Value<u32>>::default();
-        let offset2: Value<u32> = <Value<u32>>::default();
+        let offset1: Value<u32> = Rc::new(RefCell::new(0_u32));
+        let offset2: Value<u32> = Rc::new(RefCell::new(0_u32));
         if ((((!({
             woff2_BufferImpl::Skip(
                 &loca_buf.as_pointer(),
@@ -1953,25 +1953,25 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
     let input: Value<Vec<u8>> = Rc::new(RefCell::new(
         ({ GetFileContent_49((*filename.borrow()).clone()) }),
     ));
-    let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::woff2_Buffer(
+    let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
         { (input.as_pointer() as Ptr<u8>).reinterpret_cast::<u8>() },
         { ((*input.borrow()).len() - 1) },
     )));
     println!("WOFF2Header");
-    let signature: Value<u32> = <Value<u32>>::default();
-    let flavor: Value<u32> = <Value<u32>>::default();
-    let length: Value<u32> = <Value<u32>>::default();
-    let totalSfntSize: Value<u32> = <Value<u32>>::default();
-    let totalCompressedSize: Value<u32> = <Value<u32>>::default();
-    let metaOffset: Value<u32> = <Value<u32>>::default();
-    let metaLength: Value<u32> = <Value<u32>>::default();
-    let metaOrigLength: Value<u32> = <Value<u32>>::default();
-    let privOffset: Value<u32> = <Value<u32>>::default();
-    let privLength: Value<u32> = <Value<u32>>::default();
-    let num_tables: Value<u16> = <Value<u16>>::default();
-    let reserved: Value<u16> = <Value<u16>>::default();
-    let major: Value<u16> = <Value<u16>>::default();
-    let minor: Value<u16> = <Value<u16>>::default();
+    let signature: Value<u32> = Rc::new(RefCell::new(0_u32));
+    let flavor: Value<u32> = Rc::new(RefCell::new(0_u32));
+    let length: Value<u32> = Rc::new(RefCell::new(0_u32));
+    let totalSfntSize: Value<u32> = Rc::new(RefCell::new(0_u32));
+    let totalCompressedSize: Value<u32> = Rc::new(RefCell::new(0_u32));
+    let metaOffset: Value<u32> = Rc::new(RefCell::new(0_u32));
+    let metaLength: Value<u32> = Rc::new(RefCell::new(0_u32));
+    let metaOrigLength: Value<u32> = Rc::new(RefCell::new(0_u32));
+    let privOffset: Value<u32> = Rc::new(RefCell::new(0_u32));
+    let privLength: Value<u32> = Rc::new(RefCell::new(0_u32));
+    let num_tables: Value<u16> = Rc::new(RefCell::new(0_u16));
+    let reserved: Value<u16> = Rc::new(RefCell::new(0_u16));
+    let major: Value<u16> = Rc::new(RefCell::new(0_u16));
+    let minor: Value<u16> = Rc::new(RefCell::new(0_u16));
     if !({ woff2_BufferImpl::ReadU32(&file.as_pointer(), (signature.as_pointer())) }) {
         return 1;
     }
@@ -2043,10 +2043,10 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         let offset: Value<usize> = Rc::new(RefCell::new(
             ({ woff2_BufferImpl::offset(&file.as_pointer()) }),
         ));
-        let flags: Value<u8> = <Value<u8>>::default();
-        let tag: Value<u32> = <Value<u32>>::default();
-        let origLength: Value<u32> = <Value<u32>>::default();
-        let transformLength: Value<u32> = <Value<u32>>::default();
+        let flags: Value<u8> = Rc::new(RefCell::new(0_u8));
+        let tag: Value<u32> = Rc::new(RefCell::new(0_u32));
+        let origLength: Value<u32> = Rc::new(RefCell::new(0_u32));
+        let transformLength: Value<u32> = Rc::new(RefCell::new(0_u32));
         if !({ woff2_BufferImpl::ReadU8(&file.as_pointer(), (flags.as_pointer())) }) {
             return 1;
         }
@@ -2096,8 +2096,8 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         (*i.borrow_mut()).postfix_inc();
     }
     if ((*flavor.borrow()) == kTtcFontFlavor_22.with(|rc| *rc.borrow())) {
-        let version: Value<u32> = <Value<u32>>::default();
-        let numFonts: Value<u32> = <Value<u32>>::default();
+        let version: Value<u32> = Rc::new(RefCell::new(0_u32));
+        let numFonts: Value<u32> = Rc::new(RefCell::new(0_u32));
         if !({ woff2_BufferImpl::ReadU32(&file.as_pointer(), (version.as_pointer())) }) {
             return 1;
         }
@@ -2111,8 +2111,8 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
         );
         let i: Value<i32> = Rc::new(RefCell::new(0));
         'loop_: while (((*i.borrow()) as u32) < (*numFonts.borrow())) {
-            let numTables: Value<u32> = <Value<u32>>::default();
-            let flavor: Value<u32> = <Value<u32>>::default();
+            let numTables: Value<u32> = Rc::new(RefCell::new(0_u32));
+            let flavor: Value<u32> = Rc::new(RefCell::new(0_u32));
             if !({ Read255UShort_12((file.as_pointer()), (numTables.as_pointer())) }) {
                 return 1;
             }
@@ -2127,7 +2127,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             );
             let j: Value<i32> = Rc::new(RefCell::new(0));
             'loop_: while (((*j.borrow()) as u32) < (*numTables.borrow())) {
-                let table_idx: Value<u32> = <Value<u32>>::default();
+                let table_idx: Value<u32> = Rc::new(RefCell::new(0_u32));
                 if !({ Read255UShort_12((file.as_pointer()), (table_idx.as_pointer())) }) {
                     return 1;
                 }

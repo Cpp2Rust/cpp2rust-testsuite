@@ -133,9 +133,9 @@ impl Default for brunsli_JPEGQuantTable {
     fn default() -> Self {
         brunsli_JPEGQuantTable {
             values: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
-            precision: 0_i32,
-            index: 0_i32,
-            is_last: false,
+            precision: 0,
+            index: 0,
+            is_last: true,
         }
     }
 }
@@ -152,8 +152,8 @@ impl Default for brunsli_JPEGHuffmanCode {
         brunsli_JPEGHuffmanCode {
             counts: std::array::from_fn::<_, 17, _>(|_| Default::default()).to_vec(),
             values: std::array::from_fn::<_, 257, _>(|_| Default::default()).to_vec(),
-            slot_id: 0_i32,
-            is_last: false,
+            slot_id: 0,
+            is_last: true,
         }
     }
 }
@@ -209,7 +209,7 @@ pub struct brunsli_JPEGComponent {
     pub coeffs: Vec<i16>,
 }
 impl brunsli_JPEGComponent {
-    pub unsafe fn brunsli_JPEGComponent() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             id: 0,
             h_samp_factor: 1,
@@ -225,7 +225,7 @@ impl brunsli_JPEGComponent {
 }
 impl Default for brunsli_JPEGComponent {
     fn default() -> Self {
-        unsafe { brunsli_JPEGComponent::brunsli_JPEGComponent() }
+        unsafe { brunsli_JPEGComponent::new() }
     }
 }
 #[repr(C)]
@@ -255,7 +255,7 @@ pub struct brunsli_JPEGData {
     pub padding_bits: Vec<i32>,
 }
 impl brunsli_JPEGData {
-    pub unsafe fn brunsli_JPEGData() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             width: 0,
             height: 0,
@@ -285,7 +285,7 @@ impl brunsli_JPEGData {
 }
 impl Default for brunsli_JPEGData {
     fn default() -> Self {
-        unsafe { brunsli_JPEGData::brunsli_JPEGData() }
+        unsafe { brunsli_JPEGData::new() }
     }
 }
 pub unsafe fn JPEGDataIs420_15(jpg: *const brunsli_JPEGData) -> bool {
@@ -1140,7 +1140,7 @@ pub struct brunsli_Prob {
     count: u16,
 }
 impl brunsli_Prob {
-    pub unsafe fn brunsli_Prob() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             prob8: (*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProb_80)),
             total: (*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProbCount_81)),
@@ -1184,7 +1184,7 @@ impl brunsli_Prob {
 }
 impl Default for brunsli_Prob {
     fn default() -> Self {
-        unsafe { brunsli_Prob::brunsli_Prob() }
+        unsafe { brunsli_Prob::new() }
     }
 }
 pub static mut kMaxAverageContext_82: std::cell::LazyCell<usize> =
@@ -1576,10 +1576,10 @@ pub struct brunsli_ComponentStateDC {
     pub prev_sign: Vec<i32>,
 }
 impl brunsli_ComponentStateDC {
-    pub unsafe fn brunsli_ComponentStateDC() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             width: 0,
-            is_zero_prob: brunsli_Prob::brunsli_Prob(),
+            is_zero_prob: brunsli_Prob::new(),
             is_empty_block_prob: (0..((*std::cell::LazyCell::force_mut(
                 &mut *&raw mut kNumIsEmptyBlockContexts_105,
             )) as usize) as usize)
@@ -1621,7 +1621,7 @@ impl brunsli_ComponentStateDC {
 }
 impl Default for brunsli_ComponentStateDC {
     fn default() -> Self {
-        unsafe { brunsli_ComponentStateDC::brunsli_ComponentStateDC() }
+        unsafe { brunsli_ComponentStateDC::new() }
     }
 }
 #[repr(C)]
@@ -1642,7 +1642,7 @@ pub struct brunsli_ComponentState {
     pub prev_sign: Vec<i32>,
 }
 impl brunsli_ComponentState {
-    pub unsafe fn brunsli_ComponentState() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             width: 0,
             context_offset: 0_i32,
@@ -1665,7 +1665,7 @@ impl brunsli_ComponentState {
                 )) as usize)
                 .map(|_| <brunsli_Prob>::default())
                 .collect::<Vec<_>>(),
-            num_nonzero_prob: std::array::from_fn::<_, 2016, _>(|_| brunsli_Prob::brunsli_Prob()),
+            num_nonzero_prob: std::array::from_fn::<_, 2016, _>(|_| brunsli_Prob::new()),
             first_extra_bit_prob: (0..(((10)
                 * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
                 as usize) as usize)
@@ -1743,7 +1743,7 @@ impl brunsli_ComponentState {
 }
 impl Default for brunsli_ComponentState {
     fn default() -> Self {
-        unsafe { brunsli_ComponentState::brunsli_ComponentState() }
+        unsafe { brunsli_ComponentState::new() }
     }
 }
 pub static mut kSqrt2_107: std::cell::LazyCell<f64> =
@@ -2181,7 +2181,7 @@ pub struct brunsli_PermutationCoder {
     values_: Vec<u8>,
 }
 impl brunsli_PermutationCoder {
-    pub unsafe fn brunsli_PermutationCoder() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             values_: Vec::new(),
         };
@@ -2250,7 +2250,7 @@ impl brunsli_PermutationCoder {
 }
 impl Default for brunsli_PermutationCoder {
     fn default() -> Self {
-        unsafe { brunsli_PermutationCoder::brunsli_PermutationCoder() }
+        unsafe { brunsli_PermutationCoder::new() }
     }
 }
 pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code: *mut u32) {
@@ -2478,11 +2478,7 @@ pub struct brunsli_WordSource {
     pub optimistic_: bool,
 }
 impl brunsli_WordSource {
-    pub unsafe fn brunsli_WordSource(
-        mut data: *const u8,
-        mut len: usize,
-        mut optimistic: bool,
-    ) -> Self {
+    pub unsafe fn new(mut data: *const u8, mut len: usize, mut optimistic: bool) -> Self {
         let mut this = Self {
             data_: data,
             len_: ((len) & (!1 as usize)),
@@ -2525,7 +2521,7 @@ pub struct brunsli_BitSource {
     pub bit_pos_: i32,
 }
 impl brunsli_BitSource {
-    pub unsafe fn brunsli_BitSource() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             val_: 0_u32,
             bit_pos_: 0_i32,
@@ -2567,7 +2563,7 @@ impl brunsli_BitSource {
 }
 impl Default for brunsli_BitSource {
     fn default() -> Self {
-        unsafe { brunsli_BitSource::brunsli_BitSource() }
+        unsafe { brunsli_BitSource::new() }
     }
 }
 #[repr(C)]
@@ -2583,7 +2579,7 @@ pub struct brunsli_ANSDecodingData {
     pub map_: [brunsli_ANSSymbolInfo; 1024],
 }
 impl brunsli_ANSDecodingData {
-    pub unsafe fn brunsli_ANSDecodingData() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             map_: [<brunsli_ANSSymbolInfo>::default(); 1024],
         };
@@ -2592,7 +2588,7 @@ impl brunsli_ANSDecodingData {
 }
 impl Default for brunsli_ANSDecodingData {
     fn default() -> Self {
-        unsafe { brunsli_ANSDecodingData::brunsli_ANSDecodingData() }
+        unsafe { brunsli_ANSDecodingData::new() }
     }
 }
 #[repr(C)]
@@ -2601,7 +2597,7 @@ pub struct brunsli_ANSDecoder {
     state_: u32,
 }
 impl brunsli_ANSDecoder {
-    pub unsafe fn brunsli_ANSDecoder() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self { state_: 0_u32 };
         this
     }
@@ -2636,7 +2632,7 @@ impl brunsli_ANSDecoder {
 }
 impl Default for brunsli_ANSDecoder {
     fn default() -> Self {
-        unsafe { brunsli_ANSDecoder::brunsli_ANSDecoder() }
+        unsafe { brunsli_ANSDecoder::new() }
     }
 }
 impl brunsli_ANSDecodingData {
@@ -2831,15 +2827,14 @@ pub struct brunsli_BrunsliDecoder {
     state_: Option<Box<brunsli_internal_dec_State>>,
 }
 impl brunsli_BrunsliDecoder {
-    pub unsafe fn brunsli_BrunsliDecoder() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             jpg_: None,
             state_: None,
         };
         {
             let _a0: *mut brunsli_JPEGData =
-                (Box::leak(Box::new(brunsli_JPEGData::brunsli_JPEGData()))
-                    as *mut brunsli_JPEGData);
+                (Box::leak(Box::new(brunsli_JPEGData::new())) as *mut brunsli_JPEGData);
             this.jpg_ = if _a0.is_null() {
                 None
             } else {
@@ -2847,10 +2842,9 @@ impl brunsli_BrunsliDecoder {
             }
         };
         {
-            let _a0: *mut brunsli_internal_dec_State = (Box::leak(Box::new(
-                brunsli_internal_dec_State::brunsli_internal_dec_State(),
-            ))
-                as *mut brunsli_internal_dec_State);
+            let _a0: *mut brunsli_internal_dec_State =
+                (Box::leak(Box::new(brunsli_internal_dec_State::new()))
+                    as *mut brunsli_internal_dec_State);
             this.state_ = if _a0.is_null() {
                 None
             } else {
@@ -2862,7 +2856,7 @@ impl brunsli_BrunsliDecoder {
 }
 impl Default for brunsli_BrunsliDecoder {
     fn default() -> Self {
-        unsafe { brunsli_BrunsliDecoder::brunsli_BrunsliDecoder() }
+        unsafe { brunsli_BrunsliDecoder::new() }
     }
 }
 #[repr(C)]
@@ -2873,7 +2867,7 @@ pub struct brunsli_BinaryArithmeticDecoder {
     value_: u32,
 }
 impl brunsli_BinaryArithmeticDecoder {
-    pub unsafe fn brunsli_BinaryArithmeticDecoder() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             low_: 0_u32,
             high_: 0_u32,
@@ -2913,7 +2907,7 @@ impl brunsli_BinaryArithmeticDecoder {
 }
 impl Default for brunsli_BinaryArithmeticDecoder {
     fn default() -> Self {
-        unsafe { brunsli_BinaryArithmeticDecoder::brunsli_BinaryArithmeticDecoder() }
+        unsafe { brunsli_BinaryArithmeticDecoder::new() }
     }
 }
 #[repr(C)]
@@ -2929,7 +2923,7 @@ pub struct brunsli_JPEGOutput {
     data: *mut ::libc::c_void,
 }
 impl brunsli_JPEGOutput {
-    pub unsafe fn brunsli_JPEGOutput(
+    pub unsafe fn new(
         mut cb: Option<unsafe fn(*mut ::libc::c_void, *const u8, usize) -> usize>,
         mut data: *mut ::libc::c_void,
     ) -> Self {
@@ -3005,7 +2999,7 @@ pub const brunsli_internal_dec_SerializationStatus_ERROR: brunsli_internal_dec_S
 pub const brunsli_internal_dec_SerializationStatus_DONE: brunsli_internal_dec_SerializationStatus =
     3;
 #[repr(C)]
-#[derive(Default)]
+#[derive()]
 pub struct brunsli_internal_dec_State {
     pub stage: brunsli_internal_dec_Stage,
     pub tags_met: u32,
@@ -3021,8 +3015,26 @@ pub struct brunsli_internal_dec_State {
     pub internal: Option<Box<brunsli_internal_dec_InternalState>>,
 }
 impl brunsli_internal_dec_State {}
+impl Default for brunsli_internal_dec_State {
+    fn default() -> Self {
+        brunsli_internal_dec_State {
+            stage: brunsli_internal_dec_Stage_SIGNATURE,
+            tags_met: 0_u32,
+            skip_tags: 0_u32,
+            data: std::ptr::null(),
+            len: 0_usize,
+            pos: 0_usize,
+            context_map: std::ptr::null(),
+            entropy_codes: std::ptr::null(),
+            use_legacy_context_model: false,
+            is_storage_allocated: false,
+            meta: Default::default(),
+            internal: None,
+        }
+    }
+}
 #[repr(C)]
-#[derive(Default)]
+#[derive()]
 pub struct brunsli_Arena_brunsli_HuffmanCode_ {
     pub capacity: usize,
     pub storage: Option<Box<[brunsli_HuffmanCode]>>,
@@ -3042,22 +3054,28 @@ impl brunsli_Arena_brunsli_HuffmanCode_ {
         self.capacity = 0_usize;
         self.storage = None;
     }
-    pub unsafe fn Arena_pmutbrunsli_Arena_brunsli_HuffmanCode__rv(
-        _a0: *mut brunsli_Arena_brunsli_HuffmanCode_,
-    ) -> Self {
+    pub unsafe fn move_from(_a0: *mut brunsli_Arena_brunsli_HuffmanCode_) -> Self {
         let mut this = Self {
             capacity: (*_a0).capacity,
             storage: (*_a0).storage.take(),
         };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_Arena_brunsli_HuffmanCode__rv(
+    pub unsafe fn move_assign(
         &mut self,
         _a0: *mut brunsli_Arena_brunsli_HuffmanCode_,
     ) -> *mut brunsli_Arena_brunsli_HuffmanCode_ {
         self.capacity = (*_a0).capacity;
         self.storage = (*_a0).storage.take();
         return &mut (*(self as *mut brunsli_Arena_brunsli_HuffmanCode_));
+    }
+}
+impl Default for brunsli_Arena_brunsli_HuffmanCode_ {
+    fn default() -> Self {
+        brunsli_Arena_brunsli_HuffmanCode_ {
+            capacity: 0_usize,
+            storage: None,
+        }
     }
 }
 #[repr(C)]
@@ -3073,7 +3091,7 @@ pub struct brunsli_internal_dec_OutputChunk {
     pub buffer: Option<Box<Vec<u8>>>,
 }
 impl brunsli_internal_dec_OutputChunk {
-    pub unsafe fn brunsli_internal_dec_OutputChunk1(mut data: *const u8, mut size: usize) -> Self {
+    pub unsafe fn new_1(mut data: *const u8, mut size: usize) -> Self {
         let mut this = Self {
             next: data,
             len: size,
@@ -3081,7 +3099,7 @@ impl brunsli_internal_dec_OutputChunk {
         };
         this
     }
-    pub unsafe fn brunsli_internal_dec_OutputChunk2(mut size: Option<usize>) -> Self {
+    pub unsafe fn new_2(mut size: Option<usize>) -> Self {
         let mut size: usize = size.unwrap_or(0_usize);
         let mut this = Self {
             next: std::ptr::null(),
@@ -3104,7 +3122,7 @@ impl brunsli_internal_dec_OutputChunk {
         this.len = size;
         this
     }
-    pub unsafe fn brunsli_internal_dec_OutputChunk3(mut bytes: Vec<u8>) -> Self {
+    pub unsafe fn new_3(mut bytes: Vec<u8>) -> Self {
         let mut this = Self {
             next: std::ptr::null(),
             len: 0_usize,
@@ -3122,9 +3140,7 @@ impl brunsli_internal_dec_OutputChunk {
         this.len = bytes.len();
         this
     }
-    pub unsafe fn OutputChunk_pmutbrunsli_internal_dec_OutputChunk_rv(
-        _a0: *mut brunsli_internal_dec_OutputChunk,
-    ) -> Self {
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_OutputChunk) -> Self {
         let mut this = Self {
             next: (*_a0).next,
             len: (*_a0).len,
@@ -3132,7 +3148,7 @@ impl brunsli_internal_dec_OutputChunk {
         };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_OutputChunk_rv(
+    pub unsafe fn move_assign(
         &mut self,
         _a0: *mut brunsli_internal_dec_OutputChunk,
     ) -> *mut brunsli_internal_dec_OutputChunk {
@@ -3144,7 +3160,7 @@ impl brunsli_internal_dec_OutputChunk {
 }
 impl Default for brunsli_internal_dec_OutputChunk {
     fn default() -> Self {
-        unsafe { brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2(None) }
+        unsafe { brunsli_internal_dec_OutputChunk::new_2(None) }
     }
 }
 #[repr(C)]
@@ -3173,13 +3189,19 @@ pub struct brunsli_internal_dec_BitWriter {
     pub put_bits: i32,
 }
 impl brunsli_internal_dec_BitWriter {
-    pub unsafe fn BitWriter_pmutbrunsli_internal_dec_BitWriter_rv(
-        _a0: *mut brunsli_internal_dec_BitWriter,
-    ) -> Self {
-        let mut this = Self { healthy : ( * _a0 ) . healthy  , output : ( * _a0 ) . output  , chunk : brunsli_internal_dec_OutputChunk :: OutputChunk_pmutbrunsli_internal_dec_OutputChunk_rv ( { & mut ( * _a0 ) . chunk   } , ) , data : ( * _a0 ) . data  , pos : ( * _a0 ) . pos  , put_buffer : ( * _a0 ) . put_buffer  , put_bits : ( * _a0 ) . put_bits  , } ;
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_BitWriter) -> Self {
+        let mut this = Self {
+            healthy: (*_a0).healthy,
+            output: (*_a0).output,
+            chunk: brunsli_internal_dec_OutputChunk::move_from({ &mut (*_a0).chunk }),
+            data: (*_a0).data,
+            pos: (*_a0).pos,
+            put_buffer: (*_a0).put_buffer,
+            put_bits: (*_a0).put_bits,
+        };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_BitWriter_rv(
+    pub unsafe fn move_assign(
         &mut self,
         _a0: *mut brunsli_internal_dec_BitWriter,
     ) -> *mut brunsli_internal_dec_BitWriter {
@@ -3187,7 +3209,7 @@ impl brunsli_internal_dec_BitWriter {
         self.output = (*_a0).output;
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_OutputChunk = &mut (*_a0).chunk;
-            brunsli_internal_dec_OutputChunk :: operator_assign_pmutbrunsli_internal_dec_OutputChunk_rv ( &mut self . chunk   , _arg0 , )
+            brunsli_internal_dec_OutputChunk::move_assign(&mut self.chunk, _arg0)
         });
         self.data = (*_a0).data;
         self.pos = (*_a0).pos;
@@ -3197,12 +3219,22 @@ impl brunsli_internal_dec_BitWriter {
     }
 }
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct brunsli_internal_dec_DCTCodingState {
     pub eob_run_: i32,
     pub cur_ac_huff_: *const brunsli_HuffmanCodeTable,
     pub refinement_bits_: Vec<u16>,
     pub refinement_bits_count_: usize,
+}
+impl Default for brunsli_internal_dec_DCTCodingState {
+    fn default() -> Self {
+        brunsli_internal_dec_DCTCodingState {
+            eob_run_: 0_i32,
+            cur_ac_huff_: std::ptr::null(),
+            refinement_bits_: Default::default(),
+            refinement_bits_count_: 0_usize,
+        }
+    }
 }
 pub type brunsli_internal_dec_EncodeScanState_Stage = u32;
 pub const brunsli_internal_dec_EncodeScanState_Stage_HEAD:
@@ -3226,15 +3258,11 @@ pub struct brunsli_internal_dec_EncodeScanState {
     pub next_reset_point: i32,
 }
 impl brunsli_internal_dec_EncodeScanState {
-    pub unsafe fn EncodeScanState_pmutbrunsli_internal_dec_EncodeScanState_rv(
-        _a0: *mut brunsli_internal_dec_EncodeScanState,
-    ) -> Self {
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_EncodeScanState) -> Self {
         let mut this = Self {
             stage: (*_a0).stage,
             mcu_y: (*_a0).mcu_y,
-            bw: brunsli_internal_dec_BitWriter::BitWriter_pmutbrunsli_internal_dec_BitWriter_rv({
-                &mut (*_a0).bw
-            }),
+            bw: brunsli_internal_dec_BitWriter::move_from({ &mut (*_a0).bw }),
             last_dc_coeff: std::array::from_fn::<_, 4, _>(|__i: usize| (*_a0).last_dc_coeff[(__i)]),
             restarts_to_go: (*_a0).restarts_to_go,
             next_restart_marker: (*_a0).next_restart_marker,
@@ -3247,7 +3275,7 @@ impl brunsli_internal_dec_EncodeScanState {
         };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_EncodeScanState_rv(
+    pub unsafe fn move_assign(
         &mut self,
         _a0: *mut brunsli_internal_dec_EncodeScanState,
     ) -> *mut brunsli_internal_dec_EncodeScanState {
@@ -3255,10 +3283,7 @@ impl brunsli_internal_dec_EncodeScanState {
         self.mcu_y = (*_a0).mcu_y;
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_BitWriter = &mut (*_a0).bw;
-            brunsli_internal_dec_BitWriter::operator_assign_pmutbrunsli_internal_dec_BitWriter_rv(
-                &mut self.bw,
-                _arg0,
-            )
+            brunsli_internal_dec_BitWriter::move_assign(&mut self.bw, _arg0)
         });
         {
             if 8_usize != 0 {
@@ -3289,7 +3314,7 @@ impl Default for brunsli_internal_dec_EncodeScanState {
             stage: brunsli_internal_dec_EncodeScanState_Stage_HEAD,
             mcu_y: 0_i32,
             bw: <brunsli_internal_dec_BitWriter>::default(),
-            last_dc_coeff: [0_i16; 4],
+            last_dc_coeff: [0_i16, 0_i16, 0_i16, 0_i16],
             restarts_to_go: 0_i32,
             next_restart_marker: 0_i32,
             block_scan_index: 0_i32,
@@ -3311,7 +3336,7 @@ pub const brunsli_internal_dec_SerializationState_Stage_DONE:
 pub const brunsli_internal_dec_SerializationState_Stage_ERROR:
     brunsli_internal_dec_SerializationState_Stage = 3;
 #[repr(C)]
-#[derive(Default)]
+#[derive()]
 pub struct brunsli_internal_dec_SerializationState {
     pub stage: brunsli_internal_dec_SerializationState_Stage,
     pub output_queue: Vec<brunsli_internal_dec_OutputChunk>,
@@ -3331,13 +3356,28 @@ pub struct brunsli_internal_dec_SerializationState {
     pub scan_state: brunsli_internal_dec_EncodeScanState,
 }
 impl brunsli_internal_dec_SerializationState {
-    pub unsafe fn SerializationState_pmutbrunsli_internal_dec_SerializationState_rv(
-        _a0: *mut brunsli_internal_dec_SerializationState,
-    ) -> Self {
-        let mut this = Self { stage : ( * _a0 ) . stage  , output_queue : std::mem::take(&mut ( * _a0 ) . output_queue  ) , section_index : ( * _a0 ) . section_index  , dht_index : ( * _a0 ) . dht_index  , dqt_index : ( * _a0 ) . dqt_index  , app_index : ( * _a0 ) . app_index  , com_index : ( * _a0 ) . com_index  , data_index : ( * _a0 ) . data_index  , scan_index : ( * _a0 ) . scan_index  , dc_huff_table : std::mem::take(&mut ( * _a0 ) . dc_huff_table  ) , ac_huff_table : std::mem::take(&mut ( * _a0 ) . ac_huff_table  ) , pad_bits : ( * _a0 ) . pad_bits  , pad_bits_end : ( * _a0 ) . pad_bits_end  , seen_dri_marker : ( * _a0 ) . seen_dri_marker  , is_progressive : ( * _a0 ) . is_progressive  , scan_state : brunsli_internal_dec_EncodeScanState :: EncodeScanState_pmutbrunsli_internal_dec_EncodeScanState_rv ( { & mut ( * _a0 ) . scan_state   } , ) , } ;
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_SerializationState) -> Self {
+        let mut this = Self {
+            stage: (*_a0).stage,
+            output_queue: std::mem::take(&mut (*_a0).output_queue),
+            section_index: (*_a0).section_index,
+            dht_index: (*_a0).dht_index,
+            dqt_index: (*_a0).dqt_index,
+            app_index: (*_a0).app_index,
+            com_index: (*_a0).com_index,
+            data_index: (*_a0).data_index,
+            scan_index: (*_a0).scan_index,
+            dc_huff_table: std::mem::take(&mut (*_a0).dc_huff_table),
+            ac_huff_table: std::mem::take(&mut (*_a0).ac_huff_table),
+            pad_bits: (*_a0).pad_bits,
+            pad_bits_end: (*_a0).pad_bits_end,
+            seen_dri_marker: (*_a0).seen_dri_marker,
+            is_progressive: (*_a0).is_progressive,
+            scan_state: brunsli_internal_dec_EncodeScanState::move_from({ &mut (*_a0).scan_state }),
+        };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_SerializationState_rv(
+    pub unsafe fn move_assign(
         &mut self,
         _a0: *mut brunsli_internal_dec_SerializationState,
     ) -> *mut brunsli_internal_dec_SerializationState {
@@ -3358,13 +3398,35 @@ impl brunsli_internal_dec_SerializationState {
         self.is_progressive = (*_a0).is_progressive;
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_EncodeScanState = &mut (*_a0).scan_state;
-            brunsli_internal_dec_EncodeScanState :: operator_assign_pmutbrunsli_internal_dec_EncodeScanState_rv ( &mut self . scan_state   , _arg0 , )
+            brunsli_internal_dec_EncodeScanState::move_assign(&mut self.scan_state, _arg0)
         });
         return &mut (*(self as *mut brunsli_internal_dec_SerializationState));
     }
 }
+impl Default for brunsli_internal_dec_SerializationState {
+    fn default() -> Self {
+        brunsli_internal_dec_SerializationState {
+            stage: brunsli_internal_dec_SerializationState_Stage_INIT,
+            output_queue: Default::default(),
+            section_index: 0_usize,
+            dht_index: 0,
+            dqt_index: 0,
+            app_index: 0,
+            com_index: 0,
+            data_index: 0,
+            scan_index: 0,
+            dc_huff_table: Default::default(),
+            ac_huff_table: Default::default(),
+            pad_bits: std::ptr::null(),
+            pad_bits_end: std::ptr::null(),
+            seen_dri_marker: false,
+            is_progressive: false,
+            scan_state: <brunsli_internal_dec_EncodeScanState>::default(),
+        }
+    }
+}
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct brunsli_internal_dec_AcDcState {
     pub next_mcu_y: i32,
     pub next_component: usize,
@@ -3374,8 +3436,21 @@ pub struct brunsli_internal_dec_AcDcState {
     pub ac: Vec<brunsli_ComponentState>,
     pub dc: Vec<brunsli_ComponentStateDC>,
 }
+impl Default for brunsli_internal_dec_AcDcState {
+    fn default() -> Self {
+        brunsli_internal_dec_AcDcState {
+            next_mcu_y: 0,
+            next_component: 0_usize,
+            next_iy: 0,
+            next_x: 0,
+            ac_coeffs_order_decoded: false,
+            ac: Default::default(),
+            dc: Default::default(),
+        }
+    }
+}
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone)]
 pub struct brunsli_internal_dec_SectionState {
     pub tag: usize,
     pub is_active: bool,
@@ -3384,6 +3459,19 @@ pub struct brunsli_internal_dec_SectionState {
     pub remaining: usize,
     pub milestone: usize,
     pub projected_end: usize,
+}
+impl Default for brunsli_internal_dec_SectionState {
+    fn default() -> Self {
+        brunsli_internal_dec_SectionState {
+            tag: 0_usize,
+            is_active: false,
+            is_section: false,
+            tags_met: 0_u32,
+            remaining: 0_usize,
+            milestone: 0_usize,
+            projected_end: 0_usize,
+        }
+    }
 }
 pub type brunsli_internal_dec_HeaderState_Stage = u32;
 pub const brunsli_internal_dec_HeaderState_Stage_READ_TAG: brunsli_internal_dec_HeaderState_Stage =
@@ -3411,7 +3499,7 @@ pub struct brunsli_internal_dec_HeaderState {
 impl Default for brunsli_internal_dec_HeaderState {
     fn default() -> Self {
         brunsli_internal_dec_HeaderState {
-            stage: 0_usize,
+            stage: (brunsli_internal_dec_HeaderState_Stage_READ_TAG as usize),
             section: <brunsli_internal_dec_SectionState>::default(),
             remaining_skip_length: 0_usize,
             varint_values: std::array::from_fn::<_, 16, _>(|_| Default::default()).to_vec(),
@@ -3428,10 +3516,18 @@ pub const brunsli_internal_dec_FallbackState_Stage_READ_CONTENTS:
 pub const brunsli_internal_dec_FallbackState_Stage_DONE: brunsli_internal_dec_FallbackState_Stage =
     3;
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct brunsli_internal_dec_FallbackState {
     pub stage: usize,
     pub storage: Vec<u8>,
+}
+impl Default for brunsli_internal_dec_FallbackState {
+    fn default() -> Self {
+        brunsli_internal_dec_FallbackState {
+            stage: (brunsli_internal_dec_FallbackState_Stage_READ_TAG as usize),
+            storage: Default::default(),
+        }
+    }
 }
 pub type brunsli_internal_dec_SectionHeaderState_Stage = u32;
 pub const brunsli_internal_dec_SectionHeaderState_Stage_READ_TAG:
@@ -3443,9 +3539,16 @@ pub const brunsli_internal_dec_SectionHeaderState_Stage_ENTER_SECTION:
 pub const brunsli_internal_dec_SectionHeaderState_Stage_DONE:
     brunsli_internal_dec_SectionHeaderState_Stage = 3;
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone)]
 pub struct brunsli_internal_dec_SectionHeaderState {
     pub stage: usize,
+}
+impl Default for brunsli_internal_dec_SectionHeaderState {
+    fn default() -> Self {
+        brunsli_internal_dec_SectionHeaderState {
+            stage: (brunsli_internal_dec_SectionHeaderState_Stage_READ_TAG as usize),
+        }
+    }
 }
 pub type brunsli_internal_dec_MetadataDecompressionStage = i32;
 pub const brunsli_internal_dec_MetadataDecompressionStage_INITIAL:
@@ -3470,7 +3573,7 @@ pub const brunsli_internal_dec_MetadataState_Stage_READ_LENGTH_LO:
 pub const brunsli_internal_dec_MetadataState_Stage_READ_MULTIBYTE:
     brunsli_internal_dec_MetadataState_Stage = 5;
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone)]
 pub struct brunsli_internal_dec_MetadataState {
     pub short_marker_count: usize,
     pub marker: u8,
@@ -3490,6 +3593,23 @@ impl brunsli_internal_dec_MetadataState {
             || ((self.stage) == (brunsli_internal_dec_MetadataState_Stage_READ_TAIL as usize));
     }
 }
+impl Default for brunsli_internal_dec_MetadataState {
+    fn default() -> Self {
+        brunsli_internal_dec_MetadataState {
+            short_marker_count: 0_usize,
+            marker: 0_u8,
+            length_hi: 0_u8,
+            remaining_multibyte_length: 0_usize,
+            multibyte_sink: std::ptr::null_mut(),
+            stage: (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize),
+            brotli: std::ptr::null_mut(),
+            metadata_size: 0_usize,
+            decompressed_size: 0_usize,
+            result: brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR,
+            decompression_stage: brunsli_internal_dec_MetadataDecompressionStage_INITIAL,
+        }
+    }
+}
 pub type brunsli_internal_dec_VarintState_Stage = u32;
 pub const brunsli_internal_dec_VarintState_Stage_INIT: brunsli_internal_dec_VarintState_Stage = 0;
 pub const brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION:
@@ -3497,11 +3617,20 @@ pub const brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION:
 pub const brunsli_internal_dec_VarintState_Stage_READ_DATA: brunsli_internal_dec_VarintState_Stage =
     2;
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone)]
 pub struct brunsli_internal_dec_VarintState {
     pub stage: brunsli_internal_dec_VarintState_Stage,
     pub value: usize,
     pub i: usize,
+}
+impl Default for brunsli_internal_dec_VarintState {
+    fn default() -> Self {
+        brunsli_internal_dec_VarintState {
+            stage: brunsli_internal_dec_VarintState_Stage_INIT,
+            value: 0_usize,
+            i: 0_usize,
+        }
+    }
 }
 pub type brunsli_internal_dec_JpegInternalsState_Stage = u32;
 pub const brunsli_internal_dec_JpegInternalsState_Stage_INIT:
@@ -3561,7 +3690,7 @@ pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_INTERMARKER_DATA:
 pub const brunsli_internal_dec_JpegInternalsState_Stage_DONE:
     brunsli_internal_dec_JpegInternalsState_Stage = 137;
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct brunsli_internal_dec_JpegInternalsState {
     pub stage: brunsli_internal_dec_JpegInternalsState_Stage,
     pub have_dri: bool,
@@ -3583,6 +3712,32 @@ pub struct brunsli_internal_dec_JpegInternalsState {
     pub last_num: i32,
     pub num_padding_bits: usize,
     pub intermarker_length: usize,
+}
+impl Default for brunsli_internal_dec_JpegInternalsState {
+    fn default() -> Self {
+        brunsli_internal_dec_JpegInternalsState {
+            stage: brunsli_internal_dec_JpegInternalsState_Stage_INIT,
+            have_dri: false,
+            num_scans: 0_usize,
+            dht_count: 0_usize,
+            br: <brunsli_BrunsliBitReader>::default(),
+            is_known_last_huffman_code: 0_usize,
+            terminal_huffman_code_count: 0_usize,
+            is_dc_table: false,
+            total_count: 0_usize,
+            space: 0_usize,
+            max_len: 0_usize,
+            max_count: 0_usize,
+            i: 0_usize,
+            p: <brunsli_PermutationCoder>::default(),
+            varint: <brunsli_internal_dec_VarintState>::default(),
+            j: 0_usize,
+            last_block_idx: 0_i32,
+            last_num: 0_i32,
+            num_padding_bits: 0_usize,
+            intermarker_length: 0_usize,
+        }
+    }
 }
 pub type brunsli_internal_dec_QuantDataState_Stage = u32;
 pub const brunsli_internal_dec_QuantDataState_Stage_INIT:
@@ -3608,7 +3763,7 @@ pub const brunsli_internal_dec_QuantDataState_Stage_READ_QUANT_IDX:
 pub const brunsli_internal_dec_QuantDataState_Stage_FINISH:
     brunsli_internal_dec_QuantDataState_Stage = 10;
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct brunsli_internal_dec_QuantDataState {
     pub stage: brunsli_internal_dec_QuantDataState_Stage,
     pub br: brunsli_BrunsliBitReader,
@@ -3619,6 +3774,21 @@ pub struct brunsli_internal_dec_QuantDataState {
     pub delta: i32,
     pub sign: i32,
     pub predictor: Vec<u8>,
+}
+impl Default for brunsli_internal_dec_QuantDataState {
+    fn default() -> Self {
+        brunsli_internal_dec_QuantDataState {
+            stage: brunsli_internal_dec_QuantDataState_Stage_INIT,
+            br: <brunsli_BrunsliBitReader>::default(),
+            i: 0_usize,
+            j: 0_usize,
+            data_precision: 0_u8,
+            vs: <brunsli_internal_dec_VarintState>::default(),
+            delta: 0_i32,
+            sign: 0_i32,
+            predictor: Default::default(),
+        }
+    }
 }
 pub type brunsli_internal_dec_HistogramDataState_Stage = u32;
 pub const brunsli_internal_dec_HistogramDataState_Stage_INIT:
@@ -3638,7 +3808,7 @@ pub const brunsli_internal_dec_HistogramDataState_Stage_SKIP_CONTENT:
 pub const brunsli_internal_dec_HistogramDataState_Stage_DONE:
     brunsli_internal_dec_HistogramDataState_Stage = 7;
 #[repr(C)]
-#[derive(Default)]
+#[derive()]
 pub struct brunsli_internal_dec_HistogramDataState {
     pub stage: brunsli_internal_dec_HistogramDataState_Stage,
     pub br: brunsli_BrunsliBitReader,
@@ -3649,9 +3819,7 @@ pub struct brunsli_internal_dec_HistogramDataState {
     pub arena: brunsli_Arena_brunsli_HuffmanCode_,
 }
 impl brunsli_internal_dec_HistogramDataState {
-    pub unsafe fn HistogramDataState_pmutbrunsli_internal_dec_HistogramDataState_rv(
-        _a0: *mut brunsli_internal_dec_HistogramDataState,
-    ) -> Self {
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_HistogramDataState) -> Self {
         let mut this = Self {
             stage: (*_a0).stage,
             br: (*_a0).br.clone(),
@@ -3659,14 +3827,11 @@ impl brunsli_internal_dec_HistogramDataState {
             entropy: (*_a0).entropy.take(),
             i: (*_a0).i,
             counts: std::mem::take(&mut (*_a0).counts),
-            arena:
-                brunsli_Arena_brunsli_HuffmanCode_::Arena_pmutbrunsli_Arena_brunsli_HuffmanCode__rv(
-                    { &mut (*_a0).arena },
-                ),
+            arena: brunsli_Arena_brunsli_HuffmanCode_::move_from({ &mut (*_a0).arena }),
         };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_HistogramDataState_rv(
+    pub unsafe fn move_assign(
         &mut self,
         _a0: *mut brunsli_internal_dec_HistogramDataState,
     ) -> *mut brunsli_internal_dec_HistogramDataState {
@@ -3678,13 +3843,26 @@ impl brunsli_internal_dec_HistogramDataState {
         self.counts = std::mem::take(&mut (*_a0).counts);
         (unsafe {
             let _arg0: *mut brunsli_Arena_brunsli_HuffmanCode_ = &mut (*_a0).arena;
-            brunsli_Arena_brunsli_HuffmanCode_ :: operator_assign_pmutbrunsli_Arena_brunsli_HuffmanCode__rv ( &mut self . arena   , _arg0 , )
+            brunsli_Arena_brunsli_HuffmanCode_::move_assign(&mut self.arena, _arg0)
         });
         return &mut (*(self as *mut brunsli_internal_dec_HistogramDataState));
     }
 }
+impl Default for brunsli_internal_dec_HistogramDataState {
+    fn default() -> Self {
+        brunsli_internal_dec_HistogramDataState {
+            stage: brunsli_internal_dec_HistogramDataState_Stage_INIT,
+            br: <brunsli_BrunsliBitReader>::default(),
+            max_run_length_prefix: 0_usize,
+            entropy: None,
+            i: 0_usize,
+            counts: Default::default(),
+            arena: <brunsli_Arena_brunsli_HuffmanCode_>::default(),
+        }
+    }
+}
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct brunsli_internal_dec_Buffer {
     pub data_len: usize,
     pub borrowed_len: usize,
@@ -3693,8 +3871,20 @@ pub struct brunsli_internal_dec_Buffer {
     pub external_pos: usize,
     pub external_len: usize,
 }
+impl Default for brunsli_internal_dec_Buffer {
+    fn default() -> Self {
+        brunsli_internal_dec_Buffer {
+            data_len: 0_usize,
+            borrowed_len: 0_usize,
+            data: Default::default(),
+            external_data: std::ptr::null(),
+            external_pos: 0_usize,
+            external_len: 0_usize,
+        }
+    }
+}
 #[repr(C)]
-#[derive(Default)]
+#[derive()]
 pub struct brunsli_internal_dec_InternalState {
     pub ac_dc: brunsli_internal_dec_AcDcState,
     pub section: brunsli_internal_dec_SectionState,
@@ -3722,13 +3912,40 @@ pub struct brunsli_internal_dec_InternalState {
     pub serialization: brunsli_internal_dec_SerializationState,
 }
 impl brunsli_internal_dec_InternalState {
-    pub unsafe fn InternalState_pmutbrunsli_internal_dec_InternalState_rv(
-        _a0: *mut brunsli_internal_dec_InternalState,
-    ) -> Self {
-        let mut this = Self { ac_dc : ( * _a0 ) . ac_dc  .clone() , section : ( * _a0 ) . section  , header : ( * _a0 ) . header  .clone() , fallback : ( * _a0 ) . fallback  .clone() , section_header : ( * _a0 ) . section_header  , metadata : ( * _a0 ) . metadata  , internals : ( * _a0 ) . internals  .clone() , quant : ( * _a0 ) . quant  .clone() , histogram : brunsli_internal_dec_HistogramDataState :: HistogramDataState_pmutbrunsli_internal_dec_HistogramDataState_rv ( { & mut ( * _a0 ) . histogram   } , ) , context_map_ : std::mem::take(&mut ( * _a0 ) . context_map_  ) , entropy_codes_ : std::mem::take(&mut ( * _a0 ) . entropy_codes_  ) , block_state_ : std::mem::take(&mut ( * _a0 ) . block_state_  ) , is_meta_warm : ( * _a0 ) . is_meta_warm  , shallow_histograms : ( * _a0 ) . shallow_histograms  , num_contexts : ( * _a0 ) . num_contexts  , num_histograms : ( * _a0 ) . num_histograms  , subdecoders_initialized : ( * _a0 ) . subdecoders_initialized  , ans_decoder : ( * _a0 ) . ans_decoder  .clone() , bit_reader : ( * _a0 ) . bit_reader  .clone() , arith_decoder : ( * _a0 ) . arith_decoder  , result : ( * _a0 ) . result  , last_stage : ( * _a0 ) . last_stage  , buffer : ( * _a0 ) . buffer  .clone() , serialization : brunsli_internal_dec_SerializationState :: SerializationState_pmutbrunsli_internal_dec_SerializationState_rv ( { & mut ( * _a0 ) . serialization   } , ) , } ;
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_InternalState) -> Self {
+        let mut this = Self {
+            ac_dc: (*_a0).ac_dc.clone(),
+            section: (*_a0).section,
+            header: (*_a0).header.clone(),
+            fallback: (*_a0).fallback.clone(),
+            section_header: (*_a0).section_header,
+            metadata: (*_a0).metadata,
+            internals: (*_a0).internals.clone(),
+            quant: (*_a0).quant.clone(),
+            histogram: brunsli_internal_dec_HistogramDataState::move_from({
+                &mut (*_a0).histogram
+            }),
+            context_map_: std::mem::take(&mut (*_a0).context_map_),
+            entropy_codes_: std::mem::take(&mut (*_a0).entropy_codes_),
+            block_state_: std::mem::take(&mut (*_a0).block_state_),
+            is_meta_warm: (*_a0).is_meta_warm,
+            shallow_histograms: (*_a0).shallow_histograms,
+            num_contexts: (*_a0).num_contexts,
+            num_histograms: (*_a0).num_histograms,
+            subdecoders_initialized: (*_a0).subdecoders_initialized,
+            ans_decoder: (*_a0).ans_decoder.clone(),
+            bit_reader: (*_a0).bit_reader.clone(),
+            arith_decoder: (*_a0).arith_decoder,
+            result: (*_a0).result,
+            last_stage: (*_a0).last_stage,
+            buffer: (*_a0).buffer.clone(),
+            serialization: brunsli_internal_dec_SerializationState::move_from({
+                &mut (*_a0).serialization
+            }),
+        };
         this
     }
-    pub unsafe fn operator_assign_pmutbrunsli_internal_dec_InternalState_rv(
+    pub unsafe fn move_assign(
         &mut self,
         _a0: *mut brunsli_internal_dec_InternalState,
     ) -> *mut brunsli_internal_dec_InternalState {
@@ -3742,7 +3959,7 @@ impl brunsli_internal_dec_InternalState {
         self.quant = ((*_a0).quant).clone();
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_HistogramDataState = &mut (*_a0).histogram;
-            brunsli_internal_dec_HistogramDataState :: operator_assign_pmutbrunsli_internal_dec_HistogramDataState_rv ( &mut self . histogram   , _arg0 , )
+            brunsli_internal_dec_HistogramDataState::move_assign(&mut self.histogram, _arg0)
         });
         self.context_map_ = std::mem::take(&mut (*_a0).context_map_);
         self.entropy_codes_ = std::mem::take(&mut (*_a0).entropy_codes_);
@@ -3760,9 +3977,39 @@ impl brunsli_internal_dec_InternalState {
         self.buffer = ((*_a0).buffer).clone();
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_SerializationState = &mut (*_a0).serialization;
-            brunsli_internal_dec_SerializationState :: operator_assign_pmutbrunsli_internal_dec_SerializationState_rv ( &mut self . serialization   , _arg0 , )
+            brunsli_internal_dec_SerializationState::move_assign(&mut self.serialization, _arg0)
         });
         return &mut (*(self as *mut brunsli_internal_dec_InternalState));
+    }
+}
+impl Default for brunsli_internal_dec_InternalState {
+    fn default() -> Self {
+        brunsli_internal_dec_InternalState {
+            ac_dc: <brunsli_internal_dec_AcDcState>::default(),
+            section: <brunsli_internal_dec_SectionState>::default(),
+            header: <brunsli_internal_dec_HeaderState>::default(),
+            fallback: <brunsli_internal_dec_FallbackState>::default(),
+            section_header: <brunsli_internal_dec_SectionHeaderState>::default(),
+            metadata: <brunsli_internal_dec_MetadataState>::default(),
+            internals: <brunsli_internal_dec_JpegInternalsState>::default(),
+            quant: <brunsli_internal_dec_QuantDataState>::default(),
+            histogram: <brunsli_internal_dec_HistogramDataState>::default(),
+            context_map_: Default::default(),
+            entropy_codes_: Default::default(),
+            block_state_: Vec::new(),
+            is_meta_warm: false,
+            shallow_histograms: false,
+            num_contexts: 0_usize,
+            num_histograms: 0_usize,
+            subdecoders_initialized: false,
+            ans_decoder: <brunsli_ANSDecoder>::default(),
+            bit_reader: <brunsli_BitSource>::default(),
+            arith_decoder: <brunsli_BinaryArithmeticDecoder>::default(),
+            result: brunsli_BrunsliStatus_BRUNSLI_OK,
+            last_stage: brunsli_internal_dec_Stage_ERROR,
+            buffer: <brunsli_internal_dec_Buffer>::default(),
+            serialization: <brunsli_internal_dec_SerializationState>::default(),
+        }
     }
 }
 pub static mut kNumDirectCodes_135: std::cell::LazyCell<i32> =
@@ -4220,16 +4467,17 @@ pub unsafe fn ProcessMetaData_149(
                     {
                         return false;
                     }
-                    (*dest).push(
-                        core::slice::from_raw_parts(
+                    {
+                        let __init = core::slice::from_raw_parts(
                             head.as_mut_ptr(),
                             (head.as_mut_ptr().offset((3) as isize)).offset_from(head.as_mut_ptr())
                                 as usize,
                         )
                         .iter()
                         .map(|x| u8::try_from(x.clone()).ok().unwrap())
-                        .collect(),
-                    );
+                        .collect();
+                        (*dest).push(__init)
+                    };
                     (*state).multibyte_sink = ((*dest).last_mut().unwrap());
                     (*state).stage = (if (((*state).remaining_multibyte_length) > (0_usize)) {
                         brunsli_internal_dec_MetadataState_Stage_READ_MULTIBYTE
@@ -4294,9 +4542,10 @@ pub unsafe fn DecodeHuffmanCode_150(
                     }
                     (*js).is_known_last_huffman_code =
                         ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) as usize);
-                    (*jpg)
-                        .huffman_code
-                        .push(<brunsli_JPEGHuffmanCode>::default());
+                    {
+                        let __init = <brunsli_JPEGHuffmanCode>::default();
+                        (*jpg).huffman_code.push(__init)
+                    };
                     (*js).stage = brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_SIMPLE;
                     continue 'loop_;
                 }
@@ -4654,7 +4903,8 @@ pub unsafe fn DecodeScanInfo_151(
  } let mut block_idx : i32 = ( ( ( ( ( * js ) . last_block_idx  ) + ( ( ( ( * js ) . varint  . value  as i32 ) ) ) ) ) + ( 1 ) ) ;
   ;
  ;
- ( * si  ) . reset_points  . push   ( block_idx as i32  )  ;
+ {let __init = block_idx ;
+    ( * si  ) . reset_points  .push(__init)} ;
  ( * js ) . last_block_idx   = block_idx  ;
  if ( ( ( * js ) . last_block_idx  ) > ( ( ( ( 1 ) << ( 30 ) ) ) ) ) { return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN  ;
  } ( * js ) . stage   = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION  ;
@@ -6641,9 +6891,10 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                     })(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
                 });
             }
-            (*jpg)
-                .padding_bits
-                .push((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) as i32);
+            {
+                let __init = ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) as i32);
+                (*jpg).padding_bits.push(__init)
+            };
             (*js).i.prefix_inc();
         }
         (unsafe {
@@ -6696,7 +6947,10 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                     {
                         return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
                     }
-                    (*jpg).inter_marker_data.push(Vec::new());
+                    {
+                        let __init = Vec::new();
+                        (*jpg).inter_marker_data.push(__init)
+                    };
                     (*js).stage =
                         brunsli_internal_dec_JpegInternalsState_Stage_READ_INTERMARKER_DATA;
                     continue 'loop_;
@@ -7386,7 +7640,7 @@ pub unsafe fn DecodeDCDataSection_190(
         })
     } as usize);
     let mut is_last_chunk: bool = ((chunk_len) == (limit));
-    let mut in_: brunsli_WordSource = brunsli_WordSource::brunsli_WordSource(
+    let mut in_: brunsli_WordSource = brunsli_WordSource::new(
         { (*state).data.offset(((*state).pos) as isize) },
         { chunk_len },
         { is_last_chunk },
@@ -7459,7 +7713,7 @@ pub unsafe fn DecodeACDataSection_191(
         })
     } as usize);
     let mut is_last_chunk: bool = ((chunk_len) == (limit));
-    let mut in_: brunsli_WordSource = brunsli_WordSource::brunsli_WordSource(
+    let mut in_: brunsli_WordSource = brunsli_WordSource::new(
         { (*state).data.offset(((*state).pos) as isize) },
         { chunk_len },
         { is_last_chunk },
@@ -8323,8 +8577,7 @@ pub unsafe fn BrunsliDecodeJpeg_204(
     if !(!(data).is_null()) {
         return brunsli_BrunsliStatus_BRUNSLI_INVALID_PARAM;
     }
-    let mut state: brunsli_internal_dec_State =
-        brunsli_internal_dec_State::brunsli_internal_dec_State();
+    let mut state: brunsli_internal_dec_State = brunsli_internal_dec_State::new();
     state.data = data;
     state.len = len;
     return (unsafe { ProcessJpeg_203((&mut state as *mut brunsli_internal_dec_State), jpg) });
@@ -8333,15 +8586,14 @@ pub unsafe fn BrunsliEstimateDecoderPeakMemoryUsage_205(mut data: *const u8, len
     if !(!(data).is_null()) {
         return (brunsli_BrunsliStatus_BRUNSLI_INVALID_PARAM as usize);
     }
-    let mut state: brunsli_internal_dec_State =
-        brunsli_internal_dec_State::brunsli_internal_dec_State();
+    let mut state: brunsli_internal_dec_State = brunsli_internal_dec_State::new();
     state.data = data;
     state.len = len;
     state.skip_tags = !((1_u32)
         << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHistogramDataTag_35)) as i32));
     let s: *mut brunsli_internal_dec_InternalState = &mut (*state.internal.as_deref_mut().unwrap());
     (*s).shallow_histograms = true;
-    let mut jpg: brunsli_JPEGData = brunsli_JPEGData::brunsli_JPEGData();
+    let mut jpg: brunsli_JPEGData = brunsli_JPEGData::new();
     let mut status: brunsli_BrunsliStatus = (unsafe {
         ProcessJpeg_203(
             (&mut state as *mut brunsli_internal_dec_State),
@@ -9552,7 +9804,7 @@ pub unsafe fn BuildHuffmanTable_218(
     return (total_size as u32);
 }
 impl brunsli_internal_dec_OutputChunk {
-    pub unsafe fn brunsli_internal_dec_OutputChunk4(bytes: *const Vec<u8>) -> Self {
+    pub unsafe fn new_4(bytes: *const Vec<u8>) -> Self {
         let mut this = Self {
             next: std::ptr::null(),
             len: (*bytes).len(),
@@ -9582,13 +9834,10 @@ pub unsafe fn BitWriterInit_228(
     (*bw).output = output_queue;
     (unsafe {
         let mut _arg0: brunsli_internal_dec_OutputChunk =
-            brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
+            brunsli_internal_dec_OutputChunk::new_2({
                 Some((*std::cell::LazyCell::force_mut(&mut *&raw mut kBitWriterChunkSize_225)))
             });
-        brunsli_internal_dec_OutputChunk::operator_assign_pmutbrunsli_internal_dec_OutputChunk_rv(
-            &mut (*bw).chunk,
-            &mut _arg0,
-        )
+        brunsli_internal_dec_OutputChunk::move_assign(&mut (*bw).chunk, &mut _arg0)
     });
     (*bw).pos = 0_usize;
     (*bw).put_buffer = 0_u64;
@@ -9599,21 +9848,15 @@ pub unsafe fn BitWriterInit_228(
 pub unsafe fn SwapBuffer_229(mut bw: *mut brunsli_internal_dec_BitWriter) {
     (*bw).chunk.len = (*bw).pos;
     {
-        let __arg =
-            brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk_rv(
-                { &mut (*bw).chunk },
-            );
-        (*(*bw).output).push(__arg)
+        let __init = brunsli_internal_dec_OutputChunk::move_from({ &mut (*bw).chunk });
+        (*(*bw).output).push(__init)
     };
     (unsafe {
         let mut _arg0: brunsli_internal_dec_OutputChunk =
-            brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
+            brunsli_internal_dec_OutputChunk::new_2({
                 Some((*std::cell::LazyCell::force_mut(&mut *&raw mut kBitWriterChunkSize_225)))
             });
-        brunsli_internal_dec_OutputChunk::operator_assign_pmutbrunsli_internal_dec_OutputChunk_rv(
-            &mut (*bw).chunk,
-            &mut _arg0,
-        )
+        brunsli_internal_dec_OutputChunk::move_assign(&mut (*bw).chunk, &mut _arg0)
     });
     (*bw).data = (*(*bw).chunk.buffer.as_deref_mut().unwrap()).as_mut_ptr();
     (*bw).pos = 0_usize;
@@ -9764,22 +10007,13 @@ pub unsafe fn BitWriterFinish_236(mut bw: *mut brunsli_internal_dec_BitWriter) {
     }
     (*bw).chunk.len = (*bw).pos;
     {
-        let __arg =
-            brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk_rv(
-                { &mut (*bw).chunk },
-            );
-        (*(*bw).output).push(__arg)
+        let __init = brunsli_internal_dec_OutputChunk::move_from({ &mut (*bw).chunk });
+        (*(*bw).output).push(__init)
     };
     (unsafe {
         let mut _arg0: brunsli_internal_dec_OutputChunk =
-            brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk1(
-                { std::ptr::null() },
-                { 0_usize },
-            );
-        brunsli_internal_dec_OutputChunk::operator_assign_pmutbrunsli_internal_dec_OutputChunk_rv(
-            &mut (*bw).chunk,
-            &mut _arg0,
-        )
+            brunsli_internal_dec_OutputChunk::new_1({ std::ptr::null() }, { 0_usize });
+        brunsli_internal_dec_OutputChunk::move_assign(&mut (*bw).chunk, &mut _arg0)
     });
     (*bw).data = std::ptr::null_mut();
     (*bw).pos = 0_usize;
@@ -9950,25 +10184,26 @@ pub unsafe fn BuildHuffmanCodeTable_240(
     return true;
 }
 pub unsafe fn EncodeSOI_241(mut state: *mut brunsli_internal_dec_SerializationState) -> bool {
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({
+    (*state)
+        .output_queue
+        .push(brunsli_internal_dec_OutputChunk::new_3({
             vec![255_u8, 216_u8]
-        }),
-    );
+        }));
     return true;
 }
 pub unsafe fn EncodeEOI_242(
     jpg: *const brunsli_JPEGData,
     mut state: *mut brunsli_internal_dec_SerializationState,
 ) -> bool {
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({
+    (*state)
+        .output_queue
+        .push(brunsli_internal_dec_OutputChunk::new_3({
             vec![255_u8, 217_u8]
-        }),
-    );
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4({ &(*jpg).tail_data }),
-    );
+        }));
+    {
+        let __init = brunsli_internal_dec_OutputChunk::new_4({ &(*jpg).tail_data });
+        (*state).output_queue.push(__init)
+    };
     return true;
 }
 pub unsafe fn EncodeSOF_243(
@@ -9981,11 +10216,11 @@ pub unsafe fn EncodeSOF_243(
     }
     let n_comps: usize = (*jpg).components.len();
     let marker_len: usize = (8_usize).wrapping_add((3_usize).wrapping_mul(n_comps));
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
-            Some((marker_len).wrapping_add(2_usize))
-        }),
-    );
+    {
+        let __init =
+            brunsli_internal_dec_OutputChunk::new_2({ Some((marker_len).wrapping_add(2_usize)) });
+        (*state).output_queue.push(__init)
+    };
     let mut data: *mut u8 = (*(*((*state).output_queue.last_mut().unwrap()))
         .buffer
         .as_deref_mut()
@@ -10025,11 +10260,11 @@ pub unsafe fn EncodeSOS_244(
 ) -> bool {
     let n_scans: usize = (*scan_info).num_components;
     let marker_len: usize = (6_usize).wrapping_add((2_usize).wrapping_mul(n_scans));
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
-            Some((marker_len).wrapping_add(2_usize))
-        }),
-    );
+    {
+        let __init =
+            brunsli_internal_dec_OutputChunk::new_2({ Some((marker_len).wrapping_add(2_usize)) });
+        (*state).output_queue.push(__init)
+    };
     let mut data: *mut u8 = (*(*((*state).output_queue.last_mut().unwrap()))
         .buffer
         .as_deref_mut()
@@ -10081,11 +10316,11 @@ pub unsafe fn EncodeDHT_245(
         }
         i.prefix_inc();
     }
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
-            Some((marker_len).wrapping_add(2_usize))
-        }),
-    );
+    {
+        let __init =
+            brunsli_internal_dec_OutputChunk::new_2({ Some((marker_len).wrapping_add(2_usize)) });
+        (*state).output_queue.push(__init)
+    };
     let mut data: *mut u8 = (*(*((*state).output_queue.last_mut().unwrap()))
         .buffer
         .as_deref_mut()
@@ -10170,11 +10405,11 @@ pub unsafe fn EncodeDQT_246(
         }
         i.prefix_inc();
     }
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk2({
-            Some((((marker_len) + (2)) as usize))
-        }),
-    );
+    {
+        let __init =
+            brunsli_internal_dec_OutputChunk::new_2({ Some((((marker_len) + (2)) as usize)) });
+        (*state).output_queue.push(__init)
+    };
     let mut data: *mut u8 = (*(*((*state).output_queue.last_mut().unwrap()))
         .buffer
         .as_deref_mut()
@@ -10219,7 +10454,7 @@ pub unsafe fn EncodeDRI_247(
 ) -> bool {
     (*state).seen_dri_marker = true;
     let mut dri_marker: brunsli_internal_dec_OutputChunk =
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({
+        brunsli_internal_dec_OutputChunk::new_3({
             vec![
                 255_u8,
                 221_u8,
@@ -10229,22 +10464,22 @@ pub unsafe fn EncodeDRI_247(
                 ((((*jpg).restart_interval) & (255)) as u8),
             ]
         });
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::OutputChunk_pmutbrunsli_internal_dec_OutputChunk_rv({
+    (*state)
+        .output_queue
+        .push(brunsli_internal_dec_OutputChunk::move_from({
             &mut dri_marker
-        }),
-    );
+        }));
     return true;
 }
 pub unsafe fn EncodeRestart_248(
     mut marker: u8,
     mut state: *mut brunsli_internal_dec_SerializationState,
 ) -> bool {
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({
+    (*state)
+        .output_queue
+        .push(brunsli_internal_dec_OutputChunk::new_3({
             vec![255_u8, marker]
-        }),
-    );
+        }));
     return true;
 }
 pub unsafe fn EncodeAPP_249(
@@ -10257,14 +10492,13 @@ pub unsafe fn EncodeAPP_249(
     if ((app_index) >= ((*jpg).app_data.len())) {
         return false;
     }
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({ vec![255_u8] }),
-    );
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4({
-            &(&(*jpg)).app_data[(app_index)]
-        }),
-    );
+    (*state)
+        .output_queue
+        .push(brunsli_internal_dec_OutputChunk::new_3({ vec![255_u8] }));
+    {
+        let __init = brunsli_internal_dec_OutputChunk::new_4({ &(&(*jpg)).app_data[(app_index)] });
+        (*state).output_queue.push(__init)
+    };
     return true;
 }
 pub unsafe fn EncodeCOM_250(
@@ -10275,14 +10509,13 @@ pub unsafe fn EncodeCOM_250(
     if ((com_index) >= ((*jpg).com_data.len())) {
         return false;
     }
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk3({ vec![255_u8] }),
-    );
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4({
-            &(&(*jpg)).com_data[(com_index)]
-        }),
-    );
+    (*state)
+        .output_queue
+        .push(brunsli_internal_dec_OutputChunk::new_3({ vec![255_u8] }));
+    {
+        let __init = brunsli_internal_dec_OutputChunk::new_4({ &(&(*jpg)).com_data[(com_index)] });
+        (*state).output_queue.push(__init)
+    };
     return true;
 }
 pub unsafe fn EncodeInterMarkerData_251(
@@ -10293,11 +10526,11 @@ pub unsafe fn EncodeInterMarkerData_251(
     if ((index) >= ((*jpg).inter_marker_data.len())) {
         return false;
     }
-    (*state).output_queue.push(
-        brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk4({
-            &(&(*jpg)).inter_marker_data[(index)]
-        }),
-    );
+    {
+        let __init =
+            brunsli_internal_dec_OutputChunk::new_4({ &(&(*jpg)).inter_marker_data[(index)] });
+        (*state).output_queue.push(__init)
+    };
     return true;
 }
 pub unsafe fn EncodeDCTBlockSequential_252(
@@ -11918,8 +12151,7 @@ pub unsafe fn PushOutput_260(
     }
 }
 pub unsafe fn WriteJpeg_261(jpg: *const brunsli_JPEGData, mut out: brunsli_JPEGOutput) -> bool {
-    let mut state: brunsli_internal_dec_State =
-        brunsli_internal_dec_State::brunsli_internal_dec_State();
+    let mut state: brunsli_internal_dec_State = brunsli_internal_dec_State::new();
     state.stage = brunsli_internal_dec_Stage_DONE;
     let mut buffer: Vec<u8> = (0..(16384_usize) as usize)
         .map(|_| <u8>::default())
@@ -12011,12 +12243,13 @@ pub unsafe fn SerializeJpeg_206(
                             (*ss).stage = brunsli_internal_dec_SerializationState_Stage_ERROR;
                             break;
                         }
-                        (*ss).output_queue.push(
-                            brunsli_internal_dec_OutputChunk::brunsli_internal_dec_OutputChunk1(
-                                { (*jpg).original_jpg },
-                                { (*jpg).original_jpg_size },
-                            ),
-                        );
+                        {
+                            let __init =
+                                brunsli_internal_dec_OutputChunk::new_1({ (*jpg).original_jpg }, {
+                                    (*jpg).original_jpg_size
+                                });
+                            (*ss).output_queue.push(__init)
+                        };
                         (*ss).stage = brunsli_internal_dec_SerializationState_Stage_DONE;
                         break;
                     }
@@ -12176,7 +12409,7 @@ pub unsafe fn SerializeJpeg_206(
     panic!("ub: non-void function does not return a value")
 }
 impl brunsli_internal_dec_State {
-    pub unsafe fn brunsli_internal_dec_State() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             stage: brunsli_internal_dec_Stage_SIGNATURE,
             tags_met: 0_u32,
@@ -12352,7 +12585,7 @@ pub unsafe fn ProcessFile_267(
     }
     let mut output: Vec<libc::c_char> = vec![0];
     {
-        let mut jpg: brunsli_JPEGData = brunsli_JPEGData::brunsli_JPEGData();
+        let mut jpg: brunsli_JPEGData = brunsli_JPEGData::new();
         let mut input_data: *const u8 = (input.as_ptr() as *const u8);
         let mut status: brunsli_BrunsliStatus = (unsafe {
             BrunsliDecodeJpeg_204(
@@ -12373,11 +12606,10 @@ pub unsafe fn ProcessFile_267(
             printf(c"Failed to parse Brunsli input.\n".as_ptr() as *const i8);
             return false;
         }
-        let mut writer: brunsli_JPEGOutput =
-            brunsli_JPEGOutput::brunsli_JPEGOutput({ Some(StringWriter_262) }, {
-                ((&mut output as *mut Vec<libc::c_char>) as *mut Vec<libc::c_char>
-                    as *mut ::libc::c_void)
-            });
+        let mut writer: brunsli_JPEGOutput = brunsli_JPEGOutput::new({ Some(StringWriter_262) }, {
+            ((&mut output as *mut Vec<libc::c_char>) as *mut Vec<libc::c_char>
+                as *mut ::libc::c_void)
+        });
         ok = (unsafe { WriteJpeg_261(&jpg, writer.clone()) });
         if !(ok) {
             printf(c"Failed to serialize JPEG data.\n".as_ptr() as *const i8);

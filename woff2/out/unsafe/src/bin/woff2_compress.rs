@@ -223,7 +223,7 @@ pub struct woff2_Buffer {
     offset_: usize,
 }
 impl woff2_Buffer {
-    pub unsafe fn woff2_Buffer(mut data: *const u8, mut len: usize) -> Self {
+    pub unsafe fn new(mut data: *const u8, mut len: usize) -> Self {
         let mut this = Self {
             buffer_: data,
             length_: len,
@@ -937,7 +937,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
     return true;
 }
 pub unsafe fn ReadFont_36(mut data: *const u8, mut len: usize, mut font: *mut woff2_Font) -> bool {
-    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
+    let mut file: woff2_Buffer = woff2_Buffer::new({ data }, { len });
     if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut (*font).flavor as *mut u32)) }) {
         return false;
     }
@@ -951,7 +951,7 @@ pub unsafe fn ReadFontCollection_37(
     mut len: usize,
     mut font_collection: *mut woff2_FontCollection,
 ) -> bool {
-    let mut file: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
+    let mut file: woff2_Buffer = woff2_Buffer::new({ data }, { len });
     if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut (*font_collection).flavor as *mut u32)) })
     {
         return false;
@@ -1272,7 +1272,7 @@ pub unsafe fn GetGlyphData_47(
     }
     let mut index_fmt: i32 = (unsafe { IndexFormat_46(font) });
     let mut loca_buf: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer({ (*loca_table).data }, { ((*loca_table).length as usize) });
+        woff2_Buffer::new({ (*loca_table).data }, { ((*loca_table).length as usize) });
     if ((index_fmt) == (0)) {
         let mut offset1: u16 = 0_u16;
         let mut offset2: u16 = 0_u16;
@@ -1340,7 +1340,7 @@ pub struct woff2_Glyph {
     pub have_instructions: bool,
 }
 impl woff2_Glyph {
-    pub unsafe fn woff2_Glyph() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             x_min: 0_i16,
             x_max: 0_i16,
@@ -1359,7 +1359,7 @@ impl woff2_Glyph {
 }
 impl Default for woff2_Glyph {
     fn default() -> Self {
-        unsafe { woff2_Glyph::woff2_Glyph() }
+        unsafe { woff2_Glyph::new() }
     }
 }
 pub static mut kFLAG_ONCURVE_49: std::cell::LazyCell<i32> =
@@ -1453,7 +1453,7 @@ pub unsafe fn ReadGlyph_63(
     mut len: usize,
     mut glyph: *mut woff2_Glyph,
 ) -> bool {
-    let mut buffer: woff2_Buffer = woff2_Buffer::woff2_Buffer({ data }, { len });
+    let mut buffer: woff2_Buffer = woff2_Buffer::new({ data }, { len });
     let mut num_contours: i16 = 0_i16;
     if !(unsafe { woff2_Buffer::ReadS16(&mut buffer, (&mut num_contours as *mut i16)) }) {
         return false;
@@ -1968,7 +1968,7 @@ pub unsafe fn WriteNormalizedLoca_73(
                 loca_dst,
             )
         });
-        let mut glyph: woff2_Glyph = woff2_Glyph::woff2_Glyph();
+        let mut glyph: woff2_Glyph = woff2_Glyph::new();
         let mut glyph_data: *const u8 = std::ptr::null();
         let mut glyph_size: usize = 0_usize;
         if (!(unsafe {
@@ -2365,7 +2365,7 @@ pub struct woff2_GlyfEncoder {
     n_glyphs_: i32,
 }
 impl woff2_GlyfEncoder {
-    pub unsafe fn woff2_GlyfEncoder(mut num_glyphs: i32) -> Self {
+    pub unsafe fn new(mut num_glyphs: i32) -> Self {
         let mut this = Self {
             n_contour_stream_: Vec::new(),
             n_points_stream_: Vec::new(),
@@ -2731,10 +2731,10 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
         .or_default()
         .as_mut()) as *mut woff2_Font_Table);
     let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font)) });
-    let mut encoder: woff2_GlyfEncoder = woff2_GlyfEncoder::woff2_GlyfEncoder({ num_glyphs });
+    let mut encoder: woff2_GlyfEncoder = woff2_GlyfEncoder::new({ num_glyphs });
     let mut i: i32 = 0;
     'loop_: while ((i) < (num_glyphs)) {
-        let mut glyph: woff2_Glyph = woff2_Glyph::woff2_Glyph();
+        let mut glyph: woff2_Glyph = woff2_Glyph::new();
         let mut glyph_data: *const u8 = std::ptr::null();
         let mut glyph_size: usize = 0_usize;
         if (!(unsafe {
@@ -2809,7 +2809,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
         return false;
     }
     let mut hhea_buf: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer({ (*hhea_table).data }, { ((*hhea_table).length as usize) });
+        woff2_Buffer::new({ (*hhea_table).data }, { ((*hhea_table).length as usize) });
     let mut num_hmetrics: u16 = 0_u16;
     if (!(unsafe { woff2_Buffer::Skip(&mut hhea_buf, 34_usize) }))
         || (!(unsafe { woff2_Buffer::ReadU16(&mut hhea_buf, (&mut num_hmetrics as *mut u16)) }))
@@ -2826,10 +2826,10 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     let mut remove_proportional_lsb: bool = true;
     let mut remove_monospace_lsb: bool = (((num_glyphs) - (num_hmetrics as i32)) > (0));
     let mut hmtx_buf: woff2_Buffer =
-        woff2_Buffer::woff2_Buffer({ (*hmtx_table).data }, { ((*hmtx_table).length as usize) });
+        woff2_Buffer::new({ (*hmtx_table).data }, { ((*hmtx_table).length as usize) });
     let mut i: i32 = 0;
     'loop_: while ((i) < (num_glyphs)) {
-        let mut glyph: woff2_Glyph = woff2_Glyph::woff2_Glyph();
+        let mut glyph: woff2_Glyph = woff2_Glyph::new();
         let mut glyph_data: *const u8 = std::ptr::null();
         let mut glyph_size: usize = 0_usize;
         if (!(unsafe {
@@ -2946,7 +2946,7 @@ pub struct woff2_WOFF2Params {
     pub allow_transforms: bool,
 }
 impl woff2_WOFF2Params {
-    pub unsafe fn woff2_WOFF2Params() -> Self {
+    pub unsafe fn new() -> Self {
         let mut this = Self {
             extended_metadata: {
                 let s = c"".as_ptr();
@@ -2961,7 +2961,7 @@ impl woff2_WOFF2Params {
 }
 impl Default for woff2_WOFF2Params {
     fn default() -> Self {
-        unsafe { woff2_WOFF2Params::woff2_WOFF2Params() }
+        unsafe { woff2_WOFF2Params::new() }
     }
 }
 pub static mut kWoff2HeaderSize_92: std::cell::LazyCell<usize> =
@@ -3220,7 +3220,7 @@ pub unsafe fn ConvertTTFToWOFF2_108(
     mut result: *mut u8,
     mut result_length: *mut usize,
 ) -> bool {
-    let mut params: woff2_WOFF2Params = woff2_WOFF2Params::woff2_WOFF2Params();
+    let mut params: woff2_WOFF2Params = woff2_WOFF2Params::new();
     return (unsafe {
         let _length: usize = length;
         let _result_length: *mut usize = result_length;
@@ -3715,7 +3715,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         .collect();
     let mut output_data: *mut u8 =
         ((&mut output[(0_usize)] as *mut libc::c_char) as *mut libc::c_char as *mut u8);
-    let mut params: woff2_WOFF2Params = woff2_WOFF2Params::woff2_WOFF2Params();
+    let mut params: woff2_WOFF2Params = woff2_WOFF2Params::new();
     if !(unsafe {
         ConvertTTFToWOFF2_109(
             input_data,
