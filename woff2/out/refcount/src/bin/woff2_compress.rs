@@ -938,13 +938,10 @@ pub fn StoreBytes_32(data: Ptr<u8>, len: usize, offset: Ptr<usize>, dst: Ptr<u8>
     let offset: Value<Ptr<usize>> = Rc::new(RefCell::new(offset));
     let dst: Value<Ptr<u8>> = Rc::new(RefCell::new(dst));
     {
-        (((*dst.borrow()).offset(((*offset.borrow()).read()) as isize)) as Ptr<u8>)
+        ((*dst.borrow()).offset(((*offset.borrow()).read()) as isize))
             .to_any()
-            .memcpy(
-                &((*data.borrow()).clone() as Ptr<u8>).to_any(),
-                (*len.borrow()) as usize,
-            );
-        (((*dst.borrow()).offset(((*offset.borrow()).read()) as isize)) as Ptr<u8>).to_any()
+            .memcpy(&(*data.borrow()).to_any(), (*len.borrow()) as usize);
+        ((*dst.borrow()).offset(((*offset.borrow()).read()) as isize)).to_any()
     };
     {
         let rhs_0 = ((*offset.borrow()).read()).wrapping_add((*len.borrow()));
@@ -1450,15 +1447,13 @@ pub fn WriteTable_43(
             return false;
         }
         {
-            ((*dst.borrow()).offset((*(*table.upgrade().deref()).offset.borrow()) as isize)
-                as Ptr<u8>)
+            ((*dst.borrow()).offset((*(*table.upgrade().deref()).offset.borrow()) as isize))
                 .to_any()
                 .memcpy(
-                    &((*(*table.upgrade().deref()).data.borrow()).clone() as Ptr<u8>).to_any(),
+                    &(*(*table.upgrade().deref()).data.borrow()).to_any(),
                     ((*(*table.upgrade().deref()).length.borrow()) as usize) as usize,
                 );
-            ((*dst.borrow()).offset((*(*table.upgrade().deref()).offset.borrow()) as isize)
-                as Ptr<u8>)
+            ((*dst.borrow()).offset((*(*table.upgrade().deref()).offset.borrow()) as isize))
                 .to_any()
         };
         let padding_size: Value<usize> = Rc::new(RefCell::new(
@@ -1483,15 +1478,13 @@ pub fn WriteTable_43(
         {
             ((*dst.borrow())
                 .offset((*(*table.upgrade().deref()).offset.borrow()) as isize)
-                .offset((*(*table.upgrade().deref()).length.borrow()) as isize)
-                as Ptr<u8>)
-                .to_any()
-                .memset((0) as u8, (*padding_size.borrow()) as usize);
+                .offset((*(*table.upgrade().deref()).length.borrow()) as isize))
+            .to_any()
+            .memset((0) as u8, (*padding_size.borrow()) as usize);
             ((*dst.borrow())
                 .offset((*(*table.upgrade().deref()).offset.borrow()) as isize)
-                .offset((*(*table.upgrade().deref()).length.borrow()) as isize)
-                as Ptr<u8>)
-                .to_any()
+                .offset((*(*table.upgrade().deref()).length.borrow()) as isize))
+            .to_any()
         };
     }
     return true;
@@ -3120,11 +3113,11 @@ pub fn MakeEditableBuffer_74(font: Ptr<woff2_Font>, tableTag: i32) -> bool {
         (((*(*table.borrow()).upgrade().deref()).buffer.as_pointer() as Ptr<u8>).offset(0_usize)),
     ));
     {
-        ((*buf.borrow()).clone() as Ptr<u8>).to_any().memcpy(
-            &((*(*(*table.borrow()).upgrade().deref()).data.borrow()).clone() as Ptr<u8>).to_any(),
+        (*buf.borrow()).to_any().memcpy(
+            &(*(*(*table.borrow()).upgrade().deref()).data.borrow()).to_any(),
             ((*(*(*table.borrow()).upgrade().deref()).length.borrow()) as usize) as usize,
         );
-        ((*buf.borrow()).clone() as Ptr<u8>).to_any()
+        (*buf.borrow()).to_any()
     };
     if ((({
         let _lhs = ((*sz.borrow()) as u32);
@@ -3134,19 +3127,17 @@ pub fn MakeEditableBuffer_74(font: Ptr<woff2_Font>, tableTag: i32) -> bool {
     {
         {
             ((*buf.borrow())
-                .offset((*(*(*table.borrow()).upgrade().deref()).length.borrow()) as isize)
-                as Ptr<u8>)
-                .to_any()
-                .memset(
-                    (0) as u8,
-                    ((((*sz.borrow()) as u32)
-                        .wrapping_sub((*(*(*table.borrow()).upgrade().deref()).length.borrow())))
-                        as usize) as usize,
-                );
+                .offset((*(*(*table.borrow()).upgrade().deref()).length.borrow()) as isize))
+            .to_any()
+            .memset(
+                (0) as u8,
+                ((((*sz.borrow()) as u32)
+                    .wrapping_sub((*(*(*table.borrow()).upgrade().deref()).length.borrow())))
+                    as usize) as usize,
+            );
             ((*buf.borrow())
-                .offset((*(*(*table.borrow()).upgrade().deref()).length.borrow()) as isize)
-                as Ptr<u8>)
-                .to_any()
+                .offset((*(*(*table.borrow()).upgrade().deref()).length.borrow()) as isize))
+            .to_any()
         };
     }
     (*(*(*table.borrow()).upgrade().deref()).data.borrow_mut()) = (*buf.borrow()).clone();
@@ -3591,13 +3582,10 @@ pub fn WriteBytes_86(out: Ptr<Vec<u8>>, data: Ptr<u8>, len: usize) {
         (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || <u8>::default()))
     };
     {
-        (((((*out.borrow()).decay()) as Ptr<u8>).offset((*offset.borrow()))) as Ptr<u8>)
+        ((((*out.borrow()).decay()) as Ptr<u8>).offset((*offset.borrow())))
             .to_any()
-            .memcpy(
-                &((*data.borrow()).clone() as Ptr<u8>).to_any(),
-                (*len.borrow()) as usize,
-            );
-        (((((*out.borrow()).decay()) as Ptr<u8>).offset((*offset.borrow()))) as Ptr<u8>).to_any()
+            .memcpy(&(*data.borrow()).to_any(), (*len.borrow()) as usize);
+        ((((*out.borrow()).decay()) as Ptr<u8>).offset((*offset.borrow()))).to_any()
     };
 }
 pub fn WriteBytes_87(out: Ptr<Vec<u8>>, in_: Ptr<Vec<u8>>) {
@@ -5281,14 +5269,13 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         }
         if !(*data.borrow()).is_null() {
             {
-                ((*data.borrow()).clone() as Ptr<u8>).to_any().memcpy(
+                (*data.borrow()).to_any().memcpy(
                     &((*(*(*self).upgrade().deref()).buffer_.borrow())
-                        .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize))
+                    .to_any(),
                     (*n_bytes.borrow()) as usize,
                 );
-                ((*data.borrow()).clone() as Ptr<u8>).to_any()
+                (*data.borrow()).to_any()
             };
         }
         {
@@ -5322,14 +5309,13 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
             return false;
         }
         {
-            ((*value.borrow()).clone() as Ptr<u16>).to_any().memcpy(
+            (*value.borrow()).to_any().memcpy(
                 &((*(*(*self).upgrade().deref()).buffer_.borrow())
-                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
+                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize))
+                .to_any(),
                 ::std::mem::size_of::<u16>() as usize,
             );
-            ((*value.borrow()).clone() as Ptr<u16>).to_any()
+            (*value.borrow()).to_any()
         };
         let __rhs = u16::from_be(((*value.borrow()).read()));
         (*value.borrow()).write(__rhs);
@@ -5384,14 +5370,13 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
             return false;
         }
         {
-            ((*value.borrow()).clone() as Ptr<u32>).to_any().memcpy(
+            (*value.borrow()).to_any().memcpy(
                 &((*(*(*self).upgrade().deref()).buffer_.borrow())
-                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
+                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize))
+                .to_any(),
                 ::std::mem::size_of::<u32>() as usize,
             );
-            ((*value.borrow()).clone() as Ptr<u32>).to_any()
+            (*value.borrow()).to_any()
         };
         let __rhs = u32::from_be(((*value.borrow()).read()));
         (*value.borrow()).write(__rhs);
@@ -5414,14 +5399,13 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
             return false;
         }
         {
-            ((*value.borrow()).clone() as Ptr<u32>).to_any().memcpy(
+            (*value.borrow()).to_any().memcpy(
                 &((*(*(*self).upgrade().deref()).buffer_.borrow())
-                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
+                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize))
+                .to_any(),
                 ::std::mem::size_of::<u32>() as usize,
             );
-            ((*value.borrow()).clone() as Ptr<u32>).to_any()
+            (*value.borrow()).to_any()
         };
         {
             let rhs_0 = (*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(4_usize);
@@ -5438,14 +5422,13 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
             return false;
         }
         {
-            ((*value.borrow()).clone() as Ptr<u64>).to_any().memcpy(
+            (*value.borrow()).to_any().memcpy(
                 &((*(*(*self).upgrade().deref()).buffer_.borrow())
-                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
+                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize))
+                .to_any(),
                 ::std::mem::size_of::<u64>() as usize,
             );
-            ((*value.borrow()).clone() as Ptr<u64>).to_any()
+            (*value.borrow()).to_any()
         };
         {
             let rhs_0 = (*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(8_usize);

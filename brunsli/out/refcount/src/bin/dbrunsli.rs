@@ -1420,10 +1420,10 @@ pub fn BrunsliUnalignedRead16_66(p: AnyPtr) -> u16 {
     let p: Value<AnyPtr> = Rc::new(RefCell::new(p));
     let t: Value<u16> = Rc::new(RefCell::new(0_u16));
     {
-        ((t.as_pointer()) as Ptr<u16>)
+        (t.as_pointer())
             .to_any()
             .memcpy(&(*p.borrow()), ::std::mem::size_of::<u16>() as usize);
-        ((t.as_pointer()) as Ptr<u16>).to_any()
+        (t.as_pointer()).to_any()
     };
     return (*t.borrow());
 }
@@ -1432,7 +1432,7 @@ pub fn BrunsliUnalignedWrite16_67(p: AnyPtr, v: u16) {
     let v: Value<u16> = Rc::new(RefCell::new(v));
     {
         (*p.borrow()).memcpy(
-            &((v.as_pointer()) as Ptr<u16>).to_any(),
+            &(v.as_pointer()).to_any(),
             ::std::mem::size_of::<u16>() as usize,
         );
         (*p.borrow()).clone()
@@ -1442,10 +1442,10 @@ pub fn BrunsliUnalignedRead32_68(p: AnyPtr) -> u32 {
     let p: Value<AnyPtr> = Rc::new(RefCell::new(p));
     let t: Value<u32> = Rc::new(RefCell::new(0_u32));
     {
-        ((t.as_pointer()) as Ptr<u32>)
+        (t.as_pointer())
             .to_any()
             .memcpy(&(*p.borrow()), ::std::mem::size_of::<u32>() as usize);
-        ((t.as_pointer()) as Ptr<u32>).to_any()
+        (t.as_pointer()).to_any()
     };
     return (*t.borrow());
 }
@@ -1453,10 +1453,10 @@ pub fn BrunsliUnalignedRead64_69(p: AnyPtr) -> u64 {
     let p: Value<AnyPtr> = Rc::new(RefCell::new(p));
     let t: Value<u64> = Rc::new(RefCell::new(0_u64));
     {
-        ((t.as_pointer()) as Ptr<u64>)
+        (t.as_pointer())
             .to_any()
             .memcpy(&(*p.borrow()), ::std::mem::size_of::<u64>() as usize);
-        ((t.as_pointer()) as Ptr<u64>).to_any()
+        (t.as_pointer()).to_any()
     };
     return (*t.borrow());
 }
@@ -1465,7 +1465,7 @@ pub fn BrunsliUnalignedWrite64_70(p: AnyPtr, v: u64) {
     let v: Value<u64> = Rc::new(RefCell::new(v));
     {
         (*p.borrow()).memcpy(
-            &((v.as_pointer()) as Ptr<u64>).to_any(),
+            &(v.as_pointer()).to_any(),
             ::std::mem::size_of::<u64>() as usize,
         );
         (*p.borrow()).clone()
@@ -5770,10 +5770,10 @@ pub fn IsBrunsli_139(data: Ptr<u8>, len: usize) -> bool {
     if ((*len.borrow()) < kSignatureLen_141.with(|rc| *rc.borrow())) {
         return false;
     }
-    return (((kSignature_140.with(|v| v.as_pointer()) as Ptr<u8>) as Ptr<u8>)
+    return ((kSignature_140.with(|v| v.as_pointer()) as Ptr<u8>)
         .to_any()
         .memcmp(
-            &((*data.borrow()).clone() as Ptr<u8>).to_any(),
+            &(*data.borrow()).to_any(),
             kSignatureLen_141.with(|rc| *rc.borrow()),
         )
         == 0);
@@ -6519,46 +6519,44 @@ pub fn DecodeHuffmanCode_150(
                                     as i32),
                             ));
                             {
-                                ((((*(*huff.borrow()).upgrade().deref()).counts.as_pointer()
+                                (((*(*huff.borrow()).upgrade().deref()).counts.as_pointer()
                                     as Ptr<i32>)
-                                    .offset(1_usize)) as Ptr<i32>)
-                                    .to_any()
-                                    .memcpy(
-                                        &((((kStockDCHuffmanCodeCounts_54.with(|v| v.as_pointer())
-                                            as Ptr<Value<Box<[i32]>>>)
-                                            .offset((*huff_table_idx.borrow()))
-                                            .read()
-                                            .as_pointer())
-                                            as Ptr<i32>)
-                                            as Ptr<i32>)
-                                            .to_any(),
-                                        ::std::mem::size_of::<[i32; 16]>() as usize,
-                                    );
-                                ((((*(*huff.borrow()).upgrade().deref()).counts.as_pointer()
+                                    .offset(1_usize))
+                                .to_any()
+                                .memcpy(
+                                    &(((kStockDCHuffmanCodeCounts_54.with(|v| v.as_pointer())
+                                        as Ptr<Value<Box<[i32]>>>)
+                                        .offset((*huff_table_idx.borrow()))
+                                        .read()
+                                        .as_pointer())
+                                        as Ptr<i32>)
+                                        .to_any(),
+                                    ::std::mem::size_of::<[i32; 16]>() as usize,
+                                );
+                                (((*(*huff.borrow()).upgrade().deref()).counts.as_pointer()
                                     as Ptr<i32>)
-                                    .offset(1_usize)) as Ptr<i32>)
-                                    .to_any()
+                                    .offset(1_usize))
+                                .to_any()
                             };
                             {
-                                ((((*(*huff.borrow()).upgrade().deref()).values.as_pointer()
+                                (((*(*huff.borrow()).upgrade().deref()).values.as_pointer()
                                     as Ptr<i32>)
-                                    .offset(0_usize)) as Ptr<i32>)
-                                    .to_any()
-                                    .memcpy(
-                                        &((((kStockDCHuffmanCodeValues_55.with(|v| v.as_pointer())
-                                            as Ptr<Value<Box<[i32]>>>)
-                                            .offset((*huff_table_idx.borrow()))
-                                            .read()
-                                            .as_pointer())
-                                            as Ptr<i32>)
-                                            as Ptr<i32>)
-                                            .to_any(),
-                                        ::std::mem::size_of::<[i32; 13]>() as usize,
-                                    );
-                                ((((*(*huff.borrow()).upgrade().deref()).values.as_pointer()
+                                    .offset(0_usize))
+                                .to_any()
+                                .memcpy(
+                                    &(((kStockDCHuffmanCodeValues_55.with(|v| v.as_pointer())
+                                        as Ptr<Value<Box<[i32]>>>)
+                                        .offset((*huff_table_idx.borrow()))
+                                        .read()
+                                        .as_pointer())
+                                        as Ptr<i32>)
+                                        .to_any(),
+                                    ::std::mem::size_of::<[i32; 13]>() as usize,
+                                );
+                                (((*(*huff.borrow()).upgrade().deref()).values.as_pointer()
                                     as Ptr<i32>)
-                                    .offset(0_usize)) as Ptr<i32>)
-                                    .to_any()
+                                    .offset(0_usize))
+                                .to_any()
                             };
                         } else {
                             let huff_table_idx: Value<i32> = Rc::new(RefCell::new(
@@ -6566,46 +6564,44 @@ pub fn DecodeHuffmanCode_150(
                                     as i32),
                             ));
                             {
-                                ((((*(*huff.borrow()).upgrade().deref()).counts.as_pointer()
+                                (((*(*huff.borrow()).upgrade().deref()).counts.as_pointer()
                                     as Ptr<i32>)
-                                    .offset(1_usize)) as Ptr<i32>)
-                                    .to_any()
-                                    .memcpy(
-                                        &((((kStockACHuffmanCodeCounts_57.with(|v| v.as_pointer())
-                                            as Ptr<Value<Box<[i32]>>>)
-                                            .offset((*huff_table_idx.borrow()))
-                                            .read()
-                                            .as_pointer())
-                                            as Ptr<i32>)
-                                            as Ptr<i32>)
-                                            .to_any(),
-                                        ::std::mem::size_of::<[i32; 16]>() as usize,
-                                    );
-                                ((((*(*huff.borrow()).upgrade().deref()).counts.as_pointer()
+                                    .offset(1_usize))
+                                .to_any()
+                                .memcpy(
+                                    &(((kStockACHuffmanCodeCounts_57.with(|v| v.as_pointer())
+                                        as Ptr<Value<Box<[i32]>>>)
+                                        .offset((*huff_table_idx.borrow()))
+                                        .read()
+                                        .as_pointer())
+                                        as Ptr<i32>)
+                                        .to_any(),
+                                    ::std::mem::size_of::<[i32; 16]>() as usize,
+                                );
+                                (((*(*huff.borrow()).upgrade().deref()).counts.as_pointer()
                                     as Ptr<i32>)
-                                    .offset(1_usize)) as Ptr<i32>)
-                                    .to_any()
+                                    .offset(1_usize))
+                                .to_any()
                             };
                             {
-                                ((((*(*huff.borrow()).upgrade().deref()).values.as_pointer()
+                                (((*(*huff.borrow()).upgrade().deref()).values.as_pointer()
                                     as Ptr<i32>)
-                                    .offset(0_usize)) as Ptr<i32>)
-                                    .to_any()
-                                    .memcpy(
-                                        &((((kStockACHuffmanCodeValues_59.with(|v| v.as_pointer())
-                                            as Ptr<Value<Box<[i32]>>>)
-                                            .offset((*huff_table_idx.borrow()))
-                                            .read()
-                                            .as_pointer())
-                                            as Ptr<i32>)
-                                            as Ptr<i32>)
-                                            .to_any(),
-                                        ::std::mem::size_of::<[i32; 163]>() as usize,
-                                    );
-                                ((((*(*huff.borrow()).upgrade().deref()).values.as_pointer()
+                                    .offset(0_usize))
+                                .to_any()
+                                .memcpy(
+                                    &(((kStockACHuffmanCodeValues_59.with(|v| v.as_pointer())
+                                        as Ptr<Value<Box<[i32]>>>)
+                                        .offset((*huff_table_idx.borrow()))
+                                        .read()
+                                        .as_pointer())
+                                        as Ptr<i32>)
+                                        .to_any(),
+                                    ::std::mem::size_of::<[i32; 163]>() as usize,
+                                );
+                                (((*(*huff.borrow()).upgrade().deref()).values.as_pointer()
                                     as Ptr<i32>)
-                                    .offset(0_usize)) as Ptr<i32>)
-                                    .to_any()
+                                    .offset(0_usize))
+                                .to_any()
                             };
                         }
                         (*(*js.upgrade().deref()).stage.borrow_mut()) =
@@ -8537,14 +8533,12 @@ pub fn VerifySignature_176(state: Ptr<brunsli_internal_dec_State>) -> brunsli_in
     }
     let is_signature_ok: Value<bool> = Rc::new(RefCell::new(
         (((*(*(*state.borrow()).upgrade().deref()).data.borrow())
-            .offset((*(*(*state.borrow()).upgrade().deref()).pos.borrow()) as isize)
-            as Ptr<u8>)
-            .to_any()
-            .memcmp(
-                &((kBrunsliSignature_44.with(|v| v.as_pointer()) as Ptr<u8>) as Ptr<u8>).to_any(),
-                kBrunsliSignatureSize_43.with(|rc| *rc.borrow()),
-            )
-            != 0),
+            .offset((*(*(*state.borrow()).upgrade().deref()).pos.borrow()) as isize))
+        .to_any()
+        .memcmp(
+            &(kBrunsliSignature_44.with(|v| v.as_pointer()) as Ptr<u8>).to_any(),
+            kBrunsliSignatureSize_43.with(|rc| *rc.borrow()),
+        ) != 0),
     ));
     {
         let rhs_0 = (*(*(*state.borrow()).upgrade().deref()).pos.borrow())
@@ -11630,16 +11624,15 @@ pub fn WarmupMeta_196(jpg: Ptr<brunsli_JPEGData>, state: Ptr<brunsli_internal_de
             let __rhs = (*(*m.upgrade().deref()).width_in_blocks.borrow());
             (*(*m.upgrade().deref()).b_stride.borrow_mut()) = __rhs;
             {
-                (((*m.upgrade().deref()).quant.as_pointer() as Ptr<i32>) as Ptr<i32>)
+                ((*m.upgrade().deref()).quant.as_pointer() as Ptr<i32>)
                     .to_any()
                     .memcpy(
-                        &(((*q.upgrade().deref()).values.as_pointer() as Ptr<i32>) as Ptr<i32>)
-                            .to_any(),
+                        &((*q.upgrade().deref()).values.as_pointer() as Ptr<i32>).to_any(),
                         (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)
                             .wrapping_mul((::std::mem::size_of::<i32>() as usize))
                             as usize,
                     );
-                (((*m.upgrade().deref()).quant.as_pointer() as Ptr<i32>) as Ptr<i32>).to_any()
+                ((*m.upgrade().deref()).quant.as_pointer() as Ptr<i32>).to_any()
             };
             (*c.borrow_mut()).prefix_inc();
         }
@@ -11785,18 +11778,17 @@ pub fn LoadInput_200(state: Ptr<brunsli_internal_dec_State>) {
     } as usize);
     {
         (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>)
-            .offset((*(*b.upgrade().deref()).data_len.borrow()) as isize) as Ptr<u8>)
-            .to_any()
-            .memcpy(
-                &((*(*b.upgrade().deref()).external_data.borrow())
-                    .offset((*(*b.upgrade().deref()).external_pos.borrow()) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
-                (*(*b.upgrade().deref()).borrowed_len.borrow()) as usize,
-            );
+            .offset((*(*b.upgrade().deref()).data_len.borrow()) as isize))
+        .to_any()
+        .memcpy(
+            &((*(*b.upgrade().deref()).external_data.borrow())
+                .offset((*(*b.upgrade().deref()).external_pos.borrow()) as isize))
+            .to_any(),
+            (*(*b.upgrade().deref()).borrowed_len.borrow()) as usize,
+        );
         (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>)
-            .offset((*(*b.upgrade().deref()).data_len.borrow()) as isize) as Ptr<u8>)
-            .to_any()
+            .offset((*(*b.upgrade().deref()).data_len.borrow()) as isize))
+        .to_any()
     };
     (*(*(*state.borrow()).upgrade().deref()).data.borrow_mut()) =
         ((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>);
@@ -11869,16 +11861,15 @@ pub fn UnloadInput_201(
         }
         (*(*b.upgrade().deref()).data_len.borrow_mut()) = (*available.borrow());
         {
-            (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>) as Ptr<u8>)
+            ((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>)
                 .to_any()
                 .memcpy(
                     &((*(*b.upgrade().deref()).external_data.borrow())
-                        .offset((*(*b.upgrade().deref()).external_pos.borrow()) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset((*(*b.upgrade().deref()).external_pos.borrow()) as isize))
+                    .to_any(),
                     (*(*b.upgrade().deref()).data_len.borrow()) as usize,
                 );
-            (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any()
+            ((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>).to_any()
         };
         {
             let rhs_0 =
@@ -11962,16 +11953,15 @@ pub fn UnloadInput_201(
         && ((*(*b.upgrade().deref()).data_len.borrow()) > 0_usize)
     {
         {
-            (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>) as Ptr<u8>)
+            ((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>)
                 .to_any()
                 .memcpy(
                     &(((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>)
-                        .offset((*(*(*state.borrow()).upgrade().deref()).pos.borrow()) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset((*(*(*state.borrow()).upgrade().deref()).pos.borrow()) as isize))
+                    .to_any(),
                     (*(*b.upgrade().deref()).data_len.borrow()) as usize,
                 );
-            (((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any()
+            ((*b.upgrade().deref()).data.as_pointer() as Ptr<u8>).to_any()
         };
     }
     if !({
@@ -12675,13 +12665,13 @@ pub fn ReadHuffmanCodeLengths_217(
                 return false;
             }
             {
-                (((*code_lengths.borrow()).offset((*symbol.borrow()) as isize)) as Ptr<u8>)
+                ((*code_lengths.borrow()).offset((*symbol.borrow()) as isize))
                     .to_any()
                     .memset(
                         ((*repeat_code_len.borrow()) as i32) as u8,
                         (*repeat_delta.borrow()) as usize,
                     );
-                (((*code_lengths.borrow()).offset((*symbol.borrow()) as isize)) as Ptr<u8>).to_any()
+                ((*code_lengths.borrow()).offset((*symbol.borrow()) as isize)).to_any()
             };
             {
                 let rhs_0 = (*symbol.borrow()).wrapping_add((*repeat_delta.borrow()));
@@ -12699,13 +12689,13 @@ pub fn ReadHuffmanCodeLengths_217(
         return false;
     }
     {
-        (((*code_lengths.borrow()).offset((*symbol.borrow()) as isize)) as Ptr<u8>)
+        ((*code_lengths.borrow()).offset((*symbol.borrow()) as isize))
             .to_any()
             .memset(
                 (0) as u8,
                 ((*num_symbols.borrow()).wrapping_sub((*symbol.borrow()))) as usize,
             );
-        (((*code_lengths.borrow()).offset((*symbol.borrow()) as isize)) as Ptr<u8>).to_any()
+        ((*code_lengths.borrow()).offset((*symbol.borrow()) as isize)).to_any()
     };
     return ({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) });
 }
@@ -12930,18 +12920,14 @@ pub fn ReadSimpleCode_219(
     ));
     'loop_: while ((*table_size.borrow()) != ((*goal_size.borrow()) as usize)) {
         {
-            (((*table.borrow()).offset((*table_size.borrow()) as isize))
-                as Ptr<brunsli_HuffmanCode>)
+            ((*table.borrow()).offset((*table_size.borrow()) as isize))
                 .to_any()
                 .memcpy(
-                    &(((*table.borrow()).offset((0) as isize)) as Ptr<brunsli_HuffmanCode>)
-                        .to_any(),
+                    &((*table.borrow()).offset((0) as isize)).to_any(),
                     (((*table_size.borrow()) as u64).wrapping_mul((4usize as u64)) as usize)
                         as usize,
                 );
-            (((*table.borrow()).offset((*table_size.borrow()) as isize))
-                as Ptr<brunsli_HuffmanCode>)
-                .to_any()
+            ((*table.borrow()).offset((*table_size.borrow()) as isize)).to_any()
         };
         (*table_size.borrow_mut()) <<= 1;
     }
@@ -13137,17 +13123,13 @@ pub fn BuildHuffmanTable_218(
     }
     'loop_: while ((*total_size.borrow()) != (*table_size.borrow())) {
         {
-            (((*table.borrow()).offset((*table_size.borrow()) as isize))
-                as Ptr<brunsli_HuffmanCode>)
+            ((*table.borrow()).offset((*table_size.borrow()) as isize))
                 .to_any()
                 .memcpy(
-                    &(((*table.borrow()).offset((0) as isize)) as Ptr<brunsli_HuffmanCode>)
-                        .to_any(),
+                    &((*table.borrow()).offset((0) as isize)).to_any(),
                     ((*table_size.borrow()) as usize).wrapping_mul((4usize as usize)) as usize,
                 );
-            (((*table.borrow()).offset((*table_size.borrow()) as isize))
-                as Ptr<brunsli_HuffmanCode>)
-                .to_any()
+            ((*table.borrow()).offset((*table_size.borrow()) as isize)).to_any()
         };
         (*table_size.borrow_mut()) <<= 1;
     }
@@ -13223,9 +13205,7 @@ impl brunsli_internal_dec_OutputChunk {
             buffer: Rc::new(RefCell::new(None)),
         }));
         let this: Ptr<brunsli_internal_dec_OutputChunk> = __this.as_pointer();
-        let src: Value<AnyPtr> = Rc::new(RefCell::new(
-            ((bytes.decay() as Ptr<u8>) as Ptr<u8>).to_any(),
-        ));
+        let src: Value<AnyPtr> = Rc::new(RefCell::new((bytes.decay() as Ptr<u8>).to_any()));
         (*(*this.upgrade().deref()).next.borrow_mut()) = (*src.borrow()).reinterpret_cast::<u8>();
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
@@ -15145,10 +15125,10 @@ pub fn DoEncodeScan_255(
             ({ (*get_next_reset_point.borrow_mut())() }).clone();
         (*(*ss.upgrade().deref()).mcu_y.borrow_mut()) = 0;
         {
-            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
+            ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>)
                 .to_any()
                 .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
-            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>).to_any()
+            ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>).to_any()
         };
         (*(*ss.upgrade().deref()).stage.borrow_mut()) =
             brunsli_internal_dec_EncodeScanState_Stage_BODY;
@@ -15302,11 +15282,10 @@ pub fn DoEncodeScan_255(
                 (*(*ss.upgrade().deref()).restarts_to_go.borrow_mut()) =
                     (*restart_interval.borrow());
                 {
-                    (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
+                    ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>)
                         .to_any()
                         .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
-                    (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
-                        .to_any()
+                    ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>).to_any()
                 };
             }
             let i: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -15611,10 +15590,10 @@ pub fn DoEncodeScan_256(
             ({ (*get_next_reset_point.borrow_mut())() }).clone();
         (*(*ss.upgrade().deref()).mcu_y.borrow_mut()) = 0;
         {
-            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
+            ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>)
                 .to_any()
                 .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
-            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>).to_any()
+            ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>).to_any()
         };
         (*(*ss.upgrade().deref()).stage.borrow_mut()) =
             brunsli_internal_dec_EncodeScanState_Stage_BODY;
@@ -15768,11 +15747,10 @@ pub fn DoEncodeScan_256(
                 (*(*ss.upgrade().deref()).restarts_to_go.borrow_mut()) =
                     (*restart_interval.borrow());
                 {
-                    (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
+                    ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>)
                         .to_any()
                         .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
-                    (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
-                        .to_any()
+                    ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>).to_any()
                 };
             }
             let i: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -16077,10 +16055,10 @@ pub fn DoEncodeScan_257(
             ({ (*get_next_reset_point.borrow_mut())() }).clone();
         (*(*ss.upgrade().deref()).mcu_y.borrow_mut()) = 0;
         {
-            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
+            ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>)
                 .to_any()
                 .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
-            (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>).to_any()
+            ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>).to_any()
         };
         (*(*ss.upgrade().deref()).stage.borrow_mut()) =
             brunsli_internal_dec_EncodeScanState_Stage_BODY;
@@ -16234,11 +16212,10 @@ pub fn DoEncodeScan_257(
                 (*(*ss.upgrade().deref()).restarts_to_go.borrow_mut()) =
                     (*restart_interval.borrow());
                 {
-                    (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
+                    ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>)
                         .to_any()
                         .memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
-                    (((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>) as Ptr<i16>)
-                        .to_any()
+                    ((*ss.upgrade().deref()).last_dc_coeff.as_pointer() as Ptr<i16>).to_any()
                 };
             }
             let i: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -16713,13 +16690,11 @@ pub fn PushOutput_260(
         ));
         if ((*to_copy.borrow()) > 0_usize) {
             {
-                (((*next_out.borrow()).read()).clone() as Ptr<u8>)
-                    .to_any()
-                    .memcpy(
-                        &((*(*chunk.upgrade().deref()).next.borrow()).clone() as Ptr<u8>).to_any(),
-                        (*to_copy.borrow()) as usize,
-                    );
-                (((*next_out.borrow()).read()).clone() as Ptr<u8>).to_any()
+                ((*next_out.borrow()).read()).to_any().memcpy(
+                    &(*(*chunk.upgrade().deref()).next.borrow()).to_any(),
+                    (*to_copy.borrow()) as usize,
+                );
+                ((*next_out.borrow()).read()).to_any()
             };
             let __rhs = (*to_copy.borrow());
             {
@@ -17084,7 +17059,7 @@ pub fn ReadFileInternal_263(file: Ptr<CFile>, content: Ptr<Vec<u8>>) -> bool {
         _lhs < ((*(*content.borrow()).upgrade().deref()).len() - 1)
     } {
         let bytes_read: Value<usize> = Rc::new(RefCell::new({
-            let __a0 = ((if (*read_pos.borrow()) as usize
+            let __a0 = (if (*read_pos.borrow()) as usize
                 >= (*((*content.borrow()).clone() as Ptr<Vec<u8>>)
                     .upgrade()
                     .deref())
@@ -17096,8 +17071,8 @@ pub fn ReadFileInternal_263(file: Ptr<CFile>, content: Ptr<Vec<u8>>) -> bool {
                 ((*content.borrow()).clone() as Ptr<Vec<u8>>)
                     .decay()
                     .offset((*read_pos.borrow()) as isize)
-            }) as Ptr<u8>)
-                .to_any();
+            })
+            .to_any();
             let __a1 = 1_usize;
             let __a2 = ((((*(*content.borrow()).upgrade().deref()).len() - 1) as u64)
                 .wrapping_sub(((*read_pos.borrow()) as u64)) as usize);
@@ -17154,8 +17129,7 @@ pub fn WriteFileInternal_265(file: Ptr<CFile>, content: Ptr<Vec<u8>>) -> bool {
         _lhs < ((*content.upgrade().deref()).len() - 1)
     } {
         let bytes_written: Value<usize> = Rc::new(RefCell::new({
-            let __a0 =
-                (((content.decay() as Ptr<u8>).offset((*write_pos.borrow()))) as Ptr<u8>).to_any();
+            let __a0 = ((content.decay() as Ptr<u8>).offset((*write_pos.borrow()))).to_any();
             let __a1 = 1_usize;
             let __a2 = ((((*content.upgrade().deref()).len() - 1) as u64)
                 .wrapping_sub(((*write_pos.borrow()) as u64)) as usize);
@@ -17249,7 +17223,7 @@ pub fn ProcessFile_267(file_name: Ptr<Vec<u8>>, outfile_name: Ptr<Vec<u8>>) -> b
         }
         let writer: Value<brunsli_JPEGOutput> = Rc::new(RefCell::new(brunsli_JPEGOutput::new(
             { FnPtr::<fn(AnyPtr, Ptr<u8>, usize) -> usize>::new(StringWriter_262) },
-            { ((output.as_pointer()) as Ptr<Vec<u8>>).to_any() },
+            { (output.as_pointer()).to_any() },
         )));
         (*ok.borrow_mut()) = ({ WriteJpeg_261(jpg.as_pointer(), (*writer.borrow()).clone()) });
         if !(*ok.borrow()) {
@@ -18389,9 +18363,8 @@ impl brunsli_WordSourceImpl for Ptr<brunsli_WordSource> {
             (*val.borrow_mut()) = ({
                 BrunsliUnalignedRead16_66(
                     ((*(*(*self).upgrade().deref()).data_.borrow())
-                        .offset((*(*(*self).upgrade().deref()).pos_.borrow()) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset((*(*(*self).upgrade().deref()).pos_.borrow()) as isize))
+                    .to_any(),
                 )
             });
         } else {
