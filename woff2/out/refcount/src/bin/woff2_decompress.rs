@@ -1816,7 +1816,7 @@ pub fn StoreLoca_62(
         _lhs < (*loca_values.upgrade().deref()).len()
     } {
         let value: Value<u32> = Rc::new(RefCell::new(
-            ((loca_values.decay() as Ptr<u32>)
+            ((Ptr::<Vec<u32>>::decay(&(loca_values)) as Ptr<u32>)
                 .offset((*i.borrow()))
                 .read()),
         ));
@@ -2650,7 +2650,9 @@ pub fn ReconstructGlyf_63(
 pub fn FindTable_65(tables: Ptr<Vec<Ptr<woff2_Table>>>, tag: u32) -> Ptr<woff2_Table> {
     let tables: Value<Ptr<Vec<Ptr<woff2_Table>>>> = Rc::new(RefCell::new(tables));
     let tag: Value<u32> = Rc::new(RefCell::new(tag));
-    'loop_: for mut table in (*tables.borrow()).decay() as Ptr<Ptr<woff2_Table>> {
+    'loop_: for mut table in
+        Ptr::<Vec<Ptr<woff2_Table>>>::decay(&(*tables.borrow())) as Ptr<Ptr<woff2_Table>>
+    {
         let table: Value<Ptr<woff2_Table>> = Rc::new(RefCell::new(table.read()));
         if {
             let _lhs = (*(*(*table.borrow()).upgrade().deref()).tag.borrow());
@@ -2755,7 +2757,7 @@ pub fn ReconstructTransformedHmtx_67(
                 return false;
             }
         } else {
-            (*lsb.borrow_mut()) = ((x_mins.decay() as Ptr<i16>)
+            (*lsb.borrow_mut()) = ((Ptr::<Vec<i16>>::decay(&(x_mins)) as Ptr<i16>)
                 .offset(((*i.borrow()) as usize))
                 .read());
         }
@@ -2776,7 +2778,7 @@ pub fn ReconstructTransformedHmtx_67(
                 return false;
             }
         } else {
-            (*lsb.borrow_mut()) = ((x_mins.decay() as Ptr<i16>)
+            (*lsb.borrow_mut()) = ((Ptr::<Vec<i16>>::decay(&(x_mins)) as Ptr<i16>)
                 .offset(((*i.borrow()) as usize))
                 .read());
         }
@@ -2884,7 +2886,8 @@ pub fn ReadTableDirectory_69(
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < (*num_tables.borrow())) {
         let table: Value<Ptr<woff2_Table>> = Rc::new(RefCell::new(
-            ((((*tables.borrow()).decay()) as Ptr<woff2_Table>).offset((*i.borrow()))),
+            (((Ptr::<Vec<woff2_Table>>::decay(&(*tables.borrow()))) as Ptr<woff2_Table>)
+                .offset((*i.borrow()))),
         ));
         let flag_byte: Value<u8> = Rc::new(RefCell::new(0_u8));
         if ((!({ woff2_BufferImpl::ReadU8(&(*file.borrow()), (flag_byte.as_pointer())) }) as i64)

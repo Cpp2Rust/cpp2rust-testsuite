@@ -2617,7 +2617,9 @@ pub fn StorePoints_67(
         (*glyph.upgrade().deref()).contours.as_pointer() as Ptr<Value<Vec<woff2_Glyph_Point>>>
     {
         let contour: Ptr<Vec<woff2_Glyph_Point>> = contour.upgrade().deref().as_pointer();
-        'loop_: for mut point in contour.decay() as Ptr<woff2_Glyph_Point> {
+        'loop_: for mut point in
+            Ptr::<Vec<woff2_Glyph_Point>>::decay(&(contour)) as Ptr<woff2_Glyph_Point>
+        {
             let flag: Value<i32> = Rc::new(RefCell::new(
                 if (*(*point.upgrade().deref()).on_curve.borrow()) {
                     kFLAG_ONCURVE_49.with(|rc| *rc.borrow())
@@ -2749,7 +2751,9 @@ pub fn StorePoints_67(
         (*glyph.upgrade().deref()).contours.as_pointer() as Ptr<Value<Vec<woff2_Glyph_Point>>>
     {
         let contour: Ptr<Vec<woff2_Glyph_Point>> = contour.upgrade().deref().as_pointer();
-        'loop_: for mut point in contour.decay() as Ptr<woff2_Glyph_Point> {
+        'loop_: for mut point in
+            Ptr::<Vec<woff2_Glyph_Point>>::decay(&(contour)) as Ptr<woff2_Glyph_Point>
+        {
             let dx: Value<i32> = Rc::new(RefCell::new({
                 let _lhs = (*(*point.upgrade().deref()).x.borrow());
                 _lhs - (*last_x.borrow())
@@ -3588,10 +3592,13 @@ pub fn WriteBytes_86(out: Ptr<Vec<u8>>, data: Ptr<u8>, len: usize) {
         (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || <u8>::default()))
     };
     {
-        (((((*out.borrow()).decay()) as Ptr<u8>).offset((*offset.borrow()))) as Ptr<u8>)
+        ((((Ptr::<Vec<u8>>::decay(&(*out.borrow()))) as Ptr<u8>).offset((*offset.borrow())))
+            as Ptr<u8>)
             .to_any()
             .memcpy(&(*data.borrow()).to_any(), (*len.borrow()) as usize);
-        (((((*out.borrow()).decay()) as Ptr<u8>).offset((*offset.borrow()))) as Ptr<u8>).to_any()
+        ((((Ptr::<Vec<u8>>::decay(&(*out.borrow()))) as Ptr<u8>).offset((*offset.borrow())))
+            as Ptr<u8>)
+            .to_any()
     };
 }
 pub fn WriteBytes_87(out: Ptr<Vec<u8>>, in_: Ptr<Vec<u8>>) {
@@ -3602,7 +3609,10 @@ pub fn WriteBytes_87(out: Ptr<Vec<u8>>, in_: Ptr<Vec<u8>>) {
         _lhs < (*in_.upgrade().deref()).len()
     } {
         {
-            let a0_clone = ((in_.decay() as Ptr<u8>).offset((*i.borrow())).read()).clone();
+            let a0_clone = ((Ptr::<Vec<u8>>::decay(&(in_)) as Ptr<u8>)
+                .offset((*i.borrow()))
+                .read())
+            .clone();
             (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(a0_clone))
         };
         (*i.borrow_mut()).prefix_inc();
@@ -4315,7 +4325,7 @@ pub fn ComputeWoff2Length_100(
     let compressed_data_length: Value<usize> = Rc::new(RefCell::new(compressed_data_length));
     let extended_metadata_length: Value<usize> = Rc::new(RefCell::new(extended_metadata_length));
     let size: Value<usize> = Rc::new(RefCell::new(kWoff2HeaderSize_92.with(|rc| *rc.borrow())));
-    'loop_: for mut table in tables.decay() as Ptr<woff2_Table> {
+    'loop_: for mut table in Ptr::<Vec<woff2_Table>>::decay(&(tables)) as Ptr<woff2_Table> {
         {
             let rhs_0 = (*size.borrow()).wrapping_add(({ TableEntrySize_99((table).clone()) }));
             (*size.borrow_mut()) = rhs_0
@@ -5842,7 +5852,9 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
             (*glyph.upgrade().deref()).contours.as_pointer() as Ptr<Value<Vec<woff2_Glyph_Point>>>
         {
             let contour: Ptr<Vec<woff2_Glyph_Point>> = contour.upgrade().deref().as_pointer();
-            'loop_: for mut point in contour.decay() as Ptr<woff2_Glyph_Point> {
+            'loop_: for mut point in
+                Ptr::<Vec<woff2_Glyph_Point>>::decay(&(contour)) as Ptr<woff2_Glyph_Point>
+            {
                 if {
                     let _lhs = (*(*point.upgrade().deref()).x.borrow());
                     _lhs < ((*x_min.borrow()) as i32)
