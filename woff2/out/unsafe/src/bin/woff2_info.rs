@@ -216,7 +216,7 @@ pub static mut kKnownTags_8: std::cell::LazyCell<[u32; 63]> = std::cell::LazyCel
     ]
 });
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct woff2_Buffer {
     buffer_: *const u8,
     length_: usize,
@@ -247,13 +247,12 @@ impl woff2_Buffer {
             {
                 if n_bytes != 0 {
                     ::std::ptr::copy_nonoverlapping(
-                        (self.buffer_.offset((self.offset_) as isize) as *const u8
-                            as *const ::libc::c_void),
-                        (data as *mut u8 as *mut ::libc::c_void),
+                        (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void),
+                        (data as *mut ::libc::c_void),
                         n_bytes as usize,
                     )
                 }
-                (data as *mut u8 as *mut ::libc::c_void)
+                (data as *mut ::libc::c_void)
             };
         }
         self.offset_ = (self.offset_).wrapping_add(n_bytes);
@@ -276,13 +275,12 @@ impl woff2_Buffer {
         {
             if ::std::mem::size_of::<u16>() != 0 {
                 ::std::ptr::copy_nonoverlapping(
-                    (self.buffer_.offset((self.offset_) as isize) as *const u8
-                        as *const ::libc::c_void),
-                    (value as *mut u16 as *mut ::libc::c_void),
+                    (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void),
+                    (value as *mut ::libc::c_void),
                     ::std::mem::size_of::<u16>() as usize,
                 )
             }
-            (value as *mut u16 as *mut ::libc::c_void)
+            (value as *mut ::libc::c_void)
         };
         (*value) = u16::from_be((*value));
         self.offset_ = (self.offset_).wrapping_add(2_usize);
@@ -316,13 +314,12 @@ impl woff2_Buffer {
         {
             if ::std::mem::size_of::<u32>() != 0 {
                 ::std::ptr::copy_nonoverlapping(
-                    (self.buffer_.offset((self.offset_) as isize) as *const u8
-                        as *const ::libc::c_void),
-                    (value as *mut u32 as *mut ::libc::c_void),
+                    (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void),
+                    (value as *mut ::libc::c_void),
                     ::std::mem::size_of::<u32>() as usize,
                 )
             }
-            (value as *mut u32 as *mut ::libc::c_void)
+            (value as *mut ::libc::c_void)
         };
         (*value) = u32::from_be((*value));
         self.offset_ = (self.offset_).wrapping_add(4_usize);
@@ -339,13 +336,12 @@ impl woff2_Buffer {
         {
             if ::std::mem::size_of::<u32>() != 0 {
                 ::std::ptr::copy_nonoverlapping(
-                    (self.buffer_.offset((self.offset_) as isize) as *const u8
-                        as *const ::libc::c_void),
-                    (value as *mut u32 as *mut ::libc::c_void),
+                    (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void),
+                    (value as *mut ::libc::c_void),
                     ::std::mem::size_of::<u32>() as usize,
                 )
             }
-            (value as *mut u32 as *mut ::libc::c_void)
+            (value as *mut ::libc::c_void)
         };
         self.offset_ = (self.offset_).wrapping_add(4_usize);
         return true;
@@ -358,13 +354,12 @@ impl woff2_Buffer {
         {
             if ::std::mem::size_of::<u64>() != 0 {
                 ::std::ptr::copy_nonoverlapping(
-                    (self.buffer_.offset((self.offset_) as isize) as *const u8
-                        as *const ::libc::c_void),
-                    (value as *mut u64 as *mut ::libc::c_void),
+                    (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void),
+                    (value as *mut ::libc::c_void),
                     ::std::mem::size_of::<u64>() as usize,
                 )
             }
-            (value as *mut u64 as *mut ::libc::c_void)
+            (value as *mut ::libc::c_void)
         };
         self.offset_ = (self.offset_).wrapping_add(8_usize);
         return true;
@@ -523,14 +518,14 @@ pub static mut kSfntHeaderSize_23: std::cell::LazyCell<usize> =
 pub static mut kSfntEntrySize_24: std::cell::LazyCell<usize> =
     std::cell::LazyCell::new(|| unsafe { 16_usize });
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct woff2_Point {
     pub x: i32,
     pub y: i32,
     pub on_curve: bool,
 }
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct woff2_Table {
     pub tag: u32,
     pub flags: u32,
@@ -619,7 +614,7 @@ pub unsafe fn CollectionHeaderSize_27(mut header_version: u32, mut num_fonts: u3
     return size;
 }
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone, VaArg, Default)]
 pub struct woff2_Font_Table {
     pub tag: u32,
     pub checksum: u32,
@@ -631,14 +626,14 @@ pub struct woff2_Font_Table {
     pub flag_byte: u8,
 }
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone, VaArg, Default)]
 pub struct woff2_Font {
     pub flavor: u32,
     pub num_tables: u16,
     pub tables: BTreeMap<u32, Box<woff2_Font_Table>>,
 }
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone, VaArg, Default)]
 pub struct woff2_FontCollection {
     pub flavor: u32,
     pub header_version: u32,
@@ -676,18 +671,17 @@ pub unsafe fn StoreBytes_32(
     {
         if len != 0 {
             ::std::ptr::copy_nonoverlapping(
-                (data as *const u8 as *const ::libc::c_void),
-                ((&mut (*dst.offset((*offset) as isize)) as *mut u8) as *mut u8
-                    as *mut ::libc::c_void),
+                (data as *const ::libc::c_void),
+                ((&mut (*dst.offset((*offset) as isize)) as *mut u8) as *mut ::libc::c_void),
                 len as usize,
             )
         }
-        ((&mut (*dst.offset((*offset) as isize)) as *mut u8) as *mut u8 as *mut ::libc::c_void)
+        ((&mut (*dst.offset((*offset) as isize)) as *mut u8) as *mut ::libc::c_void)
     };
     (*offset) = (*offset).wrapping_add(len);
 }
 impl woff2_Font {
-    pub unsafe fn FindTable_u32(&mut self, mut tag: u32) -> *mut woff2_Font_Table {
+    pub unsafe fn FindTable_2(&mut self, mut tag: u32) -> *mut woff2_Font_Table {
         let mut it: UnsafeMapIterator<u32, woff2_Font_Table> = UnsafeMapIterator::find_key(
             &self.tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
             &tag,
@@ -702,7 +696,7 @@ impl woff2_Font {
     }
 }
 impl woff2_Font {
-    pub unsafe fn FindTable_u32_const(&self, mut tag: u32) -> *const woff2_Font_Table {
+    pub unsafe fn FindTable_3(&self, mut tag: u32) -> *const woff2_Font_Table {
         let mut it: UnsafeMapIterator<u32, woff2_Font_Table> = UnsafeMapIterator::find_key(
             &self.tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
             &tag,
@@ -834,7 +828,7 @@ pub unsafe fn ReadTrueTypeFont_33(
         last_offset = (*i.first()).wrapping_add(*i.second());
     }
     let mut head_table: *const woff2_Font_Table = (unsafe {
-        woff2_Font::FindTable_u32(
+        woff2_Font::FindTable_2(
             &mut (*font),
             (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1)),
         )
@@ -869,7 +863,7 @@ pub unsafe fn ReadCollectionFont_34(
             &(*all_tables) as *const BTreeMap<u32, Box<*mut woff2_Font_Table>>,
         ) {
             (*(*all_tables).entry((*table).offset).or_default().as_mut()) =
-                (unsafe { woff2_Font::FindTable_u32(&mut (*font), (*table).tag) });
+                (unsafe { woff2_Font::FindTable_2(&mut (*font), (*table).tag) });
         } else {
             (*table).reuse_of = (*(*all_tables).entry((*table).offset).or_default().as_mut());
             if (((*table).tag) != ((*(*table).reuse_of).tag)) {
@@ -1068,12 +1062,12 @@ pub unsafe fn WriteTable_43(
         {
             if ((*table).length as usize) != 0 {
                 ::std::ptr::copy_nonoverlapping(
-                    ((*table).data as *const u8 as *const ::libc::c_void),
-                    (dst.offset(((*table).offset) as isize) as *mut u8 as *mut ::libc::c_void),
+                    ((*table).data as *const ::libc::c_void),
+                    (dst.offset(((*table).offset) as isize) as *mut ::libc::c_void),
                     ((*table).length as usize) as usize,
                 )
             }
-            (dst.offset(((*table).offset) as isize) as *mut u8 as *mut ::libc::c_void)
+            (dst.offset(((*table).offset) as isize) as *mut ::libc::c_void)
         };
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((((*table).length) & (3_u32)))) & (3_u32)) as usize);
@@ -1089,13 +1083,13 @@ pub unsafe fn WriteTable_43(
         {
             let byte_0 = (dst
                 .offset(((*table).offset) as isize)
-                .offset(((*table).length) as isize) as *mut u8
+                .offset(((*table).length) as isize)
                 as *mut ::libc::c_void) as *mut u8;
             for offset in 0..padding_size {
                 *byte_0.offset(offset as isize) = 0 as u8;
             }
             (dst.offset(((*table).offset) as isize)
-                .offset(((*table).length) as isize) as *mut u8 as *mut ::libc::c_void)
+                .offset(((*table).length) as isize) as *mut ::libc::c_void)
         };
     }
     return true;
@@ -1211,11 +1205,11 @@ pub unsafe fn WriteFontCollection_44(
 pub unsafe fn NumGlyphs_45(font: *const woff2_Font) -> i32 {
     let mut head_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1));
-        woff2_Font::FindTable_u32_const(&(*font), _tag)
+        woff2_Font::FindTable_3(&(*font), _tag)
     });
     let mut loca_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2));
-        woff2_Font::FindTable_u32_const(&(*font), _tag)
+        woff2_Font::FindTable_3(&(*font), _tag)
     });
     if (((head_table).is_null()) || ((loca_table).is_null())) || (((*head_table).length) < (52_u32))
     {
@@ -1232,7 +1226,7 @@ pub unsafe fn NumGlyphs_45(font: *const woff2_Font) -> i32 {
 pub unsafe fn IndexFormat_46(font: *const woff2_Font) -> i32 {
     let mut head_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1));
-        woff2_Font::FindTable_u32_const(&(*font), _tag)
+        woff2_Font::FindTable_3(&(*font), _tag)
     });
     if (head_table).is_null() {
         return 0;
@@ -1255,15 +1249,15 @@ pub unsafe fn GetGlyphData_47(
     }
     let mut head_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kHeadTableTag_1));
-        woff2_Font::FindTable_u32_const(&(*font), _tag)
+        woff2_Font::FindTable_3(&(*font), _tag)
     });
     let mut loca_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2));
-        woff2_Font::FindTable_u32_const(&(*font), _tag)
+        woff2_Font::FindTable_3(&(*font), _tag)
     });
     let mut glyf_table: *const woff2_Font_Table = (unsafe {
         let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
-        woff2_Font::FindTable_u32_const(&(*font), _tag)
+        woff2_Font::FindTable_3(&(*font), _tag)
     });
     if ((((head_table).is_null()) || ((loca_table).is_null())) || ((glyf_table).is_null()))
         || (((*head_table).length) < (52_u32))

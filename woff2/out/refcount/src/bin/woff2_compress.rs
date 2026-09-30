@@ -223,7 +223,7 @@ thread_local!(
             | (('l' as u8) as i32)) as u32),
     ])));
 );
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_Buffer {
     buffer_: Value<Ptr<u8>>,
     length_: Value<usize>,
@@ -440,7 +440,7 @@ thread_local!(
 thread_local!(
     pub static kSfntEntrySize_24: Value<usize> = Rc::new(RefCell::new(16_usize));
 );
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_Point {
     pub x: Value<i32>,
     pub y: Value<i32>,
@@ -474,7 +474,7 @@ impl ByteRepr for woff2_Point {
         }
     }
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_Table {
     pub tag: Value<u32>,
     pub flags: Value<u32>,
@@ -720,7 +720,7 @@ pub fn CollectionHeaderSize_27(header_version: u32, num_fonts: u32) -> usize {
     }
     return (*size.borrow());
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_Font_Table {
     pub tag: Value<u32>,
     pub checksum: Value<u32>,
@@ -776,7 +776,7 @@ impl ByteRepr for woff2_Font_Table {
         }
     }
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_Font {
     pub flavor: Value<u32>,
     pub num_tables: Value<u16>,
@@ -817,7 +817,7 @@ impl ByteRepr for woff2_Font {
         }
     }
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_FontCollection {
     pub flavor: Value<u32>,
     pub header_version: Value<u32>,
@@ -1047,10 +1047,7 @@ pub fn ReadTrueTypeFont_33(
     }
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kHeadTableTag_1.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kHeadTableTag_1.with(|rc| *rc.borrow()))
         }),
     ));
     if (!((*head_table.borrow()).is_null()))
@@ -1102,7 +1099,7 @@ pub fn ReadCollectionFont_34(
             ((*all_tables.borrow()).clone() as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>),
         ) {
             let __rhs = ({
-                woff2_FontImpl::FindTable_u32(
+                woff2_FontImpl::FindTable_2(
                     &(*font.borrow()),
                     (*(*table.upgrade().deref()).tag.borrow()),
                 )
@@ -1670,13 +1667,13 @@ pub fn NumGlyphs_45(font: Ptr<woff2_Font>) -> i32 {
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
             let _tag: u32 = kHeadTableTag_1.with(|rc| *rc.borrow());
-            woff2_FontImpl::FindTable_u32_const(&font, _tag)
+            woff2_FontImpl::FindTable_3(&font, _tag)
         }),
     ));
     let loca_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
             let _tag: u32 = kLocaTableTag_2.with(|rc| *rc.borrow());
-            woff2_FontImpl::FindTable_u32_const(&font, _tag)
+            woff2_FontImpl::FindTable_3(&font, _tag)
         }),
     ));
     if (((*head_table.borrow()).is_null()) || ((*loca_table.borrow()).is_null()))
@@ -1702,7 +1699,7 @@ pub fn IndexFormat_46(font: Ptr<woff2_Font>) -> i32 {
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
             let _tag: u32 = kHeadTableTag_1.with(|rc| *rc.borrow());
-            woff2_FontImpl::FindTable_u32_const(&font, _tag)
+            woff2_FontImpl::FindTable_3(&font, _tag)
         }),
     ));
     if (*head_table.borrow()).is_null() {
@@ -1727,19 +1724,19 @@ pub fn GetGlyphData_47(
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
             let _tag: u32 = kHeadTableTag_1.with(|rc| *rc.borrow());
-            woff2_FontImpl::FindTable_u32_const(&font, _tag)
+            woff2_FontImpl::FindTable_3(&font, _tag)
         }),
     ));
     let loca_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
             let _tag: u32 = kLocaTableTag_2.with(|rc| *rc.borrow());
-            woff2_FontImpl::FindTable_u32_const(&font, _tag)
+            woff2_FontImpl::FindTable_3(&font, _tag)
         }),
     ));
     let glyf_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
             let _tag: u32 = kGlyfTableTag_0.with(|rc| *rc.borrow());
-            woff2_FontImpl::FindTable_u32_const(&font, _tag)
+            woff2_FontImpl::FindTable_3(&font, _tag)
         }),
     ));
     if ((((*head_table.borrow()).is_null()) || ((*loca_table.borrow()).is_null()))
@@ -1832,7 +1829,7 @@ pub fn RemoveDigitalSignature_48(font: Ptr<woff2_Font>) -> bool {
     }
     return true;
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_Glyph_Point {
     pub x: Value<i32>,
     pub y: Value<i32>,
@@ -1866,7 +1863,7 @@ impl ByteRepr for woff2_Glyph_Point {
         }
     }
 }
-#[derive()]
+#[derive(VaArg, FnPtrArg)]
 pub struct woff2_Glyph {
     pub x_min: Value<i16>,
     pub x_max: Value<i16>,
@@ -2948,18 +2945,12 @@ pub fn WriteNormalizedLoca_73(index_fmt: i32, num_glyphs: i32, font: Ptr<woff2_F
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
     let glyf_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kGlyfTableTag_0.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kGlyfTableTag_0.with(|rc| *rc.borrow()))
         }),
     ));
     let loca_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kLocaTableTag_2.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kLocaTableTag_2.with(|rc| *rc.borrow()))
         }),
     ));
     let glyph_sz: Value<i32> = Rc::new(RefCell::new(if ((*index_fmt.borrow()) == 0) {
@@ -3101,7 +3092,7 @@ pub fn MakeEditableBuffer_74(font: Ptr<woff2_Font>, tableTag: i32) -> bool {
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
     let tableTag: Value<i32> = Rc::new(RefCell::new(tableTag));
     let table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
-        ({ woff2_FontImpl::FindTable_u32(&(*font.borrow()), ((*tableTag.borrow()) as u32)) }),
+        ({ woff2_FontImpl::FindTable_2(&(*font.borrow()), ((*tableTag.borrow()) as u32)) }),
     ));
     if (*table.borrow()).is_null() {
         return false;
@@ -3157,26 +3148,17 @@ pub fn NormalizeGlyphs_75(font: Ptr<woff2_Font>) -> bool {
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kHeadTableTag_1.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kHeadTableTag_1.with(|rc| *rc.borrow()))
         }),
     ));
     let glyf_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kGlyfTableTag_0.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kGlyfTableTag_0.with(|rc| *rc.borrow()))
         }),
     ));
     let loca_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kLocaTableTag_2.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kLocaTableTag_2.with(|rc| *rc.borrow()))
         }),
     ));
     if (*head_table.borrow()).is_null() {
@@ -3348,10 +3330,7 @@ pub fn FixChecksums_78(font: Ptr<woff2_Font>) -> bool {
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kHeadTableTag_1.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kHeadTableTag_1.with(|rc| *rc.borrow()))
         }),
     ));
     if (*head_table.borrow()).is_null() {
@@ -3427,10 +3406,7 @@ pub fn MarkTransformed_79(font: Ptr<woff2_Font>) -> bool {
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kHeadTableTag_1.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kHeadTableTag_1.with(|rc| *rc.borrow()))
         }),
     ));
     if (*head_table.borrow()).is_null() {
@@ -3635,7 +3611,7 @@ pub fn WriteLong_89(out: Ptr<Vec<u8>>, value: i32) {
         .with_mut(|__v: &mut Vec<u8>| __v.push(((((*value.borrow()) >> 8) & 255) as u8)));
     (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push((((*value.borrow()) & 255) as u8)));
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_GlyfEncoder {
     n_contour_stream_: Value<Vec<u8>>,
     n_points_stream_: Value<Vec<u8>>,
@@ -3727,18 +3703,12 @@ pub fn TransformGlyfAndLocaTables_90(font: Ptr<woff2_Font>) -> bool {
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
     let glyf_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kGlyfTableTag_0.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kGlyfTableTag_0.with(|rc| *rc.borrow()))
         }),
     ));
     let loca_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kLocaTableTag_2.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kLocaTableTag_2.with(|rc| *rc.borrow()))
         }),
     ));
     if ((*loca_table.borrow()).is_null()) && ((*glyf_table.borrow()).is_null()) {
@@ -3819,10 +3789,7 @@ pub fn TransformGlyfAndLocaTables_90(font: Ptr<woff2_Font>) -> bool {
     });
     let head_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kHeadTableTag_1.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kHeadTableTag_1.with(|rc| *rc.borrow()))
         }),
     ));
     if ((*head_table.borrow()).is_null())
@@ -3869,26 +3836,17 @@ pub fn TransformHmtxTable_91(font: Ptr<woff2_Font>) -> bool {
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
     let glyf_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kGlyfTableTag_0.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kGlyfTableTag_0.with(|rc| *rc.borrow()))
         }),
     ));
     let hmtx_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kHmtxTableTag_5.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kHmtxTableTag_5.with(|rc| *rc.borrow()))
         }),
     ));
     let hhea_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
         ({
-            woff2_FontImpl::FindTable_u32(
-                &(*font.borrow()),
-                kHheaTableTag_6.with(|rc| *rc.borrow()),
-            )
+            woff2_FontImpl::FindTable_2(&(*font.borrow()), kHheaTableTag_6.with(|rc| *rc.borrow()))
         }),
     ));
     if ((*hmtx_table.borrow()).is_null()) || ((*glyf_table.borrow()).is_null()) {
@@ -4085,7 +4043,7 @@ pub fn TransformHmtxTable_91(font: Ptr<woff2_Font>) -> bool {
         .borrow_mut()) = __rhs;
     return true;
 }
-#[derive()]
+#[derive(VaArg, FnPtrArg)]
 pub struct woff2_WOFF2Params {
     pub extended_metadata: Value<Vec<u8>>,
     pub brotli_quality: Value<i32>,
@@ -4231,7 +4189,11 @@ pub fn KnownTableIndex_97(tag: u32) -> i32 {
     let tag: Value<u32> = Rc::new(RefCell::new(tag));
     let i: Value<i32> = Rc::new(RefCell::new(0));
     'loop_: while ((*i.borrow()) < 63) {
-        if ((*tag.borrow()) == kKnownTags_8.with(|rc| rc.borrow().clone())[(*i.borrow()) as usize])
+        if ((*tag.borrow())
+            == ({
+                let __idx = (*i.borrow()) as usize;
+                kKnownTags_8.with(|rc| rc.borrow()[__idx])
+            }))
         {
             return (*i.borrow());
         }
@@ -4480,7 +4442,7 @@ pub fn ComputeTotalTransformLength_103(font: Ptr<woff2_Font>) -> usize {
         if (((*(*table.upgrade().deref()).tag.borrow()) & 2155905152_u32) != 0)
             || (!(!({
                 let _tag: u32 = ((*(*table.upgrade().deref()).tag.borrow()) ^ 2155905152_u32);
-                woff2_FontImpl::FindTable_u32_const(&font, _tag)
+                woff2_FontImpl::FindTable_3(&font, _tag)
             })
             .is_null()))
         {
@@ -4595,13 +4557,13 @@ pub fn ConvertTTFToWOFF2_109(
             let glyf_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
                 ({
                     let _tag: u32 = kGlyfTableTag_0.with(|rc| *rc.borrow());
-                    woff2_FontImpl::FindTable_u32(&font, _tag)
+                    woff2_FontImpl::FindTable_2(&font, _tag)
                 }),
             ));
             let loca_table: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
                 ({
                     let _tag: u32 = kLocaTableTag_2.with(|rc| *rc.borrow());
-                    woff2_FontImpl::FindTable_u32(&font, _tag)
+                    woff2_FontImpl::FindTable_2(&font, _tag)
                 }),
             ));
             if !(*glyf_table.borrow()).is_null() {
@@ -4670,7 +4632,7 @@ pub fn ConvertTTFToWOFF2_109(
             let table_to_store: Value<Ptr<woff2_Font_Table>> = Rc::new(RefCell::new(
                 ({
                     let _tag: u32 = ((*tag.borrow()) ^ 2155905152_u32);
-                    woff2_FontImpl::FindTable_u32_const(&font, _tag)
+                    woff2_FontImpl::FindTable_3(&font, _tag)
                 }),
             ));
             if (*table_to_store.borrow()).is_null() {
@@ -4804,7 +4766,7 @@ pub fn ConvertTTFToWOFF2_109(
                 ({
                     let _tag: u32 =
                         ((*(*src_table.upgrade().deref()).tag.borrow()) ^ 2155905152_u32);
-                    woff2_FontImpl::FindTable_u32_const(&font, _tag)
+                    woff2_FontImpl::FindTable_3(&font, _tag)
                 }),
             ));
             if !((*transformed_table.borrow()).is_null()) {
@@ -5477,11 +5439,11 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
 }
 pub trait woff2_FontImpl {
     fn OutputOrderedTags(&self) -> Vec<u32>;
-    fn FindTable_u32(&self, tag: u32) -> Ptr<woff2_Font_Table>;
-    fn FindTable_u32_const(&self, tag: u32) -> Ptr<woff2_Font_Table>;
+    fn FindTable_2(&self, tag: u32) -> Ptr<woff2_Font_Table>;
+    fn FindTable_3(&self, tag: u32) -> Ptr<woff2_Font_Table>;
 }
 impl woff2_FontImpl for Ptr<woff2_Font> {
-    fn FindTable_u32(&self, tag: u32) -> Ptr<woff2_Font_Table> {
+    fn FindTable_2(&self, tag: u32) -> Ptr<woff2_Font_Table> {
         let tag: Value<u32> = Rc::new(RefCell::new(tag));
         let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
             Rc::new(RefCell::new(RefcountMapIter::find_key(
@@ -5499,7 +5461,7 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
             ((*it.borrow()).second().as_pointer())
         };
     }
-    fn FindTable_u32_const(&self, tag: u32) -> Ptr<woff2_Font_Table> {
+    fn FindTable_3(&self, tag: u32) -> Ptr<woff2_Font_Table> {
         let tag: Value<u32> = Rc::new(RefCell::new(tag));
         let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
             Rc::new(RefCell::new(RefcountMapIter::find_key(

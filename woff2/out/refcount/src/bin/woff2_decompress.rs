@@ -223,7 +223,7 @@ thread_local!(
             | (('l' as u8) as i32)) as u32),
     ])));
 );
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_Buffer {
     buffer_: Value<Ptr<u8>>,
     length_: Value<usize>,
@@ -440,7 +440,7 @@ thread_local!(
 thread_local!(
     pub static kSfntEntrySize_24: Value<usize> = Rc::new(RefCell::new(16_usize));
 );
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_Point {
     pub x: Value<i32>,
     pub y: Value<i32>,
@@ -474,7 +474,7 @@ impl ByteRepr for woff2_Point {
         }
     }
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_Table {
     pub tag: Value<u32>,
     pub flags: Value<u32>,
@@ -725,11 +725,11 @@ thread_local!(
         Rc::new(RefCell::new((((128 * 1024) * 1024) as usize)));
 );
 pub trait woff2_WOFF2Out {
-    fn Write_AnyPtr_usize(&self, buf: AnyPtr, n: usize) -> bool;
-    fn Write_AnyPtr_usize_usize(&self, buf: AnyPtr, offset: usize, n: usize) -> bool;
+    fn Write_2(&self, buf: AnyPtr, n: usize) -> bool;
+    fn Write_3(&self, buf: AnyPtr, offset: usize, n: usize) -> bool;
     fn Size(&self) -> usize;
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_WOFF2StringOut {
     buf_: Value<Ptr<Vec<u8>>>,
     max_size_: Value<usize>,
@@ -764,7 +764,7 @@ impl ByteRepr for woff2_WOFF2StringOut {
         }
     }
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_WOFF2MemoryOut {
     buf_: Value<Ptr<u8>>,
     buf_size_: Value<usize>,
@@ -957,7 +957,7 @@ thread_local!(
     pub static kMaxPlausibleCompressionRatio_54: Value<f32> =
         Rc::new(RefCell::new((1.0E+2 as f32)));
 );
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_TtcFont {
     pub flavor: Value<u32>,
     pub dst_offset: Value<u32>,
@@ -995,7 +995,7 @@ impl ByteRepr for woff2_TtcFont {
         }
     }
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_WOFF2Header {
     pub flavor: Value<u32>,
     pub header_version: Value<u32>,
@@ -1049,7 +1049,7 @@ impl ByteRepr for woff2_WOFF2Header {
         }
     }
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_WOFF2FontInfo {
     pub num_glyphs: Value<u16>,
     pub index_format: Value<u16>,
@@ -1098,7 +1098,7 @@ impl ByteRepr for woff2_WOFF2FontInfo {
         }
     }
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct woff2_RebuildMetadata {
     pub header_checksum: Value<u32>,
     pub font_infos: Value<Vec<woff2_WOFF2FontInfo>>,
@@ -1767,7 +1767,7 @@ pub fn Pad4_61(out: PtrDyn<dyn woff2_WOFF2Out>) -> bool {
     ));
     if ((*pad_bytes.borrow()) > 0_u32) {
         if ((!({
-            (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_usize(
+            (*(*out.borrow()).upgrade().deref()).Write_2(
                 ((zeroes.as_pointer()) as Ptr<u8>).to_any(),
                 ((*pad_bytes.borrow()) as usize),
             )
@@ -1851,7 +1851,7 @@ pub fn StoreLoca_62(
         let _buf: AnyPtr =
             (((loca_content.as_pointer() as Ptr<u8>).offset(0_usize)) as Ptr<u8>).to_any();
         let _n: usize = (*loca_content.borrow()).len();
-        (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_usize(_buf, _n)
+        (*(*out.borrow()).upgrade().deref()).Write_2(_buf, _n)
     }) as i64)
         != 0)
     {
@@ -2568,7 +2568,7 @@ pub fn ReconstructGlyf_63(
                     .wrapping_sub((*glyf_start.borrow()))) as u32),
             );
         if ((!({
-            (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_usize(
+            (*(*out.borrow()).upgrade().deref()).Write_2(
                 ((*glyph_buf.borrow()).as_pointer() as Ptr<u8>).to_any(),
                 (*glyph_size.borrow()),
             )
@@ -2832,7 +2832,7 @@ pub fn ReconstructTransformedHmtx_67(
     });
     (*checksum.borrow()).write(__rhs);
     if ((!({
-        (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_usize(
+        (*(*out.borrow()).upgrade().deref()).Write_2(
             (((hmtx_table.as_pointer() as Ptr<u8>).offset(0_usize)) as Ptr<u8>).to_any(),
             ((*hmtx_output_size.borrow()) as usize),
         )
@@ -2903,8 +2903,10 @@ pub fn ReadTableDirectory_69(
                 return false;
             }
         } else {
-            (*tag.borrow_mut()) = kKnownTags_8.with(|rc| rc.borrow().clone())
-                [(((*flag_byte.borrow()) as i32) & 63) as usize];
+            (*tag.borrow_mut()) = ({
+                let __idx = (((*flag_byte.borrow()) as i32) & 63) as usize;
+                kKnownTags_8.with(|rc| rc.borrow()[__idx])
+            });
         }
         let flags: Value<u32> = Rc::new(RefCell::new(0_u32));
         let xform_version: Value<u8> = Rc::new(RefCell::new(
@@ -3313,7 +3315,7 @@ pub fn ReconstructFont_74(
                         as Ptr<u8>)
                         .to_any();
                     let _n: usize = ((*(*table.upgrade().deref()).src_length.borrow()) as usize);
-                    (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_usize(_buf, _n)
+                    (*(*out.borrow()).upgrade().deref()).Write_2(_buf, _n)
                 }) as i64)
                     != 0)
                 {
@@ -3439,7 +3441,7 @@ pub fn ReconstructFont_74(
             )
         });
         if ((!({
-            (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_usize_usize(
+            (*(*out.borrow()).upgrade().deref()).Write_3(
                 ((table_entry.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any(),
                 (((((*(*info.borrow()).upgrade().deref())
                     .table_entry_by_tag
@@ -3507,7 +3509,7 @@ pub fn ReconstructFont_74(
             )
         });
         if ((!({
-            (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_usize_usize(
+            (*(*out.borrow()).upgrade().deref()).Write_3(
                 ((checksum_adjustment.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any(),
                 (((*(*(*head_table.borrow()).upgrade().deref())
                     .dst_offset
@@ -4080,7 +4082,7 @@ pub fn WriteHeaders_76(
     if ((!({
         let _buf: AnyPtr = (((output.as_pointer() as Ptr<u8>).offset(0_usize)) as Ptr<u8>).to_any();
         let _n: usize = (*output.borrow()).len();
-        (*(*out.borrow()).upgrade().deref()).Write_AnyPtr_usize(_buf, _n)
+        (*(*out.borrow()).upgrade().deref()).Write_2(_buf, _n)
     }) as i64)
         != 0)
     {
@@ -4392,15 +4394,15 @@ impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
     fn Size(&self) -> usize {
         return (*self.offset_.borrow());
     }
-    fn Write_AnyPtr_usize(&self, buf: AnyPtr, n: usize) -> bool {
+    fn Write_2(&self, buf: AnyPtr, n: usize) -> bool {
         let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
         let n: Value<usize> = Rc::new(RefCell::new(n));
         return ({
             let _offset: usize = (*self.offset_.borrow());
-            self.Write_AnyPtr_usize_usize((*buf.borrow()).clone(), _offset, (*n.borrow()))
+            self.Write_3((*buf.borrow()).clone(), _offset, (*n.borrow()))
         });
     }
-    fn Write_AnyPtr_usize_usize(&self, buf: AnyPtr, offset: usize, n: usize) -> bool {
+    fn Write_3(&self, buf: AnyPtr, offset: usize, n: usize) -> bool {
         let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
         let offset: Value<usize> = Rc::new(RefCell::new(offset));
         let n: Value<usize> = Rc::new(RefCell::new(n));
@@ -4435,15 +4437,15 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
     fn Size(&self) -> usize {
         return (*self.offset_.borrow());
     }
-    fn Write_AnyPtr_usize(&self, buf: AnyPtr, n: usize) -> bool {
+    fn Write_2(&self, buf: AnyPtr, n: usize) -> bool {
         let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
         let n: Value<usize> = Rc::new(RefCell::new(n));
         return ({
             let _offset: usize = (*self.offset_.borrow());
-            self.Write_AnyPtr_usize_usize((*buf.borrow()).clone(), _offset, (*n.borrow()))
+            self.Write_3((*buf.borrow()).clone(), _offset, (*n.borrow()))
         });
     }
-    fn Write_AnyPtr_usize_usize(&self, buf: AnyPtr, offset: usize, n: usize) -> bool {
+    fn Write_3(&self, buf: AnyPtr, offset: usize, n: usize) -> bool {
         let buf: Value<AnyPtr> = Rc::new(RefCell::new(buf));
         let offset: Value<usize> = Rc::new(RefCell::new(offset));
         let n: Value<usize> = Rc::new(RefCell::new(n));

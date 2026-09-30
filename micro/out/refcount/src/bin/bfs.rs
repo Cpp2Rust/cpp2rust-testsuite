@@ -6,7 +6,7 @@ use std::io::prelude::*;
 use std::io::{Read, Seek, Write};
 use std::os::fd::AsFd;
 use std::rc::{Rc, Weak};
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct Queue {
     pub elems: Value<Ptr<u32>>,
     pub front: Value<usize>,
@@ -44,7 +44,7 @@ impl ByteRepr for Queue {
         }
     }
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct GraphNode {
     pub vertex: Value<u32>,
     pub next: Value<Ptr<GraphNode>>,
@@ -74,7 +74,7 @@ impl ByteRepr for GraphNode {
         }
     }
 }
-#[derive(Default)]
+#[derive(VaArg, FnPtrArg, Default)]
 pub struct Graph {
     pub V: Value<u32>,
     pub adj: Value<Ptr<Ptr<GraphNode>>>,

@@ -122,7 +122,7 @@ pub const brunsli_JPEGReadError_EOB_RUN_TOO_LONG: brunsli_JPEGReadError = 40;
 pub const brunsli_JPEGReadError_IMAGE_TOO_LARGE: brunsli_JPEGReadError = 41;
 pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_PRECISION: brunsli_JPEGReadError = 42;
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_JPEGQuantTable {
     pub values: Vec<i32>,
     pub precision: i32,
@@ -140,7 +140,7 @@ impl Default for brunsli_JPEGQuantTable {
     }
 }
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_JPEGHuffmanCode {
     pub counts: Vec<i32>,
     pub values: Vec<i32>,
@@ -158,20 +158,20 @@ impl Default for brunsli_JPEGHuffmanCode {
     }
 }
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct brunsli_JPEGComponentScanInfo {
     pub comp_idx: u8,
     pub dc_tbl_idx: i32,
     pub ac_tbl_idx: i32,
 }
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct brunsli_JPEGScanInfo_ExtraZeroRunInfo {
     pub block_idx: i32,
     pub num_extra_zero_runs: i32,
 }
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_JPEGScanInfo {
     pub Ss: i32,
     pub Se: i32,
@@ -197,7 +197,7 @@ impl Default for brunsli_JPEGScanInfo {
     }
 }
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_JPEGComponent {
     pub id: i32,
     pub h_samp_factor: i32,
@@ -229,7 +229,7 @@ impl Default for brunsli_JPEGComponent {
     }
 }
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_JPEGData {
     pub width: i32,
     pub height: i32,
@@ -972,11 +972,11 @@ pub unsafe fn BrunsliUnalignedRead16_66(mut p: *const ::libc::c_void) -> u16 {
         if ::std::mem::size_of::<u16>() != 0 {
             ::std::ptr::copy_nonoverlapping(
                 p,
-                ((&mut t as *mut u16) as *mut u16 as *mut ::libc::c_void),
+                ((&mut t as *mut u16) as *mut ::libc::c_void),
                 ::std::mem::size_of::<u16>() as usize,
             )
         }
-        ((&mut t as *mut u16) as *mut u16 as *mut ::libc::c_void)
+        ((&mut t as *mut u16) as *mut ::libc::c_void)
     };
     return t;
 }
@@ -984,7 +984,7 @@ pub unsafe fn BrunsliUnalignedWrite16_67(mut p: *mut ::libc::c_void, mut v: u16)
     {
         if ::std::mem::size_of::<u16>() != 0 {
             ::std::ptr::copy_nonoverlapping(
-                ((&mut v as *mut u16) as *const u16 as *const ::libc::c_void),
+                ((&mut v as *mut u16) as *const ::libc::c_void),
                 p,
                 ::std::mem::size_of::<u16>() as usize,
             )
@@ -998,11 +998,11 @@ pub unsafe fn BrunsliUnalignedRead32_68(mut p: *const ::libc::c_void) -> u32 {
         if ::std::mem::size_of::<u32>() != 0 {
             ::std::ptr::copy_nonoverlapping(
                 p,
-                ((&mut t as *mut u32) as *mut u32 as *mut ::libc::c_void),
+                ((&mut t as *mut u32) as *mut ::libc::c_void),
                 ::std::mem::size_of::<u32>() as usize,
             )
         }
-        ((&mut t as *mut u32) as *mut u32 as *mut ::libc::c_void)
+        ((&mut t as *mut u32) as *mut ::libc::c_void)
     };
     return t;
 }
@@ -1012,11 +1012,11 @@ pub unsafe fn BrunsliUnalignedRead64_69(mut p: *const ::libc::c_void) -> u64 {
         if ::std::mem::size_of::<u64>() != 0 {
             ::std::ptr::copy_nonoverlapping(
                 p,
-                ((&mut t as *mut u64) as *mut u64 as *mut ::libc::c_void),
+                ((&mut t as *mut u64) as *mut ::libc::c_void),
                 ::std::mem::size_of::<u64>() as usize,
             )
         }
-        ((&mut t as *mut u64) as *mut u64 as *mut ::libc::c_void)
+        ((&mut t as *mut u64) as *mut ::libc::c_void)
     };
     return t;
 }
@@ -1024,7 +1024,7 @@ pub unsafe fn BrunsliUnalignedWrite64_70(mut p: *mut ::libc::c_void, mut v: u64)
     {
         if ::std::mem::size_of::<u64>() != 0 {
             ::std::ptr::copy_nonoverlapping(
-                ((&mut v as *mut u64) as *const u64 as *const ::libc::c_void),
+                ((&mut v as *mut u64) as *const ::libc::c_void),
                 p,
                 ::std::mem::size_of::<u64>() as usize,
             )
@@ -1133,7 +1133,7 @@ pub static mut kInitProb_80: std::cell::LazyCell<u8> =
 pub static mut kInitProbCount_81: std::cell::LazyCell<u8> =
     std::cell::LazyCell::new(|| unsafe { 3_u8 });
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_Prob {
     prob8: u8,
     total: u8,
@@ -1564,7 +1564,7 @@ pub unsafe fn IsEmptyBlockContext_106(mut prev: *const i32, mut x: i32) -> i32 {
     return ((*prev.offset(((x) - (1)) as isize)) + (*prev.offset((x) as isize)));
 }
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_ComponentStateDC {
     pub width: i32,
     pub is_zero_prob: brunsli_Prob,
@@ -1625,7 +1625,7 @@ impl Default for brunsli_ComponentStateDC {
     }
 }
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_ComponentState {
     pub width: i32,
     pub context_offset: i32,
@@ -2176,7 +2176,7 @@ impl brunsli_ComponentState {
     }
 }
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_PermutationCoder {
     values_: Vec<u8>,
 }
@@ -2464,7 +2464,7 @@ pub unsafe fn FindBestMatrix_119(
     return best_q;
 }
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct brunsli_Storage {
     pub data: *mut u8,
     pub length: usize,
@@ -2509,17 +2509,17 @@ pub unsafe fn WriteBits_120(mut n_bits: usize, mut bits: u64, mut storage: *mut 
     let mut p: *mut u8 = (*storage).data.offset((((*storage).pos) >> (3)) as isize);
     let mut v: u64 = ((*p) as u64);
     v |= ((bits) << (((*storage).pos) & (7_usize)));
-    (unsafe { BrunsliUnalignedWrite64_70((p as *mut u8 as *mut ::libc::c_void), v) });
+    (unsafe { BrunsliUnalignedWrite64_70((p as *mut ::libc::c_void), v) });
     (*storage).pos = ((*storage).pos).wrapping_add(n_bits);
 }
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct brunsli_ANSEncSymbolInfo {
     pub freq_: u16,
     pub start_: u16,
 }
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, VaArg)]
 pub struct brunsli_ANSTable {
     pub info_: [brunsli_ANSEncSymbolInfo; 18],
 }
@@ -2531,7 +2531,7 @@ impl Default for brunsli_ANSTable {
     }
 }
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, VaArg)]
 pub struct brunsli_ANSCoder {
     state_: u32,
 }
@@ -2898,7 +2898,7 @@ pub unsafe fn FastLog2_127(mut v: i32) -> f64 {
     return (v as f64).log2();
 }
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct brunsli_HistogramPair {
     pub idx1: usize,
     pub idx2: usize,
@@ -3481,7 +3481,7 @@ pub const brunsli_JpegReadMode_JPEG_READ_HEADER: brunsli_JpegReadMode = 0;
 pub const brunsli_JpegReadMode_JPEG_READ_TABLES: brunsli_JpegReadMode = 1;
 pub const brunsli_JpegReadMode_JPEG_READ_ALL: brunsli_JpegReadMode = 2;
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_internal_enc_ComponentMeta {
     pub context_offset: usize,
     pub approx_total_nonzeros: usize,
@@ -3521,7 +3521,7 @@ impl Default for brunsli_internal_enc_ComponentMeta {
     }
 }
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, VaArg)]
 pub struct brunsli_internal_enc_Histogram {
     pub data_: [i32; 18],
     pub total_count_: i32,
@@ -3532,7 +3532,7 @@ impl brunsli_internal_enc_Histogram {
         let mut this = Self {
             data_: [0_i32; 18],
             total_count_: 0_i32,
-            bit_cost_: 0.0_f64,
+            bit_cost_: 0_f64,
         };
         (unsafe { brunsli_internal_enc_Histogram::Clear(&mut this) });
         this
@@ -3546,7 +3546,7 @@ impl Default for brunsli_internal_enc_Histogram {
 static mut kMaxNumberOfHistograms_139: std::cell::LazyCell<usize> =
     std::cell::LazyCell::new(|| unsafe { 256_usize });
 #[repr(C)]
-#[derive(Clone, Default)]
+#[derive(Clone, VaArg, Default)]
 pub struct brunsli_internal_enc_EntropyCodes {
     clustered_: Vec<brunsli_internal_enc_Histogram>,
     context_map_: Vec<u32>,
@@ -3588,7 +3588,7 @@ impl brunsli_internal_enc_EntropyCodes {
     }
 }
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_internal_enc_EntropySource {
     num_bands_: usize,
     histograms_: Vec<brunsli_internal_enc_Histogram>,
@@ -3610,7 +3610,7 @@ impl Default for brunsli_internal_enc_EntropySource {
 static mut kSlackForOneBlock_140: std::cell::LazyCell<usize> =
     std::cell::LazyCell::new(|| unsafe { 1024_usize });
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, VaArg)]
 struct brunsli_internal_enc_DataStream_CodeWord {
     pub context: u32,
     pub value: u16,
@@ -3634,7 +3634,7 @@ impl Default for brunsli_internal_enc_DataStream_CodeWord {
     }
 }
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_internal_enc_DataStream {
     pos_: i32,
     bw_pos_: i32,
@@ -3668,7 +3668,7 @@ impl Default for brunsli_internal_enc_DataStream {
     }
 }
 #[repr(C)]
-#[derive(Clone)]
+#[derive(Clone, VaArg)]
 pub struct brunsli_internal_enc_State {
     pub entropy_source: brunsli_internal_enc_EntropySource,
     pub entropy_codes: *mut brunsli_internal_enc_EntropyCodes,
@@ -3782,11 +3782,11 @@ pub unsafe fn TransformApp0Marker_149(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
     }
     if (({
         let sa = core::slice::from_raw_parts(
-            ((*s).as_ptr() as *const u8 as *const ::libc::c_void) as *const u8,
+            ((*s).as_ptr() as *const ::libc::c_void) as *const u8,
             9_usize as usize,
         );
         let sb = core::slice::from_raw_parts(
-            ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xe0_62)).as_ptr() as *const u8
+            ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xe0_62)).as_ptr()
                 as *const ::libc::c_void) as *const u8,
             9_usize as usize,
         );
@@ -3833,7 +3833,7 @@ pub unsafe fn TransformApp0Marker_149(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
             (*out) = (0..(1_usize) as usize)
                 .map(|_| <u8>::default())
                 .collect::<Vec<_>>();
-            (*&mut (&mut (*out))[0_usize as usize]) = app0_status;
+            (*(&mut (&mut (*out))[0_usize as usize] as *mut u8)) = app0_status;
             return true;
         }
     }
@@ -3843,12 +3843,12 @@ pub unsafe fn TransformApp2Marker_150(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
     if ((((*s).len()) == (3161_usize))
         && (!({
             let sa = core::slice::from_raw_parts(
-                ((*s).as_ptr() as *const u8 as *const ::libc::c_void) as *const u8,
+                ((*s).as_ptr() as *const ::libc::c_void) as *const u8,
                 84_usize as usize,
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xe2_63)).as_ptr()
-                    as *const u8 as *const ::libc::c_void) as *const u8,
+                    as *const ::libc::c_void) as *const u8,
                 84_usize as usize,
             );
             let mut diff = 0_i32;
@@ -3862,15 +3862,13 @@ pub unsafe fn TransformApp2Marker_150(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
         } != 0)))
         && (!({
             let sa = core::slice::from_raw_parts(
-                ((*s).as_ptr().offset((85) as isize) as *const u8 as *const ::libc::c_void)
-                    as *const u8,
+                ((*s).as_ptr().offset((85) as isize) as *const ::libc::c_void) as *const u8,
                 (((3161) - (85)) as usize) as usize,
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xe2_63))
                     .as_ptr()
-                    .offset((85) as isize) as *const u8 as *const ::libc::c_void)
-                    as *const u8,
+                    .offset((85) as isize) as *const ::libc::c_void) as *const u8,
                 (((3161) - (85)) as usize) as usize,
             );
             let mut diff = 0_i32;
@@ -3897,12 +3895,12 @@ pub unsafe fn TransformApp12Marker_151(s: *const Vec<u8>, mut out: *mut Vec<u8>)
     if ((((*s).len()) == (18_usize))
         && (!({
             let sa = core::slice::from_raw_parts(
-                ((*s).as_ptr() as *const u8 as *const ::libc::c_void) as *const u8,
+                ((*s).as_ptr() as *const ::libc::c_void) as *const u8,
                 15_usize as usize,
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xec_64)).as_ptr()
-                    as *const u8 as *const ::libc::c_void) as *const u8,
+                    as *const ::libc::c_void) as *const u8,
                 15_usize as usize,
             );
             let mut diff = 0_i32;
@@ -3916,15 +3914,13 @@ pub unsafe fn TransformApp12Marker_151(s: *const Vec<u8>, mut out: *mut Vec<u8>)
         } != 0)))
         && (!({
             let sa = core::slice::from_raw_parts(
-                ((*s).as_ptr().offset((16) as isize) as *const u8 as *const ::libc::c_void)
-                    as *const u8,
+                ((*s).as_ptr().offset((16) as isize) as *const ::libc::c_void) as *const u8,
                 (((18) - (16)) as usize) as usize,
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xec_64))
                     .as_ptr()
-                    .offset((16) as isize) as *const u8 as *const ::libc::c_void)
-                    as *const u8,
+                    .offset((16) as isize) as *const ::libc::c_void) as *const u8,
                 (((18) - (16)) as usize) as usize,
             );
             let mut diff = 0_i32;
@@ -3951,13 +3947,12 @@ pub unsafe fn TransformApp14Marker_152(s: *const Vec<u8>, mut out: *mut Vec<u8>)
     if ((((*s).len()) == (15_usize))
         && (!({
             let sa = core::slice::from_raw_parts(
-                ((&(&(*s))[(0_usize)] as *const u8) as *const u8 as *const ::libc::c_void)
-                    as *const u8,
+                ((&(&(*s))[(0_usize)] as *const u8) as *const ::libc::c_void) as *const u8,
                 10_usize as usize,
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xee_65)).as_ptr()
-                    as *const u8 as *const ::libc::c_void) as *const u8,
+                    as *const ::libc::c_void) as *const u8,
                 10_usize as usize,
             );
             let mut diff = 0_i32;
@@ -3971,15 +3966,13 @@ pub unsafe fn TransformApp14Marker_152(s: *const Vec<u8>, mut out: *mut Vec<u8>)
         } != 0)))
         && (!({
             let sa = core::slice::from_raw_parts(
-                ((&(&(*s))[(11_usize)] as *const u8) as *const u8 as *const ::libc::c_void)
-                    as *const u8,
+                ((&(&(*s))[(11_usize)] as *const u8) as *const ::libc::c_void) as *const u8,
                 (((15) - (11)) as usize) as usize,
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xee_65))
                     .as_ptr()
-                    .offset((11) as isize) as *const u8 as *const ::libc::c_void)
-                    as *const u8,
+                    .offset((11) as isize) as *const ::libc::c_void) as *const u8,
                 (((15) - (11)) as usize) as usize,
             );
             let mut diff = 0_i32;
@@ -4251,15 +4244,14 @@ pub unsafe fn EncodeHuffmanCode_158(
         {
             if (({
                 let sa = core::slice::from_raw_parts(
-                    ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const i32
-                        as *const ::libc::c_void) as *const u8,
+                    ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const ::libc::c_void)
+                        as *const u8,
                     ::std::mem::size_of::<[i32; 16]>() as usize,
                 );
                 let sb = core::slice::from_raw_parts(
                     ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStockDCHuffmanCodeCounts_54))
                         [(i) as usize]
-                        .as_ptr() as *const i32 as *const ::libc::c_void)
-                        as *const u8,
+                        .as_ptr() as *const ::libc::c_void) as *const u8,
                     ::std::mem::size_of::<[i32; 16]>() as usize,
                 );
                 let mut diff = 0_i32;
@@ -4273,16 +4265,16 @@ pub unsafe fn EncodeHuffmanCode_158(
             }) == (0))
                 && (({
                     let sa = core::slice::from_raw_parts(
-                        ((&(&(*huff)).values[(0_usize)] as *const i32) as *const i32
-                            as *const ::libc::c_void) as *const u8,
+                        ((&(&(*huff)).values[(0_usize)] as *const i32) as *const ::libc::c_void)
+                            as *const u8,
                         ::std::mem::size_of::<[i32; 13]>() as usize,
                     );
                     let sb = core::slice::from_raw_parts(
                         ((*std::cell::LazyCell::force_mut(
                             &mut *&raw mut kStockDCHuffmanCodeValues_55,
                         ))[(i) as usize]
-                            .as_ptr() as *const i32
-                            as *const ::libc::c_void) as *const u8,
+                            .as_ptr() as *const ::libc::c_void)
+                            as *const u8,
                         ::std::mem::size_of::<[i32; 13]>() as usize,
                     );
                     let mut diff = 0_i32;
@@ -4308,15 +4300,14 @@ pub unsafe fn EncodeHuffmanCode_158(
         {
             if (({
                 let sa = core::slice::from_raw_parts(
-                    ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const i32
-                        as *const ::libc::c_void) as *const u8,
+                    ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const ::libc::c_void)
+                        as *const u8,
                     ::std::mem::size_of::<[i32; 16]>() as usize,
                 );
                 let sb = core::slice::from_raw_parts(
                     ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStockACHuffmanCodeCounts_57))
                         [(i) as usize]
-                        .as_ptr() as *const i32 as *const ::libc::c_void)
-                        as *const u8,
+                        .as_ptr() as *const ::libc::c_void) as *const u8,
                     ::std::mem::size_of::<[i32; 16]>() as usize,
                 );
                 let mut diff = 0_i32;
@@ -4330,16 +4321,16 @@ pub unsafe fn EncodeHuffmanCode_158(
             }) == (0))
                 && (({
                     let sa = core::slice::from_raw_parts(
-                        ((&(&(*huff)).values[(0_usize)] as *const i32) as *const i32
-                            as *const ::libc::c_void) as *const u8,
+                        ((&(&(*huff)).values[(0_usize)] as *const i32) as *const ::libc::c_void)
+                            as *const u8,
                         ::std::mem::size_of::<[i32; 163]>() as usize,
                     );
                     let sb = core::slice::from_raw_parts(
                         ((*std::cell::LazyCell::force_mut(
                             &mut *&raw mut kStockACHuffmanCodeValues_59,
                         ))[(i) as usize]
-                            .as_ptr() as *const i32
-                            as *const ::libc::c_void) as *const u8,
+                            .as_ptr() as *const ::libc::c_void)
+                            as *const u8,
                         ::std::mem::size_of::<[i32; 163]>() as usize,
                     );
                     let mut diff = 0_i32;
@@ -4705,11 +4696,11 @@ impl brunsli_internal_enc_Histogram {}
 impl brunsli_internal_enc_Histogram {
     pub unsafe fn Clear(&mut self) {
         {
-            let byte_0 = (self.data_.as_mut_ptr() as *mut i32 as *mut ::libc::c_void) as *mut u8;
+            let byte_0 = (self.data_.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
             for offset in 0..::std::mem::size_of::<[i32; 18]>() {
                 *byte_0.offset(offset as isize) = 0 as u8;
             }
-            (self.data_.as_mut_ptr() as *mut i32 as *mut ::libc::c_void)
+            (self.data_.as_mut_ptr() as *mut ::libc::c_void)
         };
         self.total_count_ = 0;
     }
@@ -5041,12 +5032,12 @@ impl brunsli_internal_enc_DataStream {
         let mut out: *mut u16 = ((*storage).data as *mut u16);
         let mut out_start: *const u16 = (out).cast_const();
         (unsafe {
-            let _p: *mut ::libc::c_void = (out.postfix_inc() as *mut u16 as *mut ::libc::c_void);
+            let _p: *mut ::libc::c_void = (out.postfix_inc() as *mut ::libc::c_void);
             let _v: u16 = (((state) >> (16)) as u16);
             BrunsliUnalignedWrite16_67(_p, _v)
         });
         (unsafe {
-            let _p: *mut ::libc::c_void = (out.postfix_inc() as *mut u16 as *mut ::libc::c_void);
+            let _p: *mut ::libc::c_void = (out.postfix_inc() as *mut ::libc::c_void);
             let _v: u16 = (state as u16);
             BrunsliUnalignedWrite16_67(_p, _v)
         });
@@ -5056,8 +5047,7 @@ impl brunsli_internal_enc_DataStream {
                 &self.code_words_[(i as usize)];
             if ((*word).nbits != 0) {
                 (unsafe {
-                    let _p: *mut ::libc::c_void =
-                        (out.postfix_inc() as *mut u16 as *mut ::libc::c_void);
+                    let _p: *mut ::libc::c_void = (out.postfix_inc() as *mut ::libc::c_void);
                     let _v: u16 = (*word).value;
                     BrunsliUnalignedWrite16_67(_p, _v)
                 });
@@ -5217,13 +5207,12 @@ pub unsafe fn EncodeSignature_171(mut len: usize, mut data: *mut u8, mut pos: *m
         if (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)) != 0 {
             ::std::ptr::copy_nonoverlapping(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignature_44)).as_ptr()
-                    as *const u8 as *const ::libc::c_void),
-                ((&mut (*data.offset((*pos) as isize)) as *mut u8) as *mut u8
-                    as *mut ::libc::c_void),
+                    as *const ::libc::c_void),
+                ((&mut (*data.offset((*pos) as isize)) as *mut u8) as *mut ::libc::c_void),
                 (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)) as usize,
             )
         }
-        ((&mut (*data.offset((*pos) as isize)) as *mut u8) as *mut u8 as *mut ::libc::c_void)
+        ((&mut (*data.offset((*pos) as isize)) as *mut u8) as *mut ::libc::c_void)
     };
     (*pos) = (*pos)
         .wrapping_add((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)));
@@ -5772,15 +5761,14 @@ pub unsafe fn CalculateMeta_186(
                 != 0
             {
                 ::std::ptr::copy_nonoverlapping(
-                    ((&(&(*q)).values[(0_usize)] as *const i32) as *const i32
-                        as *const ::libc::c_void),
-                    ((*m).quant.as_mut_ptr() as *mut i32 as *mut ::libc::c_void),
+                    ((&(&(*q)).values[(0_usize)] as *const i32) as *const ::libc::c_void),
+                    ((*m).quant.as_mut_ptr() as *mut ::libc::c_void),
                     ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize)
                         .wrapping_mul((::std::mem::size_of::<i32>() as usize))
                         as usize,
                 )
             }
-            ((*m).quant.as_mut_ptr() as *mut i32 as *mut ::libc::c_void)
+            ((*m).quant.as_mut_ptr() as *mut ::libc::c_void)
         };
         i.prefix_inc();
     }
@@ -6957,12 +6945,12 @@ pub unsafe fn EncodeOriginalJpg_194(
     {
         if (*jpg).original_jpg_size != 0 {
             ::std::ptr::copy_nonoverlapping(
-                ((*jpg).original_jpg as *const u8 as *const ::libc::c_void),
-                (data as *mut u8 as *mut ::libc::c_void),
+                ((*jpg).original_jpg as *const ::libc::c_void),
+                (data as *mut ::libc::c_void),
                 (*jpg).original_jpg_size as usize,
             )
         }
-        (data as *mut u8 as *mut ::libc::c_void)
+        (data as *mut ::libc::c_void)
     };
     (*len) = (*jpg).original_jpg_size;
     return true;
@@ -7057,7 +7045,7 @@ pub unsafe fn BrunsliEncodeJpegBypass_195(
     return true;
 }
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct brunsli_HuffmanTree {
     pub total_count: u32,
     pub index_left: i16,
@@ -7248,11 +7236,11 @@ pub unsafe fn EncodeContextMap_164(
     });
     let mut symbol_histogram: [u32; 272] = [0_u32; 272];
     {
-        let byte_0 = (symbol_histogram.as_mut_ptr() as *mut u32 as *mut ::libc::c_void) as *mut u8;
+        let byte_0 = (symbol_histogram.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
         for offset in 0..::std::mem::size_of::<[u32; 272]>() {
             *byte_0.offset(offset as isize) = 0 as u8;
         }
-        (symbol_histogram.as_mut_ptr() as *mut u32 as *mut ::libc::c_void)
+        (symbol_histogram.as_mut_ptr() as *mut ::libc::c_void)
     };
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (rle_symbols.len())) {
@@ -7273,18 +7261,18 @@ pub unsafe fn EncodeContextMap_164(
     let mut bit_depths: [u8; 272] = [0_u8; 272];
     let mut bit_codes: [u16; 272] = [0_u16; 272];
     {
-        let byte_0 = (bit_depths.as_mut_ptr() as *mut u8 as *mut ::libc::c_void) as *mut u8;
+        let byte_0 = (bit_depths.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
         for offset in 0..::std::mem::size_of::<[u8; 272]>() {
             *byte_0.offset(offset as isize) = 0 as u8;
         }
-        (bit_depths.as_mut_ptr() as *mut u8 as *mut ::libc::c_void)
+        (bit_depths.as_mut_ptr() as *mut ::libc::c_void)
     };
     {
-        let byte_0 = (bit_codes.as_mut_ptr() as *mut u16 as *mut ::libc::c_void) as *mut u8;
+        let byte_0 = (bit_codes.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
         for offset in 0..::std::mem::size_of::<[u16; 272]>() {
             *byte_0.offset(offset as isize) = 0 as u8;
         }
-        (bit_codes.as_mut_ptr() as *mut u16 as *mut ::libc::c_void)
+        (bit_codes.as_mut_ptr() as *mut ::libc::c_void)
     };
     (unsafe {
         BuildAndStoreHuffmanTree_202(
@@ -7554,7 +7542,7 @@ pub unsafe fn NormalizeCounts_124(
         'loop_: while true {}
     };
     let norm: f32 = (((1.0E+0) * (table_size as f32)) / (total as f32));
-    let mut targets: [f32; 18] = [0.0_f32; 18];
+    let mut targets: [f32; 18] = [0_f32; 18];
     let mut n: i32 = 0;
     'loop_: while ((n) < (max_symbol)) {
         targets[(n) as usize] = ((norm) * ((*counts.offset((n) as isize)) as f32));
@@ -8725,7 +8713,7 @@ pub static mut kJpegHuffmanRootTableBits_230: std::cell::LazyCell<i32> =
 pub static mut kJpegHuffmanLutSize_231: std::cell::LazyCell<i32> =
     std::cell::LazyCell::new(|| unsafe { 1024 });
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, VaArg)]
 pub struct brunsli_HuffmanTableEntry {
     pub bits: u8,
     pub value: u16,
@@ -10004,7 +9992,7 @@ pub unsafe fn ProcessCOM_242(
     return true;
 }
 #[repr(C)]
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct brunsli_BitReaderState {
     pub data_: *const u8,
     pub len_: usize,
@@ -10724,13 +10712,12 @@ pub unsafe fn ProcessScan_248(
                     }) {
                         restarts_to_go = (*jpg).restart_interval;
                         {
-                            let byte_0 = (last_dc_coeff.as_mut_ptr() as *mut i16
-                                as *mut ::libc::c_void)
-                                as *mut u8;
+                            let byte_0 =
+                                (last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
                             for offset in 0..::std::mem::size_of::<[i16; 4]>() {
                                 *byte_0.offset(offset as isize) = 0 as u8;
                             }
-                            (last_dc_coeff.as_mut_ptr() as *mut i16 as *mut ::libc::c_void)
+                            (last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void)
                         };
                         if ((eobrun) > (0)) {
                             write!(
@@ -11432,13 +11419,12 @@ impl brunsli_Storage {
         {
             if len != 0 {
                 ::std::ptr::copy_nonoverlapping(
-                    (src as *const u8 as *const ::libc::c_void),
-                    (self.data.offset(((self.pos) >> (3)) as isize) as *mut u8
-                        as *mut ::libc::c_void),
+                    (src as *const ::libc::c_void),
+                    (self.data.offset(((self.pos) >> (3)) as isize) as *mut ::libc::c_void),
                     len as usize,
                 )
             }
-            (self.data.offset(((self.pos) >> (3)) as isize) as *mut u8 as *mut ::libc::c_void)
+            (self.data.offset(((self.pos) >> (3)) as isize) as *mut ::libc::c_void)
         };
         self.pos = (self.pos).wrapping_add((8_usize).wrapping_mul(len));
     }
@@ -11481,8 +11467,8 @@ pub unsafe fn ReadFileInternal_253(
             ((if read_pos as usize >= (*content).len() - 1 {
                 panic!("out of bounds access")
             } else {
-                &mut (&mut (*content))[read_pos as usize]
-            }) as *mut libc::c_char as *mut ::libc::c_void),
+                (&mut (&mut (*content))[read_pos as usize] as *mut libc::c_char)
+            }) as *mut ::libc::c_void),
             1_usize,
             ((((*(content).cast_const()).len() - 1) as u64).wrapping_sub((read_pos as u64))
                 as usize),
@@ -11521,8 +11507,7 @@ pub unsafe fn WriteFileInternal_255(
     let mut write_pos: usize = 0_usize;
     'loop_: while ((write_pos) < ((*content).len() - 1)) {
         let bytes_written: usize = libcc2rs::fwrite_unsafe(
-            ((&(&(*content))[(write_pos)] as *const libc::c_char) as *const libc::c_char
-                as *const ::libc::c_void),
+            ((&(&(*content))[(write_pos)] as *const libc::c_char) as *const ::libc::c_void),
             1_usize,
             ((((*content).len() - 1) as u64).wrapping_sub((write_pos as u64)) as usize),
             file,
