@@ -394,17 +394,41 @@ pub unsafe fn Size255UShort_9(mut value: u16) -> usize {
 }
 pub unsafe fn Write255UShort_10(mut out: *mut Vec<u8>, mut value: i32) {
     if ((value) < (253)) {
-        (*out).push((value as u8));
+        {
+            let __a1 = (value as u8);
+            (*out).push(__a1)
+        };
     } else if ((value) < (506)) {
-        (*out).push(255_u8);
-        (*out).push((((value) - (253)) as u8));
+        {
+            let __a1 = 255_u8;
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) - (253)) as u8);
+            (*out).push(__a1)
+        };
     } else if ((value) < (762)) {
-        (*out).push(254_u8);
-        (*out).push((((value) - (506)) as u8));
+        {
+            let __a1 = 254_u8;
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) - (506)) as u8);
+            (*out).push(__a1)
+        };
     } else {
-        (*out).push(253_u8);
-        (*out).push((((value) >> (8)) as u8));
-        (*out).push((((value) & (255)) as u8));
+        {
+            let __a1 = 253_u8;
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) >> (8)) as u8);
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) & (255)) as u8);
+            (*out).push(__a1)
+        };
     }
 }
 pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *mut u8) {
@@ -2334,14 +2358,32 @@ pub unsafe fn WriteBytes_87(mut out: *mut Vec<u8>, in_: *const Vec<u8>) {
     }
 }
 pub unsafe fn WriteUShort_88(mut out: *mut Vec<u8>, mut value: i32) {
-    (*out).push((((value) >> (8)) as u8));
-    (*out).push((((value) & (255)) as u8));
+    {
+        let __a1 = (((value) >> (8)) as u8);
+        (*out).push(__a1)
+    };
+    {
+        let __a1 = (((value) & (255)) as u8);
+        (*out).push(__a1)
+    };
 }
 pub unsafe fn WriteLong_89(mut out: *mut Vec<u8>, mut value: i32) {
-    (*out).push(((((value) >> (24)) & (255)) as u8));
-    (*out).push(((((value) >> (16)) & (255)) as u8));
-    (*out).push(((((value) >> (8)) & (255)) as u8));
-    (*out).push((((value) & (255)) as u8));
+    {
+        let __a1 = ((((value) >> (24)) & (255)) as u8);
+        (*out).push(__a1)
+    };
+    {
+        let __a1 = ((((value) >> (16)) & (255)) as u8);
+        (*out).push(__a1)
+    };
+    {
+        let __a1 = ((((value) >> (8)) & (255)) as u8);
+        (*out).push(__a1)
+    };
+    {
+        let __a1 = (((value) & (255)) as u8);
+        (*out).push(__a1)
+    };
 }
 #[repr(C)]
 #[derive(Clone, VaArg, Default)]
@@ -2631,44 +2673,89 @@ impl woff2_GlyfEncoder {
         let mut y_sign_bit: i32 = if ((y) < (0)) { 0 } else { 1 };
         let mut xy_sign_bits: i32 = ((x_sign_bit) + ((2) * (y_sign_bit)));
         if ((x) == (0)) && ((abs_y) < (1280)) {
-            self.flag_byte_stream_
-                .push(((((on_curve_bit) + (((abs_y) & (3840)) >> (7))) + (y_sign_bit)) as u8));
-            self.glyph_stream_.push((((abs_y) & (255)) as u8));
+            {
+                let __a1 = ((((on_curve_bit) + (((abs_y) & (3840)) >> (7))) + (y_sign_bit)) as u8);
+                self.flag_byte_stream_.push(__a1)
+            };
+            {
+                let __a1 = (((abs_y) & (255)) as u8);
+                self.glyph_stream_.push(__a1)
+            };
         } else if ((y) == (0)) && ((abs_x) < (1280)) {
-            self.flag_byte_stream_.push(
-                (((((on_curve_bit) + (10)) + (((abs_x) & (3840)) >> (7))) + (x_sign_bit)) as u8),
-            );
-            self.glyph_stream_.push((((abs_x) & (255)) as u8));
+            {
+                let __a1 = (((((on_curve_bit) + (10)) + (((abs_x) & (3840)) >> (7))) + (x_sign_bit))
+                    as u8);
+                self.flag_byte_stream_.push(__a1)
+            };
+            {
+                let __a1 = (((abs_x) & (255)) as u8);
+                self.glyph_stream_.push(__a1)
+            };
         } else if ((abs_x) < (65)) && ((abs_y) < (65)) {
-            self.flag_byte_stream_.push(
-                ((((((on_curve_bit) + (20)) + (((abs_x) - (1)) & (48)))
+            {
+                let __a1 = ((((((on_curve_bit) + (20)) + (((abs_x) - (1)) & (48)))
                     + ((((abs_y) - (1)) & (48)) >> (2)))
-                    + (xy_sign_bits)) as u8),
-            );
-            self.glyph_stream_
-                .push(((((((abs_x) - (1)) & (15)) << (4)) | (((abs_y) - (1)) & (15))) as u8));
+                    + (xy_sign_bits)) as u8);
+                self.flag_byte_stream_.push(__a1)
+            };
+            {
+                let __a1 = ((((((abs_x) - (1)) & (15)) << (4)) | (((abs_y) - (1)) & (15))) as u8);
+                self.glyph_stream_.push(__a1)
+            };
         } else if ((abs_x) < (769)) && ((abs_y) < (769)) {
-            self.flag_byte_stream_.push(
-                ((((((on_curve_bit) + (84)) + ((12) * ((((abs_x) - (1)) & (768)) >> (8))))
+            {
+                let __a1 = ((((((on_curve_bit) + (84))
+                    + ((12) * ((((abs_x) - (1)) & (768)) >> (8))))
                     + ((((abs_y) - (1)) & (768)) >> (6)))
-                    + (xy_sign_bits)) as u8),
-            );
-            self.glyph_stream_.push(((((abs_x) - (1)) & (255)) as u8));
-            self.glyph_stream_.push(((((abs_y) - (1)) & (255)) as u8));
+                    + (xy_sign_bits)) as u8);
+                self.flag_byte_stream_.push(__a1)
+            };
+            {
+                let __a1 = ((((abs_x) - (1)) & (255)) as u8);
+                self.glyph_stream_.push(__a1)
+            };
+            {
+                let __a1 = ((((abs_y) - (1)) & (255)) as u8);
+                self.glyph_stream_.push(__a1)
+            };
         } else if ((abs_x) < (4096)) && ((abs_y) < (4096)) {
-            self.flag_byte_stream_
-                .push(((((on_curve_bit) + (120)) + (xy_sign_bits)) as u8));
-            self.glyph_stream_.push((((abs_x) >> (4)) as u8));
-            self.glyph_stream_
-                .push((((((abs_x) & (15)) << (4)) | ((abs_y) >> (8))) as u8));
-            self.glyph_stream_.push((((abs_y) & (255)) as u8));
+            {
+                let __a1 = ((((on_curve_bit) + (120)) + (xy_sign_bits)) as u8);
+                self.flag_byte_stream_.push(__a1)
+            };
+            {
+                let __a1 = (((abs_x) >> (4)) as u8);
+                self.glyph_stream_.push(__a1)
+            };
+            {
+                let __a1 = (((((abs_x) & (15)) << (4)) | ((abs_y) >> (8))) as u8);
+                self.glyph_stream_.push(__a1)
+            };
+            {
+                let __a1 = (((abs_y) & (255)) as u8);
+                self.glyph_stream_.push(__a1)
+            };
         } else {
-            self.flag_byte_stream_
-                .push(((((on_curve_bit) + (124)) + (xy_sign_bits)) as u8));
-            self.glyph_stream_.push((((abs_x) >> (8)) as u8));
-            self.glyph_stream_.push((((abs_x) & (255)) as u8));
-            self.glyph_stream_.push((((abs_y) >> (8)) as u8));
-            self.glyph_stream_.push((((abs_y) & (255)) as u8));
+            {
+                let __a1 = ((((on_curve_bit) + (124)) + (xy_sign_bits)) as u8);
+                self.flag_byte_stream_.push(__a1)
+            };
+            {
+                let __a1 = (((abs_x) >> (8)) as u8);
+                self.glyph_stream_.push(__a1)
+            };
+            {
+                let __a1 = (((abs_x) & (255)) as u8);
+                self.glyph_stream_.push(__a1)
+            };
+            {
+                let __a1 = (((abs_y) >> (8)) as u8);
+                self.glyph_stream_.push(__a1)
+            };
+            {
+                let __a1 = (((abs_y) & (255)) as u8);
+                self.glyph_stream_.push(__a1)
+            };
         }
     }
     unsafe fn EnsureOverlapBitmap(&mut self) {

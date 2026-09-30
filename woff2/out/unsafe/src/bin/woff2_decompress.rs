@@ -394,17 +394,41 @@ pub unsafe fn Size255UShort_9(mut value: u16) -> usize {
 }
 pub unsafe fn Write255UShort_10(mut out: *mut Vec<u8>, mut value: i32) {
     if ((value) < (253)) {
-        (*out).push((value as u8));
+        {
+            let __a1 = (value as u8);
+            (*out).push(__a1)
+        };
     } else if ((value) < (506)) {
-        (*out).push(255_u8);
-        (*out).push((((value) - (253)) as u8));
+        {
+            let __a1 = 255_u8;
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) - (253)) as u8);
+            (*out).push(__a1)
+        };
     } else if ((value) < (762)) {
-        (*out).push(254_u8);
-        (*out).push((((value) - (506)) as u8));
+        {
+            let __a1 = 254_u8;
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) - (506)) as u8);
+            (*out).push(__a1)
+        };
     } else {
-        (*out).push(253_u8);
-        (*out).push((((value) >> (8)) as u8));
-        (*out).push((((value) & (255)) as u8));
+        {
+            let __a1 = 253_u8;
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) >> (8)) as u8);
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) & (255)) as u8);
+            (*out).push(__a1)
+        };
     }
 }
 pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *mut u8) {
@@ -2070,12 +2094,18 @@ pub unsafe fn Tables_73(
     if (((*hdr).header_version as i64) != 0) {
         'loop_: for index in 0..((&mut (*hdr)).ttc_fonts[(font_index)].table_indices.len()) {
             let mut index = (&mut (*hdr)).ttc_fonts[(font_index)].table_indices[index].clone();
-            tables.push((&mut (&mut (*hdr)).tables[(index as usize)] as *mut woff2_Table));
+            {
+                let __a1 = (&mut (&mut (*hdr)).tables[(index as usize)] as *mut woff2_Table);
+                tables.push(__a1)
+            };
         }
     } else {
         'loop_: for table in 0..((*hdr).tables.len()) {
             let mut table = (*hdr).tables.as_mut_ptr().add(table);
-            tables.push((table));
+            {
+                let __a1 = (table);
+                tables.push(__a1)
+            };
         }
     }
     return std::mem::take(&mut tables);

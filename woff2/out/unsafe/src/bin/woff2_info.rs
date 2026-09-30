@@ -394,17 +394,41 @@ pub unsafe fn Size255UShort_9(mut value: u16) -> usize {
 }
 pub unsafe fn Write255UShort_10(mut out: *mut Vec<u8>, mut value: i32) {
     if ((value) < (253)) {
-        (*out).push((value as u8));
+        {
+            let __a1 = (value as u8);
+            (*out).push(__a1)
+        };
     } else if ((value) < (506)) {
-        (*out).push(255_u8);
-        (*out).push((((value) - (253)) as u8));
+        {
+            let __a1 = 255_u8;
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) - (253)) as u8);
+            (*out).push(__a1)
+        };
     } else if ((value) < (762)) {
-        (*out).push(254_u8);
-        (*out).push((((value) - (506)) as u8));
+        {
+            let __a1 = 254_u8;
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) - (506)) as u8);
+            (*out).push(__a1)
+        };
     } else {
-        (*out).push(253_u8);
-        (*out).push((((value) >> (8)) as u8));
-        (*out).push((((value) & (255)) as u8));
+        {
+            let __a1 = 253_u8;
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) >> (8)) as u8);
+            (*out).push(__a1)
+        };
+        {
+            let __a1 = (((value) & (255)) as u8);
+            (*out).push(__a1)
+        };
     }
 }
 pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *mut u8) {

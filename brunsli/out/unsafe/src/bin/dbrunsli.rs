@@ -10093,16 +10093,20 @@ pub unsafe fn BufferEndOfBand_239(
                 ((*s).refinement_bits_count_).wrapping_add(stuff_bits_count);
         }
         'loop_: while ((new_bits_count) >= (16_usize)) {
-            (*s).refinement_bits_
-                .push((((new_bits) >> ((new_bits_count).wrapping_sub(16_usize))) as u16));
+            {
+                let __a1 = (((new_bits) >> ((new_bits_count).wrapping_sub(16_usize))) as u16);
+                (*s).refinement_bits_.push(__a1)
+            };
             new_bits_count = (new_bits_count).wrapping_sub(16_usize);
             (*s).refinement_bits_count_ = ((*s).refinement_bits_count_).wrapping_add(16_usize);
         }
         if (new_bits_count != 0) {
-            (*s).refinement_bits_.push(
-                (((new_bits) & ((((1_u32) << (new_bits_count)).wrapping_sub(1_u32)) as u64))
-                    as u16),
-            );
+            {
+                let __a1 = (((new_bits)
+                    & ((((1_u32) << (new_bits_count)).wrapping_sub(1_u32)) as u64))
+                    as u16);
+                (*s).refinement_bits_.push(__a1)
+            };
             (*s).refinement_bits_count_ =
                 ((*s).refinement_bits_count_).wrapping_add(new_bits_count);
         }

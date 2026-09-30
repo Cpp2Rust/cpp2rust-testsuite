@@ -223,51 +223,28 @@ thread_local!(
             | (('l' as u8) as i32)) as u32),
     ])));
 );
-#[derive(VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[byte_size(24)]
 pub struct woff2_Buffer {
-    buffer_: Value<Ptr<u8>>,
-    length_: Value<usize>,
-    offset_: Value<usize>,
+    #[offset(0)]
+    #[byte_size(8)]
+    buffer_: Ptr<u8>,
+    #[offset(8)]
+    length_: usize,
+    #[offset(16)]
+    offset_: usize,
 }
 impl woff2_Buffer {
     pub fn new(data: Ptr<u8>, len: usize) -> Self {
         let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
         let len: Value<usize> = Rc::new(RefCell::new(len));
         let __this: Value<woff2_Buffer> = Rc::new(RefCell::new(Self {
-            buffer_: Rc::new(RefCell::new((*data.borrow()).clone())),
-            length_: Rc::new(RefCell::new((*len.borrow()))),
-            offset_: Rc::new(RefCell::new(0_usize)),
+            buffer_: (*data.borrow()).clone(),
+            length_: (*len.borrow()),
+            offset_: 0_usize,
         }));
         let this: Ptr<woff2_Buffer> = __this.as_pointer();
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
-    }
-}
-impl Clone for woff2_Buffer {
-    fn clone(&self) -> Self {
-        let __this: Value<woff2_Buffer> = Rc::new(RefCell::new(Self {
-            buffer_: Rc::new(RefCell::new((*self.buffer_.borrow()).clone())),
-            length_: Rc::new(RefCell::new((*self.length_.borrow()))),
-            offset_: Rc::new(RefCell::new((*self.offset_.borrow()))),
-        }));
-        let this: Ptr<woff2_Buffer> = __this.as_pointer();
-        Rc::try_unwrap(__this).ok().unwrap().into_inner()
-    }
-}
-impl ByteRepr for woff2_Buffer {
-    fn byte_size() -> usize {
-        24
-    }
-    fn to_bytes(&self, buf: &mut [u8]) {
-        (*self.buffer_.borrow()).to_bytes(&mut buf[0..8]);
-        (*self.length_.borrow()).to_bytes(&mut buf[8..16]);
-        (*self.offset_.borrow()).to_bytes(&mut buf[16..24]);
-    }
-    fn from_bytes(buf: &[u8]) -> Self {
-        Self {
-            buffer_: Rc::new(RefCell::new(<Ptr<u8>>::from_bytes(&buf[0..8]))),
-            length_: Rc::new(RefCell::new(<usize>::from_bytes(&buf[8..16]))),
-            offset_: Rc::new(RefCell::new(<usize>::from_bytes(&buf[16..24]))),
-        }
     }
 }
 pub fn Size255UShort_9(value: u16) -> usize {
@@ -286,17 +263,41 @@ pub fn Write255UShort_10(out: Ptr<Vec<u8>>, value: i32) {
     let out: Value<Ptr<Vec<u8>>> = Rc::new(RefCell::new(out));
     let value: Value<i32> = Rc::new(RefCell::new(value));
     if ((*value.borrow()) < 253) {
-        (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(((*value.borrow()) as u8)));
+        {
+            let __a1 = ((*value.borrow()) as u8);
+            (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(__a1))
+        };
     } else if ((*value.borrow()) < 506) {
-        (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(255_u8));
-        (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push((((*value.borrow()) - 253) as u8)));
+        {
+            let __a1 = 255_u8;
+            (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(__a1))
+        };
+        {
+            let __a1 = (((*value.borrow()) - 253) as u8);
+            (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(__a1))
+        };
     } else if ((*value.borrow()) < 762) {
-        (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(254_u8));
-        (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push((((*value.borrow()) - 506) as u8)));
+        {
+            let __a1 = 254_u8;
+            (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(__a1))
+        };
+        {
+            let __a1 = (((*value.borrow()) - 506) as u8);
+            (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(__a1))
+        };
     } else {
-        (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(253_u8));
-        (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push((((*value.borrow()) >> 8) as u8)));
-        (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push((((*value.borrow()) & 255) as u8)));
+        {
+            let __a1 = 253_u8;
+            (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(__a1))
+        };
+        {
+            let __a1 = (((*value.borrow()) >> 8) as u8);
+            (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(__a1))
+        };
+        {
+            let __a1 = (((*value.borrow()) & 255) as u8);
+            (*out.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(__a1))
+        };
     }
 }
 pub fn Store255UShort_11(val: i32, offset: Ptr<usize>, dst: Ptr<u8>) {
@@ -440,50 +441,36 @@ thread_local!(
 thread_local!(
     pub static kSfntEntrySize_24: Value<usize> = Rc::new(RefCell::new(16_usize));
 );
-#[derive(VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[byte_size(12)]
 pub struct woff2_Point {
-    pub x: Value<i32>,
-    pub y: Value<i32>,
-    pub on_curve: Value<bool>,
+    #[offset(0)]
+    pub x: i32,
+    #[offset(4)]
+    pub y: i32,
+    #[offset(8)]
+    pub on_curve: bool,
 }
-impl Clone for woff2_Point {
-    fn clone(&self) -> Self {
-        let __this: Value<woff2_Point> = Rc::new(RefCell::new(Self {
-            x: Rc::new(RefCell::new((*self.x.borrow()))),
-            y: Rc::new(RefCell::new((*self.y.borrow()))),
-            on_curve: Rc::new(RefCell::new((*self.on_curve.borrow()))),
-        }));
-        let this: Ptr<woff2_Point> = __this.as_pointer();
-        Rc::try_unwrap(__this).ok().unwrap().into_inner()
-    }
-}
-impl ByteRepr for woff2_Point {
-    fn byte_size() -> usize {
-        12
-    }
-    fn to_bytes(&self, buf: &mut [u8]) {
-        (*self.x.borrow()).to_bytes(&mut buf[0..4]);
-        (*self.y.borrow()).to_bytes(&mut buf[4..8]);
-        (*self.on_curve.borrow()).to_bytes(&mut buf[8..9]);
-    }
-    fn from_bytes(buf: &[u8]) -> Self {
-        Self {
-            x: Rc::new(RefCell::new(<i32>::from_bytes(&buf[0..4]))),
-            y: Rc::new(RefCell::new(<i32>::from_bytes(&buf[4..8]))),
-            on_curve: Rc::new(RefCell::new(<bool>::from_bytes(&buf[8..9]))),
-        }
-    }
-}
-#[derive(VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[byte_size(40)]
 pub struct woff2_Table {
-    pub tag: Value<u32>,
-    pub flags: Value<u32>,
-    pub src_offset: Value<u32>,
-    pub src_length: Value<u32>,
-    pub transform_length: Value<u32>,
-    pub dst_offset: Value<u32>,
-    pub dst_length: Value<u32>,
-    pub dst_data: Value<Ptr<u8>>,
+    #[offset(0)]
+    pub tag: u32,
+    #[offset(4)]
+    pub flags: u32,
+    #[offset(8)]
+    pub src_offset: u32,
+    #[offset(12)]
+    pub src_length: u32,
+    #[offset(16)]
+    pub transform_length: u32,
+    #[offset(20)]
+    pub dst_offset: u32,
+    #[offset(24)]
+    pub dst_length: u32,
+    #[offset(32)]
+    #[byte_size(8)]
+    pub dst_data: Ptr<u8>,
 }
 impl std::cmp::Ord for woff2_Table {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
@@ -603,49 +590,6 @@ impl std::cmp::PartialEq for woff2_Table {
     }
 }
 impl std::cmp::Eq for woff2_Table {}
-impl Clone for woff2_Table {
-    fn clone(&self) -> Self {
-        let __this: Value<woff2_Table> = Rc::new(RefCell::new(Self {
-            tag: Rc::new(RefCell::new((*self.tag.borrow()))),
-            flags: Rc::new(RefCell::new((*self.flags.borrow()))),
-            src_offset: Rc::new(RefCell::new((*self.src_offset.borrow()))),
-            src_length: Rc::new(RefCell::new((*self.src_length.borrow()))),
-            transform_length: Rc::new(RefCell::new((*self.transform_length.borrow()))),
-            dst_offset: Rc::new(RefCell::new((*self.dst_offset.borrow()))),
-            dst_length: Rc::new(RefCell::new((*self.dst_length.borrow()))),
-            dst_data: Rc::new(RefCell::new((*self.dst_data.borrow()).clone())),
-        }));
-        let this: Ptr<woff2_Table> = __this.as_pointer();
-        Rc::try_unwrap(__this).ok().unwrap().into_inner()
-    }
-}
-impl ByteRepr for woff2_Table {
-    fn byte_size() -> usize {
-        40
-    }
-    fn to_bytes(&self, buf: &mut [u8]) {
-        (*self.tag.borrow()).to_bytes(&mut buf[0..4]);
-        (*self.flags.borrow()).to_bytes(&mut buf[4..8]);
-        (*self.src_offset.borrow()).to_bytes(&mut buf[8..12]);
-        (*self.src_length.borrow()).to_bytes(&mut buf[12..16]);
-        (*self.transform_length.borrow()).to_bytes(&mut buf[16..20]);
-        (*self.dst_offset.borrow()).to_bytes(&mut buf[20..24]);
-        (*self.dst_length.borrow()).to_bytes(&mut buf[24..28]);
-        (*self.dst_data.borrow()).to_bytes(&mut buf[32..40]);
-    }
-    fn from_bytes(buf: &[u8]) -> Self {
-        Self {
-            tag: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
-            flags: Rc::new(RefCell::new(<u32>::from_bytes(&buf[4..8]))),
-            src_offset: Rc::new(RefCell::new(<u32>::from_bytes(&buf[8..12]))),
-            src_length: Rc::new(RefCell::new(<u32>::from_bytes(&buf[12..16]))),
-            transform_length: Rc::new(RefCell::new(<u32>::from_bytes(&buf[16..20]))),
-            dst_offset: Rc::new(RefCell::new(<u32>::from_bytes(&buf[20..24]))),
-            dst_length: Rc::new(RefCell::new(<u32>::from_bytes(&buf[24..28]))),
-            dst_data: Rc::new(RefCell::new(<Ptr<u8>>::from_bytes(&buf[32..40]))),
-        }
-    }
-}
 pub fn Log2Floor_25(n: u32) -> i32 {
     let n: Value<u32> = Rc::new(RefCell::new(n));
     return if ((*n.borrow()) == 0_u32) {
@@ -720,145 +664,84 @@ pub fn CollectionHeaderSize_27(header_version: u32, num_fonts: u32) -> usize {
     }
     return (*size.borrow());
 }
-#[derive(VaArg, FnPtrArg, Default)]
+#[derive(Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[byte_size(64)]
 pub struct woff2_Font_Table {
-    pub tag: Value<u32>,
-    pub checksum: Value<u32>,
-    pub offset: Value<u32>,
-    pub length: Value<u32>,
-    pub data: Value<Ptr<u8>>,
+    #[offset(0)]
+    pub tag: u32,
+    #[offset(4)]
+    pub checksum: u32,
+    #[offset(8)]
+    pub offset: u32,
+    #[offset(12)]
+    pub length: u32,
+    #[offset(16)]
+    #[byte_size(8)]
+    pub data: Ptr<u8>,
+    #[offset(24)]
+    #[byte_size(24)]
     pub buffer: Value<Vec<u8>>,
-    pub reuse_of: Value<Ptr<woff2_Font_Table>>,
-    pub flag_byte: Value<u8>,
+    #[offset(48)]
+    #[byte_size(8)]
+    pub reuse_of: Ptr<woff2_Font_Table>,
+    #[offset(56)]
+    pub flag_byte: u8,
 }
 impl Clone for woff2_Font_Table {
     fn clone(&self) -> Self {
-        let __this: Value<woff2_Font_Table> = Rc::new(RefCell::new(Self {
-            tag: Rc::new(RefCell::new((*self.tag.borrow()))),
-            checksum: Rc::new(RefCell::new((*self.checksum.borrow()))),
-            offset: Rc::new(RefCell::new((*self.offset.borrow()))),
-            length: Rc::new(RefCell::new((*self.length.borrow()))),
-            data: Rc::new(RefCell::new((*self.data.borrow()).clone())),
-            buffer: Rc::new(RefCell::new((*self.buffer.borrow()).clone())),
-            reuse_of: Rc::new(RefCell::new((*self.reuse_of.borrow()).clone())),
-            flag_byte: Rc::new(RefCell::new((*self.flag_byte.borrow()))),
-        }));
-        let this: Ptr<woff2_Font_Table> = __this.as_pointer();
-        Rc::try_unwrap(__this).ok().unwrap().into_inner()
-    }
-}
-impl ByteRepr for woff2_Font_Table {
-    fn byte_size() -> usize {
-        64
-    }
-    fn to_bytes(&self, buf: &mut [u8]) {
-        (*self.tag.borrow()).to_bytes(&mut buf[0..4]);
-        (*self.checksum.borrow()).to_bytes(&mut buf[4..8]);
-        (*self.offset.borrow()).to_bytes(&mut buf[8..12]);
-        (*self.length.borrow()).to_bytes(&mut buf[12..16]);
-        (*self.data.borrow()).to_bytes(&mut buf[16..24]);
-        (*self.buffer.borrow()).to_bytes(&mut buf[24..48]);
-        (*self.reuse_of.borrow()).to_bytes(&mut buf[48..56]);
-        (*self.flag_byte.borrow()).to_bytes(&mut buf[56..57]);
-    }
-    fn from_bytes(buf: &[u8]) -> Self {
         Self {
-            tag: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
-            checksum: Rc::new(RefCell::new(<u32>::from_bytes(&buf[4..8]))),
-            offset: Rc::new(RefCell::new(<u32>::from_bytes(&buf[8..12]))),
-            length: Rc::new(RefCell::new(<u32>::from_bytes(&buf[12..16]))),
-            data: Rc::new(RefCell::new(<Ptr<u8>>::from_bytes(&buf[16..24]))),
-            buffer: Rc::new(RefCell::new(<Vec<u8>>::from_bytes(&buf[24..48]))),
-            reuse_of: Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::from_bytes(
-                &buf[48..56],
-            ))),
-            flag_byte: Rc::new(RefCell::new(<u8>::from_bytes(&buf[56..57]))),
+            tag: self.tag.clone(),
+            checksum: self.checksum.clone(),
+            offset: self.offset.clone(),
+            length: self.length.clone(),
+            data: self.data.clone(),
+            buffer: Rc::new(RefCell::new((*self.buffer.borrow()).clone())),
+            reuse_of: self.reuse_of.clone(),
+            flag_byte: self.flag_byte.clone(),
         }
     }
 }
-#[derive(VaArg, FnPtrArg, Default)]
+#[derive(Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[byte_size(56)]
 pub struct woff2_Font {
-    pub flavor: Value<u32>,
-    pub num_tables: Value<u16>,
-    pub tables: Value<BTreeMap<u32, Value<woff2_Font_Table>>>,
+    #[offset(0)]
+    pub flavor: u32,
+    #[offset(4)]
+    pub num_tables: u16,
+    #[offset(8)]
+    #[byte_size(48)]
+    pub tables: BTreeMap<u32, Value<woff2_Font_Table>>,
 }
 impl Clone for woff2_Font {
     fn clone(&self) -> Self {
-        let __this: Value<woff2_Font> = Rc::new(RefCell::new(Self {
-            flavor: Rc::new(RefCell::new((*self.flavor.borrow()))),
-            num_tables: Rc::new(RefCell::new((*self.num_tables.borrow()))),
-            tables: Rc::new(RefCell::new(
-                (*self.tables.borrow())
-                    .iter()
-                    .map(|(k, v)| (k.clone(), Rc::new(RefCell::new(v.borrow().clone()))))
-                    .collect(),
-            )),
-        }));
-        let this: Ptr<woff2_Font> = __this.as_pointer();
-        Rc::try_unwrap(__this).ok().unwrap().into_inner()
-    }
-}
-impl ByteRepr for woff2_Font {
-    fn byte_size() -> usize {
-        56
-    }
-    fn to_bytes(&self, buf: &mut [u8]) {
-        (*self.flavor.borrow()).to_bytes(&mut buf[0..4]);
-        (*self.num_tables.borrow()).to_bytes(&mut buf[4..6]);
-        (*self.tables.borrow()).to_bytes(&mut buf[8..56]);
-    }
-    fn from_bytes(buf: &[u8]) -> Self {
         Self {
-            flavor: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
-            num_tables: Rc::new(RefCell::new(<u16>::from_bytes(&buf[4..6]))),
-            tables: Rc::new(RefCell::new(
-                <BTreeMap<u32, Value<woff2_Font_Table>>>::from_bytes(&buf[8..56]),
-            )),
+            flavor: self.flavor.clone(),
+            num_tables: self.num_tables.clone(),
+            tables: self.tables.clone(),
         }
     }
 }
-#[derive(VaArg, FnPtrArg, Default)]
+#[derive(Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[byte_size(80)]
 pub struct woff2_FontCollection {
-    pub flavor: Value<u32>,
-    pub header_version: Value<u32>,
-    pub tables: Value<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>,
+    #[offset(0)]
+    pub flavor: u32,
+    #[offset(4)]
+    pub header_version: u32,
+    #[offset(8)]
+    #[byte_size(48)]
+    pub tables: BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>,
+    #[offset(56)]
+    #[byte_size(24)]
     pub fonts: Value<Vec<woff2_Font>>,
 }
 impl Clone for woff2_FontCollection {
     fn clone(&self) -> Self {
-        let __this: Value<woff2_FontCollection> = Rc::new(RefCell::new(Self {
-            flavor: Rc::new(RefCell::new((*self.flavor.borrow()))),
-            header_version: Rc::new(RefCell::new((*self.header_version.borrow()))),
-            tables: Rc::new(RefCell::new(
-                (*self.tables.borrow())
-                    .iter()
-                    .map(|(k, v)| (k.clone(), Rc::new(RefCell::new(v.borrow().clone()))))
-                    .collect(),
-            )),
-            fonts: Rc::new(RefCell::new((*self.fonts.borrow()).clone())),
-        }));
-        let this: Ptr<woff2_FontCollection> = __this.as_pointer();
-        Rc::try_unwrap(__this).ok().unwrap().into_inner()
-    }
-}
-impl ByteRepr for woff2_FontCollection {
-    fn byte_size() -> usize {
-        80
-    }
-    fn to_bytes(&self, buf: &mut [u8]) {
-        (*self.flavor.borrow()).to_bytes(&mut buf[0..4]);
-        (*self.header_version.borrow()).to_bytes(&mut buf[4..8]);
-        (*self.tables.borrow()).to_bytes(&mut buf[8..56]);
-        (*self.fonts.borrow()).to_bytes(&mut buf[56..80]);
-    }
-    fn from_bytes(buf: &[u8]) -> Self {
         Self {
-            flavor: Rc::new(RefCell::new(<u32>::from_bytes(&buf[0..4]))),
-            header_version: Rc::new(RefCell::new(<u32>::from_bytes(&buf[4..8]))),
-            tables: Rc::new(RefCell::new(
-                <BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>::from_bytes(&buf[8..56]),
-            )),
-            fonts: Rc::new(RefCell::new(<Vec<woff2_Font>>::from_bytes(&buf[56..80]))),
+            flavor: self.flavor.clone(),
+            header_version: self.header_version.clone(),
+            tables: self.tables.clone(),
+            fonts: Rc::new(RefCell::new((*self.fonts.borrow()).clone())),
         }
     }
 }
@@ -961,9 +844,7 @@ pub fn ReadTrueTypeFont_33(
     if (!({
         woff2_BufferImpl::ReadU16(
             &(*file.borrow()),
-            ((*(*font.borrow()).upgrade().deref())
-                .num_tables
-                .as_pointer()),
+            (field_ptr!((*font.borrow()), num_tables)),
         )
     })) || (!({ woff2_BufferImpl::Skip(&(*file.borrow()), 6_usize) }))
     {
@@ -973,66 +854,65 @@ pub fn ReadTrueTypeFont_33(
     let i: Value<u16> = Rc::new(RefCell::new(0_u16));
     'loop_: while {
         let _lhs = ((*i.borrow()) as i32);
-        _lhs < ((*(*(*font.borrow()).upgrade().deref()).num_tables.borrow()) as i32)
+        _lhs < ((*font.borrow()).with(|__s| __s.num_tables) as i32)
     } {
         let table: Value<woff2_Font_Table> = Rc::new(RefCell::new(<woff2_Font_Table>::default()));
-        (*(*table.borrow()).flag_byte.borrow_mut()) = 0_u8;
-        (*(*table.borrow()).reuse_of.borrow_mut()) = Ptr::<woff2_Font_Table>::null();
+        (*table.borrow_mut()).flag_byte = 0_u8;
+        (*table.borrow_mut()).reuse_of = Ptr::<woff2_Font_Table>::null();
         if (((!({
-            woff2_BufferImpl::ReadU32(&(*file.borrow()), ((*table.borrow()).tag.as_pointer()))
+            woff2_BufferImpl::ReadU32(&(*file.borrow()), (field_ptr!(table.as_pointer(), tag)))
         })) || (!({
-            woff2_BufferImpl::ReadU32(&(*file.borrow()), ((*table.borrow()).checksum.as_pointer()))
+            woff2_BufferImpl::ReadU32(
+                &(*file.borrow()),
+                (field_ptr!(table.as_pointer(), checksum)),
+            )
         }))) || (!({
-            woff2_BufferImpl::ReadU32(&(*file.borrow()), ((*table.borrow()).offset.as_pointer()))
+            woff2_BufferImpl::ReadU32(&(*file.borrow()), (field_ptr!(table.as_pointer(), offset)))
         }))) || (!({
-            woff2_BufferImpl::ReadU32(&(*file.borrow()), ((*table.borrow()).length.as_pointer()))
+            woff2_BufferImpl::ReadU32(&(*file.borrow()), (field_ptr!(table.as_pointer(), length)))
         })) {
             return false;
         }
-        if ((((*(*table.borrow()).offset.borrow()) & 3_u32) != 0_u32)
-            || (((*(*table.borrow()).length.borrow()) as usize) > (*len.borrow())))
-            || ((*len.borrow()).wrapping_sub(((*(*table.borrow()).length.borrow()) as usize))
-                < ((*(*table.borrow()).offset.borrow()) as usize))
+        if ((({ (*table.borrow()).offset } & 3_u32) != 0_u32)
+            || (({ (*table.borrow()).length } as usize) > (*len.borrow())))
+            || ((*len.borrow()).wrapping_sub(({ (*table.borrow()).length } as usize))
+                < ({ (*table.borrow()).offset } as usize))
         {
             return false;
         }
-        let __rhs = (*(*table.borrow()).length.borrow());
+        let __rhs = { (*table.borrow()).length };
         (intervals.as_pointer() as Ptr<BTreeMap<u32, Value<u32>>>)
             .with_mut(|__v: &mut BTreeMap<u32, Value<u32>>| {
-                __v.entry((*(*table.borrow()).offset.borrow()))
+                __v.entry({ (*table.borrow()).offset })
                     .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
                     .as_pointer()
             })
             .write(__rhs);
-        let __rhs = (*data.borrow()).offset((*(*table.borrow()).offset.borrow()) as isize);
-        (*(*table.borrow()).data.borrow_mut()) = __rhs;
+        let __rhs = (*data.borrow()).offset(({ (*table.borrow()).offset }) as isize);
+        (*table.borrow_mut()).data = __rhs;
         if RefcountMapIter::find_key(
-            ((*(*font.borrow()).upgrade().deref()).tables.as_pointer()
-                as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
-            &(*(*table.borrow()).tag.borrow()),
+            (field_ptr!((*font.borrow()), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+            &{ (*table.borrow()).tag },
         ) != RefcountMapIter::end(
-            ((*(*font.borrow()).upgrade().deref()).tables.as_pointer()
-                as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+            (field_ptr!((*font.borrow()), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
         ) {
             return false;
         }
         let __rhs = (*table.borrow()).clone();
-        ((*(*font.borrow()).upgrade().deref()).tables.as_pointer()
-            as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>)
+        (field_ptr!((*font.borrow()), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>)
             .with_mut(|__v: &mut BTreeMap<u32, Value<woff2_Font_Table>>| {
-                __v.entry((*(*table.borrow()).tag.borrow()))
+                __v.entry({ (*table.borrow()).tag })
                     .or_insert_with(|| Rc::new(RefCell::new(<woff2_Font_Table>::default())))
                     .as_pointer()
             })
             .write(__rhs);
         (*i.borrow_mut()).prefix_inc();
     }
-    let last_offset: Value<u32> =
-        Rc::new(RefCell::new(
-            (((12_u64 as u64).wrapping_add((16_u64 as u64).wrapping_mul(
-                ((*(*(*font.borrow()).upgrade().deref()).num_tables.borrow()) as u64),
-            ))) as u32),
-        ));
+    let last_offset: Value<u32> = Rc::new(RefCell::new(
+        (((12_u64 as u64).wrapping_add(
+            (16_u64 as u64).wrapping_mul(((*font.borrow()).with(|__s| __s.num_tables) as u64)),
+        )) as u32),
+    ));
     'loop_: for i in RefcountMapIter::begin(intervals.as_pointer()) {
         if ({
             let _lhs = (*i.first().borrow());
@@ -1051,7 +931,7 @@ pub fn ReadTrueTypeFont_33(
         }),
     ));
     if (!((*head_table.borrow()).is_null()))
-        && ((*(*(*head_table.borrow()).upgrade().deref()).length.borrow()) < 52_u32)
+        && ((*head_table.borrow()).with(|__s| __s.length) < 52_u32)
     {
         return false;
     }
@@ -1070,12 +950,7 @@ pub fn ReadCollectionFont_34(
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
     let all_tables: Value<Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>> =
         Rc::new(RefCell::new(all_tables));
-    if !({
-        woff2_BufferImpl::ReadU32(
-            &(*file.borrow()),
-            ((*(*font.borrow()).upgrade().deref()).flavor.as_pointer()),
-        )
-    }) {
+    if !({ woff2_BufferImpl::ReadU32(&(*file.borrow()), (field_ptr!((*font.borrow()), flavor))) }) {
         return false;
     }
     if !({
@@ -1088,25 +963,19 @@ pub fn ReadCollectionFont_34(
     }) {
         return false;
     }
-    'loop_: for entry in
-        RefcountMapIter::begin((*(*font.borrow()).upgrade().deref()).tables.as_pointer())
-    {
+    'loop_: for entry in RefcountMapIter::begin(field_ptr!((*font.borrow()), tables)) {
         let table: Ptr<woff2_Font_Table> = entry.second().as_pointer();
         if RefcountMapIter::find_key(
             ((*all_tables.borrow()).clone() as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>),
-            &(*(*table.upgrade().deref()).offset.borrow()),
+            &table.with(|__s| __s.offset),
         ) == RefcountMapIter::end(
             ((*all_tables.borrow()).clone() as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>),
         ) {
-            let __rhs = ({
-                woff2_FontImpl::FindTable_2(
-                    &(*font.borrow()),
-                    (*(*table.upgrade().deref()).tag.borrow()),
-                )
-            });
+            let __rhs =
+                ({ woff2_FontImpl::FindTable_2(&(*font.borrow()), table.with(|__s| __s.tag)) });
             ((*all_tables.borrow()).clone() as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>)
                 .with_mut(|__v: &mut BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>| {
-                    __v.entry((*(*table.upgrade().deref()).offset.borrow()))
+                    __v.entry(table.with(|__s| __s.offset))
                         .or_insert_with(|| {
                             Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::default()))
                         })
@@ -1117,7 +986,7 @@ pub fn ReadCollectionFont_34(
             let __rhs = (((*all_tables.borrow()).clone()
                 as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>)
                 .with_mut(|__v: &mut BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>| {
-                    __v.entry((*(*table.upgrade().deref()).offset.borrow()))
+                    __v.entry(table.with(|__s| __s.offset))
                         .or_insert_with(|| {
                             Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::default()))
                         })
@@ -1125,14 +994,10 @@ pub fn ReadCollectionFont_34(
                 })
                 .read())
             .clone();
-            (*(*table.upgrade().deref()).reuse_of.borrow_mut()) = __rhs;
+            field!(table, reuse_of).write(__rhs);
             if {
-                let _lhs = (*(*table.upgrade().deref()).tag.borrow());
-                _lhs != (*(*(*(*table.upgrade().deref()).reuse_of.borrow())
-                    .upgrade()
-                    .deref())
-                .tag
-                .borrow())
+                let _lhs = table.with(|__s| __s.tag);
+                _lhs != table.with(|__s| __s.reuse_of.clone()).with(|__s| __s.tag)
             } {
                 return false;
             }
@@ -1154,9 +1019,7 @@ pub fn ReadTrueTypeCollection_35(
     if (!({
         woff2_BufferImpl::ReadU32(
             &(*file.borrow()),
-            ((*(*font_collection.borrow()).upgrade().deref())
-                .header_version
-                .as_pointer()),
+            (field_ptr!((*font_collection.borrow()), header_version)),
         )
     })) || (!({ woff2_BufferImpl::ReadU32(&(*file.borrow()), (num_fonts.as_pointer())) }))
     {
@@ -1177,14 +1040,14 @@ pub fn ReadTrueTypeCollection_35(
     }
     {
         let __a0 = (*offsets.borrow()).len() as usize;
-        (*(*(*font_collection.borrow()).upgrade().deref())
-            .fonts
+        (*(*font_collection.borrow())
+            .with(|__s| __s.fonts.clone())
             .borrow_mut())
         .resize_with(__a0, || <woff2_Font>::default())
     };
     let font_it: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(
-        ((*(*font_collection.borrow()).upgrade().deref())
-            .fonts
+        ((*font_collection.borrow())
+            .with(|__s| __s.fonts.clone())
             .as_pointer() as Ptr<woff2_Font>),
     ));
     let all_tables: Value<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>> =
@@ -1217,16 +1080,12 @@ pub fn ReadFont_36(data: Ptr<u8>, len: usize, font: Ptr<woff2_Font>) -> bool {
         { (*data.borrow()).clone() },
         { (*len.borrow()) },
     )));
-    if !({
-        woff2_BufferImpl::ReadU32(
-            &file.as_pointer(),
-            ((*(*font.borrow()).upgrade().deref()).flavor.as_pointer()),
-        )
-    }) {
+    if !({ woff2_BufferImpl::ReadU32(&file.as_pointer(), (field_ptr!((*font.borrow()), flavor))) })
+    {
         return false;
     }
     if {
-        let _lhs = (*(*(*font.borrow()).upgrade().deref()).flavor.borrow());
+        let _lhs = (*font.borrow()).with(|__s| __s.flavor);
         _lhs == kTtcFontFlavor_22.with(|rc| *rc.borrow())
     } {
         return false;
@@ -1255,34 +1114,27 @@ pub fn ReadFontCollection_37(
     if !({
         woff2_BufferImpl::ReadU32(
             &file.as_pointer(),
-            ((*(*font_collection.borrow()).upgrade().deref())
-                .flavor
-                .as_pointer()),
+            (field_ptr!((*font_collection.borrow()), flavor)),
         )
     }) {
         return false;
     }
     if {
-        let _lhs = (*(*(*font_collection.borrow()).upgrade().deref())
-            .flavor
-            .borrow());
+        let _lhs = (*font_collection.borrow()).with(|__s| __s.flavor);
         _lhs != kTtcFontFlavor_22.with(|rc| *rc.borrow())
     } {
         {
             let __a0 = 1_usize as usize;
-            (*(*(*font_collection.borrow()).upgrade().deref())
-                .fonts
+            (*(*font_collection.borrow())
+                .with(|__s| __s.fonts.clone())
                 .borrow_mut())
             .resize_with(__a0, || <woff2_Font>::default())
         };
-        let font: Ptr<woff2_Font> = ((*(*font_collection.borrow()).upgrade().deref())
-            .fonts
+        let font: Ptr<woff2_Font> = ((*font_collection.borrow())
+            .with(|__s| __s.fonts.clone())
             .as_pointer() as Ptr<woff2_Font>)
             .offset(0_usize);
-        (*(*font.upgrade().deref()).flavor.borrow_mut()) =
-            (*(*(*font_collection.borrow()).upgrade().deref())
-                .flavor
-                .borrow());
+        field!(font, flavor).write((*font_collection.borrow()).with(|__s| __s.flavor));
         return ({
             ReadTrueTypeFont_33(
                 (file.as_pointer()),
@@ -1303,20 +1155,18 @@ pub fn ReadFontCollection_37(
 }
 pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
     let max_offset: Value<usize> = Rc::new(RefCell::new(
-        (((12_u64 as u64).wrapping_add(
-            (16_u64 as u64).wrapping_mul(((*(*font.upgrade().deref()).num_tables.borrow()) as u64)),
-        )) as usize),
+        (((12_u64 as u64)
+            .wrapping_add((16_u64 as u64).wrapping_mul((font.with(|__s| __s.num_tables) as u64))))
+            as usize),
     ));
-    'loop_: for i in RefcountMapIter::begin((*font.upgrade().deref()).tables.as_pointer()) {
+    'loop_: for i in RefcountMapIter::begin(field_ptr!(font, tables)) {
         let table: Ptr<woff2_Font_Table> = i.second().as_pointer();
         let padding_size: Value<usize> = Rc::new(RefCell::new(
-            ((((4_u32).wrapping_sub(((*(*table.upgrade().deref()).length.borrow()) & 3_u32)))
-                & 3_u32) as usize),
+            ((((4_u32).wrapping_sub((table.with(|__s| __s.length) & 3_u32))) & 3_u32) as usize),
         ));
         let end_offset: Value<usize> = Rc::new(RefCell::new(
-            ((*padding_size.borrow())
-                .wrapping_add(((*(*table.upgrade().deref()).offset.borrow()) as usize)))
-            .wrapping_add(((*(*table.upgrade().deref()).length.borrow()) as usize)),
+            ((*padding_size.borrow()).wrapping_add((table.with(|__s| __s.offset) as usize)))
+                .wrapping_add((table.with(|__s| __s.length) as usize)),
         ));
         let __rhs = ({
             let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
@@ -1335,7 +1185,7 @@ pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
 pub fn FontCollectionFileSize_39(font_collection: Ptr<woff2_FontCollection>) -> usize {
     let max_offset: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: for mut font in
-        (*font_collection.upgrade().deref()).fonts.as_pointer() as Ptr<woff2_Font>
+        font_collection.with(|__s| __s.fonts.clone()).as_pointer() as Ptr<woff2_Font>
     {
         let __rhs = ({
             let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
@@ -1381,33 +1231,33 @@ pub fn WriteTableRecord_42(
         return false;
     }
     if ({ woff2_Font_TableImpl::IsReused(&(*table.borrow())) }) {
-        let __rhs = (*(*(*table.borrow()).upgrade().deref()).reuse_of.borrow()).clone();
+        let __rhs = (*table.borrow()).with(|__s| __s.reuse_of.clone());
         (*table.borrow_mut()) = __rhs;
     }
     ({
         StoreU32_30(
-            (*(*(*table.borrow()).upgrade().deref()).tag.borrow()),
+            (*table.borrow()).with(|__s| __s.tag),
             (*offset.borrow()).clone(),
             (*dst.borrow()).clone(),
         )
     });
     ({
         StoreU32_30(
-            (*(*(*table.borrow()).upgrade().deref()).checksum.borrow()),
+            (*table.borrow()).with(|__s| __s.checksum),
             (*offset.borrow()).clone(),
             (*dst.borrow()).clone(),
         )
     });
     ({
         StoreU32_30(
-            (*(*(*table.borrow()).upgrade().deref()).offset.borrow()),
+            (*table.borrow()).with(|__s| __s.offset),
             (*offset.borrow()).clone(),
             (*dst.borrow()).clone(),
         )
     });
     ({
         StoreU32_30(
-            (*(*(*table.borrow()).upgrade().deref()).length.borrow()),
+            (*table.borrow()).with(|__s| __s.length),
             (*offset.borrow()).clone(),
             (*dst.borrow()).clone(),
         )
@@ -1432,43 +1282,35 @@ pub fn WriteTable_43(
     }
     if !({ woff2_Font_TableImpl::IsReused(&table) }) {
         if ({
-            let _lhs = (*(*table.upgrade().deref()).offset.borrow())
-                .wrapping_add((*(*table.upgrade().deref()).length.borrow()));
-            _lhs < (*(*table.upgrade().deref()).offset.borrow())
+            let _lhs = (table.with(|__s| __s.offset)).wrapping_add(table.with(|__s| __s.length));
+            _lhs < table.with(|__s| __s.offset)
         }) || ({
             let _lhs = (*dst_size.borrow());
-            _lhs < (((*(*table.upgrade().deref()).offset.borrow())
-                .wrapping_add((*(*table.upgrade().deref()).length.borrow())))
+            _lhs < (((table.with(|__s| __s.offset)).wrapping_add(table.with(|__s| __s.length)))
                 as usize)
         }) {
             return false;
         }
         {
-            ((*dst.borrow()).offset((*(*table.upgrade().deref()).offset.borrow()) as isize)
-                as Ptr<u8>)
+            ((*dst.borrow()).offset((table.with(|__s| __s.offset)) as isize) as Ptr<u8>)
                 .to_any()
                 .memcpy(
-                    &(*(*table.upgrade().deref()).data.borrow()).to_any(),
-                    ((*(*table.upgrade().deref()).length.borrow()) as usize) as usize,
+                    &(table.with(|__s| __s.data.clone()) as Ptr<u8>).to_any(),
+                    (table.with(|__s| __s.length) as usize) as usize,
                 );
-            ((*dst.borrow()).offset((*(*table.upgrade().deref()).offset.borrow()) as isize)
-                as Ptr<u8>)
-                .to_any()
+            ((*dst.borrow()).offset((table.with(|__s| __s.offset)) as isize) as Ptr<u8>).to_any()
         };
         let padding_size: Value<usize> = Rc::new(RefCell::new(
-            ((((4_u32).wrapping_sub(((*(*table.upgrade().deref()).length.borrow()) & 3_u32)))
-                & 3_u32) as usize),
+            ((((4_u32).wrapping_sub((table.with(|__s| __s.length) & 3_u32))) & 3_u32) as usize),
         ));
         if ({
-            let _lhs = (((*(*table.upgrade().deref()).offset.borrow())
-                .wrapping_add((*(*table.upgrade().deref()).length.borrow())))
+            let _lhs = (((table.with(|__s| __s.offset)).wrapping_add(table.with(|__s| __s.length)))
                 as usize)
                 .wrapping_add((*padding_size.borrow()));
             _lhs < (*padding_size.borrow())
         }) || ({
             let _lhs = (*dst_size.borrow());
-            _lhs < (((*(*table.upgrade().deref()).offset.borrow())
-                .wrapping_add((*(*table.upgrade().deref()).length.borrow())))
+            _lhs < (((table.with(|__s| __s.offset)).wrapping_add(table.with(|__s| __s.length)))
                 as usize)
                 .wrapping_add((*padding_size.borrow()))
         }) {
@@ -1476,15 +1318,13 @@ pub fn WriteTable_43(
         }
         {
             ((*dst.borrow())
-                .offset((*(*table.upgrade().deref()).offset.borrow()) as isize)
-                .offset((*(*table.upgrade().deref()).length.borrow()) as isize)
-                as Ptr<u8>)
+                .offset((table.with(|__s| __s.offset)) as isize)
+                .offset((table.with(|__s| __s.length)) as isize) as Ptr<u8>)
                 .to_any()
                 .memset((0) as u8, (*padding_size.borrow()) as usize);
             ((*dst.borrow())
-                .offset((*(*table.upgrade().deref()).offset.borrow()) as isize)
-                .offset((*(*table.upgrade().deref()).length.borrow()) as isize)
-                as Ptr<u8>)
+                .offset((table.with(|__s| __s.offset)) as isize)
+                .offset((table.with(|__s| __s.length)) as isize) as Ptr<u8>)
                 .to_any()
         };
     }
@@ -1501,29 +1341,28 @@ pub fn WriteFont_41(
     let dst_size: Value<usize> = Rc::new(RefCell::new(dst_size));
     if {
         let _lhs = ((*dst_size.borrow()) as u64);
-        _lhs < (12_u64 as u64).wrapping_add(
-            (16_u64 as u64).wrapping_mul(((*(*font.upgrade().deref()).num_tables.borrow()) as u64)),
-        )
+        _lhs < (12_u64 as u64)
+            .wrapping_add((16_u64 as u64).wrapping_mul((font.with(|__s| __s.num_tables) as u64)))
     } {
         return false;
     }
     ({
         StoreU32_30(
-            (*(*font.upgrade().deref()).flavor.borrow()),
+            font.with(|__s| __s.flavor),
             (*offset.borrow()).clone(),
             (*dst.borrow()).clone(),
         )
     });
     ({
         Store16_31(
-            ((*(*font.upgrade().deref()).num_tables.borrow()) as i32),
+            (font.with(|__s| __s.num_tables) as i32),
             (*offset.borrow()).clone(),
             (*dst.borrow()).clone(),
         )
     });
     let max_pow2: Value<u16> = Rc::new(RefCell::new(
-        (if ((*(*font.upgrade().deref()).num_tables.borrow()) != 0) {
-            ({ Log2Floor_25(((*(*font.upgrade().deref()).num_tables.borrow()) as u32)) })
+        (if (font.with(|__s| __s.num_tables) != 0) {
+            ({ Log2Floor_25((font.with(|__s| __s.num_tables) as u32)) })
         } else {
             0
         } as u16),
@@ -1537,7 +1376,7 @@ pub fn WriteFont_41(
     ));
     let range_shift: Value<u16> = Rc::new(RefCell::new(
         (({
-            let _lhs = (((*(*font.upgrade().deref()).num_tables.borrow()) as i32) << 4);
+            let _lhs = ((font.with(|__s| __s.num_tables) as i32) << 4);
             _lhs - ((*search_range.borrow()) as i32)
         }) as u16),
     ));
@@ -1562,7 +1401,7 @@ pub fn WriteFont_41(
             (*dst.borrow()).clone(),
         )
     });
-    'loop_: for i in RefcountMapIter::begin((*font.upgrade().deref()).tables.as_pointer()) {
+    'loop_: for i in RefcountMapIter::begin(field_ptr!(font, tables)) {
         if !({
             let _offset: Ptr<usize> = (*offset.borrow()).clone();
             let _dst_size: usize = (*dst_size.borrow());
@@ -1587,12 +1426,12 @@ pub fn WriteFontCollection_44(
     let dst_size: Value<usize> = Rc::new(RefCell::new(dst_size));
     let offset: Value<usize> = Rc::new(RefCell::new(0_usize));
     if {
-        let _lhs = (*(*font_collection.upgrade().deref()).flavor.borrow());
+        let _lhs = font_collection.with(|__s| __s.flavor);
         _lhs != kTtcFontFlavor_22.with(|rc| *rc.borrow())
     } {
         return ({
             WriteFont_41(
-                ((*font_collection.upgrade().deref()).fonts.as_pointer() as Ptr<woff2_Font>)
+                (font_collection.with(|__s| __s.fonts.clone()).as_pointer() as Ptr<woff2_Font>)
                     .offset(0_usize),
                 (offset.as_pointer()),
                 (*dst.borrow()).clone(),
@@ -1609,14 +1448,14 @@ pub fn WriteFontCollection_44(
     });
     ({
         StoreU32_30(
-            (*(*font_collection.upgrade().deref()).header_version.borrow()),
+            font_collection.with(|__s| __s.header_version),
             (offset.as_pointer()),
             (*dst.borrow()).clone(),
         )
     });
     ({
         StoreU32_30(
-            ((*(*font_collection.upgrade().deref()).fonts.borrow()).len() as u32),
+            ((*font_collection.with(|__s| __s.fonts.clone()).borrow()).len() as u32),
             (offset.as_pointer()),
             (*dst.borrow()).clone(),
         )
@@ -1625,12 +1464,12 @@ pub fn WriteFontCollection_44(
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while {
         let _lhs = (*i.borrow());
-        _lhs < (*(*font_collection.upgrade().deref()).fonts.borrow()).len()
+        _lhs < (*font_collection.with(|__s| __s.fonts.clone()).borrow()).len()
     } {
         ({ StoreU32_30(0_u32, (offset.as_pointer()), (*dst.borrow()).clone()) });
         (*i.borrow_mut()).postfix_inc();
     }
-    if ((*(*font_collection.upgrade().deref()).header_version.borrow()) == 131072_u32) {
+    if (font_collection.with(|__s| __s.header_version) == 131072_u32) {
         ({ StoreU32_30(0_u32, (offset.as_pointer()), (*dst.borrow()).clone()) });
         ({ StoreU32_30(0_u32, (offset.as_pointer()), (*dst.borrow()).clone()) });
         ({ StoreU32_30(0_u32, (offset.as_pointer()), (*dst.borrow()).clone()) });
@@ -1638,9 +1477,9 @@ pub fn WriteFontCollection_44(
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while {
         let _lhs = (*i.borrow());
-        _lhs < (*(*font_collection.upgrade().deref()).fonts.borrow()).len()
+        _lhs < (*font_collection.with(|__s| __s.fonts.clone()).borrow()).len()
     } {
-        let font: Ptr<woff2_Font> = ((*font_collection.upgrade().deref()).fonts.as_pointer()
+        let font: Ptr<woff2_Font> = (font_collection.with(|__s| __s.fonts.clone()).as_pointer()
             as Ptr<woff2_Font>)
             .offset((*i.borrow()));
         ({
@@ -1677,7 +1516,7 @@ pub fn NumGlyphs_45(font: Ptr<woff2_Font>) -> i32 {
         }),
     ));
     if (((*head_table.borrow()).is_null()) || ((*loca_table.borrow()).is_null()))
-        || ((*(*(*head_table.borrow()).upgrade().deref()).length.borrow()) < 52_u32)
+        || ((*head_table.borrow()).with(|__s| __s.length) < 52_u32)
     {
         return 0;
     }
@@ -1686,12 +1525,12 @@ pub fn NumGlyphs_45(font: Ptr<woff2_Font>) -> i32 {
         (if ((*index_fmt.borrow()) == 0) { 2 } else { 4 }),
     ));
     if {
-        let _lhs = (*(*(*loca_table.borrow()).upgrade().deref()).length.borrow());
+        let _lhs = (*loca_table.borrow()).with(|__s| __s.length);
         _lhs < ((*loca_record_size.borrow()) as u32)
     } {
         return 0;
     }
-    return ((((*(*(*loca_table.borrow()).upgrade().deref()).length.borrow())
+    return (((((*loca_table.borrow()).with(|__s| __s.length))
         .wrapping_div(((*loca_record_size.borrow()) as u32)))
     .wrapping_sub(1_u32)) as i32);
 }
@@ -1705,7 +1544,8 @@ pub fn IndexFormat_46(font: Ptr<woff2_Font>) -> i32 {
     if (*head_table.borrow()).is_null() {
         return 0;
     }
-    return (((*(*(*head_table.borrow()).upgrade().deref()).data.borrow())
+    return (((*head_table.borrow())
+        .with(|__s| __s.data.clone())
         .offset((51) as isize)
         .read()) as i32);
 }
@@ -1741,14 +1581,14 @@ pub fn GetGlyphData_47(
     ));
     if ((((*head_table.borrow()).is_null()) || ((*loca_table.borrow()).is_null()))
         || ((*glyf_table.borrow()).is_null()))
-        || ((*(*(*head_table.borrow()).upgrade().deref()).length.borrow()) < 52_u32)
+        || ((*head_table.borrow()).with(|__s| __s.length) < 52_u32)
     {
         return false;
     }
     let index_fmt: Value<i32> = Rc::new(RefCell::new(({ IndexFormat_46((font).clone()) })));
     let loca_buf: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
-        { (*(*(*loca_table.borrow()).upgrade().deref()).data.borrow()).clone() },
-        { ((*(*(*loca_table.borrow()).upgrade().deref()).length.borrow()) as usize) },
+        { (*loca_table.borrow()).with(|__s| __s.data.clone()) },
+        { ((*loca_table.borrow()).with(|__s| __s.length) as usize) },
     )));
     if ((*index_fmt.borrow()) == 0) {
         let offset1: Value<u16> = Rc::new(RefCell::new(0_u16));
@@ -1765,12 +1605,13 @@ pub fn GetGlyphData_47(
         }))) || (((*offset2.borrow()) as i32) < ((*offset1.borrow()) as i32)))
             || ({
                 let _lhs = ((2 * ((*offset2.borrow()) as i32)) as u32);
-                _lhs > (*(*(*glyf_table.borrow()).upgrade().deref()).length.borrow())
+                _lhs > (*glyf_table.borrow()).with(|__s| __s.length)
             })
         {
             return false;
         }
-        let __rhs = (*(*(*glyf_table.borrow()).upgrade().deref()).data.borrow())
+        let __rhs = (*glyf_table.borrow())
+            .with(|__s| __s.data.clone())
             .offset((2 * ((*offset1.borrow()) as i32)) as isize);
         (*glyph_data.borrow()).write(__rhs);
         let __rhs = ((2 * (((*offset2.borrow()) as i32) - ((*offset1.borrow()) as i32))) as usize);
@@ -1790,12 +1631,13 @@ pub fn GetGlyphData_47(
         }))) || ((*offset2.borrow()) < (*offset1.borrow())))
             || ({
                 let _lhs = (*offset2.borrow());
-                _lhs > (*(*(*glyf_table.borrow()).upgrade().deref()).length.borrow())
+                _lhs > (*glyf_table.borrow()).with(|__s| __s.length)
             })
         {
             return false;
         }
-        let __rhs = (*(*(*glyf_table.borrow()).upgrade().deref()).data.borrow())
+        let __rhs = (*glyf_table.borrow())
+            .with(|__s| __s.data.clone())
             .offset((*offset1.borrow()) as isize);
         (*glyph_data.borrow()).write(__rhs);
         let __rhs = (((*offset2.borrow()).wrapping_sub((*offset1.borrow()))) as usize);
@@ -1807,25 +1649,20 @@ pub fn RemoveDigitalSignature_48(font: Ptr<woff2_Font>) -> bool {
     let font: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(font));
     let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
         Rc::new(RefCell::new(RefcountMapIter::find_key(
-            ((*(*font.borrow()).upgrade().deref()).tables.as_pointer()
-                as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+            (field_ptr!((*font.borrow()), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
             &kDsigTableTag_3.with(|rc| *rc.borrow()),
         )));
     if (*it.borrow())
         != RefcountMapIter::end(
-            ((*(*font.borrow()).upgrade().deref()).tables.as_pointer()
-                as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+            (field_ptr!((*font.borrow()), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
         )
     {
         RefcountMapIter::erase(
-            ((*(*font.borrow()).upgrade().deref()).tables.as_pointer()
-                as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+            (field_ptr!((*font.borrow()), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
             &(*it.borrow()).clone(),
         );
-        let __rhs = ((*(*(*font.borrow()).upgrade().deref()).tables.borrow()).len() as u16);
-        (*(*(*font.borrow()).upgrade().deref())
-            .num_tables
-            .borrow_mut()) = __rhs;
+        let __rhs = ((*(*font.borrow()).upgrade().deref()).tables.len() as u16);
+        field!((*font.borrow()), num_tables).write(__rhs);
     }
     return true;
 }
@@ -2183,19 +2020,19 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         if ((*n_bytes.borrow()) > (((1024 * 1024) * 1024) as usize)) {
             return false;
         }
-        if ((*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add((*n_bytes.borrow()))
-            > (*(*(*self).upgrade().deref()).length_.borrow()))
-            || ((*(*(*self).upgrade().deref()).offset_.borrow())
-                > (*(*(*self).upgrade().deref()).length_.borrow())
-                    .wrapping_sub((*n_bytes.borrow())))
+        if (((*self).with(|__s| __s.offset_)).wrapping_add((*n_bytes.borrow()))
+            > (*self).with(|__s| __s.length_))
+            || ((*self).with(|__s| __s.offset_)
+                > ((*self).with(|__s| __s.length_)).wrapping_sub((*n_bytes.borrow())))
         {
             return false;
         }
         if !(*data.borrow()).is_null() {
             {
                 (*data.borrow()).to_any().memcpy(
-                    &((*(*(*self).upgrade().deref()).buffer_.borrow())
-                        .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
+                    &((*self)
+                        .with(|__s| __s.buffer_.clone())
+                        .offset(((*self).with(|__s| __s.offset_)) as isize)
                         as Ptr<u8>)
                         .to_any(),
                     (*n_bytes.borrow()) as usize,
@@ -2204,39 +2041,40 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
             };
         }
         {
-            let rhs_0 =
-                (*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add((*n_bytes.borrow()));
-            (*(*(*self).upgrade().deref()).offset_.borrow_mut()) = rhs_0
+            let rhs_0 = ((*self).with(|__s| __s.offset_)).wrapping_add((*n_bytes.borrow()));
+            field!((*self), offset_).write(rhs_0)
         };
         return true;
     }
     fn ReadU8(&self, value: Ptr<u8>) -> bool {
         let value: Value<Ptr<u8>> = Rc::new(RefCell::new(value));
-        if ((*(*(*self).upgrade().deref()).length_.borrow()) < 1_usize)
-            || ((*(*(*self).upgrade().deref()).offset_.borrow())
-                > (*(*(*self).upgrade().deref()).length_.borrow()).wrapping_sub(1_usize))
+        if ((*self).with(|__s| __s.length_) < 1_usize)
+            || ((*self).with(|__s| __s.offset_)
+                > ((*self).with(|__s| __s.length_)).wrapping_sub(1_usize))
         {
             return false;
         }
-        let __rhs = ((*(*(*self).upgrade().deref()).buffer_.borrow())
-            .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
+        let __rhs = ((*self)
+            .with(|__s| __s.buffer_.clone())
+            .offset(((*self).with(|__s| __s.offset_)) as isize)
             .read());
         (*value.borrow()).write(__rhs);
-        (*(*(*self).upgrade().deref()).offset_.borrow_mut()).prefix_inc();
+        field!((*self), offset_).with_mut(|__v| __v.prefix_inc());
         return true;
     }
     fn ReadU16(&self, value: Ptr<u16>) -> bool {
         let value: Value<Ptr<u16>> = Rc::new(RefCell::new(value));
-        if ((*(*(*self).upgrade().deref()).length_.borrow()) < 2_usize)
-            || ((*(*(*self).upgrade().deref()).offset_.borrow())
-                > (*(*(*self).upgrade().deref()).length_.borrow()).wrapping_sub(2_usize))
+        if ((*self).with(|__s| __s.length_) < 2_usize)
+            || ((*self).with(|__s| __s.offset_)
+                > ((*self).with(|__s| __s.length_)).wrapping_sub(2_usize))
         {
             return false;
         }
         {
             (*value.borrow()).to_any().memcpy(
-                &((*(*(*self).upgrade().deref()).buffer_.borrow())
-                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
+                &((*self)
+                    .with(|__s| __s.buffer_.clone())
+                    .offset(((*self).with(|__s| __s.offset_)) as isize)
                     as Ptr<u8>)
                     .to_any(),
                 ::std::mem::size_of::<u16>() as usize,
@@ -2246,8 +2084,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         let __rhs = u16::from_be(((*value.borrow()).read()));
         (*value.borrow()).write(__rhs);
         {
-            let rhs_0 = (*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(2_usize);
-            (*(*(*self).upgrade().deref()).offset_.borrow_mut()) = rhs_0
+            let rhs_0 = ((*self).with(|__s| __s.offset_)).wrapping_add(2_usize);
+            field!((*self), offset_).write(rhs_0)
         };
         return true;
     }
@@ -2257,48 +2095,46 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
     }
     fn ReadU24(&self, value: Ptr<u32>) -> bool {
         let value: Value<Ptr<u32>> = Rc::new(RefCell::new(value));
-        if ((*(*(*self).upgrade().deref()).length_.borrow()) < 3_usize)
-            || ((*(*(*self).upgrade().deref()).offset_.borrow())
-                > (*(*(*self).upgrade().deref()).length_.borrow()).wrapping_sub(3_usize))
+        if ((*self).with(|__s| __s.length_) < 3_usize)
+            || ((*self).with(|__s| __s.offset_)
+                > ((*self).with(|__s| __s.length_)).wrapping_sub(3_usize))
         {
             return false;
         }
-        let __rhs = ((((((*(*(*self).upgrade().deref()).buffer_.borrow())
-            .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
+        let __rhs = ((((((*self)
+            .with(|__s| __s.buffer_.clone())
+            .offset(((*self).with(|__s| __s.offset_)) as isize)
             .read()) as u32)
             << 16)
-            | ((((*(*(*self).upgrade().deref()).buffer_.borrow())
-                .offset(
-                    ((*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(1_usize))
-                        as isize,
-                )
+            | ((((*self)
+                .with(|__s| __s.buffer_.clone())
+                .offset((((*self).with(|__s| __s.offset_)).wrapping_add(1_usize)) as isize)
                 .read()) as u32)
                 << 8))
-            | (((*(*(*self).upgrade().deref()).buffer_.borrow())
-                .offset(
-                    ((*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(2_usize))
-                        as isize,
-                )
+            | (((*self)
+                .with(|__s| __s.buffer_.clone())
+                .offset((((*self).with(|__s| __s.offset_)).wrapping_add(2_usize)) as isize)
                 .read()) as u32));
         (*value.borrow()).write(__rhs);
         {
-            let rhs_0 = (*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(3_usize);
-            (*(*(*self).upgrade().deref()).offset_.borrow_mut()) = rhs_0
+            let rhs_0 = ((*self).with(|__s| __s.offset_)).wrapping_add(3_usize);
+            field!((*self), offset_).write(rhs_0)
         };
         return true;
     }
     fn ReadU32(&self, value: Ptr<u32>) -> bool {
         let value: Value<Ptr<u32>> = Rc::new(RefCell::new(value));
-        if ((*(*(*self).upgrade().deref()).length_.borrow()) < 4_usize)
-            || ((*(*(*self).upgrade().deref()).offset_.borrow())
-                > (*(*(*self).upgrade().deref()).length_.borrow()).wrapping_sub(4_usize))
+        if ((*self).with(|__s| __s.length_) < 4_usize)
+            || ((*self).with(|__s| __s.offset_)
+                > ((*self).with(|__s| __s.length_)).wrapping_sub(4_usize))
         {
             return false;
         }
         {
             (*value.borrow()).to_any().memcpy(
-                &((*(*(*self).upgrade().deref()).buffer_.borrow())
-                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
+                &((*self)
+                    .with(|__s| __s.buffer_.clone())
+                    .offset(((*self).with(|__s| __s.offset_)) as isize)
                     as Ptr<u8>)
                     .to_any(),
                 ::std::mem::size_of::<u32>() as usize,
@@ -2308,8 +2144,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         let __rhs = u32::from_be(((*value.borrow()).read()));
         (*value.borrow()).write(__rhs);
         {
-            let rhs_0 = (*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(4_usize);
-            (*(*(*self).upgrade().deref()).offset_.borrow_mut()) = rhs_0
+            let rhs_0 = ((*self).with(|__s| __s.offset_)).wrapping_add(4_usize);
+            field!((*self), offset_).write(rhs_0)
         };
         return true;
     }
@@ -2319,16 +2155,17 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
     }
     fn ReadTag(&self, value: Ptr<u32>) -> bool {
         let value: Value<Ptr<u32>> = Rc::new(RefCell::new(value));
-        if ((*(*(*self).upgrade().deref()).length_.borrow()) < 4_usize)
-            || ((*(*(*self).upgrade().deref()).offset_.borrow())
-                > (*(*(*self).upgrade().deref()).length_.borrow()).wrapping_sub(4_usize))
+        if ((*self).with(|__s| __s.length_) < 4_usize)
+            || ((*self).with(|__s| __s.offset_)
+                > ((*self).with(|__s| __s.length_)).wrapping_sub(4_usize))
         {
             return false;
         }
         {
             (*value.borrow()).to_any().memcpy(
-                &((*(*(*self).upgrade().deref()).buffer_.borrow())
-                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
+                &((*self)
+                    .with(|__s| __s.buffer_.clone())
+                    .offset(((*self).with(|__s| __s.offset_)) as isize)
                     as Ptr<u8>)
                     .to_any(),
                 ::std::mem::size_of::<u32>() as usize,
@@ -2336,23 +2173,24 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
             (*value.borrow()).to_any()
         };
         {
-            let rhs_0 = (*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(4_usize);
-            (*(*(*self).upgrade().deref()).offset_.borrow_mut()) = rhs_0
+            let rhs_0 = ((*self).with(|__s| __s.offset_)).wrapping_add(4_usize);
+            field!((*self), offset_).write(rhs_0)
         };
         return true;
     }
     fn ReadR64(&self, value: Ptr<u64>) -> bool {
         let value: Value<Ptr<u64>> = Rc::new(RefCell::new(value));
-        if ((*(*(*self).upgrade().deref()).length_.borrow()) < 8_usize)
-            || ((*(*(*self).upgrade().deref()).offset_.borrow())
-                > (*(*(*self).upgrade().deref()).length_.borrow()).wrapping_sub(8_usize))
+        if ((*self).with(|__s| __s.length_) < 8_usize)
+            || ((*self).with(|__s| __s.offset_)
+                > ((*self).with(|__s| __s.length_)).wrapping_sub(8_usize))
         {
             return false;
         }
         {
             (*value.borrow()).to_any().memcpy(
-                &((*(*(*self).upgrade().deref()).buffer_.borrow())
-                    .offset((*(*(*self).upgrade().deref()).offset_.borrow()) as isize)
+                &((*self)
+                    .with(|__s| __s.buffer_.clone())
+                    .offset(((*self).with(|__s| __s.offset_)) as isize)
                     as Ptr<u8>)
                     .to_any(),
                 ::std::mem::size_of::<u64>() as usize,
@@ -2360,26 +2198,26 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
             (*value.borrow()).to_any()
         };
         {
-            let rhs_0 = (*(*(*self).upgrade().deref()).offset_.borrow()).wrapping_add(8_usize);
-            (*(*(*self).upgrade().deref()).offset_.borrow_mut()) = rhs_0
+            let rhs_0 = ((*self).with(|__s| __s.offset_)).wrapping_add(8_usize);
+            field!((*self), offset_).write(rhs_0)
         };
         return true;
     }
     fn buffer(&self) -> Ptr<u8> {
-        return (*(*(*self).upgrade().deref()).buffer_.borrow()).clone();
+        return (*self).with(|__s| __s.buffer_.clone());
     }
     fn offset(&self) -> usize {
-        return (*(*(*self).upgrade().deref()).offset_.borrow());
+        return (*self).with(|__s| __s.offset_);
     }
     fn length(&self) -> usize {
-        return (*(*(*self).upgrade().deref()).length_.borrow());
+        return (*self).with(|__s| __s.length_);
     }
     fn set_offset(&self, newoffset: usize) -> bool {
         let newoffset: Value<usize> = Rc::new(RefCell::new(newoffset));
-        if ((*newoffset.borrow()) > (*(*(*self).upgrade().deref()).length_.borrow())) {
+        if ((*newoffset.borrow()) > (*self).with(|__s| __s.length_)) {
             return false;
         }
-        (*(*(*self).upgrade().deref()).offset_.borrow_mut()) = (*newoffset.borrow());
+        field!((*self), offset_).write((*newoffset.borrow()));
         return true;
     }
 }
@@ -2393,14 +2231,12 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
         let tag: Value<u32> = Rc::new(RefCell::new(tag));
         let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
             Rc::new(RefCell::new(RefcountMapIter::find_key(
-                ((*(*self).upgrade().deref()).tables.as_pointer()
-                    as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+                (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
                 &(*tag.borrow()),
             )));
         return if (*it.borrow())
             == RefcountMapIter::end(
-                ((*(*self).upgrade().deref()).tables.as_pointer()
-                    as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+                (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
             ) {
             Ptr::<woff2_Font_Table>::null()
         } else {
@@ -2411,14 +2247,12 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
         let tag: Value<u32> = Rc::new(RefCell::new(tag));
         let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
             Rc::new(RefCell::new(RefcountMapIter::find_key(
-                ((*(*self).upgrade().deref()).tables.as_pointer()
-                    as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+                (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
                 &(*tag.borrow()),
             )));
         return if (*it.borrow())
             == RefcountMapIter::end(
-                ((*(*self).upgrade().deref()).tables.as_pointer()
-                    as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+                (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
             ) {
             Ptr::<woff2_Font_Table>::null()
         } else {
@@ -2427,13 +2261,13 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
     }
     fn OutputOrderedTags(&self) -> Vec<u32> {
         let output_order: Value<Vec<u32>> = Rc::new(RefCell::new(Vec::new()));
-        'loop_: for i in RefcountMapIter::begin((*(*self).upgrade().deref()).tables.as_pointer()) {
+        'loop_: for i in RefcountMapIter::begin(field_ptr!((*self), tables)) {
             let table: Ptr<woff2_Font_Table> = i.second().as_pointer();
-            if (((*(*table.upgrade().deref()).tag.borrow()) & 2155905152_u32) != 0) {
+            if ((table.with(|__s| __s.tag) & 2155905152_u32) != 0) {
                 continue 'loop_;
             }
             {
-                let a0_clone = (*(*table.upgrade().deref()).tag.borrow()).clone();
+                let a0_clone = table.with(|__s| __s.tag).clone();
                 (*output_order.borrow_mut()).push(a0_clone)
             };
         }
@@ -2539,7 +2373,7 @@ pub trait woff2_Font_TableImpl {
 }
 impl woff2_Font_TableImpl for Ptr<woff2_Font_Table> {
     fn IsReused(&self) -> bool {
-        return !((*(*(*self).upgrade().deref()).reuse_of.borrow()).is_null());
+        return !(((*self).with(|__s| __s.reuse_of.clone())).is_null());
     }
 }
 pub trait woff2_TableImpl {
@@ -2548,8 +2382,8 @@ pub trait woff2_TableImpl {
 impl woff2_TableImpl for Ptr<woff2_Table> {
     fn operator_lt(&self, other: Ptr<woff2_Table>) -> bool {
         return {
-            let _lhs = (*(*(*self).upgrade().deref()).tag.borrow());
-            _lhs < (*(*other.upgrade().deref()).tag.borrow())
+            let _lhs = (*self).with(|__s| __s.tag);
+            _lhs < other.with(|__s| __s.tag)
         };
     }
 }

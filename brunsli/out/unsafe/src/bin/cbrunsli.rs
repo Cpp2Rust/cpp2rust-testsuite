@@ -7179,8 +7179,14 @@ pub unsafe fn RunLengthCodeZeros_201(
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*v_in).len())) {
         if (((&(*v_in))[(i)]) != (0_u32)) {
-            (*v_out).push(((&(*v_in))[(i)]).wrapping_add((*max_run_length_prefix)));
-            (*extra_bits).push(0_u32);
+            {
+                let __a1 = ((&(*v_in))[(i)]).wrapping_add((*max_run_length_prefix));
+                (*v_out).push(__a1)
+            };
+            {
+                let __a1 = 0_u32;
+                (*extra_bits).push(__a1)
+            };
             i.prefix_inc();
         } else {
             let mut reps: u32 = 1_u32;
@@ -7198,14 +7204,20 @@ pub unsafe fn RunLengthCodeZeros_201(
                         let a0_clone = run_length_prefix.clone();
                         (*v_out).push(a0_clone)
                     };
-                    (*extra_bits).push((reps).wrapping_sub(((1_u32) << (run_length_prefix))));
+                    {
+                        let __a1 = (reps).wrapping_sub(((1_u32) << (run_length_prefix)));
+                        (*extra_bits).push(__a1)
+                    };
                     break;
                 } else {
                     {
                         let a0_clone = max_prefix.clone();
                         (*v_out).push(a0_clone)
                     };
-                    (*extra_bits).push(((1_u32) << (max_prefix)).wrapping_sub((1_u32 as u32)));
+                    {
+                        let __a1 = ((1_u32) << (max_prefix)).wrapping_sub((1_u32 as u32));
+                        (*extra_bits).push(__a1)
+                    };
                     reps =
                         (reps).wrapping_sub(((2_u32) << (max_prefix)).wrapping_sub((1_u32 as u32)));
                 }
@@ -8303,9 +8315,11 @@ pub unsafe fn CreateHuffmanTree_220(
                         (&mut __tmp_1) as *const _
                     })
                 };
-                tree.push(brunsli_HuffmanTree::new({ count }, { (-1_i32 as i16) }, {
-                    (i as i16)
-                }));
+                {
+                    let __a1 =
+                        brunsli_HuffmanTree::new({ count }, { (-1_i32 as i16) }, { (i as i16) });
+                    tree.push(__a1)
+                };
             };
         }
         let n: usize = tree.len();
@@ -10076,9 +10090,10 @@ impl brunsli_BitReaderState {
             }
             let mut i: i32 = ((npadbits) - (1));
             'loop_: while ((i) >= (0)) {
-                (*jpg)
-                    .padding_bits
-                    .push(((((padbits) >> (i)) & (1_u64)) as i32));
+                {
+                    let __a1 = ((((padbits) >> (i)) & (1_u64)) as i32);
+                    (*jpg).padding_bits.push(__a1)
+                };
                 i.prefix_dec();
             }
         }
@@ -11049,7 +11064,10 @@ pub unsafe fn ReadJpeg_196(
         __do_while = false;
         let mut num_skipped: usize = (unsafe { FindNextMarker_250(data, len, pos) });
         if ((num_skipped) > (0_usize)) {
-            (*jpg).marker_order.push(255_u8);
+            {
+                let __a1 = 255_u8;
+                (*jpg).marker_order.push(__a1)
+            };
             (*jpg).inter_marker_data.push(
                 core::slice::from_raw_parts(
                     data.offset((pos) as isize),
@@ -11208,7 +11226,10 @@ pub unsafe fn ReadJpeg_196(
         if !(ok) {
             return false;
         }
-        (*jpg).marker_order.push((marker as u8));
+        {
+            let __a1 = (marker as u8);
+            (*jpg).marker_order.push(__a1)
+        };
         if ((mode as i32) == (brunsli_JpegReadMode_JPEG_READ_HEADER as i32)) && (found_sof) {
             break;
         }
