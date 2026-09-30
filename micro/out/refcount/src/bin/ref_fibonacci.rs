@@ -14,8 +14,7 @@ pub fn fib_0(n: Ptr<u64>) {
     let n_2: Value<u64> = Rc::new(RefCell::new((n.read()).wrapping_sub(2_u64)));
     ({ fib_0(n_1.as_pointer()) });
     ({ fib_0(n_2.as_pointer()) });
-    let __rhs = (*n_1.borrow()).wrapping_add((*n_2.borrow()));
-    n.write(__rhs);
+    n.write({ (*n_1.borrow()).wrapping_add((*n_2.borrow())) });
 }
 pub fn main() {
     __cpp2rust_init_globals();

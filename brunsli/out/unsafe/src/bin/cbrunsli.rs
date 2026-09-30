@@ -7985,8 +7985,7 @@ pub unsafe fn StoreHuffmanTreeToBitMask_216(
             WriteBits_120(_n_bits, _bits, storage)
         });
         'switch: {
-            let __match_cond = ix;
-            match __match_cond {
+            match { ix } {
                 __v if __v == 16_usize => {
                     (unsafe {
                         WriteBits_120(
@@ -11105,8 +11104,7 @@ pub unsafe fn ReadJpeg_196(
         pos = (pos).wrapping_add(2_usize);
         let mut ok: bool = true;
         'switch: {
-            let __match_cond = marker;
-            match __match_cond {
+            match { marker } {
                 __v if __v == 192 || __v == 193 || __v == 194 => {
                     is_progressive = ((marker) == (194));
                     ok =

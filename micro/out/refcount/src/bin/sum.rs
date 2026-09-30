@@ -16,10 +16,8 @@ fn main_0() -> i32 {
     let i: Value<u64> = Rc::new(RefCell::new(0_u64));
     let j: Value<u64> = Rc::new(RefCell::new((*N.borrow())));
     'loop_: while ((*i.borrow()) < (*j.borrow())) {
-        {
-            let rhs_0 = (*sum.borrow()).wrapping_add((*i.borrow()).wrapping_add((*j.borrow())));
-            (*sum.borrow_mut()) = rhs_0
-        };
+        (*sum.borrow_mut()) =
+            { (*sum.borrow()).wrapping_add((*i.borrow()).wrapping_add((*j.borrow()))) };
         {
             (*i.borrow_mut()).prefix_inc();
             (*j.borrow_mut()).prefix_dec()

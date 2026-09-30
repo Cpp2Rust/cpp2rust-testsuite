@@ -1653,22 +1653,23 @@ pub fn WeightedAverageContext_98(vals: Ptr<i32>, prev_row_delta: i32) -> i32 {
     let vals: Value<Ptr<i32>> = Rc::new(RefCell::new(vals));
     let prev_row_delta: Value<i32> = Rc::new(RefCell::new(prev_row_delta));
     let sum: Value<i32> = Rc::new(RefCell::new(
-        (({
-            let _lhs = {
-                let _lhs = (4 + ((*vals.borrow()).offset((0) as isize).read()));
-                _lhs + (({
-                    let _lhs = ((*vals.borrow())
+        ((({
+            ({ (4 + ((*vals.borrow()).offset((0) as isize).read())) } + {
+                (({
+                    ((*vals.borrow())
                         .offset((-kDCTBlockSize_3.with(|rc| *rc.borrow())) as isize)
-                        .read());
-                    _lhs + ((*vals.borrow())
+                        .read())
+                } + {
+                    ((*vals.borrow())
                         .offset((*prev_row_delta.borrow()) as isize)
                         .read())
                 }) * 2)
-            };
-            _lhs + ((*vals.borrow())
+            })
+        } + {
+            ((*vals.borrow())
                 .offset((-2_i32 * kDCTBlockSize_3.with(|rc| *rc.borrow())) as isize)
                 .read())
-        } + ((*vals.borrow())
+        }) + ((*vals.borrow())
             .offset(((*prev_row_delta.borrow()) - kDCTBlockSize_3.with(|rc| *rc.borrow())) as isize)
             .read()))
             + ((*vals.borrow())
@@ -1702,8 +1703,7 @@ pub fn ACPredictContext_101(p: i64, avg_ctx: Ptr<usize>, sgn: Ptr<usize>) {
         (*multiplier.borrow_mut()) = 1;
     } else {
         (*multiplier.borrow_mut()) = -1_i32;
-        let __rhs = -(*p.borrow());
-        (*p.borrow_mut()) = __rhs;
+        (*p.borrow_mut()) = { -(*p.borrow()) };
     }
     let ctx: Value<usize> = Rc::new(RefCell::new(0_usize));
     if ((*p.borrow()) >= ((1_u32 << kMaxAverageContext_82.with(|rc| *rc.borrow())) as i64)) {
@@ -1713,11 +1713,11 @@ pub fn ACPredictContext_101(p: i64, avg_ctx: Ptr<usize>, sgn: Ptr<usize>) {
             Log2FloorNonZero_74(((2_u32).wrapping_mul(((*p.borrow()) as u32))).wrapping_add(1_u32))
         }) as usize);
     }
-    let __rhs = (*ctx.borrow());
-    (*avg_ctx.borrow()).write(__rhs);
-    let __rhs = (kMaxAverageContext_82.with(|rc| *rc.borrow()))
-        .wrapping_add(((*multiplier.borrow()) as usize).wrapping_mul((*ctx.borrow())));
-    (*sgn.borrow()).write(__rhs);
+    (*avg_ctx.borrow()).write({ (*ctx.borrow()) });
+    (*sgn.borrow()).write({
+        (kMaxAverageContext_82.with(|rc| *rc.borrow()))
+            .wrapping_add(((*multiplier.borrow()) as usize).wrapping_mul((*ctx.borrow())))
+    });
 }
 pub fn ACPredictContextCol_102(
     prev: Ptr<i16>,
@@ -1734,75 +1734,65 @@ pub fn ACPredictContextCol_102(
     let terms: Value<Box<[i16]>> =
         Rc::new(RefCell::new((0..8).map(|_| 0_i16).collect::<Box<[i16]>>()));
     (*terms.borrow_mut())[(0) as usize] = 0_i16;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((1) as isize).read()) as i32);
-        _lhs + (((*prev.borrow()).offset((1) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(1) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((2) as isize).read()) as i32);
-        _lhs - (((*prev.borrow()).offset((2) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(2) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((3) as isize).read()) as i32);
-        _lhs + (((*prev.borrow()).offset((3) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(3) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((4) as isize).read()) as i32);
-        _lhs - (((*prev.borrow()).offset((4) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(4) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((5) as isize).read()) as i32);
-        _lhs + (((*prev.borrow()).offset((5) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(5) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((6) as isize).read()) as i32);
-        _lhs - (((*prev.borrow()).offset((6) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(6) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((7) as isize).read()) as i32);
-        _lhs + (((*prev.borrow()).offset((7) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(7) as usize] = __rhs;
+    (*terms.borrow_mut())[(1) as usize] = {
+        (({ (((*cur.borrow()).offset((1) as isize).read()) as i32) } + {
+            (((*prev.borrow()).offset((1) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(2) as usize] = {
+        (({ (((*cur.borrow()).offset((2) as isize).read()) as i32) } - {
+            (((*prev.borrow()).offset((2) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(3) as usize] = {
+        (({ (((*cur.borrow()).offset((3) as isize).read()) as i32) } + {
+            (((*prev.borrow()).offset((3) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(4) as usize] = {
+        (({ (((*cur.borrow()).offset((4) as isize).read()) as i32) } - {
+            (((*prev.borrow()).offset((4) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(5) as usize] = {
+        (({ (((*cur.borrow()).offset((5) as isize).read()) as i32) } + {
+            (((*prev.borrow()).offset((5) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(6) as usize] = {
+        (({ (((*cur.borrow()).offset((6) as isize).read()) as i32) } - {
+            (((*prev.borrow()).offset((6) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(7) as usize] = {
+        (({ (((*cur.borrow()).offset((7) as isize).read()) as i32) } + {
+            (((*prev.borrow()).offset((7) as isize).read()) as i32)
+        }) as i16)
+    };
     let delta: Value<i64> = Rc::new(RefCell::new(
-        ((((((({
-            let _lhs = ((*terms.borrow())[(0) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((0) as isize).read()) as i64)
-        } + {
-            let _lhs = ((*terms.borrow())[(1) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((1) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(2) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((2) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(3) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((3) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(4) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((4) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(5) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((5) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(6) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((6) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(7) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((7) as isize).read()) as i64)
-        }),
+        (((((((({ ((*terms.borrow())[(0) as usize] as i64) } * {
+            (((*mult.borrow()).offset((0) as isize).read()) as i64)
+        }) + ({ ((*terms.borrow())[(1) as usize] as i64) } * {
+            (((*mult.borrow()).offset((1) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(2) as usize] as i64) } * {
+            (((*mult.borrow()).offset((2) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(3) as usize] as i64) } * {
+            (((*mult.borrow()).offset((3) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(4) as usize] as i64) } * {
+            (((*mult.borrow()).offset((4) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(5) as usize] as i64) } * {
+            (((*mult.borrow()).offset((5) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(6) as usize] as i64) } * {
+            (((*mult.borrow()).offset((6) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(7) as usize] as i64) } * {
+            (((*mult.borrow()).offset((7) as isize).read()) as i64)
+        })),
     ));
     ({
         ACPredictContext_101(
-            {
-                let _lhs = (((*prev.borrow()).offset((0) as isize).read()) as i64);
-                _lhs - ((*delta.borrow())
-                    / (kACPredictPrecision_100.with(|rc| *rc.borrow()) as i64))
-            },
+            ({ (((*prev.borrow()).offset((0) as isize).read()) as i64) } - {
+                ((*delta.borrow()) / (kACPredictPrecision_100.with(|rc| *rc.borrow()) as i64))
+            }),
             (*avg_ctx.borrow()).clone(),
             (*sgn.borrow()).clone(),
         )
@@ -1823,75 +1813,65 @@ pub fn ACPredictContextRow_103(
     let terms: Value<Box<[i16]>> =
         Rc::new(RefCell::new((0..8).map(|_| 0_i16).collect::<Box<[i16]>>()));
     (*terms.borrow_mut())[(0) as usize] = 0_i16;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((8) as isize).read()) as i32);
-        _lhs + (((*prev.borrow()).offset((8) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(1) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((16) as isize).read()) as i32);
-        _lhs - (((*prev.borrow()).offset((16) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(2) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((24) as isize).read()) as i32);
-        _lhs + (((*prev.borrow()).offset((24) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(3) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((32) as isize).read()) as i32);
-        _lhs - (((*prev.borrow()).offset((32) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(4) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((40) as isize).read()) as i32);
-        _lhs + (((*prev.borrow()).offset((40) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(5) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((48) as isize).read()) as i32);
-        _lhs - (((*prev.borrow()).offset((48) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(6) as usize] = __rhs;
-    let __rhs = (({
-        let _lhs = (((*cur.borrow()).offset((56) as isize).read()) as i32);
-        _lhs + (((*prev.borrow()).offset((56) as isize).read()) as i32)
-    }) as i16);
-    (*terms.borrow_mut())[(7) as usize] = __rhs;
+    (*terms.borrow_mut())[(1) as usize] = {
+        (({ (((*cur.borrow()).offset((8) as isize).read()) as i32) } + {
+            (((*prev.borrow()).offset((8) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(2) as usize] = {
+        (({ (((*cur.borrow()).offset((16) as isize).read()) as i32) } - {
+            (((*prev.borrow()).offset((16) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(3) as usize] = {
+        (({ (((*cur.borrow()).offset((24) as isize).read()) as i32) } + {
+            (((*prev.borrow()).offset((24) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(4) as usize] = {
+        (({ (((*cur.borrow()).offset((32) as isize).read()) as i32) } - {
+            (((*prev.borrow()).offset((32) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(5) as usize] = {
+        (({ (((*cur.borrow()).offset((40) as isize).read()) as i32) } + {
+            (((*prev.borrow()).offset((40) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(6) as usize] = {
+        (({ (((*cur.borrow()).offset((48) as isize).read()) as i32) } - {
+            (((*prev.borrow()).offset((48) as isize).read()) as i32)
+        }) as i16)
+    };
+    (*terms.borrow_mut())[(7) as usize] = {
+        (({ (((*cur.borrow()).offset((56) as isize).read()) as i32) } + {
+            (((*prev.borrow()).offset((56) as isize).read()) as i32)
+        }) as i16)
+    };
     let delta: Value<i64> = Rc::new(RefCell::new(
-        ((((((({
-            let _lhs = ((*terms.borrow())[(0) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((0) as isize).read()) as i64)
-        } + {
-            let _lhs = ((*terms.borrow())[(1) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((1) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(2) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((2) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(3) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((3) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(4) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((4) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(5) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((5) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(6) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((6) as isize).read()) as i64)
-        }) + {
-            let _lhs = ((*terms.borrow())[(7) as usize] as i64);
-            _lhs * (((*mult.borrow()).offset((7) as isize).read()) as i64)
-        }),
+        (((((((({ ((*terms.borrow())[(0) as usize] as i64) } * {
+            (((*mult.borrow()).offset((0) as isize).read()) as i64)
+        }) + ({ ((*terms.borrow())[(1) as usize] as i64) } * {
+            (((*mult.borrow()).offset((1) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(2) as usize] as i64) } * {
+            (((*mult.borrow()).offset((2) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(3) as usize] as i64) } * {
+            (((*mult.borrow()).offset((3) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(4) as usize] as i64) } * {
+            (((*mult.borrow()).offset((4) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(5) as usize] as i64) } * {
+            (((*mult.borrow()).offset((5) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(6) as usize] as i64) } * {
+            (((*mult.borrow()).offset((6) as isize).read()) as i64)
+        })) + ({ ((*terms.borrow())[(7) as usize] as i64) } * {
+            (((*mult.borrow()).offset((7) as isize).read()) as i64)
+        })),
     ));
     ({
         ACPredictContext_101(
-            {
-                let _lhs = (((*prev.borrow()).offset((0) as isize).read()) as i64);
-                _lhs - ((*delta.borrow())
-                    / (kACPredictPrecision_100.with(|rc| *rc.borrow()) as i64))
-            },
+            ({ (((*prev.borrow()).offset((0) as isize).read()) as i64) } - {
+                ((*delta.borrow()) / (kACPredictPrecision_100.with(|rc| *rc.borrow()) as i64))
+            }),
             (*avg_ctx.borrow()).clone(),
             (*sgn.borrow()).clone(),
         )
@@ -2167,42 +2147,44 @@ pub fn ComputeACPredictMultipliers_109(quant: Ptr<i32>, mult_row: Ptr<i32>, mult
     'loop_: while ((*y.borrow()) < 8_usize) {
         let x: Value<usize> = Rc::new(RefCell::new(0_usize));
         'loop_: while ((*x.borrow()) < 8_usize) {
-            let __rhs = {
-                let _lhs = ({
-                    let _lhs = ((*quant.borrow())
-                        .offset(
-                            ((*x.borrow()).wrapping_add((8_usize).wrapping_mul((*y.borrow()))))
-                                as isize,
-                        )
-                        .read());
-                    _lhs * kSqrt2FixedPoint_108.with(|rc| *rc.borrow())
-                });
-                _lhs / ((*quant.borrow())
-                    .offset(((*y.borrow()).wrapping_mul(8_usize)) as isize)
-                    .read())
-            };
             (*mult_row.borrow())
                 .offset(
                     ((*x.borrow()).wrapping_add((8_usize).wrapping_mul((*y.borrow())))) as isize,
                 )
-                .write(__rhs);
-            let __rhs = {
-                let _lhs = ({
-                    let _lhs = ((*quant.borrow())
-                        .offset(
-                            ((*x.borrow()).wrapping_add((8_usize).wrapping_mul((*y.borrow()))))
-                                as isize,
-                        )
-                        .read());
-                    _lhs * kSqrt2FixedPoint_108.with(|rc| *rc.borrow())
+                .write({
+                    ({
+                        ({
+                            ((*quant.borrow())
+                                .offset(
+                                    ((*x.borrow())
+                                        .wrapping_add((8_usize).wrapping_mul((*y.borrow()))))
+                                        as isize,
+                                )
+                                .read())
+                        } * { kSqrt2FixedPoint_108.with(|rc| *rc.borrow()) })
+                    } / {
+                        ((*quant.borrow())
+                            .offset(((*y.borrow()).wrapping_mul(8_usize)) as isize)
+                            .read())
+                    })
                 });
-                _lhs / ((*quant.borrow()).offset((*x.borrow()) as isize).read())
-            };
             (*mult_col.borrow())
                 .offset(
                     (((*x.borrow()).wrapping_mul(8_usize)).wrapping_add((*y.borrow()))) as isize,
                 )
-                .write(__rhs);
+                .write({
+                    ({
+                        ({
+                            ((*quant.borrow())
+                                .offset(
+                                    ((*x.borrow())
+                                        .wrapping_add((8_usize).wrapping_mul((*y.borrow()))))
+                                        as isize,
+                                )
+                                .read())
+                        } * { kSqrt2FixedPoint_108.with(|rc| *rc.borrow()) })
+                    } / { ((*quant.borrow()).offset((*x.borrow()) as isize).read()) })
+                });
             (*x.borrow_mut()).prefix_inc();
         }
         (*y.borrow_mut()).prefix_inc();
@@ -2624,10 +2606,9 @@ pub fn DecodeLehmerCode_113(code: Ptr<u32>, len: usize, sigma: Ptr<u32>) -> bool
             (items.as_pointer() as Ptr<Vec<u32>>).with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
             (items.as_pointer() as Ptr<Vec<u32>>).decay()
         };
-        let __rhs = (*value.borrow());
         (*sigma.borrow())
             .offset((*i.borrow()) as isize)
-            .write(__rhs);
+            .write({ (*value.borrow()) });
         (*i.borrow_mut()).prefix_inc();
     }
     return true;
@@ -2737,16 +2718,17 @@ pub fn FillQuantMatrix_118(is_chroma: bool, q: u32, dst: Ptr<u8>) {
             .wrapping_add(32_u32))
                 >> 6),
         ));
-        let __rhs = (if ((*v.borrow()) < 1_u32) {
-            1_u32
-        } else {
-            if ((*v.borrow()) > 255_u32) {
-                255_u32
+        (*dst.borrow()).offset((*i.borrow()) as isize).write({
+            (if ((*v.borrow()) < 1_u32) {
+                1_u32
             } else {
-                (*v.borrow())
-            }
-        } as u8);
-        (*dst.borrow()).offset((*i.borrow()) as isize).write(__rhs);
+                if ((*v.borrow()) > 255_u32) {
+                    255_u32
+                } else {
+                    (*v.borrow())
+                }
+            } as u8)
+        });
         (*i.borrow_mut()).prefix_inc();
     }
 }
@@ -2780,21 +2762,18 @@ pub fn FindBestMatrix_119(src: Ptr<i32>, is_chroma: bool, dst: Ptr<u8>) -> u32 {
                     kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx])
                 }) as i32),
             ));
-            let new_diff: Value<i32> = Rc::new(RefCell::new({
-                let _lhs = ((*src.borrow()).offset((*j.borrow()) as isize).read());
-                _lhs - (((*dst.borrow()).offset((*j.borrow()) as isize).read()) as i32)
-            }));
+            let new_diff: Value<i32> = Rc::new(RefCell::new(
+                ({ ((*src.borrow()).offset((*j.borrow()) as isize).read()) } - {
+                    (((*dst.borrow()).offset((*j.borrow()) as isize).read()) as i32)
+                }),
+            ));
             let diff: Value<i32> =
                 Rc::new(RefCell::new(((*new_diff.borrow()) - (*last_diff.borrow()))));
             (*last_diff.borrow_mut()) = (*new_diff.borrow());
             if ((*diff.borrow()) != 0) {
-                {
-                    let rhs_0 = (*len.borrow()).wrapping_add(1_usize);
-                    (*len.borrow_mut()) = rhs_0
-                };
+                (*len.borrow_mut()) = { (*len.borrow()).wrapping_add(1_usize) };
                 if ((*diff.borrow()) < 0) {
-                    let __rhs = -(*diff.borrow());
-                    (*diff.borrow_mut()) = __rhs;
+                    (*diff.borrow_mut()) = { -(*diff.borrow()) };
                 }
                 (*diff.borrow_mut()) -= 1;
                 if ((*diff.borrow()) == 0) {
@@ -2809,12 +2788,11 @@ pub fn FindBestMatrix_119(src: Ptr<i32>, is_chroma: bool, dst: Ptr<u8>) -> u32 {
                     if ((*diff_len.borrow()) == 16_u32) {
                         (*diff_len.borrow_mut()).postfix_dec();
                     }
-                    {
-                        let rhs_0 = (*len.borrow()).wrapping_add(
+                    (*len.borrow_mut()) = {
+                        (*len.borrow()).wrapping_add(
                             ((((2_u32).wrapping_mul((*diff_len.borrow()))).wrapping_add(1_u32))
                                 as usize),
-                        );
-                        (*len.borrow_mut()) = rhs_0
+                        )
                     };
                 }
             }
@@ -2882,11 +2860,10 @@ pub fn WriteBits_120(n_bits: usize, bits: u64, storage: Ptr<brunsli_Storage>) {
         'loop_: while true {}
     };
     if !({
-        let _lhs = ((((*storage.borrow()).with(|__s| __s.pos)).wrapping_add((*n_bits.borrow())))
-            >> 3)
-            .wrapping_add(7_usize);
-        _lhs < (*storage.borrow()).with(|__s| __s.length)
-    }) {
+        ((((*storage.borrow()).with(|__s| __s.pos)).wrapping_add((*n_bits.borrow()))) >> 3)
+            .wrapping_add(7_usize)
+    } < { (*storage.borrow()).with(|__s| __s.length) })
+    {
         ({
             BrunsliDumpAndAbort_79(
                 Ptr::<u8>::from_string_literal(b"ans_encode.cc"),
@@ -2902,15 +2879,11 @@ pub fn WriteBits_120(n_bits: usize, bits: u64, storage: Ptr<brunsli_Storage>) {
             .offset(((*storage.borrow()).with(|__s| __s.pos) >> 3) as isize),
     ));
     let v: Value<u64> = Rc::new(RefCell::new((((*p.borrow()).read()) as u64)));
-    (*v.borrow_mut()) |= {
-        let _lhs = (*bits.borrow());
-        _lhs << ((*storage.borrow()).with(|__s| __s.pos) & 7_usize)
-    };
+    (*v.borrow_mut()) |=
+        ({ (*bits.borrow()) } << { ((*storage.borrow()).with(|__s| __s.pos) & 7_usize) });
     ({ BrunsliUnalignedWrite64_70((*p.borrow()).to_any(), (*v.borrow())) });
-    {
-        let rhs_0 = ((*storage.borrow()).with(|__s| __s.pos)).wrapping_add((*n_bits.borrow()));
-        field!((*storage.borrow()), pos).write(rhs_0)
-    };
+    field!((*storage.borrow()), pos)
+        .write({ ((*storage.borrow()).with(|__s| __s.pos)).wrapping_add((*n_bits.borrow())) });
 }
 #[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(4)]
@@ -2982,14 +2955,12 @@ pub fn ANSBuildInfoTable_122(
         let freq: Value<u32> = Rc::new(RefCell::new(
             (((*counts.borrow()).offset((*s.borrow()) as isize).read()) as u32),
         ));
-        let __rhs = (((*counts.borrow()).offset((*s.borrow()) as isize).read()) as u16);
-        field!((*info.borrow()).offset((*s.borrow()) as isize), freq_).write(__rhs);
+        field!((*info.borrow()).offset((*s.borrow()) as isize), freq_)
+            .write({ (((*counts.borrow()).offset((*s.borrow()) as isize).read()) as u16) });
         field!((*info.borrow()).offset((*s.borrow()) as isize), start_)
             .write(((*total.borrow()) as u16));
-        {
-            let rhs_0 = (((*total.borrow()) as u32).wrapping_add((*freq.borrow()))) as i32;
-            (*total.borrow_mut()) = rhs_0
-        };
+        (*total.borrow_mut()) =
+            { (((*total.borrow()) as u32).wrapping_add((*freq.borrow()))) as i32 };
         (*s.borrow_mut()).prefix_inc();
     }
 }
@@ -3408,19 +3379,10 @@ impl std::cmp::PartialEq for brunsli_HistogramPair {
 }
 impl std::cmp::Eq for brunsli_HistogramPair {}
 pub fn operator_lt_128(p1: Ptr<brunsli_HistogramPair>, p2: Ptr<brunsli_HistogramPair>) -> bool {
-    if {
-        let _lhs = p1.with(|__s| __s.cost_diff);
-        _lhs != p2.with(|__s| __s.cost_diff)
-    } {
-        return {
-            let _lhs = p1.with(|__s| __s.cost_diff);
-            _lhs > p2.with(|__s| __s.cost_diff)
-        };
+    if ({ p1.with(|__s| __s.cost_diff) } != { p2.with(|__s| __s.cost_diff) }) {
+        return ({ p1.with(|__s| __s.cost_diff) } > { p2.with(|__s| __s.cost_diff) });
     }
-    if !({
-        let _lhs = p1.with(|__s| __s.idx1);
-        _lhs < p1.with(|__s| __s.idx2)
-    }) {
+    if !({ p1.with(|__s| __s.idx1) } < { p1.with(|__s| __s.idx2) }) {
         ({
             BrunsliDumpAndAbort_79(
                 Ptr::<u8>::from_string_literal(b"brunsli_encode.cc"),
@@ -3430,10 +3392,7 @@ pub fn operator_lt_128(p1: Ptr<brunsli_HistogramPair>, p2: Ptr<brunsli_Histogram
         });
         'loop_: while true {}
     };
-    if !({
-        let _lhs = p2.with(|__s| __s.idx1);
-        _lhs < p2.with(|__s| __s.idx2)
-    }) {
+    if !({ p2.with(|__s| __s.idx1) } < { p2.with(|__s| __s.idx2) }) {
         ({
             BrunsliDumpAndAbort_79(
                 Ptr::<u8>::from_string_literal(b"brunsli_encode.cc"),
@@ -3443,10 +3402,9 @@ pub fn operator_lt_128(p1: Ptr<brunsli_HistogramPair>, p2: Ptr<brunsli_Histogram
         });
         'loop_: while true {}
     };
-    return {
-        let _lhs = ((p1.with(|__s| __s.idx2)).wrapping_sub(p1.with(|__s| __s.idx1)));
-        _lhs > ((p2.with(|__s| __s.idx2)).wrapping_sub(p2.with(|__s| __s.idx1)))
-    };
+    return ({ ((p1.with(|__s| __s.idx2)).wrapping_sub(p1.with(|__s| __s.idx1))) } > {
+        ((p2.with(|__s| __s.idx2)).wrapping_sub(p2.with(|__s| __s.idx1)))
+    });
 }
 pub fn ClusterCostDiff_129(size_a: i32, size_b: i32) -> f64 {
     let size_a: Value<i32> = Rc::new(RefCell::new(size_a));
@@ -3594,8 +3552,7 @@ pub fn CompareAndPushToQueue_132(
         }
     }
     if (*store_pair.borrow()) {
-        let __rhs = { (*p.borrow()).cost_combo };
-        (*p.borrow_mut()).cost_diff += __rhs;
+        (*p.borrow_mut()).cost_diff += { { (*p.borrow()).cost_combo } };
         if (!((*(*pairs.borrow()).upgrade().deref()).is_empty()))
             && ({
                 let _p1: Ptr<brunsli_HistogramPair> =
@@ -3763,23 +3720,24 @@ pub fn HistogramCombine_133(
                 .deref())
             .cost_combo
         });
-        let __rhs = ((*cluster_size.borrow())
-            .offset((*best_idx2.borrow()) as isize)
-            .read());
         {
             let _ptr = (*cluster_size.borrow()).offset((*best_idx1.borrow()) as isize);
-            _ptr.write(_ptr.read() + __rhs)
+            _ptr.write(
+                _ptr.read() + {
+                    ((*cluster_size.borrow())
+                        .offset((*best_idx2.borrow()) as isize)
+                        .read())
+                },
+            )
         };
         let i: Value<usize> = Rc::new(RefCell::new(0_usize));
         'loop_: while ((*i.borrow()) < (*symbols_size.borrow())) {
-            if {
-                let _lhs = (((*symbols.borrow()).offset((*i.borrow()) as isize).read()) as usize);
-                _lhs == (*best_idx2.borrow())
-            } {
-                let __rhs = ((*best_idx1.borrow()) as u32);
+            if ({ (((*symbols.borrow()).offset((*i.borrow()) as isize).read()) as usize) } == {
+                (*best_idx2.borrow())
+            }) {
                 (*symbols.borrow())
                     .offset((*i.borrow()) as isize)
-                    .write(__rhs);
+                    .write({ ((*best_idx1.borrow()) as u32) });
             }
             (*i.borrow_mut()).prefix_inc();
         }
@@ -3800,19 +3758,11 @@ pub fn HistogramCombine_133(
             (pairs.as_pointer() as Ptr<brunsli_HistogramPair>),
         ));
         'loop_: for mut p in pairs.as_pointer() as Ptr<brunsli_HistogramPair> {
-            if ((({
-                let _lhs = p.with(|__s| __s.idx1);
-                _lhs == (*best_idx1.borrow())
-            }) || ({
-                let _lhs = p.with(|__s| __s.idx2);
-                _lhs == (*best_idx1.borrow())
-            })) || ({
-                let _lhs = p.with(|__s| __s.idx1);
-                _lhs == (*best_idx2.borrow())
-            })) || ({
-                let _lhs = p.with(|__s| __s.idx2);
-                _lhs == (*best_idx2.borrow())
-            }) {
+            if ((({ p.with(|__s| __s.idx1) } == { (*best_idx1.borrow()) })
+                || ({ p.with(|__s| __s.idx2) } == { (*best_idx1.borrow()) }))
+                || ({ p.with(|__s| __s.idx1) } == { (*best_idx2.borrow()) }))
+                || ({ p.with(|__s| __s.idx2) } == { (*best_idx2.borrow()) })
+            {
                 continue 'loop_;
             }
             if ({
@@ -3876,10 +3826,9 @@ pub fn HistogramBitCostDistance_134(
         let _other: Ptr<brunsli_internal_enc_Histogram> = (candidate).clone();
         brunsli_internal_enc_HistogramImpl::AddHistogram(&tmp.as_pointer(), _other)
     });
-    return {
-        let _lhs = ({ PopulationCost_130(tmp.as_pointer()) });
-        _lhs - candidate.with(|__s| __s.bit_cost_)
-    };
+    return ({ ({ PopulationCost_130(tmp.as_pointer()) }) } - {
+        candidate.with(|__s| __s.bit_cost_)
+    });
 }
 pub fn HistogramRemap_135(
     in_: Ptr<brunsli_internal_enc_Histogram>,
@@ -3967,10 +3916,9 @@ pub fn HistogramRemap_135(
                 (*best_out.borrow_mut()) = (*k.borrow());
             }
         }
-        let __rhs = ((*best_out.borrow()) as u32);
         (*symbols.borrow())
             .offset((*i.borrow()) as isize)
-            .write(__rhs);
+            .write({ ((*best_out.borrow()) as u32) });
         (*i.borrow_mut()).prefix_inc();
     }
     'loop_: for mut k in all_symbols.as_pointer() as Ptr<i32> {
@@ -4003,10 +3951,7 @@ pub fn HistogramReindex_136(out: Ptr<Vec<brunsli_internal_enc_Histogram>>, symbo
     let new_index: Value<BTreeMap<i32, Value<i32>>> = Rc::new(RefCell::new(BTreeMap::new()));
     let next_index: Value<i32> = Rc::new(RefCell::new(0));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*(*symbols.borrow()).upgrade().deref()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*(*symbols.borrow()).upgrade().deref()).len() }) {
         if RefcountMapIter::find_key(
             (new_index.as_pointer() as Ptr<BTreeMap<i32, Value<i32>>>),
             &((((Ptr::<Vec<u32>>::decay(&(*symbols.borrow()))) as Ptr<u32>)
@@ -4049,10 +3994,7 @@ pub fn HistogramReindex_136(out: Ptr<Vec<brunsli_internal_enc_Histogram>>, symbo
         })
     };
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*(*symbols.borrow()).upgrade().deref()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*(*symbols.borrow()).upgrade().deref()).len() }) {
         let __rhs = (((new_index.as_pointer() as Ptr<BTreeMap<i32, Value<i32>>>)
             .with_mut(|__v: &mut BTreeMap<i32, Value<i32>>| {
                 __v.entry(
@@ -4216,10 +4158,8 @@ pub fn ClusterHistograms_137(
                     )
                 });
             }
-            {
-                let rhs_0 = (*num_clusters.borrow()).wrapping_add((*nclusters.borrow()));
-                (*num_clusters.borrow_mut()) = rhs_0
-            };
+            (*num_clusters.borrow_mut()) =
+                { (*num_clusters.borrow()).wrapping_add((*nclusters.borrow())) };
             (*i.borrow_mut()).prefix_inc();
         }
     }
@@ -4644,10 +4584,8 @@ pub fn EstimateAuxDataSize_144(jpg: Ptr<brunsli_JPEGData>) -> usize {
         .wrapping_add(16_usize)),
     ));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.scan_info.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*jpg.with(|__s| __s.scan_info.clone()).borrow()).len() })
+    {
         {
             let rhs_0 = (((*size.borrow()) as u64).wrapping_add(
                 ((7_usize).wrapping_mul(
@@ -4691,16 +4629,12 @@ pub fn EstimateAuxDataSize_144(jpg: Ptr<brunsli_JPEGData>) -> usize {
     } else {
         0_usize
     }));
-    {
-        let rhs_0 =
-            (*size.borrow()).wrapping_add((((*nsize.borrow()).wrapping_add(43_usize)) >> 3));
-        (*size.borrow_mut()) = rhs_0
-    };
+    (*size.borrow_mut()) =
+        { (*size.borrow()).wrapping_add((((*nsize.borrow()).wrapping_add(43_usize)) >> 3)) };
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.inter_marker_data.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < {
+        (*jpg.with(|__s| __s.inter_marker_data.clone()).borrow()).len()
+    }) {
         {
             let rhs_0 = (((*size.borrow()) as u64).wrapping_add(
                 ((5_usize).wrapping_add(
@@ -4754,10 +4688,7 @@ pub fn GetMaximumBrunsliEncodedSize_145(jpg: Ptr<brunsli_JPEGData>) -> usize {
         (*hdr_size.borrow_mut()) = rhs_0
     };
     let num_pixels: Value<usize> = Rc::new(RefCell::new(
-        (({
-            let _lhs = jpg.with(|__s| __s.width);
-            _lhs * jpg.with(|__s| __s.height)
-        }) as usize)
+        (({ jpg.with(|__s| __s.width) } * { jpg.with(|__s| __s.height) }) as usize)
             .wrapping_mul((*jpg.with(|__s| __s.components.clone()).borrow()).len()),
     ));
     return ((((*num_pixels.borrow()) as f64) * 1.2E+0) as usize)
@@ -4888,16 +4819,15 @@ pub fn TransformApp0Marker_149(s: Ptr<Vec<u8>>, out: Ptr<Vec<u8>>) -> bool {
         if ((*density_ix.borrow()) >= 0) {
             let app0_status: Value<u8> = Rc::new(RefCell::new(
                 (({
-                    let _lhs = (((((Ptr::<Vec<u8>>::decay(&(s)) as Ptr<u8>)
+                    (((((Ptr::<Vec<u8>>::decay(&(s)) as Ptr<u8>)
                         .offset(9_usize)
                         .read()) as i32)
                         - 1)
                         | ((((Ptr::<Vec<u8>>::decay(&(s)) as Ptr<u8>)
                             .offset(10_usize)
                             .read()) as i32)
-                            << 1));
-                    _lhs | ((*density_ix.borrow()) << 3)
-                }) as u8),
+                            << 1))
+                } | { ((*density_ix.borrow()) << 3) }) as u8),
             ));
             ((*out.borrow()).clone() as Ptr<Vec<u8>>).write(
                 (0..(1_usize) as usize)
@@ -5068,17 +4998,18 @@ pub fn GetQuantTableId_154(q: Ptr<brunsli_JPEGQuantTable>, is_chroma: bool, dst:
         'loop_: while (*match_found.borrow())
             && ((*k.borrow()) < kDCTBlockSize_3.with(|rc| *rc.borrow()))
         {
-            if {
-                let _lhs = ((q.with(|__s| __s.values.clone()).as_pointer() as Ptr<i32>)
+            if ({
+                ((q.with(|__s| __s.values.clone()).as_pointer() as Ptr<i32>)
                     .offset(((*k.borrow()) as usize))
-                    .read());
-                _lhs != (({
+                    .read())
+            } != {
+                (({
                     let __idx = (*is_chroma.borrow()) as usize;
                     kStockQuantizationTables_48.with(|rc| rc.borrow()[__idx].clone())
                 })
                 .borrow()[(*j.borrow()) as usize]
                     .borrow()[(*k.borrow()) as usize] as i32)
-            } {
+            }) {
                 (*match_found.borrow_mut()) = false;
             }
             (*k.borrow_mut()).prefix_inc();
@@ -5183,10 +5114,7 @@ pub fn EncodeQuantTables_157(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
         )
     });
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.quant.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*jpg.with(|__s| __s.quant.clone()).borrow()).len() }) {
         let q: Ptr<brunsli_JPEGQuantTable> = (jpg.with(|__s| __s.quant.clone()).as_pointer()
             as Ptr<brunsli_JPEGQuantTable>)
             .offset((*i.borrow()));
@@ -5262,12 +5190,13 @@ pub fn EncodeQuantTables_157(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
                         kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx])
                     }) as i32),
                 ));
-                let new_diff: Value<i32> = Rc::new(RefCell::new({
-                    let _lhs = ((q.with(|__s| __s.values.clone()).as_pointer() as Ptr<i32>)
-                        .offset(((*j.borrow()) as usize))
-                        .read());
-                    _lhs - ((*quant_approx.borrow())[(*j.borrow()) as usize] as i32)
-                }));
+                let new_diff: Value<i32> = Rc::new(RefCell::new(
+                    ({
+                        ((q.with(|__s| __s.values.clone()).as_pointer() as Ptr<i32>)
+                            .offset(((*j.borrow()) as usize))
+                            .read())
+                    } - { ((*quant_approx.borrow())[(*j.borrow()) as usize] as i32) }),
+                ));
                 let diff: Value<i32> =
                     Rc::new(RefCell::new(((*new_diff.borrow()) - (*last_diff.borrow()))));
                 (*last_diff.borrow_mut()) = (*new_diff.borrow());
@@ -5287,8 +5216,7 @@ pub fn EncodeQuantTables_157(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
                         )
                     });
                     if ((*diff.borrow()) < 0) {
-                        let __rhs = -(*diff.borrow());
-                        (*diff.borrow_mut()) = __rhs;
+                        (*diff.borrow_mut()) = { -(*diff.borrow()) };
                     }
                     (*diff.borrow_mut()) -= 1;
                     if ((*diff.borrow()) > 65535) {
@@ -5302,10 +5230,8 @@ pub fn EncodeQuantTables_157(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_St
         (*i.borrow_mut()).prefix_inc();
     }
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.components.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*jpg.with(|__s| __s.components.clone()).borrow()).len() })
+    {
         ({
             WriteBits_120(
                 2_usize,
@@ -5492,16 +5418,19 @@ pub fn EncodeHuffmanCode_158(
         (1 << (kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) - (*max_len.borrow())));
     let i: Value<i32> = Rc::new(RefCell::new(1));
     'loop_: while ((*i.borrow()) <= (*max_len.borrow())) {
-        let count: Value<i32> = Rc::new(RefCell::new({
-            let _lhs = ((huff.with(|__s| __s.counts.clone()).as_pointer() as Ptr<i32>)
-                .offset(((*i.borrow()) as usize))
-                .read());
-            _lhs - (if ((*i.borrow()) == (*max_len.borrow())) {
-                1
-            } else {
-                0
-            })
-        }));
+        let count: Value<i32> = Rc::new(RefCell::new(
+            ({
+                ((huff.with(|__s| __s.counts.clone()).as_pointer() as Ptr<i32>)
+                    .offset(((*i.borrow()) as usize))
+                    .read())
+            } - {
+                (if ((*i.borrow()) == (*max_len.borrow())) {
+                    1
+                } else {
+                    0
+                })
+            }),
+        ));
         let count_limit: Value<i32> = Rc::new(RefCell::new({
             let __tmp_0: Value<i32> = Rc::new(RefCell::new(
                 ((*max_count.borrow()) - (*total_count.borrow())),
@@ -5549,12 +5478,12 @@ pub fn EncodeHuffmanCode_158(
         }
         (*i.borrow_mut()).prefix_inc();
     }
-    if {
-        let _lhs = ((huff.with(|__s| __s.values.clone()).as_pointer() as Ptr<i32>)
+    if ({
+        ((huff.with(|__s| __s.values.clone()).as_pointer() as Ptr<i32>)
             .offset(((*total_count.borrow()) as usize))
-            .read());
-        _lhs != kJpegHuffmanAlphabetSize_8.with(|rc| *rc.borrow())
-    } {
+            .read())
+    } != { kJpegHuffmanAlphabetSize_8.with(|rc| *rc.borrow()) })
+    {
         return false;
     }
     let p: Value<brunsli_PermutationCoder> = Rc::new(RefCell::new(brunsli_PermutationCoder::new()));
@@ -5657,10 +5586,7 @@ pub fn EncodeScanInfo_159(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
         )
     });
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < si.with(|__s| __s.num_components)
-    } {
+    'loop_: while ({ (*i.borrow()) } < { si.with(|__s| __s.num_components) }) {
         let csi: Ptr<brunsli_JPEGComponentScanInfo> =
             (si.with(|__s| __s.components.clone()).as_pointer()
                 as Ptr<brunsli_JPEGComponentScanInfo>)
@@ -5691,10 +5617,7 @@ pub fn EncodeScanInfo_159(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
     let last_block_idx: Value<i32> = Rc::new(RefCell::new(-1_i32));
     'loop_: for mut block_idx in si.with(|__s| __s.reset_points.clone()).as_pointer() as Ptr<i32> {
         ({ WriteBits_120(1_usize, 1_u64, (*storage.borrow()).clone()) });
-        if !({
-            let _lhs = (block_idx.read());
-            _lhs >= ((*last_block_idx.borrow()) + 1)
-        }) {
+        if !({ (block_idx.read()) } >= { ((*last_block_idx.borrow()) + 1) }) {
             ({
                 BrunsliDumpAndAbort_79(
                     Ptr::<u8>::from_string_literal(b"brunsli_encode.cc"),
@@ -5705,23 +5628,18 @@ pub fn EncodeScanInfo_159(si: Ptr<brunsli_JPEGScanInfo>, storage: Ptr<brunsli_St
             'loop_: while true {}
         };
         ({
-            let _n: i32 = ({
-                let _lhs = (block_idx.read());
-                _lhs - (*last_block_idx.borrow())
-            } - 1);
+            let _n: i32 = (({ (block_idx.read()) } - { (*last_block_idx.borrow()) }) - 1);
             let _storage: Ptr<brunsli_Storage> = (*storage.borrow()).clone();
             EncodeVarint_155(_n, 28, _storage)
         });
-        let __rhs = (block_idx.read());
-        (*last_block_idx.borrow_mut()) = __rhs;
+        (*last_block_idx.borrow_mut()) = { (block_idx.read()) };
     }
     ({ WriteBits_120(1_usize, 0_u64, (*storage.borrow()).clone()) });
     (*last_block_idx.borrow_mut()) = 0;
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*si.with(|__s| __s.extra_zero_runs.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < {
+        (*si.with(|__s| __s.extra_zero_runs.clone()).borrow()).len()
+    }) {
         let block_idx: Value<i32> = Rc::new(RefCell::new({
             (*(si.with(|__s| __s.extra_zero_runs.clone()).as_pointer()
                 as Ptr<brunsli_JPEGScanInfo_ExtraZeroRunInfo>)
@@ -5861,10 +5779,9 @@ pub fn EncodeAuxData_162(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
     let have_dri: Value<bool> = Rc::new(RefCell::new(false));
     let num_scans: Value<usize> = Rc::new(RefCell::new(0_usize));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.marker_order.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < {
+        (*jpg.with(|__s| __s.marker_order.clone()).borrow()).len()
+    }) {
         let marker: Value<u8> = Rc::new(RefCell::new(
             ((jpg.with(|__s| __s.marker_order.clone()).as_pointer() as Ptr<u8>)
                 .offset((*i.borrow()))
@@ -5897,9 +5814,8 @@ pub fn EncodeAuxData_162(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
             )
         });
     }
-    if !({
-        let _lhs = (*jpg.with(|__s| __s.huffman_code.clone()).borrow()).len();
-        _lhs < (kMaxDHTMarkers_10.with(|rc| *rc.borrow()) as usize)
+    if !({ (*jpg.with(|__s| __s.huffman_code.clone()).borrow()).len() } < {
+        (kMaxDHTMarkers_10.with(|rc| *rc.borrow()) as usize)
     }) {
         ({
             BrunsliDumpAndAbort_79(
@@ -5911,14 +5827,12 @@ pub fn EncodeAuxData_162(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
         'loop_: while true {}
     };
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.huffman_code.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < {
+        (*jpg.with(|__s| __s.huffman_code.clone()).borrow()).len()
+    }) {
         let is_known_last: Value<bool> = Rc::new(RefCell::new(
-            ({
-                let _lhs = ((*i.borrow()).wrapping_add(1_usize));
-                _lhs == (*jpg.with(|__s| __s.huffman_code.clone()).borrow()).len()
+            ({ ((*i.borrow()).wrapping_add(1_usize)) } == {
+                (*jpg.with(|__s| __s.huffman_code.clone()).borrow()).len()
             }),
         ));
         ({
@@ -5941,17 +5855,12 @@ pub fn EncodeAuxData_162(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
         }
         (*i.borrow_mut()).prefix_inc();
     }
-    if {
-        let _lhs = (*num_scans.borrow());
-        _lhs != (*jpg.with(|__s| __s.scan_info.clone()).borrow()).len()
-    } {
+    if ({ (*num_scans.borrow()) } != { (*jpg.with(|__s| __s.scan_info.clone()).borrow()).len() }) {
         return false;
     }
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.scan_info.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*jpg.with(|__s| __s.scan_info.clone()).borrow()).len() })
+    {
         if !({
             EncodeScanInfo_159(
                 (jpg.with(|__s| __s.scan_info.clone()).as_pointer() as Ptr<brunsli_JPEGScanInfo>)
@@ -5971,10 +5880,7 @@ pub fn EncodeAuxData_162(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
         )
     });
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.quant.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*jpg.with(|__s| __s.quant.clone()).borrow()).len() }) {
         ({
             WriteBits_120(
                 2_usize,
@@ -5989,10 +5895,9 @@ pub fn EncodeAuxData_162(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
                 (*storage.borrow()).clone(),
             )
         });
-        if {
-            let _lhs = (*i.borrow());
-            _lhs != ((*jpg.with(|__s| __s.quant.clone()).borrow()).len()).wrapping_sub(1_usize)
-        } {
+        if ({ (*i.borrow()) } != {
+            ((*jpg.with(|__s| __s.quant.clone()).borrow()).len()).wrapping_sub(1_usize)
+        }) {
             ({
                 WriteBits_120(
                     1_usize,
@@ -6044,10 +5949,9 @@ pub fn EncodeAuxData_162(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
     });
     if ((*comp_ids.borrow()) == kComponentIdsCustom_52.with(|rc| *rc.borrow())) {
         let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-        'loop_: while {
-            let _lhs = (*i.borrow());
-            _lhs < (*jpg.with(|__s| __s.components.clone()).borrow()).len()
-        } {
+        'loop_: while ({ (*i.borrow()) } < {
+            (*jpg.with(|__s| __s.components.clone()).borrow()).len()
+        }) {
             ({
                 WriteBits_120(
                     8_usize,
@@ -6070,10 +5974,7 @@ pub fn EncodeAuxData_162(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
     } else {
         0_usize
     }));
-    if {
-        let _lhs = (*nsize.borrow());
-        _lhs > (({ PaddingBitsLimit_17((jpg).clone()) }) as usize)
-    } {
+    if ({ (*nsize.borrow()) } > { (({ PaddingBitsLimit_17((jpg).clone()) }) as usize) }) {
         return false;
     }
     ({ EncodeLimitedVarint_156((*nsize.borrow()), 8, 4, (*storage.borrow()).clone()) });
@@ -6094,10 +5995,9 @@ pub fn EncodeAuxData_162(jpg: Ptr<brunsli_JPEGData>, storage: Ptr<brunsli_Storag
     }
     ({ JumpToByteBoundary_161((*storage.borrow()).clone()) });
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.inter_marker_data.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < {
+        (*jpg.with(|__s| __s.inter_marker_data.clone()).borrow()).len()
+    }) {
         let s: Ptr<Vec<u8>> = ((jpg.with(|__s| __s.inter_marker_data.clone()).as_pointer()
             as Ptr<Value<Vec<u8>>>)
             .offset((*i.borrow()))
@@ -6169,10 +6069,9 @@ pub fn ComputeCoeffOrder_163(num_zeros: Ptr<Vec<i32>>, order: Ptr<u32>) {
             .get_offset(),
         |x, y| {
             (|a: Ptr<(Value<i32>, Value<i32>)>, b: Ptr<(Value<i32>, Value<i32>)>| {
-                return {
-                    let _lhs = (*(*a.upgrade().deref()).1.borrow());
-                    _lhs < (*(*b.upgrade().deref()).1.borrow())
-                };
+                return ({ (*(*a.upgrade().deref()).1.borrow()) } < {
+                    (*(*b.upgrade().deref()).1.borrow())
+                });
             })
             .call(x, y)
         },
@@ -6232,9 +6131,8 @@ pub fn EncodeNumNonzeros_166(
                 (*bit.borrow()),
             )
         });
-        let __rhs =
-            ((2_usize).wrapping_mul((*ctx.borrow()))).wrapping_add(((*bit.borrow()) as usize));
-        (*ctx.borrow_mut()) = __rhs;
+        (*ctx.borrow_mut()) =
+            { ((2_usize).wrapping_mul((*ctx.borrow()))).wrapping_add(((*bit.borrow()) as usize)) };
         (*mask.borrow_mut()) >>= 1;
     }
 }
@@ -6245,11 +6143,10 @@ pub fn CollectAllCoeffs_167(coeffs: Ptr<i16>) -> i16 {
     'loop_: while (((*all_coeffs.borrow()) as i32) == 0)
         && ((*k.borrow()) < kDCTBlockSize_3.with(|rc| *rc.borrow()))
     {
-        {
-            let rhs_0 = (((*all_coeffs.borrow()) as i32)
+        (*all_coeffs.borrow_mut()) = {
+            (((*all_coeffs.borrow()) as i32)
                 | (((*coeffs.borrow()).offset((*k.borrow()) as isize).read()) as i32))
-                as i16;
-            (*all_coeffs.borrow_mut()) = rhs_0
+                as i16
         };
         (*k.borrow_mut()).prefix_inc();
     }
@@ -6263,11 +6160,12 @@ pub fn EncodeCoeffOrder_168(order: Ptr<u32>, data_stream: Ptr<brunsli_internal_e
         Rc::new(RefCell::new((0..64).map(|_| 0_u32).collect::<Box<[u32]>>()));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
-        let __rhs = ({
-            let __idx = ((*order.borrow()).offset((*i.borrow()) as isize).read()) as usize;
-            kJPEGZigZagOrder_14.with(|rc| rc.borrow()[__idx])
-        });
-        (*order_zigzag.borrow_mut())[(*i.borrow()) as usize] = __rhs;
+        (*order_zigzag.borrow_mut())[(*i.borrow()) as usize] = {
+            ({
+                let __idx = ((*order.borrow()).offset((*i.borrow()) as isize).read()) as usize;
+                kJPEGZigZagOrder_14.with(|rc| rc.borrow()[__idx])
+            })
+        };
         (*i.borrow_mut()).prefix_inc();
     }
     let lehmer: Value<Box<[u32]>> =
@@ -6306,11 +6204,9 @@ pub fn EncodeCoeffOrder_168(order: Ptr<u32>, data_stream: Ptr<brunsli_internal_e
         let has_non_zero: Value<i32> = Rc::new(RefCell::new(0));
         let j: Value<i32> = Rc::new(RefCell::new((*start.borrow())));
         'loop_: while ((*j.borrow()) < (*end.borrow())) {
-            {
-                let rhs_0 = (((*has_non_zero.borrow()) as u32)
-                    | (*lehmer.borrow())[(*j.borrow()) as usize])
-                    as i32;
-                (*has_non_zero.borrow_mut()) = rhs_0
+            (*has_non_zero.borrow_mut()) = {
+                (((*has_non_zero.borrow()) as u32) | (*lehmer.borrow())[(*j.borrow()) as usize])
+                    as i32
             };
             (*j.borrow_mut()).prefix_inc();
         }
@@ -6357,10 +6253,8 @@ pub fn FrameTypeCode_170(jpg: Ptr<brunsli_JPEGData>) -> u32 {
     let code: Value<u32> = Rc::new(RefCell::new(0_u32));
     let shift: Value<i32> = Rc::new(RefCell::new(0));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while ({
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.components.clone()).borrow()).len()
-    }) && ((*i.borrow()) < 4_usize)
+    'loop_: while ({ (*i.borrow()) } < { (*jpg.with(|__s| __s.components.clone()).borrow()).len() })
+        && ((*i.borrow()) < 4_usize)
     {
         let h_samp: Value<u32> = Rc::new(RefCell::new(
             (({
@@ -6394,9 +6288,8 @@ pub fn EncodeSignature_171(len: usize, data: Ptr<u8>, pos: Ptr<usize>) -> bool {
     let data: Value<Ptr<u8>> = Rc::new(RefCell::new(data));
     let pos: Value<Ptr<usize>> = Rc::new(RefCell::new(pos));
     if ((*len.borrow()) < kBrunsliSignatureSize_43.with(|rc| *rc.borrow()))
-        || ({
-            let _lhs = ((*pos.borrow()).read());
-            _lhs > (*len.borrow()).wrapping_sub(kBrunsliSignatureSize_43.with(|rc| *rc.borrow()))
+        || ({ ((*pos.borrow()).read()) } > {
+            (*len.borrow()).wrapping_sub(kBrunsliSignatureSize_43.with(|rc| *rc.borrow()))
         })
     {
         return false;
@@ -6410,11 +6303,9 @@ pub fn EncodeSignature_171(len: usize, data: Ptr<u8>, pos: Ptr<usize>) -> bool {
             );
         (((*data.borrow()).offset(((*pos.borrow()).read()) as isize)) as Ptr<u8>).to_any()
     };
-    {
-        let rhs_0 =
-            ((*pos.borrow()).read()).wrapping_add(kBrunsliSignatureSize_43.with(|rc| *rc.borrow()));
-        (*pos.borrow()).write(rhs_0)
-    };
+    (*pos.borrow()).write({
+        ((*pos.borrow()).read()).wrapping_add(kBrunsliSignatureSize_43.with(|rc| *rc.borrow()))
+    });
     return true;
 }
 pub fn EncodeValue_172(tag: u8, value: usize, data: Ptr<u8>, pos: Ptr<usize>) {
@@ -6459,9 +6350,8 @@ pub fn EncodeHeader_173(
     if (((!(*is_fallback.borrow()))
         && ((jpg.with(|__s| __s.width) == 0) || (jpg.with(|__s| __s.height) == 0)))
         || ((*jpg.with(|__s| __s.components.clone()).borrow()).is_empty()))
-        || ({
-            let _lhs = (*jpg.with(|__s| __s.components.clone()).borrow()).len();
-            _lhs > (kMaxComponents_4.with(|rc| *rc.borrow()) as usize)
+        || ({ (*jpg.with(|__s| __s.components.clone()).borrow()).len() } > {
+            (kMaxComponents_4.with(|rc| *rc.borrow()) as usize)
         })
     {
         return false;
@@ -6470,11 +6360,10 @@ pub fn EncodeHeader_173(
         return false;
     }
     let version_comp: Value<usize> = Rc::new(RefCell::new(
-        ({
-            let _lhs = ((((*jpg.with(|__s| __s.components.clone()).borrow()).len())
-                .wrapping_sub(1_usize)) as u64);
-            _lhs | (((*version.borrow()) << 2) as u64)
-        } as usize),
+        (({
+            ((((*jpg.with(|__s| __s.components.clone()).borrow()).len()).wrapping_sub(1_usize))
+                as u64)
+        } | { (((*version.borrow()) << 2) as u64) }) as usize),
     ));
     let subsampling: Value<usize> = Rc::new(RefCell::new(
         (({ FrameTypeCode_170((jpg).clone()) }) as usize),
@@ -6510,8 +6399,7 @@ pub fn EncodeHeader_173(
         let _data: Ptr<u8> = (*data.borrow()).clone();
         EncodeValue_172(_tag, (*subsampling.borrow()), _data, (pos.as_pointer()))
     });
-    let __rhs = (*pos.borrow());
-    (*len.borrow()).write(__rhs);
+    (*len.borrow()).write({ (*pos.borrow()) });
     return true;
 }
 pub fn EncodeMetaData_174(
@@ -6527,10 +6415,7 @@ pub fn EncodeMetaData_174(
     let metadata: Value<Vec<u8>> = Rc::new(RefCell::new(Vec::new()));
     let transformed_marker_count: Value<usize> = Rc::new(RefCell::new(0_usize));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.app_data.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*jpg.with(|__s| __s.app_data.clone()).borrow()).len() }) {
         let s: Ptr<Vec<u8>> = ((jpg.with(|__s| __s.app_data.clone()).as_pointer()
             as Ptr<Value<Vec<u8>>>)
             .offset((*i.borrow()))
@@ -6649,12 +6534,8 @@ pub fn EncodeMetaData_174(
         );
         return false;
     }
-    {
-        let rhs_0 = (*pos.borrow()).wrapping_add((*compressed_size.borrow()));
-        (*pos.borrow_mut()) = rhs_0
-    };
-    let __rhs = (*pos.borrow());
-    (*len.borrow()).write(__rhs);
+    (*pos.borrow_mut()) = { (*pos.borrow()).wrapping_add((*compressed_size.borrow())) };
+    (*len.borrow()).write({ (*pos.borrow()) });
     return true;
 }
 pub fn EncodeJPEGInternals_175(
@@ -6721,10 +6602,8 @@ pub fn EncodeHistogramData_177(
         { ((*len.borrow()).read()) },
     )));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*jpg.with(|__s| __s.components.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*jpg.with(|__s| __s.components.clone()).borrow()).len() })
+    {
         ({
             WriteBits_120(
                 3_usize,
@@ -6840,10 +6719,8 @@ pub fn EncodeSection_180(
     (*data.borrow())
         .offset(((*pos.borrow()).with_mut(|__v| __v.postfix_inc())) as isize)
         .write(__rhs);
-    {
-        let rhs_0 = ((*pos.borrow()).read()).wrapping_add((*section_size_bytes.borrow()));
-        (*pos.borrow()).write(rhs_0)
-    };
+    (*pos.borrow())
+        .write({ ((*pos.borrow()).read()).wrapping_add((*section_size_bytes.borrow())) });
     let section_size: Value<usize> = Rc::new(RefCell::new(
         (*len.borrow()).wrapping_sub(((*pos.borrow()).read())),
     ));
@@ -6856,10 +6733,7 @@ pub fn EncodeSection_180(
     }) {
         return false;
     }
-    {
-        let rhs_0 = ((*pos.borrow()).read()).wrapping_add((*section_size.borrow()));
-        (*pos.borrow()).write(rhs_0)
-    };
+    (*pos.borrow()).write({ ((*pos.borrow()).read()).wrapping_add((*section_size.borrow())) });
     if (((*section_size.borrow()) >> ((7_usize).wrapping_mul((*section_size_bytes.borrow()))))
         > 0_usize)
     {
@@ -6886,9 +6760,8 @@ pub fn EncodeSection_180(
 pub fn SampleNumNonZeros_181(m: Ptr<brunsli_internal_enc_ComponentMeta>) -> usize {
     let m: Value<Ptr<brunsli_internal_enc_ComponentMeta>> = Rc::new(RefCell::new(m));
     let num_blocks: Value<usize> = Rc::new(RefCell::new(
-        (({
-            let _lhs = (*m.borrow()).with(|__s| __s.width_in_blocks);
-            _lhs * (*m.borrow()).with(|__s| __s.height_in_blocks)
+        (({ (*m.borrow()).with(|__s| __s.width_in_blocks) } * {
+            (*m.borrow()).with(|__s| __s.height_in_blocks)
         }) as usize),
     ));
     if ((*num_blocks.borrow()) < ((32 * 32) as usize)) {
@@ -6934,15 +6807,12 @@ pub fn SampleNumNonZeros_181(m: Ptr<brunsli_internal_enc_ComponentMeta>) -> usiz
             }
             (*k.borrow_mut()).prefix_inc();
         }
-        {
-            let rhs_0 = (*total_nonzeros.borrow())
-                .wrapping_add((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize));
-            (*total_nonzeros.borrow_mut()) = rhs_0
+        (*total_nonzeros.borrow_mut()) = {
+            (*total_nonzeros.borrow())
+                .wrapping_add((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize))
         };
-        {
-            let rhs_0 = (*i.borrow()).wrapping_add((kStride_182.with(|rc| *rc.borrow()) as usize));
-            (*i.borrow_mut()) = rhs_0
-        };
+        (*i.borrow_mut()) =
+            { (*i.borrow()).wrapping_add((kStride_182.with(|rc| *rc.borrow()) as usize)) };
     }
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
     'loop_: while ((*i.borrow()) < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
@@ -6995,10 +6865,7 @@ pub fn PredictDCCoeffs_185(state: Ptr<brunsli_internal_enc_State>) -> bool {
     let meta: Ptr<Vec<brunsli_internal_enc_ComponentMeta>> =
         (*state.borrow()).with(|__s| __s.meta.clone()).as_pointer();
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*meta.upgrade().deref()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*meta.upgrade().deref()).len() }) {
         let m: Ptr<brunsli_internal_enc_ComponentMeta> =
             (Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
                 as Ptr<brunsli_internal_enc_ComponentMeta>)
@@ -7019,17 +6886,18 @@ pub fn PredictDCCoeffs_185(state: Ptr<brunsli_internal_enc_State>) -> bool {
             ));
             let x: Value<i32> = Rc::new(RefCell::new(0));
             'loop_: while ((*x.borrow()) < (*width.borrow())) {
-                let err: Value<i32> = Rc::new(RefCell::new({
-                    let _lhs = (((*coeffs.borrow()).offset((0) as isize).read()) as i32);
-                    _lhs - ({
-                        PredictWithAdaptiveMedian_115(
-                            (*coeffs.borrow()).clone(),
-                            (*x.borrow()),
-                            (*y.borrow()),
-                            (*ac_stride.borrow()),
-                        )
-                    })
-                }));
+                let err: Value<i32> = Rc::new(RefCell::new(
+                    ({ (((*coeffs.borrow()).offset((0) as isize).read()) as i32) } - {
+                        ({
+                            PredictWithAdaptiveMedian_115(
+                                (*coeffs.borrow()).clone(),
+                                (*x.borrow()),
+                                (*y.borrow()),
+                                (*ac_stride.borrow()),
+                            )
+                        })
+                    }),
+                ));
                 if ((*err.borrow()).abs() > kBrunsliMaxDCAbsVal_19.with(|rc| *rc.borrow())) {
                     write!(
                         libcc2rs::cerr(),
@@ -7075,10 +6943,9 @@ pub fn CalculateMeta_186(
             (Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
                 as Ptr<brunsli_internal_enc_ComponentMeta>)
                 .offset((*i.borrow()));
-        if {
-            let _lhs = (c.with(|__s| __s.quant_idx) as usize);
-            _lhs >= (*jpg.with(|__s| __s.quant.clone()).borrow()).len()
-        } {
+        if ({ (c.with(|__s| __s.quant_idx) as usize) } >= {
+            (*jpg.with(|__s| __s.quant.clone()).borrow()).len()
+        }) {
             return false;
         }
         let q: Ptr<brunsli_JPEGQuantTable> = (jpg.with(|__s| __s.quant.clone()).as_pointer()
@@ -7086,27 +6953,17 @@ pub fn CalculateMeta_186(
             .offset((c.with(|__s| __s.quant_idx) as usize));
         field!(m, h_samp).write(c.with(|__s| __s.h_samp_factor));
         field!(m, v_samp).write(c.with(|__s| __s.v_samp_factor));
-        let __rhs = {
-            let _lhs = jpg.with(|__s| __s.MCU_cols);
-            _lhs * m.with(|__s| __s.h_samp)
-        };
-        field!(m, width_in_blocks).write(__rhs);
-        let __rhs = {
-            let _lhs = jpg.with(|__s| __s.MCU_rows);
-            _lhs * m.with(|__s| __s.v_samp)
-        };
-        field!(m, height_in_blocks).write(__rhs);
+        field!(m, width_in_blocks)
+            .write({ ({ jpg.with(|__s| __s.MCU_cols) } * { m.with(|__s| __s.h_samp) }) });
+        field!(m, height_in_blocks)
+            .write({ ({ jpg.with(|__s| __s.MCU_rows) } * { m.with(|__s| __s.v_samp) }) });
         field!(m, ac_coeffs)
             .write(((c.with(|__s| __s.coeffs.clone()).as_pointer() as Ptr<i16>).offset(0_usize)));
-        let __rhs = {
-            let _lhs = m.with(|__s| __s.width_in_blocks);
-            _lhs * kDCTBlockSize_3.with(|rc| *rc.borrow())
-        };
-        field!(m, ac_stride).write(__rhs);
-        let __rhs = m.with(|__s| __s.width_in_blocks);
-        field!(m, dc_stride).write(__rhs);
-        let __rhs = m.with(|__s| __s.width_in_blocks);
-        field!(m, b_stride).write(__rhs);
+        field!(m, ac_stride).write({
+            ({ m.with(|__s| __s.width_in_blocks) } * { kDCTBlockSize_3.with(|rc| *rc.borrow()) })
+        });
+        field!(m, dc_stride).write({ m.with(|__s| __s.width_in_blocks) });
+        field!(m, b_stride).write({ m.with(|__s| __s.width_in_blocks) });
         {
             ((m.with(|__s| __s.quant.clone()).as_pointer() as Ptr<i32>) as Ptr<i32>)
                 .to_any()
@@ -7129,24 +6986,27 @@ pub fn EncodeDC_187(state: Ptr<brunsli_internal_enc_State>) {
     let meta: Ptr<Vec<brunsli_internal_enc_ComponentMeta>> =
         (*state.borrow()).with(|__s| __s.meta.clone()).as_pointer();
     let num_components: Value<usize> = Rc::new(RefCell::new((*meta.upgrade().deref()).len()));
-    let mcu_rows: Value<i32> = Rc::new(RefCell::new({
-        let _lhs = {
-            (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
-                as Ptr<brunsli_internal_enc_ComponentMeta>)
-                .offset(0_usize)
-                .upgrade()
-                .deref())
-            .height_in_blocks
-        };
-        _lhs / {
-            (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
-                as Ptr<brunsli_internal_enc_ComponentMeta>)
-                .offset(0_usize)
-                .upgrade()
-                .deref())
-            .v_samp
-        }
-    }));
+    let mcu_rows: Value<i32> = Rc::new(RefCell::new(
+        ({
+            {
+                (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
+                    as Ptr<brunsli_internal_enc_ComponentMeta>)
+                    .offset(0_usize)
+                    .upgrade()
+                    .deref())
+                .height_in_blocks
+            }
+        } / {
+            {
+                (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
+                    as Ptr<brunsli_internal_enc_ComponentMeta>)
+                    .offset(0_usize)
+                    .upgrade()
+                    .deref())
+                .v_samp
+            }
+        }),
+    ));
     let entropy_source: Ptr<brunsli_internal_enc_EntropySource> =
         field_ptr!((*state.borrow()), entropy_source);
     let data_stream: Ptr<brunsli_internal_enc_DataStream> =
@@ -7169,14 +7029,11 @@ pub fn EncodeDC_187(state: Ptr<brunsli_internal_enc_State>) {
                 m.with(|__s| __s.width_in_blocks),
             )
         });
-        {
-            let rhs_0 = (*total_num_blocks.borrow()).wrapping_add(
-                (({
-                    let _lhs = m.with(|__s| __s.width_in_blocks);
-                    _lhs * m.with(|__s| __s.height_in_blocks)
-                }) as usize),
-            );
-            (*total_num_blocks.borrow_mut()) = rhs_0
+        (*total_num_blocks.borrow_mut()) = {
+            (*total_num_blocks.borrow()).wrapping_add(
+                (({ m.with(|__s| __s.width_in_blocks) } * { m.with(|__s| __s.height_in_blocks) })
+                    as usize),
+            )
         };
         (*i.borrow_mut()).prefix_inc();
     }
@@ -7204,10 +7061,9 @@ pub fn EncodeDC_187(state: Ptr<brunsli_internal_enc_State>) {
             let ac_stride: Value<i32> = Rc::new(RefCell::new(m.with(|__s| __s.ac_stride)));
             let dc_stride: Value<i32> = Rc::new(RefCell::new(m.with(|__s| __s.dc_stride)));
             let b_stride: Value<i32> = Rc::new(RefCell::new(m.with(|__s| __s.b_stride)));
-            let y: Value<i32> = Rc::new(RefCell::new({
-                let _lhs = (*mcu_y.borrow());
-                _lhs * m.with(|__s| __s.v_samp)
-            }));
+            let y: Value<i32> = Rc::new(RefCell::new(
+                ({ (*mcu_y.borrow()) } * { m.with(|__s| __s.v_samp) }),
+            ));
             let prev_sgn: Value<Ptr<i32>> = Rc::new(RefCell::new(
                 (((*c.borrow()).with(|__s| __s.prev_sign.clone()).as_pointer() as Ptr<i32>)
                     .offset(1_usize)),
@@ -7219,10 +7075,7 @@ pub fn EncodeDC_187(state: Ptr<brunsli_internal_enc_State>) {
                     .offset(2_usize)),
             ));
             let iy: Value<i32> = Rc::new(RefCell::new(0));
-            'loop_: while {
-                let _lhs = (*iy.borrow());
-                _lhs < m.with(|__s| __s.v_samp)
-            } {
+            'loop_: while ({ (*iy.borrow()) } < { m.with(|__s| __s.v_samp) }) {
                 let dc_coeffs_in: Value<Ptr<i16>> = Rc::new(RefCell::new(
                     m.with(|__s| __s.dc_prediction_errors.clone())
                         .offset(((*y.borrow()) * (*dc_stride.borrow())) as isize),
@@ -7257,10 +7110,8 @@ pub fn EncodeDC_187(state: Ptr<brunsli_internal_enc_State>) {
                         ((*coeff.borrow()) as i32)
                     }));
                     let all_coeffs: Value<i16> = Rc::new(RefCell::new(
-                        (({
-                            let _lhs = ((*coeff.borrow()) as i32);
-                            _lhs | (({ CollectAllCoeffs_167((*ac_coeffs_in.borrow()).clone()) })
-                                as i32)
+                        (({ ((*coeff.borrow()) as i32) } | {
+                            (({ CollectAllCoeffs_167((*ac_coeffs_in.borrow()).clone()) }) as i32)
                         }) as i16),
                     ));
                     let is_empty_block: Value<bool> =
@@ -7290,8 +7141,7 @@ pub fn EncodeDC_187(state: Ptr<brunsli_internal_enc_State>) {
                         .as_pointer() as Ptr<i32>)
                         .offset((((*x.borrow()) + 1) as usize))
                         .write((!(*is_empty_block.borrow()) as i32));
-                    let __rhs = ((*is_empty_block.borrow()) as u8);
-                    (*block_state.borrow()).write(__rhs);
+                    (*block_state.borrow()).write({ ((*is_empty_block.borrow()) as u8) });
                     if !(*is_empty_block.borrow()) {
                         let is_zero: Value<i32> =
                             Rc::new(RefCell::new(((((*coeff.borrow()) as i32) == 0) as i32)));
@@ -7403,14 +7253,12 @@ pub fn EncodeDC_187(state: Ptr<brunsli_internal_enc_State>) {
                             }
                         }
                     }
-                    let __rhs = (*sign.borrow());
                     (*prev_sgn.borrow())
                         .offset((*x.borrow()) as isize)
-                        .write(__rhs);
-                    let __rhs = (*absval.borrow());
+                        .write({ (*sign.borrow()) });
                     (*prev_abs.borrow())
                         .offset((*x.borrow()) as isize)
-                        .write(__rhs);
+                        .write({ (*absval.borrow()) });
                     (*block_state.borrow_mut()).prefix_inc();
                     (*dc_coeffs_in.borrow_mut()).prefix_inc();
                     (*ac_coeffs_in.borrow_mut()) += kDCTBlockSize_3.with(|rc| *rc.borrow());
@@ -7431,24 +7279,27 @@ pub fn EncodeAC_188(state: Ptr<brunsli_internal_enc_State>) {
     let meta: Ptr<Vec<brunsli_internal_enc_ComponentMeta>> =
         (*state.borrow()).with(|__s| __s.meta.clone()).as_pointer();
     let num_components: Value<usize> = Rc::new(RefCell::new((*meta.upgrade().deref()).len()));
-    let mcu_rows: Value<i32> = Rc::new(RefCell::new({
-        let _lhs = {
-            (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
-                as Ptr<brunsli_internal_enc_ComponentMeta>)
-                .offset(0_usize)
-                .upgrade()
-                .deref())
-            .height_in_blocks
-        };
-        _lhs / {
-            (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
-                as Ptr<brunsli_internal_enc_ComponentMeta>)
-                .offset(0_usize)
-                .upgrade()
-                .deref())
-            .v_samp
-        }
-    }));
+    let mcu_rows: Value<i32> = Rc::new(RefCell::new(
+        ({
+            {
+                (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
+                    as Ptr<brunsli_internal_enc_ComponentMeta>)
+                    .offset(0_usize)
+                    .upgrade()
+                    .deref())
+                .height_in_blocks
+            }
+        } / {
+            {
+                (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
+                    as Ptr<brunsli_internal_enc_ComponentMeta>)
+                    .offset(0_usize)
+                    .upgrade()
+                    .deref())
+                .v_samp
+            }
+        }),
+    ));
     let entropy_source: Ptr<brunsli_internal_enc_EntropySource> =
         field_ptr!((*state.borrow()), entropy_source);
     let data_stream: Ptr<brunsli_internal_enc_DataStream> =
@@ -7475,18 +7326,15 @@ pub fn EncodeAC_188(state: Ptr<brunsli_internal_enc_State>) {
                 as Ptr<brunsli_internal_enc_ComponentMeta>)
                 .offset((*i.borrow()));
         let num_blocks: Value<usize> = Rc::new(RefCell::new(
-            (({
-                let _lhs = m.with(|__s| __s.width_in_blocks);
-                _lhs * m.with(|__s| __s.height_in_blocks)
-            }) as usize),
+            (({ m.with(|__s| __s.width_in_blocks) } * { m.with(|__s| __s.height_in_blocks) })
+                as usize),
         ));
-        {
-            let rhs_0 = (*num_code_words.borrow()).wrapping_add(
+        (*num_code_words.borrow_mut()) = {
+            (*num_code_words.borrow()).wrapping_add(
                 (((2_usize).wrapping_mul(m.with(|__s| __s.approx_total_nonzeros)))
                     .wrapping_add(1024_usize))
                 .wrapping_add((3_usize).wrapping_mul((*num_blocks.borrow()))),
-            );
-            (*num_code_words.borrow_mut()) = rhs_0
+            )
         };
         ({
             ComputeCoeffOrder_163(
@@ -7561,10 +7409,9 @@ pub fn EncodeAC_188(state: Ptr<brunsli_internal_enc_State>) {
                 (array_field_ptr!((*c.borrow()), order) as Ptr<u32>),
             ));
             let width: Value<i32> = Rc::new(RefCell::new((*c.borrow()).with(|__s| __s.width)));
-            let y: Value<i32> = Rc::new(RefCell::new({
-                let _lhs = (*mcu_y.borrow());
-                _lhs * m.with(|__s| __s.v_samp)
-            }));
+            let y: Value<i32> = Rc::new(RefCell::new(
+                ({ (*mcu_y.borrow()) } * { m.with(|__s| __s.v_samp) }),
+            ));
             let ac_stride: Value<i32> = Rc::new(RefCell::new(m.with(|__s| __s.ac_stride)));
             let b_stride: Value<i32> = Rc::new(RefCell::new(m.with(|__s| __s.b_stride)));
             let prev_row_delta: Value<i32> = Rc::new(RefCell::new(
@@ -7572,10 +7419,7 @@ pub fn EncodeAC_188(state: Ptr<brunsli_internal_enc_State>) {
                     * kDCTBlockSize_3.with(|rc| *rc.borrow())),
             ));
             let iy: Value<i32> = Rc::new(RefCell::new(0));
-            'loop_: while {
-                let _lhs = (*iy.borrow());
-                _lhs < m.with(|__s| __s.v_samp)
-            } {
+            'loop_: while ({ (*iy.borrow()) } < { m.with(|__s| __s.v_samp) }) {
                 let coeffs_in: Value<Ptr<i16>> = Rc::new(RefCell::new(
                     m.with(|__s| __s.ac_coeffs.clone())
                         .offset(((*y.borrow()) * (*ac_stride.borrow())) as isize),
@@ -7627,10 +7471,11 @@ pub fn EncodeAC_188(state: Ptr<brunsli_internal_enc_State>) {
                                 (((*cur_order.borrow()).offset((*k.borrow()) as isize).read())
                                     as i32),
                             ));
-                            let __rhs = ((*coeffs_in.borrow())
-                                .offset((*k_nat.borrow()) as isize)
-                                .read());
-                            (*coeffs.borrow_mut())[(*k.borrow()) as usize] = __rhs;
+                            (*coeffs.borrow_mut())[(*k.borrow()) as usize] = {
+                                ((*coeffs_in.borrow())
+                                    .offset((*k_nat.borrow()) as isize)
+                                    .read())
+                            };
                             if ((*coeffs.borrow())[(*k.borrow()) as usize] != 0) {
                                 (*last_nz.borrow_mut()) = (*k.borrow());
                             }
@@ -7797,11 +7642,10 @@ pub fn EncodeAC_188(state: Ptr<brunsli_internal_enc_State>) {
                                 })
                                     as usize);
                                 (*sign_ctx.borrow_mut()) = (({
-                                    let _lhs = (((*prev_sgn.borrow())
-                                        .offset((*k.borrow()) as isize)
-                                        .read())
-                                        * 3);
-                                    _lhs + ((*prev_sgn.borrow())
+                                    (((*prev_sgn.borrow()).offset((*k.borrow()) as isize).read())
+                                        * 3)
+                                } + {
+                                    ((*prev_sgn.borrow())
                                         .offset(
                                             ((*k.borrow())
                                                 - kDCTBlockSize_3.with(|rc| *rc.borrow()))
@@ -7811,10 +7655,12 @@ pub fn EncodeAC_188(state: Ptr<brunsli_internal_enc_State>) {
                                 })
                                     as usize);
                             }
-                            let __rhs = ((*sign_ctx.borrow())
-                                .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)))
-                            .wrapping_add(((*k.borrow()) as usize));
-                            (*sign_ctx.borrow_mut()) = __rhs;
+                            (*sign_ctx.borrow_mut()) = {
+                                ((*sign_ctx.borrow()).wrapping_mul(
+                                    (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize),
+                                ))
+                                .wrapping_add(((*k.borrow()) as usize))
+                            };
                             let sign_p: Value<Ptr<brunsli_Prob>> = Rc::new(RefCell::new(
                                 (((*c.borrow()).with(|__s| __s.sign_prob.clone()).as_pointer()
                                     as Ptr<brunsli_Prob>)
@@ -7825,10 +7671,9 @@ pub fn EncodeAC_188(state: Ptr<brunsli_internal_enc_State>) {
                                 let _bit: i32 = (*sign.borrow());
                                 brunsli_internal_enc_DataStreamImpl::AddBit(&data_stream, _p, _bit)
                             });
-                            let __rhs = ((*sign.borrow()) + 1);
                             (*prev_sgn.borrow())
                                 .offset((*k.borrow()) as isize)
-                                .write(__rhs);
+                                .write({ ((*sign.borrow()) + 1) });
                             let zdens_ctx: Value<usize> = Rc::new(RefCell::new(
                                 (m.with(|__s| __s.context_offset)).wrapping_add(
                                     (({
@@ -7923,10 +7768,9 @@ pub fn EncodeAC_188(state: Ptr<brunsli_internal_enc_State>) {
                             (*num_nzeros.borrow_mut()).prefix_inc();
                             (*encoded_coeffs.borrow_mut())[(*k_nat.borrow()) as usize] =
                                 (*coeff.borrow());
-                            let __rhs = (*absval.borrow());
                             (*prev_abs.borrow())
                                 .offset((*k.borrow()) as isize)
-                                .write(__rhs);
+                                .write({ (*absval.borrow()) });
                         } else {
                             (*prev_sgn.borrow()).offset((*k.borrow()) as isize).write(0);
                             (*prev_abs.borrow()).offset((*k.borrow()) as isize).write(0);
@@ -8262,8 +8106,7 @@ pub fn BrunsliSerialize_190(
             return false;
         }
     }
-    let __rhs = (*pos.borrow());
-    (*len.borrow()).write(__rhs);
+    (*len.borrow()).write({ (*pos.borrow()) });
     return true;
 }
 pub fn BrunsliEncodeJpeg_191(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr<usize>) -> bool {
@@ -8364,15 +8207,16 @@ pub fn BrunsliEncodeJpeg_191(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
     'loop_: while ((*i.borrow()) < (*num_components.borrow())) {
         {
             let __a0 = (({
-                let _lhs = {
+                {
                     (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
                         as Ptr<brunsli_internal_enc_ComponentMeta>)
                         .offset((*i.borrow()))
                         .upgrade()
                         .deref())
                     .width_in_blocks
-                };
-                _lhs * {
+                }
+            } * {
+                {
                     (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
                         as Ptr<brunsli_internal_enc_ComponentMeta>)
                         .offset((*i.borrow()))
@@ -8413,15 +8257,16 @@ pub fn BrunsliEncodeJpeg_191(jpg: Ptr<brunsli_JPEGData>, data: Ptr<u8>, len: Ptr
     'loop_: while ((*i.borrow()) < (*num_components.borrow())) {
         {
             let __a0 = (({
-                let _lhs = {
+                {
                     (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
                         as Ptr<brunsli_internal_enc_ComponentMeta>)
                         .offset((*i.borrow()))
                         .upgrade()
                         .deref())
                     .width_in_blocks
-                };
-                _lhs * {
+                }
+            } * {
+                {
                     (*(Ptr::<Vec<brunsli_internal_enc_ComponentMeta>>::decay(&(meta))
                         as Ptr<brunsli_internal_enc_ComponentMeta>)
                         .offset((*i.borrow()))
@@ -8483,10 +8328,7 @@ pub fn EncodeOriginalJpg_194(
     let len: Value<Ptr<usize>> = Rc::new(RefCell::new(len));
     &(*state.borrow_mut());
     if ((jpg.with(|__s| __s.original_jpg.clone())).is_null())
-        || ({
-            let _lhs = jpg.with(|__s| __s.original_jpg_size);
-            _lhs > ((*len.borrow()).read())
-        })
+        || ({ jpg.with(|__s| __s.original_jpg_size) } > { ((*len.borrow()).read()) })
     {
         return false;
     }
@@ -8497,8 +8339,7 @@ pub fn EncodeOriginalJpg_194(
         );
         (*data.borrow()).to_any()
     };
-    let __rhs = jpg.with(|__s| __s.original_jpg_size);
-    (*len.borrow()).write(__rhs);
+    (*len.borrow()).write({ jpg.with(|__s| __s.original_jpg_size) });
     return true;
 }
 pub fn BrunsliEncodeJpegBypass_195(
@@ -8596,8 +8437,7 @@ pub fn BrunsliEncodeJpegBypass_195(
     }) {
         return false;
     }
-    let __rhs = (*pos.borrow());
-    (*len.borrow()).write(__rhs);
+    (*len.borrow()).write({ (*pos.borrow()) });
     return true;
 }
 #[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
@@ -8651,16 +8491,13 @@ pub fn StoreVarLenUint8_197(n: usize, storage: Ptr<brunsli_Storage>) {
 pub fn IndexOf_198(v: Ptr<Vec<u32>>, value: u32) -> usize {
     let value: Value<u32> = Rc::new(RefCell::new(value));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*v.upgrade().deref()).len()
-    } {
-        if {
-            let _lhs = ((Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>)
+    'loop_: while ({ (*i.borrow()) } < { (*v.upgrade().deref()).len() }) {
+        if ({
+            ((Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>)
                 .offset((*i.borrow()))
-                .read());
-            _lhs == (*value.borrow())
-        } {
+                .read())
+        } == { (*value.borrow()) })
+        {
             return (*i.borrow());
         }
         (*i.borrow_mut()).prefix_inc();
@@ -8728,10 +8565,7 @@ pub fn MoveToFrontTransform_200(v: Ptr<Vec<u32>>) -> Vec<u32> {
             .collect::<Vec<_>>(),
     ));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*v.upgrade().deref()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*v.upgrade().deref()).len() }) {
         let index: Value<usize> = Rc::new(RefCell::new(
             ({
                 let _v: Ptr<Vec<u32>> = mtf.as_pointer();
@@ -8770,28 +8604,21 @@ pub fn RunLengthCodeZeros_201(
     let extra_bits: Value<Ptr<Vec<u32>>> = Rc::new(RefCell::new(extra_bits));
     let max_reps: Value<usize> = Rc::new(RefCell::new(0_usize));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*v_in.upgrade().deref()).len()
-    } {
-        'loop_: while ({
-            let _lhs = (*i.borrow());
-            _lhs < (*v_in.upgrade().deref()).len()
-        }) && (((Ptr::<Vec<u32>>::decay(&(v_in)) as Ptr<u32>)
-            .offset((*i.borrow()))
-            .read())
-            != 0_u32)
+    'loop_: while ({ (*i.borrow()) } < { (*v_in.upgrade().deref()).len() }) {
+        'loop_: while ({ (*i.borrow()) } < { (*v_in.upgrade().deref()).len() })
+            && (((Ptr::<Vec<u32>>::decay(&(v_in)) as Ptr<u32>)
+                .offset((*i.borrow()))
+                .read())
+                != 0_u32)
         {
             (*i.borrow_mut()).prefix_inc();
         }
         let i0: Value<usize> = Rc::new(RefCell::new((*i.borrow())));
-        'loop_: while ({
-            let _lhs = (*i.borrow());
-            _lhs < (*v_in.upgrade().deref()).len()
-        }) && (((Ptr::<Vec<u32>>::decay(&(v_in)) as Ptr<u32>)
-            .offset((*i.borrow()))
-            .read())
-            == 0_u32)
+        'loop_: while ({ (*i.borrow()) } < { (*v_in.upgrade().deref()).len() })
+            && (((Ptr::<Vec<u32>>::decay(&(v_in)) as Ptr<u32>)
+                .offset((*i.borrow()))
+                .read())
+                == 0_u32)
         {
             (*i.borrow_mut()).prefix_inc();
         }
@@ -8824,13 +8651,9 @@ pub fn RunLengthCodeZeros_201(
         }
         .read());
     (*max_prefix.borrow_mut()) = __rhs;
-    let __rhs = (*max_prefix.borrow());
-    (*max_run_length_prefix.borrow()).write(__rhs);
+    (*max_run_length_prefix.borrow()).write({ (*max_prefix.borrow()) });
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*v_in.upgrade().deref()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*v_in.upgrade().deref()).len() }) {
         if (((Ptr::<Vec<u32>>::decay(&(v_in)) as Ptr<u32>)
             .offset((*i.borrow()))
             .read())
@@ -8851,21 +8674,16 @@ pub fn RunLengthCodeZeros_201(
         } else {
             let reps: Value<u32> = Rc::new(RefCell::new(1_u32));
             let k: Value<usize> = Rc::new(RefCell::new((*i.borrow()).wrapping_add(1_usize)));
-            'loop_: while ({
-                let _lhs = (*k.borrow());
-                _lhs < (*v_in.upgrade().deref()).len()
-            }) && (((Ptr::<Vec<u32>>::decay(&(v_in)) as Ptr<u32>)
-                .offset((*k.borrow()))
-                .read())
-                == 0_u32)
+            'loop_: while ({ (*k.borrow()) } < { (*v_in.upgrade().deref()).len() })
+                && (((Ptr::<Vec<u32>>::decay(&(v_in)) as Ptr<u32>)
+                    .offset((*k.borrow()))
+                    .read())
+                    == 0_u32)
             {
                 (*reps.borrow_mut()).prefix_inc();
                 (*k.borrow_mut()).prefix_inc();
             }
-            {
-                let rhs_0 = (*i.borrow()).wrapping_add(((*reps.borrow()) as usize));
-                (*i.borrow_mut()) = rhs_0
-            };
+            (*i.borrow_mut()) = { (*i.borrow()).wrapping_add(((*reps.borrow()) as usize)) };
             'loop_: while ((*reps.borrow()) != 0_u32) {
                 if ((*reps.borrow()) < (2_u32 << (*max_prefix.borrow()))) {
                     let run_length_prefix: Value<u32> = Rc::new(RefCell::new(
@@ -8890,11 +8708,10 @@ pub fn RunLengthCodeZeros_201(
                         let __a1 = (1_u32 << (*max_prefix.borrow())).wrapping_sub((1_u32 as u32));
                         (*extra_bits.borrow()).with_mut(|__v: &mut Vec<u32>| __v.push(__a1))
                     };
-                    {
-                        let rhs_0 = (*reps.borrow()).wrapping_sub(
+                    (*reps.borrow_mut()) = {
+                        (*reps.borrow()).wrapping_sub(
                             (2_u32 << (*max_prefix.borrow())).wrapping_sub((1_u32 as u32)),
-                        );
-                        (*reps.borrow_mut()) = rhs_0
+                        )
                     };
                 }
             }
@@ -9103,24 +8920,21 @@ pub fn RebalanceHistogram_209(
     let n: Value<i32> = Rc::new(RefCell::new(0));
     'loop_: while ((*n.borrow()) < (*max_symbol.borrow())) {
         if (((*targets.borrow()).offset((*n.borrow()) as isize).read()) > 0_f32) {
-            let __rhs = ((*targets.borrow()).offset((*n.borrow()) as isize).read());
-            (*sum_nonrounded.borrow_mut()) += __rhs;
-            let __rhs = ((((((*targets.borrow()).offset((*n.borrow()) as isize).read()) as f64)
-                + 5.0E-1) as u32) as i32);
-            (*counts.borrow())
-                .offset((*n.borrow()) as isize)
-                .write(__rhs);
+            (*sum_nonrounded.borrow_mut()) +=
+                { ((*targets.borrow()).offset((*n.borrow()) as isize).read()) };
+            (*counts.borrow()).offset((*n.borrow()) as isize).write({
+                ((((((*targets.borrow()).offset((*n.borrow()) as isize).read()) as f64) + 5.0E-1)
+                    as u32) as i32)
+            });
             if (((*counts.borrow()).offset((*n.borrow()) as isize).read()) == 0) {
                 (*counts.borrow()).offset((*n.borrow()) as isize).write(1);
             }
-            if {
-                let _lhs = ((*counts.borrow()).offset((*n.borrow()) as isize).read());
-                _lhs == (*table_size.borrow())
-            } {
-                let __rhs = ((*table_size.borrow()) - 1);
+            if ({ ((*counts.borrow()).offset((*n.borrow()) as isize).read()) } == {
+                (*table_size.borrow())
+            }) {
                 (*counts.borrow())
                     .offset((*n.borrow()) as isize)
-                    .write(__rhs);
+                    .write({ ((*table_size.borrow()) - 1) });
             }
             let inc: Value<i32> = Rc::new(RefCell::new(
                 ({
@@ -9129,13 +8943,15 @@ pub fn RebalanceHistogram_209(
                     )
                 }),
             ));
-            let __rhs = {
-                let _lhs = ((*counts.borrow()).offset((*n.borrow()) as isize).read());
-                _lhs & ((*inc.borrow()) - 1)
-            };
             {
                 let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize);
-                _ptr.write(_ptr.read() - __rhs)
+                _ptr.write(
+                    _ptr.read() - {
+                        ({ ((*counts.borrow()).offset((*n.borrow()) as isize).read()) } & {
+                            ((*inc.borrow()) - 1)
+                        })
+                    },
+                )
             };
             let target: Value<f32> = Rc::new(RefCell::new(if false {
                 ((*sum_nonrounded.borrow()) - ((*sum.borrow()) as f32))
@@ -9143,28 +8959,22 @@ pub fn RebalanceHistogram_209(
                 ((*targets.borrow()).offset((*n.borrow()) as isize).read())
             }));
             if (((*counts.borrow()).offset((*n.borrow()) as isize).read()) == 0)
-                || (({
-                    let _lhs = (*target.borrow());
-                    _lhs > (({
-                        let _lhs = ((*counts.borrow()).offset((*n.borrow()) as isize).read());
-                        _lhs + ((*inc.borrow()) / 2)
+                || (({ (*target.borrow()) } > {
+                    (({ ((*counts.borrow()).offset((*n.borrow()) as isize).read()) } + {
+                        ((*inc.borrow()) / 2)
                     }) as f32)
                 }) && ({
-                    let _lhs = {
-                        let _lhs = ((*counts.borrow()).offset((*n.borrow()) as isize).read());
-                        _lhs + (*inc.borrow())
-                    };
-                    _lhs < (*table_size.borrow())
-                }))
+                    ({ ((*counts.borrow()).offset((*n.borrow()) as isize).read()) } + {
+                        (*inc.borrow())
+                    })
+                } < { (*table_size.borrow()) }))
             {
-                let __rhs = (*inc.borrow());
                 {
                     let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize);
-                    _ptr.write(_ptr.read() + __rhs)
+                    _ptr.write(_ptr.read() + { (*inc.borrow()) })
                 };
             }
-            let __rhs = ((*counts.borrow()).offset((*n.borrow()) as isize).read());
-            (*sum.borrow_mut()) += __rhs;
+            (*sum.borrow_mut()) += { ((*counts.borrow()).offset((*n.borrow()) as isize).read()) };
             let count_log: Value<i32> = Rc::new(RefCell::new(
                 ({
                     Log2FloorNonZero_74(
@@ -9189,13 +8999,11 @@ pub fn RebalanceHistogram_209(
         });
         'loop_: while true {}
     };
-    let __rhs = ((*sum.borrow()) - (*table_size.borrow()));
     {
         let _ptr = (*counts.borrow()).offset((*remainder_pos.borrow()) as isize);
-        _ptr.write(_ptr.read() - __rhs)
+        _ptr.write(_ptr.read() - { ((*sum.borrow()) - (*table_size.borrow())) })
     };
-    let __rhs = (*remainder_pos.borrow());
-    (*omit_pos.borrow()).write(__rhs);
+    (*omit_pos.borrow()).write({ (*remainder_pos.borrow()) });
     return (((*counts.borrow())
         .offset((*remainder_pos.borrow()) as isize)
         .read())
@@ -9230,24 +9038,21 @@ pub fn RebalanceHistogram_210(
     let n: Value<i32> = Rc::new(RefCell::new(0));
     'loop_: while ((*n.borrow()) < (*max_symbol.borrow())) {
         if (((*targets.borrow()).offset((*n.borrow()) as isize).read()) > 0_f32) {
-            let __rhs = ((*targets.borrow()).offset((*n.borrow()) as isize).read());
-            (*sum_nonrounded.borrow_mut()) += __rhs;
-            let __rhs = ((((((*targets.borrow()).offset((*n.borrow()) as isize).read()) as f64)
-                + 5.0E-1) as u32) as i32);
-            (*counts.borrow())
-                .offset((*n.borrow()) as isize)
-                .write(__rhs);
+            (*sum_nonrounded.borrow_mut()) +=
+                { ((*targets.borrow()).offset((*n.borrow()) as isize).read()) };
+            (*counts.borrow()).offset((*n.borrow()) as isize).write({
+                ((((((*targets.borrow()).offset((*n.borrow()) as isize).read()) as f64) + 5.0E-1)
+                    as u32) as i32)
+            });
             if (((*counts.borrow()).offset((*n.borrow()) as isize).read()) == 0) {
                 (*counts.borrow()).offset((*n.borrow()) as isize).write(1);
             }
-            if {
-                let _lhs = ((*counts.borrow()).offset((*n.borrow()) as isize).read());
-                _lhs == (*table_size.borrow())
-            } {
-                let __rhs = ((*table_size.borrow()) - 1);
+            if ({ ((*counts.borrow()).offset((*n.borrow()) as isize).read()) } == {
+                (*table_size.borrow())
+            }) {
                 (*counts.borrow())
                     .offset((*n.borrow()) as isize)
-                    .write(__rhs);
+                    .write({ ((*table_size.borrow()) - 1) });
             }
             let inc: Value<i32> = Rc::new(RefCell::new(
                 ({
@@ -9256,13 +9061,15 @@ pub fn RebalanceHistogram_210(
                     )
                 }),
             ));
-            let __rhs = {
-                let _lhs = ((*counts.borrow()).offset((*n.borrow()) as isize).read());
-                _lhs & ((*inc.borrow()) - 1)
-            };
             {
                 let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize);
-                _ptr.write(_ptr.read() - __rhs)
+                _ptr.write(
+                    _ptr.read() - {
+                        ({ ((*counts.borrow()).offset((*n.borrow()) as isize).read()) } & {
+                            ((*inc.borrow()) - 1)
+                        })
+                    },
+                )
             };
             let target: Value<f32> = Rc::new(RefCell::new(if true {
                 ((*sum_nonrounded.borrow()) - ((*sum.borrow()) as f32))
@@ -9270,28 +9077,22 @@ pub fn RebalanceHistogram_210(
                 ((*targets.borrow()).offset((*n.borrow()) as isize).read())
             }));
             if (((*counts.borrow()).offset((*n.borrow()) as isize).read()) == 0)
-                || (({
-                    let _lhs = (*target.borrow());
-                    _lhs > (({
-                        let _lhs = ((*counts.borrow()).offset((*n.borrow()) as isize).read());
-                        _lhs + ((*inc.borrow()) / 2)
+                || (({ (*target.borrow()) } > {
+                    (({ ((*counts.borrow()).offset((*n.borrow()) as isize).read()) } + {
+                        ((*inc.borrow()) / 2)
                     }) as f32)
                 }) && ({
-                    let _lhs = {
-                        let _lhs = ((*counts.borrow()).offset((*n.borrow()) as isize).read());
-                        _lhs + (*inc.borrow())
-                    };
-                    _lhs < (*table_size.borrow())
-                }))
+                    ({ ((*counts.borrow()).offset((*n.borrow()) as isize).read()) } + {
+                        (*inc.borrow())
+                    })
+                } < { (*table_size.borrow()) }))
             {
-                let __rhs = (*inc.borrow());
                 {
                     let _ptr = (*counts.borrow()).offset((*n.borrow()) as isize);
-                    _ptr.write(_ptr.read() + __rhs)
+                    _ptr.write(_ptr.read() + { (*inc.borrow()) })
                 };
             }
-            let __rhs = ((*counts.borrow()).offset((*n.borrow()) as isize).read());
-            (*sum.borrow_mut()) += __rhs;
+            (*sum.borrow_mut()) += { ((*counts.borrow()).offset((*n.borrow()) as isize).read()) };
             let count_log: Value<i32> = Rc::new(RefCell::new(
                 ({
                     Log2FloorNonZero_74(
@@ -9316,13 +9117,11 @@ pub fn RebalanceHistogram_210(
         });
         'loop_: while true {}
     };
-    let __rhs = ((*sum.borrow()) - (*table_size.borrow()));
     {
         let _ptr = (*counts.borrow()).offset((*remainder_pos.borrow()) as isize);
-        _ptr.write(_ptr.read() - __rhs)
+        _ptr.write(_ptr.read() - { ((*sum.borrow()) - (*table_size.borrow())) })
     };
-    let __rhs = (*remainder_pos.borrow());
-    (*omit_pos.borrow()).write(__rhs);
+    (*omit_pos.borrow()).write({ (*remainder_pos.borrow()) });
     return (((*counts.borrow())
         .offset((*remainder_pos.borrow()) as isize)
         .read())
@@ -9358,33 +9157,29 @@ pub fn NormalizeCounts_124(
     let symbol_count: Value<i32> = Rc::new(RefCell::new(0));
     let n: Value<i32> = Rc::new(RefCell::new(0));
     'loop_: while ((*n.borrow()) < (*length.borrow())) {
-        {
-            let rhs_0 = (*total.borrow())
-                .wrapping_add((((*counts.borrow()).offset((*n.borrow()) as isize).read()) as u64));
-            (*total.borrow_mut()) = rhs_0
+        (*total.borrow_mut()) = {
+            (*total.borrow())
+                .wrapping_add((((*counts.borrow()).offset((*n.borrow()) as isize).read()) as u64))
         };
         if (((*counts.borrow()).offset((*n.borrow()) as isize).read()) > 0) {
             if ((*symbol_count.borrow()) < kMaxNumSymbolsForSmallCode_121.with(|rc| *rc.borrow())) {
-                let __rhs = (*n.borrow());
                 (*symbols.borrow())
                     .offset((*symbol_count.borrow()) as isize)
-                    .write(__rhs);
+                    .write({ (*n.borrow()) });
             }
             (*symbol_count.borrow_mut()).prefix_inc();
             (*max_symbol.borrow_mut()) = ((*n.borrow()) + 1);
         }
         (*n.borrow_mut()).prefix_inc();
     }
-    let __rhs = (*symbol_count.borrow());
-    (*num_symbols.borrow()).write(__rhs);
+    (*num_symbols.borrow()).write({ (*symbol_count.borrow()) });
     if ((*symbol_count.borrow()) == 0) {
         return;
     }
     if ((*symbol_count.borrow()) == 1) {
-        let __rhs = (*table_size.borrow());
         (*counts.borrow())
             .offset(((*symbols.borrow()).offset((0) as isize).read()) as isize)
-            .write(__rhs);
+            .write({ (*table_size.borrow()) });
         return;
     }
     if !((*symbol_count.borrow()) <= (*table_size.borrow())) {
@@ -9404,11 +9199,11 @@ pub fn NormalizeCounts_124(
         Rc::new(RefCell::new((0..18).map(|_| 0_f32).collect::<Box<[f32]>>()));
     let n: Value<i32> = Rc::new(RefCell::new(0));
     'loop_: while ((*n.borrow()) < (*max_symbol.borrow())) {
-        let __rhs = {
-            let _lhs = (*norm.borrow());
-            _lhs * (((*counts.borrow()).offset((*n.borrow()) as isize).read()) as f32)
+        (*targets.borrow_mut())[(*n.borrow()) as usize] = {
+            ({ (*norm.borrow()) } * {
+                (((*counts.borrow()).offset((*n.borrow()) as isize).read()) as f32)
+            })
         };
-        (*targets.borrow_mut())[(*n.borrow()) as usize] = __rhs;
         (*n.borrow_mut()).prefix_inc();
     }
     if !({
@@ -9512,9 +9307,8 @@ pub fn EncodeCounts_125(
         let omit_log: Value<i32> = Rc::new(RefCell::new(0));
         let i: Value<i32> = Rc::new(RefCell::new(0));
         'loop_: while ((*i.borrow()) < 18) {
-            if !({
-                let _lhs = ((*counts.borrow()).offset((*i.borrow()) as isize).read());
-                _lhs <= BRUNSLI_ANS_TAB_SIZE_1.with(|rc| *rc.borrow())
+            if !({ ((*counts.borrow()).offset((*i.borrow()) as isize).read()) } <= {
+                BRUNSLI_ANS_TAB_SIZE_1.with(|rc| *rc.borrow())
             }) {
                 ({
                     BrunsliDumpAndAbort_79(
@@ -9616,9 +9410,8 @@ pub fn EncodeCounts_125(
                 let drop_bits: Value<i32> = Rc::new(RefCell::new(
                     (((*logcounts.borrow())[(*i.borrow()) as usize] - 1) - (*bitcount.borrow())),
                 ));
-                if !(({
-                    let _lhs = ((*counts.borrow()).offset((*i.borrow()) as isize).read());
-                    _lhs & ((1 << (*drop_bits.borrow())) - 1)
+                if !(({ ((*counts.borrow()).offset((*i.borrow()) as isize).read()) } & {
+                    ((1 << (*drop_bits.borrow())) - 1)
                 }) == 0)
                 {
                     ({
@@ -9633,12 +9426,11 @@ pub fn EncodeCounts_125(
                 ({
                     let _n_bits: usize = ((*bitcount.borrow()) as usize);
                     let _bits: u64 = (({
-                        let _lhs = ({
-                            let _lhs = ((*counts.borrow()).offset((*i.borrow()) as isize).read());
-                            _lhs >> (*drop_bits.borrow())
-                        });
-                        _lhs - (1 << (*bitcount.borrow()))
-                    }) as u64);
+                        ({ ((*counts.borrow()).offset((*i.borrow()) as isize).read()) } >> {
+                            (*drop_bits.borrow())
+                        })
+                    } - { (1 << (*bitcount.borrow())) })
+                        as u64);
                     WriteBits_120(_n_bits, _bits, (*storage.borrow()).clone())
                 });
             }
@@ -9684,10 +9476,9 @@ pub fn PopulationCost_131(data: Ptr<i32>, total_count: i32) -> f64 {
             ((((*total.borrow()).wrapping_add((*max0.borrow()))).wrapping_add((*max1.borrow())))
                 >> (BRUNSLI_ANS_LOG_TAB_SIZE_0.with(|rc| *rc.borrow()) as u64)),
         ));
-        {
-            let rhs_0 = (*total.borrow())
-                .wrapping_add((*min_base.borrow()).wrapping_mul(((*count.borrow()) as u64)));
-            (*total.borrow_mut()) = rhs_0
+        (*total.borrow_mut()) = {
+            (*total.borrow())
+                .wrapping_add((*min_base.borrow()).wrapping_mul(((*count.borrow()) as u64)))
         };
         let kFixBits: Value<i64> = Rc::new(RefCell::new(32_i64));
         let kFixOne: Value<i64> = Rc::new(RefCell::new((1_i64 << (*kFixBits.borrow()))));
@@ -9704,11 +9495,10 @@ pub fn PopulationCost_131(data: Ptr<i32>, total_count: i32) -> f64 {
         ));
         let cumul: Value<u32> = Rc::new(RefCell::new((*error.borrow())));
         if (((*error.borrow()) as i64) < (*kDescaleOne.borrow())) {
-            {
-                let rhs_0 = (((*cumul.borrow()) as i64)
+            (*cumul.borrow_mut()) = {
+                (((*cumul.borrow()) as i64)
                     + (((*kDescaleOne.borrow()) - ((*error.borrow()) as i64)) >> 1))
-                    as u32;
-                (*cumul.borrow_mut()) = rhs_0
+                    as u32
             };
         }
         if (((*data.borrow()).offset((0) as isize).read()) > 0) {
@@ -9733,10 +9523,9 @@ pub fn PopulationCost_131(data: Ptr<i32>, total_count: i32) -> f64 {
             let log2count: Value<f64> = Rc::new(RefCell::new(
                 ({ FastLog2_127(((*c_descaled.borrow()) as i32)) }),
             ));
-            (*entropy_bits.borrow_mut()) -= {
-                let _lhs = (((*data.borrow()).offset((0) as isize).read()) as f64);
-                _lhs * (*log2count.borrow())
-            };
+            (*entropy_bits.borrow_mut()) -= ({
+                (((*data.borrow()).offset((0) as isize).read()) as f64)
+            } * { (*log2count.borrow()) });
             (*cumul.borrow_mut()) = (((*c.borrow()) & ((*kDescaleMask.borrow()) as u64)) as u32);
         }
         let i: Value<i32> = Rc::new(RefCell::new(1));
@@ -9764,10 +9553,9 @@ pub fn PopulationCost_131(data: Ptr<i32>, total_count: i32) -> f64 {
                     ({ FastLog2_127(((*c_descaled.borrow()) as i32)) }),
                 ));
                 let log2floor: Value<i32> = Rc::new(RefCell::new(((*log2count.borrow()) as i32)));
-                (*entropy_bits.borrow_mut()) -= {
-                    let _lhs = (((*data.borrow()).offset((*i.borrow()) as isize).read()) as f64);
-                    _lhs * (*log2count.borrow())
-                };
+                (*entropy_bits.borrow_mut()) -= ({
+                    (((*data.borrow()).offset((*i.borrow()) as isize).read()) as f64)
+                } * { (*log2count.borrow()) });
                 (*histogram_bits.borrow_mut()) += (*log2floor.borrow());
                 (*histogram_bits.borrow_mut()) += (({
                     let __idx = ((*log2floor.borrow()) + 1) as usize;
@@ -9789,31 +9577,29 @@ pub fn PopulationCost_131(data: Ptr<i32>, total_count: i32) -> f64 {
                 - ({ FastLog2_127((*total_count.borrow())) })),
         ));
         if (((*data.borrow()).offset((0) as isize).read()) > 0) {
-            let log2count: Value<f64> = Rc::new(RefCell::new({
-                let _lhs = ({ FastLog2_127(((*data.borrow()).offset((0) as isize).read())) });
-                _lhs + (*log2norm.borrow())
-            }));
-            (*entropy_bits.borrow_mut()) -= {
-                let _lhs = (((*data.borrow()).offset((0) as isize).read()) as f64);
-                _lhs * (*log2count.borrow())
-            };
+            let log2count: Value<f64> = Rc::new(RefCell::new(
+                ({ ({ FastLog2_127(((*data.borrow()).offset((0) as isize).read())) }) } + {
+                    (*log2norm.borrow())
+                }),
+            ));
+            (*entropy_bits.borrow_mut()) -= ({
+                (((*data.borrow()).offset((0) as isize).read()) as f64)
+            } * { (*log2count.borrow()) });
             (*length.borrow_mut()) = 0;
             (*count.borrow_mut()).prefix_inc();
         }
         let i: Value<i32> = Rc::new(RefCell::new(1));
         'loop_: while ((*i.borrow()) < 18) {
             if (((*data.borrow()).offset((*i.borrow()) as isize).read()) > 0) {
-                let log2count: Value<f64> = Rc::new(RefCell::new({
-                    let _lhs = ({
-                        FastLog2_127(((*data.borrow()).offset((*i.borrow()) as isize).read()))
-                    });
-                    _lhs + (*log2norm.borrow())
-                }));
+                let log2count: Value<f64> = Rc::new(RefCell::new(
+                    ({
+                        ({ FastLog2_127(((*data.borrow()).offset((*i.borrow()) as isize).read())) })
+                    } + { (*log2norm.borrow()) }),
+                ));
                 let log2floor: Value<i32> = Rc::new(RefCell::new(((*log2count.borrow()) as i32)));
-                (*entropy_bits.borrow_mut()) -= {
-                    let _lhs = (((*data.borrow()).offset((*i.borrow()) as isize).read()) as f64);
-                    _lhs * (*log2count.borrow())
-                };
+                (*entropy_bits.borrow_mut()) -= ({
+                    (((*data.borrow()).offset((*i.borrow()) as isize).read()) as f64)
+                } * { (*log2count.borrow()) });
                 if ((*log2floor.borrow()) >= BRUNSLI_ANS_LOG_TAB_SIZE_0.with(|rc| *rc.borrow())) {
                     (*log2floor.borrow_mut()) =
                         (BRUNSLI_ANS_LOG_TAB_SIZE_0.with(|rc| *rc.borrow()) - 1);
@@ -9999,8 +9785,7 @@ pub fn StoreHuffmanTreeToBitMask_216(
             WriteBits_120(_n_bits, _bits, (*storage.borrow()).clone())
         });
         'switch: {
-            let __match_cond = (*ix.borrow());
-            match __match_cond {
+            match { (*ix.borrow()) } {
                 __v if __v == 16_usize => {
                     ({
                         WriteBits_120(
@@ -10055,14 +9840,15 @@ pub fn StoreSimpleHuffmanTree_217(
     'loop_: while ((*i.borrow()) < (*num_symbols.borrow())) {
         let j: Value<usize> = Rc::new(RefCell::new((*i.borrow()).wrapping_add(1_usize)));
         'loop_: while ((*j.borrow()) < (*num_symbols.borrow())) {
-            if {
-                let _lhs = (((*depths.borrow())
+            if ({
+                (((*depths.borrow())
                     .offset(((*symbols.borrow()).offset((*j.borrow()) as isize).read()) as isize)
-                    .read()) as i32);
-                _lhs < (((*depths.borrow())
+                    .read()) as i32)
+            } < {
+                (((*depths.borrow())
                     .offset(((*symbols.borrow()).offset((*i.borrow()) as isize).read()) as isize)
                     .read()) as i32)
-            } {
+            }) {
                 {
                     let tmp = (*symbols.borrow()).offset((*j.borrow()) as isize).read();
                     (*symbols.borrow())
@@ -10356,17 +10142,13 @@ pub fn SetDepth_222(
             SetDepth_222(_p, _pool, _depth, _level)
         });
     } else {
-        let __rhs = (*level.borrow());
         (*depth.borrow())
             .offset((p.with(|__s| __s.index_right_or_value)) as isize)
-            .write(__rhs);
+            .write({ (*level.borrow()) });
     }
 }
 pub fn Compare_223(v0: Ptr<brunsli_HuffmanTree>, v1: Ptr<brunsli_HuffmanTree>) -> bool {
-    return {
-        let _lhs = v0.with(|__s| __s.total_count);
-        _lhs < v1.with(|__s| __s.total_count)
-    };
+    return ({ v0.with(|__s| __s.total_count) } < { v1.with(|__s| __s.total_count) });
 }
 pub fn CreateHuffmanTree_220(data: Ptr<u32>, length: usize, tree_limit: i32, depth: Ptr<u8>) {
     let data: Value<Ptr<u32>> = Rc::new(RefCell::new(data));
@@ -10545,8 +10327,8 @@ pub fn CreateHuffmanTree_220(data: Ptr<u32>, length: usize, tree_limit: i32, dep
             let _depth: Ptr<u8> = (*depth.borrow()).clone();
             SetDepth_222(_p, _pool, _depth, 0_u8)
         });
-        if {
-            let _lhs = (({
+        if ({
+            (({
                 let count = ((*depth.borrow()).offset((*length.borrow()) as isize)).get_offset()
                     - ((*depth.borrow()).offset((0) as isize)).get_offset();
                 let max_index = PtrValueIter::new(&((*depth.borrow()).offset((0) as isize)), count)
@@ -10560,15 +10342,12 @@ pub fn CreateHuffmanTree_220(data: Ptr<u32>, length: usize, tree_limit: i32, dep
                     .unwrap_or(0);
                 ((*depth.borrow()).offset((0) as isize)) + max_index
             }
-            .read()) as i32);
-            _lhs <= (*tree_limit.borrow())
-        } {
+            .read()) as i32)
+        } <= { (*tree_limit.borrow()) })
+        {
             break;
         }
-        {
-            let rhs_0 = (*count_limit.borrow()).wrapping_mul(2_u32);
-            (*count_limit.borrow_mut()) = rhs_0
-        };
+        (*count_limit.borrow_mut()) = { (*count_limit.borrow()).wrapping_mul(2_u32) };
     }
 }
 pub fn Reverse_224(v: Ptr<u8>, start: usize, end: usize) {
@@ -10580,12 +10359,12 @@ pub fn Reverse_224(v: Ptr<u8>, start: usize, end: usize) {
         let tmp: Value<u8> = Rc::new(RefCell::new(
             ((*v.borrow()).offset((*start.borrow()) as isize).read()),
         ));
-        let __rhs = ((*v.borrow()).offset((*end.borrow()) as isize).read());
         (*v.borrow())
             .offset((*start.borrow()) as isize)
-            .write(__rhs);
-        let __rhs = (*tmp.borrow());
-        (*v.borrow()).offset((*end.borrow()) as isize).write(__rhs);
+            .write({ ((*v.borrow()).offset((*end.borrow()) as isize).read()) });
+        (*v.borrow())
+            .offset((*end.borrow()) as isize)
+            .write({ (*tmp.borrow()) });
         (*start.borrow_mut()).prefix_inc();
         (*end.borrow_mut()).prefix_dec();
     }
@@ -10615,10 +10394,9 @@ pub fn WriteHuffmanTreeRepetitions_225(
         'loop_: while true {}
     };
     if (((*previous_value.borrow()) as i32) != ((*value.borrow()) as i32)) {
-        let __rhs = (*value.borrow());
         (*tree.borrow())
             .offset(((*tree_size.borrow()).read()) as isize)
-            .write(__rhs);
+            .write({ (*value.borrow()) });
         (*extra_bits_data.borrow())
             .offset(((*tree_size.borrow()).read()) as isize)
             .write(0_u8);
@@ -10626,10 +10404,9 @@ pub fn WriteHuffmanTreeRepetitions_225(
         (*repetitions.borrow_mut()).prefix_dec();
     }
     if ((*repetitions.borrow()) == 7_usize) {
-        let __rhs = (*value.borrow());
         (*tree.borrow())
             .offset(((*tree_size.borrow()).read()) as isize)
-            .write(__rhs);
+            .write({ (*value.borrow()) });
         (*extra_bits_data.borrow())
             .offset(((*tree_size.borrow()).read()) as isize)
             .write(0_u8);
@@ -10639,10 +10416,9 @@ pub fn WriteHuffmanTreeRepetitions_225(
     if ((*repetitions.borrow()) < 3_usize) {
         let i: Value<usize> = Rc::new(RefCell::new(0_usize));
         'loop_: while ((*i.borrow()) < (*repetitions.borrow())) {
-            let __rhs = (*value.borrow());
             (*tree.borrow())
                 .offset(((*tree_size.borrow()).read()) as isize)
-                .write(__rhs);
+                .write({ (*value.borrow()) });
             (*extra_bits_data.borrow())
                 .offset(((*tree_size.borrow()).read()) as isize)
                 .write(0_u8);
@@ -10650,19 +10426,15 @@ pub fn WriteHuffmanTreeRepetitions_225(
             (*i.borrow_mut()).prefix_inc();
         }
     } else {
-        {
-            let rhs_0 = (*repetitions.borrow()).wrapping_sub(3_usize);
-            (*repetitions.borrow_mut()) = rhs_0
-        };
+        (*repetitions.borrow_mut()) = { (*repetitions.borrow()).wrapping_sub(3_usize) };
         let start: Value<usize> = Rc::new(RefCell::new(((*tree_size.borrow()).read())));
         'loop_: while true {
             (*tree.borrow())
                 .offset(((*tree_size.borrow()).read()) as isize)
                 .write(16_u8);
-            let __rhs = (((*repetitions.borrow()) & 3_usize) as u8);
             (*extra_bits_data.borrow())
                 .offset(((*tree_size.borrow()).read()) as isize)
-                .write(__rhs);
+                .write({ (((*repetitions.borrow()) & 3_usize) as u8) });
             (*tree_size.borrow()).with_mut(|__v| __v.prefix_inc());
             (*repetitions.borrow_mut()) >>= 2;
             if ((*repetitions.borrow()) == 0_usize) {
@@ -10717,19 +10489,15 @@ pub fn WriteHuffmanTreeRepetitionsZeros_226(
             (*i.borrow_mut()).prefix_inc();
         }
     } else {
-        {
-            let rhs_0 = (*repetitions.borrow()).wrapping_sub(3_usize);
-            (*repetitions.borrow_mut()) = rhs_0
-        };
+        (*repetitions.borrow_mut()) = { (*repetitions.borrow()).wrapping_sub(3_usize) };
         let start: Value<usize> = Rc::new(RefCell::new(((*tree_size.borrow()).read())));
         'loop_: while true {
             (*tree.borrow())
                 .offset(((*tree_size.borrow()).read()) as isize)
                 .write(17_u8);
-            let __rhs = (((*repetitions.borrow()) & 7_usize) as u8);
             (*extra_bits_data.borrow())
                 .offset(((*tree_size.borrow()).read()) as isize)
-                .write(__rhs);
+                .write({ (((*repetitions.borrow()) & 7_usize) as u8) });
             (*tree_size.borrow()).with_mut(|__v| __v.prefix_inc());
             (*repetitions.borrow_mut()) >>= 3;
             if ((*repetitions.borrow()) == 0_usize) {
@@ -10773,38 +10541,31 @@ pub fn DecideOverRleUse_227(
         let reps: Value<usize> = Rc::new(RefCell::new(1_usize));
         let k: Value<usize> = Rc::new(RefCell::new((*i.borrow()).wrapping_add(1_usize)));
         'loop_: while ((*k.borrow()) < (*length.borrow()))
-            && ({
-                let _lhs = (((*depth.borrow()).offset((*k.borrow()) as isize).read()) as i32);
-                _lhs == ((*value.borrow()) as i32)
+            && ({ (((*depth.borrow()).offset((*k.borrow()) as isize).read()) as i32) } == {
+                ((*value.borrow()) as i32)
             })
         {
             (*reps.borrow_mut()).prefix_inc();
             (*k.borrow_mut()).prefix_inc();
         }
         if ((*reps.borrow()) >= 3_usize) && (((*value.borrow()) as i32) == 0) {
-            {
-                let rhs_0 = (*total_reps_zero.borrow()).wrapping_add((*reps.borrow()));
-                (*total_reps_zero.borrow_mut()) = rhs_0
-            };
+            (*total_reps_zero.borrow_mut()) =
+                { (*total_reps_zero.borrow()).wrapping_add((*reps.borrow())) };
             (*count_reps_zero.borrow_mut()).prefix_inc();
         }
         if ((*reps.borrow()) >= 4_usize) && (((*value.borrow()) as i32) != 0) {
-            {
-                let rhs_0 = (*total_reps_non_zero.borrow()).wrapping_add((*reps.borrow()));
-                (*total_reps_non_zero.borrow_mut()) = rhs_0
-            };
+            (*total_reps_non_zero.borrow_mut()) =
+                { (*total_reps_non_zero.borrow()).wrapping_add((*reps.borrow())) };
             (*count_reps_non_zero.borrow_mut()).prefix_inc();
         }
-        {
-            let rhs_0 = (*i.borrow()).wrapping_add((*reps.borrow()));
-            (*i.borrow_mut()) = rhs_0
-        };
+        (*i.borrow_mut()) = { (*i.borrow()).wrapping_add((*reps.borrow())) };
     }
-    let __rhs =
-        ((*total_reps_non_zero.borrow()) > (*count_reps_non_zero.borrow()).wrapping_mul(2_usize));
-    (*use_rle_for_non_zero.borrow()).write(__rhs);
-    let __rhs = ((*total_reps_zero.borrow()) > (*count_reps_zero.borrow()).wrapping_mul(2_usize));
-    (*use_rle_for_zero.borrow()).write(__rhs);
+    (*use_rle_for_non_zero.borrow()).write({
+        ((*total_reps_non_zero.borrow()) > (*count_reps_non_zero.borrow()).wrapping_mul(2_usize))
+    });
+    (*use_rle_for_zero.borrow()).write({
+        ((*total_reps_zero.borrow()) > (*count_reps_zero.borrow()).wrapping_mul(2_usize))
+    });
 }
 pub fn WriteHuffmanTree_219(
     depth: Ptr<u8>,
@@ -10858,9 +10619,8 @@ pub fn WriteHuffmanTree_219(
         {
             let k: Value<usize> = Rc::new(RefCell::new((*i.borrow()).wrapping_add(1_usize)));
             'loop_: while ((*k.borrow()) < (*new_length.borrow()))
-                && ({
-                    let _lhs = (((*depth.borrow()).offset((*k.borrow()) as isize).read()) as i32);
-                    _lhs == ((*value.borrow()) as i32)
+                && ({ (((*depth.borrow()).offset((*k.borrow()) as isize).read()) as i32) } == {
+                    ((*value.borrow()) as i32)
                 })
             {
                 (*reps.borrow_mut()).prefix_inc();
@@ -10897,10 +10657,7 @@ pub fn WriteHuffmanTree_219(
             });
             (*previous_value.borrow_mut()) = (*value.borrow());
         }
-        {
-            let rhs_0 = (*i.borrow()).wrapping_add((*reps.borrow()));
-            (*i.borrow_mut()) = rhs_0
-        };
+        (*i.borrow_mut()) = { (*i.borrow()).wrapping_add((*reps.borrow())) };
     }
 }
 pub fn ReverseBits_228(num_bits: i32, bits: u16) -> u16 {
@@ -10921,8 +10678,7 @@ pub fn ReverseBits_228(num_bits: i32, bits: u16) -> u16 {
     let i: Value<i32> = Rc::new(RefCell::new(4));
     'loop_: while ((*i.borrow()) < (*num_bits.borrow())) {
         (*retval.borrow_mut()) <<= 4;
-        let __rhs = ((((*bits.borrow()) as i32) >> 4) as u16);
-        (*bits.borrow_mut()) = __rhs;
+        (*bits.borrow_mut()) = { ((((*bits.borrow()) as i32) >> 4) as u16) };
         (*retval.borrow_mut()) |= ({
             let __idx = (((*bits.borrow()) as i32) & 15) as usize;
             kLut_229.with(|rc| rc.borrow()[__idx])
@@ -10958,10 +10714,12 @@ pub fn ConvertBitDepthsToSymbols_221(depth: Ptr<u8>, len: usize, bits: Ptr<u16>)
         let code: Value<i32> = Rc::new(RefCell::new(0));
         let i: Value<usize> = Rc::new(RefCell::new(1_usize));
         'loop_: while ((*i.borrow()) < ((*kMaxBits.borrow()) as usize)) {
-            let __rhs = (((*code.borrow())
-                + ((*bl_count.borrow())[((*i.borrow()).wrapping_sub(1_usize)) as usize] as i32))
-                << 1);
-            (*code.borrow_mut()) = __rhs;
+            (*code.borrow_mut()) = {
+                (((*code.borrow())
+                    + ((*bl_count.borrow())[((*i.borrow()).wrapping_sub(1_usize)) as usize]
+                        as i32))
+                    << 1)
+            };
             (*next_code.borrow_mut())[(*i.borrow()) as usize] = ((*code.borrow()) as u16);
             (*i.borrow_mut()).prefix_inc();
         }
@@ -11035,10 +10793,7 @@ pub fn ReadUint16_234(data: Ptr<u8>, pos: Ptr<usize>) -> i32 {
                 .offset((((*pos.borrow()).read()).wrapping_add(1_usize)) as isize)
                 .read()) as i32)),
     ));
-    {
-        let rhs_0 = ((*pos.borrow()).read()).wrapping_add(2_usize);
-        (*pos.borrow()).write(rhs_0)
-    };
+    (*pos.borrow()).write({ ((*pos.borrow()).read()).wrapping_add(2_usize) });
     return (*v.borrow());
 }
 pub fn ProcessSOF_235(
@@ -11059,10 +10814,7 @@ pub fn ProcessSOF_235(
         return false;
     }
     let start_pos: Value<usize> = Rc::new(RefCell::new(((*pos.borrow()).read())));
-    if {
-        let _lhs = ((*pos.borrow()).read()).wrapping_add(((8) as usize));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((8) as usize)) } > { (*len.borrow()) }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -11122,11 +10874,9 @@ pub fn ProcessSOF_235(
         field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_INVALID_NUMCOMP);
         return false;
     };
-    if {
-        let _lhs =
-            ((*pos.borrow()).read()).wrapping_add(((3 * (*num_components.borrow())) as usize));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((3 * (*num_components.borrow())) as usize)) } > {
+        (*len.borrow())
+    }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -11152,10 +10902,9 @@ pub fn ProcessSOF_235(
             .collect::<Vec<bool>>(),
     ));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*(*jpg.borrow()).with(|__s| __s.components.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < {
+        (*(*jpg.borrow()).with(|__s| __s.components.clone()).borrow()).len()
+    }) {
         let id: Value<i32> = Rc::new(RefCell::new(
             ({ ReadUint8_233((*data.borrow()).clone(), (*pos.borrow()).clone()) }),
         ));
@@ -11268,39 +11017,36 @@ pub fn ProcessSOF_235(
     });
     field!((*jpg.borrow()), MCU_cols).write(__rhs);
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*(*jpg.borrow()).with(|__s| __s.components.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < {
+        (*(*jpg.borrow()).with(|__s| __s.components.clone()).borrow()).len()
+    }) {
         let c: Value<Ptr<brunsli_JPEGComponent>> = Rc::new(RefCell::new(
             (((*jpg.borrow())
                 .with(|__s| __s.components.clone())
                 .as_pointer() as Ptr<brunsli_JPEGComponent>)
                 .offset((*i.borrow()))),
         ));
-        if ({
-            let _lhs = (*jpg.borrow()).with(|__s| __s.max_h_samp_factor);
-            _lhs % (*c.borrow()).with(|__s| __s.h_samp_factor)
-        } != 0)
-            || ({
-                let _lhs = (*jpg.borrow()).with(|__s| __s.max_v_samp_factor);
-                _lhs % (*c.borrow()).with(|__s| __s.v_samp_factor)
-            } != 0)
+        if (({ (*jpg.borrow()).with(|__s| __s.max_h_samp_factor) } % {
+            (*c.borrow()).with(|__s| __s.h_samp_factor)
+        }) != 0)
+            || (({ (*jpg.borrow()).with(|__s| __s.max_v_samp_factor) } % {
+                (*c.borrow()).with(|__s| __s.v_samp_factor)
+            }) != 0)
         {
             write!(libcc2rs::cerr(), "Non-integral subsampling ratios.\n",);
             field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_INVALID_SAMPLING_FACTORS);
             return false;
         }
-        let __rhs = (({
-            let _lhs = (*jpg.borrow()).with(|__s| __s.MCU_cols);
-            _lhs * (*c.borrow()).with(|__s| __s.h_samp_factor)
-        }) as u32);
-        field!((*c.borrow()), width_in_blocks).write(__rhs);
-        let __rhs = (({
-            let _lhs = (*jpg.borrow()).with(|__s| __s.MCU_rows);
-            _lhs * (*c.borrow()).with(|__s| __s.v_samp_factor)
-        }) as u32);
-        field!((*c.borrow()), height_in_blocks).write(__rhs);
+        field!((*c.borrow()), width_in_blocks).write({
+            (({ (*jpg.borrow()).with(|__s| __s.MCU_cols) } * {
+                (*c.borrow()).with(|__s| __s.h_samp_factor)
+            }) as u32)
+        });
+        field!((*c.borrow()), height_in_blocks).write({
+            (({ (*jpg.borrow()).with(|__s| __s.MCU_rows) } * {
+                (*c.borrow()).with(|__s| __s.v_samp_factor)
+            }) as u32)
+        });
         let num_blocks: Value<u64> = Rc::new(RefCell::new(
             ((*c.borrow()).with(|__s| __s.width_in_blocks) as u64)
                 .wrapping_mul(((*c.borrow()).with(|__s| __s.height_in_blocks) as u64)),
@@ -11322,10 +11068,9 @@ pub fn ProcessSOF_235(
         }
         (*i.borrow_mut()).prefix_inc();
     }
-    if {
-        let _lhs = (*start_pos.borrow()).wrapping_add((*marker_len.borrow()));
-        _lhs != ((*pos.borrow()).read())
-    } {
+    if ({ (*start_pos.borrow()).wrapping_add((*marker_len.borrow())) } != {
+        ((*pos.borrow()).read())
+    }) {
         write!(
             libcc2rs::cerr(),
             "Invalid marker length: declared={:} actual={:}\n",
@@ -11348,10 +11093,7 @@ pub fn ProcessSOS_236(
     let pos: Value<Ptr<usize>> = Rc::new(RefCell::new(pos));
     let jpg: Value<Ptr<brunsli_JPEGData>> = Rc::new(RefCell::new(jpg));
     let start_pos: Value<usize> = Rc::new(RefCell::new(((*pos.borrow()).read())));
-    if {
-        let _lhs = ((*pos.borrow()).read()).wrapping_add(((3) as usize));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((3) as usize)) } > { (*len.borrow()) }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -11369,9 +11111,8 @@ pub fn ProcessSOS_236(
         ({ ReadUint8_233((*data.borrow()).clone(), (*pos.borrow()).clone()) }),
     ));
     if (((*comps_in_scan.borrow()) as usize) < 1_usize)
-        || ({
-            let _lhs = ((*comps_in_scan.borrow()) as usize);
-            _lhs > (*(*jpg.borrow()).with(|__s| __s.components.clone()).borrow()).len()
+        || ({ ((*comps_in_scan.borrow()) as usize) } > {
+            (*(*jpg.borrow()).with(|__s| __s.components.clone()).borrow()).len()
         })
     {
         write!(
@@ -11385,11 +11126,9 @@ pub fn ProcessSOS_236(
     let scan_info: Value<brunsli_JPEGScanInfo> =
         Rc::new(RefCell::new(<brunsli_JPEGScanInfo>::default()));
     (*scan_info.borrow_mut()).num_components = ((*comps_in_scan.borrow()) as usize);
-    if {
-        let _lhs =
-            ((*pos.borrow()).read()).wrapping_add(((2 * (*comps_in_scan.borrow())) as usize));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((2 * (*comps_in_scan.borrow())) as usize)) } > {
+        (*len.borrow())
+    }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -11428,12 +11167,11 @@ pub fn ProcessSOS_236(
             .write(true);
         let found_index: Value<bool> = Rc::new(RefCell::new(false));
         let j: Value<usize> = Rc::new(RefCell::new(0_usize));
-        'loop_: while {
-            let _lhs = (*j.borrow());
-            _lhs < (*(*jpg.borrow()).with(|__s| __s.components.clone()).borrow()).len()
-        } {
-            if {
-                let _lhs = {
+        'loop_: while ({ (*j.borrow()) } < {
+            (*(*jpg.borrow()).with(|__s| __s.components.clone()).borrow()).len()
+        }) {
+            if ({
+                {
                     (*((*jpg.borrow())
                         .with(|__s| __s.components.clone())
                         .as_pointer() as Ptr<brunsli_JPEGComponent>)
@@ -11441,9 +11179,9 @@ pub fn ProcessSOS_236(
                         .upgrade()
                         .deref())
                     .id
-                };
-                _lhs == (*id.borrow())
-            } {
+                }
+            } == { (*id.borrow()) })
+            {
                 field!(
                     ({ (*scan_info.borrow()).components.clone() }.as_pointer()
                         as Ptr<brunsli_JPEGComponentScanInfo>)
@@ -11503,10 +11241,7 @@ pub fn ProcessSOS_236(
         .write((*ac_tbl_idx.borrow()));
         (*i.borrow_mut()).prefix_inc();
     }
-    if {
-        let _lhs = ((*pos.borrow()).read()).wrapping_add(((3) as usize));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((3) as usize)) } > { (*len.borrow()) }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -11557,13 +11292,12 @@ pub fn ProcessSOS_236(
         let found_dc_table: Value<bool> = Rc::new(RefCell::new(false));
         let found_ac_table: Value<bool> = Rc::new(RefCell::new(false));
         let j: Value<usize> = Rc::new(RefCell::new(0_usize));
-        'loop_: while {
-            let _lhs = (*j.borrow());
-            _lhs < (*(*jpg.borrow())
+        'loop_: while ({ (*j.borrow()) } < {
+            (*(*jpg.borrow())
                 .with(|__s| __s.huffman_code.clone())
                 .borrow())
             .len()
-        } {
+        }) {
             let slot_id: Value<i32> = Rc::new(RefCell::new({
                 (*((*jpg.borrow())
                     .with(|__s| __s.huffman_code.clone())
@@ -11637,10 +11371,9 @@ pub fn ProcessSOS_236(
             .borrow_mut())
         .push(a0_clone)
     };
-    if {
-        let _lhs = (*start_pos.borrow()).wrapping_add((*marker_len.borrow()));
-        _lhs != ((*pos.borrow()).read())
-    } {
+    if ({ (*start_pos.borrow()).wrapping_add((*marker_len.borrow())) } != {
+        ((*pos.borrow()).read())
+    }) {
         write!(
             libcc2rs::cerr(),
             "Invalid marker length: declared={:} actual={:}\n",
@@ -11671,10 +11404,7 @@ pub fn ProcessDHT_237(
     let pos: Value<Ptr<usize>> = Rc::new(RefCell::new(pos));
     let jpg: Value<Ptr<brunsli_JPEGData>> = Rc::new(RefCell::new(jpg));
     let start_pos: Value<usize> = Rc::new(RefCell::new(((*pos.borrow()).read())));
-    if {
-        let _lhs = ((*pos.borrow()).read()).wrapping_add(((2) as usize));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((2) as usize)) } > { (*len.borrow()) }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -11693,15 +11423,14 @@ pub fn ProcessDHT_237(
         field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_EMPTY_DHT);
         return false;
     }
-    'loop_: while {
-        let _lhs = ((*pos.borrow()).read());
-        _lhs < (*start_pos.borrow()).wrapping_add((*marker_len.borrow()))
-    } {
-        if {
-            let _lhs = ((*pos.borrow()).read())
-                .wrapping_add(((1 + kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow())) as usize));
-            _lhs > (*len.borrow())
-        } {
+    'loop_: while ({ ((*pos.borrow()).read()) } < {
+        (*start_pos.borrow()).wrapping_add((*marker_len.borrow()))
+    }) {
+        if ({
+            ((*pos.borrow()).read())
+                .wrapping_add(((1 + kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow())) as usize))
+        } > { (*len.borrow()) })
+        {
             write!(
                 libcc2rs::cerr(),
                 "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -11809,10 +11538,9 @@ pub fn ProcessDHT_237(
                 return false;
             };
         }
-        if {
-            let _lhs = ((*pos.borrow()).read()).wrapping_add(((*total_count.borrow()) as usize));
-            _lhs > (*len.borrow())
-        } {
+        if ({ ((*pos.borrow()).read()).wrapping_add(((*total_count.borrow()) as usize)) } > {
+            (*len.borrow())
+        }) {
             write!(
                 libcc2rs::cerr(),
                 "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -11890,9 +11618,8 @@ pub fn ProcessDHT_237(
                 (*i.borrow_mut()).prefix_inc();
             }
         }
-        (*huff.borrow_mut()).is_last = ({
-            let _lhs = ((*pos.borrow()).read());
-            _lhs == (*start_pos.borrow()).wrapping_add((*marker_len.borrow()))
+        (*huff.borrow_mut()).is_last = ({ ((*pos.borrow()).read()) } == {
+            (*start_pos.borrow()).wrapping_add((*marker_len.borrow()))
         });
         if (((*mode.borrow()) as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
             ({
@@ -11913,10 +11640,9 @@ pub fn ProcessDHT_237(
             .push(a0_clone)
         };
     }
-    if {
-        let _lhs = (*start_pos.borrow()).wrapping_add((*marker_len.borrow()));
-        _lhs != ((*pos.borrow()).read())
-    } {
+    if ({ (*start_pos.borrow()).wrapping_add((*marker_len.borrow())) } != {
+        ((*pos.borrow()).read())
+    }) {
         write!(
             libcc2rs::cerr(),
             "Invalid marker length: declared={:} actual={:}\n",
@@ -11939,10 +11665,7 @@ pub fn ProcessDQT_239(
     let pos: Value<Ptr<usize>> = Rc::new(RefCell::new(pos));
     let jpg: Value<Ptr<brunsli_JPEGData>> = Rc::new(RefCell::new(jpg));
     let start_pos: Value<usize> = Rc::new(RefCell::new(((*pos.borrow()).read())));
-    if {
-        let _lhs = ((*pos.borrow()).read()).wrapping_add(((2) as usize));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((2) as usize)) } > { (*len.borrow()) }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -11964,17 +11687,12 @@ pub fn ProcessDQT_239(
         field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_EMPTY_DQT);
         return false;
     }
-    'loop_: while ({
-        let _lhs = ((*pos.borrow()).read());
-        _lhs < (*start_pos.borrow()).wrapping_add((*marker_len.borrow()))
-    }) && ({
-        let _lhs = (*(*jpg.borrow()).with(|__s| __s.quant.clone()).borrow()).len();
-        _lhs < (kMaxQuantTables_5.with(|rc| *rc.borrow()) as usize)
+    'loop_: while ({ ((*pos.borrow()).read()) } < {
+        (*start_pos.borrow()).wrapping_add((*marker_len.borrow()))
+    }) && ({ (*(*jpg.borrow()).with(|__s| __s.quant.clone()).borrow()).len() } < {
+        (kMaxQuantTables_5.with(|rc| *rc.borrow()) as usize)
     }) {
-        if {
-            let _lhs = ((*pos.borrow()).read()).wrapping_add(((1) as usize));
-            _lhs > (*len.borrow())
-        } {
+        if ({ ((*pos.borrow()).read()).wrapping_add(((1) as usize)) } > { (*len.borrow()) }) {
             write!(
                 libcc2rs::cerr(),
                 "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -12009,13 +11727,13 @@ pub fn ProcessDQT_239(
             field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_INVALID_QUANT_TBL_INDEX);
             return false;
         };
-        if {
-            let _lhs = ((*pos.borrow()).read()).wrapping_add(
+        if ({
+            ((*pos.borrow()).read()).wrapping_add(
                 ((((*quant_table_precision.borrow()) + 1) * kDCTBlockSize_3.with(|rc| *rc.borrow()))
                     as usize),
-            );
-            _lhs > (*len.borrow())
-        } {
+            )
+        } > { (*len.borrow()) })
+        {
             write!(
                 libcc2rs::cerr(),
                 "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -12057,19 +11775,17 @@ pub fn ProcessDQT_239(
                 .write((*quant_val.borrow()));
             (*i.borrow_mut()).prefix_inc();
         }
-        (*table.borrow_mut()).is_last = ({
-            let _lhs = ((*pos.borrow()).read());
-            _lhs == (*start_pos.borrow()).wrapping_add((*marker_len.borrow()))
+        (*table.borrow_mut()).is_last = ({ ((*pos.borrow()).read()) } == {
+            (*start_pos.borrow()).wrapping_add((*marker_len.borrow()))
         });
         {
             let a0_clone = (*table.borrow()).clone();
             (*(*jpg.borrow()).with(|__s| __s.quant.clone()).borrow_mut()).push(a0_clone)
         };
     }
-    if {
-        let _lhs = (*start_pos.borrow()).wrapping_add((*marker_len.borrow()));
-        _lhs != ((*pos.borrow()).read())
-    } {
+    if ({ (*start_pos.borrow()).wrapping_add((*marker_len.borrow())) } != {
+        ((*pos.borrow()).read())
+    }) {
         write!(
             libcc2rs::cerr(),
             "Invalid marker length: declared={:} actual={:}\n",
@@ -12100,10 +11816,7 @@ pub fn ProcessDRI_240(
     }
     (*found_dri.borrow()).write(true);
     let start_pos: Value<usize> = Rc::new(RefCell::new(((*pos.borrow()).read())));
-    if {
-        let _lhs = ((*pos.borrow()).read()).wrapping_add(((4) as usize));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((4) as usize)) } > { (*len.borrow()) }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -12121,10 +11834,9 @@ pub fn ProcessDRI_240(
         ({ ReadUint16_234((*data.borrow()).clone(), (*pos.borrow()).clone()) }),
     ));
     field!((*jpg.borrow()), restart_interval).write((*restart_interval.borrow()));
-    if {
-        let _lhs = (*start_pos.borrow()).wrapping_add((*marker_len.borrow()));
-        _lhs != ((*pos.borrow()).read())
-    } {
+    if ({ (*start_pos.borrow()).wrapping_add((*marker_len.borrow())) } != {
+        ((*pos.borrow()).read())
+    }) {
         write!(
             libcc2rs::cerr(),
             "Invalid marker length: declared={:} actual={:}\n",
@@ -12146,10 +11858,7 @@ pub fn ProcessAPP_241(
     let len: Value<usize> = Rc::new(RefCell::new(len));
     let pos: Value<Ptr<usize>> = Rc::new(RefCell::new(pos));
     let jpg: Value<Ptr<brunsli_JPEGData>> = Rc::new(RefCell::new(jpg));
-    if {
-        let _lhs = ((*pos.borrow()).read()).wrapping_add(((2) as usize));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((2) as usize)) } > { (*len.borrow()) }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -12172,11 +11881,9 @@ pub fn ProcessAPP_241(
         field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_INVALID_MARKER_LEN);
         return false;
     };
-    if {
-        let _lhs =
-            ((*pos.borrow()).read()).wrapping_add(((*marker_len.borrow()).wrapping_sub(2_usize)));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((*marker_len.borrow()).wrapping_sub(2_usize))) }
+        > { (*len.borrow()) })
+    {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -12200,11 +11907,9 @@ pub fn ProcessAPP_241(
             - (*app_str_start.borrow()).get_offset();
         PtrValueIter::new(&(*app_str_start.borrow()), __count).collect::<Vec<_>>()
     }));
-    {
-        let rhs_0 =
-            ((*pos.borrow()).read()).wrapping_add((*marker_len.borrow()).wrapping_sub(2_usize));
-        (*pos.borrow()).write(rhs_0)
-    };
+    (*pos.borrow()).write({
+        ((*pos.borrow()).read()).wrapping_add((*marker_len.borrow()).wrapping_sub(2_usize))
+    });
     ((*jpg.borrow())
         .with(|__s| __s.app_data.clone())
         .as_pointer() as Ptr<Vec<Value<Vec<u8>>>>)
@@ -12223,10 +11928,7 @@ pub fn ProcessCOM_242(
     let len: Value<usize> = Rc::new(RefCell::new(len));
     let pos: Value<Ptr<usize>> = Rc::new(RefCell::new(pos));
     let jpg: Value<Ptr<brunsli_JPEGData>> = Rc::new(RefCell::new(jpg));
-    if {
-        let _lhs = ((*pos.borrow()).read()).wrapping_add(((2) as usize));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((2) as usize)) } > { (*len.borrow()) }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -12249,11 +11951,9 @@ pub fn ProcessCOM_242(
         field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_INVALID_MARKER_LEN);
         return false;
     };
-    if {
-        let _lhs =
-            ((*pos.borrow()).read()).wrapping_add(((*marker_len.borrow()).wrapping_sub(2_usize)));
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()).wrapping_add(((*marker_len.borrow()).wrapping_sub(2_usize))) }
+        > { (*len.borrow()) })
+    {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
@@ -12277,11 +11977,9 @@ pub fn ProcessCOM_242(
             - (*com_str_start.borrow()).get_offset();
         PtrValueIter::new(&(*com_str_start.borrow()), __count).collect::<Vec<_>>()
     }));
-    {
-        let rhs_0 =
-            ((*pos.borrow()).read()).wrapping_add((*marker_len.borrow()).wrapping_sub(2_usize));
-        (*pos.borrow()).write(rhs_0)
-    };
+    (*pos.borrow()).write({
+        ((*pos.borrow()).read()).wrapping_add((*marker_len.borrow()).wrapping_sub(2_usize))
+    });
     ((*jpg.borrow())
         .with(|__s| __s.com_data.clone())
         .as_pointer() as Ptr<Vec<Value<Vec<u8>>>>)
@@ -12334,9 +12032,8 @@ pub fn ReadSymbol_243(
     let nbits: Value<i32> = Rc::new(RefCell::new(0_i32));
     ({ brunsli_BitReaderStateImpl::FillBitWindow(&(*br.borrow())) });
     let val: Value<i32> = Rc::new(RefCell::new(
-        ((({
-            let _lhs = (*br.borrow()).with(|__s| __s.val_);
-            _lhs >> ((*br.borrow()).with(|__s| __s.bits_left_) - 8)
+        ((({ (*br.borrow()).with(|__s| __s.val_) } >> {
+            ((*br.borrow()).with(|__s| __s.bits_left_) - 8)
         }) & 255_u64) as i32),
     ));
     (*table.borrow_mut()) += (*val.borrow());
@@ -12349,15 +12046,10 @@ pub fn ReadSymbol_243(
         let __rhs = ((*table.borrow()).with(|__s| __s.value) as i32);
         (*table.borrow_mut()) += __rhs;
         (*val.borrow_mut()) = (({
-            let _lhs = ({
-                let _lhs = (*br.borrow()).with(|__s| __s.val_);
-                _lhs >> ({
-                    let _lhs = (*br.borrow()).with(|__s| __s.bits_left_);
-                    _lhs - (*nbits.borrow())
-                })
-            });
-            _lhs & (((1 << (*nbits.borrow())) - 1) as u64)
-        }) as i32);
+            ({ (*br.borrow()).with(|__s| __s.val_) } >> {
+                ({ (*br.borrow()).with(|__s| __s.bits_left_) } - { (*nbits.borrow()) })
+            })
+        } & { (((1 << (*nbits.borrow())) - 1) as u64) }) as i32);
         (*table.borrow_mut()) += (*val.borrow());
     }
     {
@@ -12445,17 +12137,16 @@ pub fn DecodeDCTBlock_245(
             ));
             (*diff.borrow_mut()) = ({ HuffExtend_244((*bits.borrow()), (*s.borrow())) });
         }
-        let coeff: Value<i32> = Rc::new(RefCell::new({
-            let _lhs = (*diff.borrow());
-            _lhs + (((*last_dc_coeff.borrow()).read()) as i32)
-        }));
+        let coeff: Value<i32> = Rc::new(RefCell::new(
+            ({ (*diff.borrow()) } + { (((*last_dc_coeff.borrow()).read()) as i32) }),
+        ));
         let dc_coeff: Value<i32> = Rc::new(RefCell::new(((*coeff.borrow()) * (*Am.borrow()))));
-        let __rhs = ((*dc_coeff.borrow()) as i16);
-        (*coeffs.borrow()).offset((0) as isize).write(__rhs);
-        if {
-            let _lhs = (*dc_coeff.borrow());
-            _lhs != (((*coeffs.borrow()).offset((0) as isize).read()) as i32)
-        } {
+        (*coeffs.borrow())
+            .offset((0) as isize)
+            .write({ ((*dc_coeff.borrow()) as i16) });
+        if ({ (*dc_coeff.borrow()) } != {
+            (((*coeffs.borrow()).offset((0) as isize).read()) as i32)
+        }) {
             write!(
                 libcc2rs::cerr(),
                 "Invalid DC coefficient {:}\n",
@@ -12464,8 +12155,7 @@ pub fn DecodeDCTBlock_245(
             field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_NON_REPRESENTABLE_DC_COEFF);
             return false;
         }
-        let __rhs = ((*coeff.borrow()) as i16);
-        (*last_dc_coeff.borrow()).write(__rhs);
+        (*last_dc_coeff.borrow()).write({ ((*coeff.borrow()) as i16) });
         (*Ss.borrow_mut()).prefix_inc();
     }
     if ((*Ss.borrow()) > (*Se.borrow())) {
@@ -12524,7 +12214,6 @@ pub fn DecodeDCTBlock_245(
             let coeff: Value<i32> = Rc::new(RefCell::new(
                 ({ HuffExtend_244((*bits.borrow()), (*s.borrow())) }),
             ));
-            let __rhs = (((*coeff.borrow()) * (*Am.borrow())) as i16);
             (*coeffs.borrow())
                 .offset(
                     ({
@@ -12532,7 +12221,7 @@ pub fn DecodeDCTBlock_245(
                         kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx])
                     }) as isize,
                 )
-                .write(__rhs);
+                .write({ (((*coeff.borrow()) * (*Am.borrow())) as i16) });
             (*num_zero_runs.borrow()).write(0);
         } else if ((*r.borrow()) == 15) {
             (*k.borrow_mut()) += 15;
@@ -12543,8 +12232,7 @@ pub fn DecodeDCTBlock_245(
             {
                 (*reset_state.borrow()).write(true);
             }
-            let __rhs = (1 << (*r.borrow()));
-            (*eobrun.borrow()).write(__rhs);
+            (*eobrun.borrow()).write({ (1 << (*r.borrow())) });
             if ((*r.borrow()) > 0) {
                 if !(*eobrun_allowed.borrow()) {
                     write!(libcc2rs::cerr(), "End-of-block run crossing DC coeff.\n",);
@@ -12594,12 +12282,11 @@ pub fn RefineDCTBlock_246(
         let dc_coeff: Value<i16> = Rc::new(RefCell::new(
             ((*coeffs.borrow()).offset((0) as isize).read()),
         ));
-        {
-            let rhs_0 = (((*dc_coeff.borrow()) as i32) | ((*s.borrow()) * (*Am.borrow()))) as i16;
-            (*dc_coeff.borrow_mut()) = rhs_0
-        };
-        let __rhs = (*dc_coeff.borrow());
-        (*coeffs.borrow()).offset((0) as isize).write(__rhs);
+        (*dc_coeff.borrow_mut()) =
+            { (((*dc_coeff.borrow()) as i32) | ((*s.borrow()) * (*Am.borrow()))) as i16 };
+        (*coeffs.borrow())
+            .offset((0) as isize)
+            .write({ (*dc_coeff.borrow()) });
         (*Ss.borrow_mut()).prefix_inc();
     }
     if ((*Ss.borrow()) > (*Se.borrow())) {
@@ -12652,8 +12339,7 @@ pub fn RefineDCTBlock_246(
                     {
                         (*reset_state.borrow()).write(true);
                     }
-                    let __rhs = (1 << (*r.borrow()));
-                    (*eobrun.borrow()).write(__rhs);
+                    (*eobrun.borrow()).write({ (1 << (*r.borrow())) });
                     if ((*r.borrow()) > 0) {
                         if !(*eobrun_allowed.borrow()) {
                             write!(libcc2rs::cerr(), "End-of-block run crossing DC coeff.\n",);
@@ -12690,21 +12376,14 @@ pub fn RefineDCTBlock_246(
                     if (({ brunsli_BitReaderStateImpl::ReadBits(&(*br.borrow()), 1) }) != 0) {
                         if ((((*thiscoef.borrow()) as i32) & (*p1.borrow())) == 0) {
                             if (((*thiscoef.borrow()) as i32) >= 0) {
-                                {
-                                    let rhs_0 =
-                                        (((*thiscoef.borrow()) as i32) + (*p1.borrow())) as i16;
-                                    (*thiscoef.borrow_mut()) = rhs_0
-                                };
+                                (*thiscoef.borrow_mut()) =
+                                    { (((*thiscoef.borrow()) as i32) + (*p1.borrow())) as i16 };
                             } else {
-                                {
-                                    let rhs_0 =
-                                        (((*thiscoef.borrow()) as i32) + (*m1.borrow())) as i16;
-                                    (*thiscoef.borrow_mut()) = rhs_0
-                                };
+                                (*thiscoef.borrow_mut()) =
+                                    { (((*thiscoef.borrow()) as i32) + (*m1.borrow())) as i16 };
                             }
                         }
                     }
-                    let __rhs = (*thiscoef.borrow());
                     (*coeffs.borrow())
                         .offset(
                             ({
@@ -12712,7 +12391,7 @@ pub fn RefineDCTBlock_246(
                                 kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx])
                             }) as isize,
                         )
-                        .write(__rhs);
+                        .write({ (*thiscoef.borrow()) });
                 } else {
                     if ((*r.borrow_mut()).prefix_dec() < 0) {
                         break;
@@ -12732,7 +12411,6 @@ pub fn RefineDCTBlock_246(
                     field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_OUT_OF_BAND_COEFF);
                     return false;
                 }
-                let __rhs = ((*s.borrow()) as i16);
                 (*coeffs.borrow())
                     .offset(
                         ({
@@ -12740,7 +12418,7 @@ pub fn RefineDCTBlock_246(
                             kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx])
                         }) as isize,
                     )
-                    .write(__rhs);
+                    .write({ ((*s.borrow()) as i16) });
             }
             (*k.borrow_mut()).postfix_inc();
         }
@@ -12766,19 +12444,14 @@ pub fn RefineDCTBlock_246(
                 if (({ brunsli_BitReaderStateImpl::ReadBits(&(*br.borrow()), 1) }) != 0) {
                     if ((((*thiscoef.borrow()) as i32) & (*p1.borrow())) == 0) {
                         if (((*thiscoef.borrow()) as i32) >= 0) {
-                            {
-                                let rhs_0 = (((*thiscoef.borrow()) as i32) + (*p1.borrow())) as i16;
-                                (*thiscoef.borrow_mut()) = rhs_0
-                            };
+                            (*thiscoef.borrow_mut()) =
+                                { (((*thiscoef.borrow()) as i32) + (*p1.borrow())) as i16 };
                         } else {
-                            {
-                                let rhs_0 = (((*thiscoef.borrow()) as i32) + (*m1.borrow())) as i16;
-                                (*thiscoef.borrow_mut()) = rhs_0
-                            };
+                            (*thiscoef.borrow_mut()) =
+                                { (((*thiscoef.borrow()) as i32) + (*m1.borrow())) as i16 };
                         }
                     }
                 }
-                let __rhs = (*thiscoef.borrow());
                 (*coeffs.borrow())
                     .offset(
                         ({
@@ -12786,7 +12459,7 @@ pub fn RefineDCTBlock_246(
                             kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx])
                         }) as isize,
                     )
-                    .write(__rhs);
+                    .write({ (*thiscoef.borrow()) });
             }
             (*k.borrow_mut()).postfix_inc();
         }
@@ -12922,18 +12595,14 @@ pub fn ProcessScan_248(
                 } as usize),
             );
         (*MCUs_per_row.borrow_mut()) = ({
-            let _a: i32 = {
-                let _lhs = (*jpg.borrow()).with(|__s| __s.width);
-                _lhs * c.with(|__s| __s.h_samp_factor)
-            };
+            let _a: i32 =
+                ({ (*jpg.borrow()).with(|__s| __s.width) } * { c.with(|__s| __s.h_samp_factor) });
             let _b: i32 = (8 * (*jpg.borrow()).with(|__s| __s.max_h_samp_factor));
             DivCeil_232(_a, _b)
         });
         (*MCU_rows.borrow_mut()) = ({
-            let _a: i32 = {
-                let _lhs = (*jpg.borrow()).with(|__s| __s.height);
-                _lhs * c.with(|__s| __s.v_samp_factor)
-            };
+            let _a: i32 =
+                ({ (*jpg.borrow()).with(|__s| __s.height) } * { c.with(|__s| __s.v_samp_factor) });
             let _b: i32 = (8 * (*jpg.borrow()).with(|__s| __s.max_v_samp_factor));
             DivCeil_232(_a, _b)
         });
@@ -12981,10 +12650,7 @@ pub fn ProcessScan_248(
     let refinement_bitmask: Value<u16> =
         Rc::new(RefCell::new((((1 << (*Al.borrow())) - 1) as u16)));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*scan_info.borrow()).with(|__s| __s.num_components)
-    } {
+    'loop_: while ({ (*i.borrow()) } < { (*scan_info.borrow()).with(|__s| __s.num_components) }) {
         let comp_idx: Value<i32> = Rc::new(RefCell::new(
             ({
                 (*((*scan_info.borrow())
@@ -12998,13 +12664,13 @@ pub fn ProcessScan_248(
         ));
         let k: Value<i32> = Rc::new(RefCell::new((*Ss.borrow())));
         'loop_: while ((*k.borrow()) <= (*Se.borrow())) {
-            if ({
-                let _lhs = (((*scan_progression.borrow())
+            if (({
+                (((*scan_progression.borrow())
                     .offset((*comp_idx.borrow()) as isize)
                     .read())
-                .borrow()[(*k.borrow()) as usize] as i32);
-                _lhs & ((*scan_bitmask.borrow()) as i32)
-            } != 0)
+                .borrow()[(*k.borrow()) as usize] as i32)
+            } & { ((*scan_bitmask.borrow()) as i32) })
+                != 0)
             {
                 write!(
                     libcc2rs::cerr(),
@@ -13020,13 +12686,13 @@ pub fn ProcessScan_248(
                 field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_OVERLAPPING_SCANS);
                 return false;
             }
-            if ({
-                let _lhs = (((*scan_progression.borrow())
+            if (({
+                (((*scan_progression.borrow())
                     .offset((*comp_idx.borrow()) as isize)
                     .read())
-                .borrow()[(*k.borrow()) as usize] as i32);
-                _lhs & ((*refinement_bitmask.borrow()) as i32)
-            } != 0)
+                .borrow()[(*k.borrow()) as usize] as i32)
+            } & { ((*refinement_bitmask.borrow()) as i32) })
+                != 0)
             {
                 write!(
                     libcc2rs::cerr(),
@@ -13042,16 +12708,15 @@ pub fn ProcessScan_248(
                 field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_INVALID_SCAN_ORDER);
                 return false;
             }
-            {
-                let rhs_0 = ((((*scan_progression.borrow())
+            ((*scan_progression.borrow())
+                .offset((*comp_idx.borrow()) as isize)
+                .read())
+            .borrow_mut()[(*k.borrow()) as usize] = {
+                ((((*scan_progression.borrow())
                     .offset((*comp_idx.borrow()) as isize)
                     .read())
                 .borrow()[(*k.borrow()) as usize] as i32)
-                    | ((*scan_bitmask.borrow()) as i32)) as u16;
-                ((*scan_progression.borrow())
-                    .offset((*comp_idx.borrow()) as isize)
-                    .read())
-                .borrow_mut()[(*k.borrow()) as usize] = rhs_0
+                    | ((*scan_bitmask.borrow()) as i32)) as u16
             };
             (*k.borrow_mut()).prefix_inc();
         }
@@ -13108,10 +12773,9 @@ pub fn ProcessScan_248(
                 return false;
             }
             let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-            'loop_: while {
-                let _lhs = (*i.borrow());
-                _lhs < (*scan_info.borrow()).with(|__s| __s.num_components)
-            } {
+            'loop_: while ({ (*i.borrow()) } < {
+                (*scan_info.borrow()).with(|__s| __s.num_components)
+            }) {
                 let si: Value<Ptr<brunsli_JPEGComponentScanInfo>> = Rc::new(RefCell::new(
                     (((*scan_info.borrow())
                         .with(|__s| __s.components.clone())
@@ -13128,9 +12792,8 @@ pub fn ProcessScan_248(
                     ((Ptr::<Vec<brunsli_HuffmanTableEntry>>::decay(&(dc_huff_lut))
                         as Ptr<brunsli_HuffmanTableEntry>)
                         .offset(
-                            (({
-                                let _lhs = (*si.borrow()).with(|__s| __s.dc_tbl_idx);
-                                _lhs * kJpegHuffmanLutSize_231.with(|rc| *rc.borrow())
+                            (({ (*si.borrow()).with(|__s| __s.dc_tbl_idx) } * {
+                                kJpegHuffmanLutSize_231.with(|rc| *rc.borrow())
                             }) as usize),
                         )),
                 ));
@@ -13138,9 +12801,8 @@ pub fn ProcessScan_248(
                     ((Ptr::<Vec<brunsli_HuffmanTableEntry>>::decay(&(ac_huff_lut))
                         as Ptr<brunsli_HuffmanTableEntry>)
                         .offset(
-                            (({
-                                let _lhs = (*si.borrow()).with(|__s| __s.ac_tbl_idx);
-                                _lhs * kJpegHuffmanLutSize_231.with(|rc| *rc.borrow())
+                            (({ (*si.borrow()).with(|__s| __s.ac_tbl_idx) } * {
+                                kJpegHuffmanLutSize_231.with(|rc| *rc.borrow())
                             }) as usize),
                         )),
                 ));
@@ -13267,10 +12929,7 @@ pub fn ProcessScan_248(
         field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_INVALID_SCAN);
         return false;
     }
-    if {
-        let _lhs = ((*pos.borrow()).read());
-        _lhs > (*len.borrow())
-    } {
+    if ({ ((*pos.borrow()).read()) } > { (*len.borrow()) }) {
         write!(
             libcc2rs::cerr(),
             "Unexpected end of file during scan. pos={:} len={:}\n",
@@ -13285,10 +12944,9 @@ pub fn ProcessScan_248(
 pub fn FixupIndexes_249(jpg: Ptr<brunsli_JPEGData>) -> bool {
     let jpg: Value<Ptr<brunsli_JPEGData>> = Rc::new(RefCell::new(jpg));
     let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < (*(*jpg.borrow()).with(|__s| __s.components.clone()).borrow()).len()
-    } {
+    'loop_: while ({ (*i.borrow()) } < {
+        (*(*jpg.borrow()).with(|__s| __s.components.clone()).borrow()).len()
+    }) {
         let c: Value<Ptr<brunsli_JPEGComponent>> = Rc::new(RefCell::new(
             (((*jpg.borrow())
                 .with(|__s| __s.components.clone())
@@ -13297,21 +12955,20 @@ pub fn FixupIndexes_249(jpg: Ptr<brunsli_JPEGData>) -> bool {
         ));
         let found_index: Value<bool> = Rc::new(RefCell::new(false));
         let j: Value<usize> = Rc::new(RefCell::new(0_usize));
-        'loop_: while {
-            let _lhs = (*j.borrow());
-            _lhs < (*(*jpg.borrow()).with(|__s| __s.quant.clone()).borrow()).len()
-        } {
-            if {
-                let _lhs = {
+        'loop_: while ({ (*j.borrow()) } < {
+            (*(*jpg.borrow()).with(|__s| __s.quant.clone()).borrow()).len()
+        }) {
+            if ({
+                {
                     (*((*jpg.borrow()).with(|__s| __s.quant.clone()).as_pointer()
                         as Ptr<brunsli_JPEGQuantTable>)
                         .offset((*j.borrow()))
                         .upgrade()
                         .deref())
                     .index
-                };
-                _lhs == ((*c.borrow()).with(|__s| __s.quant_idx) as i32)
-            } {
+                }
+            } == { ((*c.borrow()).with(|__s| __s.quant_idx) as i32) })
+            {
                 field!((*c.borrow()), quant_idx).write(((*j.borrow()) as u8));
                 (*found_index.borrow_mut()) = true;
                 break;
@@ -13401,10 +13058,7 @@ pub fn ReadJpeg_196(
             .offset(((*pos.borrow()).wrapping_add(1_usize)) as isize)
             .read()) as i32),
     ));
-    {
-        let rhs_0 = (*pos.borrow()).wrapping_add(2_usize);
-        (*pos.borrow_mut()) = rhs_0
-    };
+    (*pos.borrow_mut()) = { (*pos.borrow()).wrapping_add(2_usize) };
     if ((*marker.borrow()) != 216) {
         write!(
             libcc2rs::cerr(),
@@ -13484,10 +13138,7 @@ pub fn ReadJpeg_196(
                         .collect::<Vec<_>>()
                     })))
                 });
-            {
-                let rhs_0 = (*pos.borrow()).wrapping_add((*num_skipped.borrow()));
-                (*pos.borrow_mut()) = rhs_0
-            };
+            (*pos.borrow_mut()) = { (*pos.borrow()).wrapping_add((*num_skipped.borrow())) };
         }
         if ((*pos.borrow()).wrapping_add(2_usize) > (*len.borrow()))
             || ((((*data.borrow()).offset((*pos.borrow()) as isize).read()) as i32) != 255)
@@ -13509,14 +13160,10 @@ pub fn ReadJpeg_196(
         (*marker.borrow_mut()) = (((*data.borrow())
             .offset(((*pos.borrow()).wrapping_add(1_usize)) as isize)
             .read()) as i32);
-        {
-            let rhs_0 = (*pos.borrow()).wrapping_add(2_usize);
-            (*pos.borrow_mut()) = rhs_0
-        };
+        (*pos.borrow_mut()) = { (*pos.borrow()).wrapping_add(2_usize) };
         let ok: Value<bool> = Rc::new(RefCell::new(true));
         'switch: {
-            let __match_cond = (*marker.borrow());
-            match __match_cond {
+            match { (*marker.borrow()) } {
                 __v if __v == 192 || __v == 193 || __v == 194 => {
                     (*is_progressive.borrow_mut()) = ((*marker.borrow()) == 194);
                     (*ok.borrow_mut()) = ({
@@ -13706,13 +13353,13 @@ pub fn ReadJpeg_196(
             field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR);
             return false;
         }
-        if {
-            let _lhs = (*(*jpg.borrow())
+        if ({
+            (*(*jpg.borrow())
                 .with(|__s| __s.huffman_code.clone())
                 .borrow())
-            .len();
-            _lhs >= (kMaxDHTMarkers_10.with(|rc| *rc.borrow()) as usize)
-        } {
+            .len()
+        } >= { (kMaxDHTMarkers_10.with(|rc| *rc.borrow()) as usize) })
+        {
             write!(libcc2rs::cerr(), "Too many Huffman tables.\n",);
             field!((*jpg.borrow()), error).write(brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR);
             return false;
@@ -13727,8 +13374,7 @@ pub fn NextTableBitSize_252(count: Ptr<i32>, len: i32) -> i32 {
         (1 << ((*len.borrow()) - kJpegHuffmanRootTableBits_230.with(|rc| *rc.borrow()))),
     ));
     'loop_: while ((*len.borrow()) < kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow())) {
-        let __rhs = ((*count.borrow()).offset((*len.borrow()) as isize).read());
-        (*left.borrow_mut()) -= __rhs;
+        (*left.borrow_mut()) -= { ((*count.borrow()).offset((*len.borrow()) as isize).read()) };
         if ((*left.borrow()) <= 0) {
             break;
         }
@@ -13763,8 +13409,8 @@ pub fn BuildJpegHuffmanTable_238(
     let total_count: Value<i32> = Rc::new(RefCell::new(0));
     (*len.borrow_mut()) = 1;
     'loop_: while ((*len.borrow()) <= kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow())) {
-        let __rhs = ((*count.borrow()).offset((*len.borrow()) as isize).read());
-        (*tmp_count.borrow_mut())[(*len.borrow()) as usize] = __rhs;
+        (*tmp_count.borrow_mut())[(*len.borrow()) as usize] =
+            { ((*count.borrow()).offset((*len.borrow()) as isize).read()) };
         (*total_count.borrow_mut()) += (*tmp_count.borrow())[(*len.borrow()) as usize];
         (*len.borrow_mut()).prefix_inc();
     }
@@ -13776,10 +13422,9 @@ pub fn BuildJpegHuffmanTable_238(
         (*code.borrow_mut()).value = (((*symbols.borrow()).offset((0) as isize).read()) as u16);
         (*key.borrow_mut()) = 0;
         'loop_: while ((*key.borrow()) < (*table_size.borrow())) {
-            let __rhs = (*code.borrow()).clone();
             (*table.borrow())
                 .offset((*key.borrow()) as isize)
-                .write(__rhs);
+                .write({ (*code.borrow()).clone() });
             (*key.borrow_mut()).prefix_inc();
         }
         return;
@@ -13823,11 +13468,11 @@ pub fn BuildJpegHuffmanTable_238(
                         + kJpegHuffmanRootTableBits_230.with(|rc| *rc.borrow()))
                         as u8),
                 );
-                let __rhs = (({
-                    let _lhs = (((*table.borrow()).clone() - (*lut.borrow()).clone()) as i64);
-                    _lhs - ((*key.borrow()) as i64)
-                }) as u16);
-                field!((*lut.borrow()).offset((*key.borrow()) as isize), value).write(__rhs);
+                field!((*lut.borrow()).offset((*key.borrow()) as isize), value).write({
+                    (({ (((*table.borrow()).clone() - (*lut.borrow()).clone()) as i64) } - {
+                        ((*key.borrow()) as i64)
+                    }) as u16)
+                });
                 (*key.borrow_mut()).prefix_inc();
             }
             (*code.borrow_mut()).bits =
@@ -13907,10 +13552,9 @@ pub fn ReadFileInternal_253(file: Ptr<CFile>, content: Ptr<Vec<u8>>) -> bool {
         (*content.borrow()).with_mut(|__v: &mut Vec<u8>| __v.push(0))
     };
     let read_pos: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*read_pos.borrow());
-        _lhs < ((*(*content.borrow()).upgrade().deref()).len() - 1)
-    } {
+    'loop_: while ({ (*read_pos.borrow()) } < {
+        ((*(*content.borrow()).upgrade().deref()).len() - 1)
+    }) {
         let bytes_read: Value<usize> = Rc::new(RefCell::new({
             let __a0 = ((if (*read_pos.borrow()) as usize
                 >= (*((*content.borrow()).clone() as Ptr<Vec<u8>>)
@@ -13936,10 +13580,7 @@ pub fn ReadFileInternal_253(file: Ptr<CFile>, content: Ptr<Vec<u8>>) -> bool {
             eprintln!("Failed to read input file");
             return false;
         }
-        {
-            let rhs_0 = (*read_pos.borrow()).wrapping_add((*bytes_read.borrow()));
-            (*read_pos.borrow_mut()) = rhs_0
-        };
+        (*read_pos.borrow_mut()) = { (*read_pos.borrow()).wrapping_add((*bytes_read.borrow())) };
     }
     return true;
 }
@@ -13977,10 +13618,7 @@ pub fn ReadFile_254(file_name: Ptr<Vec<u8>>, content: Ptr<Vec<u8>>) -> bool {
 pub fn WriteFileInternal_255(file: Ptr<CFile>, content: Ptr<Vec<u8>>) -> bool {
     let file: Value<Ptr<CFile>> = Rc::new(RefCell::new(file));
     let write_pos: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: while {
-        let _lhs = (*write_pos.borrow());
-        _lhs < ((*content.upgrade().deref()).len() - 1)
-    } {
+    'loop_: while ({ (*write_pos.borrow()) } < { ((*content.upgrade().deref()).len() - 1) }) {
         let bytes_written: Value<usize> = Rc::new(RefCell::new({
             let __a0 = (((Ptr::<Vec<u8>>::decay(&(content)) as Ptr<u8>)
                 .offset((*write_pos.borrow()))) as Ptr<u8>)
@@ -13995,10 +13633,8 @@ pub fn WriteFileInternal_255(file: Ptr<CFile>, content: Ptr<Vec<u8>>) -> bool {
             eprintln!("Failed to write output.");
             return false;
         }
-        {
-            let rhs_0 = (*write_pos.borrow()).wrapping_add((*bytes_written.borrow()));
-            (*write_pos.borrow_mut()) = rhs_0
-        };
+        (*write_pos.borrow_mut()) =
+            { (*write_pos.borrow()).wrapping_add((*bytes_written.borrow())) };
     }
     return true;
 }
@@ -14179,14 +13815,14 @@ impl brunsli_ANSCoderImpl for Ptr<brunsli_ANSCoder> {
             };
             (*nbits.borrow()).write(16_u8);
         }
-        let __rhs = (((((*self).with(|__s| __s.state_))
-            .wrapping_div(({ (*t.borrow()).freq_ } as u32)))
-            << BRUNSLI_ANS_LOG_TAB_SIZE_0.with(|rc| *rc.borrow()))
-        .wrapping_add(
-            (((*self).with(|__s| __s.state_)).wrapping_rem(({ (*t.borrow()).freq_ } as u32))),
-        ))
-        .wrapping_add(({ (*t.borrow()).start_ } as u32));
-        field!((*self), state_).write(__rhs);
+        field!((*self), state_).write({
+            (((((*self).with(|__s| __s.state_)).wrapping_div(({ (*t.borrow()).freq_ } as u32)))
+                << BRUNSLI_ANS_LOG_TAB_SIZE_0.with(|rc| *rc.borrow()))
+            .wrapping_add(
+                (((*self).with(|__s| __s.state_)).wrapping_rem(({ (*t.borrow()).freq_ } as u32))),
+            ))
+            .wrapping_add(({ (*t.borrow()).start_ } as u32))
+        });
         return (*bits.borrow());
     }
     fn GetState(&self) -> u32 {
@@ -14337,8 +13973,7 @@ impl brunsli_BitReaderStateImpl for Ptr<brunsli_BitReaderState> {
             write!(libcc2rs::cerr(), "Unexpected end of scan.\n",);
             return false;
         }
-        let __rhs = (*self).with(|__s| __s.pos_);
-        (*pos.borrow()).write(__rhs);
+        (*pos.borrow()).write({ (*self).with(|__s| __s.pos_) });
         return true;
     }
 }
@@ -14710,10 +14345,7 @@ impl brunsli_ProbImpl for Ptr<brunsli_Prob> {
         let val: Value<i32> = Rc::new(RefCell::new(val));
         field!((*self), total).with_mut(|__v| __v.prefix_inc());
         if ((*val.borrow()) == 0) {
-            {
-                let rhs_0 = (((*self).with(|__s| __s.count) as i32) + 256) as u16;
-                field!((*self), count).write(rhs_0)
-            };
+            field!((*self), count).write({ (((*self).with(|__s| __s.count) as i32) + 256) as u16 });
         } else {
             field!((*self), count).with_mut(|__v| __v.prefix_inc());
         }
@@ -14727,10 +14359,7 @@ impl brunsli_ProbImpl for Ptr<brunsli_Prob> {
         if (((*self).with(|__s| __s.total) as i32)
             == (kNormalizeThreshold_76.with(|rc| *rc.borrow()) as i32))
         {
-            {
-                let rhs_0 = (((*self).with(|__s| __s.count) as i32) >> 1) as u16;
-                field!((*self), count).write(rhs_0)
-            };
+            field!((*self), count).write({ (((*self).with(|__s| __s.count) as i32) >> 1) as u16 });
             field!((*self), total)
                 .write((((kNormalizeThreshold_76.with(|rc| *rc.borrow()) as i32) >> 1) as u8));
         }
@@ -14788,11 +14417,9 @@ impl brunsli_StorageImpl for Ptr<brunsli_Storage> {
                 .offset(((*self).with(|__s| __s.pos) >> 3) as isize) as Ptr<u8>)
                 .to_any()
         };
-        {
-            let rhs_0 =
-                ((*self).with(|__s| __s.pos)).wrapping_add((8_usize).wrapping_mul((*len.borrow())));
-            field!((*self), pos).write(rhs_0)
-        };
+        field!((*self), pos).write({
+            ((*self).with(|__s| __s.pos)).wrapping_add((8_usize).wrapping_mul((*len.borrow())))
+        });
     }
     fn destructor(&self) {
         if !(({ brunsli_StorageImpl::GetBytesUsed(self) }) <= (*self).with(|__s| __s.length)) {
@@ -15119,13 +14746,12 @@ impl brunsli_internal_enc_DataStreamImpl for Ptr<brunsli_internal_enc_DataStream
             }
             (*i.borrow_mut()).prefix_inc();
         }
-        {
-            let rhs_0 = ((*storage.borrow()).with(|__s| __s.pos)).wrapping_add(
+        field!((*storage.borrow()), pos).write({
+            ((*storage.borrow()).with(|__s| __s.pos)).wrapping_add(
                 (((((*out.borrow()).clone() - (*out_start.borrow()).clone()) as i64) * 16_i64)
                     as usize),
-            );
-            field!((*storage.borrow()), pos).write(rhs_0)
-        };
+            )
+        });
     }
 }
 pub trait brunsli_internal_enc_EntropyCodesImpl {
@@ -15228,9 +14854,8 @@ impl brunsli_internal_enc_EntropySourceImpl for Ptr<brunsli_internal_enc_Entropy
         .take();
     }
     fn Merge(&self, other: Ptr<brunsli_internal_enc_EntropySource>) {
-        if !({
-            let _lhs = (*(*self).with(|__s| __s.histograms_.clone()).borrow()).len();
-            _lhs >= (*other.with(|__s| __s.histograms_.clone()).borrow()).len()
+        if !({ (*(*self).with(|__s| __s.histograms_.clone()).borrow()).len() } >= {
+            (*other.with(|__s| __s.histograms_.clone()).borrow()).len()
         }) {
             ({
                 BrunsliDumpAndAbort_79(
@@ -15242,10 +14867,9 @@ impl brunsli_internal_enc_EntropySourceImpl for Ptr<brunsli_internal_enc_Entropy
             'loop_: while true {}
         };
         let i: Value<usize> = Rc::new(RefCell::new(0_usize));
-        'loop_: while {
-            let _lhs = (*i.borrow());
-            _lhs < (*other.with(|__s| __s.histograms_.clone()).borrow()).len()
-        } {
+        'loop_: while ({ (*i.borrow()) } < {
+            (*other.with(|__s| __s.histograms_.clone()).borrow()).len()
+        }) {
             ({
                 let _other: Ptr<brunsli_internal_enc_Histogram> =
                     (other.with(|__s| __s.histograms_.clone()).as_pointer()
@@ -15281,20 +14905,22 @@ impl brunsli_internal_enc_HistogramImpl for Ptr<brunsli_internal_enc_Histogram> 
     fn AddHistogram(&self, other: Ptr<brunsli_internal_enc_Histogram>) {
         let i: Value<i32> = Rc::new(RefCell::new(0));
         'loop_: while ((*i.borrow()) < 18) {
-            let __rhs = ((array_field_ptr!(other, data_) as Ptr<i32>)
-                .offset((*i.borrow()) as isize)
-                .read());
             {
                 let _ptr =
                     (array_field_ptr!((*self), data_) as Ptr<i32>).offset((*i.borrow()) as isize);
-                _ptr.write(_ptr.read() + __rhs)
+                _ptr.write(
+                    _ptr.read() + {
+                        ((array_field_ptr!(other, data_) as Ptr<i32>)
+                            .offset((*i.borrow()) as isize)
+                            .read())
+                    },
+                )
             };
             (*i.borrow_mut()).prefix_inc();
         }
-        let __rhs = other.with(|__s| __s.total_count_);
         {
             let _ptr = field!((*self), total_count_);
-            _ptr.write(_ptr.read() + __rhs)
+            _ptr.write(_ptr.read() + { other.with(|__s| __s.total_count_) })
         };
     }
     fn Add(&self, val: usize) {
@@ -15318,20 +14944,22 @@ impl brunsli_internal_enc_HistogramImpl for Ptr<brunsli_internal_enc_Histogram> 
         if (other.with(|__s| __s.total_count_) == 0) {
             return;
         }
-        let __rhs = other.with(|__s| __s.total_count_);
         {
             let _ptr = field!((*self), total_count_);
-            _ptr.write(_ptr.read() + __rhs)
+            _ptr.write(_ptr.read() + { other.with(|__s| __s.total_count_) })
         };
         let i: Value<usize> = Rc::new(RefCell::new(0_usize));
         'loop_: while ((*i.borrow()) < 18_usize) {
-            let __rhs = ((array_field_ptr!(other, data_) as Ptr<i32>)
-                .offset((*i.borrow()) as isize)
-                .read());
             {
                 let _ptr =
                     (array_field_ptr!((*self), data_) as Ptr<i32>).offset((*i.borrow()) as isize);
-                _ptr.write(_ptr.read() + __rhs)
+                _ptr.write(
+                    _ptr.read() + {
+                        ((array_field_ptr!(other, data_) as Ptr<i32>)
+                            .offset((*i.borrow()) as isize)
+                            .read())
+                    },
+                )
             };
             (*i.borrow_mut()).prefix_inc();
         }

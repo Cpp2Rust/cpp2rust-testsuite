@@ -4118,8 +4118,7 @@ pub unsafe fn DecodeVarint_144(
     }
     'loop_: while true {
         'switch: {
-            let __match_cond = ((*s).stage as i32);
-            match __match_cond {
+            match { ((*s).stage as i32) } {
                 __v if __v == (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION as i32) => {
                     if (((*s).i) >= (max_bits)) {
                         (*s).stage = brunsli_internal_dec_VarintState_Stage_INIT;
@@ -4178,8 +4177,7 @@ pub unsafe fn DecodeLimitedVarint_145(
     }
     'loop_: while true {
         'switch: {
-            let __match_cond = ((*s).stage as i32);
-            match __match_cond {
+            match { ((*s).stage as i32) } {
                 __v if __v == (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION as i32) => {
                     if (((*s).i) < (max_symbols)) {
                         if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
@@ -4234,8 +4232,7 @@ pub unsafe fn DecodeLimitedVarint_146(
     }
     'loop_: while true {
         'switch: {
-            let __match_cond = ((*s).stage as i32);
-            match __match_cond {
+            match { ((*s).stage as i32) } {
                 __v if __v == (brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION as i32) => {
                     if (((*s).i) < (max_symbols)) {
                         if !(unsafe { BrunsliBitReaderCanRead_134(br, 1_usize) }) {
@@ -4365,8 +4362,7 @@ pub unsafe fn ProcessMetaData_149(
     let mut pos: usize = 0_usize;
     'loop_: while ((pos) < (len)) {
         'switch: {
-            let __match_cond = (*state).stage;
-            match __match_cond {
+            match { (*state).stage } {
                 __v if __v == (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize) => {
                     (*state).marker = (*data.offset((pos.postfix_inc()) as isize));
                     if (((*state).marker as i32) == (217)) {
@@ -4530,8 +4526,7 @@ pub unsafe fn DecodeHuffmanCode_150(
     let mut br: *mut brunsli_BrunsliBitReader = (&mut (*js).br as *mut brunsli_BrunsliBitReader);
     'loop_: while true {
         'switch: {
-            let __match_cond = ((*js).stage as i32);
-            match __match_cond {
+            match { ((*js).stage as i32) } {
                 __v if __v
                     == (brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_LAST as i32) =>
                 {
@@ -4853,8 +4848,7 @@ pub unsafe fn DecodeScanInfo_151(
     let mut br: *mut brunsli_BrunsliBitReader = (&mut (*js).br as *mut brunsli_BrunsliBitReader);
     'loop_: while true {
         'switch: {
-            let __match_cond = ((*js).stage as i32);
-            match __match_cond { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 ) )  =>  { { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
+            match { ( ( ( * js ) . stage  as i32 ) )  } { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 ) )  =>  { { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
   ;
  ;
  if ! ( ( unsafe { BrunsliBitReaderCanRead_134 ( br , 22_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
@@ -5935,8 +5929,7 @@ pub unsafe fn DecodeHeader_177(
     let hs: *mut brunsli_internal_dec_HeaderState = &mut (*s).header;
     'loop_: while (((*hs).stage) != (brunsli_internal_dec_HeaderState_Stage_DONE as usize)) {
         'switch: {
-            let __match_cond = (*hs).stage;
-            match __match_cond {
+            match { (*hs).stage } {
                 __v if __v == (brunsli_internal_dec_HeaderState_Stage_READ_TAG as usize) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         ReadTag_170(
@@ -7759,8 +7752,7 @@ pub unsafe fn DecodeOriginalJpg_192(
     let fs: *mut brunsli_internal_dec_FallbackState = &mut (*s).fallback;
     'loop_: while (((*fs).stage) != (brunsli_internal_dec_FallbackState_Stage_DONE as usize)) {
         'switch: {
-            let __match_cond = (*fs).stage;
-            match __match_cond {
+            match { (*fs).stage } {
                 __v if __v == (brunsli_internal_dec_FallbackState_Stage_READ_TAG as usize) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         ReadTag_170(
@@ -7875,8 +7867,7 @@ pub unsafe fn ParseSection_193(
     let mut result: brunsli_internal_dec_Stage = brunsli_internal_dec_Stage_ERROR;
     'loop_: while (((*sh).stage) != (brunsli_internal_dec_SectionHeaderState_Stage_DONE as usize)) {
         'switch: {
-            let __match_cond = (*sh).stage;
-            match __match_cond {
+            match { (*sh).stage } {
                 __v if __v == (brunsli_internal_dec_SectionHeaderState_Stage_READ_TAG as usize) => {
                     let mut status: brunsli_BrunsliStatus = (unsafe {
                         ReadTag_170(
@@ -8008,8 +7999,7 @@ pub unsafe fn ProcessSection_195(
         return brunsli_internal_dec_Stage_SECTION;
     }
     'switch: {
-        let __match_cond = (*s).section.tag;
-        match __match_cond {
+        match { (*s).section.tag } {
             __v if __v
                 == ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMetaDataTag_32))
                     as usize) =>
@@ -8301,8 +8291,7 @@ pub unsafe fn DoProcessJpeg_197(
 ) -> brunsli_BrunsliStatus {
     'loop_: while true {
         'switch: {
-            let __match_cond = (*state).stage;
-            match __match_cond {
+            match { (*state).stage } {
                 __v if __v == brunsli_internal_dec_Stage_SIGNATURE => {
                     (*state).stage = (unsafe { VerifySignature_176(state) });
                     break 'switch;
@@ -8694,8 +8683,7 @@ impl brunsli_BrunsliDecoder {
             return brunsli_BrunsliDecoder_Status_ERROR;
         }
         'switch: {
-            let __match_cond = serialization_status;
-            match __match_cond {
+            match { serialization_status } {
                 __v if __v == brunsli_internal_dec_SerializationStatus_DONE => {
                     if !((parse_status as i32) == (brunsli_BrunsliStatus_BRUNSLI_OK as i32)) {
                         (unsafe {
@@ -9209,8 +9197,7 @@ pub unsafe fn ReadSimpleCode_219(
     };
     let mut table_size: usize = 1_usize;
     'switch: {
-        let __match_cond = num_symbols;
-        match __match_cond {
+        match { num_symbols } {
             __v if __v == 1_usize => {
                 (*table.offset((0) as isize)) = brunsli_HuffmanCode {
                     bits: 0_u8,
@@ -11903,8 +11890,7 @@ pub unsafe fn SerializeSection_259(
     jpg: *const brunsli_JPEGData,
 ) -> brunsli_internal_dec_SerializationStatus {
     'switch: {
-        let __match_cond = (marker as i32);
-        match __match_cond {
+        match { (marker as i32) } {
             __v if __v == 192 || __v == 193 || __v == 194 || __v == 201 || __v == 202 => {
                 return (unsafe {
                     (|result: bool| {

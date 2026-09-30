@@ -60,15 +60,13 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
             .collect::<Box<[u32]>>(),
     )));
     let i: Value<u32> = Rc::new(RefCell::new(0_u32));
-    'loop_: while {
-        let _lhs = (*i.borrow());
-        _lhs < graph.with(|__s| __s.V)
-    } {
+    'loop_: while ({ (*i.borrow()) } < { graph.with(|__s| __s.V) }) {
         (*visited.borrow())
             .offset((*i.borrow()) as isize)
             .write(false);
-        let __rhs = (*i.borrow());
-        (*pred.borrow()).offset((*i.borrow()) as isize).write(__rhs);
+        (*pred.borrow())
+            .offset((*i.borrow()) as isize)
+            .write({ (*i.borrow()) });
         (*i.borrow_mut()).prefix_inc();
     }
     (*visited.borrow())
@@ -98,13 +96,11 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
                     .offset((*adj_vertex.borrow()) as isize)
                     .write(true);
                 ({ QueueImpl::enqueue(&Q.as_pointer(), (*adj_vertex.borrow())) });
-                let __rhs = ((*current_vertex.borrow()) as u32);
                 (*pred.borrow())
                     .offset((*adj_vertex.borrow()) as isize)
-                    .write(__rhs);
+                    .write({ ((*current_vertex.borrow()) as u32) });
             }
-            let __rhs = (*head.borrow()).with(|__s| __s.next.clone());
-            (*head.borrow_mut()) = __rhs;
+            (*head.borrow_mut()) = { (*head.borrow()).with(|__s| __s.next.clone()) };
         }
     }
     (*visited.borrow()).delete();
