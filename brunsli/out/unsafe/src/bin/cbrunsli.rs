@@ -2519,16 +2519,9 @@ pub struct brunsli_ANSEncSymbolInfo {
     pub start_: u16,
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct brunsli_ANSTable {
     pub info_: [brunsli_ANSEncSymbolInfo; 18],
-}
-impl Default for brunsli_ANSTable {
-    fn default() -> Self {
-        brunsli_ANSTable {
-            info_: [<brunsli_ANSEncSymbolInfo>::default(); 18],
-        }
-    }
 }
 #[repr(C)]
 #[derive(Copy, Clone, VaArg)]

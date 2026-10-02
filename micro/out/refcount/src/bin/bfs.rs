@@ -61,43 +61,32 @@ pub fn BFS_0(graph: Ptr<Graph>, start_vertex: u32) -> Ptr<u32> {
     )));
     let i: Value<u32> = Rc::new(RefCell::new(0_u32));
     'loop_: while ({ (*i.borrow()) } < { graph.with(|__s| __s.V) }) {
-        (*visited.borrow())
-            .offset((*i.borrow()) as isize)
-            .write(false);
-        (*pred.borrow())
-            .offset((*i.borrow()) as isize)
-            .write({ (*i.borrow()) });
+        elem!((*visited.borrow()), (*i.borrow())).write(false);
+        elem!((*pred.borrow()), (*i.borrow())).write({ (*i.borrow()) });
         (*i.borrow_mut()).prefix_inc();
     }
-    (*visited.borrow())
-        .offset((*start_vertex.borrow()) as isize)
-        .write(true);
+    elem!((*visited.borrow()), (*start_vertex.borrow())).write(true);
     ({ QueueImpl::enqueue(&Q.as_pointer(), ((*start_vertex.borrow()) as i32)) });
     'loop_: while !({ QueueImpl::empty(&Q.as_pointer()) }) {
         let current_vertex: Value<i32> = Rc::new(RefCell::new(
             (({ QueueImpl::dequeue(&Q.as_pointer()) }) as i32),
         ));
         let head: Value<Ptr<GraphNode>> = Rc::new(RefCell::new(
-            (graph
-                .with(|__s| __s.adj.clone())
-                .offset((*current_vertex.borrow()) as isize)
-                .read())
+            (elem!(
+                graph.with(|__s| __s.adj.clone()),
+                (*current_vertex.borrow())
+            )
+            .read())
             .clone(),
         ));
         'loop_: while !((*head.borrow()).is_null()) {
             let adj_vertex: Value<i32> = Rc::new(RefCell::new(
                 ((*head.borrow()).with(|__s| __s.vertex) as i32),
             ));
-            if !((*visited.borrow())
-                .offset((*adj_vertex.borrow()) as isize)
-                .read())
-            {
-                (*visited.borrow())
-                    .offset((*adj_vertex.borrow()) as isize)
-                    .write(true);
+            if !(elem!((*visited.borrow()), (*adj_vertex.borrow())).read()) {
+                elem!((*visited.borrow()), (*adj_vertex.borrow())).write(true);
                 ({ QueueImpl::enqueue(&Q.as_pointer(), (*adj_vertex.borrow())) });
-                (*pred.borrow())
-                    .offset((*adj_vertex.borrow()) as isize)
+                elem!((*pred.borrow()), (*adj_vertex.borrow()))
                     .write({ ((*current_vertex.borrow()) as u32) });
             }
             (*head.borrow_mut()) = { (*head.borrow()).with(|__s| __s.next.clone()) };
@@ -124,9 +113,7 @@ fn main_0() -> i32 {
     }));
     let i: Value<u32> = Rc::new(RefCell::new(0_u32));
     'loop_: while (((*i.borrow()) as usize) < (*V.borrow())) {
-        { (*graph.borrow()).adj.clone() }
-            .offset((*i.borrow()) as isize)
-            .write(Ptr::<GraphNode>::null());
+        elem!({ (*graph.borrow()).adj.clone() }, (*i.borrow())).write(Ptr::<GraphNode>::null());
         (*i.borrow_mut()).prefix_inc();
     }
     let r: Value<u32> = Rc::new(RefCell::new(0_u32));
@@ -176,10 +163,7 @@ fn main_0() -> i32 {
     let i: Value<u32> = Rc::new(RefCell::new(0_u32));
     'loop_: while (((*i.borrow()) as usize) < (*V.borrow())) {
         let head: Value<Ptr<GraphNode>> = Rc::new(RefCell::new(
-            ({ (*graph.borrow()).adj.clone() }
-                .offset((*i.borrow()) as isize)
-                .read())
-            .clone(),
+            (elem!({ (*graph.borrow()).adj.clone() }, (*i.borrow())).read()).clone(),
         ));
         'loop_: while !((*head.borrow()).is_null()) {
             let next: Value<Ptr<GraphNode>> =
@@ -195,7 +179,7 @@ fn main_0() -> i32 {
             libcc2rs::cout(),
             "{:} -> {:}\n",
             (*i.borrow()),
-            ((*pred.borrow()).offset((*i.borrow()) as isize).read()),
+            (elem!((*pred.borrow()), (*i.borrow())).read()),
         );
         (*i.borrow_mut()).prefix_inc();
     }
@@ -212,28 +196,14 @@ impl GraphImpl for Ptr<Graph> {
         let dst: Value<u32> = Rc::new(RefCell::new(dst));
         let __rhs = Ptr::alloc(GraphNode {
             vertex: (*dst.borrow()),
-            next: ((*self)
-                .with(|__s| __s.adj.clone())
-                .offset((*src.borrow()) as isize)
-                .read())
-            .clone(),
+            next: (elem!((*self).with(|__s| __s.adj.clone()), (*src.borrow())).read()).clone(),
         });
-        (*self)
-            .with(|__s| __s.adj.clone())
-            .offset((*src.borrow()) as isize)
-            .write(__rhs);
+        elem!((*self).with(|__s| __s.adj.clone()), (*src.borrow())).write(__rhs);
         let __rhs = Ptr::alloc(GraphNode {
             vertex: (*src.borrow()),
-            next: ((*self)
-                .with(|__s| __s.adj.clone())
-                .offset((*dst.borrow()) as isize)
-                .read())
-            .clone(),
+            next: (elem!((*self).with(|__s| __s.adj.clone()), (*dst.borrow())).read()).clone(),
         });
-        (*self)
-            .with(|__s| __s.adj.clone())
-            .offset((*dst.borrow()) as isize)
-            .write(__rhs);
+        elem!((*self).with(|__s| __s.adj.clone()), (*dst.borrow())).write(__rhs);
     }
 }
 pub trait QueueImpl {
@@ -248,19 +218,21 @@ impl QueueImpl for Ptr<Queue> {
             return;
         }
         let __rhs = ((*elem.borrow()) as u32);
-        (*self)
-            .with(|__s| __s.elems.clone())
-            .offset((field!((*self), back).with_mut(|__v| __v.postfix_inc())) as isize)
-            .write(__rhs);
+        elem!(
+            (*self).with(|__s| __s.elems.clone()),
+            field!((*self), back).with_mut(|__v| __v.postfix_inc())
+        )
+        .write(__rhs);
     }
     fn dequeue(&self) -> u32 {
         if ({ QueueImpl::empty(self) }) {
             return (-1_i32 as u32);
         }
-        return ((*self)
-            .with(|__s| __s.elems.clone())
-            .offset((field!((*self), front).with_mut(|__v| __v.postfix_inc())) as isize)
-            .read());
+        return (elem!(
+            (*self).with(|__s| __s.elems.clone()),
+            field!((*self), front).with_mut(|__v| __v.postfix_inc())
+        )
+        .read());
     }
     fn empty(&self) -> bool {
         return ((*self).with(|__s| __s.front) == (*self).with(|__s| __s.back));

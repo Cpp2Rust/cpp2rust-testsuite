@@ -1203,7 +1203,7 @@ pub unsafe fn StoreLoca_62(
     if ((((((loca_size) << (2)) >> (2)) != (loca_size)) as i64) != 0) {
         return false;
     }
-    let mut loca_content: Vec<u8> = (0..((loca_size).wrapping_mul(offset_size)) as usize)
+    let mut loca_content: Vec<u8> = (0..((loca_size).wrapping_mul(offset_size) as usize) as usize)
         .map(|_| <u8>::default())
         .collect::<Vec<_>>();
     let mut dst: *mut u8 = (&mut loca_content[(0_usize)] as *mut u8);
@@ -2615,7 +2615,7 @@ pub unsafe fn WriteHeaders_76(
     mut out: *mut dyn woff2_WOFF2Out,
 ) -> bool {
     let mut output: Vec<u8> =
-        vec![0_u8; (unsafe { ComputeOffsetToFirstTable_72(&(*hdr),) }) as usize];
+        vec![0_u8; ((unsafe { ComputeOffsetToFirstTable_72(&(*hdr),) }) as usize) as usize];
     let mut sorted_tables: Vec<woff2_Table> = (*hdr).tables.clone();
     if ((*hdr).header_version != 0) {
         'loop_: for ttc_font in 0..((*hdr).ttc_fonts.len()) {
@@ -2968,7 +2968,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
             } else {
                 (&mut __tmp_1) as *const _
             })
-        }) as usize
+        } as usize) as usize
     ]
     .iter()
     .cloned()

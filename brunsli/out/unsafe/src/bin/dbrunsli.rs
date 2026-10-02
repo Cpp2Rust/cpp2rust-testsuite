@@ -2917,7 +2917,7 @@ pub struct brunsli_HuffmanCode {
     pub value: u16,
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg)]
+#[derive(Copy, Clone, VaArg, Default)]
 pub struct brunsli_JPEGOutput {
     cb: Option<unsafe fn(*mut ::libc::c_void, *const u8, usize) -> usize>,
     data: *mut ::libc::c_void,
@@ -2939,14 +2939,6 @@ impl brunsli_JPEGOutput {
             (self.cb).unwrap()(_arg0, buf, len)
         });
         return ((bytes_written) == (len));
-    }
-}
-impl Default for brunsli_JPEGOutput {
-    fn default() -> Self {
-        brunsli_JPEGOutput {
-            cb: None,
-            data: std::ptr::null_mut(),
-        }
     }
 }
 #[repr(C)]
