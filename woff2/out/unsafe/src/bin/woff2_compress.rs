@@ -216,7 +216,7 @@ pub static mut kKnownTags_8: std::cell::LazyCell<[u32; 63]> = std::cell::LazyCel
     ]
 });
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Buffer {
     buffer_: *const u8,
     length_: usize,
@@ -542,14 +542,14 @@ pub static mut kSfntHeaderSize_23: std::cell::LazyCell<usize> =
 pub static mut kSfntEntrySize_24: std::cell::LazyCell<usize> =
     std::cell::LazyCell::new(|| unsafe { 16_usize });
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Point {
     pub x: i32,
     pub y: i32,
     pub on_curve: bool,
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Table {
     pub tag: u32,
     pub flags: u32,
@@ -638,7 +638,7 @@ pub unsafe fn CollectionHeaderSize_27(mut header_version: u32, mut num_fonts: u3
     return size;
 }
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Font_Table {
     pub tag: u32,
     pub checksum: u32,
@@ -650,14 +650,14 @@ pub struct woff2_Font_Table {
     pub flag_byte: u8,
 }
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Font {
     pub flavor: u32,
     pub num_tables: u16,
     pub tables: BTreeMap<u32, Box<woff2_Font_Table>>,
 }
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_FontCollection {
     pub flavor: u32,
     pub header_version: u32,
@@ -1336,14 +1336,14 @@ pub unsafe fn RemoveDigitalSignature_48(mut font: *mut woff2_Font) -> bool {
     return true;
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Glyph_Point {
     pub x: i32,
     pub y: i32,
     pub on_curve: bool,
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct woff2_Glyph {
     pub x_min: i16,
     pub x_max: i16,
@@ -2386,7 +2386,7 @@ pub unsafe fn WriteLong_89(mut out: *mut Vec<u8>, mut value: i32) {
     };
 }
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_GlyfEncoder {
     n_contour_stream_: Vec<u8>,
     n_points_stream_: Vec<u8>,
@@ -3019,7 +3019,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     return true;
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct woff2_WOFF2Params {
     pub extended_metadata: Vec<libc::c_char>,
     pub brotli_quality: i32,
@@ -3404,7 +3404,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     }
     if !(unsafe {
         Woff2Compress_95(
-            (transform_buf.as_mut_ptr()).cast_const() as *const u8,
+            (transform_buf.as_mut_ptr()).cast_const(),
             total_transform_length,
             (&mut compression_buf[(0_usize)] as *mut u8),
             (&mut total_compressed_length as *mut u32),
@@ -3433,7 +3433,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             TextCompress_96(
                 _data,
                 _len,
-                compressed_metadata_buf.as_mut_ptr() as *mut u8,
+                compressed_metadata_buf.as_mut_ptr(),
                 (&mut compressed_metadata_buf_length as *mut u32),
                 _quality,
             )
@@ -3671,7 +3671,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     offset = ((unsafe { Round4_70((offset as u64)) }) as usize);
     (unsafe {
         StoreBytes_32(
-            (compressed_metadata_buf.as_mut_ptr()).cast_const() as *const u8,
+            (compressed_metadata_buf.as_mut_ptr()).cast_const(),
             (compressed_metadata_buf_length as usize),
             (&mut offset as *mut usize),
             result,

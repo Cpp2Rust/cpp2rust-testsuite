@@ -216,7 +216,7 @@ pub static mut kKnownTags_8: std::cell::LazyCell<[u32; 63]> = std::cell::LazyCel
     ]
 });
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Buffer {
     buffer_: *const u8,
     length_: usize,
@@ -542,14 +542,14 @@ pub static mut kSfntHeaderSize_23: std::cell::LazyCell<usize> =
 pub static mut kSfntEntrySize_24: std::cell::LazyCell<usize> =
     std::cell::LazyCell::new(|| unsafe { 16_usize });
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Point {
     pub x: i32,
     pub y: i32,
     pub on_curve: bool,
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Table {
     pub tag: u32,
     pub flags: u32,
@@ -638,7 +638,7 @@ pub unsafe fn CollectionHeaderSize_27(mut header_version: u32, mut num_fonts: u3
     return size;
 }
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Font_Table {
     pub tag: u32,
     pub checksum: u32,
@@ -650,14 +650,14 @@ pub struct woff2_Font_Table {
     pub flag_byte: u8,
 }
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Font {
     pub flavor: u32,
     pub num_tables: u16,
     pub tables: BTreeMap<u32, Box<woff2_Font_Table>>,
 }
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_FontCollection {
     pub flavor: u32,
     pub header_version: u32,

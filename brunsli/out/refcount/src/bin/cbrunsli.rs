@@ -5836,11 +5836,15 @@ pub fn ComputeCoeffOrder_163(num_zeros: Ptr<Vec<i32>>, order: Ptr<u32>) {
             .to_end()
             .get_offset(),
         |x, y| {
-            (|a: Ptr<(Value<i32>, Value<i32>)>, b: Ptr<(Value<i32>, Value<i32>)>| {
-                return ({ (*(*a.upgrade().deref()).1.borrow()) } < {
-                    (*(*b.upgrade().deref()).1.borrow())
-                });
-            })
+            FnPtr::<fn(Ptr<(Value<i32>, Value<i32>)>, Ptr<(Value<i32>, Value<i32>)>) -> bool>::new(
+                |a: Ptr<(Value<i32>, Value<i32>)>, b: Ptr<(Value<i32>, Value<i32>)>| -> bool {
+                    {
+                        return ({ (*(*a.upgrade().deref()).1.borrow()) } < {
+                            (*(*b.upgrade().deref()).1.borrow())
+                        });
+                    }
+                },
+            )
             .call(x, y)
         },
     );
@@ -7616,12 +7620,40 @@ pub fn BrunsliSerialize_190(
     let len: Value<Ptr<usize>> = Rc::new(RefCell::new(len));
     let pos: Value<usize> = Rc::new(RefCell::new(0_usize));
     let ok: Value<bool> = Rc::new(RefCell::new(true));
-    let encode_section: Value<_> = Rc::new(RefCell::new(
-        (|tag: u8,
-          fn_: FnPtr<
-            fn(Ptr<brunsli_JPEGData>, Ptr<brunsli_internal_enc_State>, Ptr<u8>, Ptr<usize>) -> bool,
+    let encode_section: Value<
+        FnPtr<
+            fn(
+                u8,
+                FnPtr<
+                    fn(
+                        Ptr<brunsli_JPEGData>,
+                        Ptr<brunsli_internal_enc_State>,
+                        Ptr<u8>,
+                        Ptr<usize>,
+                    ) -> bool,
+                >,
+                usize,
+            ) -> bool,
         >,
-          size: usize| {
+    > = Rc::new(RefCell::new(lambda!(
+        {
+            let jpg: Ptr<brunsli_JPEGData> = (jpg).clone();
+            let state: Ptr<Ptr<brunsli_internal_enc_State>> = state.as_pointer();
+            let len: Ptr<Ptr<usize>> = len.as_pointer();
+            let data: Ptr<Ptr<u8>> = data.as_pointer();
+            let pos: Ptr<usize> = pos.as_pointer();
+        },
+        |tag: u8,
+         fn_: FnPtr<
+            fn(
+                Ptr<brunsli_JPEGData>,
+                Ptr<brunsli_internal_enc_State>,
+                Ptr::<u8>,
+                Ptr::<usize>,
+            ) -> bool,
+        >,
+         size: usize|
+         -> bool {
             let tag: Value<u8> = Rc::new(RefCell::new(tag));
             let fn_: Value<
                 FnPtr<
@@ -7636,7 +7668,7 @@ pub fn BrunsliSerialize_190(
             let size: Value<usize> = Rc::new(RefCell::new(size));
             return ({
                 let _jpg: Ptr<brunsli_JPEGData> = (jpg).clone();
-                let _s: Ptr<brunsli_internal_enc_State> = (*state.borrow()).clone();
+                let _s: Ptr<brunsli_internal_enc_State> = (state.read()).clone();
                 let _tag: u8 = (*tag.borrow());
                 let _write_section: FnPtr<
                     fn(
@@ -7647,9 +7679,9 @@ pub fn BrunsliSerialize_190(
                     ) -> bool,
                 > = (*fn_.borrow()).clone();
                 let _section_size_bytes: usize = (*size.borrow());
-                let _len: usize = ((*len.borrow()).read());
-                let _data: Ptr<u8> = (*data.borrow()).clone();
-                let _pos: Ptr<usize> = (pos.as_pointer());
+                let _len: usize = ((len.read()).read());
+                let _data: Ptr<u8> = (data.read()).clone();
+                let _pos: Ptr<usize> = (pos).clone();
                 EncodeSection_180(
                     _jpg,
                     _s,
@@ -7661,8 +7693,8 @@ pub fn BrunsliSerialize_190(
                     _pos,
                 )
             });
-        }),
-    ));
+        }
+    )));
     if !(((*skip_sections.borrow())
         & (1_u32 << (kBrunsliSignatureTag_30.with(|rc| *rc.borrow()) as i32)))
         != 0)
@@ -7682,7 +7714,7 @@ pub fn BrunsliSerialize_190(
         != 0)
     {
         (*ok.borrow_mut()) = ({
-            (*encode_section.borrow_mut())(
+            (*encode_section.borrow()).call(
                 kBrunsliHeaderTag_31.with(|rc| *rc.borrow()),
                 FnPtr::<
                     fn(
@@ -7704,7 +7736,7 @@ pub fn BrunsliSerialize_190(
         != 0)
     {
         (*ok.borrow_mut()) = ({
-            (*encode_section.borrow_mut())(
+            (*encode_section.borrow()).call(
                 kBrunsliJPEGInternalsTag_33.with(|rc| *rc.borrow()),
                 FnPtr::<
                     fn(
@@ -7744,7 +7776,7 @@ pub fn BrunsliSerialize_190(
             >::new(EncodeMetaData_174);
             let _size: usize =
                 ({ Base128Size_146(((*len.borrow()).read()).wrapping_sub((*pos.borrow()))) });
-            (*encode_section.borrow_mut())(_tag, _fn_, _size)
+            (*encode_section.borrow()).call(_tag, _fn_, _size)
         })
         .clone();
         if !(*ok.borrow()) {
@@ -7756,7 +7788,7 @@ pub fn BrunsliSerialize_190(
         != 0)
     {
         (*ok.borrow_mut()) = ({
-            (*encode_section.borrow_mut())(
+            (*encode_section.borrow()).call(
                 kBrunsliQuantDataTag_34.with(|rc| *rc.borrow()),
                 FnPtr::<
                     fn(
@@ -7796,7 +7828,7 @@ pub fn BrunsliSerialize_190(
             >::new(EncodeHistogramData_177);
             let _size: usize =
                 ({ Base128Size_146(((*len.borrow()).read()).wrapping_sub((*pos.borrow()))) });
-            (*encode_section.borrow_mut())(_tag, _fn_, _size)
+            (*encode_section.borrow()).call(_tag, _fn_, _size)
         })
         .clone();
         if !(*ok.borrow()) {
@@ -7826,7 +7858,7 @@ pub fn BrunsliSerialize_190(
             >::new(EncodeDCData_178);
             let _size: usize =
                 ({ Base128Size_146(((*len.borrow()).read()).wrapping_sub((*pos.borrow()))) });
-            (*encode_section.borrow_mut())(_tag, _fn_, _size)
+            (*encode_section.borrow()).call(_tag, _fn_, _size)
         })
         .clone();
         if !(*ok.borrow()) {
@@ -7856,7 +7888,7 @@ pub fn BrunsliSerialize_190(
             >::new(EncodeACData_179);
             let _size: usize =
                 ({ Base128Size_146(((*len.borrow()).read()).wrapping_sub((*pos.borrow()))) });
-            (*encode_section.borrow_mut())(_tag, _fn_, _size)
+            (*encode_section.borrow()).call(_tag, _fn_, _size)
         })
         .clone();
         if !(*ok.borrow()) {

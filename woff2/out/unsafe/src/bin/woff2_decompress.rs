@@ -216,7 +216,7 @@ pub static mut kKnownTags_8: std::cell::LazyCell<[u32; 63]> = std::cell::LazyCel
     ]
 });
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Buffer {
     buffer_: *const u8,
     length_: usize,
@@ -542,14 +542,14 @@ pub static mut kSfntHeaderSize_23: std::cell::LazyCell<usize> =
 pub static mut kSfntEntrySize_24: std::cell::LazyCell<usize> =
     std::cell::LazyCell::new(|| unsafe { 16_usize });
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Point {
     pub x: i32,
     pub y: i32,
     pub on_curve: bool,
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_Table {
     pub tag: u32,
     pub flags: u32,
@@ -645,7 +645,7 @@ pub unsafe trait woff2_WOFF2Out {
     unsafe fn Size(&mut self) -> usize;
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_WOFF2StringOut {
     buf_: *mut Vec<libc::c_char>,
     max_size_: usize,
@@ -657,7 +657,7 @@ impl woff2_WOFF2StringOut {
     }
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_WOFF2MemoryOut {
     buf_: *mut u8,
     buf_size_: usize,
@@ -755,7 +755,7 @@ pub static mut kDefaultGlyphBuf_53: std::cell::LazyCell<usize> =
 pub static mut kMaxPlausibleCompressionRatio_54: std::cell::LazyCell<f32> =
     std::cell::LazyCell::new(|| unsafe { (1.0E+2 as f32) });
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_TtcFont {
     pub flavor: u32,
     pub dst_offset: u32,
@@ -763,7 +763,7 @@ pub struct woff2_TtcFont {
     pub table_indices: Vec<u16>,
 }
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_WOFF2Header {
     pub flavor: u32,
     pub header_version: u32,
@@ -775,7 +775,7 @@ pub struct woff2_WOFF2Header {
     pub ttc_fonts: Vec<woff2_TtcFont>,
 }
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_WOFF2FontInfo {
     pub num_glyphs: u16,
     pub index_format: u16,
@@ -784,7 +784,7 @@ pub struct woff2_WOFF2FontInfo {
     pub table_entry_by_tag: BTreeMap<u32, Box<u32>>,
 }
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_RebuildMetadata {
     pub header_checksum: u32,
     pub font_infos: Vec<woff2_WOFF2FontInfo>,
@@ -1415,8 +1415,7 @@ pub unsafe fn ReconstructGlyf_63(
                 Store16_32(
                     glyph_buf
                         .as_deref_mut()
-                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                        as *mut u8,
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
                     glyph_size,
                     (n_contours as i32),
                 )
@@ -1456,8 +1455,7 @@ pub unsafe fn ReconstructGlyf_63(
                     Store16_32(
                         glyph_buf
                             .as_deref_mut()
-                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                            as *mut u8,
+                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
                         glyph_size,
                         (instruction_size as i32),
                     )
@@ -1538,8 +1536,7 @@ pub unsafe fn ReconstructGlyf_63(
                     total_n_points,
                     points
                         .as_deref_mut()
-                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                        as *mut woff2_Point,
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
                     (&mut triplet_bytes_consumed as *mut usize),
                 )
             }) as i64)
@@ -1588,8 +1585,7 @@ pub unsafe fn ReconstructGlyf_63(
                 Store16_32(
                     glyph_buf
                         .as_deref_mut()
-                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                        as *mut u8,
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
                     glyph_size,
                     (n_contours as i32),
                 )
@@ -1616,11 +1612,10 @@ pub unsafe fn ReconstructGlyf_63(
                         (points
                             .as_deref_mut()
                             .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()))
-                        .cast_const() as *const woff2_Point,
+                        .cast_const(),
                         glyph_buf
                             .as_deref_mut()
-                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                            as *mut u8,
+                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
                     )
                 });
             }
@@ -1638,8 +1633,7 @@ pub unsafe fn ReconstructGlyf_63(
                     Store16_32(
                         glyph_buf
                             .as_deref_mut()
-                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                            as *mut u8,
+                            .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
                         glyph_size,
                         end_point,
                     )
@@ -1650,8 +1644,7 @@ pub unsafe fn ReconstructGlyf_63(
                 Store16_32(
                     glyph_buf
                         .as_deref_mut()
-                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                        as *mut u8,
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
                     glyph_size,
                     (instruction_size as i32),
                 )
@@ -1681,14 +1674,13 @@ pub unsafe fn ReconstructGlyf_63(
                     (points
                         .as_deref_mut()
                         .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()))
-                    .cast_const() as *const woff2_Point,
+                    .cast_const(),
                     (n_contours as u32),
                     instruction_size,
                     has_overlap_bit,
                     glyph_buf
                         .as_deref_mut()
-                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                        as *mut u8,
+                        .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()),
                     glyph_buf_size,
                     (&mut glyph_size as *mut usize),
                 )
@@ -1709,7 +1701,7 @@ pub unsafe fn ReconstructGlyf_63(
                 (glyph_buf
                     .as_deref_mut()
                     .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr())
-                    as *const ::libc::c_void) as *const ::libc::c_void,
+                    as *const ::libc::c_void),
                 glyph_size,
             )
         }) as i64)
@@ -1726,7 +1718,7 @@ pub unsafe fn ReconstructGlyf_63(
                     (glyph_buf
                         .as_deref_mut()
                         .map_or(::std::ptr::null_mut(), |s| s.as_mut_ptr()))
-                    .cast_const() as *const u8,
+                    .cast_const(),
                     glyph_size,
                 )
             }),

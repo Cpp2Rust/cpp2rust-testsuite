@@ -122,7 +122,7 @@ pub const brunsli_JPEGReadError_EOB_RUN_TOO_LONG: brunsli_JPEGReadError = 40;
 pub const brunsli_JPEGReadError_IMAGE_TOO_LARGE: brunsli_JPEGReadError = 41;
 pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_PRECISION: brunsli_JPEGReadError = 42;
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_JPEGQuantTable {
     pub values: Vec<i32>,
     pub precision: i32,
@@ -140,7 +140,7 @@ impl Default for brunsli_JPEGQuantTable {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_JPEGHuffmanCode {
     pub counts: Vec<i32>,
     pub values: Vec<i32>,
@@ -158,20 +158,20 @@ impl Default for brunsli_JPEGHuffmanCode {
     }
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct brunsli_JPEGComponentScanInfo {
     pub comp_idx: u8,
     pub dc_tbl_idx: i32,
     pub ac_tbl_idx: i32,
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct brunsli_JPEGScanInfo_ExtraZeroRunInfo {
     pub block_idx: i32,
     pub num_extra_zero_runs: i32,
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_JPEGScanInfo {
     pub Ss: i32,
     pub Se: i32,
@@ -197,7 +197,7 @@ impl Default for brunsli_JPEGScanInfo {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_JPEGComponent {
     pub id: i32,
     pub h_samp_factor: i32,
@@ -229,7 +229,7 @@ impl Default for brunsli_JPEGComponent {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_JPEGData {
     pub width: i32,
     pub height: i32,
@@ -1055,7 +1055,7 @@ pub unsafe fn Append_72(mut dst: *mut Vec<u8>, mut begin: *const u8, mut length:
 }
 pub unsafe fn Append_73(mut dst: *mut Vec<u8>, src: *const Vec<u8>) {
     (unsafe {
-        let _begin: *const u8 = (*src).as_ptr() as *const u8;
+        let _begin: *const u8 = (*src).as_ptr();
         let _length: usize = (*src).len();
         Append_72(dst, _begin, _length)
     });
@@ -1133,7 +1133,7 @@ pub static mut kInitProb_80: std::cell::LazyCell<u8> =
 pub static mut kInitProbCount_81: std::cell::LazyCell<u8> =
     std::cell::LazyCell::new(|| unsafe { 3_u8 });
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_Prob {
     prob8: u8,
     total: u8,
@@ -1564,7 +1564,7 @@ pub unsafe fn IsEmptyBlockContext_106(mut prev: *const i32, mut x: i32) -> i32 {
     return ((*prev.offset(((x) - (1)) as isize)) + (*prev.offset((x) as isize)));
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_ComponentStateDC {
     pub width: i32,
     pub is_zero_prob: brunsli_Prob,
@@ -1625,7 +1625,7 @@ impl Default for brunsli_ComponentStateDC {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_ComponentState {
     pub width: i32,
     pub context_offset: i32,
@@ -2176,7 +2176,7 @@ impl brunsli_ComponentState {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_PermutationCoder {
     values_: Vec<u8>,
 }
@@ -2464,7 +2464,7 @@ pub unsafe fn FindBestMatrix_119(
     return best_q;
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct brunsli_Storage {
     pub data: *mut u8,
     pub length: usize,
@@ -2513,18 +2513,18 @@ pub unsafe fn WriteBits_120(mut n_bits: usize, mut bits: u64, mut storage: *mut 
     (*storage).pos = ((*storage).pos).wrapping_add(n_bits);
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct brunsli_ANSEncSymbolInfo {
     pub freq_: u16,
     pub start_: u16,
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct brunsli_ANSTable {
     pub info_: [brunsli_ANSEncSymbolInfo; 18],
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg)]
+#[derive(Copy, Clone, VaArg, FnPtrArg)]
 pub struct brunsli_ANSCoder {
     state_: u32,
 }
@@ -2891,7 +2891,7 @@ pub unsafe fn FastLog2_127(mut v: i32) -> f64 {
     return (v as f64).log2();
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct brunsli_HistogramPair {
     pub idx1: usize,
     pub idx2: usize,
@@ -3474,7 +3474,7 @@ pub const brunsli_JpegReadMode_JPEG_READ_HEADER: brunsli_JpegReadMode = 0;
 pub const brunsli_JpegReadMode_JPEG_READ_TABLES: brunsli_JpegReadMode = 1;
 pub const brunsli_JpegReadMode_JPEG_READ_ALL: brunsli_JpegReadMode = 2;
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_internal_enc_ComponentMeta {
     pub context_offset: usize,
     pub approx_total_nonzeros: usize,
@@ -3514,7 +3514,7 @@ impl Default for brunsli_internal_enc_ComponentMeta {
     }
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg)]
+#[derive(Copy, Clone, VaArg, FnPtrArg)]
 pub struct brunsli_internal_enc_Histogram {
     pub data_: [i32; 18],
     pub total_count_: i32,
@@ -3539,7 +3539,7 @@ impl Default for brunsli_internal_enc_Histogram {
 static mut kMaxNumberOfHistograms_139: std::cell::LazyCell<usize> =
     std::cell::LazyCell::new(|| unsafe { 256_usize });
 #[repr(C)]
-#[derive(Clone, VaArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct brunsli_internal_enc_EntropyCodes {
     clustered_: Vec<brunsli_internal_enc_Histogram>,
     context_map_: Vec<u32>,
@@ -3581,7 +3581,7 @@ impl brunsli_internal_enc_EntropyCodes {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_internal_enc_EntropySource {
     num_bands_: usize,
     histograms_: Vec<brunsli_internal_enc_Histogram>,
@@ -3603,7 +3603,7 @@ impl Default for brunsli_internal_enc_EntropySource {
 static mut kSlackForOneBlock_140: std::cell::LazyCell<usize> =
     std::cell::LazyCell::new(|| unsafe { 1024_usize });
 #[repr(C)]
-#[derive(Copy, Clone, VaArg)]
+#[derive(Copy, Clone, VaArg, FnPtrArg)]
 struct brunsli_internal_enc_DataStream_CodeWord {
     pub context: u32,
     pub value: u16,
@@ -3627,7 +3627,7 @@ impl Default for brunsli_internal_enc_DataStream_CodeWord {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_internal_enc_DataStream {
     pos_: i32,
     bw_pos_: i32,
@@ -3661,7 +3661,7 @@ impl Default for brunsli_internal_enc_DataStream {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg)]
+#[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_internal_enc_State {
     pub entropy_source: brunsli_internal_enc_EntropySource,
     pub entropy_codes: *mut brunsli_internal_enc_EntropyCodes,
@@ -4677,7 +4677,7 @@ pub unsafe fn EncodeAuxData_162(
             brunsli_Storage::AppendBytes(&mut (*storage), (buffer.as_mut_ptr()).cast_const(), len)
         });
         (unsafe {
-            let _src: *const u8 = (*s).as_ptr() as *const u8;
+            let _src: *const u8 = (*s).as_ptr();
             let _len: usize = (*s).len();
             brunsli_Storage::AppendBytes(&mut (*storage), _src, _len)
         });
@@ -4752,15 +4752,23 @@ pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const Vec<i32>, mut order: *mut 
             .add(pos_and_val.len())
             .offset_from(pos_and_val.as_mut_ptr()) as usize;
         ::std::slice::from_raw_parts_mut(pos_and_val.as_mut_ptr(), len).sort_by(|x, y| {
-            if (|a: *const (i32, i32), b: *const (i32, i32)| {
-                return (((*a).1) < ((*b).1));
-            })
+            if FnPtr::<fn(*const (i32, i32), *const (i32, i32)) -> bool>::new(
+                |a: *const (i32, i32), b: *const (i32, i32)| -> bool {
+                    unsafe {
+                        return (((*a).1) < ((*b).1));
+                    }
+                },
+            )
             .call(x as *const _, y as *const _)
             {
                 std::cmp::Ordering::Less
-            } else if (|a: *const (i32, i32), b: *const (i32, i32)| {
-                return (((*a).1) < ((*b).1));
-            })
+            } else if FnPtr::<fn(*const (i32, i32), *const (i32, i32)) -> bool>::new(
+                |a: *const (i32, i32), b: *const (i32, i32)| -> bool {
+                    unsafe {
+                        return (((*a).1) < ((*b).1));
+                    }
+                },
+            )
             .call(y as *const _, x as *const _)
             {
                 std::cmp::Ordering::Greater
@@ -6015,7 +6023,7 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
         (unsafe {
             let _mult_row: *mut i32 = (&mut comps[(i)].mult_row[(0) as usize] as *mut i32);
             let _mult_col: *mut i32 = (&mut comps[(i)].mult_col[(0) as usize] as *mut i32);
-            ComputeACPredictMultipliers_109((*m).quant.as_ptr() as *const i32, _mult_row, _mult_col)
+            ComputeACPredictMultipliers_109((*m).quant.as_ptr(), _mult_row, _mult_col)
         });
         (unsafe { brunsli_ComponentState::SetWidth(&mut comps[(i)], (*m).width_in_blocks) });
         i.prefix_inc();
@@ -6098,7 +6106,7 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                         }
                         let nzero_context: u8 = (unsafe {
                             NumNonzerosContext_104(
-                                ((*c).prev_num_nonzeros.as_mut_ptr()).cast_const() as *const u8,
+                                ((*c).prev_num_nonzeros.as_mut_ptr()).cast_const(),
                                 x,
                                 y,
                             )
@@ -6412,6 +6420,67 @@ pub unsafe fn BrunsliSerialize_190(
 ) -> bool {
     let mut pos: usize = 0_usize;
     let mut ok: bool = true;
+    let encode_section: FnPtr<
+        fn(
+            u8,
+            Option<
+                unsafe fn(
+                    *const brunsli_JPEGData,
+                    *mut brunsli_internal_enc_State,
+                    *mut u8,
+                    *mut usize,
+                ) -> bool,
+            >,
+            usize,
+        ) -> bool,
+    > = lambda_unsafe!(
+        {
+            let jpg: *const brunsli_JPEGData = jpg;
+            let state: *mut *mut brunsli_internal_enc_State = &mut state;
+            let len: *mut *mut usize = &mut len;
+            let data: *mut *mut u8 = &mut data;
+            let pos: *mut usize = &mut pos;
+        },
+        |tag: u8,
+         fn_: Option<
+            unsafe fn(
+                *const brunsli_JPEGData,
+                *mut brunsli_internal_enc_State,
+                *mut u8,
+                *mut usize,
+            ) -> bool,
+        >,
+         size: usize|
+         -> bool {
+            return (unsafe {
+                let _jpg: *const brunsli_JPEGData = jpg;
+                let _s: *mut brunsli_internal_enc_State = (*state);
+                let _tag: u8 = tag;
+                let _write_section: Option<
+                    unsafe fn(
+                        *const brunsli_JPEGData,
+                        *mut brunsli_internal_enc_State,
+                        *mut u8,
+                        *mut usize,
+                    ) -> bool,
+                > = fn_;
+                let _section_size_bytes: usize = size;
+                let _len: usize = (*(*len));
+                let _data: *mut u8 = (*data);
+                let _pos: *mut usize = (&mut (*pos) as *mut usize);
+                EncodeSection_180(
+                    _jpg,
+                    _s,
+                    _tag,
+                    _write_section,
+                    _section_size_bytes,
+                    _len,
+                    _data,
+                    _pos,
+                )
+            });
+        }
+    );
     if !(((skip_sections)
         & ((1_u32)
             << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureTag_30)) as i32)))
@@ -6433,44 +6502,7 @@ pub unsafe fn BrunsliSerialize_190(
         != 0)
     {
         ok = (unsafe {
-            (|tag: u8,
-              fn_: Option<
-                unsafe fn(
-                    *const brunsli_JPEGData,
-                    *mut brunsli_internal_enc_State,
-                    *mut u8,
-                    *mut usize,
-                ) -> bool,
-            >,
-              size: usize| {
-                return (unsafe {
-                    let _jpg: *const brunsli_JPEGData = jpg;
-                    let _s: *mut brunsli_internal_enc_State = state;
-                    let _tag: u8 = tag;
-                    let _write_section: Option<
-                        unsafe fn(
-                            *const brunsli_JPEGData,
-                            *mut brunsli_internal_enc_State,
-                            *mut u8,
-                            *mut usize,
-                        ) -> bool,
-                    > = fn_;
-                    let _section_size_bytes: usize = size;
-                    let _len: usize = (*len);
-                    let _data: *mut u8 = data;
-                    let _pos: *mut usize = (&mut pos as *mut usize);
-                    EncodeSection_180(
-                        _jpg,
-                        _s,
-                        _tag,
-                        _write_section,
-                        _section_size_bytes,
-                        _len,
-                        _data,
-                        _pos,
-                    )
-                });
-            })(
+            encode_section.call(
                 (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliHeaderTag_31)),
                 Some(EncodeHeader_173),
                 1_usize,
@@ -6487,44 +6519,7 @@ pub unsafe fn BrunsliSerialize_190(
         != 0)
     {
         ok = (unsafe {
-            (|tag: u8,
-              fn_: Option<
-                unsafe fn(
-                    *const brunsli_JPEGData,
-                    *mut brunsli_internal_enc_State,
-                    *mut u8,
-                    *mut usize,
-                ) -> bool,
-            >,
-              size: usize| {
-                return (unsafe {
-                    let _jpg: *const brunsli_JPEGData = jpg;
-                    let _s: *mut brunsli_internal_enc_State = state;
-                    let _tag: u8 = tag;
-                    let _write_section: Option<
-                        unsafe fn(
-                            *const brunsli_JPEGData,
-                            *mut brunsli_internal_enc_State,
-                            *mut u8,
-                            *mut usize,
-                        ) -> bool,
-                    > = fn_;
-                    let _section_size_bytes: usize = size;
-                    let _len: usize = (*len);
-                    let _data: *mut u8 = data;
-                    let _pos: *mut usize = (&mut pos as *mut usize);
-                    EncodeSection_180(
-                        _jpg,
-                        _s,
-                        _tag,
-                        _write_section,
-                        _section_size_bytes,
-                        _len,
-                        _data,
-                        _pos,
-                    )
-                });
-            })(
+            encode_section.call(
                 (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliJPEGInternalsTag_33)),
                 Some(EncodeJPEGInternals_175),
                 (unsafe { Base128Size_146((unsafe { EstimateAuxDataSize_144(jpg) })) }),
@@ -6550,45 +6545,9 @@ pub unsafe fn BrunsliSerialize_190(
                 ) -> bool,
             > = Some(EncodeMetaData_174);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
-            (|tag: u8,
-              fn_: Option<
-                unsafe fn(
-                    *const brunsli_JPEGData,
-                    *mut brunsli_internal_enc_State,
-                    *mut u8,
-                    *mut usize,
-                ) -> bool,
-            >,
-              size: usize| {
-                return (unsafe {
-                    let _jpg: *const brunsli_JPEGData = jpg;
-                    let _s: *mut brunsli_internal_enc_State = state;
-                    let _tag: u8 = tag;
-                    let _write_section: Option<
-                        unsafe fn(
-                            *const brunsli_JPEGData,
-                            *mut brunsli_internal_enc_State,
-                            *mut u8,
-                            *mut usize,
-                        ) -> bool,
-                    > = fn_;
-                    let _section_size_bytes: usize = size;
-                    let _len: usize = (*len);
-                    let _data: *mut u8 = data;
-                    let _pos: *mut usize = (&mut pos as *mut usize);
-                    EncodeSection_180(
-                        _jpg,
-                        _s,
-                        _tag,
-                        _write_section,
-                        _section_size_bytes,
-                        _len,
-                        _data,
-                        _pos,
-                    )
-                });
-            })(_tag, _fn_, _size)
-        });
+            encode_section.call(_tag, _fn_, _size)
+        })
+        .clone();
         if !(ok) {
             return false;
         }
@@ -6599,44 +6558,7 @@ pub unsafe fn BrunsliSerialize_190(
         != 0)
     {
         ok = (unsafe {
-            (|tag: u8,
-              fn_: Option<
-                unsafe fn(
-                    *const brunsli_JPEGData,
-                    *mut brunsli_internal_enc_State,
-                    *mut u8,
-                    *mut usize,
-                ) -> bool,
-            >,
-              size: usize| {
-                return (unsafe {
-                    let _jpg: *const brunsli_JPEGData = jpg;
-                    let _s: *mut brunsli_internal_enc_State = state;
-                    let _tag: u8 = tag;
-                    let _write_section: Option<
-                        unsafe fn(
-                            *const brunsli_JPEGData,
-                            *mut brunsli_internal_enc_State,
-                            *mut u8,
-                            *mut usize,
-                        ) -> bool,
-                    > = fn_;
-                    let _section_size_bytes: usize = size;
-                    let _len: usize = (*len);
-                    let _data: *mut u8 = data;
-                    let _pos: *mut usize = (&mut pos as *mut usize);
-                    EncodeSection_180(
-                        _jpg,
-                        _s,
-                        _tag,
-                        _write_section,
-                        _section_size_bytes,
-                        _len,
-                        _data,
-                        _pos,
-                    )
-                });
-            })(
+            encode_section.call(
                 (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliQuantDataTag_34)),
                 Some(EncodeQuantData_176),
                 2_usize,
@@ -6664,45 +6586,9 @@ pub unsafe fn BrunsliSerialize_190(
                 ) -> bool,
             > = Some(EncodeHistogramData_177);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
-            (|tag: u8,
-              fn_: Option<
-                unsafe fn(
-                    *const brunsli_JPEGData,
-                    *mut brunsli_internal_enc_State,
-                    *mut u8,
-                    *mut usize,
-                ) -> bool,
-            >,
-              size: usize| {
-                return (unsafe {
-                    let _jpg: *const brunsli_JPEGData = jpg;
-                    let _s: *mut brunsli_internal_enc_State = state;
-                    let _tag: u8 = tag;
-                    let _write_section: Option<
-                        unsafe fn(
-                            *const brunsli_JPEGData,
-                            *mut brunsli_internal_enc_State,
-                            *mut u8,
-                            *mut usize,
-                        ) -> bool,
-                    > = fn_;
-                    let _section_size_bytes: usize = size;
-                    let _len: usize = (*len);
-                    let _data: *mut u8 = data;
-                    let _pos: *mut usize = (&mut pos as *mut usize);
-                    EncodeSection_180(
-                        _jpg,
-                        _s,
-                        _tag,
-                        _write_section,
-                        _section_size_bytes,
-                        _len,
-                        _data,
-                        _pos,
-                    )
-                });
-            })(_tag, _fn_, _size)
-        });
+            encode_section.call(_tag, _fn_, _size)
+        })
+        .clone();
         if !(ok) {
             return false;
         }
@@ -6723,45 +6609,9 @@ pub unsafe fn BrunsliSerialize_190(
                 ) -> bool,
             > = Some(EncodeDCData_178);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
-            (|tag: u8,
-              fn_: Option<
-                unsafe fn(
-                    *const brunsli_JPEGData,
-                    *mut brunsli_internal_enc_State,
-                    *mut u8,
-                    *mut usize,
-                ) -> bool,
-            >,
-              size: usize| {
-                return (unsafe {
-                    let _jpg: *const brunsli_JPEGData = jpg;
-                    let _s: *mut brunsli_internal_enc_State = state;
-                    let _tag: u8 = tag;
-                    let _write_section: Option<
-                        unsafe fn(
-                            *const brunsli_JPEGData,
-                            *mut brunsli_internal_enc_State,
-                            *mut u8,
-                            *mut usize,
-                        ) -> bool,
-                    > = fn_;
-                    let _section_size_bytes: usize = size;
-                    let _len: usize = (*len);
-                    let _data: *mut u8 = data;
-                    let _pos: *mut usize = (&mut pos as *mut usize);
-                    EncodeSection_180(
-                        _jpg,
-                        _s,
-                        _tag,
-                        _write_section,
-                        _section_size_bytes,
-                        _len,
-                        _data,
-                        _pos,
-                    )
-                });
-            })(_tag, _fn_, _size)
-        });
+            encode_section.call(_tag, _fn_, _size)
+        })
+        .clone();
         if !(ok) {
             return false;
         }
@@ -6782,45 +6632,9 @@ pub unsafe fn BrunsliSerialize_190(
                 ) -> bool,
             > = Some(EncodeACData_179);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
-            (|tag: u8,
-              fn_: Option<
-                unsafe fn(
-                    *const brunsli_JPEGData,
-                    *mut brunsli_internal_enc_State,
-                    *mut u8,
-                    *mut usize,
-                ) -> bool,
-            >,
-              size: usize| {
-                return (unsafe {
-                    let _jpg: *const brunsli_JPEGData = jpg;
-                    let _s: *mut brunsli_internal_enc_State = state;
-                    let _tag: u8 = tag;
-                    let _write_section: Option<
-                        unsafe fn(
-                            *const brunsli_JPEGData,
-                            *mut brunsli_internal_enc_State,
-                            *mut u8,
-                            *mut usize,
-                        ) -> bool,
-                    > = fn_;
-                    let _section_size_bytes: usize = size;
-                    let _len: usize = (*len);
-                    let _data: *mut u8 = data;
-                    let _pos: *mut usize = (&mut pos as *mut usize);
-                    EncodeSection_180(
-                        _jpg,
-                        _s,
-                        _tag,
-                        _write_section,
-                        _section_size_bytes,
-                        _len,
-                        _data,
-                        _pos,
-                    )
-                });
-            })(_tag, _fn_, _size)
-        });
+            encode_section.call(_tag, _fn_, _size)
+        })
+        .clone();
         if !(ok) {
             return false;
         }
@@ -7038,7 +6852,7 @@ pub unsafe fn BrunsliEncodeJpegBypass_195(
     return true;
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct brunsli_HuffmanTree {
     pub total_count: u32,
     pub index_left: i16,
@@ -8719,7 +8533,7 @@ pub static mut kJpegHuffmanRootTableBits_230: std::cell::LazyCell<i32> =
 pub static mut kJpegHuffmanLutSize_231: std::cell::LazyCell<i32> =
     std::cell::LazyCell::new(|| unsafe { 1024 });
 #[repr(C)]
-#[derive(Copy, Clone, VaArg)]
+#[derive(Copy, Clone, VaArg, FnPtrArg)]
 pub struct brunsli_HuffmanTableEntry {
     pub bits: u8,
     pub value: u16,
@@ -9998,7 +9812,7 @@ pub unsafe fn ProcessCOM_242(
     return true;
 }
 #[repr(C)]
-#[derive(Copy, Clone, VaArg, Default)]
+#[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct brunsli_BitReaderState {
     pub data_: *const u8,
     pub len_: usize,
