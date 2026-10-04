@@ -10850,9 +10850,9 @@ pub fn ReadSimpleCode_219(
         |i: usize, j: usize| {
             let i: Value<usize> = Rc::new(RefCell::new(i));
             let j: Value<usize> = Rc::new(RefCell::new(j));
-            let t: Value<u16> = Rc::new(RefCell::new((symbols.read())[(*j.borrow()) as usize]));
-            symbols.write({ (symbols.read())[(*i.borrow()) as usize] });
-            symbols.write((*t.borrow()));
+            let t: Value<u16> = Rc::new(RefCell::new((elem!((symbols), (*j.borrow())).read())));
+            elem!((symbols), (*j.borrow())).write({ (elem!((symbols), (*i.borrow())).read()) });
+            elem!((symbols), (*i.borrow())).write((*t.borrow()));
         }
     )));
     let table_size: Value<usize> = Rc::new(RefCell::new(1_usize));

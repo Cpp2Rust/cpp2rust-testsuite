@@ -6467,7 +6467,7 @@ pub unsafe fn BrunsliSerialize_190(
                 let _section_size_bytes: usize = size;
                 let _len: usize = (*(*len));
                 let _data: *mut u8 = (*data);
-                let _pos: *mut usize = (&mut (*pos) as *mut usize);
+                let _pos: *mut usize = (pos);
                 EncodeSection_180(
                     _jpg,
                     _s,
