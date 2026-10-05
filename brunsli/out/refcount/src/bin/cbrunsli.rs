@@ -3320,15 +3320,14 @@ pub fn HistogramCombine_133(
                 let _p2: Ptr<brunsli_HistogramPair> = (p).clone();
                 operator_lt_128(_p1, _p2)
             }) {
-                let front: Value<brunsli_HistogramPair> = Rc::new(RefCell::new(
-                    (*(pairs.as_pointer() as Ptr<brunsli_HistogramPair>)
-                        .upgrade()
-                        .deref())
-                    .clone(),
-                ));
+                let mut front: brunsli_HistogramPair = (*(pairs.as_pointer()
+                    as Ptr<brunsli_HistogramPair>)
+                    .upgrade()
+                    .deref())
+                .clone();
                 let __rhs = (*p.upgrade().deref()).clone();
                 (pairs.as_pointer() as Ptr<brunsli_HistogramPair>).write(__rhs);
-                (*copy_to.borrow()).write((*front.borrow()).clone());
+                (*copy_to.borrow()).write((front).clone());
             } else {
                 let __rhs = (*p.upgrade().deref()).clone();
                 (*copy_to.borrow()).write(__rhs);
@@ -4364,7 +4363,7 @@ pub fn GetQuantTableId_154(
             FindBestMatrix_119(
                 ((q.with(|__s| __s.values.as_pointer()) as Ptr<i32>).offset(0_usize)),
                 is_chroma,
-                (dst).clone(),
+                dst,
             )
         }),
     )) as i32);
@@ -6817,7 +6816,7 @@ pub fn BrunsliSerialize_190(
          -> bool {
             return ({
                 let _jpg: Ptr<brunsli_JPEGData> = (jpg).clone();
-                let _s: Ptr<brunsli_internal_enc_State> = (state.read()).clone();
+                let _s: Ptr<brunsli_internal_enc_State> = (state.read());
                 let _tag: u8 = tag;
                 let _write_section: FnPtr<
                     fn(
@@ -6826,10 +6825,10 @@ pub fn BrunsliSerialize_190(
                         Ptr<u8>,
                         Ptr<usize>,
                     ) -> bool,
-                > = (fn_).clone();
+                > = fn_;
                 let _section_size_bytes: usize = size;
                 let _len: usize = ((len.read()).read());
-                let _data: Ptr<u8> = (data.read()).clone();
+                let _data: Ptr<u8> = (data.read());
                 let _pos: Ptr<usize> = (pos).clone();
                 EncodeSection_180(
                     _jpg,
@@ -7249,8 +7248,8 @@ pub fn BrunsliEncodeJpeg_191(
     return ({
         let _state: Ptr<brunsli_internal_enc_State> = (state.as_pointer());
         let _jpg: Ptr<brunsli_JPEGData> = (jpg).clone();
-        let _data: Ptr<u8> = (data).clone();
-        let _len: Ptr<usize> = (len).clone();
+        let _data: Ptr<u8> = data;
+        let _len: Ptr<usize> = len;
         BrunsliSerialize_190(_state, _jpg, 0_u32, _data, _len)
     });
 }
@@ -11367,8 +11366,7 @@ pub fn BuildJpegHuffmanTable_238(
     mut symbols: Ptr<i32>,
     mut lut: Ptr<brunsli_HuffmanTableEntry>,
 ) {
-    let code: Value<brunsli_HuffmanTableEntry> =
-        Rc::new(RefCell::new(brunsli_HuffmanTableEntry::new()));
+    let mut code: brunsli_HuffmanTableEntry = brunsli_HuffmanTableEntry::new();
     let mut table: Ptr<brunsli_HuffmanTableEntry> = Ptr::<brunsli_HuffmanTableEntry>::null();
     let mut len: i32 = 0_i32;
     let mut idx: i32 = 0_i32;
@@ -11392,11 +11390,11 @@ pub fn BuildJpegHuffmanTable_238(
     table_bits = kJpegHuffmanRootTableBits_230.with(|rc| *rc.borrow());
     table_size = (1 << table_bits);
     if (total_count == 1) {
-        (*code.borrow_mut()).bits = 0_u8;
-        (*code.borrow_mut()).value = ((elem!(symbols, 0).read()) as u16);
+        code.bits = 0_u8;
+        code.value = ((elem!(symbols, 0).read()) as u16);
         key = 0;
         'loop_: while (key < table_size) {
-            elem!(table, key).write({ (*code.borrow()).clone() });
+            elem!(table, key).write({ (code).clone() });
             key.prefix_inc();
         }
         return;
@@ -11406,11 +11404,11 @@ pub fn BuildJpegHuffmanTable_238(
     len = 1;
     'loop_: while (len <= kJpegHuffmanRootTableBits_230.with(|rc| *rc.borrow())) {
         'loop_: while ((*tmp_count.borrow())[(len) as usize] > 0) {
-            (*code.borrow_mut()).bits = (len as u8);
-            (*code.borrow_mut()).value = ((elem!(symbols, idx.postfix_inc()).read()) as u16);
+            code.bits = (len as u8);
+            code.value = ((elem!(symbols, idx.postfix_inc()).read()) as u16);
             reps = (1 << (kJpegHuffmanRootTableBits_230.with(|rc| *rc.borrow()) - len));
             'loop_: while (reps.postfix_dec() != 0) {
-                let __rhs = (*code.borrow()).clone();
+                let __rhs = (code).clone();
                 elem!(table, key.postfix_inc()).write(__rhs);
             }
             (*tmp_count.borrow_mut())[(len) as usize].prefix_dec();
@@ -11436,12 +11434,11 @@ pub fn BuildJpegHuffmanTable_238(
                 });
                 key.prefix_inc();
             }
-            (*code.borrow_mut()).bits =
-                ((len - kJpegHuffmanRootTableBits_230.with(|rc| *rc.borrow())) as u8);
-            (*code.borrow_mut()).value = ((elem!(symbols, idx.postfix_inc()).read()) as u16);
-            reps = (1 << (table_bits - ({ (*code.borrow()).bits } as i32)));
+            code.bits = ((len - kJpegHuffmanRootTableBits_230.with(|rc| *rc.borrow())) as u8);
+            code.value = ((elem!(symbols, idx.postfix_inc()).read()) as u16);
+            reps = (1 << (table_bits - (code.bits as i32)));
             'loop_: while (reps.postfix_dec() != 0) {
-                let __rhs = (*code.borrow()).clone();
+                let __rhs = (code).clone();
                 elem!(table, low.postfix_inc()).write(__rhs);
             }
             (*tmp_count.borrow_mut())[(len) as usize].prefix_dec();
@@ -12359,12 +12356,12 @@ impl brunsli_internal_enc_DataStreamImpl for Ptr<brunsli_internal_enc_DataStream
         let mut histo_ix: usize = ((band)
             .wrapping_mul(kNumAvrgContexts_83.with(|rc| *rc.borrow())))
         .wrapping_add(context);
-        let word: Value<brunsli_internal_enc_DataStream_CodeWord> =
-            Rc::new(RefCell::new(brunsli_internal_enc_DataStream_CodeWord::new()));
-        (*word.borrow_mut()).context = (histo_ix as u32);
-        (*word.borrow_mut()).code = ((code as u32) as u8);
-        (*word.borrow_mut()).nbits = 0_u8;
-        (*word.borrow_mut()).value = 0_u16;
+        let mut word: brunsli_internal_enc_DataStream_CodeWord =
+            brunsli_internal_enc_DataStream_CodeWord::new();
+        word.context = (histo_ix as u32);
+        word.code = ((code as u32) as u8);
+        word.nbits = 0_u8;
+        word.value = 0_u16;
         if !(((*self).with(|__s| __s.pos_) as usize)
             < (*(*self).with(|__s| __s.code_words_.clone()).borrow()).len())
         {
@@ -12382,7 +12379,7 @@ impl brunsli_internal_enc_DataStreamImpl for Ptr<brunsli_internal_enc_DataStream
                 as Ptr<brunsli_internal_enc_DataStream_CodeWord>),
             (field!((*self), pos_).with_mut(|__v| __v.postfix_inc()) as usize)
         )
-        .write((*word.borrow()).clone());
+        .write((word).clone());
         ({ brunsli_internal_enc_EntropySourceImpl::AddCode(&s, code, histo_ix) });
     }
     fn AddBits(&self, mut nbits: i32, mut bits: i32) {
@@ -12395,18 +12392,18 @@ impl brunsli_internal_enc_DataStreamImpl for Ptr<brunsli_internal_enc_DataStream
             field!((*self), bw_bitpos_).with_mut(|__v| *__v = *__v + __rhs)
         };
         if ((*self).with(|__s| __s.bw_bitpos_) > 16) {
-            let word: Value<brunsli_internal_enc_DataStream_CodeWord> =
-                Rc::new(RefCell::new(brunsli_internal_enc_DataStream_CodeWord::new()));
-            (*word.borrow_mut()).context = 0_u32;
-            (*word.borrow_mut()).code = 0_u8;
-            (*word.borrow_mut()).nbits = 16_u8;
-            (*word.borrow_mut()).value = (((*self).with(|__s| __s.bw_val_) & 65535_u32) as u16);
+            let mut word: brunsli_internal_enc_DataStream_CodeWord =
+                brunsli_internal_enc_DataStream_CodeWord::new();
+            word.context = 0_u32;
+            word.code = 0_u8;
+            word.nbits = 16_u8;
+            word.value = (((*self).with(|__s| __s.bw_val_) & 65535_u32) as u16);
             elem!(
                 ((*self).with(|__s| __s.code_words_.as_pointer())
                     as Ptr<brunsli_internal_enc_DataStream_CodeWord>),
                 ((*self).with(|__s| __s.bw_pos_) as usize)
             )
-            .write((*word.borrow()).clone());
+            .write((word).clone());
             field!((*self), bw_pos_).write((*self).with(|__s| __s.pos_));
             field!((*self), pos_).with_mut(|__v| __v.prefix_inc());
             {
@@ -12538,27 +12535,25 @@ impl brunsli_internal_enc_DataStreamImpl for Ptr<brunsli_internal_enc_DataStream
                 as Ptr<brunsli_internal_enc_DataStream_CodeWord>)
                 .offset((i as usize)));
             if ((word.with(|__s| __s.nbits) as i32) == 0) {
-                let info: Value<brunsli_ANSEncSymbolInfo> = Rc::new(RefCell::new(
-                    (*elem!(
-                        (array_field_ptr!(
-                            ({
-                                brunsli_internal_enc_EntropyCodesImpl::GetANSTable(
-                                    &s,
-                                    (word.with(|__s| __s.context) as i32),
-                                )
-                            }),
-                            info_
-                        ) as Ptr<brunsli_ANSEncSymbolInfo>),
-                        word.with(|__s| __s.code)
-                    )
-                    .upgrade()
-                    .deref())
-                    .clone(),
-                ));
+                let mut info: brunsli_ANSEncSymbolInfo = (*elem!(
+                    (array_field_ptr!(
+                        ({
+                            brunsli_internal_enc_EntropyCodesImpl::GetANSTable(
+                                &s,
+                                (word.with(|__s| __s.context) as i32),
+                            )
+                        }),
+                        info_
+                    ) as Ptr<brunsli_ANSEncSymbolInfo>),
+                    word.with(|__s| __s.code)
+                )
+                .upgrade()
+                .deref())
+                .clone();
                 let __rhs = (({
                     brunsli_ANSCoderImpl::PutSymbol(
                         &ans.as_pointer(),
-                        (*info.borrow()).clone(),
+                        (info).clone(),
                         (field_ptr!(word, nbits)),
                     )
                 }) as u16);

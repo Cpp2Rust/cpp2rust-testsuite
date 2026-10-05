@@ -28,13 +28,13 @@ pub fn find_0(mut node: Ptr<node_t>, mut value: i32) -> Ptr<node_t> {
     {
         return ({ find_0(node.with(|__s| __s.right.clone()), value) });
     } else if ({ value } == { node.with(|__s| __s.value) }) {
-        return (node).clone();
+        return node;
     }
     return Ptr::<node_t>::null();
 }
 pub fn insert_1(mut node: Ptr<node_t>, mut new_node: Ptr<node_t>) -> Ptr<node_t> {
     if (node).is_null() {
-        return (new_node).clone();
+        return new_node;
     }
     if ({ new_node.with(|__s| __s.value) } < { node.with(|__s| __s.value) }) {
         let __rhs = ({ insert_1(node.with(|__s| __s.left.clone()), (new_node).clone()) });
@@ -43,7 +43,7 @@ pub fn insert_1(mut node: Ptr<node_t>, mut new_node: Ptr<node_t>) -> Ptr<node_t>
         let __rhs = ({ insert_1(node.with(|__s| __s.right.clone()), (new_node).clone()) });
         field!(node, right).write(__rhs);
     }
-    return (node).clone();
+    return node;
 }
 pub fn main() {
     __cpp2rust_init_globals();
@@ -56,19 +56,19 @@ fn main_0() -> i32 {
         right: Ptr::<node_t>::null(),
         value: 0,
     });
-    let i: Value<i32> = Rc::new(RefCell::new(0));
-    'loop_: while ((*i.borrow()) < N) {
+    let mut i: i32 = 0;
+    'loop_: while (i < N) {
         ({
             insert_1(
                 (tree).clone(),
                 Ptr::alloc(node_t {
                     left: Ptr::<node_t>::null(),
                     right: Ptr::<node_t>::null(),
-                    value: (*i.borrow()),
+                    value: i,
                 }),
             )
         });
-        (*i.borrow_mut()).prefix_inc();
+        i.prefix_inc();
     }
     let mut i: i32 = 0;
     'loop_: while (i < N) {

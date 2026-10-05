@@ -69,7 +69,7 @@ pub fn BFS_0(graph: Ptr<Graph>, mut start_vertex: u32) -> Ptr<u32> {
     'loop_: while !({ QueueImpl::empty(&Q.as_pointer()) }) {
         let mut current_vertex: i32 = (({ QueueImpl::dequeue(&Q.as_pointer()) }) as i32);
         let mut head: Ptr<GraphNode> =
-            (elem!(graph.with(|__s| __s.adj.clone()), current_vertex).read()).clone();
+            (elem!(graph.with(|__s| __s.adj.clone()), current_vertex).read());
         'loop_: while !((head).is_null()) {
             let mut adj_vertex: i32 = (head.with(|__s| __s.vertex) as i32);
             if !(elem!(visited, adj_vertex).read()) {
@@ -82,7 +82,7 @@ pub fn BFS_0(graph: Ptr<Graph>, mut start_vertex: u32) -> Ptr<u32> {
     }
     visited.delete();
     { (*Q.borrow()).elems.clone() }.delete();
-    return (pred).clone();
+    return pred;
 }
 pub fn main() {
     __cpp2rust_init_globals();
@@ -90,17 +90,17 @@ pub fn main() {
 }
 fn main_0() -> i32 {
     let mut N: usize = 300_usize;
-    let V: Value<usize> = Rc::new(RefCell::new((N).wrapping_mul(N)));
+    let mut V: usize = (N).wrapping_mul(N);
     let graph: Value<Graph> = Rc::new(RefCell::new(Graph {
-        V: ((*V.borrow()) as u32),
+        V: (V as u32),
         adj: Ptr::alloc_array(
-            (0..(*V.borrow()))
+            (0..V)
                 .map(|_| Ptr::<GraphNode>::null())
                 .collect::<Box<[Ptr<GraphNode>]>>(),
         ),
     }));
     let mut i: u32 = 0_u32;
-    'loop_: while ((i as usize) < (*V.borrow())) {
+    'loop_: while ((i as usize) < V) {
         elem!({ (*graph.borrow()).adj.clone() }, i).write(Ptr::<GraphNode>::null());
         i.prefix_inc();
     }
@@ -145,8 +145,8 @@ fn main_0() -> i32 {
     }
     let mut pred: Ptr<u32> = ({ BFS_0(graph.as_pointer(), 0_u32) });
     let mut i: u32 = 0_u32;
-    'loop_: while ((i as usize) < (*V.borrow())) {
-        let mut head: Ptr<GraphNode> = (elem!({ (*graph.borrow()).adj.clone() }, i).read()).clone();
+    'loop_: while ((i as usize) < V) {
+        let mut head: Ptr<GraphNode> = (elem!({ (*graph.borrow()).adj.clone() }, i).read());
         'loop_: while !((head).is_null()) {
             let mut next: Ptr<GraphNode> = head.with(|__s| __s.next.clone());
             head.delete();
@@ -155,7 +155,7 @@ fn main_0() -> i32 {
         i.prefix_inc();
     }
     let mut i: u32 = 0_u32;
-    'loop_: while ((i as usize) < (*V.borrow())) {
+    'loop_: while ((i as usize) < V) {
         write!(libcc2rs::cout(), "{:} -> {:}\n", i, (elem!(pred, i).read()),);
         i.prefix_inc();
     }
@@ -167,19 +167,17 @@ pub trait GraphImpl {
     fn push(&self, src: u32, dst: u32);
 }
 impl GraphImpl for Ptr<Graph> {
-    fn push(&self, src: u32, dst: u32) {
-        let src: Value<u32> = Rc::new(RefCell::new(src));
-        let dst: Value<u32> = Rc::new(RefCell::new(dst));
+    fn push(&self, mut src: u32, mut dst: u32) {
         let __rhs = Ptr::alloc(GraphNode {
-            vertex: (*dst.borrow()),
-            next: (elem!((*self).with(|__s| __s.adj.clone()), (*src.borrow())).read()).clone(),
+            vertex: dst,
+            next: (elem!((*self).with(|__s| __s.adj.clone()), src).read()),
         });
-        elem!((*self).with(|__s| __s.adj.clone()), (*src.borrow())).write(__rhs);
+        elem!((*self).with(|__s| __s.adj.clone()), src).write(__rhs);
         let __rhs = Ptr::alloc(GraphNode {
-            vertex: (*src.borrow()),
-            next: (elem!((*self).with(|__s| __s.adj.clone()), (*dst.borrow())).read()).clone(),
+            vertex: src,
+            next: (elem!((*self).with(|__s| __s.adj.clone()), dst).read()),
         });
-        elem!((*self).with(|__s| __s.adj.clone()), (*dst.borrow())).write(__rhs);
+        elem!((*self).with(|__s| __s.adj.clone()), dst).write(__rhs);
     }
 }
 pub trait QueueImpl {

@@ -814,8 +814,7 @@ pub fn ReadCollectionFont_34(
                         })
                         .as_pointer()
                 })
-                .read())
-            .clone();
+                .read());
             field!(table, reuse_of).write(__rhs);
             if ({ table.with(|__s| __s.tag) } != {
                 table.with(|__s| __s.reuse_of.clone()).with(|__s| __s.tag)
@@ -890,7 +889,7 @@ pub fn ReadFont_36(mut data: Ptr<u8>, mut len: usize, mut font: Ptr<woff2_Font>)
     if ({ font.with(|__s| __s.flavor) } == { kTtcFontFlavor_22.with(|rc| *rc.borrow()) }) {
         return false;
     }
-    return ({ ReadTrueTypeFont_33((file.as_pointer()), (data).clone(), len, (font).clone()) });
+    return ({ ReadTrueTypeFont_33((file.as_pointer()), data, len, font) });
 }
 pub fn ReadFontCollection_37(
     mut data: Ptr<u8>,
@@ -912,16 +911,9 @@ pub fn ReadFontCollection_37(
         let font: Ptr<woff2_Font> =
             (font_collection.with(|__s| __s.fonts.as_pointer()) as Ptr<woff2_Font>).offset(0_usize);
         field!(font, flavor).write(font_collection.with(|__s| __s.flavor));
-        return ({ ReadTrueTypeFont_33((file.as_pointer()), (data).clone(), len, (font).clone()) });
+        return ({ ReadTrueTypeFont_33((file.as_pointer()), data, len, (font).clone()) });
     }
-    return ({
-        ReadTrueTypeCollection_35(
-            (file.as_pointer()),
-            (data).clone(),
-            len,
-            (font_collection).clone(),
-        )
-    });
+    return ({ ReadTrueTypeCollection_35((file.as_pointer()), data, len, font_collection) });
 }
 pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
     let max_offset: Value<usize> = Rc::new(RefCell::new(
@@ -974,7 +966,7 @@ pub fn WriteFont_40(font: Ptr<woff2_Font>, mut dst: Ptr<u8>, mut dst_size: usize
     return ({
         let _font: Ptr<woff2_Font> = (font).clone();
         let _offset: Ptr<usize> = (offset.as_pointer());
-        let _dst: Ptr<u8> = (dst).clone();
+        let _dst: Ptr<u8> = dst;
         let _dst_size: usize = dst_size;
         WriteFont_41(_font, _offset, _dst, _dst_size)
     });
@@ -1131,7 +1123,7 @@ pub fn WriteFontCollection_44(
                 (font_collection.with(|__s| __s.fonts.as_pointer()) as Ptr<woff2_Font>)
                     .offset(0_usize),
                 (offset.as_pointer()),
-                (dst).clone(),
+                dst,
                 dst_size,
             )
         });

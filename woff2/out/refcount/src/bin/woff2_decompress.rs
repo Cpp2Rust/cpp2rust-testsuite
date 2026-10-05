@@ -839,7 +839,7 @@ pub fn TripletDecode_57(
     let mut i: u32 = 0_u32;
     'loop_: while (i < n_points) {
         let mut flag: u8 = (elem!(flags_in, i).read());
-        let on_curve: Value<bool> = Rc::new(RefCell::new(!(((flag as i32) >> 7) != 0)));
+        let mut on_curve: bool = !(((flag as i32) >> 7) != 0);
         flag = { ((flag as i32) & 127) as u8 };
         let mut n_data_bytes: u32 = 0_u32;
         if ((flag as i32) < 84) {
@@ -948,7 +948,7 @@ pub fn TripletDecode_57(
         let __rhs = woff2_Point {
             x: (*x.borrow()),
             y: (*y.borrow()),
-            on_curve: (*on_curve.borrow()),
+            on_curve: on_curve,
         };
         result.postfix_inc().write(__rhs);
         i.prefix_inc();
@@ -1964,7 +1964,7 @@ pub fn FindTable_65(mut tables: Ptr<Vec<Ptr<woff2_Table>>>, mut tag: u32) -> Ptr
     {
         let mut table: Ptr<woff2_Table> = table.read();
         if ({ table.with(|__s| __s.tag) } == { tag }) {
-            return (table).clone();
+            return table;
         }
     }
     return Ptr::<woff2_Table>::null();
@@ -2401,7 +2401,7 @@ pub fn ReconstructFont_74(
     let mut i: usize = 0_usize;
     'loop_: while (i < (*tables.borrow()).len()) {
         let table: Ptr<woff2_Table> =
-            (elem!((tables.as_pointer() as Ptr<Ptr<woff2_Table>>), i).read()).clone();
+            (elem!((tables.as_pointer() as Ptr<Ptr<woff2_Table>>), i).read());
         let checksum_key: Value<(Value<u32>, Value<u32>)> = Rc::new(RefCell::new((
             Rc::new(RefCell::new(
                 table
@@ -3129,7 +3129,7 @@ pub fn ConvertWOFF2ToTTF_78(
     )));
     return ({
         ConvertWOFF2ToTTF_79(
-            (data).clone(),
+            data,
             length,
             (out.as_pointer()).to_dyn::<dyn woff2_WOFF2Out>(|w| w),
         )
@@ -3376,7 +3376,7 @@ impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
     fn Write_2(&mut self, mut buf: AnyPtr, mut n: usize) -> bool {
         return ({
             let _offset: usize = { self.offset_ };
-            self.Write_3((buf).clone(), _offset, n)
+            self.Write_3(buf, _offset, n)
         });
     }
     fn Write_3(&mut self, mut buf: AnyPtr, mut offset: usize, mut n: usize) -> bool {
@@ -3410,7 +3410,7 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
     fn Write_2(&mut self, mut buf: AnyPtr, mut n: usize) -> bool {
         return ({
             let _offset: usize = { self.offset_ };
-            self.Write_3((buf).clone(), _offset, n)
+            self.Write_3(buf, _offset, n)
         });
     }
     fn Write_3(&mut self, mut buf: AnyPtr, mut offset: usize, mut n: usize) -> bool {
