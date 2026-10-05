@@ -6,41 +6,39 @@ use std::io::prelude::*;
 use std::io::{Read, Seek, Write};
 use std::os::fd::AsFd;
 use std::rc::{Rc, Weak};
-pub fn is_prime_0(x: i32) -> bool {
-    let x: Value<i32> = Rc::new(RefCell::new(x));
-    let i: Value<i32> = Rc::new(RefCell::new(2));
-    'loop_: while ((*i.borrow()) < (*x.borrow())) {
-        if (((*x.borrow()) % (*i.borrow())) == 0) {
+pub fn is_prime_0(mut x: i32) -> bool {
+    let mut i: i32 = 2;
+    'loop_: while (i < x) {
+        if ((x % i) == 0) {
             return false;
         }
-        (*i.borrow_mut()).prefix_inc();
+        i.prefix_inc();
     }
     return true;
 }
-pub fn largest_prime_1(n: i32) -> i32 {
-    let n: Value<i32> = Rc::new(RefCell::new(n));
-    let max: Value<i32> = Rc::new(RefCell::new(-1_i32));
-    let i: Value<i32> = Rc::new(RefCell::new(0));
-    'loop_: while ((*i.borrow()) < (*n.borrow())) {
-        if ({ is_prime_0((*i.borrow())) }) {
-            (*max.borrow_mut()) = (*i.borrow());
+pub fn largest_prime_1(mut n: i32) -> i32 {
+    let mut max: i32 = -1_i32;
+    let mut i: i32 = 0;
+    'loop_: while (i < n) {
+        if ({ is_prime_0(i) }) {
+            max = i;
         }
-        (*i.borrow_mut()).prefix_inc();
+        i.prefix_inc();
     }
-    return (*max.borrow());
+    return max;
 }
 pub fn main() {
     __cpp2rust_init_globals();
     std::process::exit(main_0());
 }
 fn main_0() -> i32 {
-    let N: Value<i32> = Rc::new(RefCell::new(270000));
-    let largest: Value<i32> = Rc::new(RefCell::new(({ largest_prime_1((*N.borrow())) })));
+    let mut N: i32 = 270000;
+    let mut largest: i32 = ({ largest_prime_1(N) });
     write!(
         libcc2rs::cout(),
         "The largest prime < {:} is: {:}\n",
-        (*N.borrow()),
-        (*largest.borrow()),
+        N,
+        largest,
     );
     return 0;
 }

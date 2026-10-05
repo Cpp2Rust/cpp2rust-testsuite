@@ -11,32 +11,30 @@ pub fn main() {
     std::process::exit(main_0());
 }
 fn main_0() -> i32 {
-    let N: Value<i32> = Rc::new(RefCell::new(100000000));
-    let sum: Value<i64> = Rc::new(RefCell::new(0_i64));
-    let k: Value<i32> = Rc::new(RefCell::new(0));
-    'loop_: while ((*k.borrow()) < 35) {
+    let mut N: i32 = 100000000;
+    let mut sum: i64 = 0_i64;
+    let mut k: i32 = 0;
+    'loop_: while (k < 35) {
         let array: Value<Option<Value<Box<[i32]>>>> =
             Rc::new(RefCell::new(Some(Rc::new(RefCell::new(
-                (0..((*N.borrow()) as usize))
+                (0..(N as usize))
                     .map(|_| <i32>::default())
                     .collect::<Box<[_]>>(),
             )))));
-        let i: Value<i32> = Rc::new(RefCell::new(0));
-        'loop_: while ((*i.borrow()) < (*N.borrow())) {
-            let __rhs = (*i.borrow());
-            (*array.borrow()).as_ref().unwrap().borrow_mut()[((*i.borrow()) as usize) as usize] =
-                __rhs;
-            (*i.borrow_mut()).prefix_inc();
+        let mut i: i32 = 0;
+        'loop_: while (i < N) {
+            let __rhs = i;
+            (*array.borrow()).as_ref().unwrap().borrow_mut()[(i as usize) as usize] = __rhs;
+            i.prefix_inc();
         }
-        let i: Value<i32> = Rc::new(RefCell::new(0));
-        'loop_: while ((*i.borrow()) < (*N.borrow())) {
-            (*sum.borrow_mut()) += ((*array.borrow()).as_ref().unwrap().borrow()
-                [((*i.borrow()) as usize) as usize] as i64);
-            (*i.borrow_mut()).prefix_inc();
+        let mut i: i32 = 0;
+        'loop_: while (i < N) {
+            sum += ((*array.borrow()).as_ref().unwrap().borrow()[(i as usize) as usize] as i64);
+            i.prefix_inc();
         }
-        (*k.borrow_mut()).prefix_inc();
+        k.prefix_inc();
     }
-    write!(libcc2rs::cout(), "{:}\n", (*sum.borrow()),);
+    write!(libcc2rs::cout(), "{:}\n", sum,);
     return 0;
 }
 pub fn __cpp2rust_init_globals() {}
