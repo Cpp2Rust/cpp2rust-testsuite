@@ -32,195 +32,195 @@ thread_local!(
 );
 thread_local!(
     pub static kKnownTags_8: Value<Box<[u32]>> = Rc::new(RefCell::new(Box::new([
-        ((((((('c' as u8) as i32) << 24) | ((('m' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('p' as u8) as i32)) as u32),
-        ((((((('h' as u8) as i32) << 24) | ((('e' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('d' as u8) as i32)) as u32),
-        ((((((('h' as u8) as i32) << 24) | ((('h' as u8) as i32) << 16))
-            | ((('e' as u8) as i32) << 8))
-            | (('a' as u8) as i32)) as u32),
-        ((((((('h' as u8) as i32) << 24) | ((('m' as u8) as i32) << 16))
-            | ((('t' as u8) as i32) << 8))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('m' as u8) as i32) << 24) | ((('a' as u8) as i32) << 16))
-            | ((('x' as u8) as i32) << 8))
-            | (('p' as u8) as i32)) as u32),
-        ((((((('n' as u8) as i32) << 24) | ((('a' as u8) as i32) << 16))
-            | ((('m' as u8) as i32) << 8))
-            | (('e' as u8) as i32)) as u32),
-        ((((((('O' as u8) as i32) << 24) | ((('S' as u8) as i32) << 16))
-            | ((('/' as u8) as i32) << 8))
-            | (('2' as u8) as i32)) as u32),
-        ((((((('p' as u8) as i32) << 24) | ((('o' as u8) as i32) << 16))
-            | ((('s' as u8) as i32) << 8))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('c' as u8) as i32) << 24) | ((('v' as u8) as i32) << 16))
-            | ((('t' as u8) as i32) << 8))
-            | ((' ' as u8) as i32)) as u32),
-        ((((((('f' as u8) as i32) << 24) | ((('p' as u8) as i32) << 16))
-            | ((('g' as u8) as i32) << 8))
-            | (('m' as u8) as i32)) as u32),
-        ((((((('g' as u8) as i32) << 24) | ((('l' as u8) as i32) << 16))
-            | ((('y' as u8) as i32) << 8))
-            | (('f' as u8) as i32)) as u32),
-        ((((((('l' as u8) as i32) << 24) | ((('o' as u8) as i32) << 16))
-            | ((('c' as u8) as i32) << 8))
-            | (('a' as u8) as i32)) as u32),
-        ((((((('p' as u8) as i32) << 24) | ((('r' as u8) as i32) << 16))
-            | ((('e' as u8) as i32) << 8))
-            | (('p' as u8) as i32)) as u32),
-        ((((((('C' as u8) as i32) << 24) | ((('F' as u8) as i32) << 16))
-            | ((('F' as u8) as i32) << 8))
-            | ((' ' as u8) as i32)) as u32),
-        ((((((('V' as u8) as i32) << 24) | ((('O' as u8) as i32) << 16))
-            | ((('R' as u8) as i32) << 8))
-            | (('G' as u8) as i32)) as u32),
-        ((((((('E' as u8) as i32) << 24) | ((('B' as u8) as i32) << 16))
-            | ((('D' as u8) as i32) << 8))
-            | (('T' as u8) as i32)) as u32),
-        ((((((('E' as u8) as i32) << 24) | ((('B' as u8) as i32) << 16))
-            | ((('L' as u8) as i32) << 8))
-            | (('C' as u8) as i32)) as u32),
-        ((((((('g' as u8) as i32) << 24) | ((('a' as u8) as i32) << 16))
-            | ((('s' as u8) as i32) << 8))
-            | (('p' as u8) as i32)) as u32),
-        ((((((('h' as u8) as i32) << 24) | ((('d' as u8) as i32) << 16))
-            | ((('m' as u8) as i32) << 8))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('k' as u8) as i32) << 24) | ((('e' as u8) as i32) << 16))
-            | ((('r' as u8) as i32) << 8))
-            | (('n' as u8) as i32)) as u32),
-        ((((((('L' as u8) as i32) << 24) | ((('T' as u8) as i32) << 16))
-            | ((('S' as u8) as i32) << 8))
-            | (('H' as u8) as i32)) as u32),
-        ((((((('P' as u8) as i32) << 24) | ((('C' as u8) as i32) << 16))
-            | ((('L' as u8) as i32) << 8))
-            | (('T' as u8) as i32)) as u32),
-        ((((((('V' as u8) as i32) << 24) | ((('D' as u8) as i32) << 16))
-            | ((('M' as u8) as i32) << 8))
-            | (('X' as u8) as i32)) as u32),
-        ((((((('v' as u8) as i32) << 24) | ((('h' as u8) as i32) << 16))
-            | ((('e' as u8) as i32) << 8))
-            | (('a' as u8) as i32)) as u32),
-        ((((((('v' as u8) as i32) << 24) | ((('m' as u8) as i32) << 16))
-            | ((('t' as u8) as i32) << 8))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('B' as u8) as i32) << 24) | ((('A' as u8) as i32) << 16))
-            | ((('S' as u8) as i32) << 8))
-            | (('E' as u8) as i32)) as u32),
-        ((((((('G' as u8) as i32) << 24) | ((('D' as u8) as i32) << 16))
-            | ((('E' as u8) as i32) << 8))
-            | (('F' as u8) as i32)) as u32),
-        ((((((('G' as u8) as i32) << 24) | ((('P' as u8) as i32) << 16))
-            | ((('O' as u8) as i32) << 8))
-            | (('S' as u8) as i32)) as u32),
-        ((((((('G' as u8) as i32) << 24) | ((('S' as u8) as i32) << 16))
-            | ((('U' as u8) as i32) << 8))
-            | (('B' as u8) as i32)) as u32),
-        ((((((('E' as u8) as i32) << 24) | ((('B' as u8) as i32) << 16))
-            | ((('S' as u8) as i32) << 8))
-            | (('C' as u8) as i32)) as u32),
-        ((((((('J' as u8) as i32) << 24) | ((('S' as u8) as i32) << 16))
-            | ((('T' as u8) as i32) << 8))
-            | (('F' as u8) as i32)) as u32),
-        ((((((('M' as u8) as i32) << 24) | ((('A' as u8) as i32) << 16))
-            | ((('T' as u8) as i32) << 8))
-            | (('H' as u8) as i32)) as u32),
-        ((((((('C' as u8) as i32) << 24) | ((('B' as u8) as i32) << 16))
-            | ((('D' as u8) as i32) << 8))
-            | (('T' as u8) as i32)) as u32),
-        ((((((('C' as u8) as i32) << 24) | ((('B' as u8) as i32) << 16))
-            | ((('L' as u8) as i32) << 8))
-            | (('C' as u8) as i32)) as u32),
-        ((((((('C' as u8) as i32) << 24) | ((('O' as u8) as i32) << 16))
-            | ((('L' as u8) as i32) << 8))
-            | (('R' as u8) as i32)) as u32),
-        ((((((('C' as u8) as i32) << 24) | ((('P' as u8) as i32) << 16))
-            | ((('A' as u8) as i32) << 8))
-            | (('L' as u8) as i32)) as u32),
-        ((((((('S' as u8) as i32) << 24) | ((('V' as u8) as i32) << 16))
-            | ((('G' as u8) as i32) << 8))
-            | ((' ' as u8) as i32)) as u32),
-        ((((((('s' as u8) as i32) << 24) | ((('b' as u8) as i32) << 16))
-            | ((('i' as u8) as i32) << 8))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('a' as u8) as i32) << 24) | ((('c' as u8) as i32) << 16))
-            | ((('n' as u8) as i32) << 8))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('a' as u8) as i32) << 24) | ((('v' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('r' as u8) as i32)) as u32),
-        ((((((('b' as u8) as i32) << 24) | ((('d' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('b' as u8) as i32) << 24) | ((('l' as u8) as i32) << 16))
-            | ((('o' as u8) as i32) << 8))
-            | (('c' as u8) as i32)) as u32),
-        ((((((('b' as u8) as i32) << 24) | ((('s' as u8) as i32) << 16))
-            | ((('l' as u8) as i32) << 8))
-            | (('n' as u8) as i32)) as u32),
-        ((((((('c' as u8) as i32) << 24) | ((('v' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('r' as u8) as i32)) as u32),
-        ((((((('f' as u8) as i32) << 24) | ((('d' as u8) as i32) << 16))
-            | ((('s' as u8) as i32) << 8))
-            | (('c' as u8) as i32)) as u32),
-        ((((((('f' as u8) as i32) << 24) | ((('e' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('f' as u8) as i32) << 24) | ((('m' as u8) as i32) << 16))
-            | ((('t' as u8) as i32) << 8))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('f' as u8) as i32) << 24) | ((('v' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('r' as u8) as i32)) as u32),
-        ((((((('g' as u8) as i32) << 24) | ((('v' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('r' as u8) as i32)) as u32),
-        ((((((('h' as u8) as i32) << 24) | ((('s' as u8) as i32) << 16))
-            | ((('t' as u8) as i32) << 8))
-            | (('y' as u8) as i32)) as u32),
-        ((((((('j' as u8) as i32) << 24) | ((('u' as u8) as i32) << 16))
-            | ((('s' as u8) as i32) << 8))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('l' as u8) as i32) << 24) | ((('c' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('r' as u8) as i32)) as u32),
-        ((((((('m' as u8) as i32) << 24) | ((('o' as u8) as i32) << 16))
-            | ((('r' as u8) as i32) << 8))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('m' as u8) as i32) << 24) | ((('o' as u8) as i32) << 16))
-            | ((('r' as u8) as i32) << 8))
-            | (('x' as u8) as i32)) as u32),
-        ((((((('o' as u8) as i32) << 24) | ((('p' as u8) as i32) << 16))
-            | ((('b' as u8) as i32) << 8))
-            | (('d' as u8) as i32)) as u32),
-        ((((((('p' as u8) as i32) << 24) | ((('r' as u8) as i32) << 16))
-            | ((('o' as u8) as i32) << 8))
-            | (('p' as u8) as i32)) as u32),
-        ((((((('t' as u8) as i32) << 24) | ((('r' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('k' as u8) as i32)) as u32),
-        ((((((('Z' as u8) as i32) << 24) | ((('a' as u8) as i32) << 16))
-            | ((('p' as u8) as i32) << 8))
-            | (('f' as u8) as i32)) as u32),
-        ((((((('S' as u8) as i32) << 24) | ((('i' as u8) as i32) << 16))
-            | ((('l' as u8) as i32) << 8))
-            | (('f' as u8) as i32)) as u32),
-        ((((((('G' as u8) as i32) << 24) | ((('l' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('G' as u8) as i32) << 24) | ((('l' as u8) as i32) << 16))
-            | ((('o' as u8) as i32) << 8))
-            | (('c' as u8) as i32)) as u32),
-        ((((((('F' as u8) as i32) << 24) | ((('e' as u8) as i32) << 16))
-            | ((('a' as u8) as i32) << 8))
-            | (('t' as u8) as i32)) as u32),
-        ((((((('S' as u8) as i32) << 24) | ((('i' as u8) as i32) << 16))
-            | ((('l' as u8) as i32) << 8))
-            | (('l' as u8) as i32)) as u32),
+        ((((((('c' as i8) as i32) << 24) | ((('m' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('p' as i8) as i32)) as u32),
+        ((((((('h' as i8) as i32) << 24) | ((('e' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('d' as i8) as i32)) as u32),
+        ((((((('h' as i8) as i32) << 24) | ((('h' as i8) as i32) << 16))
+            | ((('e' as i8) as i32) << 8))
+            | (('a' as i8) as i32)) as u32),
+        ((((((('h' as i8) as i32) << 24) | ((('m' as i8) as i32) << 16))
+            | ((('t' as i8) as i32) << 8))
+            | (('x' as i8) as i32)) as u32),
+        ((((((('m' as i8) as i32) << 24) | ((('a' as i8) as i32) << 16))
+            | ((('x' as i8) as i32) << 8))
+            | (('p' as i8) as i32)) as u32),
+        ((((((('n' as i8) as i32) << 24) | ((('a' as i8) as i32) << 16))
+            | ((('m' as i8) as i32) << 8))
+            | (('e' as i8) as i32)) as u32),
+        ((((((('O' as i8) as i32) << 24) | ((('S' as i8) as i32) << 16))
+            | ((('/' as i8) as i32) << 8))
+            | (('2' as i8) as i32)) as u32),
+        ((((((('p' as i8) as i32) << 24) | ((('o' as i8) as i32) << 16))
+            | ((('s' as i8) as i32) << 8))
+            | (('t' as i8) as i32)) as u32),
+        ((((((('c' as i8) as i32) << 24) | ((('v' as i8) as i32) << 16))
+            | ((('t' as i8) as i32) << 8))
+            | ((' ' as i8) as i32)) as u32),
+        ((((((('f' as i8) as i32) << 24) | ((('p' as i8) as i32) << 16))
+            | ((('g' as i8) as i32) << 8))
+            | (('m' as i8) as i32)) as u32),
+        ((((((('g' as i8) as i32) << 24) | ((('l' as i8) as i32) << 16))
+            | ((('y' as i8) as i32) << 8))
+            | (('f' as i8) as i32)) as u32),
+        ((((((('l' as i8) as i32) << 24) | ((('o' as i8) as i32) << 16))
+            | ((('c' as i8) as i32) << 8))
+            | (('a' as i8) as i32)) as u32),
+        ((((((('p' as i8) as i32) << 24) | ((('r' as i8) as i32) << 16))
+            | ((('e' as i8) as i32) << 8))
+            | (('p' as i8) as i32)) as u32),
+        ((((((('C' as i8) as i32) << 24) | ((('F' as i8) as i32) << 16))
+            | ((('F' as i8) as i32) << 8))
+            | ((' ' as i8) as i32)) as u32),
+        ((((((('V' as i8) as i32) << 24) | ((('O' as i8) as i32) << 16))
+            | ((('R' as i8) as i32) << 8))
+            | (('G' as i8) as i32)) as u32),
+        ((((((('E' as i8) as i32) << 24) | ((('B' as i8) as i32) << 16))
+            | ((('D' as i8) as i32) << 8))
+            | (('T' as i8) as i32)) as u32),
+        ((((((('E' as i8) as i32) << 24) | ((('B' as i8) as i32) << 16))
+            | ((('L' as i8) as i32) << 8))
+            | (('C' as i8) as i32)) as u32),
+        ((((((('g' as i8) as i32) << 24) | ((('a' as i8) as i32) << 16))
+            | ((('s' as i8) as i32) << 8))
+            | (('p' as i8) as i32)) as u32),
+        ((((((('h' as i8) as i32) << 24) | ((('d' as i8) as i32) << 16))
+            | ((('m' as i8) as i32) << 8))
+            | (('x' as i8) as i32)) as u32),
+        ((((((('k' as i8) as i32) << 24) | ((('e' as i8) as i32) << 16))
+            | ((('r' as i8) as i32) << 8))
+            | (('n' as i8) as i32)) as u32),
+        ((((((('L' as i8) as i32) << 24) | ((('T' as i8) as i32) << 16))
+            | ((('S' as i8) as i32) << 8))
+            | (('H' as i8) as i32)) as u32),
+        ((((((('P' as i8) as i32) << 24) | ((('C' as i8) as i32) << 16))
+            | ((('L' as i8) as i32) << 8))
+            | (('T' as i8) as i32)) as u32),
+        ((((((('V' as i8) as i32) << 24) | ((('D' as i8) as i32) << 16))
+            | ((('M' as i8) as i32) << 8))
+            | (('X' as i8) as i32)) as u32),
+        ((((((('v' as i8) as i32) << 24) | ((('h' as i8) as i32) << 16))
+            | ((('e' as i8) as i32) << 8))
+            | (('a' as i8) as i32)) as u32),
+        ((((((('v' as i8) as i32) << 24) | ((('m' as i8) as i32) << 16))
+            | ((('t' as i8) as i32) << 8))
+            | (('x' as i8) as i32)) as u32),
+        ((((((('B' as i8) as i32) << 24) | ((('A' as i8) as i32) << 16))
+            | ((('S' as i8) as i32) << 8))
+            | (('E' as i8) as i32)) as u32),
+        ((((((('G' as i8) as i32) << 24) | ((('D' as i8) as i32) << 16))
+            | ((('E' as i8) as i32) << 8))
+            | (('F' as i8) as i32)) as u32),
+        ((((((('G' as i8) as i32) << 24) | ((('P' as i8) as i32) << 16))
+            | ((('O' as i8) as i32) << 8))
+            | (('S' as i8) as i32)) as u32),
+        ((((((('G' as i8) as i32) << 24) | ((('S' as i8) as i32) << 16))
+            | ((('U' as i8) as i32) << 8))
+            | (('B' as i8) as i32)) as u32),
+        ((((((('E' as i8) as i32) << 24) | ((('B' as i8) as i32) << 16))
+            | ((('S' as i8) as i32) << 8))
+            | (('C' as i8) as i32)) as u32),
+        ((((((('J' as i8) as i32) << 24) | ((('S' as i8) as i32) << 16))
+            | ((('T' as i8) as i32) << 8))
+            | (('F' as i8) as i32)) as u32),
+        ((((((('M' as i8) as i32) << 24) | ((('A' as i8) as i32) << 16))
+            | ((('T' as i8) as i32) << 8))
+            | (('H' as i8) as i32)) as u32),
+        ((((((('C' as i8) as i32) << 24) | ((('B' as i8) as i32) << 16))
+            | ((('D' as i8) as i32) << 8))
+            | (('T' as i8) as i32)) as u32),
+        ((((((('C' as i8) as i32) << 24) | ((('B' as i8) as i32) << 16))
+            | ((('L' as i8) as i32) << 8))
+            | (('C' as i8) as i32)) as u32),
+        ((((((('C' as i8) as i32) << 24) | ((('O' as i8) as i32) << 16))
+            | ((('L' as i8) as i32) << 8))
+            | (('R' as i8) as i32)) as u32),
+        ((((((('C' as i8) as i32) << 24) | ((('P' as i8) as i32) << 16))
+            | ((('A' as i8) as i32) << 8))
+            | (('L' as i8) as i32)) as u32),
+        ((((((('S' as i8) as i32) << 24) | ((('V' as i8) as i32) << 16))
+            | ((('G' as i8) as i32) << 8))
+            | ((' ' as i8) as i32)) as u32),
+        ((((((('s' as i8) as i32) << 24) | ((('b' as i8) as i32) << 16))
+            | ((('i' as i8) as i32) << 8))
+            | (('x' as i8) as i32)) as u32),
+        ((((((('a' as i8) as i32) << 24) | ((('c' as i8) as i32) << 16))
+            | ((('n' as i8) as i32) << 8))
+            | (('t' as i8) as i32)) as u32),
+        ((((((('a' as i8) as i32) << 24) | ((('v' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('r' as i8) as i32)) as u32),
+        ((((((('b' as i8) as i32) << 24) | ((('d' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('t' as i8) as i32)) as u32),
+        ((((((('b' as i8) as i32) << 24) | ((('l' as i8) as i32) << 16))
+            | ((('o' as i8) as i32) << 8))
+            | (('c' as i8) as i32)) as u32),
+        ((((((('b' as i8) as i32) << 24) | ((('s' as i8) as i32) << 16))
+            | ((('l' as i8) as i32) << 8))
+            | (('n' as i8) as i32)) as u32),
+        ((((((('c' as i8) as i32) << 24) | ((('v' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('r' as i8) as i32)) as u32),
+        ((((((('f' as i8) as i32) << 24) | ((('d' as i8) as i32) << 16))
+            | ((('s' as i8) as i32) << 8))
+            | (('c' as i8) as i32)) as u32),
+        ((((((('f' as i8) as i32) << 24) | ((('e' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('t' as i8) as i32)) as u32),
+        ((((((('f' as i8) as i32) << 24) | ((('m' as i8) as i32) << 16))
+            | ((('t' as i8) as i32) << 8))
+            | (('x' as i8) as i32)) as u32),
+        ((((((('f' as i8) as i32) << 24) | ((('v' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('r' as i8) as i32)) as u32),
+        ((((((('g' as i8) as i32) << 24) | ((('v' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('r' as i8) as i32)) as u32),
+        ((((((('h' as i8) as i32) << 24) | ((('s' as i8) as i32) << 16))
+            | ((('t' as i8) as i32) << 8))
+            | (('y' as i8) as i32)) as u32),
+        ((((((('j' as i8) as i32) << 24) | ((('u' as i8) as i32) << 16))
+            | ((('s' as i8) as i32) << 8))
+            | (('t' as i8) as i32)) as u32),
+        ((((((('l' as i8) as i32) << 24) | ((('c' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('r' as i8) as i32)) as u32),
+        ((((((('m' as i8) as i32) << 24) | ((('o' as i8) as i32) << 16))
+            | ((('r' as i8) as i32) << 8))
+            | (('t' as i8) as i32)) as u32),
+        ((((((('m' as i8) as i32) << 24) | ((('o' as i8) as i32) << 16))
+            | ((('r' as i8) as i32) << 8))
+            | (('x' as i8) as i32)) as u32),
+        ((((((('o' as i8) as i32) << 24) | ((('p' as i8) as i32) << 16))
+            | ((('b' as i8) as i32) << 8))
+            | (('d' as i8) as i32)) as u32),
+        ((((((('p' as i8) as i32) << 24) | ((('r' as i8) as i32) << 16))
+            | ((('o' as i8) as i32) << 8))
+            | (('p' as i8) as i32)) as u32),
+        ((((((('t' as i8) as i32) << 24) | ((('r' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('k' as i8) as i32)) as u32),
+        ((((((('Z' as i8) as i32) << 24) | ((('a' as i8) as i32) << 16))
+            | ((('p' as i8) as i32) << 8))
+            | (('f' as i8) as i32)) as u32),
+        ((((((('S' as i8) as i32) << 24) | ((('i' as i8) as i32) << 16))
+            | ((('l' as i8) as i32) << 8))
+            | (('f' as i8) as i32)) as u32),
+        ((((((('G' as i8) as i32) << 24) | ((('l' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('t' as i8) as i32)) as u32),
+        ((((((('G' as i8) as i32) << 24) | ((('l' as i8) as i32) << 16))
+            | ((('o' as i8) as i32) << 8))
+            | (('c' as i8) as i32)) as u32),
+        ((((((('F' as i8) as i32) << 24) | ((('e' as i8) as i32) << 16))
+            | ((('a' as i8) as i32) << 8))
+            | (('t' as i8) as i32)) as u32),
+        ((((((('S' as i8) as i32) << 24) | ((('i' as i8) as i32) << 16))
+            | ((('l' as i8) as i32) << 8))
+            | (('l' as i8) as i32)) as u32),
     ])));
 );
 #[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
@@ -1586,10 +1586,10 @@ pub fn RemoveDigitalSignature_48(font: Ptr<woff2_Font>) -> bool {
     }
     return true;
 }
-pub fn GetFileContent_49(filename: Vec<u8>) -> Vec<u8> {
-    let filename: Value<Vec<u8>> = Rc::new(RefCell::new(filename));
+pub fn GetFileContent_49(filename: Vec<i8>) -> Vec<i8> {
+    let filename: Value<Vec<i8>> = Rc::new(RefCell::new(filename));
     let ifs: Value<::std::fs::File> = Rc::new(RefCell::new(
-        ::std::fs::File::open((filename.as_pointer() as Ptr<u8>).to_string())
+        ::std::fs::File::open((filename.as_pointer() as Ptr<i8>).to_string())
             .expect("Failed to open file"),
     ));
     return {
@@ -1599,23 +1599,25 @@ pub fn GetFileContent_49(filename: Vec<u8>) -> Vec<u8> {
         __f.read_to_end(&mut __bytes)
             .expect("couldn't read the file");
         __bytes.push(0);
-        __bytes
+        CChar::from_byte_vec(__bytes)
     };
 }
-pub fn SetFileContents_50(filename: Vec<u8>, start: Ptr<u8>, end: Ptr<u8>) {
-    let filename: Value<Vec<u8>> = Rc::new(RefCell::new(filename));
-    let start: Value<Ptr<u8>> = Rc::new(RefCell::new(start));
-    let end: Value<Ptr<u8>> = Rc::new(RefCell::new(end));
+pub fn SetFileContents_50(filename: Vec<i8>, start: Ptr<i8>, end: Ptr<i8>) {
+    let filename: Value<Vec<i8>> = Rc::new(RefCell::new(filename));
+    let start: Value<Ptr<i8>> = Rc::new(RefCell::new(start));
+    let end: Value<Ptr<i8>> = Rc::new(RefCell::new(end));
     let ofs: Value<::std::fs::File> = Rc::new(RefCell::new(
-        ::std::fs::File::create((filename.as_pointer() as Ptr<u8>).to_string())
+        ::std::fs::File::create((filename.as_pointer() as Ptr<i8>).to_string())
             .expect("Failed to open file"),
     ));
     {
-        (*ofs.borrow_mut()).try_clone().unwrap().write_all(
-            (*start.borrow())
-                .clone()
-                .slice_until(&(*end.borrow()).clone())
-                .as_slice(),
+        (*start.borrow()).clone().with_slice(
+            (*end.borrow()).clone().get_offset() - (*start.borrow()).clone().get_offset(),
+            |__s| {
+                CChar::with_u8_slice(__s, |__b| {
+                    (*ofs.borrow_mut()).try_clone().unwrap().write_all(__b)
+                })
+            },
         );
         (*ofs.borrow_mut())
             .try_clone()
@@ -1624,32 +1626,34 @@ pub fn SetFileContents_50(filename: Vec<u8>, start: Ptr<u8>, end: Ptr<u8>) {
             .unwrap()
     };
 }
-pub fn PrintTag_51(tag: i32) -> Vec<u8> {
+pub fn PrintTag_51(tag: i32) -> Vec<i8> {
     let tag: Value<i32> = Rc::new(RefCell::new(tag));
     if ((((*tag.borrow()) as u32) & 2155905152_u32) != 0) {
         return {
-            let mut __bytes = Ptr::<u8>::from_string_literal(b"_xfm").to_c_bytes();
+            let mut __bytes = Ptr::<i8>::from_string_literal(b"_xfm").to_c_bytes();
             __bytes.push(0);
             __bytes
         };
     }
-    let printable: Value<Box<[u8]>> = Rc::new(RefCell::new(Box::new([
-        ((((*tag.borrow()) >> 24) & 255) as u8),
-        ((((*tag.borrow()) >> 16) & 255) as u8),
-        ((((*tag.borrow()) >> 8) & 255) as u8),
-        (((*tag.borrow()) & 255) as u8),
+    let printable: Value<Box<[i8]>> = Rc::new(RefCell::new(Box::new([
+        ((((*tag.borrow()) >> 24) & 255) as i8),
+        ((((*tag.borrow()) >> 16) & 255) as i8),
+        ((((*tag.borrow()) >> 8) & 255) as i8),
+        (((*tag.borrow()) & 255) as i8),
     ])));
-    return (printable.as_pointer() as Ptr<u8>)
-        .map(|c| c.read())
-        .take(4_usize as usize)
-        .chain(std::iter::once(0))
-        .collect::<Vec<u8>>();
+    return {
+        let mut __v = Vec::with_capacity(4_usize as usize + 1);
+        (printable.as_pointer() as Ptr<i8>)
+            .with_slice(4_usize as usize, |__s| __v.extend_from_slice(__s));
+        __v.push(0);
+        __v
+    };
 }
 pub fn main() {
-    let argv: Vec<Value<Vec<u8>>> = ::std::env::args()
-        .map(|x| Rc::new(RefCell::new(x.as_bytes().to_vec())))
+    let argv: Vec<Value<Vec<i8>>> = ::std::env::args()
+        .map(|x| Rc::new(RefCell::new(x.bytes().map(|c| c as i8).collect())))
         .collect();
-    let mut argv: Value<Vec<Ptr<u8>>> = Rc::new(RefCell::new(
+    let mut argv: Value<Vec<Ptr<i8>>> = Rc::new(RefCell::new(
         argv.iter()
             .map(|x| {
                 x.borrow_mut().push(0);
@@ -1661,24 +1665,24 @@ pub fn main() {
     __cpp2rust_init_globals();
     ::std::process::exit(main_0(::std::env::args().len() as i32, argv.as_pointer()));
 }
-fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
+fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
     let argc: Value<i32> = Rc::new(RefCell::new(argc));
-    let argv: Value<Ptr<Ptr<u8>>> = Rc::new(RefCell::new(argv));
+    let argv: Value<Ptr<Ptr<i8>>> = Rc::new(RefCell::new(argv));
     if ((*argc.borrow()) != 2) {
         eprintln!("One argument, the input filename, must be provided.");
         return 1;
     }
-    let filename: Value<Vec<u8>> = Rc::new(RefCell::new({
+    let filename: Value<Vec<i8>> = Rc::new(RefCell::new({
         let mut __bytes = (elem!((*argv.borrow()), 1).read()).to_c_bytes();
         __bytes.push(0);
         __bytes
     }));
-    let outfilename: Value<Vec<u8>> = Rc::new(RefCell::new({
+    let outfilename: Value<Vec<i8>> = Rc::new(RefCell::new({
         let mut __tmp2 = {
             let mut __tmp1 = (*filename.borrow())[(0_usize) as usize
                 ..::std::cmp::min(
                     (0_usize
-                        + Ptr::<u8>::from_string_literal(b".").with_c_str(|__lookup| {
+                        + Ptr::<i8>::from_string_literal(b".").with_c_str(|__lookup| {
                             (*filename.borrow())
                                 .iter()
                                 .take((*filename.borrow()).len().saturating_sub(1))
@@ -1692,20 +1696,20 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             __tmp1
         };
         __tmp2.pop();
-        Ptr::<u8>::from_string_literal(b".woff2").with_c_str(|__s| __tmp2.extend_from_slice(__s));
+        Ptr::<i8>::from_string_literal(b".woff2").with_c_str(|__s| __tmp2.extend_from_slice(__s));
         __tmp2.push(0);
         __tmp2
     }));
     println!(
         "Processing {} => {}",
-        (filename.as_pointer() as Ptr<u8>),
-        (outfilename.as_pointer() as Ptr<u8>)
+        (filename.as_pointer() as Ptr<i8>),
+        (outfilename.as_pointer() as Ptr<i8>)
     );
-    let input: Value<Vec<u8>> = Rc::new(RefCell::new(
+    let input: Value<Vec<i8>> = Rc::new(RefCell::new(
         ({ GetFileContent_49((*filename.borrow()).clone()) }),
     ));
     let file: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
-        { (input.as_pointer() as Ptr<u8>).reinterpret_cast::<u8>() },
+        { (input.as_pointer() as Ptr<i8>).reinterpret_cast::<u8>() },
         { ((*input.borrow()).len() - 1) },
     )));
     println!("WOFF2Header");
@@ -1824,7 +1828,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
             (*offset.borrow()),
             ((*flags.borrow()) as i32),
             (Rc::new(RefCell::new(({ PrintTag_51(((*tag.borrow()) as i32),) }))).as_pointer()
-                as Ptr<u8>),
+                as Ptr<i8>),
             (*origLength.borrow())
         );
         let xform_version: Value<u8> = Rc::new(RefCell::new(
@@ -1901,7 +1905,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<u8>>) -> i32 {
                             )
                         })
                     ))
-                    .as_pointer() as Ptr<u8>),
+                    .as_pointer() as Ptr<i8>),
                     (*table_idx.borrow())
                 );
                 (*j.borrow_mut()).postfix_inc();
