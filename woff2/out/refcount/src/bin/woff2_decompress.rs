@@ -1353,174 +1353,37 @@ pub fn ReconstructGlyf_63(
                     .expect("failed conversion"),
             )),
         );
-        elem!(
-            (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-            (i as usize)
-        )
-        .write(__rhs);
+        (*substreams.borrow_mut())[(i as usize)] = __rhs;
         offset = { (offset).wrapping_add((*substream_size.borrow())) };
         i.prefix_inc();
     }
     let n_contour_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
-        {
-            (*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                0_usize
-            )
-            .upgrade()
-            .deref())
-            .0
-            .borrow())
-            .clone()
-        },
-        {
-            ((*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                0_usize
-            )
-            .upgrade()
-            .deref())
-            .1
-            .borrow()) as usize)
-        },
+        { (*(*substreams.borrow())[0_usize].0.borrow()).clone() },
+        { ((*(*substreams.borrow())[0_usize].1.borrow()) as usize) },
     )));
     let n_points_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
-        {
-            (*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                1_usize
-            )
-            .upgrade()
-            .deref())
-            .0
-            .borrow())
-            .clone()
-        },
-        {
-            ((*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                1_usize
-            )
-            .upgrade()
-            .deref())
-            .1
-            .borrow()) as usize)
-        },
+        { (*(*substreams.borrow())[1_usize].0.borrow()).clone() },
+        { ((*(*substreams.borrow())[1_usize].1.borrow()) as usize) },
     )));
     let flag_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
-        {
-            (*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                2_usize
-            )
-            .upgrade()
-            .deref())
-            .0
-            .borrow())
-            .clone()
-        },
-        {
-            ((*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                2_usize
-            )
-            .upgrade()
-            .deref())
-            .1
-            .borrow()) as usize)
-        },
+        { (*(*substreams.borrow())[2_usize].0.borrow()).clone() },
+        { ((*(*substreams.borrow())[2_usize].1.borrow()) as usize) },
     )));
     let glyph_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
-        {
-            (*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                3_usize
-            )
-            .upgrade()
-            .deref())
-            .0
-            .borrow())
-            .clone()
-        },
-        {
-            ((*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                3_usize
-            )
-            .upgrade()
-            .deref())
-            .1
-            .borrow()) as usize)
-        },
+        { (*(*substreams.borrow())[3_usize].0.borrow()).clone() },
+        { ((*(*substreams.borrow())[3_usize].1.borrow()) as usize) },
     )));
     let composite_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
-        {
-            (*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                4_usize
-            )
-            .upgrade()
-            .deref())
-            .0
-            .borrow())
-            .clone()
-        },
-        {
-            ((*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                4_usize
-            )
-            .upgrade()
-            .deref())
-            .1
-            .borrow()) as usize)
-        },
+        { (*(*substreams.borrow())[4_usize].0.borrow()).clone() },
+        { ((*(*substreams.borrow())[4_usize].1.borrow()) as usize) },
     )));
     let bbox_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
-        {
-            (*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                5_usize
-            )
-            .upgrade()
-            .deref())
-            .0
-            .borrow())
-            .clone()
-        },
-        {
-            ((*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                5_usize
-            )
-            .upgrade()
-            .deref())
-            .1
-            .borrow()) as usize)
-        },
+        { (*(*substreams.borrow())[5_usize].0.borrow()).clone() },
+        { ((*(*substreams.borrow())[5_usize].1.borrow()) as usize) },
     )));
     let instruction_stream: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
-        {
-            (*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                6_usize
-            )
-            .upgrade()
-            .deref())
-            .0
-            .borrow())
-            .clone()
-        },
-        {
-            ((*(*elem!(
-                (substreams.as_pointer() as Ptr<(Value<Ptr::<u8>>, Value<u64>)>),
-                6_usize
-            )
-            .upgrade()
-            .deref())
-            .1
-            .borrow()) as usize)
-        },
+        { (*(*substreams.borrow())[6_usize].0.borrow()).clone() },
+        { ((*(*substreams.borrow())[6_usize].1.borrow()) as usize) },
     )));
     let mut overlap_bitmap: Ptr<u8> = Ptr::<u8>::null();
     let mut overlap_bitmap_length: u32 = 0_u32;
@@ -1540,7 +1403,7 @@ pub fn ReconstructGlyf_63(
             .map(|_| <u32>::default())
             .collect::<Vec<_>>(),
     ));
-    let n_points_vec: Value<Vec<u32>> = Rc::new(RefCell::new(Vec::new()));
+    let mut n_points_vec: Vec<u32> = Vec::new();
     let points: Value<Option<Value<Box<[woff2_Point]>>>> = Rc::new(RefCell::new(None));
     let mut points_size: usize = 0_usize;
     let mut bbox_bitmap: Ptr<u8> = ({ woff2_BufferImpl::buffer(&bbox_stream.as_pointer()) });
@@ -1672,7 +1535,7 @@ pub fn ReconstructGlyf_63(
                 };
             }
         } else if (((*n_contours.borrow()) as i32) > 0) {
-            (*n_points_vec.borrow_mut()).clear();
+            n_points_vec.clear();
             let mut total_n_points: u32 = 0_u32;
             let n_points_contour: Value<u32> = Rc::new(RefCell::new(0_u32));
             let mut j: u32 = 0_u32;
@@ -1689,7 +1552,7 @@ pub fn ReconstructGlyf_63(
                 }
                 {
                     let a0_clone = (*n_points_contour.borrow()).clone();
-                    (*n_points_vec.borrow_mut()).push(a0_clone)
+                    n_points_vec.push(a0_clone)
                 };
                 if ((((total_n_points).wrapping_add((*n_points_contour.borrow())) < total_n_points)
                     as i64)
@@ -1820,13 +1683,9 @@ pub fn ReconstructGlyf_63(
             let mut contour_ix: u32 = 0_u32;
             'loop_: while (contour_ix < ((*n_contours.borrow()) as u32)) {
                 {
-                    let rhs_0 = ((end_point as u32).wrapping_add(
-                        (elem!(
-                            (n_points_vec.as_pointer() as Ptr<u32>),
-                            (contour_ix as usize)
-                        )
-                        .read()),
-                    )) as i32;
+                    let rhs_0 = ((end_point as u32)
+                        .wrapping_add(n_points_vec[(contour_ix as usize)]))
+                        as i32;
                     end_point = rhs_0
                 };
                 if (((end_point >= 65536) as i64) != 0) {
@@ -1892,7 +1751,7 @@ pub fn ReconstructGlyf_63(
             }
         }
         let __rhs = ((({ (*out.upgrade().deref_mut()).Size() }).wrapping_sub(glyf_start)) as u32);
-        elem!((loca_values.as_pointer() as Ptr<u32>), (i as usize)).write(__rhs);
+        (*loca_values.borrow_mut())[(i as usize)] = __rhs;
         if ((!({
             (*out.upgrade().deref_mut()).Write_2(
                 ((*glyph_buf.borrow()).as_pointer() as Ptr<u8>).to_any(),
@@ -2007,8 +1866,8 @@ pub fn ReconstructTransformedHmtx_67(
     {
         return false;
     }
-    let advance_widths: Value<Vec<u16>> = Rc::new(RefCell::new(Vec::new()));
-    let lsbs: Value<Vec<i16>> = Rc::new(RefCell::new(Vec::new()));
+    let mut advance_widths: Vec<u16> = Vec::new();
+    let mut lsbs: Vec<i16> = Vec::new();
     let mut has_proportional_lsbs: bool = ((((*hmtx_flags.borrow()) as i32) & 1) == 0);
     let mut has_monospace_lsbs: bool = ((((*hmtx_flags.borrow()) as i32) & 2) == 0);
     if ((((*hmtx_flags.borrow()) as i32) & 252) != 0) {
@@ -2037,7 +1896,7 @@ pub fn ReconstructTransformedHmtx_67(
         }
         {
             let a0_clone = (*advance_width.borrow()).clone();
-            (*advance_widths.borrow_mut()).push(a0_clone)
+            advance_widths.push(a0_clone)
         };
         i.postfix_inc();
     }
@@ -2060,7 +1919,7 @@ pub fn ReconstructTransformedHmtx_67(
         }
         {
             let a0_clone = (*lsb.borrow()).clone();
-            (*lsbs.borrow_mut()).push(a0_clone)
+            lsbs.push(a0_clone)
         };
         i.postfix_inc();
     }
@@ -2083,7 +1942,7 @@ pub fn ReconstructTransformedHmtx_67(
         }
         {
             let a0_clone = (*lsb.borrow()).clone();
-            (*lsbs.borrow_mut()).push(a0_clone)
+            lsbs.push(a0_clone)
         };
         i.postfix_inc();
     }
@@ -2101,8 +1960,7 @@ pub fn ReconstructTransformedHmtx_67(
         if (i < (num_hmetrics as u32)) {
             ({
                 Store16_34(
-                    ((elem!((advance_widths.as_pointer() as Ptr<u16>), (i as usize)).read())
-                        as i32),
+                    (advance_widths[(i as usize)] as i32),
                     (dst_offset.as_pointer()),
                     (dst).clone(),
                 )
@@ -2110,7 +1968,7 @@ pub fn ReconstructTransformedHmtx_67(
         }
         ({
             Store16_34(
-                ((elem!((lsbs.as_pointer() as Ptr<i16>), (i as usize)).read()) as i32),
+                (lsbs[(i as usize)] as i32),
                 (dst_offset.as_pointer()),
                 (dst).clone(),
             )
@@ -2305,7 +2163,7 @@ pub fn ComputeOffsetToFirstTable_72(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
     return offset;
 }
 pub fn Tables_73(mut hdr: Ptr<woff2_WOFF2Header>, mut font_index: usize) -> Vec<Ptr<woff2_Table>> {
-    let tables: Value<Vec<Ptr<woff2_Table>>> = Rc::new(RefCell::new(Vec::new()));
+    let mut tables: Vec<Ptr<woff2_Table>> = Vec::new();
     if ((hdr.with(|__s| __s.header_version) as i64) != 0) {
         'loop_: for mut index in {
             (*elem!(
@@ -2322,18 +2180,18 @@ pub fn Tables_73(mut hdr: Ptr<woff2_WOFF2Header>, mut font_index: usize) -> Vec<
             {
                 let __a1 = ((hdr.with(|__s| __s.tables.as_pointer()) as Ptr<woff2_Table>)
                     .offset((index as usize)));
-                (*tables.borrow_mut()).push(__a1)
+                tables.push(__a1)
             };
         }
     } else {
         'loop_: for mut table in hdr.with(|__s| __s.tables.as_pointer()) as Ptr<woff2_Table> {
             {
                 let __a1 = (table);
-                (*tables.borrow_mut()).push(__a1)
+                tables.push(__a1)
             };
         }
     }
-    return std::mem::take(&mut (*tables.borrow_mut()));
+    return std::mem::take(&mut tables);
 }
 pub fn ReconstructFont_74(
     mut transformed_buf: Ptr<u8>,
@@ -2400,8 +2258,7 @@ pub fn ReconstructFont_74(
     let loca_checksum: Value<u32> = Rc::new(RefCell::new(0_u32));
     let mut i: usize = 0_usize;
     'loop_: while (i < (*tables.borrow()).len()) {
-        let table: Ptr<woff2_Table> =
-            (elem!((tables.as_pointer() as Ptr<Ptr<woff2_Table>>), i).read());
+        let table: Ptr<woff2_Table> = ((*tables.borrow())[i]).clone();
         let checksum_key: Value<(Value<u32>, Value<u32>)> = Rc::new(RefCell::new((
             Rc::new(RefCell::new(
                 table
@@ -3006,7 +2863,7 @@ pub fn WriteHeaders_76(
                 ttc_font.with(|__s| __s.table_indices.as_pointer()) as Ptr<u16>
             {
                 let mut table_index: u16 = table_index.read();
-                let tag: Value<u32> = Rc::new(RefCell::new({
+                let mut tag: u32 = {
                     (*elem!(
                         (hdr.with(|__s| __s.tables.as_pointer()) as Ptr<woff2_Table>),
                         (table_index as usize)
@@ -3014,20 +2871,19 @@ pub fn WriteHeaders_76(
                     .upgrade()
                     .deref())
                     .tag
-                }));
+                };
                 (field_ptr!(
                     (metadata.with(|__s| __s.font_infos.as_pointer()) as Ptr<woff2_WOFF2FontInfo>)
                         .offset(i),
                     table_entry_by_tag
                 ) as Ptr<BTreeMap<u32, Value<u32>>>)
                     .with_mut(|__v: &mut BTreeMap<u32, Value<u32>>| {
-                        __v.entry((*tag.borrow()))
+                        __v.entry(tag)
                             .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
                             .as_pointer()
                     })
                     .write((offset as u32));
-                let __rhs =
-                    ({ StoreTableEntry_71((result).clone(), (offset as u32), (*tag.borrow())) });
+                let __rhs = ({ StoreTableEntry_71((result).clone(), (offset as u32), tag) });
                 offset = __rhs;
             }
             let __rhs = ({
@@ -3060,28 +2916,14 @@ pub fn WriteHeaders_76(
                 table_entry_by_tag
             ) as Ptr<BTreeMap<u32, Value<u32>>>)
                 .with_mut(|__v: &mut BTreeMap<u32, Value<u32>>| {
-                    __v.entry({
-                        (*elem!(
-                            (sorted_tables.as_pointer() as Ptr<woff2_Table>),
-                            (i as usize)
-                        )
-                        .upgrade()
-                        .deref())
-                        .tag
-                    })
-                    .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
-                    .as_pointer()
+                    __v.entry({ (*sorted_tables.borrow())[(i as usize)].tag })
+                        .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
+                        .as_pointer()
                 })
                 .write((offset as u32));
             let __rhs = ({
                 StoreTableEntry_71((result).clone(), (offset as u32), {
-                    (*elem!(
-                        (sorted_tables.as_pointer() as Ptr<woff2_Table>),
-                        (i as usize)
-                    )
-                    .upgrade()
-                    .deref())
-                    .tag
+                    (*sorted_tables.borrow())[(i as usize)].tag
                 })
             });
             offset = __rhs;
@@ -3292,24 +3134,24 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
         eprintln!("One argument, the input filename, must be provided.");
         return 1;
     }
-    let filename: Value<Vec<i8>> = Rc::new(RefCell::new({
+    let mut filename: Vec<i8> = {
         let mut __bytes = (elem!(argv, 1).read()).to_c_bytes();
         __bytes.push(0);
         __bytes
-    }));
-    let outfilename: Value<Vec<i8>> = Rc::new(RefCell::new({
+    };
+    let mut outfilename: Vec<i8> = {
         let mut __tmp2 = {
-            let mut __tmp1 = (*filename.borrow())[(0_usize) as usize
+            let mut __tmp1 = filename[(0_usize) as usize
                 ..::std::cmp::min(
                     (0_usize
                         + Ptr::<i8>::from_string_literal(b".").with_c_str(|__lookup| {
-                            (*filename.borrow())
+                            filename
                                 .iter()
-                                .take((*filename.borrow()).len().saturating_sub(1))
+                                .take(filename.len().saturating_sub(1))
                                 .rposition(|&x| __lookup.contains(&x))
                                 .unwrap_or(usize::MAX)
                         })) as usize,
-                    (*filename.borrow()).len().saturating_sub(1),
+                    filename.len().saturating_sub(1),
                 )]
                 .to_vec();
             __tmp1.push(0);
@@ -3319,10 +3161,8 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
         Ptr::<i8>::from_string_literal(b".ttf").with_c_str(|__s| __tmp2.extend_from_slice(__s));
         __tmp2.push(0);
         __tmp2
-    }));
-    let input: Value<Vec<i8>> = Rc::new(RefCell::new(
-        ({ GetFileContent_80((*filename.borrow()).clone()) }),
-    ));
+    };
+    let input: Value<Vec<i8>> = Rc::new(RefCell::new(({ GetFileContent_80((filename).clone()) })));
     let mut raw_input: Ptr<u8> = (input.as_pointer() as Ptr<i8>).reinterpret_cast::<u8>();
     let output: Value<Vec<i8>> = Rc::new(RefCell::new(
         vec![
@@ -3364,7 +3204,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
             let _start: Ptr<i8> = (output.as_pointer() as Ptr<i8>);
             let _end: Ptr<i8> = (output.as_pointer() as Ptr<i8>)
                 .offset((({ (*out.borrow_mut()).Size() }) as i64) as isize);
-            SetFileContents_81((*outfilename.borrow()).clone(), _start, _end)
+            SetFileContents_81((outfilename).clone(), _start, _end)
         });
     }
     return if ok { 0 } else { 1 };

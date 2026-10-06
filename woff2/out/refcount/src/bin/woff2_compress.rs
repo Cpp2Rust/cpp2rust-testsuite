@@ -2376,11 +2376,11 @@ pub fn NormalizeOffsets_76(mut font: Ptr<woff2_Font>) -> bool {
     'loop_: for mut tag in Rc::new(RefCell::new(({ woff2_FontImpl::OutputOrderedTags(&font) })))
         .as_pointer() as Ptr<u32>
     {
-        let tag: Value<u32> = Rc::new(RefCell::new(tag.read()));
+        let mut tag: u32 = tag.read();
         let table: Ptr<woff2_Font_Table> = (field_ptr!(font, tables)
             as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>)
             .with_mut(|__v: &mut BTreeMap<u32, Value<woff2_Font_Table>>| {
-                __v.entry((*tag.borrow()))
+                __v.entry(tag)
                     .or_insert_with(|| Rc::new(RefCell::new(<woff2_Font_Table>::default())))
                     .as_pointer()
             });
@@ -2542,11 +2542,11 @@ pub fn NormalizeFontCollection_82(mut font_collection: Ptr<woff2_FontCollection>
         'loop_: for mut tag in Rc::new(RefCell::new(({ woff2_FontImpl::OutputOrderedTags(&font) })))
             .as_pointer() as Ptr<u32>
         {
-            let tag: Value<u32> = Rc::new(RefCell::new(tag.read()));
+            let mut tag: u32 = tag.read();
             let table: Ptr<woff2_Font_Table> = (field_ptr!(font, tables)
                 as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>)
                 .with_mut(|__v: &mut BTreeMap<u32, Value<woff2_Font_Table>>| {
-                    __v.entry((*tag.borrow()))
+                    __v.entry(tag)
                         .or_insert_with(|| Rc::new(RefCell::new(<woff2_Font_Table>::default())))
                         .as_pointer()
                 });
@@ -3385,20 +3385,20 @@ pub fn ConvertTTFToWOFF2_109(
         'loop_: for tag in Rc::new(RefCell::new(({ woff2_FontImpl::OutputOrderedTags(&font) })))
             .as_pointer() as Ptr<u32>
         {
-            let tag: Value<u32> = Rc::new(RefCell::new(tag.read()));
+            let mut tag: u32 = tag.read();
             let original: Ptr<woff2_Font_Table> = (*font.upgrade().deref())
                 .tables
-                .get(&(*tag.borrow()))
+                .get(&tag)
                 .expect("out of range!")
                 .as_pointer();
             if ({ woff2_Font_TableImpl::IsReused(&original) }) {
                 continue 'loop_;
             }
-            if (((*tag.borrow()) & 2155905152_u32) != 0) {
+            if ((tag & 2155905152_u32) != 0) {
                 continue 'loop_;
             }
             let mut table_to_store: Ptr<woff2_Font_Table> = ({
-                let _tag: u32 = ((*tag.borrow()) ^ 2155905152_u32);
+                let _tag: u32 = (tag ^ 2155905152_u32);
                 woff2_FontImpl::FindTable_3(&font, _tag)
             });
             if (table_to_store).is_null() {
@@ -3473,10 +3473,10 @@ pub fn ConvertTTFToWOFF2_109(
         'loop_: for tag in Rc::new(RefCell::new(({ woff2_FontImpl::OutputOrderedTags(&font) })))
             .as_pointer() as Ptr<u32>
         {
-            let tag: Value<u32> = Rc::new(RefCell::new(tag.read()));
+            let mut tag: u32 = tag.read();
             let src_table: Ptr<woff2_Font_Table> = (*font.upgrade().deref())
                 .tables
-                .get(&(*tag.borrow()))
+                .get(&tag)
                 .expect("out of range!")
                 .as_pointer();
             if ({ woff2_Font_TableImpl::IsReused(&src_table) }) {
@@ -3515,24 +3515,24 @@ pub fn ConvertTTFToWOFF2_109(
             } else {
                 return false;
             }
-            let table: Value<woff2_Table> = Rc::new(RefCell::new(<woff2_Table>::default()));
-            (*table.borrow_mut()).tag = src_table.with(|__s| __s.tag);
-            (*table.borrow_mut()).flags = (src_table.with(|__s| __s.flag_byte) as u32);
-            (*table.borrow_mut()).src_length = src_table.with(|__s| __s.length);
-            (*table.borrow_mut()).transform_length = src_table.with(|__s| __s.length);
+            let mut table: woff2_Table = <woff2_Table>::default();
+            table.tag = src_table.with(|__s| __s.tag);
+            table.flags = (src_table.with(|__s| __s.flag_byte) as u32);
+            table.src_length = src_table.with(|__s| __s.length);
+            table.transform_length = src_table.with(|__s| __s.length);
             let mut transformed_data: Ptr<u8> = src_table.with(|__s| __s.data.clone());
             let mut transformed_table: Ptr<woff2_Font_Table> = ({
                 let _tag: u32 = (src_table.with(|__s| __s.tag) ^ 2155905152_u32);
                 woff2_FontImpl::FindTable_3(&font, _tag)
             });
             if !((transformed_table).is_null()) {
-                (*table.borrow_mut()).flags = (transformed_table.with(|__s| __s.flag_byte) as u32);
-                (*table.borrow_mut()).flags |= kWoff2FlagsTransform_21.with(|rc| *rc.borrow());
-                (*table.borrow_mut()).transform_length = transformed_table.with(|__s| __s.length);
+                table.flags = (transformed_table.with(|__s| __s.flag_byte) as u32);
+                table.flags |= kWoff2FlagsTransform_21.with(|rc| *rc.borrow());
+                table.transform_length = transformed_table.with(|__s| __s.length);
                 transformed_data = transformed_table.with(|__s| __s.data.clone());
             }
             {
-                let a0_clone = (*table.borrow()).clone();
+                let a0_clone = table.clone();
                 (*tables.borrow_mut()).push(a0_clone)
             };
         }
@@ -3700,15 +3700,13 @@ pub fn ConvertTTFToWOFF2_109(
                 if ((table.with(|__s| __s.tag) & 2155905152_u32) != 0) {
                     continue 'loop_;
                 }
-                let table_offset: Value<u32> = Rc::new(RefCell::new(
-                    if ({ woff2_Font_TableImpl::IsReused(&table) }) {
-                        table
-                            .with(|__s| __s.reuse_of.clone())
-                            .with(|__s| __s.offset)
-                    } else {
-                        table.with(|__s| __s.offset)
-                    },
-                ));
+                let mut table_offset: u32 = if ({ woff2_Font_TableImpl::IsReused(&table) }) {
+                    table
+                        .with(|__s| __s.reuse_of.clone())
+                        .with(|__s| __s.offset)
+                } else {
+                    table.with(|__s| __s.offset)
+                };
                 let mut table_length: u32 = if ({ woff2_Font_TableImpl::IsReused(&table) }) {
                     table
                         .with(|__s| __s.reuse_of.clone())
@@ -3724,9 +3722,7 @@ pub fn ConvertTTFToWOFF2_109(
                             .expect("failed conversion"),
                     )),
                     Rc::new(RefCell::new(
-                        (*table_offset.borrow())
-                            .try_into()
-                            .expect("failed conversion"),
+                        table_offset.try_into().expect("failed conversion"),
                     )),
                 )));
                 if RefcountMapIter::find_key(
@@ -3737,10 +3733,7 @@ pub fn ConvertTTFToWOFF2_109(
                     (index_by_tag_offset.as_pointer()
                         as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u16>>>),
                 ) {
-                    eprintln!(
-                        "Missing table index for offset 0x{:08x}",
-                        (*table_offset.borrow())
-                    );
+                    eprintln!("Missing table index for offset 0x{:08x}", table_offset);
                     return false;
                 }
                 let mut index: u16 = ((index_by_tag_offset.as_pointer()
@@ -4128,12 +4121,11 @@ pub trait woff2_FontImpl {
     fn FindTable_3(&self, tag: u32) -> Ptr<woff2_Font_Table>;
 }
 impl woff2_FontImpl for Ptr<woff2_Font> {
-    fn FindTable_2(&self, tag: u32) -> Ptr<woff2_Font_Table> {
-        let tag: Value<u32> = Rc::new(RefCell::new(tag));
+    fn FindTable_2(&self, mut tag: u32) -> Ptr<woff2_Font_Table> {
         let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
             Rc::new(RefCell::new(RefcountMapIter::find_key(
                 (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
-                &(*tag.borrow()),
+                &tag,
             )));
         return if (*it.borrow())
             == RefcountMapIter::end(
@@ -4144,12 +4136,11 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
             ((*it.borrow()).second().as_pointer())
         };
     }
-    fn FindTable_3(&self, tag: u32) -> Ptr<woff2_Font_Table> {
-        let tag: Value<u32> = Rc::new(RefCell::new(tag));
+    fn FindTable_3(&self, mut tag: u32) -> Ptr<woff2_Font_Table> {
         let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
             Rc::new(RefCell::new(RefcountMapIter::find_key(
                 (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
-                &(*tag.borrow()),
+                &tag,
             )));
         return if (*it.borrow())
             == RefcountMapIter::end(

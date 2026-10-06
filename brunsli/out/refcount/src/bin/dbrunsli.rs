@@ -2262,7 +2262,7 @@ pub fn ComputeLehmerCode_112(mut sigma: Ptr<u32>, mut len: usize, mut code: Ptr<
     let mut i: usize = 0_usize;
     'loop_: while (i < len) {
         let __rhs = (i as u32);
-        elem!((items.as_pointer() as Ptr<u32>), i).write(__rhs);
+        (*items.borrow_mut())[i] = __rhs;
         i.prefix_inc();
     }
     let mut i: usize = 0_usize;
@@ -2312,7 +2312,7 @@ pub fn DecodeLehmerCode_113(mut code: Ptr<u32>, mut len: usize, mut sigma: Ptr<u
     let mut i: usize = 0_usize;
     'loop_: while (i < len) {
         let __rhs = (i as u32);
-        elem!((items.as_pointer() as Ptr<u32>), i).write(__rhs);
+        (*items.borrow_mut())[i] = __rhs;
         i.prefix_inc();
     }
     let mut i: usize = 0_usize;
@@ -2321,7 +2321,7 @@ pub fn DecodeLehmerCode_113(mut code: Ptr<u32>, mut len: usize, mut sigma: Ptr<u
         if ((index as usize) >= (*items.borrow()).len()) {
             return false;
         }
-        let mut value: u32 = (elem!((items.as_pointer() as Ptr<u32>), (index as usize)).read());
+        let mut value: u32 = { (*items.borrow())[(index as usize)] };
         {
             let idx = (items.as_pointer() as Ptr<u32>)
                 .offset((index as i64) as isize)
@@ -4262,7 +4262,7 @@ pub fn DecodeLimitedVarint_146(
     panic!("ub: non-void function does not return a value")
 }
 pub fn GenerateApp0Marker_147(mut app0_status: u8) -> Vec<u8> {
-    let app0_marker: Value<Vec<u8>> = Rc::new(RefCell::new({
+    let mut app0_marker: Vec<u8> = {
         let __count = (AppData_0xe0_62.with(|v| v.as_pointer()) as Ptr<u8>)
             .offset((17) as isize)
             .get_offset()
@@ -4272,35 +4272,30 @@ pub fn GenerateApp0Marker_147(mut app0_status: u8) -> Vec<u8> {
             __count,
         )
         .collect::<Vec<_>>()
-    }));
-    elem!((app0_marker.as_pointer() as Ptr<u8>), 9_usize).write(
-        (if (((app0_status as u32) & 1_u32) != 0) {
-            2
-        } else {
-            1
-        } as u8),
-    );
+    };
+    app0_marker[9_usize] = (if (((app0_status as u32) & 1_u32) != 0) {
+        2
+    } else {
+        1
+    } as u8);
     app0_status = { ((app0_status as i32) >> 1_u32) as u8 };
-    elem!((app0_marker.as_pointer() as Ptr<u8>), 10_usize)
-        .write((((app0_status as u32) & 3_u32) as u8));
+    app0_marker[10_usize] = (((app0_status as u32) & 3_u32) as u8);
     app0_status = { ((app0_status as i32) >> 2_u32) as u8 };
     let mut x_dens: u16 = ({
         let __idx = (app0_status) as usize;
         kApp0Densities_46.with(|rc| rc.borrow()[__idx])
     });
     let __rhs = {
-        elem!((app0_marker.as_pointer() as Ptr<u8>), 13_usize)
-            .write((((x_dens as i32) >> 8_u32) as u8));
-        (elem!((app0_marker.as_pointer() as Ptr<u8>), 13_usize).read())
+        app0_marker[13_usize] = (((x_dens as i32) >> 8_u32) as u8);
+        app0_marker[13_usize]
     };
-    elem!((app0_marker.as_pointer() as Ptr<u8>), 11_usize).write(__rhs);
+    app0_marker[11_usize] = __rhs;
     let __rhs = {
-        elem!((app0_marker.as_pointer() as Ptr<u8>), 14_usize)
-            .write((((x_dens as u32) & 255_u32) as u8));
-        (elem!((app0_marker.as_pointer() as Ptr<u8>), 14_usize).read())
+        app0_marker[14_usize] = (((x_dens as u32) & 255_u32) as u8);
+        app0_marker[14_usize]
     };
-    elem!((app0_marker.as_pointer() as Ptr<u8>), 12_usize).write(__rhs);
-    return std::mem::take(&mut (*app0_marker.borrow_mut()));
+    app0_marker[12_usize] = __rhs;
+    return std::mem::take(&mut app0_marker);
 }
 pub fn GenerateAppMarker_148(mut marker: u8, mut code: u8) -> Vec<u8> {
     let s: Value<Vec<u8>> = Rc::new(RefCell::new(Vec::new()));
@@ -4316,7 +4311,7 @@ pub fn GenerateAppMarker_148(mut marker: u8, mut code: u8) -> Vec<u8> {
             )
             .collect::<Vec<_>>()
         });
-        elem!((s.as_pointer() as Ptr<u8>), 84_usize).write(code);
+        (*s.borrow_mut())[84_usize] = code;
     } else if ((marker as i32) == 129) {
         (s.as_pointer() as Ptr<Vec<u8>>).write({
             let __count = (AppData_0xec_64.with(|v| v.as_pointer()) as Ptr<u8>)
@@ -4329,7 +4324,7 @@ pub fn GenerateAppMarker_148(mut marker: u8, mut code: u8) -> Vec<u8> {
             )
             .collect::<Vec<_>>()
         });
-        elem!((s.as_pointer() as Ptr<u8>), 15_usize).write(code);
+        (*s.borrow_mut())[15_usize] = code;
     } else {
         if !((marker as i32) == 130) {
             ({
@@ -4352,7 +4347,7 @@ pub fn GenerateAppMarker_148(mut marker: u8, mut code: u8) -> Vec<u8> {
             )
             .collect::<Vec<_>>()
         });
-        elem!((s.as_pointer() as Ptr<u8>), 10_usize).write(code);
+        (*s.borrow_mut())[10_usize] = code;
     }
     return std::mem::take(&mut (*s.borrow_mut()));
 }
@@ -4926,13 +4921,12 @@ pub fn DecodeScanInfo_151(
         },
         || {
             if (js.with(|__s| __s.last_num) > 0) {
-                let info: Value<brunsli_JPEGScanInfo_ExtraZeroRunInfo> = Rc::new(RefCell::new(
-                    <brunsli_JPEGScanInfo_ExtraZeroRunInfo>::default(),
-                ));
-                (*info.borrow_mut()).block_idx = js.with(|__s| __s.last_block_idx);
-                (*info.borrow_mut()).num_extra_zero_runs = js.with(|__s| __s.last_num);
+                let mut info: brunsli_JPEGScanInfo_ExtraZeroRunInfo =
+                    <brunsli_JPEGScanInfo_ExtraZeroRunInfo>::default();
+                info.block_idx = js.with(|__s| __s.last_block_idx);
+                info.num_extra_zero_runs = js.with(|__s| __s.last_num);
                 {
-                    let a0_clone = (*info.borrow()).clone();
+                    let a0_clone = info.clone();
                     (*{
                         (*elem!(
                             ((*jpg.borrow()).with(|__s| __s.scan_info.as_pointer())
@@ -6806,25 +6800,23 @@ pub fn DecodeJPEGInternalsSection_184(
                         .call(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
                 });
             }
-            let marker: Value<u8> = Rc::new(RefCell::new(
-                (((192_u32)
-                    .wrapping_add(({ BrunsliBitReaderRead_126((*br.borrow()).clone(), 6_u32) })))
-                    as u8),
-            ));
+            let mut marker: u8 = (((192_u32)
+                .wrapping_add(({ BrunsliBitReaderRead_126((*br.borrow()).clone(), 6_u32) })))
+                as u8);
             {
-                let a0_clone = (*marker.borrow()).clone();
+                let a0_clone = marker.clone();
                 (*jpg.with(|__s| __s.marker_order.clone()).borrow_mut()).push(a0_clone)
             };
-            if (((*marker.borrow()) as i32) == 196) {
+            if ((marker as i32) == 196) {
                 field!(js, dht_count).with_mut(|__v| __v.prefix_inc());
             }
-            if (((*marker.borrow()) as i32) == 221) {
+            if ((marker as i32) == 221) {
                 field!(js, have_dri).write(true);
             }
-            if (((*marker.borrow()) as i32) == 218) {
+            if ((marker as i32) == 218) {
                 field!(js, num_scans).with_mut(|__v| __v.prefix_inc());
             }
-            if (((*marker.borrow()) as i32) == 217) {
+            if ((marker as i32) == 217) {
                 break;
             }
         }
@@ -13969,9 +13961,7 @@ impl brunsli_HuffmanDecodingDataImpl for Ptr<brunsli_HuffmanDecodingData> {
         ])));
         let mut i: usize = 0_usize;
         'loop_: while (i < alphabet_size) {
-            (*counts.borrow_mut())
-                [(elem!((code_lengths.as_pointer() as Ptr<u8>), i).read()) as usize]
-                .prefix_inc();
+            (*counts.borrow_mut())[({ (*code_lengths.borrow())[i] }) as usize].prefix_inc();
             i.prefix_inc();
         }
         ({
@@ -14098,8 +14088,7 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         };
         return true;
     }
-    fn RemoveValue(&self, value: u8, mut code: Ptr<i32>, mut nbits: Ptr<i32>) -> bool {
-        let value: Value<u8> = Rc::new(RefCell::new(value));
+    fn RemoveValue(&self, mut value: u8, mut code: Ptr<i32>, mut nbits: Ptr<i32>) -> bool {
         let it: Value<Ptr<u8>> = Rc::new(RefCell::new(
             ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>).offset(
                 ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)
@@ -14111,7 +14100,7 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
                             < ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)
                                 .to_end()
                                 .get_offset() as usize
-                            && value_0.read() == (*value.borrow())
+                            && value_0.read() == value
                     })
                     .unwrap_or(
                         ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)

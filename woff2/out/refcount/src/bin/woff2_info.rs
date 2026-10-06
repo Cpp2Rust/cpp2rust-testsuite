@@ -1512,7 +1512,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
     println!("metaOrigLength      {}", (*metaOrigLength.borrow()));
     println!("privOffset          {}", (*privOffset.borrow()));
     println!("privLength          {}", (*privLength.borrow()));
-    let table_tags: Value<Vec<u32>> = Rc::new(RefCell::new(Vec::new()));
+    let mut table_tags: Vec<u32> = Vec::new();
     println!(
         "TableDirectory starts at +{}",
         ({ woff2_BufferImpl::offset(&file.as_pointer(),) })
@@ -1540,7 +1540,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
         }
         {
             let a0_clone = (*tag.borrow()).clone();
-            (*table_tags.borrow_mut()).push(a0_clone)
+            table_tags.push(a0_clone)
         };
         if !({ ReadBase128_17((file.as_pointer()), (origLength.as_pointer())) }) {
             return 1;
@@ -1609,22 +1609,14 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
                 if !({ Read255UShort_12((file.as_pointer()), (table_idx.as_pointer())) }) {
                     return 1;
                 }
-                if (((*table_idx.borrow()) as usize) >= (*table_tags.borrow()).len()) {
+                if (((*table_idx.borrow()) as usize) >= table_tags.len()) {
                     return 1;
                 }
                 println!(
                     "  {} {} (idx {})",
                     j,
                     (Rc::new(RefCell::new(
-                        ({
-                            PrintTag_51(
-                                ((elem!(
-                                    (table_tags.as_pointer() as Ptr<u32>),
-                                    ((*table_idx.borrow()) as usize)
-                                )
-                                .read()) as i32),
-                            )
-                        })
+                        ({ PrintTag_51((table_tags[((*table_idx.borrow()) as usize)] as i32),) })
                     ))
                     .as_pointer() as Ptr<i8>),
                     (*table_idx.borrow())
@@ -1850,12 +1842,11 @@ pub trait woff2_FontImpl {
     fn FindTable_3(&self, tag: u32) -> Ptr<woff2_Font_Table>;
 }
 impl woff2_FontImpl for Ptr<woff2_Font> {
-    fn FindTable_2(&self, tag: u32) -> Ptr<woff2_Font_Table> {
-        let tag: Value<u32> = Rc::new(RefCell::new(tag));
+    fn FindTable_2(&self, mut tag: u32) -> Ptr<woff2_Font_Table> {
         let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
             Rc::new(RefCell::new(RefcountMapIter::find_key(
                 (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
-                &(*tag.borrow()),
+                &tag,
             )));
         return if (*it.borrow())
             == RefcountMapIter::end(
@@ -1866,12 +1857,11 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
             ((*it.borrow()).second().as_pointer())
         };
     }
-    fn FindTable_3(&self, tag: u32) -> Ptr<woff2_Font_Table> {
-        let tag: Value<u32> = Rc::new(RefCell::new(tag));
+    fn FindTable_3(&self, mut tag: u32) -> Ptr<woff2_Font_Table> {
         let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
             Rc::new(RefCell::new(RefcountMapIter::find_key(
                 (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
-                &(*tag.borrow()),
+                &tag,
             )));
         return if (*it.borrow())
             == RefcountMapIter::end(
