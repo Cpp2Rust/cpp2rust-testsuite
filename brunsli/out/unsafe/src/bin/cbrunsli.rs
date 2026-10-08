@@ -1133,7 +1133,7 @@ pub static mut kInitProb_80: std::cell::LazyCell<u8> =
 pub static mut kInitProbCount_81: std::cell::LazyCell<u8> =
     std::cell::LazyCell::new(|| unsafe { 3_u8 });
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, DestructorUnsafe)]
 pub struct brunsli_Prob {
     prob8: u8,
     total: u8,
@@ -1564,7 +1564,7 @@ pub unsafe fn IsEmptyBlockContext_106(mut prev: *const i32, mut x: i32) -> i32 {
     return ((*prev.offset(((x) - (1)) as isize)) + (*prev.offset((x) as isize)));
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, DestructorUnsafe)]
 pub struct brunsli_ComponentStateDC {
     pub width: i32,
     pub is_zero_prob: brunsli_Prob,
@@ -1625,7 +1625,7 @@ impl Default for brunsli_ComponentStateDC {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, DestructorUnsafe)]
 pub struct brunsli_ComponentState {
     pub width: i32,
     pub context_offset: i32,
@@ -1747,7 +1747,7 @@ impl Default for brunsli_ComponentState {
     }
 }
 pub static mut kSqrt2_107: std::cell::LazyCell<f64> =
-    std::cell::LazyCell::new(|| unsafe { 1.414213562E+0 });
+    std::cell::LazyCell::new(|| unsafe { 1.414213562_f64 });
 pub static mut kSqrt2FixedPoint_108: std::cell::LazyCell<i32> =
     std::cell::LazyCell::new(|| unsafe {
         (((*std::cell::LazyCell::force_mut(&mut *&raw mut kSqrt2_107))
@@ -2607,262 +2607,262 @@ pub unsafe fn BuildAndStoreANSEncodingData_123(
 pub static mut kLog2Table_126: std::cell::LazyCell<[f32; 256]> =
     std::cell::LazyCell::new(|| unsafe {
         [
-            0.0E+0,
-            0.0E+0,
-            1.0E+0,
-            1.584962487E+0,
-            2.0E+0,
-            2.321928024E+0,
-            2.584962606E+0,
-            2.807354927E+0,
-            3.0E+0,
-            3.169924974E+0,
-            3.321928024E+0,
-            3.459431648E+0,
-            3.584962606E+0,
-            3.700439692E+0,
-            3.807354927E+0,
-            3.906890631E+0,
-            4.0E+0,
-            4.087462902E+0,
-            4.169925213E+0,
-            4.247927666E+0,
-            4.321928024E+0,
-            4.392317295E+0,
-            4.459431648E+0,
-            4.523561954E+0,
-            4.584962368E+0,
-            4.643856049E+0,
-            4.70043993E+0,
-            4.754887581E+0,
-            4.807354927E+0,
-            4.857981205E+0,
-            4.906890392E+0,
-            4.954196453E+0,
-            5.0E+0,
-            5.044394016E+0,
-            5.087462902E+0,
-            5.129282951E+0,
-            5.169925213E+0,
-            5.209453583E+0,
-            5.247927666E+0,
-            5.285402298E+0,
-            5.321928024E+0,
-            5.357552052E+0,
-            5.392317295E+0,
-            5.426264763E+0,
-            5.459431648E+0,
-            5.491853237E+0,
-            5.523561954E+0,
-            5.554588795E+0,
-            5.584962368E+0,
-            5.614709854E+0,
-            5.643856049E+0,
-            5.67242527E+0,
-            5.70043993E+0,
-            5.727920532E+0,
-            5.754887581E+0,
-            5.781359673E+0,
-            5.807354927E+0,
-            5.832890034E+0,
-            5.857981205E+0,
-            5.882643223E+0,
-            5.906890392E+0,
-            5.930737495E+0,
-            5.954196453E+0,
-            5.97728014E+0,
-            6.0E+0,
-            6.022367954E+0,
-            6.044394016E+0,
-            6.066089153E+0,
-            6.087462902E+0,
-            6.108524323E+0,
-            6.129282951E+0,
-            6.149746895E+0,
-            6.169925213E+0,
-            6.189824581E+0,
-            6.209453583E+0,
-            6.228818893E+0,
-            6.247927666E+0,
-            6.266786575E+0,
-            6.285402298E+0,
-            6.303780556E+0,
-            6.321928024E+0,
-            6.339849949E+0,
-            6.357552052E+0,
-            6.375039577E+0,
-            6.392317295E+0,
-            6.409390926E+0,
-            6.426264763E+0,
-            6.442943573E+0,
-            6.459431648E+0,
-            6.47573328E+0,
-            6.491853237E+0,
-            6.507794857E+0,
-            6.523561954E+0,
-            6.539158821E+0,
-            6.554588795E+0,
-            6.56985569E+0,
-            6.584962368E+0,
-            6.599912643E+0,
-            6.614709854E+0,
-            6.629356384E+0,
-            6.643856049E+0,
-            6.658211708E+0,
-            6.67242527E+0,
-            6.686500549E+0,
-            6.70043993E+0,
-            6.714245319E+0,
-            6.727920532E+0,
-            6.741466999E+0,
-            6.754887581E+0,
-            6.768184185E+0,
-            6.781359673E+0,
-            6.794415951E+0,
-            6.807354927E+0,
-            6.820178986E+0,
-            6.832890034E+0,
-            6.845489979E+0,
-            6.857981205E+0,
-            6.870364666E+0,
-            6.882643223E+0,
-            6.894817829E+0,
-            6.906890392E+0,
-            6.918863297E+0,
-            6.930737495E+0,
-            6.94251442E+0,
-            6.954196453E+0,
-            6.965784073E+0,
-            6.97728014E+0,
-            6.988684654E+0,
-            7.0E+0,
-            7.011227131E+0,
-            7.022367954E+0,
-            7.033422947E+0,
-            7.044394016E+0,
-            7.055282593E+0,
-            7.066089153E+0,
-            7.076815605E+0,
-            7.087462902E+0,
-            7.098031998E+0,
-            7.108524323E+0,
-            7.118941307E+0,
-            7.129282951E+0,
-            7.139551163E+0,
-            7.149746895E+0,
-            7.159871101E+0,
-            7.169925213E+0,
-            7.179909229E+0,
-            7.189824581E+0,
-            7.199672222E+0,
-            7.209453583E+0,
-            7.219168663E+0,
-            7.228818893E+0,
-            7.238404751E+0,
-            7.247927666E+0,
-            7.257387638E+0,
-            7.266786575E+0,
-            7.276124477E+0,
-            7.285402298E+0,
-            7.294620514E+0,
-            7.303780556E+0,
-            7.3128829E+0,
-            7.321928024E+0,
-            7.330916882E+0,
-            7.339849949E+0,
-            7.34872818E+0,
-            7.357552052E+0,
-            7.366322041E+0,
-            7.375039577E+0,
-            7.383704185E+0,
-            7.392317295E+0,
-            7.400879383E+0,
-            7.409390926E+0,
-            7.417852402E+0,
-            7.426264763E+0,
-            7.43462801E+0,
-            7.442943573E+0,
-            7.451210976E+0,
-            7.459431648E+0,
-            7.467605591E+0,
-            7.47573328E+0,
-            7.48381567E+0,
-            7.491853237E+0,
-            7.499845982E+0,
-            7.507794857E+0,
-            7.515699863E+0,
-            7.523561954E+0,
-            7.531381607E+0,
-            7.539158821E+0,
-            7.54689455E+0,
-            7.554588795E+0,
-            7.562242508E+0,
-            7.56985569E+0,
-            7.577428818E+0,
-            7.584962368E+0,
-            7.592456818E+0,
-            7.599912643E+0,
-            7.607330322E+0,
-            7.614709854E+0,
-            7.622051716E+0,
-            7.629356384E+0,
-            7.636624813E+0,
-            7.643856049E+0,
-            7.651051521E+0,
-            7.658211708E+0,
-            7.665336132E+0,
-            7.67242527E+0,
-            7.679480076E+0,
-            7.686500549E+0,
-            7.693487167E+0,
-            7.70043993E+0,
-            7.707359314E+0,
-            7.714245319E+0,
-            7.721099377E+0,
-            7.727920532E+0,
-            7.73470974E+0,
-            7.741466999E+0,
-            7.748192787E+0,
-            7.754887581E+0,
-            7.76155138E+0,
-            7.768184185E+0,
-            7.774786949E+0,
-            7.781359673E+0,
-            7.787902355E+0,
-            7.794415951E+0,
-            7.800899982E+0,
-            7.807354927E+0,
-            7.813781261E+0,
-            7.820178986E+0,
-            7.826548576E+0,
-            7.832890034E+0,
-            7.839203835E+0,
-            7.845489979E+0,
-            7.851748943E+0,
-            7.857981205E+0,
-            7.864186287E+0,
-            7.870364666E+0,
-            7.876516819E+0,
-            7.882643223E+0,
-            7.888743401E+0,
-            7.894817829E+0,
-            7.900866985E+0,
-            7.906890392E+0,
-            7.912889481E+0,
-            7.918863297E+0,
-            7.924812317E+0,
-            7.930737495E+0,
-            7.936637878E+0,
-            7.94251442E+0,
-            7.948367119E+0,
-            7.954196453E+0,
-            7.960001945E+0,
-            7.965784073E+0,
-            7.971543789E+0,
-            7.97728014E+0,
-            7.982993603E+0,
-            7.988684654E+0,
-            7.994353294E+0,
+            0_f32,
+            0_f32,
+            1_f32,
+            1.5849625_f32,
+            2_f32,
+            2.321928_f32,
+            2.5849626_f32,
+            2.807355_f32,
+            3_f32,
+            3.169925_f32,
+            3.321928_f32,
+            3.4594316_f32,
+            3.5849626_f32,
+            3.7004397_f32,
+            3.807355_f32,
+            3.9068906_f32,
+            4_f32,
+            4.087463_f32,
+            4.169925_f32,
+            4.2479277_f32,
+            4.321928_f32,
+            4.3923173_f32,
+            4.4594316_f32,
+            4.523562_f32,
+            4.5849624_f32,
+            4.643856_f32,
+            4.70044_f32,
+            4.7548876_f32,
+            4.807355_f32,
+            4.857981_f32,
+            4.9068904_f32,
+            4.9541965_f32,
+            5_f32,
+            5.044394_f32,
+            5.087463_f32,
+            5.129283_f32,
+            5.169925_f32,
+            5.2094536_f32,
+            5.2479277_f32,
+            5.2854023_f32,
+            5.321928_f32,
+            5.357552_f32,
+            5.3923173_f32,
+            5.426265_f32,
+            5.4594316_f32,
+            5.491853_f32,
+            5.523562_f32,
+            5.554589_f32,
+            5.5849624_f32,
+            5.61471_f32,
+            5.643856_f32,
+            5.6724253_f32,
+            5.70044_f32,
+            5.7279205_f32,
+            5.7548876_f32,
+            5.7813597_f32,
+            5.807355_f32,
+            5.83289_f32,
+            5.857981_f32,
+            5.882643_f32,
+            5.9068904_f32,
+            5.9307375_f32,
+            5.9541965_f32,
+            5.97728_f32,
+            6_f32,
+            6.022368_f32,
+            6.044394_f32,
+            6.066089_f32,
+            6.087463_f32,
+            6.1085243_f32,
+            6.129283_f32,
+            6.149747_f32,
+            6.169925_f32,
+            6.1898246_f32,
+            6.2094536_f32,
+            6.228819_f32,
+            6.2479277_f32,
+            6.2667866_f32,
+            6.2854023_f32,
+            6.3037806_f32,
+            6.321928_f32,
+            6.33985_f32,
+            6.357552_f32,
+            6.3750396_f32,
+            6.3923173_f32,
+            6.409391_f32,
+            6.426265_f32,
+            6.4429436_f32,
+            6.4594316_f32,
+            6.4757333_f32,
+            6.491853_f32,
+            6.507795_f32,
+            6.523562_f32,
+            6.539159_f32,
+            6.554589_f32,
+            6.5698557_f32,
+            6.5849624_f32,
+            6.5999126_f32,
+            6.61471_f32,
+            6.6293564_f32,
+            6.643856_f32,
+            6.6582117_f32,
+            6.6724253_f32,
+            6.6865005_f32,
+            6.70044_f32,
+            6.7142453_f32,
+            6.7279205_f32,
+            6.741467_f32,
+            6.7548876_f32,
+            6.768184_f32,
+            6.7813597_f32,
+            6.794416_f32,
+            6.807355_f32,
+            6.820179_f32,
+            6.83289_f32,
+            6.84549_f32,
+            6.857981_f32,
+            6.8703647_f32,
+            6.882643_f32,
+            6.894818_f32,
+            6.9068904_f32,
+            6.9188633_f32,
+            6.9307375_f32,
+            6.9425144_f32,
+            6.9541965_f32,
+            6.965784_f32,
+            6.97728_f32,
+            6.9886847_f32,
+            7_f32,
+            7.011227_f32,
+            7.022368_f32,
+            7.033423_f32,
+            7.044394_f32,
+            7.0552826_f32,
+            7.066089_f32,
+            7.0768156_f32,
+            7.087463_f32,
+            7.098032_f32,
+            7.1085243_f32,
+            7.1189413_f32,
+            7.129283_f32,
+            7.139551_f32,
+            7.149747_f32,
+            7.159871_f32,
+            7.169925_f32,
+            7.179909_f32,
+            7.1898246_f32,
+            7.199672_f32,
+            7.2094536_f32,
+            7.2191687_f32,
+            7.228819_f32,
+            7.2384048_f32,
+            7.2479277_f32,
+            7.2573876_f32,
+            7.2667866_f32,
+            7.2761245_f32,
+            7.2854023_f32,
+            7.2946205_f32,
+            7.3037806_f32,
+            7.312883_f32,
+            7.321928_f32,
+            7.330917_f32,
+            7.33985_f32,
+            7.348728_f32,
+            7.357552_f32,
+            7.366322_f32,
+            7.3750396_f32,
+            7.383704_f32,
+            7.3923173_f32,
+            7.4008794_f32,
+            7.409391_f32,
+            7.4178524_f32,
+            7.426265_f32,
+            7.434628_f32,
+            7.4429436_f32,
+            7.451211_f32,
+            7.4594316_f32,
+            7.4676056_f32,
+            7.4757333_f32,
+            7.4838157_f32,
+            7.491853_f32,
+            7.499846_f32,
+            7.507795_f32,
+            7.5157_f32,
+            7.523562_f32,
+            7.5313816_f32,
+            7.539159_f32,
+            7.5468946_f32,
+            7.554589_f32,
+            7.5622425_f32,
+            7.5698557_f32,
+            7.577429_f32,
+            7.5849624_f32,
+            7.592457_f32,
+            7.5999126_f32,
+            7.6073303_f32,
+            7.61471_f32,
+            7.6220517_f32,
+            7.6293564_f32,
+            7.636625_f32,
+            7.643856_f32,
+            7.6510515_f32,
+            7.6582117_f32,
+            7.665336_f32,
+            7.6724253_f32,
+            7.67948_f32,
+            7.6865005_f32,
+            7.693487_f32,
+            7.70044_f32,
+            7.7073593_f32,
+            7.7142453_f32,
+            7.7210994_f32,
+            7.7279205_f32,
+            7.7347097_f32,
+            7.741467_f32,
+            7.748193_f32,
+            7.7548876_f32,
+            7.7615514_f32,
+            7.768184_f32,
+            7.774787_f32,
+            7.7813597_f32,
+            7.7879024_f32,
+            7.794416_f32,
+            7.8009_f32,
+            7.807355_f32,
+            7.8137813_f32,
+            7.820179_f32,
+            7.8265486_f32,
+            7.83289_f32,
+            7.839204_f32,
+            7.84549_f32,
+            7.851749_f32,
+            7.857981_f32,
+            7.8641863_f32,
+            7.8703647_f32,
+            7.876517_f32,
+            7.882643_f32,
+            7.8887434_f32,
+            7.894818_f32,
+            7.900867_f32,
+            7.9068904_f32,
+            7.9128895_f32,
+            7.9188633_f32,
+            7.9248123_f32,
+            7.9307375_f32,
+            7.936638_f32,
+            7.9425144_f32,
+            7.948367_f32,
+            7.9541965_f32,
+            7.960002_f32,
+            7.965784_f32,
+            7.971544_f32,
+            7.97728_f32,
+            7.9829936_f32,
+            7.9886847_f32,
+            7.9943533_f32,
         ]
     });
 pub unsafe fn FastLog2_127(mut v: i32) -> f64 {
@@ -2972,7 +2972,7 @@ pub unsafe fn CompareAndPushToQueue_132(
     let mut p: brunsli_HistogramPair = <brunsli_HistogramPair>::default();
     p.idx1 = (idx1 as usize);
     p.idx2 = (idx2 as usize);
-    p.cost_diff = ((5.0E-1)
+    p.cost_diff = ((0.5_f64)
         * (unsafe {
             let _size_a: i32 = (*cluster_size.offset((idx1) as isize));
             let _size_b: i32 = (*cluster_size.offset((idx2) as isize));
@@ -2988,10 +2988,10 @@ pub unsafe fn CompareAndPushToQueue_132(
         store_pair = true;
     } else {
         let mut threshold: f64 = if (*(pairs).cast_const()).is_empty() {
-            1.0E+99
+            1e+99_f64
         } else {
             {
-                let mut __tmp_0: f64 = 0.0E+0;
+                let mut __tmp_0: f64 = 0_f64;
                 (*if *&mut __tmp_0 >= *&(&mut (*pairs))[(0_usize)].cost_diff {
                     (&mut __tmp_0) as *const _
                 } else {
@@ -3038,7 +3038,7 @@ pub unsafe fn HistogramCombine_133(
     mut symbols_size: usize,
     mut max_clusters: usize,
 ) -> usize {
-    let mut cost_diff_threshold: f64 = 0.0E+0;
+    let mut cost_diff_threshold: f64 = 0_f64;
     let mut min_cluster_size: usize = 1_usize;
     let mut clusters: Vec<u64> = core::slice::from_raw_parts(
         symbols,
@@ -3112,7 +3112,7 @@ pub unsafe fn HistogramCombine_133(
     }
     'loop_: while ((clusters.len()) > (min_cluster_size)) {
         if ((pairs[(0_usize)].cost_diff) >= (cost_diff_threshold)) {
-            cost_diff_threshold = 1.0E+99;
+            cost_diff_threshold = 1e+99_f64;
             min_cluster_size = max_clusters;
             continue 'loop_;
         }
@@ -3198,7 +3198,7 @@ pub unsafe fn HistogramBitCostDistance_134(
     candidate: *const brunsli_internal_enc_Histogram,
 ) -> f64 {
     if (((*histogram).total_count_) == (0)) {
-        return 0.0E+0;
+        return 0_f64;
     }
     let mut tmp: brunsli_internal_enc_Histogram = (*histogram).clone();
     (unsafe {
@@ -3377,9 +3377,7 @@ pub unsafe fn ClusterHistograms_137(
             });
             i.prefix_inc();
         }
-    }
-    static mut kMinClustersForHistogramRemap_138: std::cell::LazyCell<usize> =
-        std::cell::LazyCell::new(|| unsafe { 24_usize });;
+    };
     let mut num_clusters: usize = 0_usize;
     if ((block_group_offsets.len()) > (1_usize)) {
         let mut i: usize = 0_usize;
@@ -3454,6 +3452,8 @@ pub unsafe fn ClusterHistograms_137(
     }
     (unsafe { HistogramReindex_136(out, histogram_symbols) });
 }
+static mut kMinClustersForHistogramRemap_138: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { 24_usize });
 pub type brunsli_JpegReadMode = u32;
 pub const brunsli_JpegReadMode_JPEG_READ_HEADER: brunsli_JpegReadMode = 0;
 pub const brunsli_JpegReadMode_JPEG_READ_TABLES: brunsli_JpegReadMode = 1;
@@ -3719,7 +3719,7 @@ pub unsafe fn GetMaximumBrunsliEncodedSize_145(jpg: *const brunsli_JPEGData) -> 
     hdr_size = ((hdr_size as u64).wrapping_add(((*jpg).tail_data.len() as u64))) as usize;
     let mut num_pixels: usize =
         ((((*jpg).width) * ((*jpg).height)) as usize).wrapping_mul((*jpg).components.len());
-    return (((num_pixels as f64) * (1.2E+0)) as usize).wrapping_add(hdr_size);
+    return (((num_pixels as f64) * (1.2_f64)) as usize).wrapping_add(hdr_size);
 }
 pub unsafe fn Base128Size_146(mut val: usize) -> usize {
     let mut size: usize = 1_usize;
@@ -4860,8 +4860,6 @@ impl brunsli_internal_enc_DataStream {
             .wrapping_add((*std::cell::LazyCell::force_mut(&mut *&raw mut kSlackForOneBlock_140))))
             > (self.code_words_.len()))
         {
-            static mut kGrowMult_165: std::cell::LazyCell<f64> =
-                std::cell::LazyCell::new(|| unsafe { 1.2E+0 });;
             let new_size: usize = (((*std::cell::LazyCell::force_mut(&mut *&raw mut kGrowMult_165))
                 * (self.code_words_.capacity() as f64))
                 as usize)
@@ -5106,7 +5104,6 @@ pub unsafe fn EncodeCoeffOrder_168(
         lehmer[(i) as usize].prefix_inc();
         i.prefix_inc();
     }
-    static mut kSpan_169: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 16 });;
     let mut i: i32 = 0;
     'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
         let start: i32 = if ((i) > (0)) { i } else { 1 };
@@ -5587,7 +5584,6 @@ pub unsafe fn SampleNumNonZeros_181(mut m: *mut brunsli_internal_enc_ComponentMe
     let mut stride: usize = ((*m).ac_stride as usize);
     let mut width_in_blocks: usize = ((*m).width_in_blocks as usize);
     let num_zeros: *mut Vec<i32> = &mut (*m).num_zeros;
-    static mut kStride_182: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 5 });;
     let mut total_nonzeros: usize = 0_usize;
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (num_blocks)) {
@@ -5627,13 +5623,6 @@ pub unsafe fn SampleNumNonZeros_181(mut m: *mut brunsli_internal_enc_ComponentMe
         .wrapping_mul(((*std::cell::LazyCell::force_mut(&mut *&raw mut kStride_182)) as usize));
 }
 pub unsafe fn SelectContextBits_183(mut num_symbols: usize) -> i32 {
-    static mut kContextBits_184: std::cell::LazyCell<[i32; 33]> =
-        std::cell::LazyCell::new(|| unsafe {
-            [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6,
-                6, 6, 6, 6, 6,
-            ]
-        });;
     let mut log2_size: usize = ((unsafe { Log2FloorNonZero_74((num_symbols as u32)) }) as usize);
     let mut scheme: i32 =
         (*std::cell::LazyCell::force_mut(&mut *&raw mut kContextBits_184))[(log2_size)];
@@ -6448,7 +6437,8 @@ pub unsafe fn BrunsliSerialize_190(
                 )
             });
         }
-    );
+    )
+    .move_from();
     if !(((skip_sections)
         & ((1_u32)
             << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureTag_30)) as i32)))
@@ -6819,6 +6809,16 @@ pub unsafe fn BrunsliEncodeJpegBypass_195(
     (*len) = pos;
     return true;
 }
+static mut kGrowMult_165: std::cell::LazyCell<f64> =
+    std::cell::LazyCell::new(|| unsafe { 1.2_f64 });
+static mut kSpan_169: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 16 });
+static mut kStride_182: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 5 });
+static mut kContextBits_184: std::cell::LazyCell<[i32; 33]> = std::cell::LazyCell::new(|| unsafe {
+    [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6,
+        6, 6, 6,
+    ]
+});
 #[repr(C)]
 #[derive(Copy, Clone, VaArg, FnPtrArg, Default)]
 pub struct brunsli_HuffmanTree {
@@ -7154,7 +7154,7 @@ pub unsafe fn RebalanceHistogram_209(
         'loop_: while true {}
     };
     let mut sum: i32 = 0;
-    let mut sum_nonrounded: f32 = (0.0E+0 as f32);
+    let mut sum_nonrounded: f32 = (0_f64 as f32);
     let mut remainder_pos: i32 = -1_i32;
     let mut remainder_log: i32 = -1_i32;
     let mut n: i32 = 0;
@@ -7162,7 +7162,7 @@ pub unsafe fn RebalanceHistogram_209(
         if ((*targets.offset((n) as isize)) > (0_f32)) {
             sum_nonrounded += (*targets.offset((n) as isize));
             (*counts.offset((n) as isize)) =
-                (((((*targets.offset((n) as isize)) as f64) + (5.0E-1)) as u32) as i32);
+                (((((*targets.offset((n) as isize)) as f64) + (0.5_f64)) as u32) as i32);
             if ((*counts.offset((n) as isize)) == (0)) {
                 (*counts.offset((n) as isize)) = 1;
             }
@@ -7224,7 +7224,7 @@ pub unsafe fn RebalanceHistogram_210(
         'loop_: while true {}
     };
     let mut sum: i32 = 0;
-    let mut sum_nonrounded: f32 = (0.0E+0 as f32);
+    let mut sum_nonrounded: f32 = (0_f64 as f32);
     let mut remainder_pos: i32 = -1_i32;
     let mut remainder_log: i32 = -1_i32;
     let mut n: i32 = 0;
@@ -7232,7 +7232,7 @@ pub unsafe fn RebalanceHistogram_210(
         if ((*targets.offset((n) as isize)) > (0_f32)) {
             sum_nonrounded += (*targets.offset((n) as isize));
             (*counts.offset((n) as isize)) =
-                (((((*targets.offset((n) as isize)) as f64) + (5.0E-1)) as u32) as i32);
+                (((((*targets.offset((n) as isize)) as f64) + (0.5_f64)) as u32) as i32);
             if ((*counts.offset((n) as isize)) == (0)) {
                 (*counts.offset((n) as isize)) = 1;
             }
@@ -7330,7 +7330,7 @@ pub unsafe fn NormalizeCounts_124(
         });
         'loop_: while true {}
     };
-    let norm: f32 = (((1.0E+0) * (table_size as f32)) / (total as f32));
+    let norm: f32 = (((1_f32) * (table_size as f32)) / (total as f32));
     let mut targets: [f32; 18] = [0_f32; 18];
     let mut n: i32 = 0;
     'loop_: while ((n) < (max_symbol)) {
@@ -7679,17 +7679,6 @@ pub unsafe fn StoreHuffmanTreeOfHuffmanTreeToBitMask_212(
     mut code_length_bitdepth: *const u8,
     mut storage: *mut brunsli_Storage,
 ) {
-    static mut kStorageOrder_213: std::cell::LazyCell<[u8; 18]> =
-        std::cell::LazyCell::new(|| unsafe {
-            [
-                1_u8, 2_u8, 3_u8, 4_u8, 0_u8, 5_u8, 17_u8, 6_u8, 16_u8, 7_u8, 8_u8, 9_u8, 10_u8,
-                11_u8, 12_u8, 13_u8, 14_u8, 15_u8,
-            ]
-        });;
-    static mut kHuffmanBitLengthHuffmanCodeSymbols_214: std::cell::LazyCell<[u8; 6]> =
-        std::cell::LazyCell::new(|| unsafe { [0_u8, 7_u8, 3_u8, 2_u8, 1_u8, 15_u8] });;
-    static mut kHuffmanBitLengthHuffmanCodeBitLengths_215: std::cell::LazyCell<[u8; 6]> =
-        std::cell::LazyCell::new(|| unsafe { [2_u8, 4_u8, 3_u8, 2_u8, 2_u8, 4_u8] });;
     let mut codes_to_store: usize =
         ((*std::cell::LazyCell::force_mut(&mut *&raw mut kCodeLengthCodes_211)) as usize);
     if ((num_codes) > (1)) {
@@ -8032,6 +8021,16 @@ pub unsafe fn BuildAndStoreHuffmanTree_202(
         (unsafe { StoreHuffmanTree_218((depth).cast_const(), length, storage) });
     }
 }
+static mut kStorageOrder_213: std::cell::LazyCell<[u8; 18]> = std::cell::LazyCell::new(|| unsafe {
+    [
+        1_u8, 2_u8, 3_u8, 4_u8, 0_u8, 5_u8, 17_u8, 6_u8, 16_u8, 7_u8, 8_u8, 9_u8, 10_u8, 11_u8,
+        12_u8, 13_u8, 14_u8, 15_u8,
+    ]
+});
+static mut kHuffmanBitLengthHuffmanCodeSymbols_214: std::cell::LazyCell<[u8; 6]> =
+    std::cell::LazyCell::new(|| unsafe { [0_u8, 7_u8, 3_u8, 2_u8, 1_u8, 15_u8] });
+static mut kHuffmanBitLengthHuffmanCodeBitLengths_215: std::cell::LazyCell<[u8; 6]> =
+    std::cell::LazyCell::new(|| unsafe { [2_u8, 4_u8, 3_u8, 2_u8, 2_u8, 4_u8] });
 pub unsafe fn SetDepth_222(
     p: *const brunsli_HuffmanTree,
     mut pool: *mut brunsli_HuffmanTree,
@@ -8442,12 +8441,6 @@ pub unsafe fn WriteHuffmanTree_219(
     }
 }
 pub unsafe fn ReverseBits_228(mut num_bits: i32, mut bits: u16) -> u16 {
-    static mut kLut_229: std::cell::LazyCell<[usize; 16]> = std::cell::LazyCell::new(|| unsafe {
-        [
-            0_usize, 8_usize, 4_usize, 12_usize, 2_usize, 10_usize, 6_usize, 14_usize, 1_usize,
-            9_usize, 5_usize, 13_usize, 3_usize, 11_usize, 7_usize, 15_usize,
-        ]
-    });;
     let mut retval: usize =
         (*std::cell::LazyCell::force_mut(&mut *&raw mut kLut_229))[((bits as i32) & (15)) as usize];
     let mut i: i32 = 4;
@@ -8502,6 +8495,12 @@ pub unsafe fn ConvertBitDepthsToSymbols_221(
         i.prefix_inc();
     }
 }
+static mut kLut_229: std::cell::LazyCell<[usize; 16]> = std::cell::LazyCell::new(|| unsafe {
+    [
+        0_usize, 8_usize, 4_usize, 12_usize, 2_usize, 10_usize, 6_usize, 14_usize, 1_usize,
+        9_usize, 5_usize, 13_usize, 3_usize, 11_usize, 7_usize, 15_usize,
+    ]
+});
 pub static mut kJpegHuffmanRootTableBits_230: std::cell::LazyCell<i32> =
     std::cell::LazyCell::new(|| unsafe { 8 });
 pub static mut kJpegHuffmanLutSize_231: std::cell::LazyCell<i32> =
@@ -10739,16 +10738,6 @@ pub unsafe fn FixupIndexes_249(mut jpg: *mut brunsli_JPEGData) -> bool {
     return true;
 }
 pub unsafe fn FindNextMarker_250(mut data: *const u8, len: usize, mut pos: usize) -> usize {
-    static mut kIsValidMarker_251: std::cell::LazyCell<[u8; 64]> =
-        std::cell::LazyCell::new(|| unsafe {
-            [
-                1_u8, 1_u8, 1_u8, 0_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-                0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 1_u8, 1_u8, 1_u8,
-                0_u8, 1_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
-                1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 0_u8,
-            ]
-        });;
     let mut num_skipped: usize = 0_usize;
     'loop_: while (((pos).wrapping_add(1_usize)) < (len))
         && (((((*data.offset((pos) as isize)) as i32) != (255))
@@ -11071,6 +11060,16 @@ pub unsafe fn ReadJpeg_196(
     }
     return true;
 }
+static mut kIsValidMarker_251: std::cell::LazyCell<[u8; 64]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            1_u8, 1_u8, 1_u8, 0_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 1_u8, 1_u8, 1_u8,
+            0_u8, 1_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8,
+            1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 1_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
+            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 0_u8,
+        ]
+    });
 pub unsafe fn NextTableBitSize_252(mut count: *const i32, mut len: i32) -> i32 {
     let mut left: i32 = ((1)
         << ((len)

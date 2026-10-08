@@ -1133,7 +1133,7 @@ pub static mut kInitProb_80: std::cell::LazyCell<u8> =
 pub static mut kInitProbCount_81: std::cell::LazyCell<u8> =
     std::cell::LazyCell::new(|| unsafe { 3_u8 });
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, DestructorUnsafe)]
 pub struct brunsli_Prob {
     prob8: u8,
     total: u8,
@@ -1564,7 +1564,7 @@ pub unsafe fn IsEmptyBlockContext_106(mut prev: *const i32, mut x: i32) -> i32 {
     return ((*prev.offset(((x) - (1)) as isize)) + (*prev.offset((x) as isize)));
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, DestructorUnsafe)]
 pub struct brunsli_ComponentStateDC {
     pub width: i32,
     pub is_zero_prob: brunsli_Prob,
@@ -1625,7 +1625,7 @@ impl Default for brunsli_ComponentStateDC {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, DestructorUnsafe)]
 pub struct brunsli_ComponentState {
     pub width: i32,
     pub context_offset: i32,
@@ -1747,7 +1747,7 @@ impl Default for brunsli_ComponentState {
     }
 }
 pub static mut kSqrt2_107: std::cell::LazyCell<f64> =
-    std::cell::LazyCell::new(|| unsafe { 1.414213562E+0 });
+    std::cell::LazyCell::new(|| unsafe { 1.414213562_f64 });
 pub static mut kSqrt2FixedPoint_108: std::cell::LazyCell<i32> =
     std::cell::LazyCell::new(|| unsafe {
         (((*std::cell::LazyCell::force_mut(&mut *&raw mut kSqrt2_107))
@@ -2821,7 +2821,7 @@ pub const brunsli_BrunsliDecoder_Status_NEEDS_MORE_OUTPUT: brunsli_BrunsliDecode
 pub const brunsli_BrunsliDecoder_Status_ERROR: brunsli_BrunsliDecoder_Status = 2;
 pub const brunsli_BrunsliDecoder_Status_DONE: brunsli_BrunsliDecoder_Status = 3;
 #[repr(C)]
-#[derive()]
+#[derive(FnPtrArg, DestructorUnsafe)]
 pub struct brunsli_BrunsliDecoder {
     jpg_: Option<Box<brunsli_JPEGData>>,
     state_: Option<Box<brunsli_internal_dec_State>>,
@@ -2991,7 +2991,7 @@ pub const brunsli_internal_dec_SerializationStatus_ERROR: brunsli_internal_dec_S
 pub const brunsli_internal_dec_SerializationStatus_DONE: brunsli_internal_dec_SerializationStatus =
     3;
 #[repr(C)]
-#[derive()]
+#[derive(FnPtrArg)]
 pub struct brunsli_internal_dec_State {
     pub stage: brunsli_internal_dec_Stage,
     pub tags_met: u32,
@@ -3026,7 +3026,7 @@ impl Default for brunsli_internal_dec_State {
     }
 }
 #[repr(C)]
-#[derive()]
+#[derive(FnPtrArg, MoveCtorUnsafe)]
 pub struct brunsli_Arena_brunsli_HuffmanCode_ {
     pub capacity: usize,
     pub storage: Option<Box<[brunsli_HuffmanCode]>>,
@@ -3076,7 +3076,7 @@ pub struct brunsli_HuffmanDecodingData {
     pub table_: Vec<brunsli_HuffmanCode>,
 }
 #[repr(C)]
-#[derive()]
+#[derive(FnPtrArg, MoveCtorUnsafe)]
 pub struct brunsli_internal_dec_OutputChunk {
     pub next: *const u8,
     pub len: usize,
@@ -3170,7 +3170,7 @@ impl Default for brunsli_HuffmanCodeTable {
     }
 }
 #[repr(C)]
-#[derive(Default)]
+#[derive(FnPtrArg, MoveCtorUnsafe, Default)]
 pub struct brunsli_internal_dec_BitWriter {
     pub healthy: bool,
     pub output: *mut Vec<brunsli_internal_dec_OutputChunk>,
@@ -3234,7 +3234,7 @@ pub const brunsli_internal_dec_EncodeScanState_Stage_HEAD:
 pub const brunsli_internal_dec_EncodeScanState_Stage_BODY:
     brunsli_internal_dec_EncodeScanState_Stage = 1;
 #[repr(C)]
-#[derive()]
+#[derive(FnPtrArg, MoveCtorUnsafe)]
 pub struct brunsli_internal_dec_EncodeScanState {
     pub stage: brunsli_internal_dec_EncodeScanState_Stage,
     pub mcu_y: i32,
@@ -3326,7 +3326,7 @@ pub const brunsli_internal_dec_SerializationState_Stage_DONE:
 pub const brunsli_internal_dec_SerializationState_Stage_ERROR:
     brunsli_internal_dec_SerializationState_Stage = 3;
 #[repr(C)]
-#[derive()]
+#[derive(FnPtrArg, MoveCtorUnsafe)]
 pub struct brunsli_internal_dec_SerializationState {
     pub stage: brunsli_internal_dec_SerializationState_Stage,
     pub output_queue: Vec<brunsli_internal_dec_OutputChunk>,
@@ -3798,7 +3798,7 @@ pub const brunsli_internal_dec_HistogramDataState_Stage_SKIP_CONTENT:
 pub const brunsli_internal_dec_HistogramDataState_Stage_DONE:
     brunsli_internal_dec_HistogramDataState_Stage = 7;
 #[repr(C)]
-#[derive()]
+#[derive(FnPtrArg, MoveCtorUnsafe)]
 pub struct brunsli_internal_dec_HistogramDataState {
     pub stage: brunsli_internal_dec_HistogramDataState_Stage,
     pub br: brunsli_BrunsliBitReader,
@@ -3874,7 +3874,7 @@ impl Default for brunsli_internal_dec_Buffer {
     }
 }
 #[repr(C)]
-#[derive()]
+#[derive(FnPtrArg, MoveCtorUnsafe)]
 pub struct brunsli_internal_dec_InternalState {
     pub ac_dc: brunsli_internal_dec_AcDcState,
     pub section: brunsli_internal_dec_SectionState,
@@ -4056,10 +4056,6 @@ pub static mut kKnownHeaderVarintTags_138: std::cell::LazyCell<u32> =
                 )) as i32)))
     });
 pub unsafe fn IsBrunsli_139(mut data: *const u8, len: usize) -> bool {
-    static mut kSignature_140: std::cell::LazyCell<[u8; 6]> =
-        std::cell::LazyCell::new(|| unsafe { [10_u8, 4_u8, 66_u8, 210_u8, 213_u8, 78_u8] });;
-    static mut kSignatureLen_141: std::cell::LazyCell<usize> =
-        std::cell::LazyCell::new(|| unsafe { ::std::mem::size_of::<[u8; 6]>() });;
     if ((len) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kSignatureLen_141))) {
         return false;
     }
@@ -4858,7 +4854,8 @@ pub unsafe fn DecodeScanInfo_151(
                 (*js).last_num = 0;
             }
         }
-    );
+    )
+    .move_from();
     'loop_: while true {
         'switch: {
             match { ( ( ( * js ) . stage  as i32 ) )  } { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 ) )  =>  { { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
@@ -4946,7 +4943,6 @@ pub unsafe fn DecodeCoeffOrder_152(
         0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
         0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
     ];
-    static mut kSpan_153: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 16 });;
     let mut i: i32 = 0;
     'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
         if !((unsafe { brunsli_BitSource::ReadBits(&mut (*br), 1, in_) }) != 0) {
@@ -6254,27 +6250,30 @@ pub unsafe fn DecodeMetaDataSection_180(
     if (((*ms).decompression_stage)
         == (brunsli_internal_dec_MetadataDecompressionStage_DECOMPRESSING))
     {
-        let finish_decompression: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> = lambda_unsafe!(
-            {
-                let ms: *mut brunsli_internal_dec_MetadataState = ms;
-            },
-            |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
-                if !(!(((*ms).brotli).is_null())) {
-                    (unsafe {
-                        BrunsliDumpAndAbort_79(
-                            c"brunsli_decode.cc".as_ptr(),
-                            1312,
-                            c"operator()".as_ptr(),
-                        )
-                    });
-                    'loop_: while true {}
-                };
-                ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
-                (*ms).brotli = std::ptr::null_mut();
-                (*ms).decompression_stage = brunsli_internal_dec_MetadataDecompressionStage_DONE;
-                return result;
-            }
-        );
+        let finish_decompression: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> =
+            lambda_unsafe!(
+                {
+                    let ms: *mut brunsli_internal_dec_MetadataState = ms;
+                },
+                |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
+                    if !(!(((*ms).brotli).is_null())) {
+                        (unsafe {
+                            BrunsliDumpAndAbort_79(
+                                c"brunsli_decode.cc".as_ptr(),
+                                1312,
+                                c"operator()".as_ptr(),
+                            )
+                        });
+                        'loop_: while true {}
+                    };
+                    ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
+                    (*ms).brotli = std::ptr::null_mut();
+                    (*ms).decompression_stage =
+                        brunsli_internal_dec_MetadataDecompressionStage_DONE;
+                    return result;
+                }
+            )
+            .move_from();
         'loop_: while true {
             let mut available_bytes: usize = ({
                 let mut __tmp_0: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
@@ -6463,15 +6462,17 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
         (*js).stage = brunsli_internal_dec_JpegInternalsState_Stage_READ_MARKERS;
     }
     (unsafe { PrepareBitReader_182(br, state) });
-    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> = lambda_unsafe!(
-        {
-            let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
-            let state: *mut *mut brunsli_internal_dec_State = &mut state;
-        },
-        |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
-            return (unsafe { SuspendBitReader_183((*br), (*state), result) });
-        }
-    );
+    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> =
+        lambda_unsafe!(
+            {
+                let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
+                let state: *mut *mut brunsli_internal_dec_State = &mut state;
+            },
+            |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
+                return (unsafe { SuspendBitReader_183((*br), (*state), result) });
+            }
+        )
+        .move_from();
     if (((*js).stage as i32) == (brunsli_internal_dec_JpegInternalsState_Stage_READ_MARKERS as i32))
     {
         'loop_: while true {
@@ -6623,8 +6624,6 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
             });
         }
         let mut comp_ids: i32 = ((unsafe { BrunsliBitReaderRead_126(br, 2_u32) }) as i32);
-        static mut kMinRequiredComponents_185: std::cell::LazyCell<[usize; 4]> =
-            std::cell::LazyCell::new(|| unsafe { [3_usize, 1_usize, 3_usize, 0_usize] });;
         if (((*jpg).components.len())
             < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMinRequiredComponents_185))
                 [(comp_ids) as usize]))
@@ -6864,15 +6863,17 @@ pub unsafe fn DecodeQuantDataSection_186(
         (*qs).stage = brunsli_internal_dec_QuantDataState_Stage_READ_NUM_QUANT;
     }
     (unsafe { PrepareBitReader_182(br, state) });
-    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> = lambda_unsafe!(
-        {
-            let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
-            let state: *mut *mut brunsli_internal_dec_State = &mut state;
-        },
-        |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
-            return (unsafe { SuspendBitReader_183((*br), (*state), result) });
-        }
-    );
+    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> =
+        lambda_unsafe!(
+            {
+                let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
+                let state: *mut *mut brunsli_internal_dec_State = &mut state;
+            },
+            |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
+                return (unsafe { SuspendBitReader_183((*br), (*state), result) });
+            }
+        )
+        .move_from();
     if (((*qs).stage as i32) == (brunsli_internal_dec_QuantDataState_Stage_READ_NUM_QUANT as i32)) {
         if !(unsafe { BrunsliBitReaderCanRead_134(br, 2_usize) }) {
             return (unsafe {
@@ -7125,15 +7126,17 @@ pub unsafe fn DecodeHistogramDataSection_187(
     {
         (unsafe { BrunsliBitReaderSetOptimistic_133(br) });
     }
-    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> = lambda_unsafe!(
-        {
-            let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
-            let state: *mut *mut brunsli_internal_dec_State = &mut state;
-        },
-        |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
-            return (unsafe { SuspendBitReader_183((*br), (*state), result) });
-        }
-    );
+    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> =
+        lambda_unsafe!(
+            {
+                let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
+                let state: *mut *mut brunsli_internal_dec_State = &mut state;
+            },
+            |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
+                return (unsafe { SuspendBitReader_183((*br), (*state), result) });
+            }
+        )
+        .move_from();
     if (((*hs).stage as i32) == (brunsli_internal_dec_HistogramDataState_Stage_READ_SCHEME as i32))
     {
         let num_components: usize = (*jpg).components.len();
@@ -8529,6 +8532,13 @@ impl brunsli_BrunsliDecoder {
         panic!("ub: non-void function does not return a value")
     }
 }
+static mut kSignature_140: std::cell::LazyCell<[u8; 6]> =
+    std::cell::LazyCell::new(|| unsafe { [10_u8, 4_u8, 66_u8, 210_u8, 213_u8, 78_u8] });
+static mut kSignatureLen_141: std::cell::LazyCell<usize> =
+    std::cell::LazyCell::new(|| unsafe { ::std::mem::size_of::<[u8; 6]>() });
+static mut kSpan_153: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 16 });
+static mut kMinRequiredComponents_185: std::cell::LazyCell<[usize; 4]> =
+    std::cell::LazyCell::new(|| unsafe { [3_usize, 1_usize, 3_usize, 0_usize] });
 pub unsafe fn MoveToFront_207(mut v: *mut u8, mut index: u8) {
     let mut value: u8 = (*v.offset((index) as isize));
     let mut i: u8 = index;
@@ -8987,7 +8997,8 @@ pub unsafe fn ReadSimpleCode_219(
             (*symbols)[(j)] = (*symbols)[(i)];
             (*symbols)[(i)] = t;
         }
-    );
+    )
+    .move_from();
     let mut table_size: usize = 1_usize;
     'switch: {
         match { num_symbols } {
@@ -9177,75 +9188,6 @@ impl brunsli_HuffmanDecodingData {
         ];
         let mut space: i32 = 32;
         let mut num_codes: i32 = 0;
-        static mut huff_220: std::cell::LazyCell<[brunsli_HuffmanCode; 16]> =
-            std::cell::LazyCell::new(|| unsafe {
-                [
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 0_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 4_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 3_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 3_u8,
-                        value: 2_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 0_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 4_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 3_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 4_u8,
-                        value: 1_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 0_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 4_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 3_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 3_u8,
-                        value: 2_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 0_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 4_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 2_u8,
-                        value: 3_u16,
-                    },
-                    brunsli_HuffmanCode {
-                        bits: 4_u8,
-                        value: 5_u16,
-                    },
-                ]
-            });;
         let mut i: usize = (simple_code_or_skip as usize);
         'loop_: while ((i)
             < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kCodeLengthCodes_213)) as usize))
@@ -9346,6 +9288,75 @@ impl brunsli_HuffmanDecodingData {
         return (*table).value;
     }
 }
+static mut huff_220: std::cell::LazyCell<[brunsli_HuffmanCode; 16]> =
+    std::cell::LazyCell::new(|| unsafe {
+        [
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 0_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 4_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 3_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 3_u8,
+                value: 2_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 0_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 4_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 3_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 4_u8,
+                value: 1_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 0_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 4_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 3_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 3_u8,
+                value: 2_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 0_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 4_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 2_u8,
+                value: 3_u16,
+            },
+            brunsli_HuffmanCode {
+                bits: 4_u8,
+                value: 5_u16,
+            },
+        ]
+    });
 pub unsafe fn GetNextKey_221(mut key: i32, mut len: usize) -> i32 {
     let mut step: i32 = (((1_u32) << ((len).wrapping_sub(1_usize))) as i32);
     'loop_: while (((key) & (step)) != 0) {
@@ -10631,7 +10642,8 @@ pub unsafe fn DoEncodeScan_255(
             }
             panic!("ub: non-void function does not return a value")
         }
-    );
+    )
+    .move_from();
     let get_next_reset_point: FnPtr<fn() -> i32> = lambda_unsafe!(
         {
             let ss: *mut brunsli_internal_dec_EncodeScanState = ss;
@@ -10645,7 +10657,8 @@ pub unsafe fn DoEncodeScan_255(
             }
             panic!("ub: non-void function does not return a value")
         }
-    );
+    )
+    .move_from();
     if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_HEAD as i32)) {
         if !(unsafe {
             let _jpg: *const brunsli_JPEGData = jpg;
@@ -10903,7 +10916,8 @@ pub unsafe fn DoEncodeScan_256(
             }
             panic!("ub: non-void function does not return a value")
         }
-    );
+    )
+    .move_from();
     let get_next_reset_point: FnPtr<fn() -> i32> = lambda_unsafe!(
         {
             let ss: *mut brunsli_internal_dec_EncodeScanState = ss;
@@ -10917,7 +10931,8 @@ pub unsafe fn DoEncodeScan_256(
             }
             panic!("ub: non-void function does not return a value")
         }
-    );
+    )
+    .move_from();
     if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_HEAD as i32)) {
         if !(unsafe {
             let _jpg: *const brunsli_JPEGData = jpg;
@@ -11186,7 +11201,8 @@ pub unsafe fn DoEncodeScan_257(
             }
             panic!("ub: non-void function does not return a value")
         }
-    );
+    )
+    .move_from();
     let get_next_reset_point: FnPtr<fn() -> i32> = lambda_unsafe!(
         {
             let ss: *mut brunsli_internal_dec_EncodeScanState = ss;
@@ -11200,7 +11216,8 @@ pub unsafe fn DoEncodeScan_257(
             }
             panic!("ub: non-void function does not return a value")
         }
-    );
+    )
+    .move_from();
     if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_HEAD as i32)) {
         if !(unsafe {
             let _jpg: *const brunsli_JPEGData = jpg;
@@ -11726,7 +11743,8 @@ pub unsafe fn SerializeJpeg_206(
                 });
             }
         }
-    );
+    )
+    .move_from();
     (unsafe { maybe_push_output.call() });
     'loop_: while true {
         switch!(match ((*ss).stage as i32) {

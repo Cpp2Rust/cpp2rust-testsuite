@@ -1328,7 +1328,7 @@ thread_local!(
 thread_local!(
     pub static kInitProbCount_81: Value<u8> = Rc::new(RefCell::new(3_u8));
 );
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Destructor)]
 #[byte_size(4)]
 pub struct brunsli_Prob {
     #[offset(0)]
@@ -1733,7 +1733,7 @@ thread_local!(
 pub fn IsEmptyBlockContext_106(mut prev: Ptr<i32>, mut x: i32) -> i32 {
     return ((elem!(prev, (x - 1)).read()) + (elem!(prev, x).read()));
 }
-#[derive(DeepClone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(DeepClone, Record, ByteRepr, VaArg, FnPtrArg, Destructor)]
 #[byte_size(152)]
 pub struct brunsli_ComponentStateDC {
     #[offset(0)]
@@ -1794,7 +1794,7 @@ impl Default for brunsli_ComponentStateDC {
         { brunsli_ComponentStateDC::new() }
     }
 }
-#[derive(DeepClone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(DeepClone, Record, ByteRepr, VaArg, FnPtrArg, Destructor)]
 #[byte_size(9008)]
 pub struct brunsli_ComponentState {
     #[offset(0)]
@@ -1903,7 +1903,7 @@ impl Default for brunsli_ComponentState {
     }
 }
 thread_local!(
-    pub static kSqrt2_107: Value<f64> = Rc::new(RefCell::new(1.414213562E+0));
+    pub static kSqrt2_107: Value<f64> = Rc::new(RefCell::new(1.414213562_f64));
 );
 thread_local!(
     pub static kSqrt2FixedPoint_108: Value<i32> = Rc::new(RefCell::new(
@@ -2762,7 +2762,7 @@ pub const brunsli_BrunsliDecoder_Status_NEEDS_MORE_INPUT: brunsli_BrunsliDecoder
 pub const brunsli_BrunsliDecoder_Status_NEEDS_MORE_OUTPUT: brunsli_BrunsliDecoder_Status = 1;
 pub const brunsli_BrunsliDecoder_Status_ERROR: brunsli_BrunsliDecoder_Status = 2;
 pub const brunsli_BrunsliDecoder_Status_DONE: brunsli_BrunsliDecoder_Status = 3;
-#[derive(Record, ByteRepr)]
+#[derive(Record, ByteRepr, FnPtrArg, Destructor)]
 #[byte_size(16)]
 pub struct brunsli_BrunsliDecoder {
     #[offset(0)]
@@ -2912,7 +2912,7 @@ pub const brunsli_internal_dec_SerializationStatus_ERROR: brunsli_internal_dec_S
     2;
 pub const brunsli_internal_dec_SerializationStatus_DONE: brunsli_internal_dec_SerializationStatus =
     3;
-#[derive(Record, ByteRepr)]
+#[derive(Record, ByteRepr, FnPtrArg)]
 #[byte_size(96)]
 pub struct brunsli_internal_dec_State {
     #[offset(0)]
@@ -2965,7 +2965,7 @@ impl Default for brunsli_internal_dec_State {
         }
     }
 }
-#[derive(Record, ByteRepr)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
 #[byte_size(16)]
 pub struct brunsli_Arena_brunsli_HuffmanCode_ {
     #[offset(0)]
@@ -2998,7 +2998,7 @@ pub struct brunsli_HuffmanDecodingData {
     #[byte_size(24)]
     pub table_: Value<Vec<brunsli_HuffmanCode>>,
 }
-#[derive(Record, ByteRepr)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
 #[byte_size(24)]
 pub struct brunsli_internal_dec_OutputChunk {
     #[offset(0)]
@@ -3093,7 +3093,7 @@ impl Default for brunsli_HuffmanCodeTable {
         }
     }
 }
-#[derive(Record, ByteRepr, Default)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor, Default)]
 #[byte_size(72)]
 pub struct brunsli_internal_dec_BitWriter {
     #[offset(0)]
@@ -3156,7 +3156,7 @@ pub const brunsli_internal_dec_EncodeScanState_Stage_HEAD:
     brunsli_internal_dec_EncodeScanState_Stage = 0;
 pub const brunsli_internal_dec_EncodeScanState_Stage_BODY:
     brunsli_internal_dec_EncodeScanState_Stage = 1;
-#[derive(Record, ByteRepr)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
 #[byte_size(184)]
 pub struct brunsli_internal_dec_EncodeScanState {
     #[offset(0)]
@@ -3236,7 +3236,7 @@ pub const brunsli_internal_dec_SerializationState_Stage_DONE:
     brunsli_internal_dec_SerializationState_Stage = 2;
 pub const brunsli_internal_dec_SerializationState_Stage_ERROR:
     brunsli_internal_dec_SerializationState_Stage = 3;
-#[derive(Record, ByteRepr)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
 #[byte_size(376)]
 pub struct brunsli_internal_dec_SerializationState {
     #[offset(0)]
@@ -3786,7 +3786,7 @@ pub const brunsli_internal_dec_HistogramDataState_Stage_SKIP_CONTENT:
     brunsli_internal_dec_HistogramDataState_Stage = 6;
 pub const brunsli_internal_dec_HistogramDataState_Stage_DONE:
     brunsli_internal_dec_HistogramDataState_Stage = 7;
-#[derive(Record, ByteRepr)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
 #[byte_size(104)]
 pub struct brunsli_internal_dec_HistogramDataState {
     #[offset(0)]
@@ -3867,7 +3867,7 @@ impl Default for brunsli_internal_dec_Buffer {
         }
     }
 }
-#[derive(Record, ByteRepr)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
 #[byte_size(1416)]
 pub struct brunsli_internal_dec_InternalState {
     #[offset(0)]
@@ -4037,15 +4037,6 @@ thread_local!(
     ));
 );
 pub fn IsBrunsli_139(mut data: Ptr<u8>, mut len: usize) -> bool {
-    thread_local!(
-        static kSignature_140: Value<Box<[u8]>> = Rc::new(RefCell::new(Box::new([
-            10_u8, 4_u8, 66_u8, 210_u8, 213_u8, 78_u8,
-        ])));
-    );
-    thread_local!(
-        static kSignatureLen_141: Value<usize> =
-            Rc::new(RefCell::new(::std::mem::size_of::<[u8; 6]>()));
-    );
     if (len < kSignatureLen_141.with(|rc| *rc.borrow())) {
         return false;
     }
@@ -5038,9 +5029,6 @@ pub fn DecodeCoeffOrder_152(
         0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
         0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
     ])));
-    thread_local!(
-        static kSpan_153: Value<i32> = Rc::new(RefCell::new(16));
-    );
     let mut i: i32 = 0;
     'loop_: while (i < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
         if !(({ brunsli_BitSourceImpl::ReadBits(&br, 1, (in_).clone()) }) != 0) {
@@ -6944,10 +6932,6 @@ pub fn DecodeJPEGInternalsSection_184(
         }
         let mut comp_ids: i32 =
             (({ BrunsliBitReaderRead_126((*br.borrow()).clone(), 2_u32) }) as i32);
-        thread_local!(
-            static kMinRequiredComponents_185: Value<Box<[usize]>> =
-                Rc::new(RefCell::new(Box::new([3_usize, 1_usize, 3_usize, 0_usize])));
-        );
         if ({ (*jpg.with(|__s| __s.components.clone()).borrow()).len() } < {
             ({
                 let __idx = (comp_ids) as usize;
@@ -9093,6 +9077,22 @@ pub fn BrunsliEstimateDecoderPeakMemoryUsage_205(mut data: Ptr<u8>, mut len: usi
     })) as usize);
 }
 impl brunsli_BrunsliDecoder {}
+thread_local!(
+    static kSignature_140: Value<Box<[u8]>> = Rc::new(RefCell::new(Box::new([
+        10_u8, 4_u8, 66_u8, 210_u8, 213_u8, 78_u8,
+    ])));
+);
+thread_local!(
+    static kSignatureLen_141: Value<usize> =
+        Rc::new(RefCell::new(::std::mem::size_of::<[u8; 6]>()));
+);
+thread_local!(
+    static kSpan_153: Value<i32> = Rc::new(RefCell::new(16));
+);
+thread_local!(
+    static kMinRequiredComponents_185: Value<Box<[usize]>> =
+        Rc::new(RefCell::new(Box::new([3_usize, 1_usize, 3_usize, 0_usize])));
+);
 pub fn MoveToFront_207(mut v: Ptr<u8>, mut index: u8) {
     let mut value: u8 = (elem!(v, index).read());
     let mut i: u8 = index;
@@ -9734,6 +9734,74 @@ pub fn ReadSimpleCode_219(
     }
     return ({ BrunsliBitReaderIsHealthy_132(br) });
 }
+thread_local!(
+    static huff_220: Value<Box<[brunsli_HuffmanCode]>> = Rc::new(RefCell::new(Box::new([
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 0_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 4_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 3_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 3_u8,
+            value: 2_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 0_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 4_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 3_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 4_u8,
+            value: 1_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 0_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 4_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 3_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 3_u8,
+            value: 2_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 0_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 4_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 2_u8,
+            value: 3_u16,
+        },
+        brunsli_HuffmanCode {
+            bits: 4_u8,
+            value: 5_u16,
+        },
+    ])));
+);
 pub fn GetNextKey_221(mut key: i32, mut len: usize) -> i32 {
     let mut step: i32 = ((1_u32 << ((len).wrapping_sub(1_usize))) as i32);
     'loop_: while ((key & step) != 0) {
@@ -13738,74 +13806,6 @@ impl brunsli_HuffmanDecodingDataImpl for Ptr<brunsli_HuffmanDecodingData> {
         ])));
         let mut space: i32 = 32;
         let mut num_codes: i32 = 0;
-        thread_local!(
-            static huff_220: Value<Box<[brunsli_HuffmanCode]>> = Rc::new(RefCell::new(Box::new([
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 0_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 4_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 3_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 3_u8,
-                    value: 2_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 0_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 4_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 3_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 4_u8,
-                    value: 1_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 0_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 4_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 3_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 3_u8,
-                    value: 2_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 0_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 4_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 2_u8,
-                    value: 3_u16,
-                },
-                brunsli_HuffmanCode {
-                    bits: 4_u8,
-                    value: 5_u16,
-                },
-            ])));
-        );
         let mut i: usize = (simple_code_or_skip as usize);
         'loop_: while (i < (kCodeLengthCodes_213.with(|rc| *rc.borrow()) as usize)) && (space > 0) {
             let mut code_len_idx: i32 = (({

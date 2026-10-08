@@ -440,13 +440,6 @@ pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *
     }
 }
 pub unsafe fn Read255UShort_12(mut buf: *mut woff2_Buffer, mut value: *mut u32) -> bool {
-    static mut kWordCode_13: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });;
-    static mut kOneMoreByteCode2_14: std::cell::LazyCell<i32> =
-        std::cell::LazyCell::new(|| unsafe { 254 });;
-    static mut kOneMoreByteCode1_15: std::cell::LazyCell<i32> =
-        std::cell::LazyCell::new(|| unsafe { 255 });;
-    static mut kLowestUCode_16: std::cell::LazyCell<i32> =
-        std::cell::LazyCell::new(|| unsafe { 253 });;
     let mut code: u8 = 0_u8;
     if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
         return false;
@@ -531,6 +524,12 @@ pub unsafe fn StoreBase128_19(mut len: usize, mut offset: *mut usize, mut dst: *
         i.prefix_inc();
     }
 }
+static mut kWordCode_13: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });
+static mut kOneMoreByteCode2_14: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 254 });
+static mut kOneMoreByteCode1_15: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 255 });
+static mut kLowestUCode_16: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });
 pub static mut kWoff2Signature_20: std::cell::LazyCell<u32> =
     std::cell::LazyCell::new(|| unsafe { 2001684018_u32 });
 pub static mut kWoff2FlagsTransform_21: std::cell::LazyCell<u32> =
@@ -2128,7 +2127,7 @@ pub unsafe fn NormalizeGlyphs_75(mut font: *mut woff2_Font) -> bool {
     let mut index_fmt: i32 = ((*(*head_table).data.offset((51) as isize)) as i32);
     let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font)) });
     let mut max_normalized_glyf_size: usize =
-        ((((1.1E+0) * ((*glyf_table).length as f64)) + (((2) * (num_glyphs)) as f64)) as usize);
+        ((((1.1_f64) * ((*glyf_table).length as f64)) + (((2) * (num_glyphs)) as f64)) as usize);
     {
         let __a0 = max_normalized_glyf_size as usize;
         (*glyf_table).buffer.resize_with(__a0, || <u8>::default())
@@ -3282,7 +3281,7 @@ pub unsafe fn MaxWOFF2CompressedSize_105(
         .wrapping_add((((*extended_metadata).len() - 1) as u64)) as usize);
 }
 pub unsafe fn CompressedBufferSize_106(mut original_size: u32) -> u32 {
-    return ((((1.2E+0) * (original_size as f64)) + (10240_f64)) as u32);
+    return ((((1.2_f64) * (original_size as f64)) + (10240_f64)) as u32);
 }
 pub unsafe fn TransformFontCollection_107(mut font_collection: *mut woff2_FontCollection) -> bool {
     'loop_: for font in 0..((*font_collection).fonts.len()) {

@@ -440,13 +440,6 @@ pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *
     }
 }
 pub unsafe fn Read255UShort_12(mut buf: *mut woff2_Buffer, mut value: *mut u32) -> bool {
-    static mut kWordCode_13: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });;
-    static mut kOneMoreByteCode2_14: std::cell::LazyCell<i32> =
-        std::cell::LazyCell::new(|| unsafe { 254 });;
-    static mut kOneMoreByteCode1_15: std::cell::LazyCell<i32> =
-        std::cell::LazyCell::new(|| unsafe { 255 });;
-    static mut kLowestUCode_16: std::cell::LazyCell<i32> =
-        std::cell::LazyCell::new(|| unsafe { 253 });;
     let mut code: u8 = 0_u8;
     if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
         return false;
@@ -531,6 +524,12 @@ pub unsafe fn StoreBase128_19(mut len: usize, mut offset: *mut usize, mut dst: *
         i.prefix_inc();
     }
 }
+static mut kWordCode_13: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });
+static mut kOneMoreByteCode2_14: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 254 });
+static mut kOneMoreByteCode1_15: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 255 });
+static mut kLowestUCode_16: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });
 pub static mut kWoff2Signature_20: std::cell::LazyCell<u32> =
     std::cell::LazyCell::new(|| unsafe { 2001684018_u32 });
 pub static mut kWoff2FlagsTransform_21: std::cell::LazyCell<u32> =

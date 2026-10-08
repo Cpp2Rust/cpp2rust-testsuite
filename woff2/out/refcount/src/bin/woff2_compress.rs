@@ -303,18 +303,6 @@ pub fn Store255UShort_11(mut val: i32, mut offset: Ptr<usize>, mut dst: Ptr<u8>)
     }
 }
 pub fn Read255UShort_12(mut buf: Ptr<woff2_Buffer>, mut value: Ptr<u32>) -> bool {
-    thread_local!(
-        static kWordCode_13: Value<i32> = Rc::new(RefCell::new(253));
-    );
-    thread_local!(
-        static kOneMoreByteCode2_14: Value<i32> = Rc::new(RefCell::new(254));
-    );
-    thread_local!(
-        static kOneMoreByteCode1_15: Value<i32> = Rc::new(RefCell::new(255));
-    );
-    thread_local!(
-        static kLowestUCode_16: Value<i32> = Rc::new(RefCell::new(253));
-    );
     let code: Value<u8> = Rc::new(RefCell::new(0_u8));
     if !({ woff2_BufferImpl::ReadU8(&buf, (code.as_pointer())) }) {
         return false;
@@ -396,6 +384,18 @@ pub fn StoreBase128_19(mut len: usize, mut offset: Ptr<usize>, mut dst: Ptr<u8>)
         i.prefix_inc();
     }
 }
+thread_local!(
+    static kWordCode_13: Value<i32> = Rc::new(RefCell::new(253));
+);
+thread_local!(
+    static kOneMoreByteCode2_14: Value<i32> = Rc::new(RefCell::new(254));
+);
+thread_local!(
+    static kOneMoreByteCode1_15: Value<i32> = Rc::new(RefCell::new(255));
+);
+thread_local!(
+    static kLowestUCode_16: Value<i32> = Rc::new(RefCell::new(253));
+);
 thread_local!(
     pub static kWoff2Signature_20: Value<u32> = Rc::new(RefCell::new(2001684018_u32));
 );
@@ -2348,7 +2348,7 @@ pub fn NormalizeGlyphs_75(mut font: Ptr<woff2_Font>) -> bool {
     let mut index_fmt: i32 = ((elem!(head_table.with(|__s| __s.data.clone()), 51).read()) as i32);
     let mut num_glyphs: i32 = ({ NumGlyphs_45((font).clone()) });
     let mut max_normalized_glyf_size: usize = (({
-        (1.1E+0 * (glyf_table.with(|__s| __s.length) as f64))
+        (1.1_f64 * (glyf_table.with(|__s| __s.length) as f64))
     } + { ((2 * num_glyphs) as f64) }) as usize);
     {
         let __a0 = max_normalized_glyf_size as usize;
@@ -3292,7 +3292,7 @@ pub fn MaxWOFF2CompressedSize_105(
         as usize);
 }
 pub fn CompressedBufferSize_106(mut original_size: u32) -> u32 {
-    return (((1.2E+0 * (original_size as f64)) + 10240_f64) as u32);
+    return (((1.2_f64 * (original_size as f64)) + 10240_f64) as u32);
 }
 pub fn TransformFontCollection_107(mut font_collection: Ptr<woff2_FontCollection>) -> bool {
     'loop_: for mut font in font_collection.with(|__s| __s.fonts.as_pointer()) as Ptr<woff2_Font> {

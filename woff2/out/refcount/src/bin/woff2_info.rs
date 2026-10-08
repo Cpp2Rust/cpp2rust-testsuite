@@ -303,18 +303,6 @@ pub fn Store255UShort_11(mut val: i32, mut offset: Ptr<usize>, mut dst: Ptr<u8>)
     }
 }
 pub fn Read255UShort_12(mut buf: Ptr<woff2_Buffer>, mut value: Ptr<u32>) -> bool {
-    thread_local!(
-        static kWordCode_13: Value<i32> = Rc::new(RefCell::new(253));
-    );
-    thread_local!(
-        static kOneMoreByteCode2_14: Value<i32> = Rc::new(RefCell::new(254));
-    );
-    thread_local!(
-        static kOneMoreByteCode1_15: Value<i32> = Rc::new(RefCell::new(255));
-    );
-    thread_local!(
-        static kLowestUCode_16: Value<i32> = Rc::new(RefCell::new(253));
-    );
     let code: Value<u8> = Rc::new(RefCell::new(0_u8));
     if !({ woff2_BufferImpl::ReadU8(&buf, (code.as_pointer())) }) {
         return false;
@@ -396,6 +384,18 @@ pub fn StoreBase128_19(mut len: usize, mut offset: Ptr<usize>, mut dst: Ptr<u8>)
         i.prefix_inc();
     }
 }
+thread_local!(
+    static kWordCode_13: Value<i32> = Rc::new(RefCell::new(253));
+);
+thread_local!(
+    static kOneMoreByteCode2_14: Value<i32> = Rc::new(RefCell::new(254));
+);
+thread_local!(
+    static kOneMoreByteCode1_15: Value<i32> = Rc::new(RefCell::new(255));
+);
+thread_local!(
+    static kLowestUCode_16: Value<i32> = Rc::new(RefCell::new(253));
+);
 thread_local!(
     pub static kWoff2Signature_20: Value<u32> = Rc::new(RefCell::new(2001684018_u32));
 );

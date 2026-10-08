@@ -440,13 +440,6 @@ pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *
     }
 }
 pub unsafe fn Read255UShort_12(mut buf: *mut woff2_Buffer, mut value: *mut u32) -> bool {
-    static mut kWordCode_13: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });;
-    static mut kOneMoreByteCode2_14: std::cell::LazyCell<i32> =
-        std::cell::LazyCell::new(|| unsafe { 254 });;
-    static mut kOneMoreByteCode1_15: std::cell::LazyCell<i32> =
-        std::cell::LazyCell::new(|| unsafe { 255 });;
-    static mut kLowestUCode_16: std::cell::LazyCell<i32> =
-        std::cell::LazyCell::new(|| unsafe { 253 });;
     let mut code: u8 = 0_u8;
     if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
         return false;
@@ -531,6 +524,12 @@ pub unsafe fn StoreBase128_19(mut len: usize, mut offset: *mut usize, mut dst: *
         i.prefix_inc();
     }
 }
+static mut kWordCode_13: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });
+static mut kOneMoreByteCode2_14: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 254 });
+static mut kOneMoreByteCode1_15: std::cell::LazyCell<i32> =
+    std::cell::LazyCell::new(|| unsafe { 255 });
+static mut kLowestUCode_16: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });
 pub static mut kWoff2Signature_20: std::cell::LazyCell<u32> =
     std::cell::LazyCell::new(|| unsafe { 2001684018_u32 });
 pub static mut kWoff2FlagsTransform_21: std::cell::LazyCell<u32> =
@@ -753,7 +752,7 @@ pub static mut kCompositeGlyphBegin_52: std::cell::LazyCell<usize> =
 pub static mut kDefaultGlyphBuf_53: std::cell::LazyCell<usize> =
     std::cell::LazyCell::new(|| unsafe { 5120_usize });
 pub static mut kMaxPlausibleCompressionRatio_54: std::cell::LazyCell<f32> =
-    std::cell::LazyCell::new(|| unsafe { (1.0E+2 as f32) });
+    std::cell::LazyCell::new(|| unsafe { (100_f64 as f32) });
 #[repr(C)]
 #[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_TtcFont {
@@ -1244,8 +1243,6 @@ pub unsafe fn ReconstructGlyf_63(
     mut info: *mut woff2_WOFF2FontInfo,
     mut out: *mut dyn woff2_WOFF2Out,
 ) -> bool {
-    static mut kNumSubStreams_64: std::cell::LazyCell<i32> =
-        std::cell::LazyCell::new(|| unsafe { 7 });;
     let mut file: woff2_Buffer =
         woff2_Buffer::new({ data }, { ((*glyf_table).transform_length as usize) });
     let mut version: u16 = 0_u16;
@@ -2824,6 +2821,7 @@ pub unsafe fn ConvertWOFF2ToTTF_79(
     }
     return true;
 }
+static mut kNumSubStreams_64: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 7 });
 impl woff2_WOFF2StringOut {
     pub unsafe fn new(mut buf: *mut Vec<libc::c_char>) -> Self {
         let mut this = Self {
