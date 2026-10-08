@@ -100,16 +100,26 @@ pub unsafe fn BFS_0(graph: *const Graph, mut start_vertex: u32) -> *mut u32 {
             head = (*head).next;
         }
     }
-    ::std::mem::drop(Box::from_raw(::std::slice::from_raw_parts_mut(
-        visited,
-        libcc2rs::malloc_usable_size(visited as *mut ::libc::c_void)
-            / ::std::mem::size_of::<bool>(),
-    )));
-
-    ::std::mem::drop(Box::from_raw(::std::slice::from_raw_parts_mut(
-        Q.elems,
-        libcc2rs::malloc_usable_size(Q.elems as *mut ::libc::c_void) / ::std::mem::size_of::<u32>(),
-    )));
+    {
+        let __p = visited;
+        if !__p.is_null() {
+            ::std::mem::drop(Box::from_raw(::std::slice::from_raw_parts_mut(
+                __p,
+                libcc2rs::malloc_usable_size(__p as *mut ::libc::c_void)
+                    / ::std::mem::size_of::<bool>(),
+            )))
+        }
+    };
+    {
+        let __p = Q.elems;
+        if !__p.is_null() {
+            ::std::mem::drop(Box::from_raw(::std::slice::from_raw_parts_mut(
+                __p,
+                libcc2rs::malloc_usable_size(__p as *mut ::libc::c_void)
+                    / ::std::mem::size_of::<u32>(),
+            )))
+        }
+    };
     return pred;
 }
 pub fn main() {
@@ -180,7 +190,12 @@ unsafe fn main_0() -> i32 {
         let mut head: *mut GraphNode = (*graph.adj.offset((i) as isize));
         'loop_: while !((head).is_null()) {
             let mut next: *mut GraphNode = (*head).next;
-            ::std::mem::drop(Box::from_raw(head));
+            {
+                let __p = head;
+                if !__p.is_null() {
+                    ::std::mem::drop(Box::from_raw(__p))
+                }
+            };
             head = next;
         }
         i.prefix_inc();
@@ -201,16 +216,26 @@ unsafe fn main_0() -> i32 {
         );
         i.prefix_inc();
     }
-    ::std::mem::drop(Box::from_raw(::std::slice::from_raw_parts_mut(
-        graph.adj,
-        libcc2rs::malloc_usable_size(graph.adj as *mut ::libc::c_void)
-            / ::std::mem::size_of::<*mut GraphNode>(),
-    )));
-
-    ::std::mem::drop(Box::from_raw(::std::slice::from_raw_parts_mut(
-        pred,
-        libcc2rs::malloc_usable_size(pred as *mut ::libc::c_void) / ::std::mem::size_of::<u32>(),
-    )));
+    {
+        let __p = graph.adj;
+        if !__p.is_null() {
+            ::std::mem::drop(Box::from_raw(::std::slice::from_raw_parts_mut(
+                __p,
+                libcc2rs::malloc_usable_size(__p as *mut ::libc::c_void)
+                    / ::std::mem::size_of::<*mut GraphNode>(),
+            )))
+        }
+    };
+    {
+        let __p = pred;
+        if !__p.is_null() {
+            ::std::mem::drop(Box::from_raw(::std::slice::from_raw_parts_mut(
+                __p,
+                libcc2rs::malloc_usable_size(__p as *mut ::libc::c_void)
+                    / ::std::mem::size_of::<u32>(),
+            )))
+        }
+    };
     return 0;
 }
 pub unsafe fn __cpp2rust_init_globals() {}

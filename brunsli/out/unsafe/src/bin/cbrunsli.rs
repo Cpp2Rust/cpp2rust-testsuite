@@ -2476,22 +2476,7 @@ impl brunsli_Storage {
     }
 }
 pub unsafe fn WriteBits_120(mut n_bits: usize, mut bits: u64, mut storage: *mut brunsli_Storage) {
-    if true {
-    } else {
-        write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
-            "WriteBits {:2} {:16x} {:10}\n",
-            n_bits,
-            bits,
-            (*storage).pos,
-        );
-    }
+    {}
     if !(((bits) >> (n_bits)) == (0_u64)) {
         (unsafe { BrunsliDumpAndAbort_79(c"ans_encode.cc".as_ptr(), 58, c"WriteBits".as_ptr()) });
         'loop_: while true {}
@@ -4373,24 +4358,7 @@ pub unsafe fn EncodeHuffmanCode_158(
             })
         };
         if ((count) > (count_limit)) {
-            if true {
-            } else {
-                write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
-                    "len = {:} count = {:} limit = {:} space = {:} total = {:}\n",
-                    i,
-                    count,
-                    count_limit,
-                    space,
-                    total_count,
-                );
-            }
+            {}
             return false;
         }
         if ((count_limit) > (0)) {
@@ -6910,7 +6878,9 @@ pub unsafe fn MoveToFrontTransform_200(v: *const Vec<u32>) -> Vec<u32> {
         ((*v).as_ptr().add((*v).len())).offset_from((*v).as_ptr()) as usize,
     )
     .iter()
-    .max()
+    .enumerate()
+    .max_by(|(idx_a, val_a), (idx_b, val_b)| val_a.cmp(val_b).then_with(|| idx_b.cmp(idx_a)))
+    .map(|(_, value)| value)
     .unwrap());
     let mut mtf: Vec<u32> = (0..(((max_value).wrapping_add(1_u32)) as usize) as usize)
         .map(|_| <u32>::default())
@@ -8220,7 +8190,11 @@ pub unsafe fn CreateHuffmanTree_220(
             std::slice::from_raw_parts((&mut (*depth.offset((0) as isize)) as *mut u8), count)
                 .iter()
                 .enumerate()
-                .max_by(|(_, x), (_, y)| x.partial_cmp(y).unwrap_or(std::cmp::Ordering::Equal))
+                .max_by(|(idx_a, x), (idx_b, y)| {
+                    x.partial_cmp(y)
+                        .unwrap_or(std::cmp::Ordering::Equal)
+                        .then_with(|| idx_b.cmp(idx_a))
+                })
                 .map(|(i, _)| (&mut (*depth.offset((0) as isize)) as *mut u8).add(i))
                 .unwrap_or((&mut (*depth.offset((0) as isize)) as *mut u8))
         }) as i32)

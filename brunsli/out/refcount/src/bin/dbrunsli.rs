@@ -2267,20 +2267,18 @@ pub fn ComputeLehmerCode_112(mut sigma: Ptr<u32>, mut len: usize, mut code: Ptr<
     }
     let mut i: usize = 0_usize;
     'loop_: while (i < len) {
-        let it: Value<Ptr<u32>> = Rc::new(RefCell::new(
+        let it: Value<Ptr<u32>> = Rc::new(RefCell::new({
+            let count = ((items.as_pointer() as Ptr<u32>).to_end().get_offset()
+                - (items.as_pointer() as Ptr<u32>).get_offset()) as usize;
             (items.as_pointer() as Ptr<u32>).offset(
                 (items.as_pointer() as Ptr<u32>)
                     .clone()
                     .into_iter()
-                    .enumerate()
-                    .position(|(index_0, value_0)| {
-                        index_0 < (items.as_pointer() as Ptr<u32>).to_end().get_offset() as usize
-                            && value_0.read() == (elem!(sigma, i).read())
-                    })
-                    .unwrap_or((items.as_pointer() as Ptr<u32>).to_end().get_offset() as usize)
-                    as isize,
-            ),
-        ));
+                    .take(count)
+                    .position(|value_0| value_0.read() == (elem!(sigma, i).read()))
+                    .unwrap_or(count) as isize,
+            )
+        }));
         if !((*it.borrow()) != (items.as_pointer() as Ptr<u32>).to_end()) {
             ({
                 BrunsliDumpAndAbort_79(
@@ -3021,7 +3019,7 @@ impl brunsli_internal_dec_OutputChunk {
         }
     }
     pub fn new_2(size: Option<usize>) -> Self {
-        let mut size: usize = size.unwrap_or(0_usize);
+        let mut size: usize = size.unwrap_or_else(|| 0_usize);
         let __this: Value<brunsli_internal_dec_OutputChunk> = Rc::new(RefCell::new(Self {
             next: Ptr::<u8>::null(),
             len: 0_usize,
@@ -4116,7 +4114,7 @@ pub fn DecodeVarint_144(
                     continue 'loop_;
                 }
                 _ => {
-                    if !(false) {
+                    {
                         ({
                             BrunsliDumpAndAbort_79(
                                 Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),
@@ -4180,7 +4178,7 @@ pub fn DecodeLimitedVarint_145(
                     continue 'loop_;
                 }
                 _ => {
-                    if !(false) {
+                    {
                         ({
                             BrunsliDumpAndAbort_79(
                                 Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),
@@ -4244,7 +4242,7 @@ pub fn DecodeLimitedVarint_146(
                     continue 'loop_;
                 }
                 _ => {
-                    if !(false) {
+                    {
                         ({
                             BrunsliDumpAndAbort_79(
                                 Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),
@@ -6656,7 +6654,7 @@ pub fn DecodeMetaDataSection_180(
             return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
         }
     }
-    if !(false) {
+    {
         ({
             BrunsliDumpAndAbort_79(
                 Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),
@@ -11556,7 +11554,7 @@ pub fn DoEncodeScan_255(
                             as Ptr<i16>)
                             .offset(((block_idx << 6) as usize)));
                         let mut ok: bool = false;
-                        if (0 == 0) {
+                        {
                             ok = ({
                                 let _coeffs: Ptr<i16> = (coeffs).clone();
                                 let _dc_huff: Ptr<brunsli_HuffmanCodeTable> = (dc_huff).clone();
@@ -11572,54 +11570,6 @@ pub fn DoEncodeScan_255(
                                     _ac_huff,
                                     _num_zero_runs,
                                     _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else if (0 == 1) {
-                            ok = ({
-                                let _coeffs: Ptr<i16> = (coeffs).clone();
-                                let _dc_huff: Ptr<brunsli_HuffmanCodeTable> = (dc_huff).clone();
-                                let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _coding_state: Ptr<brunsli_internal_dec_DCTCodingState> =
-                                    (coding_state).clone();
-                                let _last_dc_coeff: Ptr<i16> = (array_field_ptr!(ss, last_dc_coeff)
-                                    as Ptr<i16>)
-                                    .offset((si.with(|__s| __s.comp_idx) as i32) as isize);
-                                let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                EncodeDCTBlockProgressive_253(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _num_zero_runs,
-                                    _coding_state,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else {
-                            ok = ({
-                                let _coeffs: Ptr<i16> = (coeffs).clone();
-                                let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _coding_state: Ptr<brunsli_internal_dec_DCTCodingState> =
-                                    (coding_state).clone();
-                                let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                EncodeRefinementBits_254(
-                                    _coeffs,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _coding_state,
                                     _bw,
                                 )
                             });
@@ -11949,73 +11899,36 @@ pub fn DoEncodeScan_256(
                             as Ptr<i16>)
                             .offset(((block_idx << 6) as usize)));
                         let mut ok: bool = false;
-                        if (1 == 0) {
-                            ok = ({
-                                let _coeffs: Ptr<i16> = (coeffs).clone();
-                                let _dc_huff: Ptr<brunsli_HuffmanCodeTable> = (dc_huff).clone();
-                                let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _last_dc_coeff: Ptr<i16> = (array_field_ptr!(ss, last_dc_coeff)
-                                    as Ptr<i16>)
-                                    .offset((si.with(|__s| __s.comp_idx) as i32) as isize);
-                                let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                EncodeDCTBlockSequential_252(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _num_zero_runs,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else if (1 == 1) {
-                            ok = ({
-                                let _coeffs: Ptr<i16> = (coeffs).clone();
-                                let _dc_huff: Ptr<brunsli_HuffmanCodeTable> = (dc_huff).clone();
-                                let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _coding_state: Ptr<brunsli_internal_dec_DCTCodingState> =
-                                    (coding_state).clone();
-                                let _last_dc_coeff: Ptr<i16> = (array_field_ptr!(ss, last_dc_coeff)
-                                    as Ptr<i16>)
-                                    .offset((si.with(|__s| __s.comp_idx) as i32) as isize);
-                                let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                EncodeDCTBlockProgressive_253(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _num_zero_runs,
-                                    _coding_state,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else {
-                            ok = ({
-                                let _coeffs: Ptr<i16> = (coeffs).clone();
-                                let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _coding_state: Ptr<brunsli_internal_dec_DCTCodingState> =
-                                    (coding_state).clone();
-                                let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                EncodeRefinementBits_254(
-                                    _coeffs,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _coding_state,
-                                    _bw,
-                                )
-                            });
+                        {
+                            {
+                                ok = ({
+                                    let _coeffs: Ptr<i16> = (coeffs).clone();
+                                    let _dc_huff: Ptr<brunsli_HuffmanCodeTable> = (dc_huff).clone();
+                                    let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
+                                    let _Ss: i32 = Ss;
+                                    let _Se: i32 = Se;
+                                    let _Al: i32 = Al;
+                                    let _num_zero_runs: i32 = num_zero_runs;
+                                    let _coding_state: Ptr<brunsli_internal_dec_DCTCodingState> =
+                                        (coding_state).clone();
+                                    let _last_dc_coeff: Ptr<i16> =
+                                        (array_field_ptr!(ss, last_dc_coeff) as Ptr<i16>)
+                                            .offset((si.with(|__s| __s.comp_idx) as i32) as isize);
+                                    let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
+                                    EncodeDCTBlockProgressive_253(
+                                        _coeffs,
+                                        _dc_huff,
+                                        _ac_huff,
+                                        _Ss,
+                                        _Se,
+                                        _Al,
+                                        _num_zero_runs,
+                                        _coding_state,
+                                        _last_dc_coeff,
+                                        _bw,
+                                    )
+                                });
+                            }
                         }
                         if !(ok) {
                             return brunsli_internal_dec_SerializationStatus_ERROR;
@@ -12342,73 +12255,28 @@ pub fn DoEncodeScan_257(
                             as Ptr<i16>)
                             .offset(((block_idx << 6) as usize)));
                         let mut ok: bool = false;
-                        if (2 == 0) {
-                            ok = ({
-                                let _coeffs: Ptr<i16> = (coeffs).clone();
-                                let _dc_huff: Ptr<brunsli_HuffmanCodeTable> = (dc_huff).clone();
-                                let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _last_dc_coeff: Ptr<i16> = (array_field_ptr!(ss, last_dc_coeff)
-                                    as Ptr<i16>)
-                                    .offset((si.with(|__s| __s.comp_idx) as i32) as isize);
-                                let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                EncodeDCTBlockSequential_252(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _num_zero_runs,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else if (2 == 1) {
-                            ok = ({
-                                let _coeffs: Ptr<i16> = (coeffs).clone();
-                                let _dc_huff: Ptr<brunsli_HuffmanCodeTable> = (dc_huff).clone();
-                                let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _coding_state: Ptr<brunsli_internal_dec_DCTCodingState> =
-                                    (coding_state).clone();
-                                let _last_dc_coeff: Ptr<i16> = (array_field_ptr!(ss, last_dc_coeff)
-                                    as Ptr<i16>)
-                                    .offset((si.with(|__s| __s.comp_idx) as i32) as isize);
-                                let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                EncodeDCTBlockProgressive_253(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _num_zero_runs,
-                                    _coding_state,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else {
-                            ok = ({
-                                let _coeffs: Ptr<i16> = (coeffs).clone();
-                                let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _coding_state: Ptr<brunsli_internal_dec_DCTCodingState> =
-                                    (coding_state).clone();
-                                let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                EncodeRefinementBits_254(
-                                    _coeffs,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _coding_state,
-                                    _bw,
-                                )
-                            });
+                        {
+                            {
+                                ok = ({
+                                    let _coeffs: Ptr<i16> = (coeffs).clone();
+                                    let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
+                                    let _Ss: i32 = Ss;
+                                    let _Se: i32 = Se;
+                                    let _Al: i32 = Al;
+                                    let _coding_state: Ptr<brunsli_internal_dec_DCTCodingState> =
+                                        (coding_state).clone();
+                                    let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
+                                    EncodeRefinementBits_254(
+                                        _coeffs,
+                                        _ac_huff,
+                                        _Ss,
+                                        _Se,
+                                        _Al,
+                                        _coding_state,
+                                        _bw,
+                                    )
+                                });
+                            }
                         }
                         if !(ok) {
                             return brunsli_internal_dec_SerializationStatus_ERROR;
@@ -12879,12 +12747,7 @@ pub fn SerializeJpeg_206(
                         SerializeSection_259(_marker, _parsing_state, _state, _jpg)
                     });
                     if (status == brunsli_internal_dec_SerializationStatus_ERROR) {
-                        if true {
-                        } else {
-                            write!(libcc2rs::cerr(), "Failed to encode marker ",);
-                            libcc2rs::cerr().write_all(&([(&[marker as u8] as &[u8])].concat()));
-                            write!(libcc2rs::cerr(), "\n",);
-                        }
+                        {}
                         field!(ss, stage)
                             .write(brunsli_internal_dec_SerializationState_Stage_ERROR);
                         break;
@@ -12893,7 +12756,7 @@ pub fn SerializeJpeg_206(
                     if (status == brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT) {
                         return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT;
                     } else if (status != brunsli_internal_dec_SerializationStatus_DONE) {
-                        if !(false) {
+                        {
                             ({
                                 BrunsliDumpAndAbort_79(
                                     Ptr::<i8>::from_string_literal(b"jpeg_data_writer.cc"),
@@ -12942,6 +12805,25 @@ impl brunsli_internal_dec_State {
             is_storage_allocated: false,
             meta: Rc::new(RefCell::new(Vec::new())),
             internal: Ptr::alloc(<brunsli_internal_dec_InternalState>::default()).to_owned_opt(),
+        }
+    }
+    pub fn move_from(_a0: Ptr<brunsli_internal_dec_State>) -> Self {
+        Self {
+            stage: { (*_a0.upgrade().deref()).stage },
+            tags_met: { (*_a0.upgrade().deref()).tags_met },
+            skip_tags: { (*_a0.upgrade().deref()).skip_tags },
+            data: { (*_a0.upgrade().deref()).data.clone() },
+            len: { (*_a0.upgrade().deref()).len },
+            pos: { (*_a0.upgrade().deref()).pos },
+            context_map: { (*_a0.upgrade().deref()).context_map.clone() },
+            entropy_codes: { (*_a0.upgrade().deref()).entropy_codes.clone() },
+            use_legacy_context_model: { (*_a0.upgrade().deref()).use_legacy_context_model },
+            is_storage_allocated: { (*_a0.upgrade().deref()).is_storage_allocated },
+            meta: Rc::new(RefCell::new(std::mem::take(
+                &mut (*{ (*_a0.upgrade().deref()).meta.clone() }.borrow_mut()),
+            ))),
+            internal: field!(_a0, internal)
+                .with_mut(|__v: &mut Option<Value<brunsli_internal_dec_InternalState>>| __v.take()),
         }
     }
 }
@@ -13564,7 +13446,7 @@ impl brunsli_BrunsliDecoderImpl for Ptr<brunsli_BrunsliDecoder> {
                     return brunsli_BrunsliDecoder_Status_ERROR;
                 }
                 _ => {
-                    if !(false) {
+                    {
                         ({
                             BrunsliDumpAndAbort_79(
                                 Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),
@@ -13823,7 +13705,7 @@ impl brunsli_HuffmanDecodingDataImpl for Ptr<brunsli_HuffmanDecodingData> {
         arena: Option<Ptr<brunsli_Arena_brunsli_HuffmanCode_>>,
     ) -> bool {
         let mut arena: Ptr<brunsli_Arena_brunsli_HuffmanCode_> =
-            arena.unwrap_or(Ptr::<brunsli_Arena_brunsli_HuffmanCode_>::null());
+            arena.unwrap_or_else(|| Ptr::<brunsli_Arena_brunsli_HuffmanCode_>::null());
         let local_arena: Value<brunsli_Arena_brunsli_HuffmanCode_> =
             Rc::new(RefCell::new(<brunsli_Arena_brunsli_HuffmanCode_>::default()));
         if (arena).is_null() {
@@ -14089,26 +13971,21 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         return true;
     }
     fn RemoveValue(&self, mut value: u8, mut code: Ptr<i32>, mut nbits: Ptr<i32>) -> bool {
-        let it: Value<Ptr<u8>> = Rc::new(RefCell::new(
+        let it: Value<Ptr<u8>> = Rc::new(RefCell::new({
+            let count = (((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)
+                .to_end()
+                .get_offset()
+                - ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>).get_offset())
+                as usize;
             ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>).offset(
                 ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)
                     .clone()
                     .into_iter()
-                    .enumerate()
-                    .position(|(index_0, value_0)| {
-                        index_0
-                            < ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)
-                                .to_end()
-                                .get_offset() as usize
-                            && value_0.read() == value
-                    })
-                    .unwrap_or(
-                        ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)
-                            .to_end()
-                            .get_offset() as usize,
-                    ) as isize,
-            ),
-        ));
+                    .take(count)
+                    .position(|value_0| value_0.read() == value)
+                    .unwrap_or(count) as isize,
+            )
+        }));
         if (*it.borrow()) == ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>).to_end() {
             return false;
         }

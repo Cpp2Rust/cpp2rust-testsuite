@@ -1884,46 +1884,36 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                 (*output_order.borrow_mut()).push(a0_clone)
             };
         }
-        let glyf_loc: Value<Ptr<u32>> = Rc::new(RefCell::new(
+        let glyf_loc: Value<Ptr<u32>> = Rc::new(RefCell::new({
+            let count = ((output_order.as_pointer() as Ptr<u32>)
+                .to_end()
+                .get_offset()
+                - (output_order.as_pointer() as Ptr<u32>).get_offset())
+                as usize;
             (output_order.as_pointer() as Ptr<u32>).offset(
                 (output_order.as_pointer() as Ptr<u32>)
                     .clone()
                     .into_iter()
-                    .enumerate()
-                    .position(|(index_0, value_0)| {
-                        index_0
-                            < (output_order.as_pointer() as Ptr<u32>)
-                                .to_end()
-                                .get_offset() as usize
-                            && value_0.read() == kGlyfTableTag_0.with(|rc| *rc.borrow())
-                    })
-                    .unwrap_or(
-                        (output_order.as_pointer() as Ptr<u32>)
-                            .to_end()
-                            .get_offset() as usize,
-                    ) as isize,
-            ),
-        ));
-        let loca_loc: Value<Ptr<u32>> = Rc::new(RefCell::new(
+                    .take(count)
+                    .position(|value_0| value_0.read() == kGlyfTableTag_0.with(|rc| *rc.borrow()))
+                    .unwrap_or(count) as isize,
+            )
+        }));
+        let loca_loc: Value<Ptr<u32>> = Rc::new(RefCell::new({
+            let count = ((output_order.as_pointer() as Ptr<u32>)
+                .to_end()
+                .get_offset()
+                - (output_order.as_pointer() as Ptr<u32>).get_offset())
+                as usize;
             (output_order.as_pointer() as Ptr<u32>).offset(
                 (output_order.as_pointer() as Ptr<u32>)
                     .clone()
                     .into_iter()
-                    .enumerate()
-                    .position(|(index_0, value_0)| {
-                        index_0
-                            < (output_order.as_pointer() as Ptr<u32>)
-                                .to_end()
-                                .get_offset() as usize
-                            && value_0.read() == kLocaTableTag_2.with(|rc| *rc.borrow())
-                    })
-                    .unwrap_or(
-                        (output_order.as_pointer() as Ptr<u32>)
-                            .to_end()
-                            .get_offset() as usize,
-                    ) as isize,
-            ),
-        ));
+                    .take(count)
+                    .position(|value_0| value_0.read() == kLocaTableTag_2.with(|rc| *rc.borrow()))
+                    .unwrap_or(count) as isize,
+            )
+        }));
         if ((*glyf_loc.borrow()) != (output_order.as_pointer() as Ptr<u32>).to_end())
             && ((*loca_loc.borrow()) != (output_order.as_pointer() as Ptr<u32>).to_end())
         {
@@ -1934,48 +1924,44 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                 (output_order.as_pointer() as Ptr<Vec<u32>>).decay()
             };
             {
-                let __off = (output_order.as_pointer() as Ptr<u32>)
-                    .offset(
+                let __off = {
+                    let count = ((output_order.as_pointer() as Ptr<u32>)
+                        .to_end()
+                        .get_offset()
+                        - (output_order.as_pointer() as Ptr<u32>).get_offset())
+                        as usize;
+                    (output_order.as_pointer() as Ptr<u32>).offset(
                         (output_order.as_pointer() as Ptr<u32>)
                             .clone()
                             .into_iter()
-                            .enumerate()
-                            .position(|(index_0, value_0)| {
-                                index_0
-                                    < (output_order.as_pointer() as Ptr<u32>)
-                                        .to_end()
-                                        .get_offset() as usize
-                                    && value_0.read() == kGlyfTableTag_0.with(|rc| *rc.borrow())
+                            .take(count)
+                            .position(|value_0| {
+                                value_0.read() == kGlyfTableTag_0.with(|rc| *rc.borrow())
                             })
-                            .unwrap_or(
-                                (output_order.as_pointer() as Ptr<u32>)
-                                    .to_end()
-                                    .get_offset() as usize,
-                            ) as isize,
+                            .unwrap_or(count) as isize,
                     )
-                    .offset(1_i64 as isize)
-                    .get_offset();
+                }
+                .offset(1_i64 as isize)
+                .get_offset();
                 (*output_order.borrow_mut()).insert(__off, kLocaTableTag_2.with(|rc| *rc.borrow()));
-                (output_order.as_pointer() as Ptr<u32>)
-                    .offset(
+                {
+                    let count = ((output_order.as_pointer() as Ptr<u32>)
+                        .to_end()
+                        .get_offset()
+                        - (output_order.as_pointer() as Ptr<u32>).get_offset())
+                        as usize;
+                    (output_order.as_pointer() as Ptr<u32>).offset(
                         (output_order.as_pointer() as Ptr<u32>)
                             .clone()
                             .into_iter()
-                            .enumerate()
-                            .position(|(index_0, value_0)| {
-                                index_0
-                                    < (output_order.as_pointer() as Ptr<u32>)
-                                        .to_end()
-                                        .get_offset() as usize
-                                    && value_0.read() == kGlyfTableTag_0.with(|rc| *rc.borrow())
+                            .take(count)
+                            .position(|value_0| {
+                                value_0.read() == kGlyfTableTag_0.with(|rc| *rc.borrow())
                             })
-                            .unwrap_or(
-                                (output_order.as_pointer() as Ptr<u32>)
-                                    .to_end()
-                                    .get_offset() as usize,
-                            ) as isize,
+                            .unwrap_or(count) as isize,
                     )
-                    .offset(1_i64 as isize)
+                }
+                .offset(1_i64 as isize)
             };
         }
         return std::mem::take(&mut (*output_order.borrow_mut()));

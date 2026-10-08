@@ -2267,20 +2267,18 @@ pub fn ComputeLehmerCode_112(mut sigma: Ptr<u32>, mut len: usize, mut code: Ptr<
     }
     let mut i: usize = 0_usize;
     'loop_: while (i < len) {
-        let it: Value<Ptr<u32>> = Rc::new(RefCell::new(
+        let it: Value<Ptr<u32>> = Rc::new(RefCell::new({
+            let count = ((items.as_pointer() as Ptr<u32>).to_end().get_offset()
+                - (items.as_pointer() as Ptr<u32>).get_offset()) as usize;
             (items.as_pointer() as Ptr<u32>).offset(
                 (items.as_pointer() as Ptr<u32>)
                     .clone()
                     .into_iter()
-                    .enumerate()
-                    .position(|(index_0, value_0)| {
-                        index_0 < (items.as_pointer() as Ptr<u32>).to_end().get_offset() as usize
-                            && value_0.read() == (elem!(sigma, i).read())
-                    })
-                    .unwrap_or((items.as_pointer() as Ptr<u32>).to_end().get_offset() as usize)
-                    as isize,
-            ),
-        ));
+                    .take(count)
+                    .position(|value_0| value_0.read() == (elem!(sigma, i).read()))
+                    .unwrap_or(count) as isize,
+            )
+        }));
         if !((*it.borrow()) != (items.as_pointer() as Ptr<u32>).to_end()) {
             ({
                 BrunsliDumpAndAbort_79(
@@ -2492,16 +2490,7 @@ pub struct brunsli_Storage {
 }
 impl brunsli_Storage {}
 pub fn WriteBits_120(mut n_bits: usize, mut bits: u64, mut storage: Ptr<brunsli_Storage>) {
-    if true {
-    } else {
-        write!(
-            libcc2rs::cerr(),
-            "WriteBits {:2} {:16x} {:10}\n",
-            n_bits,
-            bits,
-            storage.with(|__s| __s.pos),
-        );
-    }
+    {}
     if !((bits >> n_bits) == 0_u64) {
         ({
             BrunsliDumpAndAbort_79(
@@ -4662,18 +4651,7 @@ pub fn EncodeHuffmanCode_158(
             .read())
         };
         if (count > count_limit) {
-            if true {
-            } else {
-                write!(
-                    libcc2rs::cerr(),
-                    "len = {:} count = {:} limit = {:} space = {:} total = {:}\n",
-                    i,
-                    count,
-                    count_limit,
-                    space,
-                    total_count,
-                );
-            }
+            {}
             return false;
         }
         if (count_limit > 0) {
@@ -7380,7 +7358,9 @@ pub fn MoveToFrontTransform_200(v: Ptr<Vec<u32>>) -> Vec<u32> {
             - (Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>).get_offset();
         let max_index = PtrValueIter::new(&(Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>), __count)
             .enumerate()
-            .max_by_key(|&(_, val)| val)
+            .max_by(|&(idx_a, val_a), &(idx_b, val_b)| {
+                val_a.cmp(&val_b).then_with(|| idx_b.cmp(&idx_a))
+            })
             .map(|(idx, _)| idx)
             .unwrap_or(0);
 
@@ -8764,10 +8744,11 @@ pub fn CreateHuffmanTree_220(
                     - (depth.offset((0) as isize)).get_offset();
                 let max_index = PtrValueIter::new(&(depth.offset((0) as isize)), count)
                     .enumerate()
-                    .max_by(|(_, val_a), (_, val_b)| {
+                    .max_by(|(idx_a, val_a), (idx_b, val_b)| {
                         val_a
                             .partial_cmp(val_b)
                             .unwrap_or(std::cmp::Ordering::Equal)
+                            .then_with(|| idx_b.cmp(idx_a))
                     })
                     .map(|(idx, _)| idx)
                     .unwrap_or(0);
@@ -12008,26 +11989,21 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         return true;
     }
     fn RemoveValue(&self, mut value: u8, mut code: Ptr<i32>, mut nbits: Ptr<i32>) -> bool {
-        let it: Value<Ptr<u8>> = Rc::new(RefCell::new(
+        let it: Value<Ptr<u8>> = Rc::new(RefCell::new({
+            let count = (((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)
+                .to_end()
+                .get_offset()
+                - ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>).get_offset())
+                as usize;
             ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>).offset(
                 ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)
                     .clone()
                     .into_iter()
-                    .enumerate()
-                    .position(|(index_0, value_0)| {
-                        index_0
-                            < ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)
-                                .to_end()
-                                .get_offset() as usize
-                            && value_0.read() == value
-                    })
-                    .unwrap_or(
-                        ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>)
-                            .to_end()
-                            .get_offset() as usize,
-                    ) as isize,
-            ),
-        ));
+                    .take(count)
+                    .position(|value_0| value_0.read() == value)
+                    .unwrap_or(count) as isize,
+            )
+        }));
         if (*it.borrow()) == ((*self).with(|__s| __s.values_.as_pointer()) as Ptr<u8>).to_end() {
             return false;
         }

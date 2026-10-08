@@ -3092,7 +3092,7 @@ impl brunsli_internal_dec_OutputChunk {
         this
     }
     pub unsafe fn new_2(mut size: Option<usize>) -> Self {
-        let mut size: usize = size.unwrap_or(0_usize);
+        let mut size: usize = size.unwrap_or_else(|| unsafe { 0_usize });
         let mut this = Self {
             next: std::ptr::null(),
             len: 0_usize,
@@ -4140,7 +4140,7 @@ pub unsafe fn DecodeVarint_144(
                     continue 'loop_;
                 }
                 _ => {
-                    if !(false) {
+                    {
                         (unsafe {
                             BrunsliDumpAndAbort_79(
                                 c"brunsli_decode.cc".as_ptr(),
@@ -4195,7 +4195,7 @@ pub unsafe fn DecodeLimitedVarint_145(
                     continue 'loop_;
                 }
                 _ => {
-                    if !(false) {
+                    {
                         (unsafe {
                             BrunsliDumpAndAbort_79(
                                 c"brunsli_decode.cc".as_ptr(),
@@ -4250,7 +4250,7 @@ pub unsafe fn DecodeLimitedVarint_146(
                     continue 'loop_;
                 }
                 _ => {
-                    if !(false) {
+                    {
                         (unsafe {
                             BrunsliDumpAndAbort_79(
                                 c"brunsli_decode.cc".as_ptr(),
@@ -6361,7 +6361,7 @@ pub unsafe fn DecodeMetaDataSection_180(
             return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
         }
     }
-    if !(false) {
+    {
         (unsafe {
             BrunsliDumpAndAbort_79(
                 c"brunsli_decode.cc".as_ptr(),
@@ -8512,7 +8512,7 @@ impl brunsli_BrunsliDecoder {
                     return brunsli_BrunsliDecoder_Status_ERROR;
                 }
                 _ => {
-                    if !(false) {
+                    {
                         (unsafe {
                             BrunsliDumpAndAbort_79(
                                 c"brunsli_decode.cc".as_ptr(),
@@ -9145,7 +9145,7 @@ impl brunsli_HuffmanDecodingData {
         mut arena: Option<*mut brunsli_Arena_brunsli_HuffmanCode_>,
     ) -> bool {
         let mut arena: *mut brunsli_Arena_brunsli_HuffmanCode_ =
-            arena.unwrap_or(std::ptr::null_mut());
+            arena.unwrap_or_else(|| unsafe { std::ptr::null_mut() });
         let mut local_arena: brunsli_Arena_brunsli_HuffmanCode_ =
             <brunsli_Arena_brunsli_HuffmanCode_>::default();
         if (arena).is_null() {
@@ -10819,7 +10819,7 @@ pub unsafe fn DoEncodeScan_255(
                         let mut coeffs: *const i16 =
                             (&(&(*c)).coeffs[(((block_idx) << (6)) as usize)] as *const i16);
                         let mut ok: bool = false;
-                        if ((0) == (0)) {
+                        {
                             ok = (unsafe {
                                 let _coeffs: *const i16 = coeffs;
                                 let _dc_huff: *const brunsli_HuffmanCodeTable = dc_huff;
@@ -10836,55 +10836,6 @@ pub unsafe fn DoEncodeScan_255(
                                     _ac_huff,
                                     _num_zero_runs,
                                     _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else if ((0) == (1)) {
-                            ok = (unsafe {
-                                let _coeffs: *const i16 = coeffs;
-                                let _dc_huff: *const brunsli_HuffmanCodeTable = dc_huff;
-                                let _ac_huff: *const brunsli_HuffmanCodeTable = ac_huff;
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _coding_state: *mut brunsli_internal_dec_DCTCodingState =
-                                    coding_state;
-                                let _last_dc_coeff: *mut i16 = (*ss)
-                                    .last_dc_coeff
-                                    .as_mut_ptr()
-                                    .offset(((*si).comp_idx as i32) as isize);
-                                let _bw: *mut brunsli_internal_dec_BitWriter = bw;
-                                EncodeDCTBlockProgressive_253(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _num_zero_runs,
-                                    _coding_state,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else {
-                            ok = (unsafe {
-                                let _coeffs: *const i16 = coeffs;
-                                let _ac_huff: *const brunsli_HuffmanCodeTable = ac_huff;
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _coding_state: *mut brunsli_internal_dec_DCTCodingState =
-                                    coding_state;
-                                let _bw: *mut brunsli_internal_dec_BitWriter = bw;
-                                EncodeRefinementBits_254(
-                                    _coeffs,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _coding_state,
                                     _bw,
                                 )
                             });
@@ -11140,75 +11091,37 @@ pub unsafe fn DoEncodeScan_256(
                         let mut coeffs: *const i16 =
                             (&(&(*c)).coeffs[(((block_idx) << (6)) as usize)] as *const i16);
                         let mut ok: bool = false;
-                        if ((1) == (0)) {
-                            ok = (unsafe {
-                                let _coeffs: *const i16 = coeffs;
-                                let _dc_huff: *const brunsli_HuffmanCodeTable = dc_huff;
-                                let _ac_huff: *const brunsli_HuffmanCodeTable = ac_huff;
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _last_dc_coeff: *mut i16 = (*ss)
-                                    .last_dc_coeff
-                                    .as_mut_ptr()
-                                    .offset(((*si).comp_idx as i32) as isize);
-                                let _bw: *mut brunsli_internal_dec_BitWriter = bw;
-                                EncodeDCTBlockSequential_252(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _num_zero_runs,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else if ((1) == (1)) {
-                            ok = (unsafe {
-                                let _coeffs: *const i16 = coeffs;
-                                let _dc_huff: *const brunsli_HuffmanCodeTable = dc_huff;
-                                let _ac_huff: *const brunsli_HuffmanCodeTable = ac_huff;
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _coding_state: *mut brunsli_internal_dec_DCTCodingState =
-                                    coding_state;
-                                let _last_dc_coeff: *mut i16 = (*ss)
-                                    .last_dc_coeff
-                                    .as_mut_ptr()
-                                    .offset(((*si).comp_idx as i32) as isize);
-                                let _bw: *mut brunsli_internal_dec_BitWriter = bw;
-                                EncodeDCTBlockProgressive_253(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _num_zero_runs,
-                                    _coding_state,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else {
-                            ok = (unsafe {
-                                let _coeffs: *const i16 = coeffs;
-                                let _ac_huff: *const brunsli_HuffmanCodeTable = ac_huff;
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _coding_state: *mut brunsli_internal_dec_DCTCodingState =
-                                    coding_state;
-                                let _bw: *mut brunsli_internal_dec_BitWriter = bw;
-                                EncodeRefinementBits_254(
-                                    _coeffs,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _coding_state,
-                                    _bw,
-                                )
-                            });
+                        {
+                            {
+                                ok = (unsafe {
+                                    let _coeffs: *const i16 = coeffs;
+                                    let _dc_huff: *const brunsli_HuffmanCodeTable = dc_huff;
+                                    let _ac_huff: *const brunsli_HuffmanCodeTable = ac_huff;
+                                    let _Ss: i32 = Ss;
+                                    let _Se: i32 = Se;
+                                    let _Al: i32 = Al;
+                                    let _num_zero_runs: i32 = num_zero_runs;
+                                    let _coding_state: *mut brunsli_internal_dec_DCTCodingState =
+                                        coding_state;
+                                    let _last_dc_coeff: *mut i16 = (*ss)
+                                        .last_dc_coeff
+                                        .as_mut_ptr()
+                                        .offset(((*si).comp_idx as i32) as isize);
+                                    let _bw: *mut brunsli_internal_dec_BitWriter = bw;
+                                    EncodeDCTBlockProgressive_253(
+                                        _coeffs,
+                                        _dc_huff,
+                                        _ac_huff,
+                                        _Ss,
+                                        _Se,
+                                        _Al,
+                                        _num_zero_runs,
+                                        _coding_state,
+                                        _last_dc_coeff,
+                                        _bw,
+                                    )
+                                });
+                            }
                         }
                         if !(ok) {
                             return brunsli_internal_dec_SerializationStatus_ERROR;
@@ -11461,75 +11374,28 @@ pub unsafe fn DoEncodeScan_257(
                         let mut coeffs: *const i16 =
                             (&(&(*c)).coeffs[(((block_idx) << (6)) as usize)] as *const i16);
                         let mut ok: bool = false;
-                        if ((2) == (0)) {
-                            ok = (unsafe {
-                                let _coeffs: *const i16 = coeffs;
-                                let _dc_huff: *const brunsli_HuffmanCodeTable = dc_huff;
-                                let _ac_huff: *const brunsli_HuffmanCodeTable = ac_huff;
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _last_dc_coeff: *mut i16 = (*ss)
-                                    .last_dc_coeff
-                                    .as_mut_ptr()
-                                    .offset(((*si).comp_idx as i32) as isize);
-                                let _bw: *mut brunsli_internal_dec_BitWriter = bw;
-                                EncodeDCTBlockSequential_252(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _num_zero_runs,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else if ((2) == (1)) {
-                            ok = (unsafe {
-                                let _coeffs: *const i16 = coeffs;
-                                let _dc_huff: *const brunsli_HuffmanCodeTable = dc_huff;
-                                let _ac_huff: *const brunsli_HuffmanCodeTable = ac_huff;
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _coding_state: *mut brunsli_internal_dec_DCTCodingState =
-                                    coding_state;
-                                let _last_dc_coeff: *mut i16 = (*ss)
-                                    .last_dc_coeff
-                                    .as_mut_ptr()
-                                    .offset(((*si).comp_idx as i32) as isize);
-                                let _bw: *mut brunsli_internal_dec_BitWriter = bw;
-                                EncodeDCTBlockProgressive_253(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _num_zero_runs,
-                                    _coding_state,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
-                        } else {
-                            ok = (unsafe {
-                                let _coeffs: *const i16 = coeffs;
-                                let _ac_huff: *const brunsli_HuffmanCodeTable = ac_huff;
-                                let _Ss: i32 = Ss;
-                                let _Se: i32 = Se;
-                                let _Al: i32 = Al;
-                                let _coding_state: *mut brunsli_internal_dec_DCTCodingState =
-                                    coding_state;
-                                let _bw: *mut brunsli_internal_dec_BitWriter = bw;
-                                EncodeRefinementBits_254(
-                                    _coeffs,
-                                    _ac_huff,
-                                    _Ss,
-                                    _Se,
-                                    _Al,
-                                    _coding_state,
-                                    _bw,
-                                )
-                            });
+                        {
+                            {
+                                ok = (unsafe {
+                                    let _coeffs: *const i16 = coeffs;
+                                    let _ac_huff: *const brunsli_HuffmanCodeTable = ac_huff;
+                                    let _Ss: i32 = Ss;
+                                    let _Se: i32 = Se;
+                                    let _Al: i32 = Al;
+                                    let _coding_state: *mut brunsli_internal_dec_DCTCodingState =
+                                        coding_state;
+                                    let _bw: *mut brunsli_internal_dec_BitWriter = bw;
+                                    EncodeRefinementBits_254(
+                                        _coeffs,
+                                        _ac_huff,
+                                        _Ss,
+                                        _Se,
+                                        _Al,
+                                        _coding_state,
+                                        _bw,
+                                    )
+                                });
+                            }
                         }
                         if !(ok) {
                             return brunsli_internal_dec_SerializationStatus_ERROR;
@@ -11957,37 +11823,7 @@ pub unsafe fn SerializeJpeg_206(
                         SerializeSection_259(_marker, _parsing_state, _state, _jpg)
                     });
                     if ((status) == (brunsli_internal_dec_SerializationStatus_ERROR)) {
-                        if true {
-                        } else {
-                            write!(
-                                std::fs::File::from_raw_fd(
-                                    std::io::stderr()
-                                        .as_fd()
-                                        .try_clone_to_owned()
-                                        .unwrap()
-                                        .into_raw_fd(),
-                                ),
-                                "Failed to encode marker ",
-                            );
-                            std::fs::File::from_raw_fd(
-                                std::io::stderr()
-                                    .as_fd()
-                                    .try_clone_to_owned()
-                                    .unwrap()
-                                    .into_raw_fd(),
-                            )
-                            .write_all(&([(&[marker as u8] as &[u8])].concat()));
-                            write!(
-                                std::fs::File::from_raw_fd(
-                                    std::io::stderr()
-                                        .as_fd()
-                                        .try_clone_to_owned()
-                                        .unwrap()
-                                        .into_raw_fd(),
-                                ),
-                                "\n",
-                            );
-                        }
+                        {}
                         (*ss).stage = brunsli_internal_dec_SerializationState_Stage_ERROR;
                         break;
                     }
@@ -11995,7 +11831,7 @@ pub unsafe fn SerializeJpeg_206(
                     if ((status) == (brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT)) {
                         return brunsli_internal_dec_SerializationStatus_NEEDS_MORE_INPUT;
                     } else if ((status) != (brunsli_internal_dec_SerializationStatus_DONE)) {
-                        if !(false) {
+                        {
                             (unsafe {
                                 BrunsliDumpAndAbort_79(
                                     c"jpeg_data_writer.cc".as_ptr(),
@@ -12046,6 +11882,23 @@ impl brunsli_internal_dec_State {
                 (Box::leak(Box::new(<brunsli_internal_dec_InternalState>::default()))
                     as *mut brunsli_internal_dec_InternalState),
             )),
+        };
+        this
+    }
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_State) -> Self {
+        let mut this = Self {
+            stage: (*_a0).stage,
+            tags_met: (*_a0).tags_met,
+            skip_tags: (*_a0).skip_tags,
+            data: (*_a0).data,
+            len: (*_a0).len,
+            pos: (*_a0).pos,
+            context_map: (*_a0).context_map,
+            entropy_codes: (*_a0).entropy_codes,
+            use_legacy_context_model: (*_a0).use_legacy_context_model,
+            is_storage_allocated: (*_a0).is_storage_allocated,
+            meta: std::mem::take(&mut (*_a0).meta),
+            internal: (*_a0).internal.take(),
         };
         this
     }
