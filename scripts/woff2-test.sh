@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -eo pipefail
 
 # Usage: woff2-test.sh <build_dir> <source_dir> <model...>
 BUILD_DIR="$1"
@@ -35,6 +35,10 @@ for f in "$TMP_DIR"/original/*.ttf; do
 done
 wait_all "${pids[@]}" || { echo "FAIL: cpp woff2_compress"; exit 1; }
 
+n_ttf=$(ls "$TMP_DIR"/original/*.ttf | wc -l)
+n_woff2=$(ls "$TMP_DIR"/original/*.woff2 | wc -l)
+[ "$n_ttf" -eq "$n_woff2" ] || { echo "FAIL: cpp woff2_compress produced $n_woff2 of $n_ttf"; exit 1; }
+
 for f in "$TMP_DIR"/original/*.woff2; do
   "$SRC_DIR/src/woff2_info" "$f" | tail -n +2 > "$TMP_DIR/original/$(basename "$f" .woff2).info"
 done
@@ -67,10 +71,9 @@ for model in "${MODELS[@]}"; do
   wait_all "${pids[@]}" || { echo "FAIL [$model]: woff2_compress"; exit 1; }
 
   # Compare woff2 files against original
-  for f in "$MODEL_DIR"/*.woff2; do
-    base=$(basename "$f" .woff2)
-    diff "$f" "$TMP_DIR/original/$base.woff2" \
-      || { echo "FAIL [$model]: woff2 mismatch on $base"; exit 1; }
+  for f in "$TMP_DIR"/original/*.woff2; do
+    diff "$MODEL_DIR/$(basename "$f")" "$f" \
+      || { echo "FAIL [$model]: woff2 mismatch on $f"; exit 1; }
   done
 
   # Decompress and compare ttf roundtrip
@@ -82,17 +85,15 @@ for model in "${MODELS[@]}"; do
   done
   wait_all "${pids[@]}" || { echo "FAIL [$model]: woff2_decompress"; exit 1; }
 
-  for f in "$MODEL_DIR"/*.ttf; do
-    base=$(basename "$f" .ttf)
-    diff "$f" "$TMP_DIR/cc-decompressed/$base.ttf" \
-      || { echo "FAIL [$model]: ttf mismatch on $base"; exit 1; }
+  for f in "$TMP_DIR"/cc-decompressed/*.ttf; do
+    diff "$MODEL_DIR/$(basename "$f")" "$f" \
+      || { echo "FAIL [$model]: ttf mismatch on $f"; exit 1; }
   done
 
   # Compare woff2_info output
-  for f in "$MODEL_DIR"/*.woff2; do
-    base=$(basename "$f" .woff2)
-    "$RUST_BIN"/woff2_info "$f" | tail -n +2 > "$MODEL_DIR/$base.info"
-    diff "$MODEL_DIR/$base.info" "$TMP_DIR/original/$base.info" \
+  for f in "$TMP_DIR"/original/*.info; do
+    base=$(basename "$f" .info)
+    "$RUST_BIN"/woff2_info "$MODEL_DIR/$base.woff2" | tail -n +2 | diff - "$f" \
       || { echo "FAIL [$model]: info mismatch on $base"; exit 1; }
   done
 

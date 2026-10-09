@@ -38,6 +38,12 @@ for f in "$TMP_DIR/cpp"/*.brn; do
 done
 wait_all "${pids[@]}" || { echo "FAIL: cpp dbrunsli"; exit 1; }
 
+# check roundtrip lossless
+for f in "$IMGS_DIR"/*.jpg; do
+  diff "$f" "$TMP_DIR/cpp/$(basename "$f")" \
+    || { echo "FAIL: cpp roundtrip not lossless on $f"; exit 1; }
+done
+
 # Run each model and compare against original
 
 for model in "${MODELS[@]}"; do
@@ -55,9 +61,9 @@ for model in "${MODELS[@]}"; do
   wait_all "${pids[@]}" || { echo "FAIL [$model]: cbrunsli"; exit 1; }
 
   # Compare brn files against original
-  for f in "$MODEL_DIR"/*.brn; do
-    base=$(basename "$f")
-    diff "$f" "$TMP_DIR/cpp/$base" \
+  for f in "$IMGS_DIR"/*.jpg; do
+    base=$(basename "$f" .jpg)
+    diff "$MODEL_DIR/$base.brn" "$TMP_DIR/cpp/$base.brn" \
       || { echo "FAIL [$model]: brn mismatch on $base"; exit 1; }
   done
 
@@ -69,10 +75,9 @@ for model in "${MODELS[@]}"; do
   done
   wait_all "${pids[@]}" || { echo "FAIL [$model]: dbrunsli"; exit 1; }
 
-  for f in "$MODEL_DIR"/*.jpg; do
-    base=$(basename "$f")
-    diff "$f" "$TMP_DIR/cpp/$base" \
-      || { echo "FAIL [$model]: jpg mismatch on $base"; exit 1; }
+  for f in "$IMGS_DIR"/*.jpg; do
+    diff "$MODEL_DIR/$(basename "$f")" "$f" \
+      || { echo "FAIL [$model]: jpg mismatch on $f"; exit 1; }
   done
 
   echo "Brunsli $model tests passed!"
