@@ -780,14 +780,14 @@ pub struct woff2_WOFF2FontInfo {
     pub index_format: u16,
     pub num_hmetrics: u16,
     pub x_mins: Vec<i16>,
-    pub table_entry_by_tag: BTreeMap<u32, Box<u32>>,
+    pub table_entry_by_tag: BTreeMap<u32, Box<(u32, u32)>>,
 }
 #[repr(C)]
 #[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_RebuildMetadata {
     pub header_checksum: u32,
     pub font_infos: Vec<woff2_WOFF2FontInfo>,
-    pub checksums: BTreeMap<(u32, u32), Box<u32>>,
+    pub checksums: BTreeMap<(u32, u32), Box<((u32, u32), u32)>>,
 }
 pub unsafe fn WithSign_55(mut flag: i32, mut baseval: i32) -> i32 {
     return if (((flag) & (1)) != 0) {
@@ -1688,7 +1688,12 @@ pub unsafe fn ReconstructGlyf_63(
             }
         } else {
             if ((have_bbox as i64) != 0) {
-                printf(c"Empty glyph has a bbox\n".as_ptr() as *const i8);
+                (unsafe {
+                    libc::fprintf(
+                        libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                        c"Empty glyph has a bbox\n".as_ptr() as *const libc::c_char,
+                    )
+                });
                 return false;
             }
         }
@@ -1813,7 +1818,12 @@ pub unsafe fn ReconstructTransformedHmtx_67(
     let mut has_proportional_lsbs: bool = (((hmtx_flags as i32) & (1)) == (0));
     let mut has_monospace_lsbs: bool = (((hmtx_flags as i32) & (2)) == (0));
     if (((hmtx_flags as i32) & (252)) != (0)) {
-        printf(c"Illegal hmtx flags; bits 2-7 must be 0\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Illegal hmtx flags; bits 2-7 must be 0\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     if (has_proportional_lsbs) && (has_monospace_lsbs) {
@@ -2127,7 +2137,12 @@ pub unsafe fn ReconstructFont_74(
     })
     .cast_const();
     if ((((!(glyf_table).is_null() as i32) != (!(loca_table).is_null() as i32)) as i64) != 0) {
-        printf(c"Cannot have just one of glyf/loca\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Cannot have just one of glyf/loca\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     if !((glyf_table).is_null()) {
@@ -2138,7 +2153,12 @@ pub unsafe fn ReconstructFont_74(
             as i64)
             != 0)
         {
-            printf(c"Cannot transform just one of glyf/loca\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Cannot transform just one of glyf/loca\n".as_ptr() as *const libc::c_char,
+                )
+            });
             return false;
         }
     }
@@ -2152,10 +2172,10 @@ pub unsafe fn ReconstructFont_74(
         let table: *mut woff2_Table = &mut (*tables[(i)]);
         let mut checksum_key: (u32, u32) = ((*table).tag.into(), (*table).src_offset.into());
         let mut reused: bool = UnsafeMapIterator::find_key(
-            &(*metadata).checksums as *const BTreeMap<(u32, u32), Box<u32>>,
+            &(*metadata).checksums as *const BTreeMap<(u32, u32), Box<((u32, u32), u32)>>,
             &checksum_key,
         ) != UnsafeMapIterator::end(
-            &(*metadata).checksums as *const BTreeMap<(u32, u32), Box<u32>>,
+            &(*metadata).checksums as *const BTreeMap<(u32, u32), Box<((u32, u32), u32)>>,
         );
         if (((((font_index) == (0_usize)) && (reused)) as i64) != 0) {
             return false;
@@ -2276,17 +2296,17 @@ pub unsafe fn ReconstructFont_74(
                     return false;
                 }
             }
-            (*(*metadata)
+            (*&mut (*metadata)
                 .checksums
-                .entry((checksum_key).clone())
-                .or_default()
-                .as_mut()) = checksum;
+                .entry(checksum_key.clone())
+                .or_insert_with(|| Box::new((checksum_key, <u32>::default())))
+                .1) = checksum;
         } else {
-            checksum = (*(*metadata)
+            checksum = (*&mut (*metadata)
                 .checksums
-                .entry((checksum_key).clone())
-                .or_default()
-                .as_mut());
+                .entry(checksum_key.clone())
+                .or_insert_with(|| Box::new((checksum_key, <u32>::default())))
+                .1);
         }
         font_checksum = (font_checksum).wrapping_add(checksum);
         (unsafe { StoreU32_31(table_entry.as_mut_ptr(), 0_usize, checksum) });
@@ -2295,12 +2315,12 @@ pub unsafe fn ReconstructFont_74(
         if ((!(unsafe {
             (*out).Write_3(
                 (table_entry.as_mut_ptr() as *const ::libc::c_void),
-                (((*(*info)
+                (((*&mut (*info)
                     .table_entry_by_tag
-                    .entry((*table).tag)
-                    .or_default()
-                    .as_mut())
-                .wrapping_add(4_u32)) as usize),
+                    .entry((*table).tag.clone())
+                    .or_insert_with(|| Box::new(((*table).tag, <u32>::default())))
+                    .1)
+                    .wrapping_add(4_u32)) as usize),
                 12_usize,
             )
         }) as i64)
@@ -2545,10 +2565,14 @@ pub unsafe fn ReadWOFF2Header_75(
                     as i64)
                     != 0)
                 {
-                    printf(
-                        c"TTC font %d has non-consecutive glyf/loca\n".as_ptr() as *const i8,
-                        i,
-                    );
+                    (unsafe {
+                        libc::fprintf(
+                            libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                            c"TTC font %d has non-consecutive glyf/loca\n".as_ptr()
+                                as *const libc::c_char,
+                            (i),
+                        )
+                    });
                     return false;
                 }
             }
@@ -2565,12 +2589,16 @@ pub unsafe fn ReadWOFF2Header_75(
     });
     let mut dst_offset: u64 = first_table_offset;
     if ((((src_offset as usize) > (length)) as i64) != 0) {
-        printf(
-            c"offset fail; src_offset %lu length %lu dst_offset %lu\n".as_ptr() as *const i8,
-            src_offset,
-            length,
-            dst_offset,
-        );
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"offset fail; src_offset %lu length %lu dst_offset %lu\n".as_ptr()
+                    as *const libc::c_char,
+                (src_offset),
+                (length),
+                (dst_offset),
+            )
+        });
         return false;
     }
     if (meta_offset != 0) {
@@ -2609,19 +2637,25 @@ pub unsafe fn WriteHeaders_76(
     if ((*hdr).header_version != 0) {
         'loop_: for ttc_font in 0..((*hdr).ttc_fonts.len()) {
             let mut ttc_font = (*hdr).ttc_fonts.as_mut_ptr().add(ttc_font);
-            let mut sorted_index_by_tag: BTreeMap<u32, Box<u16>> = BTreeMap::new();
+            let mut sorted_index_by_tag: BTreeMap<u32, Box<(u32, u16)>> = BTreeMap::new();
             'loop_: for table_index in 0..((*ttc_font).table_indices.len()) {
                 let mut table_index = (&(*ttc_font)).table_indices[table_index].clone();
-                (*sorted_index_by_tag
-                    .entry((&mut (*hdr)).tables[(table_index as usize)].tag)
-                    .or_default()
-                    .as_mut()) = table_index;
+                (*&mut sorted_index_by_tag
+                    .entry((&mut (*hdr)).tables[(table_index as usize)].tag.clone())
+                    .or_insert_with(|| {
+                        Box::new((
+                            (&mut (*hdr)).tables[(table_index as usize)].tag,
+                            <u16>::default(),
+                        ))
+                    })
+                    .1) = table_index;
             }
             let mut index: u16 = 0_u16;
-            'loop_: for i in
-                UnsafeMapIterator::begin(&sorted_index_by_tag as *const BTreeMap<u32, Box<u16>>)
-            {
-                (&mut (*ttc_font)).table_indices[(index.postfix_inc() as usize)] = *i.second();
+            'loop_: for __begin4 in UnsafeMapIterator::begin(
+                &sorted_index_by_tag as *const BTreeMap<u32, Box<(u32, u16)>>,
+            ) {
+                let i: *mut (u32, u16) = &mut (*__begin4.deref());
+                (&mut (*ttc_font)).table_indices[(index.postfix_inc() as usize)] = (*i).1;
             }
         }
     } else {
@@ -2669,11 +2703,11 @@ pub unsafe fn WriteHeaders_76(
             'loop_: for table_index in 0..((*ttc_font).table_indices.len()) {
                 let table_index = (&(*ttc_font)).table_indices[table_index].clone();
                 let mut tag: u32 = (&mut (*hdr)).tables[(table_index as usize)].tag;
-                (*(&mut (*metadata)).font_infos[(i)]
+                (*&mut (&mut (*metadata)).font_infos[(i)]
                     .table_entry_by_tag
-                    .entry(tag)
-                    .or_default()
-                    .as_mut()) = (offset as u32);
+                    .entry(tag.clone())
+                    .or_insert_with(|| Box::new((tag, <u32>::default())))
+                    .1) = (offset as u32);
                 offset = (unsafe { StoreTableEntry_71(result, (offset as u32), tag) });
             }
             (*ttc_font).header_checksum = (unsafe {
@@ -2698,11 +2732,11 @@ pub unsafe fn WriteHeaders_76(
         });
         let mut i: u16 = 0_u16;
         'loop_: while ((i as i32) < ((*hdr).num_tables as i32)) {
-            (*(&mut (*metadata)).font_infos[(0_usize)]
+            (*&mut (&mut (*metadata)).font_infos[(0_usize)]
                 .table_entry_by_tag
-                .entry(sorted_tables[(i as usize)].tag)
-                .or_default()
-                .as_mut()) = (offset as u32);
+                .entry(sorted_tables[(i as usize)].tag.clone())
+                .or_insert_with(|| Box::new((sorted_tables[(i as usize)].tag, <u32>::default())))
+                .1) = (offset as u32);
             offset = (unsafe {
                 StoreTableEntry_71(result, (offset as u32), sorted_tables[(i as usize)].tag)
             });
@@ -2772,10 +2806,13 @@ pub unsafe fn ConvertWOFF2ToTTF_79(
     if ((compression_ratio)
         > (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxPlausibleCompressionRatio_54)))
     {
-        printf(
-            c"Implausible compression ratio %.01f\n".as_ptr() as *const i8,
-            (compression_ratio as f64),
-        );
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Implausible compression ratio %.01f\n".as_ptr() as *const libc::c_char,
+                (compression_ratio as f64),
+            )
+        });
         return false;
     }
     let mut src_buf: *const u8 = data.offset((hdr.compressed_offset) as isize);
@@ -2861,7 +2898,7 @@ pub unsafe fn GetFileContent_80(mut filename: Vec<libc::c_char>) -> Vec<libc::c_
     .unwrap();
     return {
         let mut __bytes: Vec<u8> = Vec::new();
-        let mut __f = &ifs.try_clone().unwrap();
+        let mut __f = &ifs;
         __f.read_to_end(&mut __bytes)
             .expect("couldn't read the file");
         let mut __buf: Vec<libc::c_char> = __bytes.iter().map(|&b| b as libc::c_char).collect();
@@ -2884,10 +2921,8 @@ pub unsafe fn SetFileContents_81(
         let __start = start as *const u8;
         let __end = end as *const u8;
         let __len = __end.offset_from(__start) as usize;
-        ofs.try_clone()
-            .unwrap()
-            .write_all(::std::slice::from_raw_parts(__start, __len));
-        ofs.try_clone().unwrap().try_clone().unwrap()
+        ofs.write_all(::std::slice::from_raw_parts(__start, __len));
+        ofs.try_clone().unwrap()
     };
 }
 pub fn main() {
@@ -2907,7 +2942,13 @@ pub fn main() {
 }
 unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     if ((argc) != (2)) {
-        printf(c"One argument, the input filename, must be provided.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"One argument, the input filename, must be provided.\n".as_ptr()
+                    as *const libc::c_char,
+            )
+        });
         return 1;
     }
     let mut filename: Vec<libc::c_char> = {

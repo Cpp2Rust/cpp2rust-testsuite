@@ -131,11 +131,13 @@ pub struct brunsli_JPEGQuantTable {
 }
 impl Default for brunsli_JPEGQuantTable {
     fn default() -> Self {
-        brunsli_JPEGQuantTable {
-            values: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
-            precision: 0,
-            index: 0,
-            is_last: true,
+        unsafe {
+            brunsli_JPEGQuantTable {
+                values: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
+                precision: 0,
+                index: 0,
+                is_last: true,
+            }
         }
     }
 }
@@ -149,11 +151,13 @@ pub struct brunsli_JPEGHuffmanCode {
 }
 impl Default for brunsli_JPEGHuffmanCode {
     fn default() -> Self {
-        brunsli_JPEGHuffmanCode {
-            counts: std::array::from_fn::<_, 17, _>(|_| Default::default()).to_vec(),
-            values: std::array::from_fn::<_, 257, _>(|_| Default::default()).to_vec(),
-            slot_id: 0,
-            is_last: true,
+        unsafe {
+            brunsli_JPEGHuffmanCode {
+                counts: std::array::from_fn::<_, 17, _>(|_| Default::default()).to_vec(),
+                values: std::array::from_fn::<_, 257, _>(|_| Default::default()).to_vec(),
+                slot_id: 0,
+                is_last: true,
+            }
         }
     }
 }
@@ -184,15 +188,17 @@ pub struct brunsli_JPEGScanInfo {
 }
 impl Default for brunsli_JPEGScanInfo {
     fn default() -> Self {
-        brunsli_JPEGScanInfo {
-            Ss: 0_i32,
-            Se: 0_i32,
-            Ah: 0_i32,
-            Al: 0_i32,
-            num_components: 0_usize,
-            components: std::array::from_fn::<_, 4, _>(|_| Default::default()).to_vec(),
-            reset_points: Default::default(),
-            extra_zero_runs: Default::default(),
+        unsafe {
+            brunsli_JPEGScanInfo {
+                Ss: 0_i32,
+                Se: 0_i32,
+                Ah: 0_i32,
+                Al: 0_i32,
+                num_components: 0_usize,
+                components: std::array::from_fn::<_, 4, _>(|_| Default::default()).to_vec(),
+                reset_points: Default::default(),
+                extra_zero_runs: Default::default(),
+            }
         }
     }
 }
@@ -2329,7 +2335,15 @@ pub unsafe fn BrunsliDumpAndAbort_79(
     mut l: i32,
     mut fn_: *const libc::c_char,
 ) {
-    printf(c"%s:%d (%s)\n".as_ptr() as *const i8, f, l, fn_);
+    (unsafe {
+        libc::fprintf(
+            libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+            c"%s:%d (%s)\n".as_ptr() as *const libc::c_char,
+            (f),
+            (l),
+            (fn_),
+        )
+    });
     libc::fflush(libcc2rs::stderr_unsafe());
     std::process::abort();
 }
@@ -2958,18 +2972,20 @@ pub struct brunsli_internal_dec_ComponentMeta {
 }
 impl Default for brunsli_internal_dec_ComponentMeta {
     fn default() -> Self {
-        brunsli_internal_dec_ComponentMeta {
-            context_offset: 0_usize,
-            h_samp: 0_i32,
-            v_samp: 0_i32,
-            context_bits: 0_usize,
-            ac_stride: 0_i32,
-            b_stride: 0_i32,
-            width_in_blocks: 0_i32,
-            height_in_blocks: 0_i32,
-            ac_coeffs: std::ptr::null_mut(),
-            block_state: std::ptr::null_mut(),
-            quant: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
+        unsafe {
+            brunsli_internal_dec_ComponentMeta {
+                context_offset: 0_usize,
+                h_samp: 0_i32,
+                v_samp: 0_i32,
+                context_bits: 0_usize,
+                ac_stride: 0_i32,
+                b_stride: 0_i32,
+                width_in_blocks: 0_i32,
+                height_in_blocks: 0_i32,
+                ac_coeffs: std::ptr::null_mut(),
+                block_state: std::ptr::null_mut(),
+                quant: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
+            }
         }
     }
 }
@@ -3009,19 +3025,21 @@ pub struct brunsli_internal_dec_State {
 impl brunsli_internal_dec_State {}
 impl Default for brunsli_internal_dec_State {
     fn default() -> Self {
-        brunsli_internal_dec_State {
-            stage: brunsli_internal_dec_Stage_SIGNATURE,
-            tags_met: 0_u32,
-            skip_tags: 0_u32,
-            data: std::ptr::null(),
-            len: 0_usize,
-            pos: 0_usize,
-            context_map: std::ptr::null(),
-            entropy_codes: std::ptr::null(),
-            use_legacy_context_model: false,
-            is_storage_allocated: false,
-            meta: Default::default(),
-            internal: None,
+        unsafe {
+            brunsli_internal_dec_State {
+                stage: brunsli_internal_dec_Stage_SIGNATURE,
+                tags_met: 0_u32,
+                skip_tags: 0_u32,
+                data: std::ptr::null(),
+                len: 0_usize,
+                pos: 0_usize,
+                context_map: std::ptr::null(),
+                entropy_codes: std::ptr::null(),
+                use_legacy_context_model: false,
+                is_storage_allocated: false,
+                meta: Default::default(),
+                internal: None,
+            }
         }
     }
 }
@@ -3064,9 +3082,11 @@ impl brunsli_Arena_brunsli_HuffmanCode_ {
 }
 impl Default for brunsli_Arena_brunsli_HuffmanCode_ {
     fn default() -> Self {
-        brunsli_Arena_brunsli_HuffmanCode_ {
-            capacity: 0_usize,
-            storage: None,
+        unsafe {
+            brunsli_Arena_brunsli_HuffmanCode_ {
+                capacity: 0_usize,
+                storage: None,
+            }
         }
     }
 }
@@ -3163,9 +3183,11 @@ pub struct brunsli_HuffmanCodeTable {
 }
 impl Default for brunsli_HuffmanCodeTable {
     fn default() -> Self {
-        brunsli_HuffmanCodeTable {
-            depth: [0_i32; 256],
-            code: [0_i32; 256],
+        unsafe {
+            brunsli_HuffmanCodeTable {
+                depth: [0_i32; 256],
+                code: [0_i32; 256],
+            }
         }
     }
 }
@@ -3220,11 +3242,13 @@ pub struct brunsli_internal_dec_DCTCodingState {
 }
 impl Default for brunsli_internal_dec_DCTCodingState {
     fn default() -> Self {
-        brunsli_internal_dec_DCTCodingState {
-            eob_run_: 0_i32,
-            cur_ac_huff_: std::ptr::null(),
-            refinement_bits_: Default::default(),
-            refinement_bits_count_: 0_usize,
+        unsafe {
+            brunsli_internal_dec_DCTCodingState {
+                eob_run_: 0_i32,
+                cur_ac_huff_: std::ptr::null(),
+                refinement_bits_: Default::default(),
+                refinement_bits_count_: 0_usize,
+            }
         }
     }
 }
@@ -3300,19 +3324,21 @@ impl brunsli_internal_dec_EncodeScanState {
 }
 impl Default for brunsli_internal_dec_EncodeScanState {
     fn default() -> Self {
-        brunsli_internal_dec_EncodeScanState {
-            stage: brunsli_internal_dec_EncodeScanState_Stage_HEAD,
-            mcu_y: 0_i32,
-            bw: <brunsli_internal_dec_BitWriter>::default(),
-            last_dc_coeff: [0_i16, 0_i16, 0_i16, 0_i16],
-            restarts_to_go: 0_i32,
-            next_restart_marker: 0_i32,
-            block_scan_index: 0_i32,
-            coding_state: <brunsli_internal_dec_DCTCodingState>::default(),
-            extra_zero_runs_pos: 0_usize,
-            next_extra_zero_run_index: 0_i32,
-            next_reset_point_pos: 0_usize,
-            next_reset_point: 0_i32,
+        unsafe {
+            brunsli_internal_dec_EncodeScanState {
+                stage: brunsli_internal_dec_EncodeScanState_Stage_HEAD,
+                mcu_y: 0_i32,
+                bw: <brunsli_internal_dec_BitWriter>::default(),
+                last_dc_coeff: [0_i16, 0_i16, 0_i16, 0_i16],
+                restarts_to_go: 0_i32,
+                next_restart_marker: 0_i32,
+                block_scan_index: 0_i32,
+                coding_state: <brunsli_internal_dec_DCTCodingState>::default(),
+                extra_zero_runs_pos: 0_usize,
+                next_extra_zero_run_index: 0_i32,
+                next_reset_point_pos: 0_usize,
+                next_reset_point: 0_i32,
+            }
         }
     }
 }
@@ -3395,23 +3421,25 @@ impl brunsli_internal_dec_SerializationState {
 }
 impl Default for brunsli_internal_dec_SerializationState {
     fn default() -> Self {
-        brunsli_internal_dec_SerializationState {
-            stage: brunsli_internal_dec_SerializationState_Stage_INIT,
-            output_queue: Default::default(),
-            section_index: 0_usize,
-            dht_index: 0,
-            dqt_index: 0,
-            app_index: 0,
-            com_index: 0,
-            data_index: 0,
-            scan_index: 0,
-            dc_huff_table: Default::default(),
-            ac_huff_table: Default::default(),
-            pad_bits: std::ptr::null(),
-            pad_bits_end: std::ptr::null(),
-            seen_dri_marker: false,
-            is_progressive: false,
-            scan_state: <brunsli_internal_dec_EncodeScanState>::default(),
+        unsafe {
+            brunsli_internal_dec_SerializationState {
+                stage: brunsli_internal_dec_SerializationState_Stage_INIT,
+                output_queue: Default::default(),
+                section_index: 0_usize,
+                dht_index: 0,
+                dqt_index: 0,
+                app_index: 0,
+                com_index: 0,
+                data_index: 0,
+                scan_index: 0,
+                dc_huff_table: Default::default(),
+                ac_huff_table: Default::default(),
+                pad_bits: std::ptr::null(),
+                pad_bits_end: std::ptr::null(),
+                seen_dri_marker: false,
+                is_progressive: false,
+                scan_state: <brunsli_internal_dec_EncodeScanState>::default(),
+            }
         }
     }
 }
@@ -3428,14 +3456,16 @@ pub struct brunsli_internal_dec_AcDcState {
 }
 impl Default for brunsli_internal_dec_AcDcState {
     fn default() -> Self {
-        brunsli_internal_dec_AcDcState {
-            next_mcu_y: 0,
-            next_component: 0_usize,
-            next_iy: 0,
-            next_x: 0,
-            ac_coeffs_order_decoded: false,
-            ac: Default::default(),
-            dc: Default::default(),
+        unsafe {
+            brunsli_internal_dec_AcDcState {
+                next_mcu_y: 0,
+                next_component: 0_usize,
+                next_iy: 0,
+                next_x: 0,
+                ac_coeffs_order_decoded: false,
+                ac: Default::default(),
+                dc: Default::default(),
+            }
         }
     }
 }
@@ -3452,14 +3482,16 @@ pub struct brunsli_internal_dec_SectionState {
 }
 impl Default for brunsli_internal_dec_SectionState {
     fn default() -> Self {
-        brunsli_internal_dec_SectionState {
-            tag: 0_usize,
-            is_active: false,
-            is_section: false,
-            tags_met: 0_u32,
-            remaining: 0_usize,
-            milestone: 0_usize,
-            projected_end: 0_usize,
+        unsafe {
+            brunsli_internal_dec_SectionState {
+                tag: 0_usize,
+                is_active: false,
+                is_section: false,
+                tags_met: 0_u32,
+                remaining: 0_usize,
+                milestone: 0_usize,
+                projected_end: 0_usize,
+            }
         }
     }
 }
@@ -3488,11 +3520,13 @@ pub struct brunsli_internal_dec_HeaderState {
 }
 impl Default for brunsli_internal_dec_HeaderState {
     fn default() -> Self {
-        brunsli_internal_dec_HeaderState {
-            stage: (brunsli_internal_dec_HeaderState_Stage_READ_TAG as usize),
-            section: <brunsli_internal_dec_SectionState>::default(),
-            remaining_skip_length: 0_usize,
-            varint_values: std::array::from_fn::<_, 16, _>(|_| Default::default()).to_vec(),
+        unsafe {
+            brunsli_internal_dec_HeaderState {
+                stage: (brunsli_internal_dec_HeaderState_Stage_READ_TAG as usize),
+                section: <brunsli_internal_dec_SectionState>::default(),
+                remaining_skip_length: 0_usize,
+                varint_values: std::array::from_fn::<_, 16, _>(|_| Default::default()).to_vec(),
+            }
         }
     }
 }
@@ -3513,9 +3547,11 @@ pub struct brunsli_internal_dec_FallbackState {
 }
 impl Default for brunsli_internal_dec_FallbackState {
     fn default() -> Self {
-        brunsli_internal_dec_FallbackState {
-            stage: (brunsli_internal_dec_FallbackState_Stage_READ_TAG as usize),
-            storage: Default::default(),
+        unsafe {
+            brunsli_internal_dec_FallbackState {
+                stage: (brunsli_internal_dec_FallbackState_Stage_READ_TAG as usize),
+                storage: Default::default(),
+            }
         }
     }
 }
@@ -3535,8 +3571,10 @@ pub struct brunsli_internal_dec_SectionHeaderState {
 }
 impl Default for brunsli_internal_dec_SectionHeaderState {
     fn default() -> Self {
-        brunsli_internal_dec_SectionHeaderState {
-            stage: (brunsli_internal_dec_SectionHeaderState_Stage_READ_TAG as usize),
+        unsafe {
+            brunsli_internal_dec_SectionHeaderState {
+                stage: (brunsli_internal_dec_SectionHeaderState_Stage_READ_TAG as usize),
+            }
         }
     }
 }
@@ -3585,18 +3623,20 @@ impl brunsli_internal_dec_MetadataState {
 }
 impl Default for brunsli_internal_dec_MetadataState {
     fn default() -> Self {
-        brunsli_internal_dec_MetadataState {
-            short_marker_count: 0_usize,
-            marker: 0_u8,
-            length_hi: 0_u8,
-            remaining_multibyte_length: 0_usize,
-            multibyte_sink: std::ptr::null_mut(),
-            stage: (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize),
-            brotli: std::ptr::null_mut(),
-            metadata_size: 0_usize,
-            decompressed_size: 0_usize,
-            result: brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR,
-            decompression_stage: brunsli_internal_dec_MetadataDecompressionStage_INITIAL,
+        unsafe {
+            brunsli_internal_dec_MetadataState {
+                short_marker_count: 0_usize,
+                marker: 0_u8,
+                length_hi: 0_u8,
+                remaining_multibyte_length: 0_usize,
+                multibyte_sink: std::ptr::null_mut(),
+                stage: (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize),
+                brotli: std::ptr::null_mut(),
+                metadata_size: 0_usize,
+                decompressed_size: 0_usize,
+                result: brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR,
+                decompression_stage: brunsli_internal_dec_MetadataDecompressionStage_INITIAL,
+            }
         }
     }
 }
@@ -3615,10 +3655,12 @@ pub struct brunsli_internal_dec_VarintState {
 }
 impl Default for brunsli_internal_dec_VarintState {
     fn default() -> Self {
-        brunsli_internal_dec_VarintState {
-            stage: brunsli_internal_dec_VarintState_Stage_INIT,
-            value: 0_usize,
-            i: 0_usize,
+        unsafe {
+            brunsli_internal_dec_VarintState {
+                stage: brunsli_internal_dec_VarintState_Stage_INIT,
+                value: 0_usize,
+                i: 0_usize,
+            }
         }
     }
 }
@@ -3705,27 +3747,29 @@ pub struct brunsli_internal_dec_JpegInternalsState {
 }
 impl Default for brunsli_internal_dec_JpegInternalsState {
     fn default() -> Self {
-        brunsli_internal_dec_JpegInternalsState {
-            stage: brunsli_internal_dec_JpegInternalsState_Stage_INIT,
-            have_dri: false,
-            num_scans: 0_usize,
-            dht_count: 0_usize,
-            br: <brunsli_BrunsliBitReader>::default(),
-            is_known_last_huffman_code: 0_usize,
-            terminal_huffman_code_count: 0_usize,
-            is_dc_table: false,
-            total_count: 0_usize,
-            space: 0_usize,
-            max_len: 0_usize,
-            max_count: 0_usize,
-            i: 0_usize,
-            p: <brunsli_PermutationCoder>::default(),
-            varint: <brunsli_internal_dec_VarintState>::default(),
-            j: 0_usize,
-            last_block_idx: 0_i32,
-            last_num: 0_i32,
-            num_padding_bits: 0_usize,
-            intermarker_length: 0_usize,
+        unsafe {
+            brunsli_internal_dec_JpegInternalsState {
+                stage: brunsli_internal_dec_JpegInternalsState_Stage_INIT,
+                have_dri: false,
+                num_scans: 0_usize,
+                dht_count: 0_usize,
+                br: <brunsli_BrunsliBitReader>::default(),
+                is_known_last_huffman_code: 0_usize,
+                terminal_huffman_code_count: 0_usize,
+                is_dc_table: false,
+                total_count: 0_usize,
+                space: 0_usize,
+                max_len: 0_usize,
+                max_count: 0_usize,
+                i: 0_usize,
+                p: <brunsli_PermutationCoder>::default(),
+                varint: <brunsli_internal_dec_VarintState>::default(),
+                j: 0_usize,
+                last_block_idx: 0_i32,
+                last_num: 0_i32,
+                num_padding_bits: 0_usize,
+                intermarker_length: 0_usize,
+            }
         }
     }
 }
@@ -3767,16 +3811,18 @@ pub struct brunsli_internal_dec_QuantDataState {
 }
 impl Default for brunsli_internal_dec_QuantDataState {
     fn default() -> Self {
-        brunsli_internal_dec_QuantDataState {
-            stage: brunsli_internal_dec_QuantDataState_Stage_INIT,
-            br: <brunsli_BrunsliBitReader>::default(),
-            i: 0_usize,
-            j: 0_usize,
-            data_precision: 0_u8,
-            vs: <brunsli_internal_dec_VarintState>::default(),
-            delta: 0_i32,
-            sign: 0_i32,
-            predictor: Default::default(),
+        unsafe {
+            brunsli_internal_dec_QuantDataState {
+                stage: brunsli_internal_dec_QuantDataState_Stage_INIT,
+                br: <brunsli_BrunsliBitReader>::default(),
+                i: 0_usize,
+                j: 0_usize,
+                data_precision: 0_u8,
+                vs: <brunsli_internal_dec_VarintState>::default(),
+                delta: 0_i32,
+                sign: 0_i32,
+                predictor: Default::default(),
+            }
         }
     }
 }
@@ -3840,14 +3886,16 @@ impl brunsli_internal_dec_HistogramDataState {
 }
 impl Default for brunsli_internal_dec_HistogramDataState {
     fn default() -> Self {
-        brunsli_internal_dec_HistogramDataState {
-            stage: brunsli_internal_dec_HistogramDataState_Stage_INIT,
-            br: <brunsli_BrunsliBitReader>::default(),
-            max_run_length_prefix: 0_usize,
-            entropy: None,
-            i: 0_usize,
-            counts: Default::default(),
-            arena: <brunsli_Arena_brunsli_HuffmanCode_>::default(),
+        unsafe {
+            brunsli_internal_dec_HistogramDataState {
+                stage: brunsli_internal_dec_HistogramDataState_Stage_INIT,
+                br: <brunsli_BrunsliBitReader>::default(),
+                max_run_length_prefix: 0_usize,
+                entropy: None,
+                i: 0_usize,
+                counts: Default::default(),
+                arena: <brunsli_Arena_brunsli_HuffmanCode_>::default(),
+            }
         }
     }
 }
@@ -3863,13 +3911,15 @@ pub struct brunsli_internal_dec_Buffer {
 }
 impl Default for brunsli_internal_dec_Buffer {
     fn default() -> Self {
-        brunsli_internal_dec_Buffer {
-            data_len: 0_usize,
-            borrowed_len: 0_usize,
-            data: Default::default(),
-            external_data: std::ptr::null(),
-            external_pos: 0_usize,
-            external_len: 0_usize,
+        unsafe {
+            brunsli_internal_dec_Buffer {
+                data_len: 0_usize,
+                borrowed_len: 0_usize,
+                data: Default::default(),
+                external_data: std::ptr::null(),
+                external_pos: 0_usize,
+                external_len: 0_usize,
+            }
         }
     }
 }
@@ -3974,31 +4024,33 @@ impl brunsli_internal_dec_InternalState {
 }
 impl Default for brunsli_internal_dec_InternalState {
     fn default() -> Self {
-        brunsli_internal_dec_InternalState {
-            ac_dc: <brunsli_internal_dec_AcDcState>::default(),
-            section: <brunsli_internal_dec_SectionState>::default(),
-            header: <brunsli_internal_dec_HeaderState>::default(),
-            fallback: <brunsli_internal_dec_FallbackState>::default(),
-            section_header: <brunsli_internal_dec_SectionHeaderState>::default(),
-            metadata: <brunsli_internal_dec_MetadataState>::default(),
-            internals: <brunsli_internal_dec_JpegInternalsState>::default(),
-            quant: <brunsli_internal_dec_QuantDataState>::default(),
-            histogram: <brunsli_internal_dec_HistogramDataState>::default(),
-            context_map_: Default::default(),
-            entropy_codes_: Default::default(),
-            block_state_: Vec::new(),
-            is_meta_warm: false,
-            shallow_histograms: false,
-            num_contexts: 0_usize,
-            num_histograms: 0_usize,
-            subdecoders_initialized: false,
-            ans_decoder: <brunsli_ANSDecoder>::default(),
-            bit_reader: <brunsli_BitSource>::default(),
-            arith_decoder: <brunsli_BinaryArithmeticDecoder>::default(),
-            result: brunsli_BrunsliStatus_BRUNSLI_OK,
-            last_stage: brunsli_internal_dec_Stage_ERROR,
-            buffer: <brunsli_internal_dec_Buffer>::default(),
-            serialization: <brunsli_internal_dec_SerializationState>::default(),
+        unsafe {
+            brunsli_internal_dec_InternalState {
+                ac_dc: <brunsli_internal_dec_AcDcState>::default(),
+                section: <brunsli_internal_dec_SectionState>::default(),
+                header: <brunsli_internal_dec_HeaderState>::default(),
+                fallback: <brunsli_internal_dec_FallbackState>::default(),
+                section_header: <brunsli_internal_dec_SectionHeaderState>::default(),
+                metadata: <brunsli_internal_dec_MetadataState>::default(),
+                internals: <brunsli_internal_dec_JpegInternalsState>::default(),
+                quant: <brunsli_internal_dec_QuantDataState>::default(),
+                histogram: <brunsli_internal_dec_HistogramDataState>::default(),
+                context_map_: Default::default(),
+                entropy_codes_: Default::default(),
+                block_state_: Default::default(),
+                is_meta_warm: false,
+                shallow_histograms: false,
+                num_contexts: 0_usize,
+                num_histograms: 0_usize,
+                subdecoders_initialized: false,
+                ans_decoder: <brunsli_ANSDecoder>::default(),
+                bit_reader: <brunsli_BitSource>::default(),
+                arith_decoder: <brunsli_BinaryArithmeticDecoder>::default(),
+                result: brunsli_BrunsliStatus_BRUNSLI_OK,
+                last_stage: brunsli_internal_dec_Stage_ERROR,
+                buffer: <brunsli_internal_dec_Buffer>::default(),
+                serialization: <brunsli_internal_dec_SerializationState>::default(),
+            }
         }
     }
 }
@@ -4367,9 +4419,10 @@ pub unsafe fn ProcessMetaData_149(
                         {
                             return false;
                         }
-                        (*jpg)
-                            .app_data
-                            .push((unsafe { GenerateApp0Marker_147((*state).marker) }));
+                        {
+                            let __a1 = (unsafe { GenerateApp0Marker_147((*state).marker) });
+                            (*jpg).app_data.push(__a1)
+                        };
                         continue 'loop_;
                     } else if (((*state).marker as i32) >= (128))
                         && (((*state).marker as i32) <= (130))
@@ -4406,9 +4459,10 @@ pub unsafe fn ProcessMetaData_149(
                 }
                 __v if __v == (brunsli_internal_dec_MetadataState_Stage_READ_CODE as usize) => {
                     let code: u8 = (*data.offset((pos.postfix_inc()) as isize));
-                    (*jpg)
-                        .app_data
-                        .push((unsafe { GenerateAppMarker_148((*state).marker, code) }));
+                    {
+                        let __a1 = (unsafe { GenerateAppMarker_148((*state).marker, code) });
+                        (*jpg).app_data.push(__a1)
+                    };
                     (*state).stage =
                         (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize);
                     continue 'loop_;
@@ -4854,8 +4908,7 @@ pub unsafe fn DecodeScanInfo_151(
                 (*js).last_num = 0;
             }
         }
-    )
-    .move_from();
+    );
     'loop_: while true {
         'switch: {
             match { ( ( ( * js ) . stage  as i32 ) )  } { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 ) )  =>  { { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
@@ -6250,30 +6303,27 @@ pub unsafe fn DecodeMetaDataSection_180(
     if (((*ms).decompression_stage)
         == (brunsli_internal_dec_MetadataDecompressionStage_DECOMPRESSING))
     {
-        let finish_decompression: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> =
-            lambda_unsafe!(
-                {
-                    let ms: *mut brunsli_internal_dec_MetadataState = ms;
-                },
-                |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
-                    if !(!(((*ms).brotli).is_null())) {
-                        (unsafe {
-                            BrunsliDumpAndAbort_79(
-                                c"brunsli_decode.cc".as_ptr(),
-                                1312,
-                                c"operator()".as_ptr(),
-                            )
-                        });
-                        'loop_: while true {}
-                    };
-                    ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
-                    (*ms).brotli = std::ptr::null_mut();
-                    (*ms).decompression_stage =
-                        brunsli_internal_dec_MetadataDecompressionStage_DONE;
-                    return result;
-                }
-            )
-            .move_from();
+        let finish_decompression: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> = lambda_unsafe!(
+            {
+                let ms: *mut brunsli_internal_dec_MetadataState = ms;
+            },
+            |mut result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
+                if !(!(((*ms).brotli).is_null())) {
+                    (unsafe {
+                        BrunsliDumpAndAbort_79(
+                            c"brunsli_decode.cc".as_ptr(),
+                            1312,
+                            c"operator()".as_ptr(),
+                        )
+                    });
+                    'loop_: while true {}
+                };
+                ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
+                (*ms).brotli = std::ptr::null_mut();
+                (*ms).decompression_stage = brunsli_internal_dec_MetadataDecompressionStage_DONE;
+                return result;
+            }
+        );
         'loop_: while true {
             let mut available_bytes: usize = ({
                 let mut __tmp_0: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
@@ -6462,17 +6512,15 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
         (*js).stage = brunsli_internal_dec_JpegInternalsState_Stage_READ_MARKERS;
     }
     (unsafe { PrepareBitReader_182(br, state) });
-    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> =
-        lambda_unsafe!(
-            {
-                let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
-                let state: *mut *mut brunsli_internal_dec_State = &mut state;
-            },
-            |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
-                return (unsafe { SuspendBitReader_183((*br), (*state), result) });
-            }
-        )
-        .move_from();
+    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> = lambda_unsafe!(
+        {
+            let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
+            let state: *mut *mut brunsli_internal_dec_State = &mut state;
+        },
+        |mut result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
+            return (unsafe { SuspendBitReader_183((*br), (*state), result) });
+        }
+    );
     if (((*js).stage as i32) == (brunsli_internal_dec_JpegInternalsState_Stage_READ_MARKERS as i32))
     {
         'loop_: while true {
@@ -6863,17 +6911,15 @@ pub unsafe fn DecodeQuantDataSection_186(
         (*qs).stage = brunsli_internal_dec_QuantDataState_Stage_READ_NUM_QUANT;
     }
     (unsafe { PrepareBitReader_182(br, state) });
-    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> =
-        lambda_unsafe!(
-            {
-                let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
-                let state: *mut *mut brunsli_internal_dec_State = &mut state;
-            },
-            |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
-                return (unsafe { SuspendBitReader_183((*br), (*state), result) });
-            }
-        )
-        .move_from();
+    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> = lambda_unsafe!(
+        {
+            let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
+            let state: *mut *mut brunsli_internal_dec_State = &mut state;
+        },
+        |mut result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
+            return (unsafe { SuspendBitReader_183((*br), (*state), result) });
+        }
+    );
     if (((*qs).stage as i32) == (brunsli_internal_dec_QuantDataState_Stage_READ_NUM_QUANT as i32)) {
         if !(unsafe { BrunsliBitReaderCanRead_134(br, 2_usize) }) {
             return (unsafe {
@@ -7126,17 +7172,15 @@ pub unsafe fn DecodeHistogramDataSection_187(
     {
         (unsafe { BrunsliBitReaderSetOptimistic_133(br) });
     }
-    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> =
-        lambda_unsafe!(
-            {
-                let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
-                let state: *mut *mut brunsli_internal_dec_State = &mut state;
-            },
-            |result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
-                return (unsafe { SuspendBitReader_183((*br), (*state), result) });
-            }
-        )
-        .move_from();
+    let suspend_bit_reader: FnPtr<fn(brunsli_BrunsliStatus) -> brunsli_BrunsliStatus> = lambda_unsafe!(
+        {
+            let br: *mut *mut brunsli_BrunsliBitReader = &mut br;
+            let state: *mut *mut brunsli_internal_dec_State = &mut state;
+        },
+        |mut result: brunsli_BrunsliStatus| -> brunsli_BrunsliStatus {
+            return (unsafe { SuspendBitReader_183((*br), (*state), result) });
+        }
+    );
     if (((*hs).stage as i32) == (brunsli_internal_dec_HistogramDataState_Stage_READ_SCHEME as i32))
     {
         let num_components: usize = (*jpg).components.len();
@@ -7992,8 +8036,10 @@ pub unsafe fn PrepareMeta_179(
     let s: *mut brunsli_internal_dec_InternalState =
         &mut (*(*state).internal.as_deref_mut().unwrap());
     let mut num_components: usize = (*jpg).components.len();
-    (*s).block_state_
-        .resize_with(num_components as usize, || <Vec<u8>>::default());
+    {
+        let __a0 = num_components as usize;
+        (*s).block_state_.resize_with(__a0, || <Vec<u8>>::default())
+    };
     let meta: *mut Vec<brunsli_internal_dec_ComponentMeta> = &mut (*state).meta;
     {
         let __a0 = num_components as usize;
@@ -8992,13 +9038,12 @@ pub unsafe fn ReadSimpleCode_219(
         {
             let symbols: *mut [u16; 4] = &mut symbols;
         },
-        |i: usize, j: usize| {
+        |mut i: usize, mut j: usize| {
             let mut t: u16 = (*symbols)[(j)];
             (*symbols)[(j)] = (*symbols)[(i)];
             (*symbols)[(i)] = t;
         }
-    )
-    .move_from();
+    );
     let mut table_size: usize = 1_usize;
     'switch: {
         match { num_symbols } {
@@ -10642,8 +10687,7 @@ pub unsafe fn DoEncodeScan_255(
             }
             panic!("ub: non-void function does not return a value")
         }
-    )
-    .move_from();
+    );
     let get_next_reset_point: FnPtr<fn() -> i32> = lambda_unsafe!(
         {
             let ss: *mut brunsli_internal_dec_EncodeScanState = ss;
@@ -10657,8 +10701,7 @@ pub unsafe fn DoEncodeScan_255(
             }
             panic!("ub: non-void function does not return a value")
         }
-    )
-    .move_from();
+    );
     if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_HEAD as i32)) {
         if !(unsafe {
             let _jpg: *const brunsli_JPEGData = jpg;
@@ -10916,8 +10959,7 @@ pub unsafe fn DoEncodeScan_256(
             }
             panic!("ub: non-void function does not return a value")
         }
-    )
-    .move_from();
+    );
     let get_next_reset_point: FnPtr<fn() -> i32> = lambda_unsafe!(
         {
             let ss: *mut brunsli_internal_dec_EncodeScanState = ss;
@@ -10931,8 +10973,7 @@ pub unsafe fn DoEncodeScan_256(
             }
             panic!("ub: non-void function does not return a value")
         }
-    )
-    .move_from();
+    );
     if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_HEAD as i32)) {
         if !(unsafe {
             let _jpg: *const brunsli_JPEGData = jpg;
@@ -11201,8 +11242,7 @@ pub unsafe fn DoEncodeScan_257(
             }
             panic!("ub: non-void function does not return a value")
         }
-    )
-    .move_from();
+    );
     let get_next_reset_point: FnPtr<fn() -> i32> = lambda_unsafe!(
         {
             let ss: *mut brunsli_internal_dec_EncodeScanState = ss;
@@ -11216,8 +11256,7 @@ pub unsafe fn DoEncodeScan_257(
             }
             panic!("ub: non-void function does not return a value")
         }
-    )
-    .move_from();
+    );
     if (((*ss).stage as i32) == (brunsli_internal_dec_EncodeScanState_Stage_HEAD as i32)) {
         if !(unsafe {
             let _jpg: *const brunsli_JPEGData = jpg;
@@ -11497,7 +11536,7 @@ pub unsafe fn SerializeSection_259(
 ) -> brunsli_internal_dec_SerializationStatus {
     let to_status: FnPtr<fn(bool) -> brunsli_internal_dec_SerializationStatus> =
         FnPtr::<fn(bool) -> brunsli_internal_dec_SerializationStatus>::new(
-            |result: bool| -> brunsli_internal_dec_SerializationStatus {
+            |mut result: bool| -> brunsli_internal_dec_SerializationStatus {
                 unsafe {
                     return if result {
                         brunsli_internal_dec_SerializationStatus_DONE
@@ -11743,8 +11782,7 @@ pub unsafe fn SerializeJpeg_206(
                 });
             }
         }
-    )
-    .move_from();
+    );
     (unsafe { maybe_push_output.call() });
     'loop_: while true {
         switch!(match ((*ss).stage as i32) {
@@ -11962,16 +12000,31 @@ pub unsafe fn ReadFileInternal_263(
     mut content: *mut Vec<libc::c_char>,
 ) -> bool {
     if ((libc::fseek(file, 0_i64 as ::libc::c_long, ::libc::SEEK_END)) != (0)) {
-        printf(c"Failed to seek end of input file.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Failed to seek end of input file.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     let mut input_size: i32 = (libc::ftell(file) as i64 as i32);
     if ((input_size) == (0)) {
-        printf(c"Input file is empty.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Input file is empty.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     if ((libc::fseek(file, 0_i64 as ::libc::c_long, ::libc::SEEK_SET)) != (0)) {
-        printf(c"Failed to rewind input file to the beginning.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Failed to rewind input file to the beginning.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     {
@@ -11993,7 +12046,12 @@ pub unsafe fn ReadFileInternal_263(
             file,
         );
         if ((bytes_read) == (0_usize)) {
-            printf(c"Failed to read input file\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to read input file\n".as_ptr() as *const libc::c_char,
+                )
+            });
             return false;
         }
         read_pos = (read_pos).wrapping_add(bytes_read);
@@ -12006,13 +12064,23 @@ pub unsafe fn ReadFile_264(
 ) -> bool {
     let mut file: *mut ::libc::FILE = libc::fopen((*file_name).as_ptr(), c"rb".as_ptr());
     if (file).is_null() {
-        printf(c"Failed to open input file.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Failed to open input file.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     let mut ok: bool = (unsafe { ReadFileInternal_263(file, content) });
     if ((libc::fclose(file)) != (0)) {
         if ok {
-            printf(c"Failed to close input file.\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to close input file.\n".as_ptr() as *const libc::c_char,
+                )
+            });
         }
         return false;
     }
@@ -12031,7 +12099,12 @@ pub unsafe fn WriteFileInternal_265(
             file,
         );
         if ((bytes_written) == (0_usize)) {
-            printf(c"Failed to write output.\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to write output.\n".as_ptr() as *const libc::c_char,
+                )
+            });
             return false;
         }
         write_pos = (write_pos).wrapping_add(bytes_written);
@@ -12044,7 +12117,12 @@ pub unsafe fn WriteFile_266(
 ) -> bool {
     let mut file: *mut ::libc::FILE = libc::fopen((*file_name).as_ptr(), c"wb".as_ptr());
     if (file).is_null() {
-        printf(c"Failed to open file for writing.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Failed to open file for writing.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     let mut ok: bool = (unsafe {
@@ -12054,7 +12132,12 @@ pub unsafe fn WriteFile_266(
     });
     if ((libc::fclose(file)) != (0)) {
         if ok {
-            printf(c"Failed to close output file.\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to close output file.\n".as_ptr() as *const libc::c_char,
+                )
+            });
         }
         return false;
     }
@@ -12093,7 +12176,12 @@ pub unsafe fn ProcessFile_267(
             input.shrink_to_fit();
         }
         if !(ok) {
-            printf(c"Failed to parse Brunsli input.\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to parse Brunsli input.\n".as_ptr() as *const libc::c_char,
+                )
+            });
             return false;
         }
         let mut writer: brunsli_JPEGOutput = brunsli_JPEGOutput::new({ Some(StringWriter_262) }, {
@@ -12101,7 +12189,12 @@ pub unsafe fn ProcessFile_267(
         });
         ok = (unsafe { WriteJpeg_261(&jpg, writer.clone()) });
         if !(ok) {
-            printf(c"Failed to serialize JPEG data.\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to serialize JPEG data.\n".as_ptr() as *const libc::c_char,
+                )
+            });
             return false;
         }
     }
@@ -12129,7 +12222,13 @@ pub fn main() {
 }
 unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     if ((argc) != (2)) && ((argc) != (3)) {
-        printf(c"Usage: dbrunsli FILE [OUTPUT_FILE, default=FILE.jpg]\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Usage: dbrunsli FILE [OUTPUT_FILE, default=FILE.jpg]\n".as_ptr()
+                    as *const libc::c_char,
+            )
+        });
         return 1;
     }
     let file_name: Vec<libc::c_char> = {
@@ -12137,7 +12236,12 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         std::slice::from_raw_parts(s, (0..).take_while(|&i| *s.add(i) != 0).count() + 1).to_vec()
     };
     if file_name.len() <= 1 {
-        printf(c"Empty input file name.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Empty input file name.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return 1;
     }
     let outfile_name: Vec<libc::c_char> = if ((argc) == (2)) {

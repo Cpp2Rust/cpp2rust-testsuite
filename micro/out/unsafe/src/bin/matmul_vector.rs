@@ -39,16 +39,18 @@ unsafe fn main_0() -> i32 {
     let mut b: Vec<Vec<i32>> = Vec::new();
     let mut i: i32 = 0;
     'loop_: while ((i) < (N)) {
-        a.push(
-            (0..(N as usize) as usize)
+        {
+            let __a1 = (0..(N as usize) as usize)
                 .map(|_| <i32>::default())
-                .collect::<Vec<_>>(),
-        );
-        b.push(
-            (0..(N as usize) as usize)
+                .collect::<Vec<_>>();
+            a.push(__a1)
+        };
+        {
+            let __a1 = (0..(N as usize) as usize)
                 .map(|_| <i32>::default())
-                .collect::<Vec<_>>(),
-        );
+                .collect::<Vec<_>>();
+            b.push(__a1)
+        };
         let mut j: i32 = 0;
         'loop_: while ((j) < (N)) {
             a[(i as usize)][(j as usize)] = (((i) + (j)) % (7));
@@ -63,11 +65,12 @@ unsafe fn main_0() -> i32 {
         let mut c: Vec<Vec<i32>> = Vec::new();
         let mut i: i32 = 0;
         'loop_: while ((i) < (N)) {
-            c.push(
-                (0..(N as usize) as usize)
+            {
+                let __a1 = (0..(N as usize) as usize)
                     .map(|_| <i32>::default())
-                    .collect::<Vec<_>>(),
-            );
+                    .collect::<Vec<_>>();
+                c.push(__a1)
+            };
             i.prefix_inc();
         }
         (unsafe { matmul_0(&a, &b, &mut c, N) });

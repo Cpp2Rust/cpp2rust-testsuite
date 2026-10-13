@@ -797,7 +797,7 @@ pub struct woff2_WOFF2FontInfo {
     pub x_mins: Value<Vec<i16>>,
     #[offset(32)]
     #[byte_size(48)]
-    pub table_entry_by_tag: BTreeMap<u32, Value<u32>>,
+    pub table_entry_by_tag: BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>,
 }
 #[derive(DeepClone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(80)]
@@ -809,7 +809,8 @@ pub struct woff2_RebuildMetadata {
     pub font_infos: Value<Vec<woff2_WOFF2FontInfo>>,
     #[offset(32)]
     #[byte_size(48)]
-    pub checksums: BTreeMap<(Value<u32>, Value<u32>), Value<u32>>,
+    pub checksums:
+        BTreeMap<(Value<u32>, Value<u32>), Value<(Value<(Value<u32>, Value<u32>)>, Value<u32>)>>,
 }
 pub fn WithSign_55(mut flag: i32, mut baseval: i32) -> i32 {
     return if ((flag & 1) != 0) { baseval } else { -baseval };
@@ -2042,8 +2043,8 @@ pub fn ReadTableDirectory_69(
             }
         } else {
             (*tag.borrow_mut()) = ({
-                let __idx = (((*flag_byte.borrow()) as i32) & 63) as usize;
-                kKnownTags_8.with(|rc| rc.borrow()[__idx])
+                let __idx0 = (((*flag_byte.borrow()) as i32) & 63) as usize;
+                kKnownTags_8.with(|rc| rc.borrow()[__idx0])
             });
         }
         let mut flags: u32 = 0_u32;
@@ -2272,11 +2273,21 @@ pub fn ReconstructFont_74(
         )));
         let mut reused: bool = RefcountMapIter::find_key(
             (field_ptr!(metadata, checksums)
-                as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u32>>>),
+                as Ptr<
+                    BTreeMap<
+                        (Value<u32>, Value<u32>),
+                        Value<(Value<(Value<u32>, Value<u32>)>, Value<u32>)>,
+                    >,
+                >),
             &(*checksum_key.borrow()),
         ) != RefcountMapIter::end(
             (field_ptr!(metadata, checksums)
-                as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u32>>>),
+                as Ptr<
+                    BTreeMap<
+                        (Value<u32>, Value<u32>),
+                        Value<(Value<(Value<u32>, Value<u32>)>, Value<u32>)>,
+                    >,
+                >),
         );
         if ((((font_index == 0_usize) && (reused)) as i64) != 0) {
             return false;
@@ -2399,21 +2410,55 @@ pub fn ReconstructFont_74(
                 }
             }
             (field_ptr!(metadata, checksums)
-                as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u32>>>)
-                .with_mut(|__v: &mut BTreeMap<(Value<u32>, Value<u32>), Value<u32>>| {
-                    __v.entry((*checksum_key.borrow()).clone())
-                        .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
-                        .as_pointer()
-                })
+                as Ptr<
+                    BTreeMap<
+                        (Value<u32>, Value<u32>),
+                        Value<(Value<(Value<u32>, Value<u32>)>, Value<u32>)>,
+                    >,
+                >)
+                .with_mut(
+                    |__v: &mut BTreeMap<
+                        (Value<u32>, Value<u32>),
+                        Value<(Value<(Value<u32>, Value<u32>)>, Value<u32>)>,
+                    >| {
+                        __v.entry((*checksum_key.borrow()).clone())
+                            .or_insert_with(|| {
+                                Rc::new(RefCell::new((
+                                    Rc::new(RefCell::new((*checksum_key.borrow()).clone())),
+                                    Rc::new(RefCell::new(<u32>::default())),
+                                )))
+                            })
+                            .borrow()
+                            .1
+                            .as_pointer()
+                    },
+                )
                 .write((*checksum.borrow()));
         } else {
             (*checksum.borrow_mut()) = ((field_ptr!(metadata, checksums)
-                as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u32>>>)
-                .with_mut(|__v: &mut BTreeMap<(Value<u32>, Value<u32>), Value<u32>>| {
-                    __v.entry((*checksum_key.borrow()).clone())
-                        .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
-                        .as_pointer()
-                })
+                as Ptr<
+                    BTreeMap<
+                        (Value<u32>, Value<u32>),
+                        Value<(Value<(Value<u32>, Value<u32>)>, Value<u32>)>,
+                    >,
+                >)
+                .with_mut(
+                    |__v: &mut BTreeMap<
+                        (Value<u32>, Value<u32>),
+                        Value<(Value<(Value<u32>, Value<u32>)>, Value<u32>)>,
+                    >| {
+                        __v.entry((*checksum_key.borrow()).clone())
+                            .or_insert_with(|| {
+                                Rc::new(RefCell::new((
+                                    Rc::new(RefCell::new((*checksum_key.borrow()).clone())),
+                                    Rc::new(RefCell::new(<u32>::default())),
+                                )))
+                            })
+                            .borrow()
+                            .1
+                            .as_pointer()
+                    },
+                )
                 .read());
         }
         font_checksum = { (font_checksum).wrapping_add((*checksum.borrow())) };
@@ -2441,10 +2486,18 @@ pub fn ReconstructFont_74(
         if ((!({
             (*out.upgrade().deref_mut()).Write_3(
                 ((table_entry.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any(),
-                ((((field_ptr!(info, table_entry_by_tag) as Ptr<BTreeMap<u32, Value<u32>>>)
-                    .with_mut(|__v: &mut BTreeMap<u32, Value<u32>>| {
-                        __v.entry(table.with(|__s| __s.tag))
-                            .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
+                ((((field_ptr!(info, table_entry_by_tag)
+                    as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>>)
+                    .with_mut(|__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>| {
+                        __v.entry(table.with(|__s| __s.tag).clone())
+                            .or_insert_with(|| {
+                                Rc::new(RefCell::new((
+                                    Rc::new(RefCell::new(table.with(|__s| __s.tag))),
+                                    Rc::new(RefCell::new(<u32>::default())),
+                                )))
+                            })
+                            .borrow()
+                            .1
                             .as_pointer()
                     })
                     .read())
@@ -2768,36 +2821,58 @@ pub fn WriteHeaders_76(
     if (hdr.with(|__s| __s.header_version) != 0) {
         'loop_: for mut ttc_font in hdr.with(|__s| __s.ttc_fonts.as_pointer()) as Ptr<woff2_TtcFont>
         {
-            let sorted_index_by_tag: Value<BTreeMap<u32, Value<u16>>> =
+            let sorted_index_by_tag: Value<BTreeMap<u32, Value<(Value<u32>, Value<u16>)>>> =
                 Rc::new(RefCell::new(BTreeMap::new()));
             'loop_: for mut table_index in
                 ttc_font.with(|__s| __s.table_indices.as_pointer()) as Ptr<u16>
             {
                 let mut table_index: u16 = table_index.read();
                 let __rhs = table_index;
-                (sorted_index_by_tag.as_pointer() as Ptr<BTreeMap<u32, Value<u16>>>)
-                    .with_mut(|__v: &mut BTreeMap<u32, Value<u16>>| {
-                        __v.entry({
-                            (*elem!(
-                                (hdr.with(|__s| __s.tables.as_pointer()) as Ptr<woff2_Table>),
-                                (table_index as usize)
-                            )
-                            .upgrade()
-                            .deref())
-                            .tag
+                (sorted_index_by_tag.as_pointer()
+                    as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<u16>)>>>)
+                    .with_mut(|__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<u16>)>>| {
+                        __v.entry(
+                            {
+                                (*elem!(
+                                    (hdr.with(|__s| __s.tables.as_pointer()) as Ptr<woff2_Table>),
+                                    (table_index as usize)
+                                )
+                                .upgrade()
+                                .deref())
+                                .tag
+                            }
+                            .clone(),
+                        )
+                        .or_insert_with(|| {
+                            Rc::new(RefCell::new((
+                                Rc::new(RefCell::new({
+                                    (*elem!(
+                                        (hdr.with(|__s| __s.tables.as_pointer())
+                                            as Ptr<woff2_Table>),
+                                        (table_index as usize)
+                                    )
+                                    .upgrade()
+                                    .deref())
+                                    .tag
+                                })),
+                                Rc::new(RefCell::new(<u16>::default())),
+                            )))
                         })
-                        .or_insert_with(|| Rc::new(RefCell::new(<u16>::default())))
+                        .borrow()
+                        .1
                         .as_pointer()
                     })
                     .write(__rhs);
             }
             let mut index: u16 = 0_u16;
-            'loop_: for i in RefcountMapIter::begin(sorted_index_by_tag.as_pointer()) {
+            'loop_: for __begin4 in RefcountMapIter::begin(sorted_index_by_tag.as_pointer()) {
+                let __begin4: Value<RefcountMapIter<u32, u16>> = Rc::new(RefCell::new(__begin4));
+                let i: Ptr<(Value<u32>, Value<u16>)> = (*__begin4.borrow()).deref();
                 elem!(
                     (ttc_font.with(|__s| __s.table_indices.as_pointer()) as Ptr<u16>),
                     (index.postfix_inc() as usize)
                 )
-                .write((*i.second().borrow()));
+                .write((*(*i.upgrade().deref()).1.borrow()));
             }
         }
     } else {
@@ -2873,10 +2948,17 @@ pub fn WriteHeaders_76(
                     (metadata.with(|__s| __s.font_infos.as_pointer()) as Ptr<woff2_WOFF2FontInfo>)
                         .offset(i),
                     table_entry_by_tag
-                ) as Ptr<BTreeMap<u32, Value<u32>>>)
-                    .with_mut(|__v: &mut BTreeMap<u32, Value<u32>>| {
-                        __v.entry(tag)
-                            .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
+                ) as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>>)
+                    .with_mut(|__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>| {
+                        __v.entry(tag.clone())
+                            .or_insert_with(|| {
+                                Rc::new(RefCell::new((
+                                    Rc::new(RefCell::new(tag)),
+                                    Rc::new(RefCell::new(<u32>::default())),
+                                )))
+                            })
+                            .borrow()
+                            .1
                             .as_pointer()
                     })
                     .write((offset as u32));
@@ -2911,10 +2993,19 @@ pub fn WriteHeaders_76(
                 (metadata.with(|__s| __s.font_infos.as_pointer()) as Ptr<woff2_WOFF2FontInfo>)
                     .offset(0_usize),
                 table_entry_by_tag
-            ) as Ptr<BTreeMap<u32, Value<u32>>>)
-                .with_mut(|__v: &mut BTreeMap<u32, Value<u32>>| {
-                    __v.entry({ (*sorted_tables.borrow())[(i as usize)].tag })
-                        .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
+            ) as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>>)
+                .with_mut(|__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>| {
+                    __v.entry({ (*sorted_tables.borrow())[(i as usize)].tag }.clone())
+                        .or_insert_with(|| {
+                            Rc::new(RefCell::new((
+                                Rc::new(RefCell::new({
+                                    (*sorted_tables.borrow())[(i as usize)].tag
+                                })),
+                                Rc::new(RefCell::new(<u32>::default())),
+                            )))
+                        })
+                        .borrow()
+                        .1
                         .as_pointer()
                 })
                 .write((offset as u32));
@@ -3082,7 +3173,7 @@ pub fn GetFileContent_80(filename: Vec<i8>) -> Vec<i8> {
     return {
         use std::io::Read;
         let mut __bytes: Vec<u8> = Vec::new();
-        let mut __f = &(*ifs.borrow()).try_clone().unwrap();
+        let mut __f = &(*ifs.borrow());
         __f.read_to_end(&mut __bytes)
             .expect("couldn't read the file");
         __bytes.push(0);
@@ -3100,17 +3191,9 @@ pub fn SetFileContents_81(filename: Vec<i8>, start: Ptr<i8>, end: Ptr<i8>) {
     {
         (*start.borrow()).clone().with_slice(
             (*end.borrow()).clone().get_offset() - (*start.borrow()).clone().get_offset(),
-            |__s| {
-                CChar::with_u8_slice(__s, |__b| {
-                    (*ofs.borrow_mut()).try_clone().unwrap().write_all(__b)
-                })
-            },
+            |__s| CChar::with_u8_slice(__s, |__b| (*ofs.borrow_mut()).write_all(__b)),
         );
-        (*ofs.borrow_mut())
-            .try_clone()
-            .unwrap()
-            .try_clone()
-            .unwrap()
+        (*ofs.borrow_mut()).try_clone().unwrap()
     };
 }
 pub fn main() {

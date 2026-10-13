@@ -640,7 +640,7 @@ pub struct woff2_Font {
     pub num_tables: u16,
     #[offset(8)]
     #[byte_size(48)]
-    pub tables: BTreeMap<u32, Value<woff2_Font_Table>>,
+    pub tables: BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>,
 }
 #[derive(DeepClone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(80)]
@@ -651,7 +651,7 @@ pub struct woff2_FontCollection {
     pub header_version: u32,
     #[offset(8)]
     #[byte_size(48)]
-    pub tables: BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>,
+    pub tables: BTreeMap<u32, Value<(Value<u32>, Value<Ptr<woff2_Font_Table>>)>>,
     #[offset(56)]
     #[byte_size(24)]
     pub fonts: Value<Vec<woff2_Font>>,
@@ -704,7 +704,8 @@ pub fn ReadTrueTypeFont_33(
     {
         return false;
     }
-    let intervals: Value<BTreeMap<u32, Value<u32>>> = Rc::new(RefCell::new(BTreeMap::new()));
+    let intervals: Value<BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>> =
+        Rc::new(RefCell::new(BTreeMap::new()));
     let mut i: u16 = 0_u16;
     'loop_: while ({ (i as i32) } < { (font.with(|__s| __s.num_tables) as i32) }) {
         let table: Value<woff2_Font_Table> = Rc::new(RefCell::new(<woff2_Font_Table>::default()));
@@ -727,44 +728,67 @@ pub fn ReadTrueTypeFont_33(
             return false;
         }
         let __rhs = { (*table.borrow()).length };
-        (intervals.as_pointer() as Ptr<BTreeMap<u32, Value<u32>>>)
-            .with_mut(|__v: &mut BTreeMap<u32, Value<u32>>| {
-                __v.entry({ (*table.borrow()).offset })
-                    .or_insert_with(|| Rc::new(RefCell::new(<u32>::default())))
+        (intervals.as_pointer() as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>>)
+            .with_mut(|__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>| {
+                __v.entry({ (*table.borrow()).offset }.clone())
+                    .or_insert_with(|| {
+                        Rc::new(RefCell::new((
+                            Rc::new(RefCell::new({ (*table.borrow()).offset })),
+                            Rc::new(RefCell::new(<u32>::default())),
+                        )))
+                    })
+                    .borrow()
+                    .1
                     .as_pointer()
             })
             .write(__rhs);
         (*table.borrow_mut()).data = { data.offset(({ (*table.borrow()).offset }) as isize) };
         if RefcountMapIter::find_key(
-            (field_ptr!(font, tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+            (field_ptr!(font, tables)
+                as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>),
             &{ (*table.borrow()).tag },
         ) != RefcountMapIter::end(
-            (field_ptr!(font, tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+            (field_ptr!(font, tables)
+                as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>),
         ) {
             return false;
         }
         let __rhs = (*table.borrow()).clone();
-        (field_ptr!(font, tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>)
-            .with_mut(|__v: &mut BTreeMap<u32, Value<woff2_Font_Table>>| {
-                __v.entry({ (*table.borrow()).tag })
-                    .or_insert_with(|| Rc::new(RefCell::new(<woff2_Font_Table>::default())))
-                    .as_pointer()
-            })
+        (field_ptr!(font, tables)
+            as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>)
+            .with_mut(
+                |__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>| {
+                    __v.entry({ (*table.borrow()).tag }.clone())
+                        .or_insert_with(|| {
+                            Rc::new(RefCell::new((
+                                Rc::new(RefCell::new({ (*table.borrow()).tag })),
+                                Rc::new(RefCell::new(<woff2_Font_Table>::default())),
+                            )))
+                        })
+                        .borrow()
+                        .1
+                        .as_pointer()
+                },
+            )
             .write(__rhs);
         i.prefix_inc();
     }
     let mut last_offset: u32 = (((12_u64 as u64)
         .wrapping_add((16_u64 as u64).wrapping_mul((font.with(|__s| __s.num_tables) as u64))))
         as u32);
-    'loop_: for i in RefcountMapIter::begin(intervals.as_pointer()) {
-        if ({ (*i.first().borrow()) } < { last_offset })
-            || ({ (*i.first().borrow()).wrapping_add((*i.second().borrow())) } < {
-                (*i.first().borrow())
-            })
+    'loop_: for __begin1 in RefcountMapIter::begin(intervals.as_pointer()) {
+        let __begin1: Value<RefcountMapIter<u32, u32>> = Rc::new(RefCell::new(__begin1));
+        let i: Ptr<(Value<u32>, Value<u32>)> = (*__begin1.borrow()).deref();
+        if ({ (*(*i.upgrade().deref()).0.borrow()) } < { last_offset })
+            || ({
+                (*(*i.upgrade().deref()).0.borrow())
+                    .wrapping_add((*(*i.upgrade().deref()).1.borrow()))
+            } < { (*(*i.upgrade().deref()).0.borrow()) })
         {
             return false;
         }
-        last_offset = (*i.first().borrow()).wrapping_add((*i.second().borrow()));
+        last_offset =
+            (*(*i.upgrade().deref()).0.borrow()).wrapping_add((*(*i.upgrade().deref()).1.borrow()));
     }
     let mut head_table: Ptr<woff2_Font_Table> =
         ({ woff2_FontImpl::FindTable_2(&font, kHeadTableTag_1.with(|rc| *rc.borrow())) });
@@ -778,7 +802,7 @@ pub fn ReadCollectionFont_34(
     mut data: Ptr<u8>,
     mut len: usize,
     mut font: Ptr<woff2_Font>,
-    mut all_tables: Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>,
+    mut all_tables: Ptr<BTreeMap<u32, Value<(Value<u32>, Value<Ptr<woff2_Font_Table>>)>>>,
 ) -> bool {
     if !({ woff2_BufferImpl::ReadU32(&file, (field_ptr!(font, flavor))) }) {
         return false;
@@ -786,34 +810,54 @@ pub fn ReadCollectionFont_34(
     if !({ ReadTrueTypeFont_33((file).clone(), (data).clone(), len, (font).clone()) }) {
         return false;
     }
-    'loop_: for entry in RefcountMapIter::begin(field_ptr!(font, tables)) {
-        let table: Ptr<woff2_Font_Table> = entry.second().as_pointer();
+    'loop_: for __begin1 in RefcountMapIter::begin(field_ptr!(font, tables)) {
+        let __begin1: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+            Rc::new(RefCell::new(__begin1));
+        let entry: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin1.borrow()).deref();
+        let table: Ptr<woff2_Font_Table> = (*entry.upgrade().deref()).1.as_pointer();
         if RefcountMapIter::find_key(
-            ((all_tables).clone() as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>),
+            ((all_tables).clone()
+                as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<Ptr<woff2_Font_Table>>)>>>),
             &table.with(|__s| __s.offset),
         ) == RefcountMapIter::end(
-            ((all_tables).clone() as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>),
+            ((all_tables).clone()
+                as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<Ptr<woff2_Font_Table>>)>>>),
         ) {
             let __rhs = ({ woff2_FontImpl::FindTable_2(&font, table.with(|__s| __s.tag)) });
-            ((all_tables).clone() as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>)
-                .with_mut(|__v: &mut BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>| {
-                    __v.entry(table.with(|__s| __s.offset))
-                        .or_insert_with(|| {
-                            Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::default()))
-                        })
-                        .as_pointer()
-                })
+            ((all_tables).clone()
+                as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<Ptr<woff2_Font_Table>>)>>>)
+                .with_mut(
+                    |__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<Ptr<woff2_Font_Table>>)>>| {
+                        __v.entry(table.with(|__s| __s.offset).clone())
+                            .or_insert_with(|| {
+                                Rc::new(RefCell::new((
+                                    Rc::new(RefCell::new(table.with(|__s| __s.offset))),
+                                    Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::default())),
+                                )))
+                            })
+                            .borrow()
+                            .1
+                            .as_pointer()
+                    },
+                )
                 .write(__rhs);
         } else {
             let __rhs = (((all_tables).clone()
-                as Ptr<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>>)
-                .with_mut(|__v: &mut BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>| {
-                    __v.entry(table.with(|__s| __s.offset))
-                        .or_insert_with(|| {
-                            Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::default()))
-                        })
-                        .as_pointer()
-                })
+                as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<Ptr<woff2_Font_Table>>)>>>)
+                .with_mut(
+                    |__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<Ptr<woff2_Font_Table>>)>>| {
+                        __v.entry(table.with(|__s| __s.offset).clone())
+                            .or_insert_with(|| {
+                                Rc::new(RefCell::new((
+                                    Rc::new(RefCell::new(table.with(|__s| __s.offset))),
+                                    Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::default())),
+                                )))
+                            })
+                            .borrow()
+                            .1
+                            .as_pointer()
+                    },
+                )
                 .read());
             field!(table, reuse_of).write(__rhs);
             if ({ table.with(|__s| __s.tag) } != {
@@ -858,7 +902,7 @@ pub fn ReadTrueTypeCollection_35(
     let font_it: Value<Ptr<woff2_Font>> = Rc::new(RefCell::new(
         (font_collection.with(|__s| __s.fonts.as_pointer()) as Ptr<woff2_Font>),
     ));
-    let all_tables: Value<BTreeMap<u32, Value<Ptr<woff2_Font_Table>>>> =
+    let all_tables: Value<BTreeMap<u32, Value<(Value<u32>, Value<Ptr<woff2_Font_Table>>)>>> =
         Rc::new(RefCell::new(BTreeMap::new()));
     'loop_: for offset in offsets.as_pointer() as Ptr<u32> {
         let mut offset: u32 = offset.read();
@@ -921,8 +965,11 @@ pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
             .wrapping_add((16_u64 as u64).wrapping_mul((font.with(|__s| __s.num_tables) as u64))))
             as usize),
     ));
-    'loop_: for i in RefcountMapIter::begin(field_ptr!(font, tables)) {
-        let table: Ptr<woff2_Font_Table> = i.second().as_pointer();
+    'loop_: for __begin1 in RefcountMapIter::begin(field_ptr!(font, tables)) {
+        let __begin1: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+            Rc::new(RefCell::new(__begin1));
+        let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin1.borrow()).deref();
+        let table: Ptr<woff2_Font_Table> = (*i.upgrade().deref()).1.as_pointer();
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((table.with(|__s| __s.length) & 3_u32))) & 3_u32) as usize);
         let end_offset: Value<usize> = Rc::new(RefCell::new(
@@ -1099,11 +1146,19 @@ pub fn WriteFont_41(
     ({ Store16_31((search_range as i32), (offset).clone(), (dst).clone()) });
     ({ Store16_31((max_pow2 as i32), (offset).clone(), (dst).clone()) });
     ({ Store16_31((range_shift as i32), (offset).clone(), (dst).clone()) });
-    'loop_: for i in RefcountMapIter::begin(field_ptr!(font, tables)) {
+    'loop_: for __begin1 in RefcountMapIter::begin(field_ptr!(font, tables)) {
+        let __begin1: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+            Rc::new(RefCell::new(__begin1));
+        let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin1.borrow()).deref();
         if !({
             let _offset: Ptr<usize> = (offset).clone();
             let _dst_size: usize = dst_size;
-            WriteTable_43(i.second().as_pointer(), _offset, (dst).clone(), _dst_size)
+            WriteTable_43(
+                (*i.upgrade().deref()).1.as_pointer(),
+                _offset,
+                (dst).clone(),
+                _dst_size,
+            )
         }) {
             return false;
         }
@@ -1297,16 +1352,19 @@ pub fn GetGlyphData_47(
 pub fn RemoveDigitalSignature_48(mut font: Ptr<woff2_Font>) -> bool {
     let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
         Rc::new(RefCell::new(RefcountMapIter::find_key(
-            (field_ptr!(font, tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+            (field_ptr!(font, tables)
+                as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>),
             &kDsigTableTag_3.with(|rc| *rc.borrow()),
         )));
     if (*it.borrow())
         != RefcountMapIter::end(
-            (field_ptr!(font, tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+            (field_ptr!(font, tables)
+                as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>),
         )
     {
         RefcountMapIter::erase(
-            (field_ptr!(font, tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+            (field_ptr!(font, tables)
+                as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>),
             &(*it.borrow()).clone(),
         );
         let __rhs = ((*font.upgrade().deref()).tables.len() as u16);
@@ -1344,7 +1402,7 @@ pub struct woff2_Glyph {
     pub overlap_simple_flag_set: bool,
     #[offset(32)]
     #[byte_size(24)]
-    pub contours: Value<Vec<Value<Vec<woff2_Glyph_Point>>>>,
+    pub contours: Value<Vec<Vec<woff2_Glyph_Point>>>,
     #[offset(56)]
     #[byte_size(8)]
     pub composite_data: Ptr<u8>,
@@ -1492,11 +1550,9 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
     }
     if (((*num_contours.borrow()) as i32) > 0) {
         {
-            let _a0 = ((*num_contours.borrow()) as usize) as usize;
-            (glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<Value<Vec<woff2_Glyph_Point>>>>)
-                .with_mut(|__v: &mut Vec<Value<Vec<woff2_Glyph_Point>>>| {
-                    __v.resize_with(_a0, <Value<Vec<woff2_Glyph_Point>>>::default)
-                })
+            let __a0 = ((*num_contours.borrow()) as usize) as usize;
+            (*glyph.with(|__s| __s.contours.clone()).borrow_mut())
+                .resize_with(__a0, || <Vec<woff2_Glyph_Point>>::default())
         };
         let mut last_point_index: u16 = 0_u16;
         let mut i: i32 = 0;
@@ -1511,12 +1567,11 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
             {
                 let __a0 = (num_points as usize) as usize;
                 elem!(
-                    (glyph.with(|__s| __s.contours.as_pointer())
-                        as Ptr<Value<Vec<woff2_Glyph_Point>>>),
+                    (glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>),
                     (i as usize)
                 )
-                .with_mut(|__v: &mut Value<Vec<woff2_Glyph_Point>>| {
-                    (*__v.borrow_mut()).resize_with(__a0, || <woff2_Glyph_Point>::default())
+                .with_mut(|__v: &mut Vec<woff2_Glyph_Point>| {
+                    __v.resize_with(__a0, || <woff2_Glyph_Point>::default())
                 })
             };
             last_point_index = (*point_index.borrow());
@@ -1537,9 +1592,9 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
         }) {
             return false;
         }
-        let flags: Value<Vec<Value<Vec<u8>>>> = Rc::new(RefCell::new(
+        let flags: Value<Vec<Vec<u8>>> = Rc::new(RefCell::new(
             (0..((*num_contours.borrow()) as usize) as usize)
-                .map(|_| <Value<Vec<u8>>>::default())
+                .map(|_| <Vec<u8>>::default())
                 .collect::<Vec<_>>(),
         ));
         {
@@ -1549,28 +1604,20 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
             'loop_: while (i < ((*num_contours.borrow()) as i32)) {
                 {
                     let __a0 = (*((glyph.with(|__s| __s.contours.as_pointer())
-                        as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                        as Ptr<Vec<woff2_Glyph_Point>>)
                         .offset((i as usize))
-                        .upgrade()
-                        .deref()
                         .as_pointer()
                         as Ptr<Vec<woff2_Glyph_Point>>)
                         .upgrade()
                         .deref())
                     .len() as usize;
-                    elem!((flags.as_pointer() as Ptr<Value<Vec<u8>>>), (i as usize)).with_mut(
-                        |__v: &mut Value<Vec<u8>>| {
-                            (*__v.borrow_mut()).resize_with(__a0, || <u8>::default())
-                        },
-                    )
+                    elem!((flags.as_pointer() as Ptr<Vec<u8>>), (i as usize))
+                        .with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || <u8>::default()))
                 };
                 let mut j: usize = 0_usize;
                 'loop_: while ({ j } < {
-                    (*((glyph.with(|__s| __s.contours.as_pointer())
-                        as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                    (*((glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>)
                         .offset((i as usize))
-                        .upgrade()
-                        .deref()
                         .as_pointer() as Ptr<Vec<woff2_Glyph_Point>>)
                         .upgrade()
                         .deref())
@@ -1598,10 +1645,8 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
                         (*flag_repeat.borrow_mut()).postfix_dec();
                     }
                     elem!(
-                        ((flags.as_pointer() as Ptr<Value<Vec<u8>>>)
+                        ((flags.as_pointer() as Ptr<Vec<u8>>)
                             .offset((i as usize))
-                            .upgrade()
-                            .deref()
                             .as_pointer() as Ptr<u8>),
                         j
                     )
@@ -1609,10 +1654,8 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
                     field!(
                         elem!(
                             ((glyph.with(|__s| __s.contours.as_pointer())
-                                as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                                as Ptr<Vec<woff2_Glyph_Point>>)
                                 .offset((i as usize))
-                                .upgrade()
-                                .deref()
                                 .as_pointer()
                                 as Ptr<woff2_Glyph_Point>),
                             j
@@ -1629,20 +1672,16 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
             }
         }
         if (!((*flags.borrow()).is_empty()))
-            && (!((*((flags.as_pointer() as Ptr<Value<Vec<u8>>>)
+            && (!((*((flags.as_pointer() as Ptr<Vec<u8>>)
                 .offset(0_usize)
-                .upgrade()
-                .deref()
                 .as_pointer() as Ptr<Vec<u8>>)
                 .upgrade()
                 .deref())
             .is_empty()))
         {
             let __rhs = ((((elem!(
-                ((flags.as_pointer() as Ptr<Value<Vec<u8>>>)
+                ((flags.as_pointer() as Ptr<Vec<u8>>)
                     .offset(0_usize)
-                    .upgrade()
-                    .deref()
                     .as_pointer() as Ptr<u8>),
                 0_usize
             )
@@ -1656,21 +1695,16 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
         'loop_: while (i < ((*num_contours.borrow()) as i32)) {
             let mut j: usize = 0_usize;
             'loop_: while ({ j } < {
-                (*((glyph.with(|__s| __s.contours.as_pointer())
-                    as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                (*((glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>)
                     .offset((i as usize))
-                    .upgrade()
-                    .deref()
                     .as_pointer() as Ptr<Vec<woff2_Glyph_Point>>)
                     .upgrade()
                     .deref())
                 .len()
             }) {
                 let mut flag: u8 = (elem!(
-                    ((flags.as_pointer() as Ptr<Value<Vec<u8>>>)
+                    ((flags.as_pointer() as Ptr<Vec<u8>>)
                         .offset((i as usize))
-                        .upgrade()
-                        .deref()
                         .as_pointer() as Ptr<u8>),
                     j
                 )
@@ -1690,10 +1724,8 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
                     field!(
                         elem!(
                             ((glyph.with(|__s| __s.contours.as_pointer())
-                                as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                                as Ptr<Vec<woff2_Glyph_Point>>)
                                 .offset((i as usize))
-                                .upgrade()
-                                .deref()
                                 .as_pointer()
                                 as Ptr<woff2_Glyph_Point>),
                             j
@@ -1713,10 +1745,8 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
                     field!(
                         elem!(
                             ((glyph.with(|__s| __s.contours.as_pointer())
-                                as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                                as Ptr<Vec<woff2_Glyph_Point>>)
                                 .offset((i as usize))
-                                .upgrade()
-                                .deref()
                                 .as_pointer()
                                 as Ptr<woff2_Glyph_Point>),
                             j
@@ -1728,10 +1758,8 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
                 prev_x = {
                     (*elem!(
                         ((glyph.with(|__s| __s.contours.as_pointer())
-                            as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                            as Ptr<Vec<woff2_Glyph_Point>>)
                             .offset((i as usize))
-                            .upgrade()
-                            .deref()
                             .as_pointer() as Ptr<woff2_Glyph_Point>),
                         j
                     )
@@ -1748,21 +1776,16 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
         'loop_: while (i < ((*num_contours.borrow()) as i32)) {
             let mut j: usize = 0_usize;
             'loop_: while ({ j } < {
-                (*((glyph.with(|__s| __s.contours.as_pointer())
-                    as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                (*((glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>)
                     .offset((i as usize))
-                    .upgrade()
-                    .deref()
                     .as_pointer() as Ptr<Vec<woff2_Glyph_Point>>)
                     .upgrade()
                     .deref())
                 .len()
             }) {
                 let mut flag: u8 = (elem!(
-                    ((flags.as_pointer() as Ptr<Value<Vec<u8>>>)
+                    ((flags.as_pointer() as Ptr<Vec<u8>>)
                         .offset((i as usize))
-                        .upgrade()
-                        .deref()
                         .as_pointer() as Ptr<u8>),
                     j
                 )
@@ -1782,10 +1805,8 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
                     field!(
                         elem!(
                             ((glyph.with(|__s| __s.contours.as_pointer())
-                                as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                                as Ptr<Vec<woff2_Glyph_Point>>)
                                 .offset((i as usize))
-                                .upgrade()
-                                .deref()
                                 .as_pointer()
                                 as Ptr<woff2_Glyph_Point>),
                             j
@@ -1805,10 +1826,8 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
                     field!(
                         elem!(
                             ((glyph.with(|__s| __s.contours.as_pointer())
-                                as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                                as Ptr<Vec<woff2_Glyph_Point>>)
                                 .offset((i as usize))
-                                .upgrade()
-                                .deref()
                                 .as_pointer()
                                 as Ptr<woff2_Glyph_Point>),
                             j
@@ -1820,10 +1839,8 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
                 prev_y = {
                     (*elem!(
                         ((glyph.with(|__s| __s.contours.as_pointer())
-                            as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                            as Ptr<Vec<woff2_Glyph_Point>>)
                             .offset((i as usize))
-                            .upgrade()
-                            .deref()
                             .as_pointer() as Ptr<woff2_Glyph_Point>),
                         j
                     )
@@ -1918,9 +1935,8 @@ pub fn StoreEndPtsOfContours_66(
 ) -> bool {
     let mut end_point: i32 = -1_i32;
     'loop_: for mut contour in
-        glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Value<Vec<woff2_Glyph_Point>>>
+        glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>
     {
-        let contour: Ptr<Vec<woff2_Glyph_Point>> = contour.upgrade().deref().as_pointer();
         {
             let rhs_0 =
                 ((end_point as usize).wrapping_add((*contour.upgrade().deref()).len())) as i32;
@@ -1948,9 +1964,8 @@ pub fn StorePoints_67(
     let mut x_bytes: usize = 0_usize;
     let mut y_bytes: usize = 0_usize;
     'loop_: for mut contour in
-        glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Value<Vec<woff2_Glyph_Point>>>
+        glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>
     {
-        let contour: Ptr<Vec<woff2_Glyph_Point>> = contour.upgrade().deref().as_pointer();
         'loop_: for mut point in
             Ptr::<Vec<woff2_Glyph_Point>>::decay(&(contour)) as Ptr<woff2_Glyph_Point>
         {
@@ -2031,9 +2046,8 @@ pub fn StorePoints_67(
     last_x = 0;
     last_y = 0;
     'loop_: for mut contour in
-        glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Value<Vec<woff2_Glyph_Point>>>
+        glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>
     {
-        let contour: Ptr<Vec<woff2_Glyph_Point>> = contour.upgrade().deref().as_pointer();
         'loop_: for mut point in
             Ptr::<Vec<woff2_Glyph_Point>>::decay(&(contour)) as Ptr<woff2_Glyph_Point>
         {
@@ -2378,12 +2392,21 @@ pub fn NormalizeOffsets_76(mut font: Ptr<woff2_Font>) -> bool {
     {
         let mut tag: u32 = tag.read();
         let table: Ptr<woff2_Font_Table> = (field_ptr!(font, tables)
-            as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>)
-            .with_mut(|__v: &mut BTreeMap<u32, Value<woff2_Font_Table>>| {
-                __v.entry(tag)
-                    .or_insert_with(|| Rc::new(RefCell::new(<woff2_Font_Table>::default())))
-                    .as_pointer()
-            });
+            as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>)
+            .with_mut(
+                |__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>| {
+                    __v.entry(tag.clone())
+                        .or_insert_with(|| {
+                            Rc::new(RefCell::new((
+                                Rc::new(RefCell::new(tag)),
+                                Rc::new(RefCell::new(<woff2_Font_Table>::default())),
+                            )))
+                        })
+                        .borrow()
+                        .1
+                        .as_pointer()
+                },
+            );
         field!(table, offset).write(offset);
         {
             let rhs_0 = (offset).wrapping_add(({ Round4_71(table.with(|__s| __s.length)) }));
@@ -2414,8 +2437,11 @@ pub fn ComputeHeaderChecksum_77(font: Ptr<woff2_Font>) -> u32 {
     };
     checksum =
         { (checksum).wrapping_add(((((max_pow2 as i32) << 16) | (range_shift as i32)) as u32)) };
-    'loop_: for i in RefcountMapIter::begin(field_ptr!(font, tables)) {
-        let mut table: Ptr<woff2_Font_Table> = (i.second().as_pointer());
+    'loop_: for __begin2 in RefcountMapIter::begin(field_ptr!(font, tables)) {
+        let __begin2: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+            Rc::new(RefCell::new(__begin2));
+        let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin2.borrow()).deref();
+        let mut table: Ptr<woff2_Font_Table> = ((*i.upgrade().deref()).1.as_pointer());
         if ({ woff2_Font_TableImpl::IsReused(&table) }) {
             table = { table.with(|__s| __s.reuse_of.clone()) };
         }
@@ -2444,8 +2470,11 @@ pub fn FixChecksums_78(mut font: Ptr<woff2_Font>) -> bool {
     ({ StoreU32_30(0_u32, (offset.as_pointer()), (head_buf).clone()) });
     let mut file_checksum: u32 = 0_u32;
     let mut head_checksum: u32 = 0_u32;
-    'loop_: for i in RefcountMapIter::begin(field_ptr!(font, tables)) {
-        let mut table: Ptr<woff2_Font_Table> = (i.second().as_pointer());
+    'loop_: for __begin1 in RefcountMapIter::begin(field_ptr!(font, tables)) {
+        let __begin1: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+            Rc::new(RefCell::new(__begin1));
+        let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin1.borrow()).deref();
+        let mut table: Ptr<woff2_Font_Table> = ((*i.upgrade().deref()).1.as_pointer());
         if ({ woff2_Font_TableImpl::IsReused(&table) }) {
             table = { table.with(|__s| __s.reuse_of.clone()) };
         }
@@ -2544,12 +2573,21 @@ pub fn NormalizeFontCollection_82(mut font_collection: Ptr<woff2_FontCollection>
         {
             let mut tag: u32 = tag.read();
             let table: Ptr<woff2_Font_Table> = (field_ptr!(font, tables)
-                as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>)
-                .with_mut(|__v: &mut BTreeMap<u32, Value<woff2_Font_Table>>| {
-                    __v.entry(tag)
-                        .or_insert_with(|| Rc::new(RefCell::new(<woff2_Font_Table>::default())))
-                        .as_pointer()
-                });
+                as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>)
+                .with_mut(
+                    |__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>| {
+                        __v.entry(tag.clone())
+                            .or_insert_with(|| {
+                                Rc::new(RefCell::new((
+                                    Rc::new(RefCell::new(tag)),
+                                    Rc::new(RefCell::new(<woff2_Font_Table>::default())),
+                                )))
+                            })
+                            .borrow()
+                            .1
+                            .as_pointer()
+                    },
+                );
             if ({ woff2_Font_TableImpl::IsReused(&table) }) {
                 field!(table, offset).write({
                     table
@@ -2713,19 +2751,41 @@ pub fn TransformGlyfAndLocaTables_90(mut font: Ptr<woff2_Font>) -> bool {
         return true;
     }
     let mut transformed_glyf: Ptr<woff2_Font_Table> = ((field_ptr!(font, tables)
-        as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>)
-        .with_mut(|__v: &mut BTreeMap<u32, Value<woff2_Font_Table>>| {
-            __v.entry((kGlyfTableTag_0.with(|rc| *rc.borrow()) ^ 2155905152_u32))
-                .or_insert_with(|| Rc::new(RefCell::new(<woff2_Font_Table>::default())))
-                .as_pointer()
-        }));
+        as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>)
+        .with_mut(
+            |__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>| {
+                __v.entry((kGlyfTableTag_0.with(|rc| *rc.borrow()) ^ 2155905152_u32).clone())
+                    .or_insert_with(|| {
+                        Rc::new(RefCell::new((
+                            Rc::new(RefCell::new(
+                                (kGlyfTableTag_0.with(|rc| *rc.borrow()) ^ 2155905152_u32),
+                            )),
+                            Rc::new(RefCell::new(<woff2_Font_Table>::default())),
+                        )))
+                    })
+                    .borrow()
+                    .1
+                    .as_pointer()
+            },
+        ));
     let mut transformed_loca: Ptr<woff2_Font_Table> = ((field_ptr!(font, tables)
-        as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>)
-        .with_mut(|__v: &mut BTreeMap<u32, Value<woff2_Font_Table>>| {
-            __v.entry((kLocaTableTag_2.with(|rc| *rc.borrow()) ^ 2155905152_u32))
-                .or_insert_with(|| Rc::new(RefCell::new(<woff2_Font_Table>::default())))
-                .as_pointer()
-        }));
+        as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>)
+        .with_mut(
+            |__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>| {
+                __v.entry((kLocaTableTag_2.with(|rc| *rc.borrow()) ^ 2155905152_u32).clone())
+                    .or_insert_with(|| {
+                        Rc::new(RefCell::new((
+                            Rc::new(RefCell::new(
+                                (kLocaTableTag_2.with(|rc| *rc.borrow()) ^ 2155905152_u32),
+                            )),
+                            Rc::new(RefCell::new(<woff2_Font_Table>::default())),
+                        )))
+                    })
+                    .borrow()
+                    .1
+                    .as_pointer()
+            },
+        ));
     let mut num_glyphs: i32 = ({ NumGlyphs_45((font).clone()) });
     let encoder: Value<woff2_GlyfEncoder> =
         Rc::new(RefCell::new(woff2_GlyfEncoder::new({ num_glyphs })));
@@ -2883,12 +2943,23 @@ pub fn TransformHmtxTable_91(mut font: Ptr<woff2_Font>) -> bool {
         i.postfix_inc();
     }
     let mut transformed_hmtx: Ptr<woff2_Font_Table> = ((field_ptr!(font, tables)
-        as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>)
-        .with_mut(|__v: &mut BTreeMap<u32, Value<woff2_Font_Table>>| {
-            __v.entry((kHmtxTableTag_5.with(|rc| *rc.borrow()) ^ 2155905152_u32))
-                .or_insert_with(|| Rc::new(RefCell::new(<woff2_Font_Table>::default())))
-                .as_pointer()
-        }));
+        as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>)
+        .with_mut(
+            |__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>| {
+                __v.entry((kHmtxTableTag_5.with(|rc| *rc.borrow()) ^ 2155905152_u32).clone())
+                    .or_insert_with(|| {
+                        Rc::new(RefCell::new((
+                            Rc::new(RefCell::new(
+                                (kHmtxTableTag_5.with(|rc| *rc.borrow()) ^ 2155905152_u32),
+                            )),
+                            Rc::new(RefCell::new(<woff2_Font_Table>::default())),
+                        )))
+                    })
+                    .borrow()
+                    .1
+                    .as_pointer()
+            },
+        ));
     let flags: Value<u8> = Rc::new(RefCell::new(0_u8));
     let mut transformed_size: usize =
         (1_usize).wrapping_add((2_usize).wrapping_mul((*advance_widths.borrow()).len()));
@@ -3067,8 +3138,8 @@ pub fn KnownTableIndex_97(mut tag: u32) -> i32 {
     'loop_: while (i < 63) {
         if (tag
             == ({
-                let __idx = (i) as usize;
-                kKnownTags_8.with(|rc| rc.borrow()[__idx])
+                let __idx0 = (i) as usize;
+                kKnownTags_8.with(|rc| rc.borrow()[__idx0])
             }))
         {
             return i;
@@ -3128,12 +3199,16 @@ pub fn TableEntrySize_99(table: Ptr<woff2_Table>) -> usize {
 pub fn ComputeWoff2Length_100(
     font_collection: Ptr<woff2_FontCollection>,
     tables: Ptr<Vec<woff2_Table>>,
-    index_by_tag_offset: BTreeMap<(Value<u32>, Value<u32>), Value<u16>>,
+    index_by_tag_offset: BTreeMap<
+        (Value<u32>, Value<u32>),
+        Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+    >,
     mut compressed_data_length: usize,
     mut extended_metadata_length: usize,
 ) -> usize {
-    let index_by_tag_offset: Value<BTreeMap<(Value<u32>, Value<u32>), Value<u16>>> =
-        Rc::new(RefCell::new(index_by_tag_offset));
+    let index_by_tag_offset: Value<
+        BTreeMap<(Value<u32>, Value<u32>), Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>>,
+    > = Rc::new(RefCell::new(index_by_tag_offset));
     let mut size: usize = kWoff2HeaderSize_92.with(|rc| *rc.borrow());
     'loop_: for mut table in Ptr::<Vec<woff2_Table>>::decay(&(tables)) as Ptr<woff2_Table> {
         {
@@ -3171,8 +3246,12 @@ pub fn ComputeWoff2Length_100(
                 );
                 size = rhs_0
             };
-            'loop_: for entry in RefcountMapIter::begin(field_ptr!(font, tables)) {
-                let table: Ptr<woff2_Font_Table> = entry.second().as_pointer();
+            'loop_: for __begin4 in RefcountMapIter::begin(field_ptr!(font, tables)) {
+                let __begin4: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+                    Rc::new(RefCell::new(__begin4));
+                let entry: Ptr<(Value<u32>, Value<woff2_Font_Table>)> =
+                    (*__begin4.borrow()).deref();
+                let table: Ptr<woff2_Font_Table> = (*entry.upgrade().deref()).1.as_pointer();
                 if ((table.with(|__s| __s.tag) & 2155905152_u32) != 0) {
                     continue 'loop_;
                 }
@@ -3191,12 +3270,29 @@ pub fn ComputeWoff2Length_100(
                     )),
                 )));
                 let mut table_index: u16 = ((index_by_tag_offset.as_pointer()
-                    as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u16>>>)
-                    .with_mut(|__v: &mut BTreeMap<(Value<u32>, Value<u32>), Value<u16>>| {
-                        __v.entry((*tag_offset.borrow()).clone())
-                            .or_insert_with(|| Rc::new(RefCell::new(<u16>::default())))
-                            .as_pointer()
-                    })
+                    as Ptr<
+                        BTreeMap<
+                            (Value<u32>, Value<u32>),
+                            Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+                        >,
+                    >)
+                    .with_mut(
+                        |__v: &mut BTreeMap<
+                            (Value<u32>, Value<u32>),
+                            Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+                        >| {
+                            __v.entry((*tag_offset.borrow()).clone())
+                                .or_insert_with(|| {
+                                    Rc::new(RefCell::new((
+                                        Rc::new(RefCell::new((*tag_offset.borrow()).clone())),
+                                        Rc::new(RefCell::new(<u16>::default())),
+                                    )))
+                                })
+                                .borrow()
+                                .1
+                                .as_pointer()
+                        },
+                    )
                     .read());
                 {
                     let rhs_0 = (size).wrapping_add(({ Size255UShort_9(table_index) }));
@@ -3213,8 +3309,11 @@ pub fn ComputeWoff2Length_100(
 }
 pub fn ComputeUncompressedLength_101(font: Ptr<woff2_Font>) -> usize {
     let mut size: usize = ((12 + (16 * (font.with(|__s| __s.num_tables) as i32))) as usize);
-    'loop_: for entry in RefcountMapIter::begin(field_ptr!(font, tables)) {
-        let table: Ptr<woff2_Font_Table> = entry.second().as_pointer();
+    'loop_: for __begin2 in RefcountMapIter::begin(field_ptr!(font, tables)) {
+        let __begin2: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+            Rc::new(RefCell::new(__begin2));
+        let entry: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin2.borrow()).deref();
+        let table: Ptr<woff2_Font_Table> = (*entry.upgrade().deref()).1.as_pointer();
         if ((table.with(|__s| __s.tag) & 2155905152_u32) != 0) {
             continue 'loop_;
         }
@@ -3255,8 +3354,11 @@ pub fn ComputeUncompressedLength_102(font_collection: Ptr<woff2_FontCollection>)
 }
 pub fn ComputeTotalTransformLength_103(font: Ptr<woff2_Font>) -> usize {
     let mut total: usize = 0_usize;
-    'loop_: for i in RefcountMapIter::begin(field_ptr!(font, tables)) {
-        let table: Ptr<woff2_Font_Table> = i.second().as_pointer();
+    'loop_: for __begin2 in RefcountMapIter::begin(field_ptr!(font, tables)) {
+        let __begin2: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+            Rc::new(RefCell::new(__begin2));
+        let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin2.borrow()).deref();
+        let table: Ptr<woff2_Font_Table> = (*i.upgrade().deref()).1.as_pointer();
         if ({ woff2_Font_TableImpl::IsReused(&table) }) {
             continue 'loop_;
         }
@@ -3390,6 +3492,8 @@ pub fn ConvertTTFToWOFF2_109(
                 .tables
                 .get(&tag)
                 .expect("out of range!")
+                .borrow()
+                .1
                 .as_pointer();
             if ({ woff2_Font_TableImpl::IsReused(&original) }) {
                 continue 'loop_;
@@ -3467,8 +3571,9 @@ pub fn ConvertTTFToWOFF2_109(
         (*compressed_metadata_buf_length.borrow_mut()) = 0_u32;
     }
     let tables: Value<Vec<woff2_Table>> = Rc::new(RefCell::new(Vec::new()));
-    let index_by_tag_offset: Value<BTreeMap<(Value<u32>, Value<u32>), Value<u16>>> =
-        Rc::new(RefCell::new(BTreeMap::new()));
+    let index_by_tag_offset: Value<
+        BTreeMap<(Value<u32>, Value<u32>), Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>>,
+    > = Rc::new(RefCell::new(BTreeMap::new()));
     'loop_: for mut font in { (*font_collection.borrow()).fonts.as_pointer() } as Ptr<woff2_Font> {
         'loop_: for tag in Rc::new(RefCell::new(({ woff2_FontImpl::OutputOrderedTags(&font) })))
             .as_pointer() as Ptr<u32>
@@ -3478,6 +3583,8 @@ pub fn ConvertTTFToWOFF2_109(
                 .tables
                 .get(&tag)
                 .expect("out of range!")
+                .borrow()
+                .1
                 .as_pointer();
             if ({ woff2_Font_TableImpl::IsReused(&src_table) }) {
                 continue 'loop_;
@@ -3498,19 +3605,46 @@ pub fn ConvertTTFToWOFF2_109(
             )));
             if RefcountMapIter::find_key(
                 (index_by_tag_offset.as_pointer()
-                    as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u16>>>),
+                    as Ptr<
+                        BTreeMap<
+                            (Value<u32>, Value<u32>),
+                            Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+                        >,
+                    >),
                 &(*tag_offset.borrow()),
             ) == RefcountMapIter::end(
                 (index_by_tag_offset.as_pointer()
-                    as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u16>>>),
+                    as Ptr<
+                        BTreeMap<
+                            (Value<u32>, Value<u32>),
+                            Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+                        >,
+                    >),
             ) {
                 (index_by_tag_offset.as_pointer()
-                    as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u16>>>)
-                    .with_mut(|__v: &mut BTreeMap<(Value<u32>, Value<u32>), Value<u16>>| {
-                        __v.entry((*tag_offset.borrow()).clone())
-                            .or_insert_with(|| Rc::new(RefCell::new(<u16>::default())))
-                            .as_pointer()
-                    })
+                    as Ptr<
+                        BTreeMap<
+                            (Value<u32>, Value<u32>),
+                            Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+                        >,
+                    >)
+                    .with_mut(
+                        |__v: &mut BTreeMap<
+                            (Value<u32>, Value<u32>),
+                            Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+                        >| {
+                            __v.entry((*tag_offset.borrow()).clone())
+                                .or_insert_with(|| {
+                                    Rc::new(RefCell::new((
+                                        Rc::new(RefCell::new((*tag_offset.borrow()).clone())),
+                                        Rc::new(RefCell::new(<u16>::default())),
+                                    )))
+                                })
+                                .borrow()
+                                .1
+                                .as_pointer()
+                        },
+                    )
                     .write(((*tables.borrow()).len() as u16));
             } else {
                 return false;
@@ -3543,7 +3677,16 @@ pub fn ConvertTTFToWOFF2_109(
             tables.as_pointer(),
             (*index_by_tag_offset.borrow())
                 .iter()
-                .map(|(k, v)| (k.clone(), Rc::new(RefCell::new(v.borrow().clone()))))
+                .map(|(k, v)| {
+                    let __v = v.borrow();
+                    (
+                        k.clone(),
+                        Rc::new(RefCell::new((
+                            Rc::new(RefCell::new(__v.0.borrow().clone())),
+                            Rc::new(RefCell::new(__v.1.borrow().clone())),
+                        ))),
+                    )
+                })
                 .collect(),
             ((*total_compressed_length.borrow()) as usize),
             ((*compressed_metadata_buf_length.borrow()) as usize),
@@ -3680,8 +3823,12 @@ pub fn ConvertTTFToWOFF2_109(
             { (*font_collection.borrow()).fonts.as_pointer() } as Ptr<woff2_Font>
         {
             let mut num_tables: u16 = 0_u16;
-            'loop_: for entry in RefcountMapIter::begin(field_ptr!(font, tables)) {
-                let table: Ptr<woff2_Font_Table> = entry.second().as_pointer();
+            'loop_: for __begin3 in RefcountMapIter::begin(field_ptr!(font, tables)) {
+                let __begin3: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+                    Rc::new(RefCell::new(__begin3));
+                let entry: Ptr<(Value<u32>, Value<woff2_Font_Table>)> =
+                    (*__begin3.borrow()).deref();
+                let table: Ptr<woff2_Font_Table> = (*entry.upgrade().deref()).1.as_pointer();
                 if ((table.with(|__s| __s.tag) & 2155905152_u32) != 0) {
                     continue 'loop_;
                 }
@@ -3695,8 +3842,12 @@ pub fn ConvertTTFToWOFF2_109(
                     (result).clone(),
                 )
             });
-            'loop_: for entry in RefcountMapIter::begin(field_ptr!(font, tables)) {
-                let table: Ptr<woff2_Font_Table> = entry.second().as_pointer();
+            'loop_: for __begin3 in RefcountMapIter::begin(field_ptr!(font, tables)) {
+                let __begin3: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+                    Rc::new(RefCell::new(__begin3));
+                let entry: Ptr<(Value<u32>, Value<woff2_Font_Table>)> =
+                    (*__begin3.borrow()).deref();
+                let table: Ptr<woff2_Font_Table> = (*entry.upgrade().deref()).1.as_pointer();
                 if ((table.with(|__s| __s.tag) & 2155905152_u32) != 0) {
                     continue 'loop_;
                 }
@@ -3727,22 +3878,49 @@ pub fn ConvertTTFToWOFF2_109(
                 )));
                 if RefcountMapIter::find_key(
                     (index_by_tag_offset.as_pointer()
-                        as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u16>>>),
+                        as Ptr<
+                            BTreeMap<
+                                (Value<u32>, Value<u32>),
+                                Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+                            >,
+                        >),
                     &(*tag_offset.borrow()),
                 ) == RefcountMapIter::end(
                     (index_by_tag_offset.as_pointer()
-                        as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u16>>>),
+                        as Ptr<
+                            BTreeMap<
+                                (Value<u32>, Value<u32>),
+                                Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+                            >,
+                        >),
                 ) {
                     eprintln!("Missing table index for offset 0x{:08x}", table_offset);
                     return false;
                 }
                 let mut index: u16 = ((index_by_tag_offset.as_pointer()
-                    as Ptr<BTreeMap<(Value<u32>, Value<u32>), Value<u16>>>)
-                    .with_mut(|__v: &mut BTreeMap<(Value<u32>, Value<u32>), Value<u16>>| {
-                        __v.entry((*tag_offset.borrow()).clone())
-                            .or_insert_with(|| Rc::new(RefCell::new(<u16>::default())))
-                            .as_pointer()
-                    })
+                    as Ptr<
+                        BTreeMap<
+                            (Value<u32>, Value<u32>),
+                            Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+                        >,
+                    >)
+                    .with_mut(
+                        |__v: &mut BTreeMap<
+                            (Value<u32>, Value<u32>),
+                            Value<(Value<(Value<u32>, Value<u32>)>, Value<u16>)>,
+                        >| {
+                            __v.entry((*tag_offset.borrow()).clone())
+                                .or_insert_with(|| {
+                                    Rc::new(RefCell::new((
+                                        Rc::new(RefCell::new((*tag_offset.borrow()).clone())),
+                                        Rc::new(RefCell::new(<u16>::default())),
+                                    )))
+                                })
+                                .borrow()
+                                .1
+                                .as_pointer()
+                        },
+                    )
                     .read());
                 ({ Store255UShort_11((index as i32), (offset.as_pointer()), (result).clone()) });
             }
@@ -3785,7 +3963,7 @@ pub fn GetFileContent_110(filename: Vec<i8>) -> Vec<i8> {
     return {
         use std::io::Read;
         let mut __bytes: Vec<u8> = Vec::new();
-        let mut __f = &(*ifs.borrow()).try_clone().unwrap();
+        let mut __f = &(*ifs.borrow());
         __f.read_to_end(&mut __bytes)
             .expect("couldn't read the file");
         __bytes.push(0);
@@ -3803,17 +3981,9 @@ pub fn SetFileContents_111(filename: Vec<i8>, start: Ptr<i8>, end: Ptr<i8>) {
     {
         (*start.borrow()).clone().with_slice(
             (*end.borrow()).clone().get_offset() - (*start.borrow()).clone().get_offset(),
-            |__s| {
-                CChar::with_u8_slice(__s, |__b| {
-                    (*ofs.borrow_mut()).try_clone().unwrap().write_all(__b)
-                })
-            },
+            |__s| CChar::with_u8_slice(__s, |__b| (*ofs.borrow_mut()).write_all(__b)),
         );
-        (*ofs.borrow_mut())
-            .try_clone()
-            .unwrap()
-            .try_clone()
-            .unwrap()
+        (*ofs.borrow_mut()).try_clone().unwrap()
     };
 }
 pub fn main() {
@@ -4124,37 +4294,50 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
     fn FindTable_2(&self, mut tag: u32) -> Ptr<woff2_Font_Table> {
         let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
             Rc::new(RefCell::new(RefcountMapIter::find_key(
-                (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+                (field_ptr!((*self), tables)
+                    as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>),
                 &tag,
             )));
         return if (*it.borrow())
             == RefcountMapIter::end(
-                (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+                (field_ptr!((*self), tables)
+                    as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>),
             ) {
             Ptr::<woff2_Font_Table>::null()
         } else {
-            ((*it.borrow()).second().as_pointer())
+            ((*it.borrow())
+                .deref()
+                .with(|__p| __p.1.clone())
+                .as_pointer())
         };
     }
     fn FindTable_3(&self, mut tag: u32) -> Ptr<woff2_Font_Table> {
         let it: Value<RefcountMapIter<u32, woff2_Font_Table>> =
             Rc::new(RefCell::new(RefcountMapIter::find_key(
-                (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+                (field_ptr!((*self), tables)
+                    as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>),
                 &tag,
             )));
         return if (*it.borrow())
             == RefcountMapIter::end(
-                (field_ptr!((*self), tables) as Ptr<BTreeMap<u32, Value<woff2_Font_Table>>>),
+                (field_ptr!((*self), tables)
+                    as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<woff2_Font_Table>)>>>),
             ) {
             Ptr::<woff2_Font_Table>::null()
         } else {
-            ((*it.borrow()).second().as_pointer())
+            ((*it.borrow())
+                .deref()
+                .with(|__p| __p.1.clone())
+                .as_pointer())
         };
     }
     fn OutputOrderedTags(&self) -> Vec<u32> {
         let output_order: Value<Vec<u32>> = Rc::new(RefCell::new(Vec::new()));
-        'loop_: for i in RefcountMapIter::begin(field_ptr!((*self), tables)) {
-            let table: Ptr<woff2_Font_Table> = i.second().as_pointer();
+        'loop_: for __begin1 in RefcountMapIter::begin(field_ptr!((*self), tables)) {
+            let __begin1: Value<RefcountMapIter<u32, woff2_Font_Table>> =
+                Rc::new(RefCell::new(__begin1));
+            let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin1.borrow()).deref();
+            let table: Ptr<woff2_Font_Table> = (*i.upgrade().deref()).1.as_pointer();
             if ((table.with(|__s| __s.tag) & 2155905152_u32) != 0) {
                 continue 'loop_;
             }
@@ -4409,11 +4592,8 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
     }
     fn ShouldWriteSimpleGlyphBbox(&self, glyph: Ptr<woff2_Glyph>) -> bool {
         if ((*glyph.with(|__s| __s.contours.clone()).borrow()).is_empty())
-            || ((*((glyph.with(|__s| __s.contours.as_pointer())
-                as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+            || ((*((glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>)
                 .offset(0_usize)
-                .upgrade()
-                .deref()
                 .as_pointer() as Ptr<Vec<woff2_Glyph_Point>>)
                 .upgrade()
                 .deref())
@@ -4425,10 +4605,8 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
         }
         let mut x_min: i16 = ({
             (*elem!(
-                ((glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                ((glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>)
                     .offset(0_usize)
-                    .upgrade()
-                    .deref()
                     .as_pointer() as Ptr<woff2_Glyph_Point>),
                 0_usize
             )
@@ -4438,10 +4616,8 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
         } as i16);
         let mut y_min: i16 = ({
             (*elem!(
-                ((glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                ((glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>)
                     .offset(0_usize)
-                    .upgrade()
-                    .deref()
                     .as_pointer() as Ptr<woff2_Glyph_Point>),
                 0_usize
             )
@@ -4452,9 +4628,8 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
         let mut x_max: i16 = x_min;
         let mut y_max: i16 = y_min;
         'loop_: for mut contour in
-            glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Value<Vec<woff2_Glyph_Point>>>
+            glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>
         {
-            let contour: Ptr<Vec<woff2_Glyph_Point>> = contour.upgrade().deref().as_pointer();
             'loop_: for mut point in
                 Ptr::<Vec<woff2_Glyph_Point>>::decay(&(contour)) as Ptr<woff2_Glyph_Point>
             {
@@ -4521,18 +4696,7 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
         let mut i: i32 = 0;
         'loop_: while (i < num_contours) {
             ({
-                Write255UShort_10(
-                    ((*self).with(|__s| __s.n_points_stream_.as_pointer())),
-                    ((*((glyph.with(|__s| __s.contours.as_pointer())
-                        as Ptr<Value<Vec<woff2_Glyph_Point>>>)
-                        .offset((i as usize))
-                        .upgrade()
-                        .deref()
-                        .as_pointer() as Ptr<Vec<woff2_Glyph_Point>>)
-                        .upgrade()
-                        .deref())
-                    .len() as i32),
-                )
+                Write255UShort_10 ( ( (* self ) .with(|__s| __s . n_points_stream_ .as_pointer())  )  , ( ( ( * ( (glyph.with(|__s| __s . contours .as_pointer())  as Ptr<Vec<woff2_Glyph_Point>>).offset(( ( i as usize ) ) ) .as_pointer() as Ptr<Vec<woff2_Glyph_Point>  >) .upgrade().deref() ) .len()  as i32 ) )  , )
             });
             i.postfix_inc();
         }
@@ -4540,25 +4704,20 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
         let mut lastY: i32 = 0;
         let mut i: i32 = 0;
         'loop_: while (i < num_contours) {
-            let mut num_points: i32 = ((*((glyph.with(|__s| __s.contours.as_pointer())
-                as Ptr<Value<Vec<woff2_Glyph_Point>>>)
-                .offset((i as usize))
-                .upgrade()
-                .deref()
-                .as_pointer()
-                as Ptr<Vec<woff2_Glyph_Point>>)
-                .upgrade()
-                .deref())
-            .len() as i32);
+            let mut num_points: i32 =
+                ((*((glyph.with(|__s| __s.contours.as_pointer()) as Ptr<Vec<woff2_Glyph_Point>>)
+                    .offset((i as usize))
+                    .as_pointer() as Ptr<Vec<woff2_Glyph_Point>>)
+                    .upgrade()
+                    .deref())
+                .len() as i32);
             let mut j: i32 = 0;
             'loop_: while (j < num_points) {
                 let mut x: i32 = {
                     (*elem!(
                         ((glyph.with(|__s| __s.contours.as_pointer())
-                            as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                            as Ptr<Vec<woff2_Glyph_Point>>)
                             .offset((i as usize))
-                            .upgrade()
-                            .deref()
                             .as_pointer() as Ptr<woff2_Glyph_Point>),
                         (j as usize)
                     )
@@ -4569,10 +4728,8 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
                 let mut y: i32 = {
                     (*elem!(
                         ((glyph.with(|__s| __s.contours.as_pointer())
-                            as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                            as Ptr<Vec<woff2_Glyph_Point>>)
                             .offset((i as usize))
-                            .upgrade()
-                            .deref()
                             .as_pointer() as Ptr<woff2_Glyph_Point>),
                         (j as usize)
                     )
@@ -4588,10 +4745,8 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
                         {
                             (*elem!(
                                 ((glyph.with(|__s| __s.contours.as_pointer())
-                                    as Ptr<Value<Vec<woff2_Glyph_Point>>>)
+                                    as Ptr<Vec<woff2_Glyph_Point>>)
                                     .offset((i as usize))
-                                    .upgrade()
-                                    .deref()
                                     .as_pointer()
                                     as Ptr<woff2_Glyph_Point>),
                                 (j as usize)

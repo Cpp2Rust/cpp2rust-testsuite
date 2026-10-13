@@ -131,11 +131,13 @@ pub struct brunsli_JPEGQuantTable {
 }
 impl Default for brunsli_JPEGQuantTable {
     fn default() -> Self {
-        brunsli_JPEGQuantTable {
-            values: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
-            precision: 0,
-            index: 0,
-            is_last: true,
+        unsafe {
+            brunsli_JPEGQuantTable {
+                values: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
+                precision: 0,
+                index: 0,
+                is_last: true,
+            }
         }
     }
 }
@@ -149,11 +151,13 @@ pub struct brunsli_JPEGHuffmanCode {
 }
 impl Default for brunsli_JPEGHuffmanCode {
     fn default() -> Self {
-        brunsli_JPEGHuffmanCode {
-            counts: std::array::from_fn::<_, 17, _>(|_| Default::default()).to_vec(),
-            values: std::array::from_fn::<_, 257, _>(|_| Default::default()).to_vec(),
-            slot_id: 0,
-            is_last: true,
+        unsafe {
+            brunsli_JPEGHuffmanCode {
+                counts: std::array::from_fn::<_, 17, _>(|_| Default::default()).to_vec(),
+                values: std::array::from_fn::<_, 257, _>(|_| Default::default()).to_vec(),
+                slot_id: 0,
+                is_last: true,
+            }
         }
     }
 }
@@ -184,15 +188,17 @@ pub struct brunsli_JPEGScanInfo {
 }
 impl Default for brunsli_JPEGScanInfo {
     fn default() -> Self {
-        brunsli_JPEGScanInfo {
-            Ss: 0_i32,
-            Se: 0_i32,
-            Ah: 0_i32,
-            Al: 0_i32,
-            num_components: 0_usize,
-            components: std::array::from_fn::<_, 4, _>(|_| Default::default()).to_vec(),
-            reset_points: Default::default(),
-            extra_zero_runs: Default::default(),
+        unsafe {
+            brunsli_JPEGScanInfo {
+                Ss: 0_i32,
+                Se: 0_i32,
+                Ah: 0_i32,
+                Al: 0_i32,
+                num_components: 0_usize,
+                components: std::array::from_fn::<_, 4, _>(|_| Default::default()).to_vec(),
+                reset_points: Default::default(),
+                extra_zero_runs: Default::default(),
+            }
         }
     }
 }
@@ -2329,7 +2335,15 @@ pub unsafe fn BrunsliDumpAndAbort_79(
     mut l: i32,
     mut fn_: *const libc::c_char,
 ) {
-    printf(c"%s:%d (%s)\n".as_ptr() as *const i8, f, l, fn_);
+    (unsafe {
+        libc::fprintf(
+            libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+            c"%s:%d (%s)\n".as_ptr() as *const libc::c_char,
+            (f),
+            (l),
+            (fn_),
+        )
+    });
     libc::fflush(libcc2rs::stderr_unsafe());
     std::process::abort();
 }
@@ -3302,19 +3316,19 @@ pub unsafe fn HistogramReindex_136(
     mut symbols: *mut Vec<u32>,
 ) {
     let mut tmp: Vec<brunsli_internal_enc_Histogram> = (*out).clone();
-    let mut new_index: BTreeMap<i32, Box<i32>> = BTreeMap::new();
+    let mut new_index: BTreeMap<i32, Box<(i32, i32)>> = BTreeMap::new();
     let mut next_index: i32 = 0;
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*(symbols).cast_const()).len())) {
         if UnsafeMapIterator::find_key(
-            &new_index as *const BTreeMap<i32, Box<i32>>,
+            &new_index as *const BTreeMap<i32, Box<(i32, i32)>>,
             &((&mut (*symbols))[(i)] as i32),
-        ) == UnsafeMapIterator::end(&new_index as *const BTreeMap<i32, Box<i32>>)
+        ) == UnsafeMapIterator::end(&new_index as *const BTreeMap<i32, Box<(i32, i32)>>)
         {
-            (*new_index
-                .entry(((&mut (*symbols))[(i)] as i32))
-                .or_default()
-                .as_mut()) = next_index;
+            (*&mut new_index
+                .entry(((&mut (*symbols))[(i)] as i32).clone())
+                .or_insert_with(|| Box::new((((&mut (*symbols))[(i)] as i32), <i32>::default())))
+                .1) = next_index;
             (&mut (*out))[(next_index as usize)] = tmp[((&mut (*symbols))[(i)] as usize)];
             next_index.prefix_inc();
         }
@@ -3326,10 +3340,10 @@ pub unsafe fn HistogramReindex_136(
     };
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*(symbols).cast_const()).len())) {
-        (&mut (*symbols))[(i)] = ((*new_index
-            .entry(((&mut (*symbols))[(i)] as i32))
-            .or_default()
-            .as_mut()) as u32);
+        (&mut (*symbols))[(i)] = ((*&mut new_index
+            .entry(((&mut (*symbols))[(i)] as i32).clone())
+            .or_insert_with(|| Box::new((((&mut (*symbols))[(i)] as i32), <i32>::default())))
+            .1) as u32);
         i.prefix_inc();
     }
 }
@@ -3479,22 +3493,24 @@ pub struct brunsli_internal_enc_ComponentMeta {
 }
 impl Default for brunsli_internal_enc_ComponentMeta {
     fn default() -> Self {
-        brunsli_internal_enc_ComponentMeta {
-            context_offset: 0_usize,
-            approx_total_nonzeros: 0_usize,
-            h_samp: 0_i32,
-            v_samp: 0_i32,
-            context_bits: 0_i32,
-            ac_stride: 0_i32,
-            dc_stride: 0_i32,
-            b_stride: 0_i32,
-            width_in_blocks: 0_i32,
-            height_in_blocks: 0_i32,
-            ac_coeffs: std::ptr::null(),
-            dc_prediction_errors: std::ptr::null_mut(),
-            block_state: std::ptr::null_mut(),
-            num_zeros: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
-            quant: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
+        unsafe {
+            brunsli_internal_enc_ComponentMeta {
+                context_offset: 0_usize,
+                approx_total_nonzeros: 0_usize,
+                h_samp: 0_i32,
+                v_samp: 0_i32,
+                context_bits: 0_i32,
+                ac_stride: 0_i32,
+                dc_stride: 0_i32,
+                b_stride: 0_i32,
+                width_in_blocks: 0_i32,
+                height_in_blocks: 0_i32,
+                ac_coeffs: std::ptr::null(),
+                dc_prediction_errors: std::ptr::null_mut(),
+                block_state: std::ptr::null_mut(),
+                num_zeros: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
+                quant: std::array::from_fn::<_, 64, _>(|_| Default::default()).to_vec(),
+            }
         }
     }
 }
@@ -3658,14 +3674,16 @@ pub struct brunsli_internal_enc_State {
 }
 impl Default for brunsli_internal_enc_State {
     fn default() -> Self {
-        brunsli_internal_enc_State {
-            entropy_source: <brunsli_internal_enc_EntropySource>::default(),
-            entropy_codes: std::ptr::null_mut(),
-            data_stream_dc: <brunsli_internal_enc_DataStream>::default(),
-            data_stream_ac: <brunsli_internal_enc_DataStream>::default(),
-            meta: Default::default(),
-            num_contexts: 0_usize,
-            use_legacy_context_model: false,
+        unsafe {
+            brunsli_internal_enc_State {
+                entropy_source: <brunsli_internal_enc_EntropySource>::default(),
+                entropy_codes: std::ptr::null_mut(),
+                data_stream_dc: <brunsli_internal_enc_DataStream>::default(),
+                data_stream_ac: <brunsli_internal_enc_DataStream>::default(),
+                meta: Default::default(),
+                num_contexts: 0_usize,
+                use_legacy_context_model: false,
+            }
         }
     }
 }
@@ -4785,8 +4803,7 @@ impl brunsli_internal_enc_EntropySource {
                 { self.num_bands_ },
                 { offsets },
             ))) as *mut brunsli_internal_enc_EntropyCodes),
-        ))
-        .take();
+        ));
     }
 }
 impl brunsli_internal_enc_EntropySource {
@@ -6365,8 +6382,7 @@ pub unsafe fn PrepareEntropyCodes_189(
             &mut (*state).entropy_source,
             &group_context_offsets,
         )
-    })
-    .take();
+    });
 }
 pub unsafe fn BrunsliSerialize_190(
     mut state: *mut brunsli_internal_enc_State,
@@ -6398,8 +6414,8 @@ pub unsafe fn BrunsliSerialize_190(
             let data: *mut *mut u8 = &mut data;
             let pos: *mut usize = &mut pos;
         },
-        |tag: u8,
-         fn_: Option<
+        |mut tag: u8,
+         mut fn_: Option<
             unsafe fn(
                 *const brunsli_JPEGData,
                 *mut brunsli_internal_enc_State,
@@ -6407,7 +6423,7 @@ pub unsafe fn BrunsliSerialize_190(
                 *mut usize,
             ) -> bool,
         >,
-         size: usize|
+         mut size: usize|
          -> bool {
             return (unsafe {
                 let _jpg: *const brunsli_JPEGData = jpg;
@@ -6437,8 +6453,7 @@ pub unsafe fn BrunsliSerialize_190(
                 )
             });
         }
-    )
-    .move_from();
+    );
     if !(((skip_sections)
         & ((1_u32)
             << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureTag_30)) as i32)))
@@ -6674,8 +6689,7 @@ pub unsafe fn BrunsliEncodeJpeg_191(
     (unsafe { EncodeDC_187((&mut state as *mut brunsli_internal_enc_State)) });
     (unsafe { EncodeAC_188((&mut state as *mut brunsli_internal_enc_State)) });
     let mut entropy_codes: Option<Box<brunsli_internal_enc_EntropyCodes>> =
-        (unsafe { PrepareEntropyCodes_189((&mut state as *mut brunsli_internal_enc_State)) })
-            .take();
+        (unsafe { PrepareEntropyCodes_189((&mut state as *mut brunsli_internal_enc_State)) });
     state.entropy_codes = entropy_codes
         .as_deref_mut()
         .map_or(::std::ptr::null_mut(), |v| {
@@ -9712,7 +9726,10 @@ pub unsafe fn ProcessAPP_241(
     )
     .to_vec();
     (*pos) = (*pos).wrapping_add((marker_len).wrapping_sub(2_usize));
-    (*jpg).app_data.push(app_str.clone());
+    {
+        let a0_clone = app_str.clone();
+        (*jpg).app_data.push(a0_clone)
+    };
     return true;
 }
 pub unsafe fn ProcessCOM_242(
@@ -9781,7 +9798,10 @@ pub unsafe fn ProcessCOM_242(
     )
     .to_vec();
     (*pos) = (*pos).wrapping_add((marker_len).wrapping_sub(2_usize));
-    (*jpg).com_data.push(com_str.clone());
+    {
+        let a0_clone = com_str.clone();
+        (*jpg).com_data.push(a0_clone)
+    };
     return true;
 }
 #[repr(C)]
@@ -10837,14 +10857,15 @@ pub unsafe fn ReadJpeg_196(
                 let __a1 = 255_u8;
                 (*jpg).marker_order.push(__a1)
             };
-            (*jpg).inter_marker_data.push(
-                core::slice::from_raw_parts(
+            {
+                let __a1 = core::slice::from_raw_parts(
                     data.offset((pos) as isize),
                     (data.offset((pos) as isize).offset((num_skipped) as isize))
                         .offset_from(data.offset((pos) as isize)) as usize,
                 )
-                .to_vec(),
-            );
+                .to_vec();
+                (*jpg).inter_marker_data.push(__a1)
+            };
             pos = (pos).wrapping_add(num_skipped);
         }
         if (((pos).wrapping_add(2_usize)) > (len))
@@ -11243,16 +11264,31 @@ pub unsafe fn ReadFileInternal_253(
     mut content: *mut Vec<libc::c_char>,
 ) -> bool {
     if ((libc::fseek(file, 0_i64 as ::libc::c_long, ::libc::SEEK_END)) != (0)) {
-        printf(c"Failed to seek end of input file.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Failed to seek end of input file.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     let mut input_size: i32 = (libc::ftell(file) as i64 as i32);
     if ((input_size) == (0)) {
-        printf(c"Input file is empty.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Input file is empty.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     if ((libc::fseek(file, 0_i64 as ::libc::c_long, ::libc::SEEK_SET)) != (0)) {
-        printf(c"Failed to rewind input file to the beginning.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Failed to rewind input file to the beginning.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     {
@@ -11274,7 +11310,12 @@ pub unsafe fn ReadFileInternal_253(
             file,
         );
         if ((bytes_read) == (0_usize)) {
-            printf(c"Failed to read input file\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to read input file\n".as_ptr() as *const libc::c_char,
+                )
+            });
             return false;
         }
         read_pos = (read_pos).wrapping_add(bytes_read);
@@ -11287,13 +11328,23 @@ pub unsafe fn ReadFile_254(
 ) -> bool {
     let mut file: *mut ::libc::FILE = libc::fopen((*file_name).as_ptr(), c"rb".as_ptr());
     if (file).is_null() {
-        printf(c"Failed to open input file.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Failed to open input file.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     let mut ok: bool = (unsafe { ReadFileInternal_253(file, content) });
     if ((libc::fclose(file)) != (0)) {
         if ok {
-            printf(c"Failed to close input file.\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to close input file.\n".as_ptr() as *const libc::c_char,
+                )
+            });
         }
         return false;
     }
@@ -11312,7 +11363,12 @@ pub unsafe fn WriteFileInternal_255(
             file,
         );
         if ((bytes_written) == (0_usize)) {
-            printf(c"Failed to write output.\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to write output.\n".as_ptr() as *const libc::c_char,
+                )
+            });
             return false;
         }
         write_pos = (write_pos).wrapping_add(bytes_written);
@@ -11325,7 +11381,12 @@ pub unsafe fn WriteFile_256(
 ) -> bool {
     let mut file: *mut ::libc::FILE = libc::fopen((*file_name).as_ptr(), c"wb".as_ptr());
     if (file).is_null() {
-        printf(c"Failed to open file for writing.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Failed to open file for writing.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return false;
     }
     let mut ok: bool = (unsafe {
@@ -11335,7 +11396,12 @@ pub unsafe fn WriteFile_256(
     });
     if ((libc::fclose(file)) != (0)) {
         if ok {
-            printf(c"Failed to close output file.\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to close output file.\n".as_ptr() as *const libc::c_char,
+                )
+            });
         }
         return false;
     }
@@ -11372,7 +11438,12 @@ pub unsafe fn ProcessFile_257(
         };
         input.shrink_to_fit();
         if !(ok) {
-            printf(c"Failed to parse JPEG input.\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to parse JPEG input.\n".as_ptr() as *const libc::c_char,
+                )
+            });
             return false;
         }
         let mut output_size: usize = (unsafe { GetMaximumBrunsliEncodedSize_145(&jpg) });
@@ -11386,7 +11457,12 @@ pub unsafe fn ProcessFile_257(
         ok =
             (unsafe { BrunsliEncodeJpeg_191(&jpg, output_data, (&mut output_size as *mut usize)) });
         if !(ok) {
-            printf(c"Failed to transform JPEG to Brunsli\n".as_ptr() as *const i8);
+            (unsafe {
+                libc::fprintf(
+                    libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                    c"Failed to transform JPEG to Brunsli\n".as_ptr() as *const libc::c_char,
+                )
+            });
             return false;
         }
         {
@@ -11419,7 +11495,13 @@ pub fn main() {
 }
 unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     if ((argc) != (2)) && ((argc) != (3)) {
-        printf(c"Usage: cbrunsli FILE [OUTPUT_FILE, default=FILE.brn]\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Usage: cbrunsli FILE [OUTPUT_FILE, default=FILE.brn]\n".as_ptr()
+                    as *const libc::c_char,
+            )
+        });
         return 1;
     }
     let file_name: Vec<libc::c_char> = {
@@ -11427,7 +11509,12 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         std::slice::from_raw_parts(s, (0..).take_while(|&i| *s.add(i) != 0).count() + 1).to_vec()
     };
     if file_name.len() <= 1 {
-        printf(c"Empty input file name.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"Empty input file name.\n".as_ptr() as *const libc::c_char,
+            )
+        });
         return 1;
     }
     let outfile_name: Vec<libc::c_char> = if ((argc) == (2)) {

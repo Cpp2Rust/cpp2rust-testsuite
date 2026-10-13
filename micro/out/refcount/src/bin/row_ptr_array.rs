@@ -28,20 +28,16 @@ pub fn main() {
     std::process::exit(main_0());
 }
 fn main_0() -> i32 {
-    let grid: Value<Box<[Value<Box<[i32]>>]>> = Rc::new(RefCell::new(
+    let grid: Value<Box<[Box<[i32]>]>> = Rc::new(RefCell::new(
         (0..1000)
-            .map(|_| {
-                Rc::new(RefCell::new(
-                    (0..1000).map(|_| 0_i32).collect::<Box<[i32]>>(),
-                ))
-            })
-            .collect::<Box<[Value<Box<[i32]>>]>>(),
+            .map(|_| (0..1000).map(|_| 0_i32).collect::<Box<[i32]>>())
+            .collect::<Box<[Box<[i32]>]>>(),
     ));
     let mut i: i32 = 0;
     'loop_: while (i < N_0.with(|rc| *rc.borrow())) {
         let mut j: i32 = 0;
         'loop_: while (j < N_0.with(|rc| *rc.borrow())) {
-            (*grid.borrow())[(i) as usize].borrow_mut()[(j) as usize] = { ((i * j) % 7) };
+            (*grid.borrow_mut())[(i) as usize][(j) as usize] = { ((i * j) % 7) };
             j.prefix_inc();
         }
         i.prefix_inc();
@@ -49,10 +45,10 @@ fn main_0() -> i32 {
     let mut out: i64 = 0_i64;
     let mut r: i32 = 0;
     'loop_: while (r < 40) {
-        let mut row: Ptr<Value<Box<[i32]>>> = (grid.as_pointer() as Ptr<Value<Box<[i32]>>>);
+        let mut row: Ptr<Box<[i32]>> = (grid.as_pointer() as Ptr<Box<[i32]>>);
         let mut i: i32 = 0;
         'loop_: while (i < N_0.with(|rc| *rc.borrow())) {
-            let mut p: Ptr<i32> = ((row).read().as_pointer() as Ptr<i32>).clone();
+            let mut p: Ptr<i32> = ((row).as_pointer() as Ptr<i32>).clone();
             ({
                 let _p: Ptr<i32> = (p).clone();
                 let _n: i32 = N_0.with(|rc| *rc.borrow());

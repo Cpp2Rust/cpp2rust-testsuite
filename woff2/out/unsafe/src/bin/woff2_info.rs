@@ -653,14 +653,14 @@ pub struct woff2_Font_Table {
 pub struct woff2_Font {
     pub flavor: u32,
     pub num_tables: u16,
-    pub tables: BTreeMap<u32, Box<woff2_Font_Table>>,
+    pub tables: BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
 }
 #[repr(C)]
 #[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_FontCollection {
     pub flavor: u32,
     pub header_version: u32,
-    pub tables: BTreeMap<u32, Box<*mut woff2_Font_Table>>,
+    pub tables: BTreeMap<u32, Box<(u32, *mut woff2_Font_Table)>>,
     pub fonts: Vec<woff2_Font>,
 }
 pub unsafe fn StoreU32_28(mut dst: *mut u8, mut offset: usize, mut x: u32) -> usize {
@@ -706,40 +706,43 @@ pub unsafe fn StoreBytes_32(
 impl woff2_Font {
     pub unsafe fn FindTable_2(&mut self, mut tag: u32) -> *mut woff2_Font_Table {
         let mut it: UnsafeMapIterator<u32, woff2_Font_Table> = UnsafeMapIterator::find_key(
-            &self.tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
+            &self.tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
             &tag,
         );
         return if it
-            == UnsafeMapIterator::end(&self.tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
-        {
+            == UnsafeMapIterator::end(
+                &self.tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
+            ) {
             std::ptr::null_mut()
         } else {
-            (&mut *it.second() as *mut woff2_Font_Table)
+            (&mut *&raw mut (*it.deref()).1 as *mut woff2_Font_Table)
         };
     }
 }
 impl woff2_Font {
     pub unsafe fn FindTable_3(&self, mut tag: u32) -> *const woff2_Font_Table {
         let mut it: UnsafeMapIterator<u32, woff2_Font_Table> = UnsafeMapIterator::find_key(
-            &self.tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
+            &self.tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
             &tag,
         );
         return if it
-            == UnsafeMapIterator::end(&self.tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
-        {
+            == UnsafeMapIterator::end(
+                &self.tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
+            ) {
             std::ptr::null()
         } else {
-            (&*it.second() as *const woff2_Font_Table)
+            (&*&raw mut (*it.deref()).1 as *const woff2_Font_Table)
         };
     }
 }
 impl woff2_Font {
     pub unsafe fn OutputOrderedTags(&self) -> Vec<u32> {
         let mut output_order: Vec<u32> = Vec::new();
-        'loop_: for i in
-            UnsafeMapIterator::begin(&self.tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
-        {
-            let table: *const woff2_Font_Table = &*i.second();
+        'loop_: for __begin1 in UnsafeMapIterator::begin(
+            &self.tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
+        ) {
+            let i: *const (u32, woff2_Font_Table) = &(*__begin1.deref().cast_const());
+            let table: *const woff2_Font_Table = &(*i).1;
             if ((((*table).tag) & (2155905152_u32)) != 0) {
                 continue 'loop_;
             }
@@ -806,7 +809,7 @@ pub unsafe fn ReadTrueTypeFont_33(
     {
         return false;
     }
-    let mut intervals: BTreeMap<u32, Box<u32>> = BTreeMap::new();
+    let mut intervals: BTreeMap<u32, Box<(u32, u32)>> = BTreeMap::new();
     let mut i: u16 = 0_u16;
     'loop_: while ((i as i32) < ((*font).num_tables as i32)) {
         let mut table: woff2_Font_Table = <woff2_Font_Table>::default();
@@ -826,29 +829,37 @@ pub unsafe fn ReadTrueTypeFont_33(
         {
             return false;
         }
-        (*intervals.entry(table.offset).or_default().as_mut()) = table.length;
+        (*&mut intervals
+            .entry(table.offset.clone())
+            .or_insert_with(|| Box::new((table.offset, <u32>::default())))
+            .1) = table.length;
         table.data = data.offset((table.offset) as isize);
         if UnsafeMapIterator::find_key(
-            &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
+            &(*font).tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
             &table.tag,
         ) != UnsafeMapIterator::end(
-            &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
+            &(*font).tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
         ) {
             return false;
         }
-        (*(*font).tables.entry(table.tag).or_default().as_mut()) = (table).clone();
+        (*&mut (*font)
+            .tables
+            .entry(table.tag.clone())
+            .or_insert_with(|| Box::new((table.tag, <woff2_Font_Table>::default())))
+            .1) = (table).clone();
         i.prefix_inc();
     }
     let mut last_offset: u32 = (((12_u64 as u64)
         .wrapping_add((16_u64 as u64).wrapping_mul(((*font).num_tables as u64))))
         as u32);
-    'loop_: for i in UnsafeMapIterator::begin(&intervals as *const BTreeMap<u32, Box<u32>>) {
-        if ((*i.first()) < (last_offset))
-            || (((*i.first()).wrapping_add(*i.second())) < (*i.first()))
-        {
+    'loop_: for __begin1 in
+        UnsafeMapIterator::begin(&intervals as *const BTreeMap<u32, Box<(u32, u32)>>)
+    {
+        let i: *const (u32, u32) = &(*__begin1.deref());
+        if (((*i).0) < (last_offset)) || ((((*i).0).wrapping_add((*i).1)) < ((*i).0)) {
             return false;
         }
-        last_offset = (*i.first()).wrapping_add(*i.second());
+        last_offset = ((*i).0).wrapping_add((*i).1);
     }
     let mut head_table: *const woff2_Font_Table = (unsafe {
         woff2_Font::FindTable_2(
@@ -867,7 +878,7 @@ pub unsafe fn ReadCollectionFont_34(
     mut data: *const u8,
     mut len: usize,
     mut font: *mut woff2_Font,
-    mut all_tables: *mut BTreeMap<u32, Box<*mut woff2_Font_Table>>,
+    mut all_tables: *mut BTreeMap<u32, Box<(u32, *mut woff2_Font_Table)>>,
 ) -> bool {
     if !(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut (*font).flavor as *mut u32)) }) {
         return false;
@@ -875,20 +886,26 @@ pub unsafe fn ReadCollectionFont_34(
     if !(unsafe { ReadTrueTypeFont_33(file, data, len, font) }) {
         return false;
     }
-    'loop_: for entry in
-        UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
-    {
-        let table: *mut woff2_Font_Table = &mut *entry.second();
+    'loop_: for __begin1 in UnsafeMapIterator::begin(
+        &(*font).tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
+    ) {
+        let entry: *mut (u32, woff2_Font_Table) = &mut (*__begin1.deref());
+        let table: *mut woff2_Font_Table = &mut (*entry).1;
         if UnsafeMapIterator::find_key(
-            &(*all_tables) as *const BTreeMap<u32, Box<*mut woff2_Font_Table>>,
+            &(*all_tables) as *const BTreeMap<u32, Box<(u32, *mut woff2_Font_Table)>>,
             &(*table).offset,
         ) == UnsafeMapIterator::end(
-            &(*all_tables) as *const BTreeMap<u32, Box<*mut woff2_Font_Table>>,
+            &(*all_tables) as *const BTreeMap<u32, Box<(u32, *mut woff2_Font_Table)>>,
         ) {
-            (*(*all_tables).entry((*table).offset).or_default().as_mut()) =
-                (unsafe { woff2_Font::FindTable_2(&mut (*font), (*table).tag) });
+            (*&mut (*all_tables)
+                .entry((*table).offset.clone())
+                .or_insert_with(|| Box::new(((*table).offset, <*mut woff2_Font_Table>::default())))
+                .1) = (unsafe { woff2_Font::FindTable_2(&mut (*font), (*table).tag) });
         } else {
-            (*table).reuse_of = (*(*all_tables).entry((*table).offset).or_default().as_mut());
+            (*table).reuse_of = (*&mut (*all_tables)
+                .entry((*table).offset.clone())
+                .or_insert_with(|| Box::new(((*table).offset, <*mut woff2_Font_Table>::default())))
+                .1);
             if (((*table).tag) != ((*(*table).reuse_of).tag)) {
                 return false;
             }
@@ -932,7 +949,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
             .resize_with(__a0, || <woff2_Font>::default())
     };
     let mut font_it: *mut woff2_Font = (*font_collection).fonts.as_mut_ptr();
-    let mut all_tables: BTreeMap<u32, Box<*mut woff2_Font_Table>> = BTreeMap::new();
+    let mut all_tables: BTreeMap<u32, Box<(u32, *mut woff2_Font_Table)>> = BTreeMap::new();
     'loop_: for offset in 0..(offsets.len()) {
         let offset = offsets[offset].clone();
         if !(unsafe { woff2_Buffer::set_offset(&mut (*file), (offset as usize)) }) {
@@ -945,7 +962,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
                 data,
                 len,
                 (font),
-                (&mut all_tables as *mut BTreeMap<u32, Box<*mut woff2_Font_Table>>),
+                (&mut all_tables as *mut BTreeMap<u32, Box<(u32, *mut woff2_Font_Table)>>),
             )
         }) {
             return false;
@@ -996,10 +1013,11 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
     let mut max_offset: usize = (((12_u64 as u64)
         .wrapping_add((16_u64 as u64).wrapping_mul(((*font).num_tables as u64))))
         as usize);
-    'loop_: for i in
-        UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
-    {
-        let table: *const woff2_Font_Table = &*i.second();
+    'loop_: for __begin1 in UnsafeMapIterator::begin(
+        &(*font).tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
+    ) {
+        let i: *const (u32, woff2_Font_Table) = &(*__begin1.deref().cast_const());
+        let table: *const woff2_Font_Table = &(*i).1;
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((((*table).length) & (3_u32)))) & (3_u32)) as usize);
         let mut end_offset: usize = ((padding_size).wrapping_add(((*table).offset as usize)))
@@ -1145,13 +1163,14 @@ pub unsafe fn WriteFont_41(
     (unsafe { Store16_31((search_range as i32), offset, dst) });
     (unsafe { Store16_31((max_pow2 as i32), offset, dst) });
     (unsafe { Store16_31((range_shift as i32), offset, dst) });
-    'loop_: for i in
-        UnsafeMapIterator::begin(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
-    {
+    'loop_: for __begin1 in UnsafeMapIterator::begin(
+        &(*font).tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
+    ) {
+        let i: *const (u32, woff2_Font_Table) = &(*__begin1.deref().cast_const());
         if !(unsafe {
             let _offset: *mut usize = offset;
             let _dst_size: usize = dst_size;
-            WriteTable_43(&*i.second(), _offset, dst, _dst_size)
+            WriteTable_43(&(*i).1, _offset, dst, _dst_size)
         }) {
             return false;
         }
@@ -1321,13 +1340,16 @@ pub unsafe fn GetGlyphData_47(
 }
 pub unsafe fn RemoveDigitalSignature_48(mut font: *mut woff2_Font) -> bool {
     let mut it: UnsafeMapIterator<u32, woff2_Font_Table> = UnsafeMapIterator::find_key(
-        &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
+        &(*font).tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
         &(*std::cell::LazyCell::force_mut(&mut *&raw mut kDsigTableTag_3)),
     );
-    if it != UnsafeMapIterator::end(&(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>)
+    if it
+        != UnsafeMapIterator::end(
+            &(*font).tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
+        )
     {
         UnsafeMapIterator::erase(
-            &(*font).tables as *const BTreeMap<u32, Box<woff2_Font_Table>>,
+            &(*font).tables as *const BTreeMap<u32, Box<(u32, woff2_Font_Table)>>,
             &it.clone(),
         );
         (*font).num_tables = ((*font).tables.len() as u16);
@@ -1343,7 +1365,7 @@ pub unsafe fn GetFileContent_49(mut filename: Vec<libc::c_char>) -> Vec<libc::c_
     .unwrap();
     return {
         let mut __bytes: Vec<u8> = Vec::new();
-        let mut __f = &ifs.try_clone().unwrap();
+        let mut __f = &ifs;
         __f.read_to_end(&mut __bytes)
             .expect("couldn't read the file");
         let mut __buf: Vec<libc::c_char> = __bytes.iter().map(|&b| b as libc::c_char).collect();
@@ -1366,10 +1388,8 @@ pub unsafe fn SetFileContents_50(
         let __start = start as *const u8;
         let __end = end as *const u8;
         let __len = __end.offset_from(__start) as usize;
-        ofs.try_clone()
-            .unwrap()
-            .write_all(::std::slice::from_raw_parts(__start, __len));
-        ofs.try_clone().unwrap().try_clone().unwrap()
+        ofs.write_all(::std::slice::from_raw_parts(__start, __len));
+        ofs.try_clone().unwrap()
     };
 }
 pub unsafe fn PrintTag_51(mut tag: i32) -> Vec<libc::c_char> {
@@ -1410,7 +1430,13 @@ pub fn main() {
 }
 unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     if ((argc) != (2)) {
-        printf(c"One argument, the input filename, must be provided.\n".as_ptr() as *const i8);
+        (unsafe {
+            libc::fprintf(
+                libcc2rs::stderr_unsafe() as *mut ::libc::FILE,
+                c"One argument, the input filename, must be provided.\n".as_ptr()
+                    as *const libc::c_char,
+            )
+        });
         return 1;
     }
     let mut filename: Vec<libc::c_char> = {
@@ -1447,15 +1473,18 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         __tmp2.push(0);
         __tmp2
     };
-    printf(
-        c"Processing %s => %s\n".as_ptr() as *const i8,
-        filename.as_ptr(),
-        outfilename.as_ptr(),
-    );
+    (unsafe {
+        libc::fprintf(
+            libcc2rs::stdout_unsafe() as *mut ::libc::FILE,
+            c"Processing %s => %s\n".as_ptr() as *const libc::c_char,
+            (filename.as_ptr()),
+            (outfilename.as_ptr()),
+        )
+    });
     let mut input: Vec<libc::c_char> = (unsafe { GetFileContent_49(filename.clone()) });
     let mut file: woff2_Buffer =
         woff2_Buffer::new({ (input.as_ptr() as *const u8) }, { (input.len() - 1) });
-    printf(c"WOFF2Header\n".as_ptr() as *const i8);
+    (unsafe { libc::printf(c"WOFF2Header\n".as_ptr() as *const libc::c_char) });
     let mut signature: u32 = 0_u32;
     let mut flavor: u32 = 0_u32;
     let mut length: u32 = 0_u32;
@@ -1513,71 +1542,110 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         return 1;
     }
     if ((signature) != (2001684018_u32)) {
-        printf(
-            c"Invalid signature: %08x\n".as_ptr() as *const i8,
-            signature,
-        );
+        (unsafe {
+            libc::printf(
+                c"Invalid signature: %08x\n".as_ptr() as *const libc::c_char,
+                (signature),
+            )
+        });
         return 1;
     }
-    printf(
-        c"signature           0x%08x\n".as_ptr() as *const i8,
-        signature,
-    );
-    printf(
-        c"flavor              0x%08x\n".as_ptr() as *const i8,
-        flavor,
-    );
-    printf(c"length              %d\n".as_ptr() as *const i8, length);
-    printf(
-        c"numTables           %d\n".as_ptr() as *const i8,
-        (num_tables as i32),
-    );
-    printf(
-        c"reserved            %d\n".as_ptr() as *const i8,
-        (reserved as i32),
-    );
-    printf(
-        c"totalSfntSize       %d\n".as_ptr() as *const i8,
-        totalSfntSize,
-    );
-    printf(
-        c"totalCompressedSize %d\n".as_ptr() as *const i8,
-        totalCompressedSize,
-    );
-    printf(
-        c"majorVersion        %d\n".as_ptr() as *const i8,
-        (major as i32),
-    );
-    printf(
-        c"minorVersion        %d\n".as_ptr() as *const i8,
-        (minor as i32),
-    );
-    printf(
-        c"metaOffset          %d\n".as_ptr() as *const i8,
-        metaOffset,
-    );
-    printf(
-        c"metaLength          %d\n".as_ptr() as *const i8,
-        metaLength,
-    );
-    printf(
-        c"metaOrigLength      %d\n".as_ptr() as *const i8,
-        metaOrigLength,
-    );
-    printf(
-        c"privOffset          %d\n".as_ptr() as *const i8,
-        privOffset,
-    );
-    printf(
-        c"privLength          %d\n".as_ptr() as *const i8,
-        privLength,
-    );
+    (unsafe {
+        libc::printf(
+            c"signature           0x%08x\n".as_ptr() as *const libc::c_char,
+            (signature),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"flavor              0x%08x\n".as_ptr() as *const libc::c_char,
+            (flavor),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"length              %d\n".as_ptr() as *const libc::c_char,
+            (length),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"numTables           %d\n".as_ptr() as *const libc::c_char,
+            (num_tables as i32),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"reserved            %d\n".as_ptr() as *const libc::c_char,
+            (reserved as i32),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"totalSfntSize       %d\n".as_ptr() as *const libc::c_char,
+            (totalSfntSize),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"totalCompressedSize %d\n".as_ptr() as *const libc::c_char,
+            (totalCompressedSize),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"majorVersion        %d\n".as_ptr() as *const libc::c_char,
+            (major as i32),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"minorVersion        %d\n".as_ptr() as *const libc::c_char,
+            (minor as i32),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"metaOffset          %d\n".as_ptr() as *const libc::c_char,
+            (metaOffset),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"metaLength          %d\n".as_ptr() as *const libc::c_char,
+            (metaLength),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"metaOrigLength      %d\n".as_ptr() as *const libc::c_char,
+            (metaOrigLength),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"privOffset          %d\n".as_ptr() as *const libc::c_char,
+            (privOffset),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"privLength          %d\n".as_ptr() as *const libc::c_char,
+            (privLength),
+        )
+    });
     let mut table_tags: Vec<u32> = Vec::new();
-    printf(
-        c"TableDirectory starts at +%zu\n".as_ptr() as *const i8,
-        (unsafe { woff2_Buffer::offset(&file) }),
-    );
-    printf(c"Entry offset flags tag  origLength txLength\n".as_ptr() as *const i8);
+    (unsafe {
+        libc::printf(
+            c"TableDirectory starts at +%zu\n".as_ptr() as *const libc::c_char,
+            (unsafe { woff2_Buffer::offset(&file) }),
+        )
+    });
+    (unsafe {
+        libc::printf(
+            c"Entry offset flags tag  origLength txLength\n".as_ptr() as *const libc::c_char
+        )
+    });
     let mut i: i32 = 0;
     'loop_: while ((i) < (num_tables as i32)) {
         let mut offset: usize = (unsafe { woff2_Buffer::offset(&file) });
@@ -1608,14 +1676,16 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         }) {
             return 1;
         }
-        printf(
-            c"%5d %6zu  0x%02x %s %10d".as_ptr() as *const i8,
-            i,
-            offset,
-            (flags as i32),
-            (unsafe { PrintTag_51((tag as i32)) }).as_ptr(),
-            origLength,
-        );
+        (unsafe {
+            libc::printf(
+                c"%5d %6zu  0x%02x %s %10d".as_ptr() as *const libc::c_char,
+                (i),
+                (offset),
+                (flags as i32),
+                ((unsafe { PrintTag_51((tag as i32)) }).as_ptr()),
+                (origLength),
+            )
+        });
         let mut xform_version: u8 = ((((flags as i32) >> (6)) & (3)) as u8);
         if ((tag) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)))
             || ((tag) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)))
@@ -1629,7 +1699,9 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
                 }) {
                     return 1;
                 }
-                printf(c" %8d".as_ptr() as *const i8, transformLength);
+                (unsafe {
+                    libc::printf(c" %8d".as_ptr() as *const libc::c_char, (transformLength))
+                });
             }
         } else if ((xform_version as i32) > (0)) {
             if !(unsafe {
@@ -1640,9 +1712,9 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
             }) {
                 return 1;
             }
-            printf(c" %8d".as_ptr() as *const i8, transformLength);
+            (unsafe { libc::printf(c" %8d".as_ptr() as *const libc::c_char, (transformLength)) });
         }
-        printf(c"\n".as_ptr() as *const i8);
+        (unsafe { libc::printf(c"\n".as_ptr() as *const libc::c_char) });
         i.postfix_inc();
     }
     if ((flavor) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22))) {
@@ -1659,11 +1731,13 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         }) {
             return 1;
         }
-        printf(
-            c"CollectionHeader 0x%08x %d fonts\n".as_ptr() as *const i8,
-            version,
-            numFonts,
-        );
+        (unsafe {
+            libc::printf(
+                c"CollectionHeader 0x%08x %d fonts\n".as_ptr() as *const libc::c_char,
+                (version),
+                (numFonts),
+            )
+        });
         let mut i: i32 = 0;
         'loop_: while ((i as u32) < (numFonts)) {
             let mut numTables: u32 = 0_u32;
@@ -1679,12 +1753,15 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
             if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut flavor as *mut u32)) }) {
                 return 1;
             }
-            printf(
-                c"CollectionFontEntry %d flavor 0x%08x %d tables\n".as_ptr() as *const i8,
-                i,
-                flavor,
-                numTables,
-            );
+            (unsafe {
+                libc::printf(
+                    c"CollectionFontEntry %d flavor 0x%08x %d tables\n".as_ptr()
+                        as *const libc::c_char,
+                    (i),
+                    (flavor),
+                    (numTables),
+                )
+            });
             let mut j: i32 = 0;
             'loop_: while ((j as u32) < (numTables)) {
                 let mut table_idx: u32 = 0_u32;
@@ -1699,21 +1776,26 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
                 if ((table_idx as usize) >= (table_tags.len())) {
                     return 1;
                 }
-                printf(
-                    c"  %d %s (idx %d)\n".as_ptr() as *const i8,
-                    j,
-                    (unsafe { PrintTag_51((table_tags[(table_idx as usize)] as i32)) }).as_ptr(),
-                    table_idx,
-                );
+                (unsafe {
+                    libc::printf(
+                        c"  %d %s (idx %d)\n".as_ptr() as *const libc::c_char,
+                        (j),
+                        ((unsafe { PrintTag_51((table_tags[(table_idx as usize)] as i32)) })
+                            .as_ptr()),
+                        (table_idx),
+                    )
+                });
                 j.postfix_inc();
             }
             i.postfix_inc();
         }
     }
-    printf(
-        c"TableDirectory ends at +%zu\n".as_ptr() as *const i8,
-        (unsafe { woff2_Buffer::offset(&file) }),
-    );
+    (unsafe {
+        libc::printf(
+            c"TableDirectory ends at +%zu\n".as_ptr() as *const libc::c_char,
+            (unsafe { woff2_Buffer::offset(&file) }),
+        )
+    });
     return 0;
 }
 pub unsafe fn __cpp2rust_init_globals() {

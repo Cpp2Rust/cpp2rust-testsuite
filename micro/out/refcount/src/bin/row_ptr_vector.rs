@@ -26,26 +26,21 @@ pub fn main() {
 }
 fn main_0() -> i32 {
     let mut N: i32 = 2000;
-    let grid: Value<Vec<Value<Vec<i32>>>> = Rc::new(RefCell::new(Vec::new()));
+    let grid: Value<Vec<Vec<i32>>> = Rc::new(RefCell::new(Vec::new()));
     let mut i: i32 = 0;
     'loop_: while (i < N) {
-        (grid.as_pointer() as Ptr<Vec<Value<Vec<i32>>>>).with_mut(
-            |__v: &mut Vec<Value<Vec<i32>>>| {
-                __v.push(Rc::new(RefCell::new(
-                    (0..(N as usize) as usize)
-                        .map(|_| <i32>::default())
-                        .collect::<Vec<_>>(),
-                )))
-            },
-        );
+        {
+            let __a1 = (0..(N as usize) as usize)
+                .map(|_| <i32>::default())
+                .collect::<Vec<_>>();
+            (*grid.borrow_mut()).push(__a1)
+        };
         let mut j: i32 = 0;
         'loop_: while (j < N) {
             let __rhs = ((i * j) % 7);
             elem!(
-                ((grid.as_pointer() as Ptr<Value<Vec<i32>>>)
+                ((grid.as_pointer() as Ptr<Vec<i32>>)
                     .offset((i as usize))
-                    .upgrade()
-                    .deref()
                     .as_pointer() as Ptr<i32>),
                 (j as usize)
             )
@@ -59,10 +54,8 @@ fn main_0() -> i32 {
     'loop_: while (r < 10) {
         let mut i: i32 = 0;
         'loop_: while (i < N) {
-            let mut p: Ptr<i32> = (((grid.as_pointer() as Ptr<Value<Vec<i32>>>)
+            let mut p: Ptr<i32> = (((grid.as_pointer() as Ptr<Vec<i32>>)
                 .offset((i as usize))
-                .upgrade()
-                .deref()
                 .as_pointer() as Ptr<i32>)
                 .offset(0_usize));
             ({

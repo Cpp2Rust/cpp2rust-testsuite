@@ -32,11 +32,12 @@ unsafe fn main_0() -> i32 {
     let mut grid: Vec<Vec<i32>> = Vec::new();
     let mut i: i32 = 0;
     'loop_: while ((i) < (N)) {
-        grid.push(
-            (0..(N as usize) as usize)
+        {
+            let __a1 = (0..(N as usize) as usize)
                 .map(|_| <i32>::default())
-                .collect::<Vec<_>>(),
-        );
+                .collect::<Vec<_>>();
+            grid.push(__a1)
+        };
         let mut j: i32 = 0;
         'loop_: while ((j) < (N)) {
             grid[(i as usize)][(j as usize)] = (((i) * (j)) % (7));
