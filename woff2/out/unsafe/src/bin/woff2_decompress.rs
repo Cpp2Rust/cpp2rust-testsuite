@@ -1379,7 +1379,7 @@ pub unsafe fn ReconstructGlyf_63(
             let mut composite_size: usize = 0_usize;
             if ((!(unsafe {
                 SizeOfComposite_60(
-                    composite_stream.clone(),
+                    composite_stream,
                     (&mut composite_size as *mut usize),
                     (&mut have_instructions as *mut bool),
                 )

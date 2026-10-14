@@ -3858,7 +3858,7 @@ impl brunsli_internal_dec_HistogramDataState {
     pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_HistogramDataState) -> Self {
         let mut this = Self {
             stage: (*_a0).stage,
-            br: (*_a0).br.clone(),
+            br: (*_a0).br,
             max_run_length_prefix: (*_a0).max_run_length_prefix,
             entropy: (*_a0).entropy.take(),
             i: (*_a0).i,
@@ -3872,7 +3872,7 @@ impl brunsli_internal_dec_HistogramDataState {
         _a0: *mut brunsli_internal_dec_HistogramDataState,
     ) -> *mut brunsli_internal_dec_HistogramDataState {
         self.stage = (*_a0).stage;
-        self.br = ((*_a0).br).clone();
+        self.br = (*_a0).br;
         self.max_run_length_prefix = (*_a0).max_run_length_prefix;
         self.entropy = (*_a0).entropy.take();
         self.i = (*_a0).i;
@@ -3973,8 +3973,8 @@ impl brunsli_internal_dec_InternalState {
             num_contexts: (*_a0).num_contexts,
             num_histograms: (*_a0).num_histograms,
             subdecoders_initialized: (*_a0).subdecoders_initialized,
-            ans_decoder: (*_a0).ans_decoder.clone(),
-            bit_reader: (*_a0).bit_reader.clone(),
+            ans_decoder: (*_a0).ans_decoder,
+            bit_reader: (*_a0).bit_reader,
             arith_decoder: (*_a0).arith_decoder,
             result: (*_a0).result,
             last_stage: (*_a0).last_stage,
@@ -4009,8 +4009,8 @@ impl brunsli_internal_dec_InternalState {
         self.num_contexts = (*_a0).num_contexts;
         self.num_histograms = (*_a0).num_histograms;
         self.subdecoders_initialized = (*_a0).subdecoders_initialized;
-        self.ans_decoder = ((*_a0).ans_decoder).clone();
-        self.bit_reader = ((*_a0).bit_reader).clone();
+        self.ans_decoder = (*_a0).ans_decoder;
+        self.bit_reader = (*_a0).bit_reader;
         self.arith_decoder = (*_a0).arith_decoder;
         self.result = (*_a0).result;
         self.last_stage = (*_a0).last_stage;
@@ -5150,8 +5150,8 @@ pub unsafe fn DecodeDC_157(
         return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
     }
     (unsafe { EnsureSubdecodersInitialized_155(state, in_) });
-    let mut ans: brunsli_ANSDecoder = (*s).ans_decoder.clone();
-    let mut br: brunsli_BitSource = (*s).bit_reader.clone();
+    let mut ans: brunsli_ANSDecoder = (*s).ans_decoder;
+    let mut br: brunsli_BitSource = (*s).bit_reader;
     let mut ac: brunsli_BinaryArithmeticDecoder = (*s).arith_decoder;
     let mut mcu_y: i32 = (*ac_dc_state).next_mcu_y;
     'loop_: while ((mcu_y) < (mcu_rows)) {
@@ -5192,8 +5192,8 @@ pub unsafe fn DecodeDC_157(
                         (*ac_dc_state).next_component = i;
                         (*ac_dc_state).next_iy = iy;
                         (*ac_dc_state).next_x = x;
-                        (*s).ans_decoder = (ans).clone();
-                        (*s).bit_reader = (br).clone();
+                        (*s).ans_decoder = ans;
+                        (*s).bit_reader = br;
                         (*s).arith_decoder = ac;
                         return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                     }
@@ -5334,8 +5334,8 @@ pub unsafe fn DecodeDC_157(
     (*ac_dc_state).next_x = 0;
     (*comps).clear();
     (*comps).shrink_to_fit();
-    (*s).ans_decoder = (ans).clone();
-    (*s).bit_reader = (br).clone();
+    (*s).ans_decoder = ans;
+    (*s).bit_reader = br;
     (*s).arith_decoder = ac;
     if !(unsafe { FinalizeSubdecoders_156(state) }) {
         return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
@@ -5382,8 +5382,8 @@ pub unsafe fn DecodeAcBlock_159(cookie: *const brunsli_AcBlockCookie) -> usize {
     let mut c: brunsli_AcBlockCookie = (*cookie);
     let mut ac: brunsli_BinaryArithmeticDecoder = (*c.ac);
     let mut in_: *mut brunsli_WordSource = c.in_;
-    let mut ans: brunsli_ANSDecoder = (*c.ans).clone();
-    let mut br: brunsli_BitSource = (*c.br).clone();
+    let mut ans: brunsli_ANSDecoder = (*c.ans);
+    let mut br: brunsli_BitSource = (*c.br);
     let mut num_nonzeros: usize = 0_usize;
     let nonzero_ctx: u8 = (unsafe {
         let _prev: *const u8 = (c.prev_num_nonzeros).cast_const();
@@ -5554,8 +5554,8 @@ pub unsafe fn DecodeAcBlock_159(cookie: *const brunsli_AcBlockCookie) -> usize {
         (*c.prev_abs.offset((k) as isize)) = abs_val;
         k.prefix_dec();
     }
-    (*c.ans) = (ans).clone();
-    (*c.br) = (br).clone();
+    (*c.ans) = ans;
+    (*c.br) = br;
     (*c.ac) = ac;
     return num_nonzeros;
 }
@@ -5870,13 +5870,7 @@ pub unsafe fn ReadTag_170(
     let tag_bit: u32 = ((1_u32) << (tag));
     if ((((*section).tags_met) & (tag_bit)) != 0) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Duplicate marker {:x}\n",
             (marker as i32),
         );
@@ -6576,13 +6570,7 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
     {
         if (((*js).dht_count) != ((*js).terminal_huffman_code_count)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid number of DHT markers\n",
             );
             return (unsafe { suspend_bit_reader.call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
@@ -6649,13 +6637,7 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
         (*q).precision = ((unsafe { BrunsliBitReaderRead_126(br, 4_u32) }) as i32);
         if (((*q).precision) > (1)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid quantization table precision: {:}\n",
                 (*q).precision,
             );
@@ -6677,13 +6659,7 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                 [(comp_ids) as usize]))
         {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Insufficient number of components for ColorId #{:}\n",
                 comp_ids,
             );
@@ -6753,13 +6729,7 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
         (*jpg).has_zero_padding_bit = (((*js).num_padding_bits) > (0_usize));
         if (((*js).num_padding_bits) > ((unsafe { PaddingBitsLimit_17(&(*jpg)) }) as usize)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Suspicious number of padding bits {:}\n",
                 (*js).num_padding_bits,
             );
@@ -7395,14 +7365,7 @@ pub unsafe fn DecodeHistogramDataSection_187(
             }
             (*hs).i.prefix_inc();
         }
-        {
-            let _a0: *mut brunsli_HuffmanDecodingData = Default::default();
-            (*hs).entropy = if _a0.is_null() {
-                None
-            } else {
-                Some(Box::from_raw(_a0))
-            }
-        };
+        (*hs).entropy = None;
         std::mem::swap(&mut Vec::new(), &mut (*hs).counts);
         (unsafe { suspend_bit_reader.call(brunsli_BrunsliStatus_BRUNSLI_OK) });
         (unsafe { BrunsliBitReaderFinish_131(br) });
@@ -8902,8 +8865,7 @@ pub unsafe fn ReadHuffmanCodeLengths_217(
     let mut repeat_code_len: u8 = 0_u8;
     let kFullSpace: i32 = ((1) << (15));
     let mut space: i32 = kFullSpace;
-    let mut table: [brunsli_HuffmanCode; 32] =
-        std::array::from_fn::<_, 32, _>(|_| <brunsli_HuffmanCode>::default());
+    let mut table: [brunsli_HuffmanCode; 32] = [<brunsli_HuffmanCode>::default(); 32];
     let mut counts: [u16; 16] = [
         0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
         0_u16, 0_u16, 0_u16,
@@ -9419,7 +9381,7 @@ pub unsafe fn ReplicateValue_222(
     'loop_: while __do_while || ((end) > (0)) {
         __do_while = false;
         end -= step;
-        (*table.offset((end) as isize)) = (code).clone();
+        (*table.offset((end) as isize)) = code;
     }
 }
 pub unsafe fn NextTableBitSize_223(
@@ -9502,7 +9464,7 @@ pub unsafe fn BuildHuffmanTable_218(
         code.value = (*sorted.offset((0) as isize));
         key = 0;
         'loop_: while ((key) < (total_size)) {
-            (*table.offset((key) as isize)) = (code).clone();
+            (*table.offset((key) as isize)) = code;
             key.prefix_inc();
         }
         return (total_size as u32);
@@ -9523,7 +9485,7 @@ pub unsafe fn BuildHuffmanTable_218(
             (unsafe {
                 let _table: *mut brunsli_HuffmanCode =
                     (&mut (*table.offset((key) as isize)) as *mut brunsli_HuffmanCode);
-                let _code: brunsli_HuffmanCode = code.clone();
+                let _code: brunsli_HuffmanCode = code;
                 ReplicateValue_222(_table, step, table_size, _code)
             });
             key = (unsafe { GetNextKey_221(key, (code.bits as usize)) });
@@ -9581,7 +9543,7 @@ pub unsafe fn BuildHuffmanTable_218(
                 let _table: *mut brunsli_HuffmanCode = (&mut (*table
                     .offset(((key) >> (root_bits)) as isize))
                     as *mut brunsli_HuffmanCode);
-                let _code: brunsli_HuffmanCode = code.clone();
+                let _code: brunsli_HuffmanCode = code;
                 ReplicateValue_222(_table, step, table_size, _code)
             });
             key = (unsafe { GetNextKey_221(key, len) });
@@ -10726,9 +10688,9 @@ pub unsafe fn DoEncodeScan_255(
         (*ss).next_restart_marker = 0;
         (*ss).block_scan_index = 0;
         (*ss).extra_zero_runs_pos = 0_usize;
-        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() }).clone();
+        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() });
         (*ss).next_reset_point_pos = 0_usize;
-        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() }).clone();
+        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
         (*ss).mcu_y = 0;
         {
             let byte_0 = ((*ss).last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
@@ -10860,8 +10822,7 @@ pub unsafe fn DoEncodeScan_255(
                             as i32);
                         if (((*ss).block_scan_index) == ((*ss).next_reset_point)) {
                             (unsafe { Flush_238(coding_state, bw) });
-                            (*ss).next_reset_point =
-                                (unsafe { get_next_reset_point.call() }).clone();
+                            (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
                         }
                         let mut num_zero_runs: i32 = 0;
                         if (((*ss).block_scan_index) == ((*ss).next_extra_zero_run_index)) {
@@ -10870,7 +10831,7 @@ pub unsafe fn DoEncodeScan_255(
                                 .num_extra_zero_runs;
                             (*ss).extra_zero_runs_pos.prefix_inc();
                             (*ss).next_extra_zero_run_index =
-                                (unsafe { get_next_extra_zero_run_index.call() }).clone();
+                                (unsafe { get_next_extra_zero_run_index.call() });
                         }
                         let mut coeffs: *const i16 =
                             (&(&(*c)).coeffs[(((block_idx) << (6)) as usize)] as *const i16);
@@ -10998,9 +10959,9 @@ pub unsafe fn DoEncodeScan_256(
         (*ss).next_restart_marker = 0;
         (*ss).block_scan_index = 0;
         (*ss).extra_zero_runs_pos = 0_usize;
-        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() }).clone();
+        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() });
         (*ss).next_reset_point_pos = 0_usize;
-        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() }).clone();
+        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
         (*ss).mcu_y = 0;
         {
             let byte_0 = ((*ss).last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
@@ -11132,8 +11093,7 @@ pub unsafe fn DoEncodeScan_256(
                             as i32);
                         if (((*ss).block_scan_index) == ((*ss).next_reset_point)) {
                             (unsafe { Flush_238(coding_state, bw) });
-                            (*ss).next_reset_point =
-                                (unsafe { get_next_reset_point.call() }).clone();
+                            (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
                         }
                         let mut num_zero_runs: i32 = 0;
                         if (((*ss).block_scan_index) == ((*ss).next_extra_zero_run_index)) {
@@ -11142,7 +11102,7 @@ pub unsafe fn DoEncodeScan_256(
                                 .num_extra_zero_runs;
                             (*ss).extra_zero_runs_pos.prefix_inc();
                             (*ss).next_extra_zero_run_index =
-                                (unsafe { get_next_extra_zero_run_index.call() }).clone();
+                                (unsafe { get_next_extra_zero_run_index.call() });
                         }
                         let mut coeffs: *const i16 =
                             (&(&(*c)).coeffs[(((block_idx) << (6)) as usize)] as *const i16);
@@ -11281,9 +11241,9 @@ pub unsafe fn DoEncodeScan_257(
         (*ss).next_restart_marker = 0;
         (*ss).block_scan_index = 0;
         (*ss).extra_zero_runs_pos = 0_usize;
-        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() }).clone();
+        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() });
         (*ss).next_reset_point_pos = 0_usize;
-        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() }).clone();
+        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
         (*ss).mcu_y = 0;
         {
             let byte_0 = ((*ss).last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
@@ -11415,8 +11375,7 @@ pub unsafe fn DoEncodeScan_257(
                             as i32);
                         if (((*ss).block_scan_index) == ((*ss).next_reset_point)) {
                             (unsafe { Flush_238(coding_state, bw) });
-                            (*ss).next_reset_point =
-                                (unsafe { get_next_reset_point.call() }).clone();
+                            (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
                         }
                         let mut num_zero_runs: i32 = 0;
                         if (((*ss).block_scan_index) == ((*ss).next_extra_zero_run_index)) {
@@ -11425,7 +11384,7 @@ pub unsafe fn DoEncodeScan_257(
                                 .num_extra_zero_runs;
                             (*ss).extra_zero_runs_pos.prefix_inc();
                             (*ss).next_extra_zero_run_index =
-                                (unsafe { get_next_extra_zero_run_index.call() }).clone();
+                                (unsafe { get_next_extra_zero_run_index.call() });
                         }
                         let mut coeffs: *const i16 =
                             (&(&(*c)).coeffs[(((block_idx) << (6)) as usize)] as *const i16);
@@ -12187,7 +12146,7 @@ pub unsafe fn ProcessFile_267(
         let mut writer: brunsli_JPEGOutput = brunsli_JPEGOutput::new({ Some(StringWriter_262) }, {
             ((&mut output as *mut Vec<libc::c_char>) as *mut ::libc::c_void)
         });
-        ok = (unsafe { WriteJpeg_261(&jpg, writer.clone()) });
+        ok = (unsafe { WriteJpeg_261(&jpg, writer) });
         if !(ok) {
             (unsafe {
                 libc::fprintf(

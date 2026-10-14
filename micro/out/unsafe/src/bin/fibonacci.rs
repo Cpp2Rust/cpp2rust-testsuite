@@ -22,13 +22,7 @@ pub fn main() {
 }
 unsafe fn main_0() -> i32 {
     write!(
-        std::fs::File::from_raw_fd(
-            std::io::stdout()
-                .as_fd()
-                .try_clone_to_owned()
-                .unwrap()
-                .into_raw_fd(),
-        ),
+        (*libcc2rs::cout_unsafe()),
         "{:}\n",
         (unsafe { fib_0(46_u64,) }),
     );

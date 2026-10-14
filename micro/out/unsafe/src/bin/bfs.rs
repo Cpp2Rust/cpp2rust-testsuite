@@ -203,13 +203,7 @@ unsafe fn main_0() -> i32 {
     let mut i: u32 = 0_u32;
     'loop_: while ((i as usize) < (V)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stdout()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cout_unsafe()),
             "{:} -> {:}\n",
             i,
             (*pred.offset((i) as isize)),

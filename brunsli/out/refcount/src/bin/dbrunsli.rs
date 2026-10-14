@@ -4924,7 +4924,7 @@ pub fn DecodeScanInfo_151(
     )));
     'loop_: while true {
         'switch: {
-            match { ( ( js.with(|__s| __s . stage ) as i32 ) )  } { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 ) )  =>  { { let mut si : Ptr<brunsli_JPEGScanInfo>  = ( ((*jpg.borrow()) .with(|__s| __s . scan_info .as_pointer())  as Ptr<brunsli_JPEGScanInfo>).offset(js.with(|__s| __s . i ) )  )  ;
+            match { ( ( js.with(|__s| __s . stage ) as i32 ) )  } { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 ) )  =>  { { let mut si : Ptr< brunsli_JPEGScanInfo  >  = ( ((*jpg.borrow()) .with(|__s| __s . scan_info .as_pointer())  as Ptr<brunsli_JPEGScanInfo  >).offset(js.with(|__s| __s . i ) )  )  ;
   ;
  ;
  if ! ( ( { BrunsliBitReaderCanRead_134 ( (br ).clone() , 22_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
@@ -4942,16 +4942,16 @@ pub fn DecodeScanInfo_151(
  field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT  ) ;
  ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT as i32 ) )  =>  { { let mut si : Ptr<brunsli_JPEGScanInfo>  = ( ((*jpg.borrow()) .with(|__s| __s . scan_info .as_pointer())  as Ptr<brunsli_JPEGScanInfo>).offset(js.with(|__s| __s . i ) )  )  ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT as i32 ) )  =>  { { let mut si : Ptr< brunsli_JPEGScanInfo  >  = ( ((*jpg.borrow()) .with(|__s| __s . scan_info .as_pointer())  as Ptr<brunsli_JPEGScanInfo  >).offset(js.with(|__s| __s . i ) )  )  ;
   ;
  ;
  if ({ js.with(|__s| __s . j )  } < { si .with(|__s| __s . num_components )  }) { if ! ( ( { BrunsliBitReaderCanRead_134 ( (br ).clone() , 6_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
  } let __rhs = ( ( ( { BrunsliBitReaderRead_126 ( (br ).clone() , 2_u32  , ) } )  as u8 ) )  ;
- field!(elem!((si .with(|__s| __s . components .as_pointer())  as Ptr<brunsli_JPEGComponentScanInfo>), js.with(|__s| __s . j ) ), comp_idx) .write( __rhs ) ;
+ field!(elem!((si .with(|__s| __s . components .as_pointer())  as Ptr<brunsli_JPEGComponentScanInfo  >), js.with(|__s| __s . j ) ), comp_idx) .write( __rhs ) ;
  let __rhs = ( ( ( { BrunsliBitReaderRead_126 ( (br ).clone() , 2_u32  , ) } )  as i32 ) )  ;
- field!(elem!((si .with(|__s| __s . components .as_pointer())  as Ptr<brunsli_JPEGComponentScanInfo>), js.with(|__s| __s . j ) ), dc_tbl_idx) .write( __rhs ) ;
+ field!(elem!((si .with(|__s| __s . components .as_pointer())  as Ptr<brunsli_JPEGComponentScanInfo  >), js.with(|__s| __s . j ) ), dc_tbl_idx) .write( __rhs ) ;
  let __rhs = ( ( ( { BrunsliBitReaderRead_126 ( (br ).clone() , 2_u32  , ) } )  as i32 ) )  ;
- field!(elem!((si .with(|__s| __s . components .as_pointer())  as Ptr<brunsli_JPEGComponentScanInfo>), js.with(|__s| __s . j ) ), ac_tbl_idx) .write( __rhs ) ;
+ field!(elem!((si .with(|__s| __s . components .as_pointer())  as Ptr<brunsli_JPEGComponentScanInfo  >), js.with(|__s| __s . j ) ), ac_tbl_idx) .write( __rhs ) ;
  field!(js, j) .with_mut(|__v| __v. postfix_inc ()) ;
  } else { field!(js, last_block_idx) .write( - 1_i32  ) ;
  field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION  ) ;
@@ -4964,7 +4964,7 @@ pub fn DecodeScanInfo_151(
  field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION  ) ;
  } ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA as i32 ) )  =>  { { let mut si : Ptr<brunsli_JPEGScanInfo>  = ( ((*jpg.borrow()) .with(|__s| __s . scan_info .as_pointer())  as Ptr<brunsli_JPEGScanInfo>).offset(js.with(|__s| __s . i ) )  )  ;
+ } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA as i32 ) )  =>  { { let mut si : Ptr< brunsli_JPEGScanInfo  >  = ( ((*jpg.borrow()) .with(|__s| __s . scan_info .as_pointer())  as Ptr<brunsli_JPEGScanInfo  >).offset(js.with(|__s| __s . i ) )  )  ;
   ;
  ;
  if ! ( ( { DecodeVarint_144 ( ( field_ptr!(js , varint)  )  , (br ).clone() , 28_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
@@ -7834,11 +7834,7 @@ pub fn DecodeHistogramDataSection_187(
             }
             field!(hs, i).with_mut(|__v| __v.prefix_inc());
         }
-        {
-            let _p: Ptr<_> = Default::default();
-            (field_ptr!(hs, entropy) as Ptr<Option<Value<brunsli_HuffmanDecodingData>>>)
-                .write(_p.to_owned_opt())
-        };
+        (field_ptr!(hs, entropy) as Ptr<Option<Value<brunsli_HuffmanDecodingData>>>).write(None);
         std::mem::swap(
             &mut Vec::new(),
             &mut (*hs.with(|__s| __s.counts.clone()).borrow_mut()),

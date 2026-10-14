@@ -24,17 +24,7 @@ unsafe fn main_0() -> i32 {
             j.prefix_dec()
         };
     }
-    write!(
-        std::fs::File::from_raw_fd(
-            std::io::stdout()
-                .as_fd()
-                .try_clone_to_owned()
-                .unwrap()
-                .into_raw_fd(),
-        ),
-        "Sum: {:}\n",
-        sum,
-    );
+    write!((*libcc2rs::cout_unsafe()), "Sum: {:}\n", sum,);
     return 0;
 }
 pub unsafe fn __cpp2rust_init_globals() {}

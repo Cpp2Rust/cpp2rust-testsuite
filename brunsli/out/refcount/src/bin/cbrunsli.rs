@@ -6679,12 +6679,7 @@ pub fn BrunsliSerialize_190(
         },
         |mut tag: u8,
          mut fn_: FnPtr<
-            fn(
-                Ptr<brunsli_JPEGData>,
-                Ptr<brunsli_internal_enc_State>,
-                Ptr::<u8>,
-                Ptr::<usize>,
-            ) -> bool,
+            fn(Ptr<brunsli_JPEGData>, Ptr<brunsli_internal_enc_State>, Ptr<u8>, Ptr<usize>) -> bool,
         >,
          mut size: usize|
          -> bool {

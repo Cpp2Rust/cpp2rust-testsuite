@@ -25,17 +25,7 @@ pub fn main() {
 unsafe fn main_0() -> i32 {
     let mut n: u64 = 45_u64;
     (unsafe { fib_0(&mut n) });
-    write!(
-        std::fs::File::from_raw_fd(
-            std::io::stdout()
-                .as_fd()
-                .try_clone_to_owned()
-                .unwrap()
-                .into_raw_fd(),
-        ),
-        "Fibonacci number: {:}\n",
-        n,
-    );
+    write!((*libcc2rs::cout_unsafe()), "Fibonacci number: {:}\n", n,);
     return 0;
 }
 pub unsafe fn __cpp2rust_init_globals() {}

@@ -3013,7 +3013,7 @@ pub unsafe fn CompareAndPushToQueue_132(
                 })
             }
         };
-        let mut combo: brunsli_internal_enc_Histogram = (*out.offset((idx1) as isize)).clone();
+        let mut combo: brunsli_internal_enc_Histogram = (*out.offset((idx1) as isize));
         (unsafe {
             let _other: *const brunsli_internal_enc_Histogram = &(*out.offset((idx2) as isize));
             brunsli_internal_enc_Histogram::AddHistogram(&mut combo, _other)
@@ -3214,7 +3214,7 @@ pub unsafe fn HistogramBitCostDistance_134(
     if (((*histogram).total_count_) == (0)) {
         return 0_f64;
     }
-    let mut tmp: brunsli_internal_enc_Histogram = (*histogram).clone();
+    let mut tmp: brunsli_internal_enc_Histogram = (*histogram);
     (unsafe {
         let _other: *const brunsli_internal_enc_Histogram = candidate;
         brunsli_internal_enc_Histogram::AddHistogram(&mut tmp, _other)
@@ -5000,14 +5000,9 @@ impl brunsli_internal_enc_DataStream {
                         ((*word).context as i32),
                     )
                 }))
-                .info_[((*word).code) as usize]
-                    .clone();
+                .info_[((*word).code) as usize];
                 (*word).value = ((unsafe {
-                    brunsli_ANSCoder::PutSymbol(
-                        &mut ans,
-                        info.clone(),
-                        (&mut (*word).nbits as *mut u8),
-                    )
+                    brunsli_ANSCoder::PutSymbol(&mut ans, info, (&mut (*word).nbits as *mut u8))
                 }) as u16);
             }
             i.prefix_dec();
@@ -5309,13 +5304,7 @@ pub unsafe fn EncodeMetaData_174(
         > ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliShortMarkerLimit_23)) as usize))
     {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Too many short markers: {:}\n",
             transformed_marker_count,
         );
@@ -5328,13 +5317,7 @@ pub unsafe fn EncodeMetaData_174(
             as usize))
     {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Too many app markers: {:}\n",
             other_app_count,
         );
@@ -5346,13 +5329,7 @@ pub unsafe fn EncodeMetaData_174(
             as usize))
     {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Too many com markers: {:}\n",
             com_count,
         );
@@ -5392,13 +5369,7 @@ pub unsafe fn EncodeMetaData_174(
     ) != 0)
     {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Brotli compression failed: input size = {:} pos = {:} len = {:}\n",
             metadata.len(),
             pos,
@@ -5550,32 +5521,11 @@ pub unsafe fn EncodeSection_180(
     }
     (*pos) = (*pos).wrapping_add(section_size);
     if (((section_size) >> ((7_usize).wrapping_mul(section_size_bytes))) > (0_usize)) {
+        write!((*libcc2rs::cerr_unsafe()), "Section 0x",);
+        (*libcc2rs::cerr_unsafe())
+            .write_all(&([(&[marker as u8] as &[u8]), (b" size " as &[u8])].concat()));
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
-            "Section 0x",
-        );
-        std::fs::File::from_raw_fd(
-            std::io::stderr()
-                .as_fd()
-                .try_clone_to_owned()
-                .unwrap()
-                .into_raw_fd(),
-        )
-        .write_all(&([(&[marker as u8] as &[u8]), (b" size " as &[u8])].concat()));
-        write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "{:} too large for {:} bytes base128 number.\n",
             section_size,
             section_size_bytes,
@@ -5678,13 +5628,7 @@ pub unsafe fn PredictDCCoeffs_185(mut state: *mut brunsli_internal_enc_State) ->
                     > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxDCAbsVal_19)))
                 {
                     write!(
-                        std::fs::File::from_raw_fd(
-                            std::io::stderr()
-                                .as_fd()
-                                .try_clone_to_owned()
-                                .unwrap()
-                                .into_raw_fd(),
-                        ),
+                        (*libcc2rs::cerr_unsafe()),
                         "Invalid DC coefficient: {:} after prediction: {:}\n",
                         (*coeffs.offset((0) as isize)),
                         err,
@@ -6519,8 +6463,7 @@ pub unsafe fn BrunsliSerialize_190(
             > = Some(EncodeMetaData_174);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
             encode_section.call(_tag, _fn_, _size)
-        })
-        .clone();
+        });
         if !(ok) {
             return false;
         }
@@ -6560,8 +6503,7 @@ pub unsafe fn BrunsliSerialize_190(
             > = Some(EncodeHistogramData_177);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
             encode_section.call(_tag, _fn_, _size)
-        })
-        .clone();
+        });
         if !(ok) {
             return false;
         }
@@ -6583,8 +6525,7 @@ pub unsafe fn BrunsliSerialize_190(
             > = Some(EncodeDCData_178);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
             encode_section.call(_tag, _fn_, _size)
-        })
-        .clone();
+        });
         if !(ok) {
             return false;
         }
@@ -6606,8 +6547,7 @@ pub unsafe fn BrunsliSerialize_190(
             > = Some(EncodeACData_179);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
             encode_section.call(_tag, _fn_, _size)
-        })
-        .clone();
+        });
         if !(ok) {
             return false;
         }
@@ -8559,29 +8499,14 @@ pub unsafe fn ProcessSOF_235(
     mut jpg: *mut brunsli_JPEGData,
 ) -> bool {
     if (((*jpg).width) != (0)) {
-        write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
-            "Duplicate SOF marker.\n",
-        );
+        write!((*libcc2rs::cerr_unsafe()), "Duplicate SOF marker.\n",);
         (*jpg).error = brunsli_JPEGReadError_DUPLICATE_SOF;
         return false;
     }
     let start_pos: usize = (*pos);
     if (((*pos).wrapping_add(((8) as usize))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             (8),
@@ -8597,13 +8522,7 @@ pub unsafe fn ProcessSOF_235(
     let mut num_components: i32 = (unsafe { ReadUint8_233(data, pos) });
     if ((precision) < (8)) || ((precision) > (8)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid precision: {:}\n",
             precision,
         );
@@ -8613,34 +8532,14 @@ pub unsafe fn ProcessSOF_235(
     if ((height) < (1))
         || ((height) > (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxDimPixels_11)))
     {
-        write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
-            "Invalid height: {:}\n",
-            height,
-        );
+        write!((*libcc2rs::cerr_unsafe()), "Invalid height: {:}\n", height,);
         (*jpg).error = brunsli_JPEGReadError_INVALID_HEIGHT;
         return false;
     };
     if ((width) < (1))
         || ((width) > (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxDimPixels_11)))
     {
-        write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
-            "Invalid width: {:}\n",
-            width,
-        );
+        write!((*libcc2rs::cerr_unsafe()), "Invalid width: {:}\n", width,);
         (*jpg).error = brunsli_JPEGReadError_INVALID_WIDTH;
         return false;
     };
@@ -8648,13 +8547,7 @@ pub unsafe fn ProcessSOF_235(
         || ((num_components) > (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxComponents_4)))
     {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid num_components: {:}\n",
             num_components,
         );
@@ -8663,13 +8556,7 @@ pub unsafe fn ProcessSOF_235(
     };
     if (((*pos).wrapping_add((((3) * (num_components)) as usize))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             ((3) * (num_components)),
@@ -8693,17 +8580,7 @@ pub unsafe fn ProcessSOF_235(
     'loop_: while ((i) < ((*jpg).components.len())) {
         let id: i32 = (unsafe { ReadUint8_233(data, pos) });
         if (ids_seen[(id as usize)] as bool) {
-            write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
-                "Duplicate ID {:} in SOF.\n",
-                id,
-            );
+            write!((*libcc2rs::cerr_unsafe()), "Duplicate ID {:} in SOF.\n", id,);
             (*jpg).error = brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID;
             return false;
         }
@@ -8717,13 +8594,7 @@ pub unsafe fn ProcessSOF_235(
                 > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxSampling_27)))
         {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid h_samp_factor: {:}\n",
                 h_samp_factor,
             );
@@ -8735,13 +8606,7 @@ pub unsafe fn ProcessSOF_235(
                 > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxSampling_27)))
         {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid v_samp_factor: {:}\n",
                 v_samp_factor,
             );
@@ -8781,13 +8646,7 @@ pub unsafe fn ProcessSOF_235(
             || ((((*jpg).max_v_samp_factor) % ((*c).v_samp_factor)) != (0))
         {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Non-integral subsampling ratios.\n",
             );
             (*jpg).error = brunsli_JPEGReadError_INVALID_SAMPLING_FACTORS;
@@ -8800,16 +8659,7 @@ pub unsafe fn ProcessSOF_235(
         if ((num_blocks as usize)
             > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxNumBlocks_18)))
         {
-            write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
-                "Image too large.\n",
-            );
+            write!((*libcc2rs::cerr_unsafe()), "Image too large.\n",);
             (*jpg).error = brunsli_JPEGReadError_IMAGE_TOO_LARGE;
             return false;
         }
@@ -8826,13 +8676,7 @@ pub unsafe fn ProcessSOF_235(
     }
     if (((start_pos).wrapping_add(marker_len)) != (*pos)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid marker length: declared={:} actual={:}\n",
             marker_len,
             ((*pos).wrapping_sub(start_pos)),
@@ -8851,13 +8695,7 @@ pub unsafe fn ProcessSOS_236(
     let start_pos: usize = (*pos);
     if (((*pos).wrapping_add(((3) as usize))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             (3),
@@ -8872,13 +8710,7 @@ pub unsafe fn ProcessSOS_236(
         || ((comps_in_scan as usize) > ((*jpg).components.len()))
     {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid static_cast<size_t>(comps_in_scan): {:}\n",
             (comps_in_scan as usize),
         );
@@ -8889,13 +8721,7 @@ pub unsafe fn ProcessSOS_236(
     scan_info.num_components = (comps_in_scan as usize);
     if (((*pos).wrapping_add((((2) * (comps_in_scan)) as usize))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             ((2) * (comps_in_scan)),
@@ -8911,17 +8737,7 @@ pub unsafe fn ProcessSOS_236(
     'loop_: while ((i) < (comps_in_scan)) {
         let mut id: i32 = (unsafe { ReadUint8_233(data, pos) });
         if (ids_seen[(id as usize)] as bool) {
-            write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
-                "Duplicate ID {:} in SOS.\n",
-                id,
-            );
+            write!((*libcc2rs::cerr_unsafe()), "Duplicate ID {:} in SOS.\n", id,);
             (*jpg).error = brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID;
             return false;
         }
@@ -8937,13 +8753,7 @@ pub unsafe fn ProcessSOS_236(
         }
         if !(found_index) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "SOS marker: Could not find component with id {:}\n",
                 id,
             );
@@ -8955,13 +8765,7 @@ pub unsafe fn ProcessSOS_236(
         let mut ac_tbl_idx: i32 = ((c) & (15));
         if ((dc_tbl_idx) < (0)) || ((dc_tbl_idx) > (3)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid dc_tbl_idx: {:}\n",
                 dc_tbl_idx,
             );
@@ -8970,13 +8774,7 @@ pub unsafe fn ProcessSOS_236(
         };
         if ((ac_tbl_idx) < (0)) || ((ac_tbl_idx) > (3)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid ac_tbl_idx: {:}\n",
                 ac_tbl_idx,
             );
@@ -8989,13 +8787,7 @@ pub unsafe fn ProcessSOS_236(
     }
     if (((*pos).wrapping_add(((3) as usize))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             (3),
@@ -9008,13 +8800,7 @@ pub unsafe fn ProcessSOS_236(
     scan_info.Se = (unsafe { ReadUint8_233(data, pos) });
     if ((scan_info.Ss) < (0)) || ((scan_info.Ss) > (63)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid scan_info.Ss: {:}\n",
             scan_info.Ss,
         );
@@ -9023,13 +8809,7 @@ pub unsafe fn ProcessSOS_236(
     };
     if ((scan_info.Se) < (scan_info.Ss)) || ((scan_info.Se) > (63)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid scan_info.Se: {:}\n",
             scan_info.Se,
         );
@@ -9041,13 +8821,7 @@ pub unsafe fn ProcessSOS_236(
     scan_info.Al = ((c) & (15));
     if ((scan_info.Ah) != (0)) && ((scan_info.Al) != ((scan_info.Ah) - (1))) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid progressive parameters:  Al = {:} Ah = {:}\n",
             scan_info.Al,
             scan_info.Ah,
@@ -9069,13 +8843,7 @@ pub unsafe fn ProcessSOS_236(
         }
         if ((scan_info.Ss) == (0)) && (!(found_dc_table)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "SOS marker: Could not find DC Huffman table with index {:}\n",
                 scan_info.components[(i as usize)].dc_tbl_idx,
             );
@@ -9084,13 +8852,7 @@ pub unsafe fn ProcessSOS_236(
         }
         if ((scan_info.Se) > (0)) && (!(found_ac_table)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "SOS marker: Could not find AC Huffman table with index {:}\n",
                 scan_info.components[(i as usize)].ac_tbl_idx,
             );
@@ -9105,13 +8867,7 @@ pub unsafe fn ProcessSOS_236(
     };
     if (((start_pos).wrapping_add(marker_len)) != (*pos)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid marker length: declared={:} actual={:}\n",
             marker_len,
             ((*pos).wrapping_sub(start_pos)),
@@ -9133,13 +8889,7 @@ pub unsafe fn ProcessDHT_237(
     let start_pos: usize = (*pos);
     if (((*pos).wrapping_add(((2) as usize))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             (2),
@@ -9151,13 +8901,7 @@ pub unsafe fn ProcessDHT_237(
     let mut marker_len: usize = ((unsafe { ReadUint16_234(data, pos) }) as usize);
     if ((marker_len) == (2_usize)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "DHT marker: no Huffman table found\n",
         );
         (*jpg).error = brunsli_JPEGReadError_EMPTY_DHT;
@@ -9170,13 +8914,7 @@ pub unsafe fn ProcessDHT_237(
         )) > (len))
         {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Unexpected end of input: pos={:} need={:} len={:}\n",
                 (*pos),
                 ((1) + (*std::cell::LazyCell::force_mut(
@@ -9196,13 +8934,7 @@ pub unsafe fn ProcessDHT_237(
             huffman_index -= 16;
             if ((huffman_index) < (0)) || ((huffman_index) > (3)) {
                 write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
+                    (*libcc2rs::cerr_unsafe()),
                     "Invalid huffman_index: {:}\n",
                     huffman_index,
                 );
@@ -9215,13 +8947,7 @@ pub unsafe fn ProcessDHT_237(
         } else {
             if ((huffman_index) < (0)) || ((huffman_index) > (3)) {
                 write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
+                    (*libcc2rs::cerr_unsafe()),
                     "Invalid huffman_index: {:}\n",
                     huffman_index,
                 );
@@ -9260,13 +8986,7 @@ pub unsafe fn ProcessDHT_237(
                     > (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8)))
             {
                 write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
+                    (*libcc2rs::cerr_unsafe()),
                     "Invalid total_count: {:}\n",
                     total_count,
                 );
@@ -9279,13 +8999,7 @@ pub unsafe fn ProcessDHT_237(
                     > (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9)))
             {
                 write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
+                    (*libcc2rs::cerr_unsafe()),
                     "Invalid total_count: {:}\n",
                     total_count,
                 );
@@ -9295,13 +9009,7 @@ pub unsafe fn ProcessDHT_237(
         }
         if (((*pos).wrapping_add(((total_count) as usize))) > (len)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Unexpected end of input: pos={:} need={:} len={:}\n",
                 (*pos),
                 (total_count),
@@ -9322,47 +9030,17 @@ pub unsafe fn ProcessDHT_237(
                         > ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9))
                             - (1)))
                 {
-                    write!(
-                        std::fs::File::from_raw_fd(
-                            std::io::stderr()
-                                .as_fd()
-                                .try_clone_to_owned()
-                                .unwrap()
-                                .into_raw_fd(),
-                        ),
-                        "Invalid value: ",
-                    );
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    )
-                    .write_all(&([(&[value as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()));
+                    write!((*libcc2rs::cerr_unsafe()), "Invalid value: ",);
+                    (*libcc2rs::cerr_unsafe())
+                        .write_all(&([(&[value as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()));
                     (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
                     return false;
                 };
             }
             if (values_seen[(value as usize)] as bool) {
-                write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
-                    "Duplicate Huffman code value ",
-                );
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                )
-                .write_all(&([(&[value as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()));
+                write!((*libcc2rs::cerr_unsafe()), "Duplicate Huffman code value ",);
+                (*libcc2rs::cerr_unsafe())
+                    .write_all(&([(&[value as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()));
                 (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
                 return false;
             }
@@ -9378,13 +9056,7 @@ pub unsafe fn ProcessDHT_237(
                 - (max_depth)));
         if ((space) < (0)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid Huffman code lengths.\n",
             );
             (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
@@ -9414,13 +9086,7 @@ pub unsafe fn ProcessDHT_237(
     }
     if (((start_pos).wrapping_add(marker_len)) != (*pos)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid marker length: declared={:} actual={:}\n",
             marker_len,
             ((*pos).wrapping_sub(start_pos)),
@@ -9439,13 +9105,7 @@ pub unsafe fn ProcessDQT_239(
     let start_pos: usize = (*pos);
     if (((*pos).wrapping_add(((2) as usize))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             (2),
@@ -9457,13 +9117,7 @@ pub unsafe fn ProcessDQT_239(
     let mut marker_len: usize = ((unsafe { ReadUint16_234(data, pos) }) as usize);
     if ((marker_len) == (2_usize)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "DQT marker: no quantization table found\n",
         );
         (*jpg).error = brunsli_JPEGReadError_EMPTY_DQT;
@@ -9475,13 +9129,7 @@ pub unsafe fn ProcessDQT_239(
     {
         if (((*pos).wrapping_add(((1) as usize))) > (len)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Unexpected end of input: pos={:} need={:} len={:}\n",
                 (*pos),
                 (1),
@@ -9494,13 +9142,7 @@ pub unsafe fn ProcessDQT_239(
         let mut quant_table_precision: i32 = ((quant_table_index) >> (4));
         if ((quant_table_precision) < (0)) || ((quant_table_precision) > (1)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid quant_table_precision: {:}\n",
                 quant_table_precision,
             );
@@ -9510,13 +9152,7 @@ pub unsafe fn ProcessDQT_239(
         quant_table_index &= 15;
         if ((quant_table_index) < (0)) || ((quant_table_index) > (3)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid quant_table_index: {:}\n",
                 quant_table_index,
             );
@@ -9530,13 +9166,7 @@ pub unsafe fn ProcessDQT_239(
         )) > (len))
         {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Unexpected end of input: pos={:} need={:} len={:}\n",
                 (*pos),
                 (((quant_table_precision) + (1))
@@ -9558,13 +9188,7 @@ pub unsafe fn ProcessDQT_239(
             };
             if ((quant_val) < (1)) || ((quant_val) > (65535)) {
                 write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
+                    (*libcc2rs::cerr_unsafe()),
                     "Invalid quant_val: {:}\n",
                     quant_val,
                 );
@@ -9583,13 +9207,7 @@ pub unsafe fn ProcessDQT_239(
     }
     if (((start_pos).wrapping_add(marker_len)) != (*pos)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid marker length: declared={:} actual={:}\n",
             marker_len,
             ((*pos).wrapping_sub(start_pos)),
@@ -9607,16 +9225,7 @@ pub unsafe fn ProcessDRI_240(
     mut jpg: *mut brunsli_JPEGData,
 ) -> bool {
     if (*found_dri) {
-        write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
-            "Duplicate DRI marker.\n",
-        );
+        write!((*libcc2rs::cerr_unsafe()), "Duplicate DRI marker.\n",);
         (*jpg).error = brunsli_JPEGReadError_DUPLICATE_DRI;
         return false;
     }
@@ -9624,13 +9233,7 @@ pub unsafe fn ProcessDRI_240(
     let start_pos: usize = (*pos);
     if (((*pos).wrapping_add(((4) as usize))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             (4),
@@ -9644,13 +9247,7 @@ pub unsafe fn ProcessDRI_240(
     (*jpg).restart_interval = restart_interval;
     if (((start_pos).wrapping_add(marker_len)) != (*pos)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid marker length: declared={:} actual={:}\n",
             marker_len,
             ((*pos).wrapping_sub(start_pos)),
@@ -9668,13 +9265,7 @@ pub unsafe fn ProcessAPP_241(
 ) -> bool {
     if (((*pos).wrapping_add(((2) as usize))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             (2),
@@ -9686,13 +9277,7 @@ pub unsafe fn ProcessAPP_241(
     let mut marker_len: usize = ((unsafe { ReadUint16_234(data, pos) }) as usize);
     if ((marker_len) < (2_usize)) || ((marker_len) > (65535_usize)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid marker_len: {:}\n",
             marker_len,
         );
@@ -9701,13 +9286,7 @@ pub unsafe fn ProcessAPP_241(
     };
     if (((*pos).wrapping_add(((marker_len).wrapping_sub(2_usize)))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             ((marker_len).wrapping_sub(2_usize)),
@@ -9740,13 +9319,7 @@ pub unsafe fn ProcessCOM_242(
 ) -> bool {
     if (((*pos).wrapping_add(((2) as usize))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             (2),
@@ -9758,13 +9331,7 @@ pub unsafe fn ProcessCOM_242(
     let mut marker_len: usize = ((unsafe { ReadUint16_234(data, pos) }) as usize);
     if ((marker_len) < (2_usize)) || ((marker_len) > (65535_usize)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Invalid marker_len: {:}\n",
             marker_len,
         );
@@ -9773,13 +9340,7 @@ pub unsafe fn ProcessCOM_242(
     };
     if (((*pos).wrapping_add(((marker_len).wrapping_sub(2_usize)))) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of input: pos={:} need={:} len={:}\n",
             (*pos),
             ((marker_len).wrapping_sub(2_usize)),
@@ -9911,16 +9472,7 @@ impl brunsli_BitReaderState {
             }
         }
         if ((self.pos_) > (self.next_marker_pos_)) {
-            write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
-                "Unexpected end of scan.\n",
-            );
+            write!((*libcc2rs::cerr_unsafe()), "Unexpected end of scan.\n",);
             return false;
         }
         (*pos) = self.pos_;
@@ -9987,13 +9539,7 @@ pub unsafe fn DecodeDCTBlock_245(
         let mut s: i32 = (unsafe { ReadSymbol_243(dc_huff, br) });
         if ((s) >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9))) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid Huffman symbol {:} for DC coefficient.\n",
                 s,
             );
@@ -10010,13 +9556,7 @@ pub unsafe fn DecodeDCTBlock_245(
         (*coeffs.offset((0) as isize)) = (dc_coeff as i16);
         if ((dc_coeff) != ((*coeffs.offset((0) as isize)) as i32)) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid DC coefficient {:}\n",
                 dc_coeff,
             );
@@ -10039,13 +9579,7 @@ pub unsafe fn DecodeDCTBlock_245(
         let mut sr: i32 = (unsafe { ReadSymbol_243(ac_huff, br) });
         if ((sr) >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8))) {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Invalid Huffman symbol {:} for AC coefficient {:}\n",
                 sr,
                 k,
@@ -10059,13 +9593,7 @@ pub unsafe fn DecodeDCTBlock_245(
             k += r;
             if ((k) > (Se)) {
                 write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
+                    (*libcc2rs::cerr_unsafe()),
                     "Out-of-band coefficient {:} band was {:}-{:}\n",
                     k,
                     Ss,
@@ -10078,13 +9606,7 @@ pub unsafe fn DecodeDCTBlock_245(
                 >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9)))
             {
                 write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
+                    (*libcc2rs::cerr_unsafe()),
                     "Out of range AC coefficient value: s = {:} Al = {:} k = {:}\n",
                     s,
                     Al,
@@ -10111,13 +9633,7 @@ pub unsafe fn DecodeDCTBlock_245(
             if ((r) > (0)) {
                 if !(eobrun_allowed) {
                     write!(
-                        std::fs::File::from_raw_fd(
-                            std::io::stderr()
-                                .as_fd()
-                                .try_clone_to_owned()
-                                .unwrap()
-                                .into_raw_fd(),
-                        ),
+                        (*libcc2rs::cerr_unsafe()),
                         "End-of-block run crossing DC coeff.\n",
                     );
                     (*jpg).error = brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
@@ -10167,13 +9683,7 @@ pub unsafe fn RefineDCTBlock_246(
             if ((s) >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8)))
             {
                 write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
+                    (*libcc2rs::cerr_unsafe()),
                     "Invalid Huffman symbol {:} for AC coefficient {:}\n",
                     s,
                     k,
@@ -10186,13 +9696,7 @@ pub unsafe fn RefineDCTBlock_246(
             if (s != 0) {
                 if ((s) != (1)) {
                     write!(
-                        std::fs::File::from_raw_fd(
-                            std::io::stderr()
-                                .as_fd()
-                                .try_clone_to_owned()
-                                .unwrap()
-                                .into_raw_fd(),
-                        ),
+                        (*libcc2rs::cerr_unsafe()),
                         "Invalid Huffman symbol {:} for AC coefficient {:}\n",
                         s,
                         k,
@@ -10215,13 +9719,7 @@ pub unsafe fn RefineDCTBlock_246(
                     if ((r) > (0)) {
                         if !(eobrun_allowed) {
                             write!(
-                                std::fs::File::from_raw_fd(
-                                    std::io::stderr()
-                                        .as_fd()
-                                        .try_clone_to_owned()
-                                        .unwrap()
-                                        .into_raw_fd(),
-                                ),
+                                (*libcc2rs::cerr_unsafe()),
                                 "End-of-block run crossing DC coeff.\n",
                             );
                             (*jpg).error = brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
@@ -10264,13 +9762,7 @@ pub unsafe fn RefineDCTBlock_246(
             if (s != 0) {
                 if ((k) > (Se)) {
                     write!(
-                        std::fs::File::from_raw_fd(
-                            std::io::stderr()
-                                .as_fd()
-                                .try_clone_to_owned()
-                                .unwrap()
-                                .into_raw_fd(),
-                        ),
+                        (*libcc2rs::cerr_unsafe()),
                         "Out-of-band coefficient {:} band was {:}-{:}\n",
                         k,
                         Ss,
@@ -10289,13 +9781,7 @@ pub unsafe fn RefineDCTBlock_246(
     }
     if in_zero_run {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Extra zero run before end-of-block.\n",
         );
         (*jpg).error = brunsli_JPEGReadError_EXTRA_ZERO_RUN;
@@ -10345,13 +9831,7 @@ pub unsafe fn ProcessRestart_247(
     if (((pos).wrapping_add(2_usize)) > (len)) || (((*data.offset((pos) as isize)) as i32) != (255))
     {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Marker byte (0xff) expected, found: {:} pos={:} len={:}\n",
             (if ((pos) < (len)) {
                 ((*data.offset((pos) as isize)) as i32)
@@ -10367,13 +9847,7 @@ pub unsafe fn ProcessRestart_247(
     let mut marker: i32 = ((*data.offset(((pos).wrapping_add(1_usize)) as isize)) as i32);
     if ((marker) != (expected_marker)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Did not find expected restart marker {:} actual={:}\n",
             expected_marker,
             marker,
@@ -10450,13 +9924,7 @@ pub unsafe fn ProcessScan_248(
                 != 0)
             {
                 write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
+                    (*libcc2rs::cerr_unsafe()),
                     "Overlapping scans: component = {:} k = {:} prev_mask: {:} cur_mask: {:}\n",
                     comp_idx,
                     k,
@@ -10471,13 +9939,7 @@ pub unsafe fn ProcessScan_248(
                 != 0)
             {
                 write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
+                    (*libcc2rs::cerr_unsafe()),
                     "Invalid scan order, a more refined scan was already done: component = {:} k = {:} prev_mask: {:} cur_mask: {:}\n",
                     comp_idx,
                     k,
@@ -10496,13 +9958,7 @@ pub unsafe fn ProcessScan_248(
     }
     if ((Al) > (10)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Scan parameter Al = {:} is not supported in brunsli.\n",
             Al,
         );
@@ -10534,16 +9990,7 @@ pub unsafe fn ProcessScan_248(
                             (last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void)
                         };
                         if ((eobrun) > (0)) {
-                            write!(
-                                std::fs::File::from_raw_fd(
-                                    std::io::stderr()
-                                        .as_fd()
-                                        .try_clone_to_owned()
-                                        .unwrap()
-                                        .into_raw_fd(),
-                                ),
-                                "End-of-block run too long.\n",
-                            );
+                            write!((*libcc2rs::cerr_unsafe()), "End-of-block run too long.\n",);
                             (*jpg).error = brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
                             return false;
                         }
@@ -10555,16 +10002,7 @@ pub unsafe fn ProcessScan_248(
                 restarts_to_go.prefix_dec();
             }
             if (unsafe { brunsli_BitReaderState::IsUnhealthy(&mut br) }) {
-                write!(
-                    std::fs::File::from_raw_fd(
-                        std::io::stderr()
-                            .as_fd()
-                            .try_clone_to_owned()
-                            .unwrap()
-                            .into_raw_fd(),
-                    ),
-                    "Unexpected end of scan.\n",
-                );
+                write!((*libcc2rs::cerr_unsafe()), "Unexpected end of scan.\n",);
                 (*jpg).error = brunsli_JPEGReadError_INVALID_SCAN;
                 return false;
             }
@@ -10674,16 +10112,7 @@ pub unsafe fn ProcessScan_248(
         mcu_y.prefix_inc();
     }
     if ((eobrun) > (0)) {
-        write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
-            "End-of-block run too long.\n",
-        );
+        write!((*libcc2rs::cerr_unsafe()), "End-of-block run too long.\n",);
         (*jpg).error = brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
         return false;
     }
@@ -10693,13 +10122,7 @@ pub unsafe fn ProcessScan_248(
     }
     if ((*pos) > (len)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Unexpected end of file during scan. pos={:} len={:}\n",
             (*pos),
             len,
@@ -10725,24 +10148,8 @@ pub unsafe fn FixupIndexes_249(mut jpg: *mut brunsli_JPEGData) -> bool {
             j.prefix_inc();
         }
         if !(found_index) {
-            write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
-                "Quantization table with index ",
-            );
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            )
-            .write_all(
+            write!((*libcc2rs::cerr_unsafe()), "Quantization table with index ",);
+            (*libcc2rs::cerr_unsafe()).write_all(
                 &([
                     (&[(*c).quant_idx as u8] as &[u8]),
                     (b" not found." as &[u8]),
@@ -10784,13 +10191,7 @@ pub unsafe fn ReadJpeg_196(
     if (((pos).wrapping_add(2_usize)) > (len)) || (((*data.offset((pos) as isize)) as i32) != (255))
     {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Marker byte (0xff) expected, found: {:} pos={:} len={:}\n",
             (if ((pos) < (len)) {
                 ((*data.offset((pos) as isize)) as i32)
@@ -10807,13 +10208,7 @@ pub unsafe fn ReadJpeg_196(
     pos = (pos).wrapping_add(2_usize);
     if ((marker) != (216)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cerr_unsafe()),
             "Did not find expected SOI marker, actual={:}\n",
             marker,
         );
@@ -10872,13 +10267,7 @@ pub unsafe fn ReadJpeg_196(
             || (((*data.offset((pos) as isize)) as i32) != (255))
         {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Marker byte (0xff) expected, found: {:} pos={:} len={:}\n",
                 (if ((pos) < (len)) {
                     ((*data.offset((pos) as isize)) as i32)
@@ -10994,13 +10383,7 @@ pub unsafe fn ReadJpeg_196(
                 }
                 _ => {
                     write!(
-                        std::fs::File::from_raw_fd(
-                            std::io::stderr()
-                                .as_fd()
-                                .try_clone_to_owned()
-                                .unwrap()
-                                .into_raw_fd(),
-                        ),
+                        (*libcc2rs::cerr_unsafe()),
                         "Unsupported marker: {:} pos={:} len={:}\n",
                         marker,
                         pos,
@@ -11024,16 +10407,7 @@ pub unsafe fn ReadJpeg_196(
         }
     }
     if !(found_sof) {
-        write!(
-            std::fs::File::from_raw_fd(
-                std::io::stderr()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
-            "Missing SOF marker.\n",
-        );
+        write!((*libcc2rs::cerr_unsafe()), "Missing SOF marker.\n",);
         (*jpg).error = brunsli_JPEGReadError_SOF_NOT_FOUND;
         return false;
     }
@@ -11050,13 +10424,7 @@ pub unsafe fn ReadJpeg_196(
         }
         if (*jpg).huffman_code.is_empty() {
             write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
+                (*libcc2rs::cerr_unsafe()),
                 "Need at least one Huffman code table.\n",
             );
             (*jpg).error = brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR;
@@ -11065,16 +10433,7 @@ pub unsafe fn ReadJpeg_196(
         if (((*jpg).huffman_code.len())
             >= ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxDHTMarkers_10)) as usize))
         {
-            write!(
-                std::fs::File::from_raw_fd(
-                    std::io::stderr()
-                        .as_fd()
-                        .try_clone_to_owned()
-                        .unwrap()
-                        .into_raw_fd(),
-                ),
-                "Too many Huffman tables.\n",
-            );
+            write!((*libcc2rs::cerr_unsafe()), "Too many Huffman tables.\n",);
             (*jpg).error = brunsli_JPEGReadError_HUFFMAN_TABLE_ERROR;
             return false;
         }
@@ -11143,7 +10502,7 @@ pub unsafe fn BuildJpegHuffmanTable_238(
         code.value = ((*symbols.offset((0) as isize)) as u16);
         key = 0;
         'loop_: while ((key) < (table_size)) {
-            (*table.offset((key) as isize)) = (code).clone();
+            (*table.offset((key) as isize)) = code;
             key.prefix_inc();
         }
         return;
@@ -11162,7 +10521,7 @@ pub unsafe fn BuildJpegHuffmanTable_238(
                     &mut *&raw mut kJpegHuffmanRootTableBits_230,
                 )) - (len)));
             'loop_: while (reps.postfix_dec() != 0) {
-                (*table.offset((key.postfix_inc()) as isize)) = (code).clone();
+                (*table.offset((key.postfix_inc()) as isize)) = code;
             }
             tmp_count[(len) as usize].prefix_dec();
         }
@@ -11198,7 +10557,7 @@ pub unsafe fn BuildJpegHuffmanTable_238(
             code.value = ((*symbols.offset((idx.postfix_inc()) as isize)) as u16);
             reps = ((1) << ((table_bits) - (code.bits as i32)));
             'loop_: while (reps.postfix_dec() != 0) {
-                (*table.offset((low.postfix_inc()) as isize)) = (code).clone();
+                (*table.offset((low.postfix_inc()) as isize)) = code;
             }
             tmp_count[(len) as usize].prefix_dec();
         }

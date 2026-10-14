@@ -4696,7 +4696,7 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
         let mut i: i32 = 0;
         'loop_: while (i < num_contours) {
             ({
-                Write255UShort_10 ( ( (* self ) .with(|__s| __s . n_points_stream_ .as_pointer())  )  , ( ( ( * ( (glyph.with(|__s| __s . contours .as_pointer())  as Ptr<Vec<woff2_Glyph_Point>>).offset(( ( i as usize ) ) ) .as_pointer() as Ptr<Vec<woff2_Glyph_Point>  >) .upgrade().deref() ) .len()  as i32 ) )  , )
+                Write255UShort_10 ( ( (* self ) .with(|__s| __s . n_points_stream_ .as_pointer())  )  , ( ( ( * ( (glyph.with(|__s| __s . contours .as_pointer())  as Ptr<Vec<woff2_Glyph_Point  >  >).offset(( ( i as usize ) ) ) .as_pointer() as Ptr<Vec<woff2_Glyph_Point  >  >) .upgrade().deref() ) .len()  as i32 ) )  , )
             });
             i.postfix_inc();
         }

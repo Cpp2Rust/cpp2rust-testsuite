@@ -64,13 +64,7 @@ unsafe fn main_0() -> i32 {
     let mut i: i32 = 0;
     'loop_: while ((i) < (N)) {
         write!(
-            std::fs::File::from_raw_fd(
-                std::io::stdout()
-                    .as_fd()
-                    .try_clone_to_owned()
-                    .unwrap()
-                    .into_raw_fd(),
-            ),
+            (*libcc2rs::cout_unsafe()),
             "Value: {:}, Found: {:}\n",
             i,
             (*(unsafe { find_0(tree, i,) })).value,
