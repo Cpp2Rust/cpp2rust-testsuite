@@ -8055,8 +8055,10 @@ pub unsafe fn WarmupMeta_196(
         let mut c: usize = 0_usize;
         'loop_: while ((c) < (num_components)) {
             let m: *mut brunsli_internal_dec_ComponentMeta = &mut (&mut (*meta))[(c)];
-            let q: *const brunsli_JPEGQuantTable =
-                &(&mut (*jpg)).quant[((&mut (*jpg)).components[(c)].quant_idx as usize)];
+            let q: *const brunsli_JPEGQuantTable = &(*{
+                let __idx = ((&mut (*jpg)).components[(c)].quant_idx as usize);
+                &mut (&mut (*jpg)).quant[__idx]
+            });
             (*m).ac_coeffs = (&mut (*jpg)).components[(c)].coeffs.as_mut_ptr();
             (*m).ac_stride = (((*m).width_in_blocks)
                 * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)));
