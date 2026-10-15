@@ -38,10 +38,8 @@ fn main_0() -> i32 {
         let mut j: i32 = 0;
         'loop_: while (j < N) {
             let __rhs = ((i * j) % 7);
-            elem!(
-                ((grid.as_pointer() as Ptr<Vec<i32>>)
-                    .offset((i as usize))
-                    .as_pointer() as Ptr<i32>),
+            index!(
+                elem!((grid.as_pointer() as Ptr<Vec<i32>>), (i as usize)),
                 (j as usize)
             )
             .write(__rhs);

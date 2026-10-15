@@ -10688,9 +10688,9 @@ pub unsafe fn DoEncodeScan_255(
         (*ss).next_restart_marker = 0;
         (*ss).block_scan_index = 0;
         (*ss).extra_zero_runs_pos = 0_usize;
-        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() });
+        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() }).clone();
         (*ss).next_reset_point_pos = 0_usize;
-        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
+        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() }).clone();
         (*ss).mcu_y = 0;
         {
             let byte_0 = ((*ss).last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
@@ -10822,7 +10822,8 @@ pub unsafe fn DoEncodeScan_255(
                             as i32);
                         if (((*ss).block_scan_index) == ((*ss).next_reset_point)) {
                             (unsafe { Flush_238(coding_state, bw) });
-                            (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
+                            (*ss).next_reset_point =
+                                (unsafe { get_next_reset_point.call() }).clone();
                         }
                         let mut num_zero_runs: i32 = 0;
                         if (((*ss).block_scan_index) == ((*ss).next_extra_zero_run_index)) {
@@ -10831,7 +10832,7 @@ pub unsafe fn DoEncodeScan_255(
                                 .num_extra_zero_runs;
                             (*ss).extra_zero_runs_pos.prefix_inc();
                             (*ss).next_extra_zero_run_index =
-                                (unsafe { get_next_extra_zero_run_index.call() });
+                                (unsafe { get_next_extra_zero_run_index.call() }).clone();
                         }
                         let mut coeffs: *const i16 =
                             (&(&(*c)).coeffs[(((block_idx) << (6)) as usize)] as *const i16);
@@ -10959,9 +10960,9 @@ pub unsafe fn DoEncodeScan_256(
         (*ss).next_restart_marker = 0;
         (*ss).block_scan_index = 0;
         (*ss).extra_zero_runs_pos = 0_usize;
-        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() });
+        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() }).clone();
         (*ss).next_reset_point_pos = 0_usize;
-        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
+        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() }).clone();
         (*ss).mcu_y = 0;
         {
             let byte_0 = ((*ss).last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
@@ -11093,7 +11094,8 @@ pub unsafe fn DoEncodeScan_256(
                             as i32);
                         if (((*ss).block_scan_index) == ((*ss).next_reset_point)) {
                             (unsafe { Flush_238(coding_state, bw) });
-                            (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
+                            (*ss).next_reset_point =
+                                (unsafe { get_next_reset_point.call() }).clone();
                         }
                         let mut num_zero_runs: i32 = 0;
                         if (((*ss).block_scan_index) == ((*ss).next_extra_zero_run_index)) {
@@ -11102,7 +11104,7 @@ pub unsafe fn DoEncodeScan_256(
                                 .num_extra_zero_runs;
                             (*ss).extra_zero_runs_pos.prefix_inc();
                             (*ss).next_extra_zero_run_index =
-                                (unsafe { get_next_extra_zero_run_index.call() });
+                                (unsafe { get_next_extra_zero_run_index.call() }).clone();
                         }
                         let mut coeffs: *const i16 =
                             (&(&(*c)).coeffs[(((block_idx) << (6)) as usize)] as *const i16);
@@ -11241,9 +11243,9 @@ pub unsafe fn DoEncodeScan_257(
         (*ss).next_restart_marker = 0;
         (*ss).block_scan_index = 0;
         (*ss).extra_zero_runs_pos = 0_usize;
-        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() });
+        (*ss).next_extra_zero_run_index = (unsafe { get_next_extra_zero_run_index.call() }).clone();
         (*ss).next_reset_point_pos = 0_usize;
-        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
+        (*ss).next_reset_point = (unsafe { get_next_reset_point.call() }).clone();
         (*ss).mcu_y = 0;
         {
             let byte_0 = ((*ss).last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void) as *mut u8;
@@ -11375,7 +11377,8 @@ pub unsafe fn DoEncodeScan_257(
                             as i32);
                         if (((*ss).block_scan_index) == ((*ss).next_reset_point)) {
                             (unsafe { Flush_238(coding_state, bw) });
-                            (*ss).next_reset_point = (unsafe { get_next_reset_point.call() });
+                            (*ss).next_reset_point =
+                                (unsafe { get_next_reset_point.call() }).clone();
                         }
                         let mut num_zero_runs: i32 = 0;
                         if (((*ss).block_scan_index) == ((*ss).next_extra_zero_run_index)) {
@@ -11384,7 +11387,7 @@ pub unsafe fn DoEncodeScan_257(
                                 .num_extra_zero_runs;
                             (*ss).extra_zero_runs_pos.prefix_inc();
                             (*ss).next_extra_zero_run_index =
-                                (unsafe { get_next_extra_zero_run_index.call() });
+                                (unsafe { get_next_extra_zero_run_index.call() }).clone();
                         }
                         let mut coeffs: *const i16 =
                             (&(&(*c)).coeffs[(((block_idx) << (6)) as usize)] as *const i16);

@@ -748,7 +748,7 @@ thread_local!(
     pub static kMaxPlausibleCompressionRatio_54: Value<f32> =
         Rc::new(RefCell::new((100_f64 as f32)));
 );
-#[derive(DeepClone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(40)]
 pub struct woff2_TtcFont {
     #[offset(0)]
@@ -759,9 +759,9 @@ pub struct woff2_TtcFont {
     pub header_checksum: u32,
     #[offset(16)]
     #[byte_size(24)]
-    pub table_indices: Value<Vec<u16>>,
+    pub table_indices: Vec<u16>,
 }
-#[derive(DeepClone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(80)]
 pub struct woff2_WOFF2Header {
     #[offset(0)]
@@ -778,12 +778,12 @@ pub struct woff2_WOFF2Header {
     pub uncompressed_size: u32,
     #[offset(32)]
     #[byte_size(24)]
-    pub tables: Value<Vec<woff2_Table>>,
+    pub tables: Vec<woff2_Table>,
     #[offset(56)]
     #[byte_size(24)]
-    pub ttc_fonts: Value<Vec<woff2_TtcFont>>,
+    pub ttc_fonts: Vec<woff2_TtcFont>,
 }
-#[derive(DeepClone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(80)]
 pub struct woff2_WOFF2FontInfo {
     #[offset(0)]
@@ -794,19 +794,19 @@ pub struct woff2_WOFF2FontInfo {
     pub num_hmetrics: u16,
     #[offset(8)]
     #[byte_size(24)]
-    pub x_mins: Value<Vec<i16>>,
+    pub x_mins: Vec<i16>,
     #[offset(32)]
     #[byte_size(48)]
     pub table_entry_by_tag: BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>,
 }
-#[derive(DeepClone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(80)]
 pub struct woff2_RebuildMetadata {
     #[offset(0)]
     pub header_checksum: u32,
     #[offset(8)]
     #[byte_size(24)]
-    pub font_infos: Value<Vec<woff2_WOFF2FontInfo>>,
+    pub font_infos: Vec<woff2_WOFF2FontInfo>,
     #[offset(32)]
     #[byte_size(48)]
     pub checksums:
@@ -1062,7 +1062,7 @@ pub fn StorePoints_58(
     last_y = 0;
     let mut i: u32 = 0_u32;
     'loop_: while (i < n_points) {
-        let mut dx: i32 = ({ { (*elem!(points, i).upgrade().deref()).x } } - { last_x });
+        let mut dx: i32 = ({ elem!(points, i).with(|__s| __s.x) } - { last_x });
         if (dx == 0) {
         } else if (dx > -256_i32) && (dx < 256) {
             let __rhs = (dx.abs() as u8);
@@ -1072,7 +1072,7 @@ pub fn StorePoints_58(
             x_offset = __rhs;
         }
         last_x += dx;
-        let mut dy: i32 = ({ { (*elem!(points, i).upgrade().deref()).y } } - { last_y });
+        let mut dy: i32 = ({ elem!(points, i).with(|__s| __s.y) } - { last_y });
         if (dy == 0) {
         } else if (dy > -256_i32) && (dy < 256) {
             let __rhs = (dy.abs() as u8);
@@ -1093,15 +1093,15 @@ pub fn ComputeBbox_59(mut n_points: u32, mut points: Ptr<woff2_Point>, mut dst: 
     let x_max: Value<i32> = Rc::new(RefCell::new(0));
     let y_max: Value<i32> = Rc::new(RefCell::new(0));
     if (n_points > 0_u32) {
-        (*x_min.borrow_mut()) = { (*elem!(points, 0).upgrade().deref()).x };
-        (*x_max.borrow_mut()) = { (*elem!(points, 0).upgrade().deref()).x };
-        (*y_min.borrow_mut()) = { (*elem!(points, 0).upgrade().deref()).y };
-        (*y_max.borrow_mut()) = { (*elem!(points, 0).upgrade().deref()).y };
+        (*x_min.borrow_mut()) = elem!(points, 0).with(|__s| __s.x);
+        (*x_max.borrow_mut()) = elem!(points, 0).with(|__s| __s.x);
+        (*y_min.borrow_mut()) = elem!(points, 0).with(|__s| __s.y);
+        (*y_max.borrow_mut()) = elem!(points, 0).with(|__s| __s.y);
     }
     let mut i: u32 = 1_u32;
     'loop_: while (i < n_points) {
-        let x: Value<i32> = Rc::new(RefCell::new({ (*elem!(points, i).upgrade().deref()).x }));
-        let y: Value<i32> = Rc::new(RefCell::new({ (*elem!(points, i).upgrade().deref()).y }));
+        let x: Value<i32> = Rc::new(RefCell::new(elem!(points, i).with(|__s| __s.x)));
+        let y: Value<i32> = Rc::new(RefCell::new(elem!(points, i).with(|__s| __s.y)));
         let __rhs = (if x.as_pointer().read() <= x_min.as_pointer().read() {
             x.as_pointer()
         } else {
@@ -1245,8 +1245,7 @@ pub fn StoreLoca_62(
     let mut offset: usize = 0_usize;
     let mut i: usize = 0_usize;
     'loop_: while ({ i } < { (*loca_values.upgrade().deref()).len() }) {
-        let mut value: u32 =
-            (elem!((Ptr::<Vec<u32>>::decay(&(loca_values)) as Ptr<u32>), i).read());
+        let mut value: u32 = (index!(loca_values, i).read());
         if (index_format != 0) {
             let __rhs = ({ StoreU32_31((dst).clone(), offset, value) });
             offset = __rhs;
@@ -1416,7 +1415,8 @@ pub fn ReconstructGlyf_63(
     ));
     {
         let __a0 = (info.with(|__s| __s.num_glyphs) as usize) as usize;
-        (*info.with(|__s| __s.x_mins.clone()).borrow_mut()).resize_with(__a0, || <i16>::default())
+        field!(info, x_mins)
+            .with_mut(|__v: &mut Vec<i16>| __v.resize_with(__a0, || <i16>::default()))
     };
     let mut i: u32 = 0_u32;
     'loop_: while ({ i } < { (info.with(|__s| __s.num_glyphs) as u32) }) {
@@ -1779,7 +1779,7 @@ pub fn ReconstructGlyf_63(
             if ((!({
                 woff2_BufferImpl::ReadS16(
                     &x_min_buf.as_pointer(),
-                    ((info.with(|__s| __s.x_mins.as_pointer()) as Ptr<i16>).offset((i as usize))),
+                    ((field_ref!(info, x_mins).as_pointer() as Ptr<i16>).offset((i as usize))),
                 )
             }) as i64)
                 != 0)
@@ -1909,11 +1909,7 @@ pub fn ReconstructTransformedHmtx_67(
                 return false;
             }
         } else {
-            (*lsb.borrow_mut()) = (elem!(
-                (Ptr::<Vec<i16>>::decay(&(x_mins)) as Ptr<i16>),
-                (i as usize)
-            )
-            .read());
+            (*lsb.borrow_mut()) = (index!(x_mins, (i as usize)).read());
         }
         {
             let a0_clone = (*lsb.borrow()).clone();
@@ -1932,11 +1928,7 @@ pub fn ReconstructTransformedHmtx_67(
                 return false;
             }
         } else {
-            (*lsb.borrow_mut()) = (elem!(
-                (Ptr::<Vec<i16>>::decay(&(x_mins)) as Ptr<i16>),
-                (i as usize)
-            )
-            .read());
+            (*lsb.borrow_mut()) = (index!(x_mins, (i as usize)).read());
         }
         {
             let a0_clone = (*lsb.borrow()).clone();
@@ -2139,20 +2131,18 @@ pub fn ComputeOffsetToFirstTable_72(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
     if (hdr.with(|__s| __s.header_version) != 0) {
         offset = (({
             let _header_version: u32 = hdr.with(|__s| __s.header_version);
-            let _num_fonts: u32 = ((*hdr.with(|__s| __s.ttc_fonts.clone()).borrow()).len() as u32);
+            let _num_fonts: u32 = ((*hdr.upgrade().deref()).ttc_fonts.len() as u32);
             CollectionHeaderSize_27(_header_version, _num_fonts)
         }) as u64)
             .wrapping_add(
                 (kSfntHeaderSize_23.with(|rc| *rc.borrow()) as u64)
-                    .wrapping_mul(((*hdr.with(|__s| __s.ttc_fonts.clone()).borrow()).len() as u64)),
+                    .wrapping_mul(((*hdr.upgrade().deref()).ttc_fonts.len() as u64)),
             );
-        'loop_: for mut ttc_font in hdr.with(|__s| __s.ttc_fonts.as_pointer()) as Ptr<woff2_TtcFont>
-        {
+        'loop_: for mut ttc_font in field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont> {
             {
                 let rhs_0 = (offset).wrapping_add(
-                    (kSfntEntrySize_24.with(|rc| *rc.borrow()) as u64).wrapping_mul(
-                        ((*ttc_font.with(|__s| __s.table_indices.clone()).borrow()).len() as u64),
-                    ),
+                    (kSfntEntrySize_24.with(|rc| *rc.borrow()) as u64)
+                        .wrapping_mul(((*ttc_font.upgrade().deref()).table_indices.len() as u64)),
                 );
                 offset = rhs_0
             };
@@ -2163,26 +2153,21 @@ pub fn ComputeOffsetToFirstTable_72(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
 pub fn Tables_73(mut hdr: Ptr<woff2_WOFF2Header>, mut font_index: usize) -> Vec<Ptr<woff2_Table>> {
     let mut tables: Vec<Ptr<woff2_Table>> = Vec::new();
     if ((hdr.with(|__s| __s.header_version) as i64) != 0) {
-        'loop_: for mut index in {
-            (*elem!(
-                (hdr.with(|__s| __s.ttc_fonts.as_pointer()) as Ptr<woff2_TtcFont>),
-                font_index
-            )
-            .upgrade()
-            .deref())
-            .table_indices
-            .as_pointer()
-        } as Ptr<u16>
+        'loop_: for mut index in field_ref!(
+            (field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont>).offset(font_index),
+            table_indices
+        )
+        .as_pointer() as Ptr<u16>
         {
             let mut index: u16 = index.read();
             {
-                let __a1 = ((hdr.with(|__s| __s.tables.as_pointer()) as Ptr<woff2_Table>)
+                let __a1 = ((field_ref!(hdr, tables).as_pointer() as Ptr<woff2_Table>)
                     .offset((index as usize)));
                 tables.push(__a1)
             };
         }
     } else {
-        'loop_: for mut table in hdr.with(|__s| __s.tables.as_pointer()) as Ptr<woff2_Table> {
+        'loop_: for mut table in field_ref!(hdr, tables).as_pointer() as Ptr<woff2_Table> {
             {
                 let __a1 = (table);
                 tables.push(__a1)
@@ -2202,7 +2187,7 @@ pub fn ReconstructFont_74(
     let mut dest_offset: usize = ({ (*out.upgrade().deref_mut()).Size() });
     let table_entry: Value<Box<[u8]>> =
         Rc::new(RefCell::new((0..12).map(|_| 0_u8).collect::<Box<[u8]>>()));
-    let mut info: Ptr<woff2_WOFF2FontInfo> = ((metadata.with(|__s| __s.font_infos.as_pointer())
+    let mut info: Ptr<woff2_WOFF2FontInfo> = ((field_ref!(metadata, font_infos).as_pointer()
         as Ptr<woff2_WOFF2FontInfo>)
         .offset(font_index));
     let tables: Value<Vec<Ptr<woff2_Table>>> =
@@ -2243,15 +2228,7 @@ pub fn ReconstructFont_74(
     }
     let mut font_checksum: u32 = metadata.with(|__s| __s.header_checksum);
     if (hdr.with(|__s| __s.header_version) != 0) {
-        font_checksum = {
-            (*elem!(
-                (hdr.with(|__s| __s.ttc_fonts.as_pointer()) as Ptr<woff2_TtcFont>),
-                font_index
-            )
-            .upgrade()
-            .deref())
-            .header_checksum
-        };
+        font_checksum = vec_elem!(hdr, ttc_fonts, font_index).with(|__s| __s.header_checksum);
     }
     let loca_checksum: Value<u32> = Rc::new(RefCell::new(0_u32));
     let mut i: usize = 0_usize;
@@ -2390,7 +2367,7 @@ pub fn ReconstructFont_74(
                         let _transformed_size: usize = (table.with(|__s| __s.src_length) as usize);
                         let _num_glyphs: u16 = info.with(|__s| __s.num_glyphs);
                         let _num_hmetrics: u16 = info.with(|__s| __s.num_hmetrics);
-                        let _x_mins: Ptr<Vec<i16>> = info.with(|__s| __s.x_mins.as_pointer());
+                        let _x_mins: Ptr<Vec<i16>> = field_ref!(info, x_mins).as_pointer();
                         ReconstructTransformedHmtx_67(
                             _transformed_buf,
                             _transformed_size,
@@ -2644,11 +2621,12 @@ pub fn ReadWOFF2Header_75(
     }
     {
         let __a0 = (hdr.with(|__s| __s.num_tables) as usize) as usize;
-        (*hdr.with(|__s| __s.tables.clone()).borrow_mut())
-            .resize_with(__a0, || <woff2_Table>::default())
+        field!(hdr, tables).with_mut(|__v: &mut Vec<woff2_Table>| {
+            __v.resize_with(__a0, || <woff2_Table>::default())
+        })
     };
     if ((!({
-        let _tables: Ptr<Vec<woff2_Table>> = (hdr.with(|__s| __s.tables.as_pointer()));
+        let _tables: Ptr<Vec<woff2_Table>> = (field_ref!(hdr, tables).as_pointer());
         let _num_tables: usize = (hdr.with(|__s| __s.num_tables) as usize);
         ReadTableDirectory_69((file.as_pointer()), _tables, _num_tables)
     }) as i64)
@@ -2657,7 +2635,7 @@ pub fn ReadWOFF2Header_75(
         return false;
     }
     let last_table: Ptr<woff2_Table> =
-        (hdr.with(|__s| __s.tables.as_pointer()) as Ptr<woff2_Table>).to_last();
+        (field_ref!(hdr, tables).as_pointer() as Ptr<woff2_Table>).to_last();
     field!(hdr, uncompressed_size).write(
         (last_table.with(|__s| __s.src_offset)).wrapping_add(last_table.with(|__s| __s.src_length)),
     );
@@ -2690,12 +2668,13 @@ pub fn ReadWOFF2Header_75(
         }
         {
             let __a0 = ((*num_fonts.borrow()) as usize) as usize;
-            (*hdr.with(|__s| __s.ttc_fonts.clone()).borrow_mut())
-                .resize_with(__a0, || <woff2_TtcFont>::default())
+            field!(hdr, ttc_fonts).with_mut(|__v: &mut Vec<woff2_TtcFont>| {
+                __v.resize_with(__a0, || <woff2_TtcFont>::default())
+            })
         };
         let mut i: u32 = 0_u32;
         'loop_: while (i < (*num_fonts.borrow())) {
-            let ttc_font: Ptr<woff2_TtcFont> = (hdr.with(|__s| __s.ttc_fonts.as_pointer())
+            let ttc_font: Ptr<woff2_TtcFont> = (field_ref!(hdr, ttc_fonts).as_pointer()
                 as Ptr<woff2_TtcFont>)
                 .offset((i as usize));
             let num_tables: Value<u32> = Rc::new(RefCell::new(0_u32));
@@ -2714,8 +2693,8 @@ pub fn ReadWOFF2Header_75(
             }
             {
                 let __a0 = ((*num_tables.borrow()) as usize) as usize;
-                (*ttc_font.with(|__s| __s.table_indices.clone()).borrow_mut())
-                    .resize_with(__a0, || <u16>::default())
+                field!(ttc_font, table_indices)
+                    .with_mut(|__v: &mut Vec<u16>| __v.resize_with(__a0, || <u16>::default()))
             };
             let mut glyf_idx: u32 = 0_u32;
             let mut loca_idx: u32 = 0_u32;
@@ -2725,17 +2704,14 @@ pub fn ReadWOFF2Header_75(
                 if ((!({ Read255UShort_12((file.as_pointer()), (table_idx.as_pointer())) }) as i64)
                     != 0)
                     || ({ ((*table_idx.borrow()) as usize) } >= {
-                        (*hdr.with(|__s| __s.tables.clone()).borrow()).len()
+                        (*hdr.upgrade().deref()).tables.len()
                     })
                 {
                     return false;
                 }
-                elem!(
-                    (ttc_font.with(|__s| __s.table_indices.as_pointer()) as Ptr<u16>),
-                    (j as usize)
-                )
-                .write(((*table_idx.borrow()) as u16));
-                let table: Ptr<woff2_Table> = (hdr.with(|__s| __s.tables.as_pointer())
+                vec_elem!(ttc_font, table_indices, (j as usize))
+                    .write(((*table_idx.borrow()) as u16));
+                let table: Ptr<woff2_Table> = (field_ref!(hdr, tables).as_pointer()
                     as Ptr<woff2_Table>)
                     .offset(((*table_idx.borrow()) as usize));
                 if ({ table.with(|__s| __s.tag) } == { kLocaTableTag_2.with(|rc| *rc.borrow()) }) {
@@ -2815,16 +2791,14 @@ pub fn WriteHeaders_76(
         (({ ComputeOffsetToFirstTable_72((hdr).clone(),) }) as usize)
             as usize
     ]));
-    let sorted_tables: Value<Vec<woff2_Table>> = Rc::new(RefCell::new(
-        (*hdr.with(|__s| __s.tables.clone()).borrow()).clone(),
-    ));
+    let sorted_tables: Value<Vec<woff2_Table>> =
+        Rc::new(RefCell::new((*hdr.upgrade().deref()).tables.clone()));
     if (hdr.with(|__s| __s.header_version) != 0) {
-        'loop_: for mut ttc_font in hdr.with(|__s| __s.ttc_fonts.as_pointer()) as Ptr<woff2_TtcFont>
-        {
+        'loop_: for mut ttc_font in field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont> {
             let sorted_index_by_tag: Value<BTreeMap<u32, Value<(Value<u32>, Value<u16>)>>> =
                 Rc::new(RefCell::new(BTreeMap::new()));
             'loop_: for mut table_index in
-                ttc_font.with(|__s| __s.table_indices.as_pointer()) as Ptr<u16>
+                field_ref!(ttc_font, table_indices).as_pointer() as Ptr<u16>
             {
                 let mut table_index: u16 = table_index.read();
                 let __rhs = table_index;
@@ -2832,29 +2806,16 @@ pub fn WriteHeaders_76(
                     as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<u16>)>>>)
                     .with_mut(|__v: &mut BTreeMap<u32, Value<(Value<u32>, Value<u16>)>>| {
                         __v.entry(
-                            {
-                                (*elem!(
-                                    (hdr.with(|__s| __s.tables.as_pointer()) as Ptr<woff2_Table>),
-                                    (table_index as usize)
-                                )
-                                .upgrade()
-                                .deref())
-                                .tag
-                            }
-                            .clone(),
+                            vec_elem!(hdr, tables, (table_index as usize))
+                                .with(|__s| __s.tag)
+                                .clone(),
                         )
                         .or_insert_with(|| {
                             Rc::new(RefCell::new((
-                                Rc::new(RefCell::new({
-                                    (*elem!(
-                                        (hdr.with(|__s| __s.tables.as_pointer())
-                                            as Ptr<woff2_Table>),
-                                        (table_index as usize)
-                                    )
-                                    .upgrade()
-                                    .deref())
-                                    .tag
-                                })),
+                                Rc::new(RefCell::new(
+                                    vec_elem!(hdr, tables, (table_index as usize))
+                                        .with(|__s| __s.tag),
+                                )),
                                 Rc::new(RefCell::new(<u16>::default())),
                             )))
                         })
@@ -2868,11 +2829,8 @@ pub fn WriteHeaders_76(
             'loop_: for __begin4 in RefcountMapIter::begin(sorted_index_by_tag.as_pointer()) {
                 let __begin4: Value<RefcountMapIter<u32, u16>> = Rc::new(RefCell::new(__begin4));
                 let i: Ptr<(Value<u32>, Value<u16>)> = (*__begin4.borrow()).deref();
-                elem!(
-                    (ttc_font.with(|__s| __s.table_indices.as_pointer()) as Ptr<u16>),
-                    (index.postfix_inc() as usize)
-                )
-                .write((*(*i.upgrade().deref()).1.borrow()));
+                vec_elem!(ttc_font, table_indices, (index.postfix_inc() as usize))
+                    .write((*(*i.upgrade().deref()).1.borrow()));
             }
         }
     } else {
@@ -2893,13 +2851,13 @@ pub fn WriteHeaders_76(
             StoreU32_31(
                 (result).clone(),
                 offset,
-                ((*hdr.with(|__s| __s.ttc_fonts.clone()).borrow()).len() as u32),
+                ((*hdr.upgrade().deref()).ttc_fonts.len() as u32),
             )
         });
         offset = __rhs;
         let mut offset_table: usize = offset;
         let mut i: usize = 0_usize;
-        'loop_: while ({ i } < { (*hdr.with(|__s| __s.ttc_fonts.clone()).borrow()).len() }) {
+        'loop_: while ({ i } < { (*hdr.upgrade().deref()).ttc_fonts.len() }) {
             let __rhs = ({ StoreU32_31((result).clone(), offset, 0_u32) });
             offset = __rhs;
             i.postfix_inc();
@@ -2913,39 +2871,31 @@ pub fn WriteHeaders_76(
             offset = __rhs;
         }
         {
-            let __a0 = (*hdr.with(|__s| __s.ttc_fonts.clone()).borrow()).len() as usize;
-            (*metadata.with(|__s| __s.font_infos.clone()).borrow_mut())
-                .resize_with(__a0, || <woff2_WOFF2FontInfo>::default())
+            let __a0 = (*hdr.upgrade().deref()).ttc_fonts.len() as usize;
+            field!(metadata, font_infos).with_mut(|__v: &mut Vec<woff2_WOFF2FontInfo>| {
+                __v.resize_with(__a0, || <woff2_WOFF2FontInfo>::default())
+            })
         };
         let mut i: usize = 0_usize;
-        'loop_: while ({ i } < { (*hdr.with(|__s| __s.ttc_fonts.clone()).borrow()).len() }) {
+        'loop_: while ({ i } < { (*hdr.upgrade().deref()).ttc_fonts.len() }) {
             let ttc_font: Ptr<woff2_TtcFont> =
-                (hdr.with(|__s| __s.ttc_fonts.as_pointer()) as Ptr<woff2_TtcFont>).offset(i);
+                (field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont>).offset(i);
             let __rhs = ({ StoreU32_31((result).clone(), offset_table, (offset as u32)) });
             offset_table = __rhs;
             field!(ttc_font, dst_offset).write((offset as u32));
             let __rhs = ({
                 let _flavor: u32 = ttc_font.with(|__s| __s.flavor);
-                let _num_tables: u16 =
-                    ((*ttc_font.with(|__s| __s.table_indices.clone()).borrow()).len() as u16);
+                let _num_tables: u16 = ((*ttc_font.upgrade().deref()).table_indices.len() as u16);
                 StoreOffsetTable_70((result).clone(), offset, _flavor, _num_tables)
             });
             offset = __rhs;
-            'loop_: for table_index in
-                ttc_font.with(|__s| __s.table_indices.as_pointer()) as Ptr<u16>
+            'loop_: for table_index in field_ref!(ttc_font, table_indices).as_pointer() as Ptr<u16>
             {
                 let mut table_index: u16 = table_index.read();
-                let mut tag: u32 = {
-                    (*elem!(
-                        (hdr.with(|__s| __s.tables.as_pointer()) as Ptr<woff2_Table>),
-                        (table_index as usize)
-                    )
-                    .upgrade()
-                    .deref())
-                    .tag
-                };
+                let mut tag: u32 =
+                    vec_elem!(hdr, tables, (table_index as usize)).with(|__s| __s.tag);
                 (field_ptr!(
-                    (metadata.with(|__s| __s.font_infos.as_pointer()) as Ptr<woff2_WOFF2FontInfo>)
+                    (field_ref!(metadata, font_infos).as_pointer() as Ptr<woff2_WOFF2FontInfo>)
                         .offset(i),
                     table_entry_by_tag
                 ) as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>>)
@@ -2978,8 +2928,9 @@ pub fn WriteHeaders_76(
     } else {
         {
             let __a0 = 1_usize as usize;
-            (*metadata.with(|__s| __s.font_infos.clone()).borrow_mut())
-                .resize_with(__a0, || <woff2_WOFF2FontInfo>::default())
+            field!(metadata, font_infos).with_mut(|__v: &mut Vec<woff2_WOFF2FontInfo>| {
+                __v.resize_with(__a0, || <woff2_WOFF2FontInfo>::default())
+            })
         };
         let __rhs = ({
             let _flavor: u32 = hdr.with(|__s| __s.flavor);
@@ -2990,7 +2941,7 @@ pub fn WriteHeaders_76(
         let mut i: u16 = 0_u16;
         'loop_: while ({ (i as i32) } < { (hdr.with(|__s| __s.num_tables) as i32) }) {
             (field_ptr!(
-                (metadata.with(|__s| __s.font_infos.as_pointer()) as Ptr<woff2_WOFF2FontInfo>)
+                (field_ref!(metadata, font_infos).as_pointer() as Ptr<woff2_WOFF2FontInfo>)
                     .offset(0_usize),
                 table_entry_by_tag
             ) as Ptr<BTreeMap<u32, Value<(Value<u32>, Value<u32>)>>>)
@@ -3120,7 +3071,7 @@ pub fn ConvertWOFF2ToTTF_79(
         return false;
     }
     let mut i: usize = 0_usize;
-    'loop_: while (i < (*{ (*metadata.borrow()).font_infos.clone() }.borrow()).len()) {
+    'loop_: while (i < (*metadata.borrow()).font_infos.len()) {
         if ((!({
             let _transformed_buf_size: u32 = { (*hdr.borrow()).uncompressed_size };
             let _hdr: Ptr<woff2_WOFF2Header> = (hdr.as_pointer());
@@ -3180,35 +3131,36 @@ pub fn GetFileContent_80(filename: Vec<i8>) -> Vec<i8> {
         CChar::from_byte_vec(__bytes)
     };
 }
-pub fn SetFileContents_81(filename: Vec<i8>, start: Ptr<i8>, end: Ptr<i8>) {
+pub fn SetFileContents_81(filename: Vec<i8>, mut start: Ptr<i8>, mut end: Ptr<i8>) {
     let filename: Value<Vec<i8>> = Rc::new(RefCell::new(filename));
-    let start: Value<Ptr<i8>> = Rc::new(RefCell::new(start));
-    let end: Value<Ptr<i8>> = Rc::new(RefCell::new(end));
     let ofs: Value<::std::fs::File> = Rc::new(RefCell::new(
         ::std::fs::File::create((filename.as_pointer() as Ptr<i8>).to_string())
             .expect("Failed to open file"),
     ));
     {
-        (*start.borrow()).clone().with_slice(
-            (*end.borrow()).clone().get_offset() - (*start.borrow()).clone().get_offset(),
+        (start).clone().with_slice(
+            (end).clone().get_offset() - (start).clone().get_offset(),
             |__s| CChar::with_u8_slice(__s, |__b| (*ofs.borrow_mut()).write_all(__b)),
         );
         (*ofs.borrow_mut()).try_clone().unwrap()
     };
 }
 pub fn main() {
-    let argv: Vec<Value<Vec<i8>>> = ::std::env::args()
-        .map(|x| Rc::new(RefCell::new(x.bytes().map(|c| c as i8).collect())))
-        .collect();
-    let mut argv: Value<Vec<Ptr<i8>>> = Rc::new(RefCell::new(
-        argv.iter()
-            .map(|x| {
-                x.borrow_mut().push(0);
-                x.as_pointer()
+    let size: usize = ::std::env::args().map(|arg| arg.len() + 1).sum();
+    let args: Value<Box<[i8]>> = Rc::new(RefCell::new(vec![0; size].into_boxed_slice()));
+    let args_ptr: Ptr<i8> = args.as_pointer();
+    let mut off = 0;
+    let argv: Value<Box<[Ptr<i8>]>> = Rc::new(RefCell::new(
+        ::std::env::args()
+            .map(|arg| {
+                let ptr = args_ptr.offset(off);
+                ptr.write_c_bytes(arg.as_bytes());
+                off += arg.len() + 1;
+                ptr
             })
+            .chain(::std::iter::once(Ptr::null()))
             .collect(),
     ));
-    (*argv.borrow_mut()).push(Ptr::null());
     __cpp2rust_init_globals();
     ::std::process::exit(main_0(::std::env::args().len() as i32, argv.as_pointer()));
 }

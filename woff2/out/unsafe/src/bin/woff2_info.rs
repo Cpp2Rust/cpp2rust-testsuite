@@ -715,7 +715,7 @@ impl woff2_Font {
             ) {
             std::ptr::null_mut()
         } else {
-            (&mut *&raw mut (*it.deref()).1 as *mut woff2_Font_Table)
+            (&mut (*&raw mut (*it.deref()).1) as *mut woff2_Font_Table)
         };
     }
 }
@@ -731,7 +731,7 @@ impl woff2_Font {
             ) {
             std::ptr::null()
         } else {
-            (&*&raw mut (*it.deref()).1 as *const woff2_Font_Table)
+            (&(*&raw mut (*it.deref()).1) as *const woff2_Font_Table)
         };
     }
 }

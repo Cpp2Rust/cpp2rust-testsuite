@@ -6463,7 +6463,8 @@ pub unsafe fn BrunsliSerialize_190(
             > = Some(EncodeMetaData_174);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
             encode_section.call(_tag, _fn_, _size)
-        });
+        })
+        .clone();
         if !(ok) {
             return false;
         }
@@ -6503,7 +6504,8 @@ pub unsafe fn BrunsliSerialize_190(
             > = Some(EncodeHistogramData_177);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
             encode_section.call(_tag, _fn_, _size)
-        });
+        })
+        .clone();
         if !(ok) {
             return false;
         }
@@ -6525,7 +6527,8 @@ pub unsafe fn BrunsliSerialize_190(
             > = Some(EncodeDCData_178);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
             encode_section.call(_tag, _fn_, _size)
-        });
+        })
+        .clone();
         if !(ok) {
             return false;
         }
@@ -6547,7 +6550,8 @@ pub unsafe fn BrunsliSerialize_190(
             > = Some(EncodeACData_179);
             let _size: usize = (unsafe { Base128Size_146((*len).wrapping_sub(pos)) });
             encode_section.call(_tag, _fn_, _size)
-        });
+        })
+        .clone();
         if !(ok) {
             return false;
         }
