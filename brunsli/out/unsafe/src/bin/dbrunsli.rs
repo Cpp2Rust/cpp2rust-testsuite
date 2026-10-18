@@ -1040,16 +1040,17 @@ pub unsafe fn BrunsliUnalignedWrite64_70(mut p: *mut ::libc::c_void, mut v: u64)
 }
 pub unsafe fn Append_71(mut dst: *mut Vec<u8>, mut begin: *const u8, mut end: *const u8) {
     {
-        let __off = (*dst)
-            .as_mut_ptr()
-            .add((*dst).len())
-            .offset_from((*dst).as_ptr()) as usize;
+        let __off = <UnsafeRandomAccessIterator<u8>>::from(UnsafeRandomAccessIterator::Vec(
+            (*dst).as_mut_ptr().add((*dst).len()),
+        ))
+        .vec_ptr()
+        .offset_from((*dst).as_ptr()) as usize;
         let count = end.offset_from(begin) as usize;
         (*dst).splice(
             __off..__off,
             std::slice::from_raw_parts(begin, count).iter().cloned(),
         );
-        (*dst).as_mut_ptr().add(__off)
+        UnsafeRandomAccessIterator::Vec((*dst).as_mut_ptr().add(__off))
     };
 }
 pub unsafe fn Append_72(mut dst: *mut Vec<u8>, mut begin: *const u8, mut length: usize) {
@@ -2218,13 +2219,17 @@ impl brunsli_PermutationCoder {
         }
         (*value) = self.values_[(code)];
         {
-            let pos = self
-                .values_
-                .as_mut_ptr()
-                .add((code as i64) as usize)
-                .offset_from(self.values_.as_ptr()) as usize;
+            let pos = <UnsafeRandomAccessIterator<u8>>::from(
+                UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr())
+                    .iter_add((code as isize)),
+            )
+            .vec_ptr()
+            .offset_from(self.values_.as_ptr()) as usize;
             self.values_.remove(pos);
-            self.values_.as_mut_ptr().add((code as i64) as usize)
+            <UnsafeRandomAccessIterator<u8>>::from(
+                UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr())
+                    .iter_add((code as isize)),
+            )
         };
         return true;
     }
@@ -2234,22 +2239,31 @@ impl brunsli_PermutationCoder {
         mut code: *mut i32,
         mut nbits: *mut i32,
     ) -> bool {
-        let mut it: *mut u8 = {
-            let mut it = self.values_.as_mut_ptr();
-            while it != self.values_.as_mut_ptr().add(self.values_.len()) && *it != value {
-                it = it.add(1);
+        let mut it: UnsafeRandomAccessIterator<u8> = {
+            let mut __it = UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr());
+            while __it
+                != UnsafeRandomAccessIterator::Vec(
+                    self.values_.as_mut_ptr().add(self.values_.len()),
+                )
+                && *__it.iter_deref() != value
+            {
+                __it.iter_inc();
             }
-            it
+            __it
         };
-        if it == self.values_.as_mut_ptr().add(self.values_.len()) {
+        if it == UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr().add(self.values_.len()))
+        {
             return false;
         }
-        (*code) = (it.offset_from(self.values_.as_mut_ptr()) as i32);
+        (*code) =
+            (it.iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr())) as i32);
         (*nbits) = (unsafe { brunsli_PermutationCoder::num_bits(self) });
         {
-            let pos = it.offset_from(self.values_.as_ptr()) as usize;
+            let pos = <UnsafeRandomAccessIterator<u8>>::from((it).clone())
+                .vec_ptr()
+                .offset_from(self.values_.as_ptr()) as usize;
             self.values_.remove(pos);
-            it
+            <UnsafeRandomAccessIterator<u8>>::from((it).clone())
         };
         return true;
     }
@@ -2270,15 +2284,16 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
     }
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (len)) {
-        let mut it: *mut u32 = {
-            let mut it = items.as_mut_ptr();
-            while it != items.as_mut_ptr().add(items.len()) && *it != (*sigma.offset((i) as isize))
+        let mut it: UnsafeRandomAccessIterator<u32> = {
+            let mut __it = UnsafeRandomAccessIterator::Vec(items.as_mut_ptr());
+            while __it != UnsafeRandomAccessIterator::Vec(items.as_mut_ptr().add(items.len()))
+                && *__it.iter_deref() != (*sigma.offset((i) as isize))
             {
-                it = it.add(1);
+                __it.iter_inc();
             }
-            it
+            __it
         };
-        if !(it != items.as_mut_ptr().add(items.len())) {
+        if !(it != UnsafeRandomAccessIterator::Vec(items.as_mut_ptr().add(items.len()))) {
             (unsafe {
                 BrunsliDumpAndAbort_79(
                     c"lehmer_code.cc".as_ptr(),
@@ -2288,11 +2303,14 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
             });
             'loop_: while true {}
         };
-        (*code.offset((i) as isize)) = (it.offset_from(items.as_mut_ptr()) as u32);
+        (*code.offset((i) as isize)) =
+            (it.iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr())) as u32);
         {
-            let pos = it.offset_from(items.as_ptr()) as usize;
+            let pos = <UnsafeRandomAccessIterator<u32>>::from((it).clone())
+                .vec_ptr()
+                .offset_from(items.as_ptr()) as usize;
             items.remove(pos);
-            it
+            <UnsafeRandomAccessIterator<u32>>::from((it).clone())
         };
         i.prefix_inc();
     }
@@ -2318,12 +2336,15 @@ pub unsafe fn DecodeLehmerCode_113(
         }
         let value: u32 = items[(index as usize)];
         {
-            let pos = items
-                .as_mut_ptr()
-                .add((index as i64) as usize)
-                .offset_from(items.as_ptr()) as usize;
+            let pos = <UnsafeRandomAccessIterator<u32>>::from(
+                UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()).iter_add((index as isize)),
+            )
+            .vec_ptr()
+            .offset_from(items.as_ptr()) as usize;
             items.remove(pos);
-            items.as_mut_ptr().add((index as i64) as usize)
+            <UnsafeRandomAccessIterator<u32>>::from(
+                UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()).iter_add((index as isize)),
+            )
         };
         (*sigma.offset((i) as isize)) = value;
         i.prefix_inc();
@@ -7617,18 +7638,18 @@ pub unsafe fn DecodeOriginalJpg_192(
                         })
                     } as usize);
                     {
-                        let __off = (*fs)
-                            .storage
-                            .as_ptr()
-                            .add((*fs).storage.len())
-                            .offset_from((*fs).storage.as_ptr())
+                        let __off = UnsafeRandomAccessIterator::Vec(
+                            (*fs).storage.as_ptr().add((*fs).storage.len()).cast_mut(),
+                        )
+                        .vec_ptr()
+                        .offset_from((*fs).storage.as_ptr())
                             as usize;
                         let count = src.offset((to_copy) as isize).offset_from(src) as usize;
                         (*fs).storage.splice(
                             __off..__off,
                             std::slice::from_raw_parts(src, count).iter().cloned(),
                         );
-                        (*fs).storage.as_mut_ptr().add(__off)
+                        UnsafeRandomAccessIterator::Vec((*fs).storage.as_mut_ptr().add(__off))
                     };
                     (unsafe { SkipBytes_165(state, to_copy) });
                     if (((*fs).storage.len()) == ((*jpg).original_jpg_size)) {
@@ -8726,11 +8747,11 @@ pub unsafe fn ReadHistogram_189(
     let mut space: u32 = ((1_u32) << (precision_bits));
     let length: usize = (*(counts).cast_const()).len();
     {
-        let count = (*counts)
-            .as_mut_ptr()
-            .add((*counts).len())
-            .offset_from((*counts).as_mut_ptr()) as usize;
-        std::slice::from_raw_parts_mut((*counts).as_mut_ptr(), count).fill(0)
+        let mut __it = UnsafeRandomAccessIterator::Vec((*counts).as_mut_ptr());
+        while __it != UnsafeRandomAccessIterator::Vec((*counts).as_mut_ptr().add((*counts).len())) {
+            *__it.iter_deref() = Clone::clone(&0);
+            __it.iter_inc();
+        }
     };
     let mut histogram: *mut u32 = (*counts).as_mut_ptr();
     let mut simple_code: i32 = ((unsafe { BrunsliBitReaderRead_126(br, 1_u32) }) as i32);

@@ -1114,15 +1114,17 @@ pub fn BrunsliUnalignedWrite64_70(mut p: AnyPtr, v: u64) {
 }
 pub fn Append_71(mut dst: Ptr<Vec<u8>>, mut begin: Ptr<u8>, mut end: Ptr<u8>) {
     {
-        let start_idx = (Ptr::<Vec<u8>>::decay(&(dst)) as Ptr<u8>)
-            .to_end()
-            .get_offset();
+        let start_idx = <RandomAccessIterator<u8>>::from(RandomAccessIterator::Vec(
+            (Ptr::<Vec<u8>>::decay(&(dst)) as Ptr<u8>).to_end(),
+        ))
+        .vec_ptr()
+        .get_offset();
         let count = end.get_offset() - begin.get_offset();
         let temp_vec: Vec<u8> = PtrValueIter::new(&begin, count).collect();
         ((dst).clone() as Ptr<Vec<u8>>).with_mut(|v: &mut Vec<u8>| {
             v.splice(start_idx..start_idx, temp_vec);
         });
-        ((dst).clone() as Ptr<Vec<u8>>) + start_idx
+        RandomAccessIterator::Vec(((dst).clone() as Ptr<Vec<u8>>).decay() + start_idx)
     };
 }
 pub fn Append_72(mut dst: Ptr<Vec<u8>>, mut begin: Ptr<u8>, mut length: usize) {
@@ -2115,19 +2117,19 @@ pub fn ComputeLehmerCode_112(mut sigma: Ptr<u32>, mut len: usize, mut code: Ptr<
     }
     let mut i: usize = 0_usize;
     'loop_: while (i < len) {
-        let mut it: Ptr<u32> = {
-            let count = ((items.as_pointer() as Ptr<u32>).to_end().get_offset()
-                - (items.as_pointer() as Ptr<u32>).get_offset()) as usize;
-            (items.as_pointer() as Ptr<u32>).offset(
-                (items.as_pointer() as Ptr<u32>)
-                    .clone()
-                    .into_iter()
-                    .take(count)
-                    .position(|value_0| value_0.read() == (elem!(sigma, i).read()))
-                    .unwrap_or(count) as isize,
-            )
-        };
-        if !(it != (items.as_pointer() as Ptr<u32>).to_end()) {
+        let it: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new({
+            let mut __it = RandomAccessIterator::Vec((items.as_pointer() as Ptr<u32>));
+            while __it != RandomAccessIterator::Vec((items.as_pointer() as Ptr<u32>).to_end())
+                && __it
+                    .iter_deref()
+                    .with(|__v| *__v != (elem!(sigma, i).read()))
+            {
+                __it.iter_inc();
+            }
+            __it
+        }));
+        if !((*it.borrow()) != RandomAccessIterator::Vec((items.as_pointer() as Ptr<u32>).to_end()))
+        {
             ({
                 BrunsliDumpAndAbort_79(
                     Ptr::<i8>::from_string_literal(b"lehmer_code.cc"),
@@ -2137,14 +2139,16 @@ pub fn ComputeLehmerCode_112(mut sigma: Ptr<u32>, mut len: usize, mut code: Ptr<
             });
             'loop_: while true {}
         };
-        let __rhs = (((it.get_offset() as isize)
-            - ((items.as_pointer() as Ptr<u32>).get_offset() as isize))
+        let __rhs = ((*it.borrow())
+            .iter_distance(&RandomAccessIterator::Vec((items.as_pointer() as Ptr<u32>)))
             as u32);
         elem!(code, i).write(__rhs);
         {
-            let idx = it.get_offset();
+            let idx = <RandomAccessIterator<u32>>::from((*it.borrow()).clone())
+                .vec_ptr()
+                .get_offset();
             (items.as_pointer() as Ptr<Vec<u32>>).with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
-            (items.as_pointer() as Ptr<Vec<u32>>).decay()
+            RandomAccessIterator::Vec((items.as_pointer() as Ptr<Vec<u32>>).decay())
         };
         i.prefix_inc();
     }
@@ -2169,11 +2173,14 @@ pub fn DecodeLehmerCode_113(mut code: Ptr<u32>, mut len: usize, mut sigma: Ptr<u
         }
         let mut value: u32 = { (*items.borrow())[(index as usize)] };
         {
-            let idx = (items.as_pointer() as Ptr<u32>)
-                .offset((index as i64) as isize)
-                .get_offset();
+            let idx = <RandomAccessIterator<u32>>::from(
+                RandomAccessIterator::Vec((items.as_pointer() as Ptr<u32>))
+                    .iter_add((index as isize)),
+            )
+            .vec_ptr()
+            .get_offset();
             (items.as_pointer() as Ptr<Vec<u32>>).with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
-            (items.as_pointer() as Ptr<Vec<u32>>).decay()
+            RandomAccessIterator::Vec((items.as_pointer() as Ptr<Vec<u32>>).decay())
         };
         elem!(sigma, i).write({ value });
         i.prefix_inc();
@@ -7779,9 +7786,11 @@ pub fn DecodeOriginalJpg_192(
                         .read())
                     } as usize);
                     {
-                        let start_idx = (field_ref!(fs, storage).as_pointer() as Ptr<u8>)
-                            .to_end()
-                            .get_offset();
+                        let start_idx = RandomAccessIterator::Vec(
+                            (field_ref!(fs, storage).as_pointer() as Ptr<u8>).to_end(),
+                        )
+                        .vec_ptr()
+                        .get_offset();
                         let count = src.offset((to_copy) as isize).get_offset() - src.get_offset();
                         let temp_vec: Vec<u8> = PtrValueIter::new(&src, count).collect();
                         (field_ref!(fs, storage).as_pointer() as Ptr<Vec<u8>>).with_mut(
@@ -7789,7 +7798,10 @@ pub fn DecodeOriginalJpg_192(
                                 v.splice(start_idx..start_idx, temp_vec);
                             },
                         );
-                        (field_ref!(fs, storage).as_pointer() as Ptr<Vec<u8>>) + start_idx
+                        RandomAccessIterator::Vec(
+                            (field_ref!(fs, storage).as_pointer() as Ptr<Vec<u8>>).decay()
+                                + start_idx,
+                        )
                     };
                     ({ SkipBytes_165((state).clone(), to_copy) });
                     if ({ (*fs.upgrade().deref()).storage.len() } == {
@@ -8842,11 +8854,12 @@ pub fn ReadHistogram_189(
     let mut space: u32 = (1_u32 << precision_bits);
     let mut length: usize = (*counts.upgrade().deref()).len();
     {
-        let mut __a0 = (Ptr::<Vec<u32>>::decay(&(counts)) as Ptr<u32>);
-        while __a0 != (Ptr::<Vec<u32>>::decay(&(counts)) as Ptr<u32>).to_end() {
-            let v = 0.clone();
-            __a0.write(v);
-            __a0 += 1;
+        let mut __it = RandomAccessIterator::Vec((Ptr::<Vec<u32>>::decay(&(counts)) as Ptr<u32>));
+        while __it
+            != RandomAccessIterator::Vec((Ptr::<Vec<u32>>::decay(&(counts)) as Ptr<u32>).to_end())
+        {
+            __it.iter_deref().write(Clone::clone(&0));
+            __it.iter_inc();
         }
     };
     let mut histogram: Ptr<u32> = (Ptr::<Vec<u32>>::decay(&(counts)) as Ptr<u32>);
@@ -13335,45 +13348,56 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         let __rhs = (vec_elem!((*self), values_, code).read());
         value.write(__rhs);
         {
-            let idx = (field_ref!((*self), values_).as_pointer() as Ptr<u8>)
-                .offset((code as i64) as isize)
-                .get_offset();
+            let idx = <RandomAccessIterator<u8>>::from(
+                RandomAccessIterator::Vec((field_ref!((*self), values_).as_pointer() as Ptr<u8>))
+                    .iter_add((code as isize)),
+            )
+            .vec_ptr()
+            .get_offset();
             (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>)
                 .with_mut(|__v: &mut Vec<u8>| __v.remove(idx));
-            (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>).decay()
+            RandomAccessIterator::Vec(
+                (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>).decay(),
+            )
         };
         return true;
     }
     fn RemoveValue(&self, mut value: u8, mut code: Ptr<i32>, mut nbits: Ptr<i32>) -> bool {
-        let mut it: Ptr<u8> = {
-            let count = ((field_ref!((*self), values_).as_pointer() as Ptr<u8>)
-                .to_end()
-                .get_offset()
-                - (field_ref!((*self), values_).as_pointer() as Ptr<u8>).get_offset())
-                as usize;
-            (field_ref!((*self), values_).as_pointer() as Ptr<u8>).offset(
-                (field_ref!((*self), values_).as_pointer() as Ptr<u8>)
-                    .clone()
-                    .into_iter()
-                    .take(count)
-                    .position(|value_0| value_0.read() == value)
-                    .unwrap_or(count) as isize,
+        let it: Value<RandomAccessIterator<u8>> = Rc::new(RefCell::new({
+            let mut __it =
+                RandomAccessIterator::Vec((field_ref!((*self), values_).as_pointer() as Ptr<u8>));
+            while __it
+                != RandomAccessIterator::Vec(
+                    (field_ref!((*self), values_).as_pointer() as Ptr<u8>).to_end(),
+                )
+                && __it.iter_deref().with(|__v| *__v != value)
+            {
+                __it.iter_inc();
+            }
+            __it
+        }));
+        if (*it.borrow())
+            == RandomAccessIterator::Vec(
+                (field_ref!((*self), values_).as_pointer() as Ptr<u8>).to_end(),
             )
-        };
-        if it == (field_ref!((*self), values_).as_pointer() as Ptr<u8>).to_end() {
+        {
             return false;
         }
-        let __rhs = (((it.get_offset() as isize)
-            - ((field_ref!((*self), values_).as_pointer() as Ptr<u8>).get_offset() as isize))
-            as i32);
+        let __rhs = ((*it.borrow()).iter_distance(&RandomAccessIterator::Vec(
+            (field_ref!((*self), values_).as_pointer() as Ptr<u8>),
+        )) as i32);
         code.write(__rhs);
         let __rhs = ({ brunsli_PermutationCoderImpl::num_bits(self) });
         nbits.write(__rhs);
         {
-            let idx = it.get_offset();
+            let idx = <RandomAccessIterator<u8>>::from((*it.borrow()).clone())
+                .vec_ptr()
+                .get_offset();
             (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>)
                 .with_mut(|__v: &mut Vec<u8>| __v.remove(idx));
-            (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>).decay()
+            RandomAccessIterator::Vec(
+                (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>).decay(),
+            )
         };
         return true;
     }

@@ -1114,15 +1114,17 @@ pub fn BrunsliUnalignedWrite64_70(mut p: AnyPtr, v: u64) {
 }
 pub fn Append_71(mut dst: Ptr<Vec<u8>>, mut begin: Ptr<u8>, mut end: Ptr<u8>) {
     {
-        let start_idx = (Ptr::<Vec<u8>>::decay(&(dst)) as Ptr<u8>)
-            .to_end()
-            .get_offset();
+        let start_idx = <RandomAccessIterator<u8>>::from(RandomAccessIterator::Vec(
+            (Ptr::<Vec<u8>>::decay(&(dst)) as Ptr<u8>).to_end(),
+        ))
+        .vec_ptr()
+        .get_offset();
         let count = end.get_offset() - begin.get_offset();
         let temp_vec: Vec<u8> = PtrValueIter::new(&begin, count).collect();
         ((dst).clone() as Ptr<Vec<u8>>).with_mut(|v: &mut Vec<u8>| {
             v.splice(start_idx..start_idx, temp_vec);
         });
-        ((dst).clone() as Ptr<Vec<u8>>) + start_idx
+        RandomAccessIterator::Vec(((dst).clone() as Ptr<Vec<u8>>).decay() + start_idx)
     };
 }
 pub fn Append_72(mut dst: Ptr<Vec<u8>>, mut begin: Ptr<u8>, mut length: usize) {
@@ -2115,19 +2117,19 @@ pub fn ComputeLehmerCode_112(mut sigma: Ptr<u32>, mut len: usize, mut code: Ptr<
     }
     let mut i: usize = 0_usize;
     'loop_: while (i < len) {
-        let mut it: Ptr<u32> = {
-            let count = ((items.as_pointer() as Ptr<u32>).to_end().get_offset()
-                - (items.as_pointer() as Ptr<u32>).get_offset()) as usize;
-            (items.as_pointer() as Ptr<u32>).offset(
-                (items.as_pointer() as Ptr<u32>)
-                    .clone()
-                    .into_iter()
-                    .take(count)
-                    .position(|value_0| value_0.read() == (elem!(sigma, i).read()))
-                    .unwrap_or(count) as isize,
-            )
-        };
-        if !(it != (items.as_pointer() as Ptr<u32>).to_end()) {
+        let it: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new({
+            let mut __it = RandomAccessIterator::Vec((items.as_pointer() as Ptr<u32>));
+            while __it != RandomAccessIterator::Vec((items.as_pointer() as Ptr<u32>).to_end())
+                && __it
+                    .iter_deref()
+                    .with(|__v| *__v != (elem!(sigma, i).read()))
+            {
+                __it.iter_inc();
+            }
+            __it
+        }));
+        if !((*it.borrow()) != RandomAccessIterator::Vec((items.as_pointer() as Ptr<u32>).to_end()))
+        {
             ({
                 BrunsliDumpAndAbort_79(
                     Ptr::<i8>::from_string_literal(b"lehmer_code.cc"),
@@ -2137,14 +2139,16 @@ pub fn ComputeLehmerCode_112(mut sigma: Ptr<u32>, mut len: usize, mut code: Ptr<
             });
             'loop_: while true {}
         };
-        let __rhs = (((it.get_offset() as isize)
-            - ((items.as_pointer() as Ptr<u32>).get_offset() as isize))
+        let __rhs = ((*it.borrow())
+            .iter_distance(&RandomAccessIterator::Vec((items.as_pointer() as Ptr<u32>)))
             as u32);
         elem!(code, i).write(__rhs);
         {
-            let idx = it.get_offset();
+            let idx = <RandomAccessIterator<u32>>::from((*it.borrow()).clone())
+                .vec_ptr()
+                .get_offset();
             (items.as_pointer() as Ptr<Vec<u32>>).with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
-            (items.as_pointer() as Ptr<Vec<u32>>).decay()
+            RandomAccessIterator::Vec((items.as_pointer() as Ptr<Vec<u32>>).decay())
         };
         i.prefix_inc();
     }
@@ -2169,11 +2173,14 @@ pub fn DecodeLehmerCode_113(mut code: Ptr<u32>, mut len: usize, mut sigma: Ptr<u
         }
         let mut value: u32 = { (*items.borrow())[(index as usize)] };
         {
-            let idx = (items.as_pointer() as Ptr<u32>)
-                .offset((index as i64) as isize)
-                .get_offset();
+            let idx = <RandomAccessIterator<u32>>::from(
+                RandomAccessIterator::Vec((items.as_pointer() as Ptr<u32>))
+                    .iter_add((index as isize)),
+            )
+            .vec_ptr()
+            .get_offset();
             (items.as_pointer() as Ptr<Vec<u32>>).with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
-            (items.as_pointer() as Ptr<Vec<u32>>).decay()
+            RandomAccessIterator::Vec((items.as_pointer() as Ptr<Vec<u32>>).decay())
         };
         elem!(sigma, i).write({ value });
         i.prefix_inc();
@@ -3002,35 +3009,59 @@ pub fn HistogramCombine_133(
             .map(|item| u64::try_from(item).ok().unwrap())
             .collect::<Vec<_>>()
     }));
-    (clusters.as_pointer() as Ptr<u64>)
-        .sort((clusters.as_pointer() as Ptr<u64>).to_end().get_offset());
     {
-        let __a0 = ((({
-            let count = (clusters.as_pointer() as Ptr<u64>).to_end().get_offset()
-                - (clusters.as_pointer() as Ptr<u64>).get_offset();
-            if count <= 1 {
-                (clusters.as_pointer() as Ptr<u64>).to_end()
-            } else {
-                let mut iter = PtrValueIter::new(&(clusters.as_pointer() as Ptr<u64>), count);
-                let mut write_ptr = (clusters.as_pointer() as Ptr<u64>);
-                let mut last_unique = iter.next().unwrap();
-
-                // the first unique value is already in place
-                write_ptr += 1;
-
-                for current_val in iter {
-                    if current_val != last_unique {
-                        write_ptr.write(current_val.clone());
-                        last_unique = current_val;
-                        write_ptr += 1;
-                    }
-                }
-                write_ptr
-            }
+        let __n = RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>).to_end())
+            .iter_distance(&RandomAccessIterator::Vec(
+                (clusters.as_pointer() as Ptr<u64>),
+            ));
+        let mut __order: Vec<isize> = (0..__n).collect();
+        __order.sort_by(|&__x, &__y| {
+            RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>))
+                .iter_at(__x)
+                .with(|__a| {
+                    RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>))
+                        .iter_at(__y)
+                        .with(|__b| __a.cmp(__b))
+                })
+        });
+        let __values: Vec<_> = __order
+            .iter()
+            .map(|&__i| {
+                RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>))
+                    .iter_at(__i)
+                    .read()
+            })
+            .collect();
+        for (__i, __v) in (0..__n).zip(__values) {
+            RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>))
+                .iter_at(__i)
+                .write(__v);
         }
-        .get_offset() as isize)
-            - ((clusters.as_pointer() as Ptr<u64>).get_offset() as isize))
-            as usize) as usize;
+    };
+    {
+        let __a0 = (if RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>))
+            == RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>).to_end())
+        {
+            RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>).to_end())
+        } else {
+            let mut __write =
+                RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>)).clone();
+            let mut __it = RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>));
+            __it.iter_inc();
+            while __it != RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>).to_end()) {
+                let __v = __it.iter_deref().read();
+                if __write.iter_deref().with(|__w| *__w != __v) {
+                    __write.iter_inc();
+                    __write.iter_deref().write(__v);
+                }
+                __it.iter_inc();
+            }
+            __write.iter_inc();
+            __write
+        }
+        .iter_distance(&RandomAccessIterator::Vec(
+            (clusters.as_pointer() as Ptr<u64>),
+        )) as usize) as usize;
         (*clusters.borrow_mut()).resize_with(__a0, || <u64>::default())
     };
     let pairs: Value<Vec<brunsli_HistogramPair>> = Rc::new(RefCell::new(Vec::new()));
@@ -3095,21 +3126,28 @@ pub fn HistogramCombine_133(
             }
             i.prefix_inc();
         }
-        let mut cluster: Ptr<u64> = (clusters.as_pointer() as Ptr<u64>);
-        'loop_: while cluster != (clusters.as_pointer() as Ptr<u64>).to_end() {
-            if (((cluster.read()) as usize) >= best_idx2) {
+        let cluster: Value<RandomAccessIterator<u64>> = Rc::new(RefCell::new(
+            RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>)),
+        ));
+        'loop_: while (*cluster.borrow())
+            != RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<u64>).to_end())
+        {
+            if ((((*cluster.borrow()).iter_deref().read()) as usize) >= best_idx2) {
                 {
-                    let idx = cluster.get_offset();
+                    let idx = <RandomAccessIterator<u64>>::from((*cluster.borrow()).clone())
+                        .vec_ptr()
+                        .get_offset();
                     (clusters.as_pointer() as Ptr<Vec<u64>>)
                         .with_mut(|__v: &mut Vec<u64>| __v.remove(idx));
-                    (clusters.as_pointer() as Ptr<Vec<u64>>).decay()
+                    RandomAccessIterator::Vec((clusters.as_pointer() as Ptr<Vec<u64>>).decay())
                 };
                 break;
             }
-            cluster.prefix_inc();
+            (*cluster.borrow_mut()).iter_inc();
         }
-        let mut copy_to: Ptr<brunsli_HistogramPair> =
-            (pairs.as_pointer() as Ptr<brunsli_HistogramPair>);
+        let copy_to: Value<RandomAccessIterator<brunsli_HistogramPair>> = Rc::new(RefCell::new(
+            RandomAccessIterator::Vec((pairs.as_pointer() as Ptr<brunsli_HistogramPair>)),
+        ));
         'loop_: for mut p in pairs.as_pointer() as Ptr<brunsli_HistogramPair> {
             if ((({ p.with(|__s| __s.idx1) } == { best_idx1 })
                 || ({ p.with(|__s| __s.idx2) } == { best_idx1 }))
@@ -3131,17 +3169,17 @@ pub fn HistogramCombine_133(
                 .clone();
                 let __rhs = (*p.upgrade().deref()).clone();
                 (pairs.as_pointer() as Ptr<brunsli_HistogramPair>).write(__rhs);
-                copy_to.write((front).clone());
+                (*copy_to.borrow()).iter_deref().write((front).clone());
             } else {
                 let __rhs = (*p.upgrade().deref()).clone();
-                copy_to.write(__rhs);
+                (*copy_to.borrow()).iter_deref().write(__rhs);
             }
-            copy_to.prefix_inc();
+            (*copy_to.borrow_mut()).iter_inc();
         }
         {
-            let __a0 = (((copy_to.get_offset() as isize)
-                - ((pairs.as_pointer() as Ptr<brunsli_HistogramPair>).get_offset() as isize))
-                as usize) as usize;
+            let __a0 = ((*copy_to.borrow()).iter_distance(&RandomAccessIterator::Vec(
+                (pairs.as_pointer() as Ptr<brunsli_HistogramPair>),
+            )) as usize) as usize;
             (*pairs.borrow_mut()).resize_with(__a0, || <brunsli_HistogramPair>::default())
         };
         let mut i: usize = 0_usize;
@@ -3192,35 +3230,60 @@ pub fn HistogramRemap_135(
             .map(|item| i32::try_from(item).ok().unwrap())
             .collect::<Vec<_>>()
     }));
-    (all_symbols.as_pointer() as Ptr<i32>)
-        .sort((all_symbols.as_pointer() as Ptr<i32>).to_end().get_offset());
     {
-        let __a0 = ((({
-            let count = (all_symbols.as_pointer() as Ptr<i32>).to_end().get_offset()
-                - (all_symbols.as_pointer() as Ptr<i32>).get_offset();
-            if count <= 1 {
-                (all_symbols.as_pointer() as Ptr<i32>).to_end()
-            } else {
-                let mut iter = PtrValueIter::new(&(all_symbols.as_pointer() as Ptr<i32>), count);
-                let mut write_ptr = (all_symbols.as_pointer() as Ptr<i32>);
-                let mut last_unique = iter.next().unwrap();
-
-                // the first unique value is already in place
-                write_ptr += 1;
-
-                for current_val in iter {
-                    if current_val != last_unique {
-                        write_ptr.write(current_val.clone());
-                        last_unique = current_val;
-                        write_ptr += 1;
-                    }
-                }
-                write_ptr
-            }
+        let __n = RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>).to_end())
+            .iter_distance(&RandomAccessIterator::Vec(
+                (all_symbols.as_pointer() as Ptr<i32>),
+            ));
+        let mut __order: Vec<isize> = (0..__n).collect();
+        __order.sort_by(|&__x, &__y| {
+            RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>))
+                .iter_at(__x)
+                .with(|__a| {
+                    RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>))
+                        .iter_at(__y)
+                        .with(|__b| __a.cmp(__b))
+                })
+        });
+        let __values: Vec<_> = __order
+            .iter()
+            .map(|&__i| {
+                RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>))
+                    .iter_at(__i)
+                    .read()
+            })
+            .collect();
+        for (__i, __v) in (0..__n).zip(__values) {
+            RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>))
+                .iter_at(__i)
+                .write(__v);
         }
-        .get_offset() as isize)
-            - ((all_symbols.as_pointer() as Ptr<i32>).get_offset() as isize))
-            as usize) as usize;
+    };
+    {
+        let __a0 = (if RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>))
+            == RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>).to_end())
+        {
+            RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>).to_end())
+        } else {
+            let mut __write =
+                RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>)).clone();
+            let mut __it = RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>));
+            __it.iter_inc();
+            while __it != RandomAccessIterator::Vec((all_symbols.as_pointer() as Ptr<i32>).to_end())
+            {
+                let __v = __it.iter_deref().read();
+                if __write.iter_deref().with(|__w| *__w != __v) {
+                    __write.iter_inc();
+                    __write.iter_deref().write(__v);
+                }
+                __it.iter_inc();
+            }
+            __write.iter_inc();
+            __write
+        }
+        .iter_distance(&RandomAccessIterator::Vec(
+            (all_symbols.as_pointer() as Ptr<i32>),
+        )) as usize) as usize;
         (*all_symbols.borrow_mut()).resize_with(__a0, || <i32>::default())
     };
     let mut i: usize = 0_usize;
@@ -3271,29 +3334,28 @@ pub fn HistogramReindex_136(
     mut symbols: Ptr<Vec<u32>>,
 ) {
     let mut tmp: Vec<brunsli_internal_enc_Histogram> = (*out.upgrade().deref()).clone();
-    let new_index: Value<BTreeMap<i32, Value<(Value<i32>, Value<i32>)>>> =
-        Rc::new(RefCell::new(BTreeMap::new()));
+    let new_index: Value<Map<i32, (Value<i32>, Value<i32>)>> = Rc::new(RefCell::new(Map::new()));
     let mut next_index: i32 = 0;
     let mut i: usize = 0_usize;
     'loop_: while ({ i } < { (*symbols.upgrade().deref()).len() }) {
-        if RefcountMapIter::find_key(
-            (new_index.as_pointer() as Ptr<BTreeMap<i32, Value<(Value<i32>, Value<i32>)>>>),
-            &((index!(symbols, i).read()) as i32),
-        ) == RefcountMapIter::end(
-            (new_index.as_pointer() as Ptr<BTreeMap<i32, Value<(Value<i32>, Value<i32>)>>>),
-        ) {
-            (new_index.as_pointer() as Ptr<BTreeMap<i32, Value<(Value<i32>, Value<i32>)>>>)
-                .with_mut(|__v: &mut BTreeMap<i32, Value<(Value<i32>, Value<i32>)>>| {
-                    __v.entry(((index!(symbols, i).read()) as i32).clone())
-                        .or_insert_with(|| {
-                            Rc::new(RefCell::new((
-                                Rc::new(RefCell::new(((index!(symbols, i).read()) as i32))),
-                                Rc::new(RefCell::new(<i32>::default())),
-                            )))
-                        })
-                        .borrow()
-                        .1
-                        .as_pointer()
+        if (new_index.as_pointer() as Ptr<Map<i32, (Value<i32>, Value<i32>)>>).with(
+            |__m: &Map<i32, (Value<i32>, Value<i32>)>| {
+                __m.find(&((index!(symbols, i).read()) as i32))
+            },
+        ) == (new_index.as_pointer() as Ptr<Map<i32, (Value<i32>, Value<i32>)>>)
+            .with(|__m: &Map<i32, (Value<i32>, Value<i32>)>| __m.end())
+        {
+            (new_index.as_pointer() as Ptr<Map<i32, (Value<i32>, Value<i32>)>>)
+                .with_mut(|__m: &mut Map<i32, (Value<i32>, Value<i32>)>| {
+                    __m.get_or_insert_with(((index!(symbols, i).read()) as i32).clone(), || {
+                        (
+                            Rc::new(RefCell::new(((index!(symbols, i).read()) as i32))),
+                            Rc::new(RefCell::new(<i32>::default())),
+                        )
+                    })
+                    .borrow()
+                    .1
+                    .as_pointer()
                 })
                 .write(next_index);
             let __rhs = (tmp[((index!(symbols, i).read()) as usize)]).clone();
@@ -3310,19 +3372,17 @@ pub fn HistogramReindex_136(
     };
     let mut i: usize = 0_usize;
     'loop_: while ({ i } < { (*symbols.upgrade().deref()).len() }) {
-        let __rhs = (((new_index.as_pointer()
-            as Ptr<BTreeMap<i32, Value<(Value<i32>, Value<i32>)>>>)
-            .with_mut(|__v: &mut BTreeMap<i32, Value<(Value<i32>, Value<i32>)>>| {
-                __v.entry(((index!(symbols, i).read()) as i32).clone())
-                    .or_insert_with(|| {
-                        Rc::new(RefCell::new((
-                            Rc::new(RefCell::new(((index!(symbols, i).read()) as i32))),
-                            Rc::new(RefCell::new(<i32>::default())),
-                        )))
-                    })
-                    .borrow()
-                    .1
-                    .as_pointer()
+        let __rhs = (((new_index.as_pointer() as Ptr<Map<i32, (Value<i32>, Value<i32>)>>)
+            .with_mut(|__m: &mut Map<i32, (Value<i32>, Value<i32>)>| {
+                __m.get_or_insert_with(((index!(symbols, i).read()) as i32).clone(), || {
+                    (
+                        Rc::new(RefCell::new(((index!(symbols, i).read()) as i32))),
+                        Rc::new(RefCell::new(<i32>::default())),
+                    )
+                })
+                .borrow()
+                .1
+                .as_pointer()
             })
             .read()) as u32);
         index!(symbols, i).write(__rhs);
@@ -4778,23 +4838,43 @@ pub fn ComputeCoeffOrder_163(num_zeros: Ptr<Vec<i32>>, mut order: Ptr<u32>) {
         (*(*pos_and_val.borrow())[(i as usize)].1.borrow_mut()) = __rhs;
         i.prefix_inc();
     }
-    (pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>).sort_with_cmp(
-        (pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>)
-            .to_end()
-            .get_offset(),
-        |x, y| {
-            FnPtr::<fn(Ptr<(Value<i32>, Value<i32>)>, Ptr<(Value<i32>, Value<i32>)>) -> bool>::new(
-                |a: Ptr<(Value<i32>, Value<i32>)>, b: Ptr<(Value<i32>, Value<i32>)>| -> bool {
-                    {
-                        return ({ (*(*a.upgrade().deref()).1.borrow()) } < {
-                            (*(*b.upgrade().deref()).1.borrow())
-                        });
-                    }
-                },
-            )
-            .call(x, y)
-        },
-    );
+    {
+        let __n = RandomAccessIterator::Vec(
+            (pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>).to_end(),
+        )
+        .iter_distance(&RandomAccessIterator::Vec(
+            (pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>),
+        ));
+        let mut __order: Vec<isize> = (0..__n).collect();
+        __order.sort_by(|&__x, &__y| {
+        let __a = RandomAccessIterator::Vec((pos_and_val .as_pointer()  as Ptr<(Value<i32  >, Value<i32  >)  >))  .iter_at(__x);
+        let __b = RandomAccessIterator::Vec((pos_and_val .as_pointer()  as Ptr<(Value<i32  >, Value<i32  >)  >))  .iter_at(__y);
+        if FnPtr::<fn(Ptr< (Value<i32  >, Value<i32  >)  > ,Ptr< (Value<i32  >, Value<i32  >)  > ,) -> bool  >::new ( | a : Ptr< (Value<i32  >, Value<i32  >)  > , b : Ptr< (Value<i32  >, Value<i32  >)  > , | -> bool  { { return ({ (*(*a.upgrade().deref()) .1.borrow())  } < { (*(*b.upgrade().deref()) .1.borrow())  })   ;
+ } } ) .call(__a.clone(), __b.clone()) {
+            std::cmp::Ordering::Less
+        } else if FnPtr::<fn(Ptr< (Value<i32  >, Value<i32  >)  > ,Ptr< (Value<i32  >, Value<i32  >)  > ,) -> bool  >::new ( | a : Ptr< (Value<i32  >, Value<i32  >)  > , b : Ptr< (Value<i32  >, Value<i32  >)  > , | -> bool  { { return ({ (*(*a.upgrade().deref()) .1.borrow())  } < { (*(*b.upgrade().deref()) .1.borrow())  })   ;
+ } } ) .call(__b, __a) {
+            std::cmp::Ordering::Greater
+        } else {
+            std::cmp::Ordering::Equal
+        }
+    });
+        let __values: Vec<_> = __order
+            .iter()
+            .map(|&__i| {
+                RandomAccessIterator::Vec(
+                    (pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>),
+                )
+                .iter_at(__i)
+                .read()
+            })
+            .collect();
+        for (__i, __v) in (0..__n).zip(__values) {
+            RandomAccessIterator::Vec((pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>))
+                .iter_at(__i)
+                .write(__v);
+        }
+    };
     let mut i: usize = 0_usize;
     'loop_: while (i < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
         let __rhs = ({
@@ -6727,20 +6807,28 @@ pub fn MoveToFrontTransform_200(v: Ptr<Vec<u32>>) -> Vec<u32> {
         return (*v.upgrade().deref()).clone();
     }
     let mut max_value: u32 = ({
-        let __count = (Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>)
-            .to_end()
-            .get_offset()
-            - (Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>).get_offset();
-        let max_index = PtrValueIter::new(&(Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>), __count)
-            .enumerate()
-            .max_by(|&(idx_a, val_a), &(idx_b, val_b)| {
-                val_a.cmp(&val_b).then_with(|| idx_b.cmp(&idx_a))
-            })
-            .map(|(idx, _)| idx)
-            .unwrap_or(0);
-
-        (Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>) + max_index
+        let mut __best =
+            RandomAccessIterator::Vec((Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>)).clone();
+        if RandomAccessIterator::Vec((Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>))
+            != RandomAccessIterator::Vec((Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>).to_end())
+        {
+            let mut __it = RandomAccessIterator::Vec((Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>));
+            __it.iter_inc();
+            while __it
+                != RandomAccessIterator::Vec((Ptr::<Vec<u32>>::decay(&(v)) as Ptr<u32>).to_end())
+            {
+                if __best
+                    .iter_deref()
+                    .with(|__b| __it.iter_deref().with(|__v| __b < __v))
+                {
+                    __best = __it.clone();
+                }
+                __it.iter_inc();
+            }
+        }
+        __best
     }
+    .iter_deref()
     .read());
     let mtf: Value<Vec<u32>> = Rc::new(RefCell::new(
         (0..(((max_value).wrapping_add(1_u32)) as usize) as usize)
@@ -8046,12 +8134,42 @@ pub fn CreateHuffmanTree_220(
             elem!(depth, { (*tree.borrow())[0_usize].index_right_or_value }).write(1_u8);
             break;
         }
-        (tree.as_pointer() as Ptr<brunsli_HuffmanTree>).sort_with_cmp(
-            (tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                .to_end()
-                .get_offset(),
-            |x, y| Compare_223.call(x, y),
-        );
+        {
+            let __n =
+                RandomAccessIterator::Vec((tree.as_pointer() as Ptr<brunsli_HuffmanTree>).to_end())
+                    .iter_distance(&RandomAccessIterator::Vec(
+                        (tree.as_pointer() as Ptr<brunsli_HuffmanTree>),
+                    ));
+            let mut __order: Vec<isize> = (0..__n).collect();
+            __order.sort_by(|&__x, &__y| {
+                let __a =
+                    RandomAccessIterator::Vec((tree.as_pointer() as Ptr<brunsli_HuffmanTree>))
+                        .iter_at(__x);
+                let __b =
+                    RandomAccessIterator::Vec((tree.as_pointer() as Ptr<brunsli_HuffmanTree>))
+                        .iter_at(__y);
+                if Compare_223.call(__a.clone(), __b.clone()) {
+                    std::cmp::Ordering::Less
+                } else if Compare_223.call(__b, __a) {
+                    std::cmp::Ordering::Greater
+                } else {
+                    std::cmp::Ordering::Equal
+                }
+            });
+            let __values: Vec<_> = __order
+                .iter()
+                .map(|&__i| {
+                    RandomAccessIterator::Vec((tree.as_pointer() as Ptr<brunsli_HuffmanTree>))
+                        .iter_at(__i)
+                        .read()
+                })
+                .collect();
+            for (__i, __v) in (0..__n).zip(__values) {
+                RandomAccessIterator::Vec((tree.as_pointer() as Ptr<brunsli_HuffmanTree>))
+                    .iter_at(__i)
+                    .write(__v);
+            }
+        };
         let mut sentinel: brunsli_HuffmanTree =
             brunsli_HuffmanTree::new({ <u32>::MAX }, { (-1_i32 as i16) }, { (-1_i32 as i16) });
         {
@@ -8114,19 +8232,21 @@ pub fn CreateHuffmanTree_220(
         });
         if ({
             (({
-                let count = (depth.offset((length) as isize)).get_offset()
-                    - (depth.offset((0) as isize)).get_offset();
-                let max_index = PtrValueIter::new(&(depth.offset((0) as isize)), count)
-                    .enumerate()
-                    .max_by(|(idx_a, val_a), (idx_b, val_b)| {
-                        val_a
-                            .partial_cmp(val_b)
-                            .unwrap_or(std::cmp::Ordering::Equal)
-                            .then_with(|| idx_b.cmp(idx_a))
-                    })
-                    .map(|(idx, _)| idx)
-                    .unwrap_or(0);
-                (depth.offset((0) as isize)) + max_index
+                let mut __best = (depth.offset((0) as isize)).clone();
+                if (depth.offset((0) as isize)) != (depth.offset((length) as isize)) {
+                    let mut __it = (depth.offset((0) as isize));
+                    __it.iter_inc();
+                    while __it != (depth.offset((length) as isize)) {
+                        if __best
+                            .iter_deref()
+                            .with(|__b| __it.iter_deref().with(|__v| __b < __v))
+                        {
+                            __best = __it.clone();
+                        }
+                        __it.iter_inc();
+                    }
+                }
+                __best
             }
             .read()) as i32)
         } <= { tree_limit })
@@ -11222,45 +11342,56 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         let __rhs = (vec_elem!((*self), values_, code).read());
         value.write(__rhs);
         {
-            let idx = (field_ref!((*self), values_).as_pointer() as Ptr<u8>)
-                .offset((code as i64) as isize)
-                .get_offset();
+            let idx = <RandomAccessIterator<u8>>::from(
+                RandomAccessIterator::Vec((field_ref!((*self), values_).as_pointer() as Ptr<u8>))
+                    .iter_add((code as isize)),
+            )
+            .vec_ptr()
+            .get_offset();
             (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>)
                 .with_mut(|__v: &mut Vec<u8>| __v.remove(idx));
-            (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>).decay()
+            RandomAccessIterator::Vec(
+                (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>).decay(),
+            )
         };
         return true;
     }
     fn RemoveValue(&self, mut value: u8, mut code: Ptr<i32>, mut nbits: Ptr<i32>) -> bool {
-        let mut it: Ptr<u8> = {
-            let count = ((field_ref!((*self), values_).as_pointer() as Ptr<u8>)
-                .to_end()
-                .get_offset()
-                - (field_ref!((*self), values_).as_pointer() as Ptr<u8>).get_offset())
-                as usize;
-            (field_ref!((*self), values_).as_pointer() as Ptr<u8>).offset(
-                (field_ref!((*self), values_).as_pointer() as Ptr<u8>)
-                    .clone()
-                    .into_iter()
-                    .take(count)
-                    .position(|value_0| value_0.read() == value)
-                    .unwrap_or(count) as isize,
+        let it: Value<RandomAccessIterator<u8>> = Rc::new(RefCell::new({
+            let mut __it =
+                RandomAccessIterator::Vec((field_ref!((*self), values_).as_pointer() as Ptr<u8>));
+            while __it
+                != RandomAccessIterator::Vec(
+                    (field_ref!((*self), values_).as_pointer() as Ptr<u8>).to_end(),
+                )
+                && __it.iter_deref().with(|__v| *__v != value)
+            {
+                __it.iter_inc();
+            }
+            __it
+        }));
+        if (*it.borrow())
+            == RandomAccessIterator::Vec(
+                (field_ref!((*self), values_).as_pointer() as Ptr<u8>).to_end(),
             )
-        };
-        if it == (field_ref!((*self), values_).as_pointer() as Ptr<u8>).to_end() {
+        {
             return false;
         }
-        let __rhs = (((it.get_offset() as isize)
-            - ((field_ref!((*self), values_).as_pointer() as Ptr<u8>).get_offset() as isize))
-            as i32);
+        let __rhs = ((*it.borrow()).iter_distance(&RandomAccessIterator::Vec(
+            (field_ref!((*self), values_).as_pointer() as Ptr<u8>),
+        )) as i32);
         code.write(__rhs);
         let __rhs = ({ brunsli_PermutationCoderImpl::num_bits(self) });
         nbits.write(__rhs);
         {
-            let idx = it.get_offset();
+            let idx = <RandomAccessIterator<u8>>::from((*it.borrow()).clone())
+                .vec_ptr()
+                .get_offset();
             (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>)
                 .with_mut(|__v: &mut Vec<u8>| __v.remove(idx));
-            (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>).decay()
+            RandomAccessIterator::Vec(
+                (field_ref!((*self), values_).as_pointer() as Ptr<Vec<u8>>).decay(),
+            )
         };
         return true;
     }

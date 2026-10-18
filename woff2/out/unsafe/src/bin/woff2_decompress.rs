@@ -780,14 +780,14 @@ pub struct woff2_WOFF2FontInfo {
     pub index_format: u16,
     pub num_hmetrics: u16,
     pub x_mins: Vec<i16>,
-    pub table_entry_by_tag: BTreeMap<u32, Box<(u32, u32)>>,
+    pub table_entry_by_tag: UnsafeMap<u32, (u32, u32)>,
 }
 #[repr(C)]
 #[derive(Clone, VaArg, FnPtrArg, Default)]
 pub struct woff2_RebuildMetadata {
     pub header_checksum: u32,
     pub font_infos: Vec<woff2_WOFF2FontInfo>,
-    pub checksums: BTreeMap<(u32, u32), Box<((u32, u32), u32)>>,
+    pub checksums: UnsafeMap<(u32, u32), ((u32, u32), u32)>,
 }
 pub unsafe fn WithSign_55(mut flag: i32, mut baseval: i32) -> i32 {
     return if (((flag) & (1)) != 0) {
@@ -2171,12 +2171,8 @@ pub unsafe fn ReconstructFont_74(
     'loop_: while ((i) < (tables.len())) {
         let table: *mut woff2_Table = &mut (*tables[(i)]);
         let mut checksum_key: (u32, u32) = ((*table).tag.into(), (*table).src_offset.into());
-        let mut reused: bool = UnsafeMapIterator::find_key(
-            &(*metadata).checksums as *const BTreeMap<(u32, u32), Box<((u32, u32), u32)>>,
-            &checksum_key,
-        ) != UnsafeMapIterator::end(
-            &(*metadata).checksums as *const BTreeMap<(u32, u32), Box<((u32, u32), u32)>>,
-        );
+        let mut reused: bool =
+            (*metadata).checksums.find(&checksum_key) != (*metadata).checksums.end();
         if (((((font_index) == (0_usize)) && (reused)) as i64) != 0) {
             return false;
         }
@@ -2296,17 +2292,15 @@ pub unsafe fn ReconstructFont_74(
                     return false;
                 }
             }
-            (*&mut (*metadata)
+            (*&mut (*(*metadata)
                 .checksums
-                .entry(checksum_key.clone())
-                .or_insert_with(|| Box::new((checksum_key, <u32>::default())))
-                .1) = checksum;
+                .get_or_insert_with(checksum_key.clone(), || (checksum_key, <u32>::default())))
+            .1) = checksum;
         } else {
-            checksum = (*&mut (*metadata)
+            checksum = (*&mut (*(*metadata)
                 .checksums
-                .entry(checksum_key.clone())
-                .or_insert_with(|| Box::new((checksum_key, <u32>::default())))
-                .1);
+                .get_or_insert_with(checksum_key.clone(), || (checksum_key, <u32>::default())))
+            .1);
         }
         font_checksum = (font_checksum).wrapping_add(checksum);
         (unsafe { StoreU32_31(table_entry.as_mut_ptr(), 0_usize, checksum) });
@@ -2315,11 +2309,12 @@ pub unsafe fn ReconstructFont_74(
         if ((!(unsafe {
             (*out).Write_3(
                 (table_entry.as_mut_ptr() as *const ::libc::c_void),
-                (((*&mut (*info)
+                (((*&mut (*(*info)
                     .table_entry_by_tag
-                    .entry((*table).tag.clone())
-                    .or_insert_with(|| Box::new(((*table).tag, <u32>::default())))
-                    .1)
+                    .get_or_insert_with((*table).tag.clone(), || {
+                        ((*table).tag, <u32>::default())
+                    }))
+                .1)
                     .wrapping_add(4_u32)) as usize),
                 12_usize,
             )
@@ -2637,34 +2632,53 @@ pub unsafe fn WriteHeaders_76(
     if ((*hdr).header_version != 0) {
         'loop_: for ttc_font in 0..((*hdr).ttc_fonts.len()) {
             let mut ttc_font = (*hdr).ttc_fonts.as_mut_ptr().add(ttc_font);
-            let mut sorted_index_by_tag: BTreeMap<u32, Box<(u32, u16)>> = BTreeMap::new();
+            let mut sorted_index_by_tag: UnsafeMap<u32, (u32, u16)> = UnsafeMap::new();
             'loop_: for table_index in 0..((*ttc_font).table_indices.len()) {
                 let mut table_index = (&(*ttc_font)).table_indices[table_index].clone();
-                (*&mut sorted_index_by_tag
-                    .entry((&mut (*hdr)).tables[(table_index as usize)].tag.clone())
-                    .or_insert_with(|| {
-                        Box::new((
+                (*&mut (*sorted_index_by_tag.get_or_insert_with(
+                    (&mut (*hdr)).tables[(table_index as usize)].tag.clone(),
+                    || {
+                        (
                             (&mut (*hdr)).tables[(table_index as usize)].tag,
                             <u16>::default(),
-                        ))
-                    })
-                    .1) = table_index;
+                        )
+                    },
+                ))
+                .1) = table_index;
             }
             let mut index: u16 = 0_u16;
-            'loop_: for __begin4 in UnsafeMapIterator::begin(
-                &sorted_index_by_tag as *const BTreeMap<u32, Box<(u32, u16)>>,
-            ) {
-                let i: *mut (u32, u16) = &mut (*__begin4.deref());
+            'loop_: for __begin4 in
+                UnsafeMap::range(&sorted_index_by_tag as *const UnsafeMap<u32, (u32, u16)>)
+            {
+                let i: *mut (u32, u16) = &mut (*__begin4.iter_deref());
                 (&mut (*ttc_font)).table_indices[(index.postfix_inc() as usize)] = (*i).1;
             }
         }
     } else {
         {
-            let len = sorted_tables
-                .as_mut_ptr()
-                .add(sorted_tables.len())
-                .offset_from(sorted_tables.as_mut_ptr()) as usize;
-            ::std::slice::from_raw_parts_mut(sorted_tables.as_mut_ptr(), len).sort()
+            let __n = UnsafeRandomAccessIterator::Vec(
+                sorted_tables.as_mut_ptr().add(sorted_tables.len()),
+            )
+            .iter_distance(&UnsafeRandomAccessIterator::Vec(sorted_tables.as_mut_ptr()));
+            let mut __order: Vec<isize> = (0..__n).collect();
+            __order.sort_by(|&__x, &__y| {
+                (*UnsafeRandomAccessIterator::Vec(sorted_tables.as_mut_ptr()).iter_at(__x))
+                    .cmp(&*UnsafeRandomAccessIterator::Vec(sorted_tables.as_mut_ptr()).iter_at(__y))
+            });
+            let __values: Vec<_> = __order
+                .iter()
+                .map(|&__i| {
+                    std::ptr::read(
+                        UnsafeRandomAccessIterator::Vec(sorted_tables.as_mut_ptr()).iter_at(__i),
+                    )
+                })
+                .collect();
+            for (__i, __v) in (0..__n).zip(__values) {
+                std::ptr::write(
+                    UnsafeRandomAccessIterator::Vec(sorted_tables.as_mut_ptr()).iter_at(__i),
+                    __v,
+                );
+            }
         };
     }
     let mut result: *mut u8 = (&mut output[(0_usize)] as *mut u8);
@@ -2703,11 +2717,10 @@ pub unsafe fn WriteHeaders_76(
             'loop_: for table_index in 0..((*ttc_font).table_indices.len()) {
                 let table_index = (&(*ttc_font)).table_indices[table_index].clone();
                 let mut tag: u32 = (&mut (*hdr)).tables[(table_index as usize)].tag;
-                (*&mut (&mut (*metadata)).font_infos[(i)]
+                (*&mut (*(&mut (*metadata)).font_infos[(i)]
                     .table_entry_by_tag
-                    .entry(tag.clone())
-                    .or_insert_with(|| Box::new((tag, <u32>::default())))
-                    .1) = (offset as u32);
+                    .get_or_insert_with(tag.clone(), || (tag, <u32>::default())))
+                .1) = (offset as u32);
                 offset = (unsafe { StoreTableEntry_71(result, (offset as u32), tag) });
             }
             (*ttc_font).header_checksum = (unsafe {
@@ -2732,11 +2745,12 @@ pub unsafe fn WriteHeaders_76(
         });
         let mut i: u16 = 0_u16;
         'loop_: while ((i as i32) < ((*hdr).num_tables as i32)) {
-            (*&mut (&mut (*metadata)).font_infos[(0_usize)]
+            (*&mut (*(&mut (*metadata)).font_infos[(0_usize)]
                 .table_entry_by_tag
-                .entry(sorted_tables[(i as usize)].tag.clone())
-                .or_insert_with(|| Box::new((sorted_tables[(i as usize)].tag, <u32>::default())))
-                .1) = (offset as u32);
+                .get_or_insert_with(sorted_tables[(i as usize)].tag.clone(), || {
+                    (sorted_tables[(i as usize)].tag, <u32>::default())
+                }))
+            .1) = (offset as u32);
             offset = (unsafe {
                 StoreTableEntry_71(result, (offset as u32), sorted_tables[(i as usize)].tag)
             });
@@ -2918,8 +2932,8 @@ pub unsafe fn SetFileContents_81(
     )
     .unwrap();
     {
-        let __start = start as *const u8;
-        let __end = end as *const u8;
+        let __start = (start).clone() as *const u8;
+        let __end = (end).clone() as *const u8;
         let __len = __end.offset_from(__start) as usize;
         ofs.write_all(::std::slice::from_raw_parts(__start, __len));
         ofs.try_clone().unwrap()
@@ -3019,7 +3033,7 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
             let _start: *mut libc::c_char = output.as_mut_ptr();
             let _end: *mut libc::c_char = output
                 .as_mut_ptr()
-                .add(((unsafe { out.Size() }) as i64) as usize);
+                .add(((unsafe { out.Size() }) as isize) as usize);
             SetFileContents_81(outfilename.clone(), _start, _end)
         });
     }

@@ -1040,16 +1040,17 @@ pub unsafe fn BrunsliUnalignedWrite64_70(mut p: *mut ::libc::c_void, mut v: u64)
 }
 pub unsafe fn Append_71(mut dst: *mut Vec<u8>, mut begin: *const u8, mut end: *const u8) {
     {
-        let __off = (*dst)
-            .as_mut_ptr()
-            .add((*dst).len())
-            .offset_from((*dst).as_ptr()) as usize;
+        let __off = <UnsafeRandomAccessIterator<u8>>::from(UnsafeRandomAccessIterator::Vec(
+            (*dst).as_mut_ptr().add((*dst).len()),
+        ))
+        .vec_ptr()
+        .offset_from((*dst).as_ptr()) as usize;
         let count = end.offset_from(begin) as usize;
         (*dst).splice(
             __off..__off,
             std::slice::from_raw_parts(begin, count).iter().cloned(),
         );
-        (*dst).as_mut_ptr().add(__off)
+        UnsafeRandomAccessIterator::Vec((*dst).as_mut_ptr().add(__off))
     };
 }
 pub unsafe fn Append_72(mut dst: *mut Vec<u8>, mut begin: *const u8, mut length: usize) {
@@ -2218,13 +2219,17 @@ impl brunsli_PermutationCoder {
         }
         (*value) = self.values_[(code)];
         {
-            let pos = self
-                .values_
-                .as_mut_ptr()
-                .add((code as i64) as usize)
-                .offset_from(self.values_.as_ptr()) as usize;
+            let pos = <UnsafeRandomAccessIterator<u8>>::from(
+                UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr())
+                    .iter_add((code as isize)),
+            )
+            .vec_ptr()
+            .offset_from(self.values_.as_ptr()) as usize;
             self.values_.remove(pos);
-            self.values_.as_mut_ptr().add((code as i64) as usize)
+            <UnsafeRandomAccessIterator<u8>>::from(
+                UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr())
+                    .iter_add((code as isize)),
+            )
         };
         return true;
     }
@@ -2234,22 +2239,31 @@ impl brunsli_PermutationCoder {
         mut code: *mut i32,
         mut nbits: *mut i32,
     ) -> bool {
-        let mut it: *mut u8 = {
-            let mut it = self.values_.as_mut_ptr();
-            while it != self.values_.as_mut_ptr().add(self.values_.len()) && *it != value {
-                it = it.add(1);
+        let mut it: UnsafeRandomAccessIterator<u8> = {
+            let mut __it = UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr());
+            while __it
+                != UnsafeRandomAccessIterator::Vec(
+                    self.values_.as_mut_ptr().add(self.values_.len()),
+                )
+                && *__it.iter_deref() != value
+            {
+                __it.iter_inc();
             }
-            it
+            __it
         };
-        if it == self.values_.as_mut_ptr().add(self.values_.len()) {
+        if it == UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr().add(self.values_.len()))
+        {
             return false;
         }
-        (*code) = (it.offset_from(self.values_.as_mut_ptr()) as i32);
+        (*code) =
+            (it.iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr())) as i32);
         (*nbits) = (unsafe { brunsli_PermutationCoder::num_bits(self) });
         {
-            let pos = it.offset_from(self.values_.as_ptr()) as usize;
+            let pos = <UnsafeRandomAccessIterator<u8>>::from((it).clone())
+                .vec_ptr()
+                .offset_from(self.values_.as_ptr()) as usize;
             self.values_.remove(pos);
-            it
+            <UnsafeRandomAccessIterator<u8>>::from((it).clone())
         };
         return true;
     }
@@ -2270,15 +2284,16 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
     }
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (len)) {
-        let mut it: *mut u32 = {
-            let mut it = items.as_mut_ptr();
-            while it != items.as_mut_ptr().add(items.len()) && *it != (*sigma.offset((i) as isize))
+        let mut it: UnsafeRandomAccessIterator<u32> = {
+            let mut __it = UnsafeRandomAccessIterator::Vec(items.as_mut_ptr());
+            while __it != UnsafeRandomAccessIterator::Vec(items.as_mut_ptr().add(items.len()))
+                && *__it.iter_deref() != (*sigma.offset((i) as isize))
             {
-                it = it.add(1);
+                __it.iter_inc();
             }
-            it
+            __it
         };
-        if !(it != items.as_mut_ptr().add(items.len())) {
+        if !(it != UnsafeRandomAccessIterator::Vec(items.as_mut_ptr().add(items.len()))) {
             (unsafe {
                 BrunsliDumpAndAbort_79(
                     c"lehmer_code.cc".as_ptr(),
@@ -2288,11 +2303,14 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
             });
             'loop_: while true {}
         };
-        (*code.offset((i) as isize)) = (it.offset_from(items.as_mut_ptr()) as u32);
+        (*code.offset((i) as isize)) =
+            (it.iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr())) as u32);
         {
-            let pos = it.offset_from(items.as_ptr()) as usize;
+            let pos = <UnsafeRandomAccessIterator<u32>>::from((it).clone())
+                .vec_ptr()
+                .offset_from(items.as_ptr()) as usize;
             items.remove(pos);
-            it
+            <UnsafeRandomAccessIterator<u32>>::from((it).clone())
         };
         i.prefix_inc();
     }
@@ -2318,12 +2336,15 @@ pub unsafe fn DecodeLehmerCode_113(
         }
         let value: u32 = items[(index as usize)];
         {
-            let pos = items
-                .as_mut_ptr()
-                .add((index as i64) as usize)
-                .offset_from(items.as_ptr()) as usize;
+            let pos = <UnsafeRandomAccessIterator<u32>>::from(
+                UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()).iter_add((index as isize)),
+            )
+            .vec_ptr()
+            .offset_from(items.as_ptr()) as usize;
             items.remove(pos);
-            items.as_mut_ptr().add((index as i64) as usize)
+            <UnsafeRandomAccessIterator<u32>>::from(
+                UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()).iter_add((index as isize)),
+            )
         };
         (*sigma.offset((i) as isize)) = value;
         i.prefix_inc();
@@ -3062,34 +3083,48 @@ pub unsafe fn HistogramCombine_133(
     .map(|x| u64::try_from(x.clone()).ok().unwrap())
     .collect();
     {
-        let len = clusters
-            .as_mut_ptr()
-            .add(clusters.len())
-            .offset_from(clusters.as_mut_ptr()) as usize;
-        ::std::slice::from_raw_parts_mut(clusters.as_mut_ptr(), len).sort()
+        let __n = UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr().add(clusters.len()))
+            .iter_distance(&UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr()));
+        let mut __order: Vec<isize> = (0..__n).collect();
+        __order.sort_by(|&__x, &__y| {
+            (*UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr()).iter_at(__x))
+                .cmp(&*UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr()).iter_at(__y))
+        });
+        let __values: Vec<_> = __order
+            .iter()
+            .map(|&__i| {
+                std::ptr::read(UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr()).iter_at(__i))
+            })
+            .collect();
+        for (__i, __v) in (0..__n).zip(__values) {
+            std::ptr::write(
+                UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr()).iter_at(__i),
+                __v,
+            );
+        }
     };
     {
-        let __a0 = (if clusters.as_mut_ptr() == clusters.as_mut_ptr().add(clusters.len()) {
-            clusters.as_mut_ptr()
+        let __a0 = (if UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr())
+            == UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr().add(clusters.len()))
+        {
+            UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr().add(clusters.len()))
         } else {
-            let mut write = clusters.as_mut_ptr();
-            let mut prev = clusters.as_mut_ptr();
-            let mut it = clusters.as_mut_ptr();
-            it = it.add(1);
-
-            while it != clusters.as_mut_ptr().add(clusters.len()) {
-                if *prev != *it {
-                    write = write.add(1);
-                    *write = (*it).clone();
-                    prev = write;
+            let mut __write = UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr()).clone();
+            let mut __it = UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr());
+            __it.iter_inc();
+            while __it != UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr().add(clusters.len()))
+            {
+                if *__write.iter_deref() != *__it.iter_deref() {
+                    __write.iter_inc();
+                    *__write.iter_deref() = (*__it.iter_deref()).clone();
                 }
-                it = it.add(1);
+                __it.iter_inc();
             }
-
-            write = write.add(1);
-            write
+            __write.iter_inc();
+            __write
         }
-        .offset_from(clusters.as_mut_ptr()) as usize) as usize;
+        .iter_distance(&UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr()))
+            as usize) as usize;
         clusters.resize_with(__a0, || <u64>::default())
     };
     let mut pairs: Vec<brunsli_HistogramPair> = Vec::new();
@@ -3150,19 +3185,25 @@ pub unsafe fn HistogramCombine_133(
             }
             i.prefix_inc();
         }
-        let mut cluster: *mut u64 = clusters.as_mut_ptr();
-        'loop_: while cluster != clusters.as_mut_ptr().add(clusters.len()) {
-            if (((*cluster) as usize) >= (best_idx2)) {
+        let mut cluster: UnsafeRandomAccessIterator<u64> =
+            UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr());
+        'loop_: while cluster
+            != UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr().add(clusters.len()))
+        {
+            if (((*cluster.iter_deref()) as usize) >= (best_idx2)) {
                 {
-                    let pos = cluster.offset_from(clusters.as_ptr()) as usize;
+                    let pos = <UnsafeRandomAccessIterator<u64>>::from((cluster).clone())
+                        .vec_ptr()
+                        .offset_from(clusters.as_ptr()) as usize;
                     clusters.remove(pos);
-                    cluster
+                    <UnsafeRandomAccessIterator<u64>>::from((cluster).clone())
                 };
                 break;
             }
-            cluster.prefix_inc();
+            cluster.iter_inc();
         }
-        let mut copy_to: *mut brunsli_HistogramPair = pairs.as_mut_ptr();
+        let mut copy_to: UnsafeRandomAccessIterator<brunsli_HistogramPair> =
+            UnsafeRandomAccessIterator::Vec(pairs.as_mut_ptr());
         'loop_: for p in 0..(pairs.len()) {
             let mut p = pairs.as_ptr().add(p);
             if (((((*p).idx1) == (best_idx1)) || (((*p).idx2) == (best_idx1)))
@@ -3178,14 +3219,15 @@ pub unsafe fn HistogramCombine_133(
             }) {
                 let mut front: brunsli_HistogramPair = (*((pairs).first_mut().unwrap()));
                 (*((pairs).first_mut().unwrap())) = (*p);
-                (*copy_to) = front;
+                (*copy_to.iter_deref()) = front;
             } else {
-                (*copy_to) = (*p);
+                (*copy_to.iter_deref()) = (*p);
             }
-            copy_to.prefix_inc();
+            copy_to.iter_inc();
         }
         {
-            let __a0 = (copy_to.offset_from(pairs.as_mut_ptr()) as usize) as usize;
+            let __a0 = (copy_to.iter_distance(&UnsafeRandomAccessIterator::Vec(pairs.as_mut_ptr()))
+                as usize) as usize;
             pairs.resize_with(__a0, || <brunsli_HistogramPair>::default())
         };
         let mut i: usize = 0_usize;
@@ -3235,34 +3277,51 @@ pub unsafe fn HistogramRemap_135(
     .map(|x| i32::try_from(x.clone()).ok().unwrap())
     .collect();
     {
-        let len = all_symbols
-            .as_mut_ptr()
-            .add(all_symbols.len())
-            .offset_from(all_symbols.as_mut_ptr()) as usize;
-        ::std::slice::from_raw_parts_mut(all_symbols.as_mut_ptr(), len).sort()
+        let __n = UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr().add(all_symbols.len()))
+            .iter_distance(&UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr()));
+        let mut __order: Vec<isize> = (0..__n).collect();
+        __order.sort_by(|&__x, &__y| {
+            (*UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr()).iter_at(__x))
+                .cmp(&*UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr()).iter_at(__y))
+        });
+        let __values: Vec<_> = __order
+            .iter()
+            .map(|&__i| {
+                std::ptr::read(
+                    UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr()).iter_at(__i),
+                )
+            })
+            .collect();
+        for (__i, __v) in (0..__n).zip(__values) {
+            std::ptr::write(
+                UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr()).iter_at(__i),
+                __v,
+            );
+        }
     };
     {
-        let __a0 = (if all_symbols.as_mut_ptr() == all_symbols.as_mut_ptr().add(all_symbols.len()) {
-            all_symbols.as_mut_ptr()
+        let __a0 = (if UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr())
+            == UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr().add(all_symbols.len()))
+        {
+            UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr().add(all_symbols.len()))
         } else {
-            let mut write = all_symbols.as_mut_ptr();
-            let mut prev = all_symbols.as_mut_ptr();
-            let mut it = all_symbols.as_mut_ptr();
-            it = it.add(1);
-
-            while it != all_symbols.as_mut_ptr().add(all_symbols.len()) {
-                if *prev != *it {
-                    write = write.add(1);
-                    *write = (*it).clone();
-                    prev = write;
+            let mut __write = UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr()).clone();
+            let mut __it = UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr());
+            __it.iter_inc();
+            while __it
+                != UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr().add(all_symbols.len()))
+            {
+                if *__write.iter_deref() != *__it.iter_deref() {
+                    __write.iter_inc();
+                    *__write.iter_deref() = (*__it.iter_deref()).clone();
                 }
-                it = it.add(1);
+                __it.iter_inc();
             }
-
-            write = write.add(1);
-            write
+            __write.iter_inc();
+            __write
         }
-        .offset_from(all_symbols.as_mut_ptr()) as usize) as usize;
+        .iter_distance(&UnsafeRandomAccessIterator::Vec(all_symbols.as_mut_ptr()))
+            as usize) as usize;
         all_symbols.resize_with(__a0, || <i32>::default())
     };
     let mut i: usize = 0_usize;
@@ -3316,19 +3375,16 @@ pub unsafe fn HistogramReindex_136(
     mut symbols: *mut Vec<u32>,
 ) {
     let mut tmp: Vec<brunsli_internal_enc_Histogram> = (*out).clone();
-    let mut new_index: BTreeMap<i32, Box<(i32, i32)>> = BTreeMap::new();
+    let mut new_index: UnsafeMap<i32, (i32, i32)> = UnsafeMap::new();
     let mut next_index: i32 = 0;
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*(symbols).cast_const()).len())) {
-        if UnsafeMapIterator::find_key(
-            &new_index as *const BTreeMap<i32, Box<(i32, i32)>>,
-            &((&mut (*symbols))[(i)] as i32),
-        ) == UnsafeMapIterator::end(&new_index as *const BTreeMap<i32, Box<(i32, i32)>>)
-        {
-            (*&mut new_index
-                .entry(((&mut (*symbols))[(i)] as i32).clone())
-                .or_insert_with(|| Box::new((((&mut (*symbols))[(i)] as i32), <i32>::default())))
-                .1) = next_index;
+        if new_index.find(&((&mut (*symbols))[(i)] as i32)) == new_index.end() {
+            (*&mut (*new_index
+                .get_or_insert_with(((&mut (*symbols))[(i)] as i32).clone(), || {
+                    (((&mut (*symbols))[(i)] as i32), <i32>::default())
+                }))
+            .1) = next_index;
             (&mut (*out))[(next_index as usize)] = tmp[((&mut (*symbols))[(i)] as usize)];
             next_index.prefix_inc();
         }
@@ -3340,10 +3396,11 @@ pub unsafe fn HistogramReindex_136(
     };
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*(symbols).cast_const()).len())) {
-        (&mut (*symbols))[(i)] = ((*&mut new_index
-            .entry(((&mut (*symbols))[(i)] as i32).clone())
-            .or_insert_with(|| Box::new((((&mut (*symbols))[(i)] as i32), <i32>::default())))
-            .1) as u32);
+        (&mut (*symbols))[(i)] = ((*&mut (*new_index
+            .get_or_insert_with(((&mut (*symbols))[(i)] as i32).clone(), || {
+                (((&mut (*symbols))[(i)] as i32), <i32>::default())
+            }))
+        .1) as u32);
         i.prefix_inc();
     }
 }
@@ -4733,11 +4790,14 @@ pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const Vec<i32>, mut order: *mut 
         i.prefix_inc();
     }
     {
-        let len = pos_and_val
-            .as_mut_ptr()
-            .add(pos_and_val.len())
-            .offset_from(pos_and_val.as_mut_ptr()) as usize;
-        ::std::slice::from_raw_parts_mut(pos_and_val.as_mut_ptr(), len).sort_by(|x, y| {
+        let __n = UnsafeRandomAccessIterator::Vec(pos_and_val.as_mut_ptr().add(pos_and_val.len()))
+            .iter_distance(&UnsafeRandomAccessIterator::Vec(pos_and_val.as_mut_ptr()));
+        let mut __order: Vec<isize> = (0..__n).collect();
+        __order.sort_by(|&__x, &__y| {
+            let __a =
+                UnsafeRandomAccessIterator::Vec(pos_and_val.as_mut_ptr()).iter_at(__x) as *const _;
+            let __b =
+                UnsafeRandomAccessIterator::Vec(pos_and_val.as_mut_ptr()).iter_at(__y) as *const _;
             if FnPtr::<fn(*const (i32, i32), *const (i32, i32)) -> bool>::new(
                 |a: *const (i32, i32), b: *const (i32, i32)| -> bool {
                     unsafe {
@@ -4745,7 +4805,7 @@ pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const Vec<i32>, mut order: *mut 
                     }
                 },
             )
-            .call(x as *const _, y as *const _)
+            .call(__a, __b)
             {
                 std::cmp::Ordering::Less
             } else if FnPtr::<fn(*const (i32, i32), *const (i32, i32)) -> bool>::new(
@@ -4755,13 +4815,27 @@ pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const Vec<i32>, mut order: *mut 
                     }
                 },
             )
-            .call(y as *const _, x as *const _)
+            .call(__b, __a)
             {
                 std::cmp::Ordering::Greater
             } else {
                 std::cmp::Ordering::Equal
             }
-        })
+        });
+        let __values: Vec<_> = __order
+            .iter()
+            .map(|&__i| {
+                std::ptr::read(
+                    UnsafeRandomAccessIterator::Vec(pos_and_val.as_mut_ptr()).iter_at(__i),
+                )
+            })
+            .collect();
+        for (__i, __v) in (0..__n).zip(__values) {
+            std::ptr::write(
+                UnsafeRandomAccessIterator::Vec(pos_and_val.as_mut_ptr()).iter_at(__i),
+                __v,
+            );
+        }
     };
     let mut i: usize = 0_usize;
     'loop_: while ((i)
@@ -6831,15 +6905,24 @@ pub unsafe fn MoveToFrontTransform_200(v: *const Vec<u32>) -> Vec<u32> {
     if (*v).is_empty() {
         return (*v).clone();
     }
-    let mut max_value: u32 = (*core::slice::from_raw_parts(
-        (*v).as_ptr(),
-        ((*v).as_ptr().add((*v).len())).offset_from((*v).as_ptr()) as usize,
-    )
-    .iter()
-    .enumerate()
-    .max_by(|(idx_a, val_a), (idx_b, val_b)| val_a.cmp(val_b).then_with(|| idx_b.cmp(idx_a)))
-    .map(|(_, value)| value)
-    .unwrap());
+    let mut max_value: u32 = (*{
+        let mut __best = UnsafeRandomAccessIterator::Vec((*v).as_ptr().cast_mut()).clone();
+        if UnsafeRandomAccessIterator::Vec((*v).as_ptr().cast_mut())
+            != UnsafeRandomAccessIterator::Vec((*v).as_ptr().add((*v).len()).cast_mut())
+        {
+            let mut __it = UnsafeRandomAccessIterator::Vec((*v).as_ptr().cast_mut());
+            __it.iter_inc();
+            while __it != UnsafeRandomAccessIterator::Vec((*v).as_ptr().add((*v).len()).cast_mut())
+            {
+                if *__best.iter_deref() < *__it.iter_deref() {
+                    __best = __it.clone();
+                }
+                __it.iter_inc();
+            }
+        }
+        __best
+    }
+    .iter_deref());
     let mut mtf: Vec<u32> = (0..(((max_value).wrapping_add(1_u32)) as usize) as usize)
         .map(|_| <u32>::default())
         .collect::<Vec<_>>();
@@ -8061,25 +8144,40 @@ pub unsafe fn CreateHuffmanTree_220(
             break;
         }
         {
-            let len = tree
-                .as_mut_ptr()
-                .add(tree.len())
-                .offset_from(tree.as_mut_ptr()) as usize;
-            ::std::slice::from_raw_parts_mut(tree.as_mut_ptr(), len).sort_by(|x, y| {
+            let __n = UnsafeRandomAccessIterator::Vec(tree.as_mut_ptr().add(tree.len()))
+                .iter_distance(&UnsafeRandomAccessIterator::Vec(tree.as_mut_ptr()));
+            let mut __order: Vec<isize> = (0..__n).collect();
+            __order.sort_by(|&__x, &__y| {
+                let __a =
+                    UnsafeRandomAccessIterator::Vec(tree.as_mut_ptr()).iter_at(__x) as *const _;
+                let __b =
+                    UnsafeRandomAccessIterator::Vec(tree.as_mut_ptr()).iter_at(__y) as *const _;
                 if (Compare_223
                     as unsafe fn(*const brunsli_HuffmanTree, *const brunsli_HuffmanTree) -> bool)
-                    .call(x as *const _, y as *const _)
+                    .call(__a, __b)
                 {
                     std::cmp::Ordering::Less
                 } else if (Compare_223
                     as unsafe fn(*const brunsli_HuffmanTree, *const brunsli_HuffmanTree) -> bool)
-                    .call(y as *const _, x as *const _)
+                    .call(__b, __a)
                 {
                     std::cmp::Ordering::Greater
                 } else {
                     std::cmp::Ordering::Equal
                 }
-            })
+            });
+            let __values: Vec<_> = __order
+                .iter()
+                .map(|&__i| {
+                    std::ptr::read(UnsafeRandomAccessIterator::Vec(tree.as_mut_ptr()).iter_at(__i))
+                })
+                .collect();
+            for (__i, __v) in (0..__n).zip(__values) {
+                std::ptr::write(
+                    UnsafeRandomAccessIterator::Vec(tree.as_mut_ptr()).iter_at(__i),
+                    __v,
+                );
+            }
         };
         let sentinel: brunsli_HuffmanTree =
             brunsli_HuffmanTree::new({ <u32>::MAX }, { (-1_i32 as i16) }, { (-1_i32 as i16) });
@@ -8141,19 +8239,20 @@ pub unsafe fn CreateHuffmanTree_220(
             SetDepth_222(_p, _pool, _depth, 0_u8)
         });
         if (((*{
-            let count = (&mut (*depth.offset((length) as isize)) as *mut u8)
-                .offset_from((&mut (*depth.offset((0) as isize)) as *mut u8))
-                as usize;
-            std::slice::from_raw_parts((&mut (*depth.offset((0) as isize)) as *mut u8), count)
-                .iter()
-                .enumerate()
-                .max_by(|(idx_a, x), (idx_b, y)| {
-                    x.partial_cmp(y)
-                        .unwrap_or(std::cmp::Ordering::Equal)
-                        .then_with(|| idx_b.cmp(idx_a))
-                })
-                .map(|(i, _)| (&mut (*depth.offset((0) as isize)) as *mut u8).add(i))
-                .unwrap_or((&mut (*depth.offset((0) as isize)) as *mut u8))
+            let mut __best = (&mut (*depth.offset((0) as isize)) as *mut u8).clone();
+            if (&mut (*depth.offset((0) as isize)) as *mut u8)
+                != (&mut (*depth.offset((length) as isize)) as *mut u8)
+            {
+                let mut __it = (&mut (*depth.offset((0) as isize)) as *mut u8);
+                __it.iter_inc();
+                while __it != (&mut (*depth.offset((length) as isize)) as *mut u8) {
+                    if *__best.iter_deref() < *__it.iter_deref() {
+                        __best = __it.clone();
+                    }
+                    __it.iter_inc();
+                }
+            }
+            __best
         }) as i32)
             <= (tree_limit))
         {
