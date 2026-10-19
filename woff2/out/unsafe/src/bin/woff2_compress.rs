@@ -434,8 +434,8 @@ pub unsafe fn Write255UShort_10(mut out: *mut Vec<u8>, mut value: i32) {
 pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *mut u8) {
     let mut packed: Vec<u8> = Vec::new();
     (unsafe { Write255UShort_10((&mut packed as *mut Vec<u8>), val) });
-    'loop_: for packed_byte in 0..(packed.len()) {
-        let mut packed_byte = packed[packed_byte].clone();
+    'loop_: for packed_byte in IterRange::new(packed.begin(), packed.end()) {
+        let mut packed_byte: u8 = (*packed_byte.iter_deref());
         (*dst.offset(((*offset).postfix_inc()) as isize)) = packed_byte;
     }
 }
@@ -726,10 +726,8 @@ impl woff2_Font {
 impl woff2_Font {
     pub unsafe fn OutputOrderedTags(&self) -> Vec<u32> {
         let mut output_order: Vec<u32> = Vec::new();
-        'loop_: for __begin1 in
-            UnsafeMap::range(&self.tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-        {
-            let i: *const (u32, woff2_Font_Table) = &(*__begin1.iter_deref());
+        'loop_: for i in IterRange::new(self.tables.begin(), self.tables.end()) {
+            let i: *const (u32, woff2_Font_Table) = &(*i.iter_deref());
             let table: *const woff2_Font_Table = &(*i).1;
             if ((((*table).tag) & (2155905152_u32)) != 0) {
                 continue 'loop_;
@@ -740,11 +738,8 @@ impl woff2_Font {
             };
         }
         let mut glyf_loc: UnsafeRandomAccessIterator<u32> = {
-            let mut __it = UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr());
-            while __it
-                != UnsafeRandomAccessIterator::Vec(
-                    output_order.as_mut_ptr().add(output_order.len()),
-                )
+            let mut __it = output_order.begin();
+            while __it != output_order.end()
                 && *__it.iter_deref()
                     != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
             {
@@ -753,11 +748,8 @@ impl woff2_Font {
             __it
         };
         let mut loca_loc: UnsafeRandomAccessIterator<u32> = {
-            let mut __it = UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr());
-            while __it
-                != UnsafeRandomAccessIterator::Vec(
-                    output_order.as_mut_ptr().add(output_order.len()),
-                )
+            let mut __it = output_order.begin();
+            while __it != output_order.end()
                 && *__it.iter_deref()
                     != (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2))
             {
@@ -765,28 +757,19 @@ impl woff2_Font {
             }
             __it
         };
-        if (glyf_loc
-            != UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr().add(output_order.len())))
-            && (loca_loc
-                != UnsafeRandomAccessIterator::Vec(
-                    output_order.as_mut_ptr().add(output_order.len()),
-                ))
-        {
+        if (glyf_loc != output_order.end()) && (loca_loc != output_order.end()) {
             {
                 let pos = <UnsafeRandomAccessIterator<u32>>::from((loca_loc).clone())
-                    .vec_ptr()
-                    .offset_from(output_order.as_ptr()) as usize;
+                    .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
+                    as usize;
                 output_order.remove(pos);
                 <UnsafeRandomAccessIterator<u32>>::from((loca_loc).clone())
             };
             {
                 let pos = <UnsafeRandomAccessIterator<u32>>::from(
                     {
-                        let mut __it = UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr());
-                        while __it
-                            != UnsafeRandomAccessIterator::Vec(
-                                output_order.as_mut_ptr().add(output_order.len()),
-                            )
+                        let mut __it = output_order.begin();
+                        while __it != output_order.end()
                             && *__it.iter_deref()
                                 != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
                         {
@@ -796,19 +779,16 @@ impl woff2_Font {
                     }
                     .iter_add(1_isize),
                 )
-                .vec_ptr()
-                .offset_from(output_order.as_ptr()) as usize;
+                .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
+                    as usize;
                 output_order.insert(
                     pos,
                     (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)),
                 );
                 <UnsafeRandomAccessIterator<u32>>::from(
                     {
-                        let mut __it = UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr());
-                        while __it
-                            != UnsafeRandomAccessIterator::Vec(
-                                output_order.as_mut_ptr().add(output_order.len()),
-                            )
+                        let mut __it = output_order.begin();
+                        while __it != output_order.end()
                             && *__it.iter_deref()
                                 != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
                         {
@@ -870,8 +850,8 @@ pub unsafe fn ReadTrueTypeFont_33(
     let mut last_offset: u32 = (((12_u64 as u64)
         .wrapping_add((16_u64 as u64).wrapping_mul(((*font).num_tables as u64))))
         as u32);
-    'loop_: for __begin1 in UnsafeMap::range(&intervals as *const UnsafeMap<u32, (u32, u32)>) {
-        let i: *const (u32, u32) = &(*__begin1.iter_deref());
+    'loop_: for i in IterRange::new(intervals.begin(), intervals.end()) {
+        let i: *const (u32, u32) = &(*i.iter_deref());
         if (((*i).0) < (last_offset)) || ((((*i).0).wrapping_add((*i).1)) < ((*i).0)) {
             return false;
         }
@@ -901,11 +881,9 @@ pub unsafe fn ReadCollectionFont_34(
     }
     if !(unsafe { ReadTrueTypeFont_33(file, data, len, font) }) {
         return false;
-    }
-    'loop_: for __begin1 in
-        UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-    {
-        let entry: *mut (u32, woff2_Font_Table) = &mut (*__begin1.iter_deref());
+    };
+    'loop_: for entry in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+        let entry: *mut (u32, woff2_Font_Table) = &mut (*entry.iter_deref());
         let table: *mut woff2_Font_Table = &mut (*entry).1;
         if (*all_tables).find(&(*table).offset) == (*all_tables).end() {
             (*&mut (*(*all_tables).get_or_insert_with((*table).offset.clone(), || {
@@ -960,11 +938,10 @@ pub unsafe fn ReadTrueTypeCollection_35(
             .fonts
             .resize_with(__a0, || <woff2_Font>::default())
     };
-    let mut font_it: UnsafeRandomAccessIterator<woff2_Font> =
-        UnsafeRandomAccessIterator::Vec((*font_collection).fonts.as_mut_ptr());
+    let mut font_it: UnsafeRandomAccessIterator<woff2_Font> = (*font_collection).fonts.begin();
     let mut all_tables: UnsafeMap<u32, (u32, *mut woff2_Font_Table)> = UnsafeMap::new();
-    'loop_: for offset in 0..(offsets.len()) {
-        let offset = offsets[offset].clone();
+    'loop_: for offset in IterRange::new(offsets.begin(), offsets.end()) {
+        let offset: u32 = (*offset.iter_deref());
         if !(unsafe { woff2_Buffer::set_offset(&mut (*file), (offset as usize)) }) {
             return false;
         }
@@ -1026,10 +1003,8 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
     let mut max_offset: usize = (((12_u64 as u64)
         .wrapping_add((16_u64 as u64).wrapping_mul(((*font).num_tables as u64))))
         as usize);
-    'loop_: for __begin1 in
-        UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-    {
-        let i: *const (u32, woff2_Font_Table) = &(*__begin1.iter_deref());
+    'loop_: for i in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+        let i: *const (u32, woff2_Font_Table) = &(*i.iter_deref());
         let table: *const woff2_Font_Table = &(*i).1;
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((((*table).length) & (3_u32)))) & (3_u32)) as usize);
@@ -1049,8 +1024,11 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
 }
 pub unsafe fn FontCollectionFileSize_39(font_collection: *const woff2_FontCollection) -> usize {
     let mut max_offset: usize = 0_usize;
-    'loop_: for font in 0..((*font_collection).fonts.len()) {
-        let mut font = (*font_collection).fonts.as_ptr().add(font);
+    'loop_: for font in IterRange::new(
+        (*font_collection).fonts.begin(),
+        (*font_collection).fonts.end(),
+    ) {
+        let font: *const woff2_Font = &(*font.iter_deref());
         max_offset = ({
             let mut __tmp_0: u64 = (max_offset as u64);
             let mut __tmp_1: u64 = ((unsafe { FontFileSize_38(font) }) as u64);
@@ -1176,10 +1154,8 @@ pub unsafe fn WriteFont_41(
     (unsafe { Store16_31((search_range as i32), offset, dst) });
     (unsafe { Store16_31((max_pow2 as i32), offset, dst) });
     (unsafe { Store16_31((range_shift as i32), offset, dst) });
-    'loop_: for __begin1 in
-        UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-    {
-        let i: *const (u32, woff2_Font_Table) = &(*__begin1.iter_deref());
+    'loop_: for i in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+        let i: *const (u32, woff2_Font_Table) = &(*i.iter_deref());
         if !(unsafe {
             let _offset: *mut usize = offset;
             let _dst_size: usize = dst_size;
@@ -1727,8 +1703,8 @@ pub unsafe fn StoreEndPtsOfContours_66(
     mut dst: *mut u8,
 ) -> bool {
     let mut end_point: i32 = -1_i32;
-    'loop_: for contour in 0..((*glyph).contours.len()) {
-        let mut contour = (*glyph).contours.as_ptr().add(contour);
+    'loop_: for contour in IterRange::new((*glyph).contours.begin(), (*glyph).contours.end()) {
+        let contour: *const Vec<woff2_Glyph_Point> = &(*contour.iter_deref());
         end_point = ((end_point as usize).wrapping_add((*contour).len())) as i32;
         if (((*contour).len()) > (<u16>::MAX as usize)) || ((end_point) > (<u16>::MAX as i32)) {
             return false;
@@ -1749,10 +1725,10 @@ pub unsafe fn StorePoints_67(
     let mut last_y: i32 = 0;
     let mut x_bytes: usize = 0_usize;
     let mut y_bytes: usize = 0_usize;
-    'loop_: for contour in 0..((*glyph).contours.len()) {
-        let mut contour = (*glyph).contours.as_ptr().add(contour);
-        'loop_: for point in 0..((*contour).len()) {
-            let mut point = (*contour).as_ptr().add(point);
+    'loop_: for contour in IterRange::new((*glyph).contours.begin(), (*glyph).contours.end()) {
+        let contour: *const Vec<woff2_Glyph_Point> = &(*contour.iter_deref());
+        'loop_: for point in IterRange::new((*contour).begin(), (*contour).end()) {
+            let point: *const woff2_Glyph_Point = &(*point.iter_deref());
             let mut flag: i32 = if (*point).on_curve {
                 (*std::cell::LazyCell::force_mut(&mut *&raw mut kFLAG_ONCURVE_49))
             } else {
@@ -1827,10 +1803,10 @@ pub unsafe fn StorePoints_67(
     let mut y_offset: usize = (*offset).wrapping_add(x_bytes);
     last_x = 0;
     last_y = 0;
-    'loop_: for contour in 0..((*glyph).contours.len()) {
-        let mut contour = (*glyph).contours.as_ptr().add(contour);
-        'loop_: for point in 0..((*contour).len()) {
-            let mut point = (*contour).as_ptr().add(point);
+    'loop_: for contour in IterRange::new((*glyph).contours.begin(), (*glyph).contours.end()) {
+        let contour: *const Vec<woff2_Glyph_Point> = &(*contour.iter_deref());
+        'loop_: for point in IterRange::new((*contour).begin(), (*contour).end()) {
+            let point: *const woff2_Glyph_Point = &(*point.iter_deref());
             let mut dx: i32 = (((*point).x) - (last_x));
             let mut dy: i32 = (((*point).y) - (last_y));
             if ((dx) == (0)) {
@@ -2174,11 +2150,10 @@ pub unsafe fn NormalizeGlyphs_75(mut font: *mut woff2_Font) -> bool {
 }
 pub unsafe fn NormalizeOffsets_76(mut font: *mut woff2_Font) -> bool {
     let mut offset: u32 = (((12) + ((16) * ((*font).num_tables as i32))) as u32);
-    'loop_: for tag in
-        0..((unsafe { woff2_Font::OutputOrderedTags(&(*(font).cast_const())) }).len())
-    {
-        let mut tag =
-            (unsafe { woff2_Font::OutputOrderedTags(&(&(*(font).cast_const()))) })[tag].clone();
+    let mut __tmp_0: Vec<u32> = (unsafe { woff2_Font::OutputOrderedTags(&(*(font).cast_const())) });
+    let __range1: *mut Vec<u32> = &mut __tmp_0;
+    'loop_: for tag in IterRange::new((*__range1).begin(), (*__range1).end()) {
+        let mut tag: u32 = (*tag.iter_deref());
         let table: *mut woff2_Font_Table = &mut (*&mut (*(*font)
             .tables
             .get_or_insert_with(tag.clone(), || (tag, <woff2_Font_Table>::default())))
@@ -2206,10 +2181,8 @@ pub unsafe fn ComputeHeaderChecksum_77(font: *const woff2_Font) -> u32 {
         .wrapping_add((((((*font).num_tables as i32) << (16)) | (search_range as i32)) as u32));
     checksum =
         (checksum).wrapping_add(((((max_pow2 as i32) << (16)) | (range_shift as i32)) as u32));
-    'loop_: for __begin2 in
-        UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-    {
-        let i: *const (u32, woff2_Font_Table) = &(*__begin2.iter_deref());
+    'loop_: for i in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+        let i: *const (u32, woff2_Font_Table) = &(*i.iter_deref());
         let mut table: *const woff2_Font_Table = (&(*i).1 as *const woff2_Font_Table);
         if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
             table = ((*table).reuse_of).cast_const();
@@ -2242,10 +2215,8 @@ pub unsafe fn FixChecksums_78(mut font: *mut woff2_Font) -> bool {
     (unsafe { StoreU32_30(0_u32, (&mut offset as *mut usize), head_buf) });
     let mut file_checksum: u32 = 0_u32;
     let mut head_checksum: u32 = 0_u32;
-    'loop_: for __begin1 in
-        UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-    {
-        let i: *mut (u32, woff2_Font_Table) = &mut (*__begin1.iter_deref());
+    'loop_: for i in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+        let i: *mut (u32, woff2_Font_Table) = &mut (*i.iter_deref());
         let mut table: *mut woff2_Font_Table = (&mut (*i).1 as *mut woff2_Font_Table);
         if (unsafe { woff2_Font_Table::IsReused(&(*(table).cast_const())) }) {
             table = (*table).reuse_of;
@@ -2317,8 +2288,11 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
         let _num_fonts: u32 = ((*font_collection).fonts.len() as u32);
         CollectionHeaderSize_27(_header_version, _num_fonts)
     }) as u32);
-    'loop_: for font in 0..((*font_collection).fonts.len()) {
-        let mut font = (*font_collection).fonts.as_mut_ptr().add(font);
+    'loop_: for font in IterRange::new(
+        (*font_collection).fonts.begin(),
+        (*font_collection).fonts.end(),
+    ) {
+        let font: *mut woff2_Font = &mut (*font.iter_deref());
         if !(unsafe { NormalizeWithoutFixingChecksums_80((font)) }) {
             (unsafe {
                 libc::fprintf(
@@ -2335,10 +2309,15 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
             ),
         )) as u32;
     }
-    'loop_: for font in 0..((*font_collection).fonts.len()) {
-        let mut font = (*font_collection).fonts.as_mut_ptr().add(font);
-        'loop_: for tag in 0..((unsafe { woff2_Font::OutputOrderedTags(&(*font)) }).len()) {
-            let mut tag = (unsafe { woff2_Font::OutputOrderedTags(&(&(*font))) })[tag].clone();
+    'loop_: for font in IterRange::new(
+        (*font_collection).fonts.begin(),
+        (*font_collection).fonts.end(),
+    ) {
+        let font: *mut woff2_Font = &mut (*font.iter_deref());
+        let mut __tmp_1: Vec<u32> = (unsafe { woff2_Font::OutputOrderedTags(&(*font)) });
+        let __range2: *mut Vec<u32> = &mut __tmp_1;
+        'loop_: for tag in IterRange::new((*__range2).begin(), (*__range2).end()) {
+            let mut tag: u32 = (*tag.iter_deref());
             let table: *mut woff2_Font_Table = &mut (*&mut (*(*font)
                 .tables
                 .get_or_insert_with(tag.clone(), || (tag, <woff2_Font_Table>::default())))
@@ -2351,8 +2330,11 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
             }
         }
     }
-    'loop_: for font in 0..((*font_collection).fonts.len()) {
-        let mut font = (*font_collection).fonts.as_mut_ptr().add(font);
+    'loop_: for font in IterRange::new(
+        (*font_collection).fonts.begin(),
+        (*font_collection).fonts.end(),
+    ) {
+        let font: *mut woff2_Font = &mut (*font.iter_deref());
         if !(unsafe { FixChecksums_78((font)) }) {
             (unsafe {
                 libc::fprintf(
@@ -2577,10 +2559,10 @@ impl woff2_GlyfEncoder {
         let mut y_min: i16 = ((&(*glyph)).contours[(0_usize)][(0_usize)].y as i16);
         let mut x_max: i16 = x_min;
         let mut y_max: i16 = y_min;
-        'loop_: for contour in 0..((*glyph).contours.len()) {
-            let mut contour = (*glyph).contours.as_ptr().add(contour);
-            'loop_: for point in 0..((*contour).len()) {
-                let mut point = (*contour).as_ptr().add(point);
+        'loop_: for contour in IterRange::new((*glyph).contours.begin(), (*glyph).contours.end()) {
+            let contour: *const Vec<woff2_Glyph_Point> = &(*contour.iter_deref());
+            'loop_: for point in IterRange::new((*contour).begin(), (*contour).end()) {
+                let point: *const woff2_Glyph_Point = &(*point.iter_deref());
                 if (((*point).x) < (x_min as i32)) {
                     x_min = ((*point).x as i16);
                 }
@@ -3057,19 +3039,19 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     };
     let mut out: *mut Vec<u8> = (&mut (*transformed_hmtx).buffer as *mut Vec<u8>);
     (unsafe { WriteBytes_86(out, (&mut flags as *mut u8).cast_const(), 1_usize) });
-    'loop_: for advance_width in 0..(advance_widths.len()) {
-        let mut advance_width = advance_widths[advance_width].clone();
+    'loop_: for advance_width in IterRange::new(advance_widths.begin(), advance_widths.end()) {
+        let mut advance_width: u16 = (*advance_width.iter_deref());
         (unsafe { WriteUShort_88(out, (advance_width as i32)) });
     }
     if !(remove_proportional_lsb) {
-        'loop_: for lsb in 0..(proportional_lsbs.len()) {
-            let mut lsb = proportional_lsbs[lsb].clone();
+        'loop_: for lsb in IterRange::new(proportional_lsbs.begin(), proportional_lsbs.end()) {
+            let mut lsb: i16 = (*lsb.iter_deref());
             (unsafe { WriteUShort_88(out, (lsb as i32)) });
         }
     }
     if !(remove_monospace_lsb) {
-        'loop_: for lsb in 0..(monospace_lsbs.len()) {
-            let mut lsb = monospace_lsbs[lsb].clone();
+        'loop_: for lsb in IterRange::new(monospace_lsbs.begin(), monospace_lsbs.end()) {
+            let mut lsb: i16 = (*lsb.iter_deref());
             (unsafe { WriteUShort_88(out, (lsb as i32)) });
         }
     }
@@ -3234,8 +3216,8 @@ pub unsafe fn ComputeWoff2Length_100(
     mut extended_metadata_length: usize,
 ) -> usize {
     let mut size: usize = (*std::cell::LazyCell::force_mut(&mut *&raw mut kWoff2HeaderSize_92));
-    'loop_: for table in 0..((*tables).len()) {
-        let mut table = (*tables).as_ptr().add(table);
+    'loop_: for table in IterRange::new((*tables).begin(), (*tables).end()) {
+        let table: *const woff2_Table = &(*table.iter_deref());
         size = (size).wrapping_add((unsafe { TableEntrySize_99(table) }));
     }
     if (((*font_collection).flavor)
@@ -3247,13 +3229,14 @@ pub unsafe fn ComputeWoff2Length_100(
         size = ((size as u64)
             .wrapping_add(((4_usize).wrapping_mul((*font_collection).fonts.len()) as u64)))
             as usize;
-        'loop_: for font in 0..((*font_collection).fonts.len()) {
-            let mut font = (*font_collection).fonts.as_ptr().add(font);
+        'loop_: for font in IterRange::new(
+            (*font_collection).fonts.begin(),
+            (*font_collection).fonts.end(),
+        ) {
+            let font: *const woff2_Font = &(*font.iter_deref());
             size = (size).wrapping_add((unsafe { Size255UShort_9(((*font).tables.len() as u16)) }));
-            'loop_: for __begin4 in
-                UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-            {
-                let entry: *const (u32, woff2_Font_Table) = &(*__begin4.iter_deref());
+            'loop_: for entry in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+                let entry: *const (u32, woff2_Font_Table) = &(*entry.iter_deref());
                 let table: *const woff2_Font_Table = &(*entry).1;
                 if ((((*table).tag) & (2155905152_u32)) != 0) {
                     continue 'loop_;
@@ -3273,10 +3256,8 @@ pub unsafe fn ComputeWoff2Length_100(
 }
 pub unsafe fn ComputeUncompressedLength_101(font: *const woff2_Font) -> usize {
     let mut size: usize = (((12) + ((16) * ((*font).num_tables as i32))) as usize);
-    'loop_: for __begin2 in
-        UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-    {
-        let entry: *const (u32, woff2_Font_Table) = &(*__begin2.iter_deref());
+    'loop_: for entry in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+        let entry: *const (u32, woff2_Font_Table) = &(*entry.iter_deref());
         let table: *const woff2_Font_Table = &(*entry).1;
         if ((((*table).tag) & (2155905152_u32)) != 0) {
             continue 'loop_;
@@ -3299,18 +3280,19 @@ pub unsafe fn ComputeUncompressedLength_102(font_collection: *const woff2_FontCo
         let _num_fonts: u32 = ((*font_collection).fonts.len() as u32);
         CollectionHeaderSize_27(_header_version, _num_fonts)
     });
-    'loop_: for font in 0..((*font_collection).fonts.len()) {
-        let mut font = (*font_collection).fonts.as_ptr().add(font);
+    'loop_: for font in IterRange::new(
+        (*font_collection).fonts.begin(),
+        (*font_collection).fonts.end(),
+    ) {
+        let font: *const woff2_Font = &(*font.iter_deref());
         size = (size).wrapping_add((unsafe { ComputeUncompressedLength_101(font) }));
     }
     return size;
 }
 pub unsafe fn ComputeTotalTransformLength_103(font: *const woff2_Font) -> usize {
     let mut total: usize = 0_usize;
-    'loop_: for __begin2 in
-        UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-    {
-        let i: *const (u32, woff2_Font_Table) = &(*__begin2.iter_deref());
+    'loop_: for i in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+        let i: *const (u32, woff2_Font_Table) = &(*i.iter_deref());
         let table: *const woff2_Font_Table = &(*i).1;
         if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
             continue 'loop_;
@@ -3349,8 +3331,11 @@ pub unsafe fn CompressedBufferSize_106(mut original_size: u32) -> u32 {
     return ((((1.2_f64) * (original_size as f64)) + (10240_f64)) as u32);
 }
 pub unsafe fn TransformFontCollection_107(mut font_collection: *mut woff2_FontCollection) -> bool {
-    'loop_: for font in 0..((*font_collection).fonts.len()) {
-        let mut font = (*font_collection).fonts.as_mut_ptr().add(font);
+    'loop_: for font in IterRange::new(
+        (*font_collection).fonts.begin(),
+        (*font_collection).fonts.end(),
+    ) {
+        let font: *mut woff2_Font = &mut (*font.iter_deref());
         if !(unsafe { TransformGlyfAndLocaTables_90((font)) }) {
             (unsafe {
                 libc::fprintf(
@@ -3410,8 +3395,10 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     {
         return false;
     } else {
-        'loop_: for font in 0..(font_collection.fonts.len()) {
-            let mut font = font_collection.fonts.as_mut_ptr().add(font);
+        'loop_: for font in
+            IterRange::new(font_collection.fonts.begin(), font_collection.fonts.end())
+        {
+            let font: *mut woff2_Font = &mut (*font.iter_deref());
             let mut glyf_table: *mut woff2_Font_Table = (unsafe {
                 let _tag: u32 = (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
                 woff2_Font::FindTable_2(&mut (*font), _tag)
@@ -3429,8 +3416,8 @@ pub unsafe fn ConvertTTFToWOFF2_109(
         }
     }
     let mut total_transform_length: usize = 0_usize;
-    'loop_: for font in 0..(font_collection.fonts.len()) {
-        let mut font = font_collection.fonts.as_ptr().add(font);
+    'loop_: for font in IterRange::new(font_collection.fonts.begin(), font_collection.fonts.end()) {
+        let font: *const woff2_Font = &(*font.iter_deref());
         total_transform_length = (total_transform_length)
             .wrapping_add((unsafe { ComputeTotalTransformLength_103(font) }));
     }
@@ -3444,10 +3431,12 @@ pub unsafe fn ConvertTTFToWOFF2_109(
         .map(|_| <u8>::default())
         .collect::<Vec<_>>();
     let mut transform_offset: usize = 0_usize;
-    'loop_: for font in 0..(font_collection.fonts.len()) {
-        let mut font = font_collection.fonts.as_ptr().add(font);
-        'loop_: for tag in 0..((unsafe { woff2_Font::OutputOrderedTags(&(*font)) }).len()) {
-            let tag = (unsafe { woff2_Font::OutputOrderedTags(&(&(*font))) })[tag].clone();
+    'loop_: for font in IterRange::new(font_collection.fonts.begin(), font_collection.fonts.end()) {
+        let font: *const woff2_Font = &(*font.iter_deref());
+        let mut __tmp_0: Vec<u32> = (unsafe { woff2_Font::OutputOrderedTags(&(*font)) });
+        let __range2: *mut Vec<u32> = &mut __tmp_0;
+        'loop_: for tag in IterRange::new((*__range2).begin(), (*__range2).end()) {
+            let tag: u32 = (*tag.iter_deref());
             let original: *const woff2_Font_Table =
                 &raw const (*(*font).tables.get(&tag).expect("out of range!")).1;
             if (unsafe { woff2_Font_Table::IsReused(&(*original)) }) {
@@ -3532,10 +3521,12 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     }
     let mut tables: Vec<woff2_Table> = Vec::new();
     let mut index_by_tag_offset: UnsafeMap<(u32, u32), ((u32, u32), u16)> = UnsafeMap::new();
-    'loop_: for font in 0..(font_collection.fonts.len()) {
-        let mut font = font_collection.fonts.as_ptr().add(font);
-        'loop_: for tag in 0..((unsafe { woff2_Font::OutputOrderedTags(&(*font)) }).len()) {
-            let tag = (unsafe { woff2_Font::OutputOrderedTags(&(&(*font))) })[tag].clone();
+    'loop_: for font in IterRange::new(font_collection.fonts.begin(), font_collection.fonts.end()) {
+        let font: *const woff2_Font = &(*font.iter_deref());
+        let mut __tmp_1: Vec<u32> = (unsafe { woff2_Font::OutputOrderedTags(&(*font)) });
+        let __range2: *mut Vec<u32> = &mut __tmp_1;
+        'loop_: for tag in IterRange::new((*__range2).begin(), (*__range2).end()) {
+            let tag: u32 = (*tag.iter_deref());
             let src_table: *const woff2_Font_Table =
                 &raw const (*(*font).tables.get(&tag).expect("out of range!")).1;
             if (unsafe { woff2_Font_Table::IsReused(&(*src_table)) }) {
@@ -3663,8 +3654,8 @@ pub unsafe fn ConvertTTFToWOFF2_109(
     }
     (unsafe { StoreU32_30(0_u32, (&mut offset as *mut usize), result) });
     (unsafe { StoreU32_30(0_u32, (&mut offset as *mut usize), result) });
-    'loop_: for table in 0..(tables.len()) {
-        let mut table = tables.as_ptr().add(table);
+    'loop_: for table in IterRange::new(tables.begin(), tables.end()) {
+        let table: *const woff2_Table = &(*table.iter_deref());
         (unsafe {
             let _table: *const woff2_Table = table;
             let _offset: *mut usize = (&mut offset as *mut usize);
@@ -3689,13 +3680,13 @@ pub unsafe fn ConvertTTFToWOFF2_109(
                 result,
             )
         });
-        'loop_: for font in 0..(font_collection.fonts.len()) {
-            let mut font = font_collection.fonts.as_ptr().add(font);
+        'loop_: for font in
+            IterRange::new(font_collection.fonts.begin(), font_collection.fonts.end())
+        {
+            let font: *const woff2_Font = &(*font.iter_deref());
             let mut num_tables: u16 = 0_u16;
-            'loop_: for __begin3 in
-                UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-            {
-                let entry: *const (u32, woff2_Font_Table) = &(*__begin3.iter_deref());
+            'loop_: for entry in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+                let entry: *const (u32, woff2_Font_Table) = &(*entry.iter_deref());
                 let table: *const woff2_Font_Table = &(*entry).1;
                 if ((((*table).tag) & (2155905152_u32)) != 0) {
                     continue 'loop_;
@@ -3706,10 +3697,8 @@ pub unsafe fn ConvertTTFToWOFF2_109(
                 Store255UShort_11((num_tables as i32), (&mut offset as *mut usize), result)
             });
             (unsafe { StoreU32_30((*font).flavor, (&mut offset as *mut usize), result) });
-            'loop_: for __begin3 in
-                UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-            {
-                let entry: *const (u32, woff2_Font_Table) = &(*__begin3.iter_deref());
+            'loop_: for entry in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+                let entry: *const (u32, woff2_Font_Table) = &(*entry.iter_deref());
                 let table: *const woff2_Font_Table = &(*entry).1;
                 if ((((*table).tag) & (2155905152_u32)) != 0) {
                     continue 'loop_;
@@ -3793,8 +3782,8 @@ pub unsafe fn GetFileContent_110(mut filename: Vec<libc::c_char>) -> Vec<libc::c
 }
 pub unsafe fn SetFileContents_111(
     mut filename: Vec<libc::c_char>,
-    mut start: *mut libc::c_char,
-    mut end: *mut libc::c_char,
+    mut start: UnsafeRandomAccessIterator<libc::c_char>,
+    mut end: UnsafeRandomAccessIterator<libc::c_char>,
 ) {
     let mut ofs: ::std::fs::File = ::std::fs::File::create(
         ::std::ffi::CStr::from_ptr(filename.as_ptr())
@@ -3803,10 +3792,13 @@ pub unsafe fn SetFileContents_111(
     )
     .unwrap();
     {
-        let __start = (start).clone() as *const u8;
-        let __end = (end).clone() as *const u8;
-        let __len = __end.offset_from(__start) as usize;
-        ofs.write_all(::std::slice::from_raw_parts(__start, __len));
+        let mut __bytes: Vec<u8> = Vec::new();
+        let mut __it = (start).clone();
+        while __it != (end).clone() {
+            __bytes.push(*__it.iter_deref() as u8);
+            __it.iter_inc();
+        }
+        ofs.write_all(&__bytes);
         ofs.try_clone().unwrap()
     };
 }
@@ -3913,8 +3905,10 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         output.push(0)
     };
     (unsafe {
-        let _start: *mut libc::c_char = output.as_mut_ptr();
-        let _end: *mut libc::c_char = output.as_mut_ptr().add(output.len() - 1);
+        let _start: UnsafeRandomAccessIterator<libc::c_char> =
+            UnsafeRandomAccessIterator::Vec(output.as_mut_ptr());
+        let _end: UnsafeRandomAccessIterator<libc::c_char> =
+            UnsafeRandomAccessIterator::Vec(output.as_mut_ptr().add(output.len() - 1));
         SetFileContents_111(outfilename.clone(), _start, _end)
     });
     return 0;

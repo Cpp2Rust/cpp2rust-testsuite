@@ -296,8 +296,11 @@ pub fn Write255UShort_10(mut out: Ptr<Vec<u8>>, mut value: i32) {
 pub fn Store255UShort_11(mut val: i32, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
     let packed: Value<Vec<u8>> = Rc::new(RefCell::new(Vec::new()));
     ({ Write255UShort_10((packed.as_pointer()), val) });
-    'loop_: for mut packed_byte in packed.as_pointer() as Ptr<u8> {
-        let mut packed_byte: u8 = packed_byte.read();
+    'loop_: for packed_byte in IterRange::new(
+        (packed.as_pointer() as Ptr<u8>).begin(),
+        (packed.as_pointer() as Ptr<u8>).end(),
+    ) {
+        let mut packed_byte: u8 = (packed_byte.iter_deref().read());
         let __rhs = packed_byte;
         elem!(dst, offset.with_mut(|__v| __v.postfix_inc())).write(__rhs);
     }
@@ -771,10 +774,13 @@ pub fn ReadTrueTypeFont_33(
     let mut last_offset: u32 = (((12_u64 as u64)
         .wrapping_add((16_u64 as u64).wrapping_mul((font.with(|__s| __s.num_tables) as u64))))
         as u32);
-    'loop_: for __begin1 in Map::range(intervals.as_pointer()) {
-        let __begin1: Value<BidirectionalIterator<(Value<u32>, Value<u32>)>> =
-            Rc::new(RefCell::new(__begin1));
-        let i: Ptr<(Value<u32>, Value<u32>)> = (*__begin1.borrow()).iter_deref();
+    'loop_: for i in IterRange::new(
+        (intervals.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u32>)>>)
+            .with(|__m: &Map<u32, (Value<u32>, Value<u32>)>| __m.begin()),
+        (intervals.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u32>)>>)
+            .with(|__m: &Map<u32, (Value<u32>, Value<u32>)>| __m.end()),
+    ) {
+        let i: Ptr<(Value<u32>, Value<u32>)> = i.iter_deref();
         if ({ (*(*i.upgrade().deref()).0.borrow()) } < { last_offset })
             || ({
                 (*(*i.upgrade().deref()).0.borrow())
@@ -805,11 +811,14 @@ pub fn ReadCollectionFont_34(
     }
     if !({ ReadTrueTypeFont_33((file).clone(), (data).clone(), len, (font).clone()) }) {
         return false;
-    }
-    'loop_: for __begin1 in Map::range(field_ptr!(font, tables)) {
-        let __begin1: Value<BidirectionalIterator<(Value<u32>, Value<woff2_Font_Table>)>> =
-            Rc::new(RefCell::new(__begin1));
-        let entry: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin1.borrow()).iter_deref();
+    };
+    'loop_: for entry in IterRange::new(
+        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
+            .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.begin()),
+        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
+            .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end()),
+    ) {
+        let entry: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = entry.iter_deref();
         let table: Ptr<woff2_Font_Table> = (*entry.upgrade().deref()).1.as_pointer();
         if ((all_tables).clone() as Ptr<Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>>).with(
             |__m: &Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| {
@@ -891,14 +900,16 @@ pub fn ReadTrueTypeCollection_35(
         field!(font_collection, fonts)
             .with_mut(|__v: &mut Vec<woff2_Font>| __v.resize_with(__a0, || <woff2_Font>::default()))
     };
-    let font_it: Value<RandomAccessIterator<woff2_Font>> =
-        Rc::new(RefCell::new(RandomAccessIterator::Vec(
-            (field_ref!(font_collection, fonts).as_pointer() as Ptr<woff2_Font>),
-        )));
+    let font_it: Value<RandomAccessIterator<woff2_Font>> = Rc::new(RefCell::new(
+        (field_ref!(font_collection, fonts).as_pointer() as Ptr<woff2_Font>).begin(),
+    ));
     let all_tables: Value<Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>> =
         Rc::new(RefCell::new(Map::new()));
-    'loop_: for offset in offsets.as_pointer() as Ptr<u32> {
-        let mut offset: u32 = offset.read();
+    'loop_: for offset in IterRange::new(
+        (offsets.as_pointer() as Ptr<u32>).begin(),
+        (offsets.as_pointer() as Ptr<u32>).end(),
+    ) {
+        let mut offset: u32 = (offset.iter_deref().read());
         if !({ woff2_BufferImpl::set_offset(&file, (offset as usize)) }) {
             return false;
         }
@@ -959,10 +970,13 @@ pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
             .wrapping_add((16_u64 as u64).wrapping_mul((font.with(|__s| __s.num_tables) as u64))))
             as usize),
     ));
-    'loop_: for __begin1 in Map::range(field_ptr!(font, tables)) {
-        let __begin1: Value<BidirectionalIterator<(Value<u32>, Value<woff2_Font_Table>)>> =
-            Rc::new(RefCell::new(__begin1));
-        let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin1.borrow()).iter_deref();
+    'loop_: for i in IterRange::new(
+        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
+            .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.begin()),
+        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
+            .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end()),
+    ) {
+        let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = i.iter_deref();
         let table: Ptr<woff2_Font_Table> = (*i.upgrade().deref()).1.as_pointer();
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((table.with(|__s| __s.length) & 3_u32))) & 3_u32) as usize);
@@ -986,7 +1000,11 @@ pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
 }
 pub fn FontCollectionFileSize_39(font_collection: Ptr<woff2_FontCollection>) -> usize {
     let max_offset: Value<usize> = Rc::new(RefCell::new(0_usize));
-    'loop_: for mut font in field_ref!(font_collection, fonts).as_pointer() as Ptr<woff2_Font> {
+    'loop_: for font in IterRange::new(
+        (field_ref!(font_collection, fonts).as_pointer() as Ptr<woff2_Font>).begin(),
+        (field_ref!(font_collection, fonts).as_pointer() as Ptr<woff2_Font>).end(),
+    ) {
+        let font: Ptr<woff2_Font> = font.iter_deref();
         let __rhs = ({
             let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
             let __tmp_1: Value<u64> =
@@ -1140,10 +1158,13 @@ pub fn WriteFont_41(
     ({ Store16_31((search_range as i32), (offset).clone(), (dst).clone()) });
     ({ Store16_31((max_pow2 as i32), (offset).clone(), (dst).clone()) });
     ({ Store16_31((range_shift as i32), (offset).clone(), (dst).clone()) });
-    'loop_: for __begin1 in Map::range(field_ptr!(font, tables)) {
-        let __begin1: Value<BidirectionalIterator<(Value<u32>, Value<woff2_Font_Table>)>> =
-            Rc::new(RefCell::new(__begin1));
-        let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin1.borrow()).iter_deref();
+    'loop_: for i in IterRange::new(
+        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
+            .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.begin()),
+        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
+            .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end()),
+    ) {
+        let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = i.iter_deref();
         if !({
             let _offset: Ptr<usize> = (offset).clone();
             let _dst_size: usize = dst_size;
@@ -1382,17 +1403,26 @@ pub fn GetFileContent_49(filename: Vec<i8>) -> Vec<i8> {
         CChar::from_byte_vec(__bytes)
     };
 }
-pub fn SetFileContents_50(filename: Vec<i8>, mut start: Ptr<i8>, mut end: Ptr<i8>) {
+pub fn SetFileContents_50(
+    filename: Vec<i8>,
+    start: RandomAccessIterator<i8>,
+    end: RandomAccessIterator<i8>,
+) {
     let filename: Value<Vec<i8>> = Rc::new(RefCell::new(filename));
+    let start: Value<RandomAccessIterator<i8>> = Rc::new(RefCell::new(start));
+    let end: Value<RandomAccessIterator<i8>> = Rc::new(RefCell::new(end));
     let ofs: Value<::std::fs::File> = Rc::new(RefCell::new(
         ::std::fs::File::create((filename.as_pointer() as Ptr<i8>).to_string())
             .expect("Failed to open file"),
     ));
     {
-        (start).clone().with_slice(
-            (end).clone().get_offset() - (start).clone().get_offset(),
-            |__s| CChar::with_u8_slice(__s, |__b| (*ofs.borrow_mut()).write_all(__b)),
-        );
+        let mut __bytes: Vec<u8> = Vec::new();
+        let mut __it = (*start.borrow()).clone();
+        while __it != (*end.borrow()).clone() {
+            __bytes.push(__it.iter_deref().read() as u8);
+            __it.iter_inc();
+        }
+        (*ofs.borrow_mut()).write_all(&__bytes);
         (*ofs.borrow_mut()).try_clone().unwrap()
     };
 }
@@ -1925,10 +1955,13 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
     }
     fn OutputOrderedTags(&self) -> Vec<u32> {
         let output_order: Value<Vec<u32>> = Rc::new(RefCell::new(Vec::new()));
-        'loop_: for __begin1 in Map::range(field_ptr!((*self), tables)) {
-            let __begin1: Value<BidirectionalIterator<(Value<u32>, Value<woff2_Font_Table>)>> =
-                Rc::new(RefCell::new(__begin1));
-            let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = (*__begin1.borrow()).iter_deref();
+        'loop_: for i in IterRange::new(
+            (field_ptr!((*self), tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
+                .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.begin()),
+            (field_ptr!((*self), tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
+                .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end()),
+        ) {
+            let i: Ptr<(Value<u32>, Value<woff2_Font_Table>)> = i.iter_deref();
             let table: Ptr<woff2_Font_Table> = (*i.upgrade().deref()).1.as_pointer();
             if ((table.with(|__s| __s.tag) & 2155905152_u32) != 0) {
                 continue 'loop_;
@@ -1939,9 +1972,8 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
             };
         }
         let glyf_loc: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new({
-            let mut __it = RandomAccessIterator::Vec((output_order.as_pointer() as Ptr<u32>));
-            while __it
-                != RandomAccessIterator::Vec((output_order.as_pointer() as Ptr<u32>).to_end())
+            let mut __it = (output_order.as_pointer() as Ptr<u32>).begin();
+            while __it != (output_order.as_pointer() as Ptr<u32>).end()
                 && __it
                     .iter_deref()
                     .with(|__v| *__v != kGlyfTableTag_0.with(|rc| *rc.borrow()))
@@ -1951,9 +1983,8 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
             __it
         }));
         let loca_loc: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new({
-            let mut __it = RandomAccessIterator::Vec((output_order.as_pointer() as Ptr<u32>));
-            while __it
-                != RandomAccessIterator::Vec((output_order.as_pointer() as Ptr<u32>).to_end())
+            let mut __it = (output_order.as_pointer() as Ptr<u32>).begin();
+            while __it != (output_order.as_pointer() as Ptr<u32>).end()
                 && __it
                     .iter_deref()
                     .with(|__v| *__v != kLocaTableTag_2.with(|rc| *rc.borrow()))
@@ -1962,28 +1993,22 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
             }
             __it
         }));
-        if ((*glyf_loc.borrow())
-            != RandomAccessIterator::Vec((output_order.as_pointer() as Ptr<u32>).to_end()))
-            && ((*loca_loc.borrow())
-                != RandomAccessIterator::Vec((output_order.as_pointer() as Ptr<u32>).to_end()))
+        if ((*glyf_loc.borrow()) != (output_order.as_pointer() as Ptr<u32>).end())
+            && ((*loca_loc.borrow()) != (output_order.as_pointer() as Ptr<u32>).end())
         {
             {
-                let idx = <RandomAccessIterator<u32>>::from((*loca_loc.borrow()).clone())
-                    .vec_ptr()
-                    .get_offset();
+                let __off = <RandomAccessIterator<u32>>::from((*loca_loc.borrow()).clone()).index();
                 (output_order.as_pointer() as Ptr<Vec<u32>>)
-                    .with_mut(|__v: &mut Vec<u32>| __v.remove(idx));
-                RandomAccessIterator::Vec((output_order.as_pointer() as Ptr<Vec<u32>>).decay())
+                    .with_mut(|__v: &mut Vec<u32>| __v.remove(__off));
+                RandomAccessIterator::Vec(
+                    (output_order.as_pointer() as Ptr<Vec<u32>>).decay() + __off,
+                )
             };
             {
                 let __off = <RandomAccessIterator<u32>>::from(
                     {
-                        let mut __it =
-                            RandomAccessIterator::Vec((output_order.as_pointer() as Ptr<u32>));
-                        while __it
-                            != RandomAccessIterator::Vec(
-                                (output_order.as_pointer() as Ptr<u32>).to_end(),
-                            )
+                        let mut __it = (output_order.as_pointer() as Ptr<u32>).begin();
+                        while __it != (output_order.as_pointer() as Ptr<u32>).end()
                             && __it
                                 .iter_deref()
                                 .with(|__v| *__v != kGlyfTableTag_0.with(|rc| *rc.borrow()))
@@ -1994,17 +2019,12 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                     }
                     .iter_add(1_isize),
                 )
-                .vec_ptr()
-                .get_offset();
+                .index();
                 (*output_order.borrow_mut()).insert(__off, kLocaTableTag_2.with(|rc| *rc.borrow()));
                 <RandomAccessIterator<u32>>::from(
                     {
-                        let mut __it =
-                            RandomAccessIterator::Vec((output_order.as_pointer() as Ptr<u32>));
-                        while __it
-                            != RandomAccessIterator::Vec(
-                                (output_order.as_pointer() as Ptr<u32>).to_end(),
-                            )
+                        let mut __it = (output_order.as_pointer() as Ptr<u32>).begin();
+                        while __it != (output_order.as_pointer() as Ptr<u32>).end()
                             && __it
                                 .iter_deref()
                                 .with(|__v| *__v != kGlyfTableTag_0.with(|rc| *rc.borrow()))

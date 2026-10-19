@@ -10,7 +10,9 @@ pub fn initialize_0(array: Ptr<Option<Value<Box<[i32]>>>>, mut N: i32) {
     let mut i: i32 = 0;
     'loop_: while (i < N) {
         let __rhs = i;
-        (*array.upgrade().deref()).as_ref().unwrap().borrow_mut()[(i as usize) as usize] = __rhs;
+        ((*array.upgrade().deref()).as_pointer() as Ptr<i32>)
+            .offset((i as usize) as isize)
+            .write(__rhs);
         i.prefix_inc();
     }
 }
@@ -18,8 +20,9 @@ pub fn sum_1(mut array: Ptr<Option<Value<Box<[i32]>>>>, mut N: i32) -> i64 {
     let mut sum: i64 = 0_i64;
     let mut i: i32 = 0;
     'loop_: while (i < N) {
-        sum +=
-            ((*array.upgrade().deref()).as_ref().unwrap().borrow()[(i as usize) as usize] as i64);
+        sum += ((((*array.upgrade().deref()).as_pointer() as Ptr<i32>)
+            .offset((i as usize) as isize)
+            .read()) as i64);
         i.prefix_inc();
     }
     return sum;

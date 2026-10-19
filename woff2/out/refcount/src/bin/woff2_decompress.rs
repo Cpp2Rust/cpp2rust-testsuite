@@ -296,8 +296,11 @@ pub fn Write255UShort_10(mut out: Ptr<Vec<u8>>, mut value: i32) {
 pub fn Store255UShort_11(mut val: i32, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
     let packed: Value<Vec<u8>> = Rc::new(RefCell::new(Vec::new()));
     ({ Write255UShort_10((packed.as_pointer()), val) });
-    'loop_: for mut packed_byte in packed.as_pointer() as Ptr<u8> {
-        let mut packed_byte: u8 = packed_byte.read();
+    'loop_: for packed_byte in IterRange::new(
+        (packed.as_pointer() as Ptr<u8>).begin(),
+        (packed.as_pointer() as Ptr<u8>).end(),
+    ) {
+        let mut packed_byte: u8 = (packed_byte.iter_deref().read());
         let __rhs = packed_byte;
         elem!(dst, offset.with_mut(|__v| __v.postfix_inc())).write(__rhs);
     }
@@ -1816,9 +1819,11 @@ pub fn ReconstructGlyf_63(
     return true;
 }
 pub fn FindTable_65(mut tables: Ptr<Vec<Ptr<woff2_Table>>>, mut tag: u32) -> Ptr<woff2_Table> {
-    'loop_: for mut table in Ptr::<Vec<Ptr<woff2_Table>>>::decay(&(tables)) as Ptr<Ptr<woff2_Table>>
-    {
-        let mut table: Ptr<woff2_Table> = table.read();
+    'loop_: for table in IterRange::new(
+        (Ptr::<Vec<Ptr<woff2_Table>>>::decay(&(tables)) as Ptr<Ptr<woff2_Table>>).begin(),
+        (Ptr::<Vec<Ptr<woff2_Table>>>::decay(&(tables)) as Ptr<Ptr<woff2_Table>>).end(),
+    ) {
+        let mut table: Ptr<woff2_Table> = (table.iter_deref().read());
         if ({ table.with(|__s| __s.tag) } == { tag }) {
             return table;
         }
@@ -2137,7 +2142,11 @@ pub fn ComputeOffsetToFirstTable_72(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
                 (kSfntHeaderSize_23.with(|rc| *rc.borrow()) as u64)
                     .wrapping_mul(((*hdr.upgrade().deref()).ttc_fonts.len() as u64)),
             );
-        'loop_: for mut ttc_font in field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont> {
+        'loop_: for ttc_font in IterRange::new(
+            (field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont>).begin(),
+            (field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont>).end(),
+        ) {
+            let ttc_font: Ptr<woff2_TtcFont> = ttc_font.iter_deref();
             {
                 let rhs_0 = (offset).wrapping_add(
                     (kSfntEntrySize_24.with(|rc| *rc.borrow()) as u64)
@@ -2152,13 +2161,16 @@ pub fn ComputeOffsetToFirstTable_72(hdr: Ptr<woff2_WOFF2Header>) -> u64 {
 pub fn Tables_73(mut hdr: Ptr<woff2_WOFF2Header>, mut font_index: usize) -> Vec<Ptr<woff2_Table>> {
     let mut tables: Vec<Ptr<woff2_Table>> = Vec::new();
     if ((hdr.with(|__s| __s.header_version) as i64) != 0) {
-        'loop_: for mut index in field_ref!(
+        let __range3: Ptr<Vec<u16>> = field_ref!(
             (field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont>).offset(font_index),
             table_indices
         )
-        .as_pointer() as Ptr<u16>
-        {
-            let mut index: u16 = index.read();
+        .as_pointer();
+        'loop_: for index in IterRange::new(
+            (Ptr::<Vec<u16>>::decay(&(__range3)) as Ptr<u16>).begin(),
+            (Ptr::<Vec<u16>>::decay(&(__range3)) as Ptr<u16>).end(),
+        ) {
+            let mut index: u16 = (index.iter_deref().read());
             {
                 let __a1 = ((field_ref!(hdr, tables).as_pointer() as Ptr<woff2_Table>)
                     .offset((index as usize)));
@@ -2166,7 +2178,11 @@ pub fn Tables_73(mut hdr: Ptr<woff2_WOFF2Header>, mut font_index: usize) -> Vec<
             };
         }
     } else {
-        'loop_: for mut table in field_ref!(hdr, tables).as_pointer() as Ptr<woff2_Table> {
+        'loop_: for table in IterRange::new(
+            (field_ref!(hdr, tables).as_pointer() as Ptr<woff2_Table>).begin(),
+            (field_ref!(hdr, tables).as_pointer() as Ptr<woff2_Table>).end(),
+        ) {
+            let table: Ptr<woff2_Table> = table.iter_deref();
             {
                 let __a1 = (table);
                 tables.push(__a1)
@@ -2784,13 +2800,18 @@ pub fn WriteHeaders_76(
     let sorted_tables: Value<Vec<woff2_Table>> =
         Rc::new(RefCell::new((*hdr.upgrade().deref()).tables.clone()));
     if (hdr.with(|__s| __s.header_version) != 0) {
-        'loop_: for mut ttc_font in field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont> {
+        'loop_: for ttc_font in IterRange::new(
+            (field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont>).begin(),
+            (field_ref!(hdr, ttc_fonts).as_pointer() as Ptr<woff2_TtcFont>).end(),
+        ) {
+            let ttc_font: Ptr<woff2_TtcFont> = ttc_font.iter_deref();
             let sorted_index_by_tag: Value<Map<u32, (Value<u32>, Value<u16>)>> =
                 Rc::new(RefCell::new(Map::new()));
-            'loop_: for mut table_index in
-                field_ref!(ttc_font, table_indices).as_pointer() as Ptr<u16>
-            {
-                let mut table_index: u16 = table_index.read();
+            'loop_: for table_index in IterRange::new(
+                (field_ref!(ttc_font, table_indices).as_pointer() as Ptr<u16>).begin(),
+                (field_ref!(ttc_font, table_indices).as_pointer() as Ptr<u16>).end(),
+            ) {
+                let mut table_index: u16 = (table_index.iter_deref().read());
                 let __rhs = table_index;
                 (sorted_index_by_tag.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u16>)>>)
                     .with_mut(|__m: &mut Map<u32, (Value<u32>, Value<u16>)>| {
@@ -2815,28 +2836,30 @@ pub fn WriteHeaders_76(
                     .write(__rhs);
             }
             let mut index: u16 = 0_u16;
-            'loop_: for __begin4 in Map::range(sorted_index_by_tag.as_pointer()) {
-                let __begin4: Value<BidirectionalIterator<(Value<u32>, Value<u16>)>> =
-                    Rc::new(RefCell::new(__begin4));
-                let i: Ptr<(Value<u32>, Value<u16>)> = (*__begin4.borrow()).iter_deref();
+            'loop_: for i in IterRange::new(
+                (sorted_index_by_tag.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u16>)>>)
+                    .with(|__m: &Map<u32, (Value<u32>, Value<u16>)>| __m.begin()),
+                (sorted_index_by_tag.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u16>)>>)
+                    .with(|__m: &Map<u32, (Value<u32>, Value<u16>)>| __m.end()),
+            ) {
+                let i: Ptr<(Value<u32>, Value<u16>)> = i.iter_deref();
                 vec_elem!(ttc_font, table_indices, (index.postfix_inc() as usize))
                     .write((*(*i.upgrade().deref()).1.borrow()));
             }
         }
     } else {
         {
-            let __n = RandomAccessIterator::Vec(
-                (sorted_tables.as_pointer() as Ptr<woff2_Table>).to_end(),
-            )
-            .iter_distance(&RandomAccessIterator::Vec(
-                (sorted_tables.as_pointer() as Ptr<woff2_Table>),
-            ));
+            let __n = (sorted_tables.as_pointer() as Ptr<woff2_Table>)
+                .end()
+                .iter_distance(&(sorted_tables.as_pointer() as Ptr<woff2_Table>).begin());
             let mut __order: Vec<isize> = (0..__n).collect();
             __order.sort_by(|&__x, &__y| {
-                RandomAccessIterator::Vec((sorted_tables.as_pointer() as Ptr<woff2_Table>))
+                (sorted_tables.as_pointer() as Ptr<woff2_Table>)
+                    .begin()
                     .iter_at(__x)
                     .with(|__a| {
-                        RandomAccessIterator::Vec((sorted_tables.as_pointer() as Ptr<woff2_Table>))
+                        (sorted_tables.as_pointer() as Ptr<woff2_Table>)
+                            .begin()
                             .iter_at(__y)
                             .with(|__b| __a.cmp(__b))
                     })
@@ -2844,13 +2867,15 @@ pub fn WriteHeaders_76(
             let __values: Vec<_> = __order
                 .iter()
                 .map(|&__i| {
-                    RandomAccessIterator::Vec((sorted_tables.as_pointer() as Ptr<woff2_Table>))
+                    (sorted_tables.as_pointer() as Ptr<woff2_Table>)
+                        .begin()
                         .iter_at(__i)
                         .read()
                 })
                 .collect();
             for (__i, __v) in (0..__n).zip(__values) {
-                RandomAccessIterator::Vec((sorted_tables.as_pointer() as Ptr<woff2_Table>))
+                (sorted_tables.as_pointer() as Ptr<woff2_Table>)
+                    .begin()
                     .iter_at(__i)
                     .write(__v);
             }
@@ -2905,9 +2930,11 @@ pub fn WriteHeaders_76(
                 StoreOffsetTable_70((result).clone(), offset, _flavor, _num_tables)
             });
             offset = __rhs;
-            'loop_: for table_index in field_ref!(ttc_font, table_indices).as_pointer() as Ptr<u16>
-            {
-                let mut table_index: u16 = table_index.read();
+            'loop_: for table_index in IterRange::new(
+                (field_ref!(ttc_font, table_indices).as_pointer() as Ptr<u16>).begin(),
+                (field_ref!(ttc_font, table_indices).as_pointer() as Ptr<u16>).end(),
+            ) {
+                let mut table_index: u16 = (table_index.iter_deref().read());
                 let mut tag: u32 =
                     vec_elem!(hdr, tables, (table_index as usize)).with(|__s| __s.tag);
                 (field_ptr!(
@@ -3148,17 +3175,26 @@ pub fn GetFileContent_80(filename: Vec<i8>) -> Vec<i8> {
         CChar::from_byte_vec(__bytes)
     };
 }
-pub fn SetFileContents_81(filename: Vec<i8>, mut start: Ptr<i8>, mut end: Ptr<i8>) {
+pub fn SetFileContents_81(
+    filename: Vec<i8>,
+    start: RandomAccessIterator<i8>,
+    end: RandomAccessIterator<i8>,
+) {
     let filename: Value<Vec<i8>> = Rc::new(RefCell::new(filename));
+    let start: Value<RandomAccessIterator<i8>> = Rc::new(RefCell::new(start));
+    let end: Value<RandomAccessIterator<i8>> = Rc::new(RefCell::new(end));
     let ofs: Value<::std::fs::File> = Rc::new(RefCell::new(
         ::std::fs::File::create((filename.as_pointer() as Ptr<i8>).to_string())
             .expect("Failed to open file"),
     ));
     {
-        (start).clone().with_slice(
-            (end).clone().get_offset() - (start).clone().get_offset(),
-            |__s| CChar::with_u8_slice(__s, |__b| (*ofs.borrow_mut()).write_all(__b)),
-        );
+        let mut __bytes: Vec<u8> = Vec::new();
+        let mut __it = (*start.borrow()).clone();
+        while __it != (*end.borrow()).clone() {
+            __bytes.push(__it.iter_deref().read() as u8);
+            __it.iter_inc();
+        }
+        (*ofs.borrow_mut()).write_all(&__bytes);
         (*ofs.borrow_mut()).try_clone().unwrap()
     };
 }
@@ -3253,9 +3289,11 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
     });
     if ok {
         ({
-            let _start: Ptr<i8> = (output.as_pointer() as Ptr<i8>);
-            let _end: Ptr<i8> = (output.as_pointer() as Ptr<i8>)
-                .offset((({ (*out.borrow_mut()).Size() }) as isize) as isize);
+            let _start: RandomAccessIterator<i8> =
+                RandomAccessIterator::Vec((output.as_pointer() as Ptr<i8>));
+            let _end: RandomAccessIterator<i8> =
+                RandomAccessIterator::Vec((output.as_pointer() as Ptr<i8>))
+                    .iter_add((({ (*out.borrow_mut()).Size() }) as isize));
             SetFileContents_81((outfilename).clone(), _start, _end)
         });
     }

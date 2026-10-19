@@ -434,8 +434,8 @@ pub unsafe fn Write255UShort_10(mut out: *mut Vec<u8>, mut value: i32) {
 pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *mut u8) {
     let mut packed: Vec<u8> = Vec::new();
     (unsafe { Write255UShort_10((&mut packed as *mut Vec<u8>), val) });
-    'loop_: for packed_byte in 0..(packed.len()) {
-        let mut packed_byte = packed[packed_byte].clone();
+    'loop_: for packed_byte in IterRange::new(packed.begin(), packed.end()) {
+        let mut packed_byte: u8 = (*packed_byte.iter_deref());
         (*dst.offset(((*offset).postfix_inc()) as isize)) = packed_byte;
     }
 }
@@ -726,10 +726,8 @@ impl woff2_Font {
 impl woff2_Font {
     pub unsafe fn OutputOrderedTags(&self) -> Vec<u32> {
         let mut output_order: Vec<u32> = Vec::new();
-        'loop_: for __begin1 in
-            UnsafeMap::range(&self.tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-        {
-            let i: *const (u32, woff2_Font_Table) = &(*__begin1.iter_deref());
+        'loop_: for i in IterRange::new(self.tables.begin(), self.tables.end()) {
+            let i: *const (u32, woff2_Font_Table) = &(*i.iter_deref());
             let table: *const woff2_Font_Table = &(*i).1;
             if ((((*table).tag) & (2155905152_u32)) != 0) {
                 continue 'loop_;
@@ -740,11 +738,8 @@ impl woff2_Font {
             };
         }
         let mut glyf_loc: UnsafeRandomAccessIterator<u32> = {
-            let mut __it = UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr());
-            while __it
-                != UnsafeRandomAccessIterator::Vec(
-                    output_order.as_mut_ptr().add(output_order.len()),
-                )
+            let mut __it = output_order.begin();
+            while __it != output_order.end()
                 && *__it.iter_deref()
                     != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
             {
@@ -753,11 +748,8 @@ impl woff2_Font {
             __it
         };
         let mut loca_loc: UnsafeRandomAccessIterator<u32> = {
-            let mut __it = UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr());
-            while __it
-                != UnsafeRandomAccessIterator::Vec(
-                    output_order.as_mut_ptr().add(output_order.len()),
-                )
+            let mut __it = output_order.begin();
+            while __it != output_order.end()
                 && *__it.iter_deref()
                     != (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2))
             {
@@ -765,28 +757,19 @@ impl woff2_Font {
             }
             __it
         };
-        if (glyf_loc
-            != UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr().add(output_order.len())))
-            && (loca_loc
-                != UnsafeRandomAccessIterator::Vec(
-                    output_order.as_mut_ptr().add(output_order.len()),
-                ))
-        {
+        if (glyf_loc != output_order.end()) && (loca_loc != output_order.end()) {
             {
                 let pos = <UnsafeRandomAccessIterator<u32>>::from((loca_loc).clone())
-                    .vec_ptr()
-                    .offset_from(output_order.as_ptr()) as usize;
+                    .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
+                    as usize;
                 output_order.remove(pos);
                 <UnsafeRandomAccessIterator<u32>>::from((loca_loc).clone())
             };
             {
                 let pos = <UnsafeRandomAccessIterator<u32>>::from(
                     {
-                        let mut __it = UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr());
-                        while __it
-                            != UnsafeRandomAccessIterator::Vec(
-                                output_order.as_mut_ptr().add(output_order.len()),
-                            )
+                        let mut __it = output_order.begin();
+                        while __it != output_order.end()
                             && *__it.iter_deref()
                                 != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
                         {
@@ -796,19 +779,16 @@ impl woff2_Font {
                     }
                     .iter_add(1_isize),
                 )
-                .vec_ptr()
-                .offset_from(output_order.as_ptr()) as usize;
+                .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
+                    as usize;
                 output_order.insert(
                     pos,
                     (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)),
                 );
                 <UnsafeRandomAccessIterator<u32>>::from(
                     {
-                        let mut __it = UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr());
-                        while __it
-                            != UnsafeRandomAccessIterator::Vec(
-                                output_order.as_mut_ptr().add(output_order.len()),
-                            )
+                        let mut __it = output_order.begin();
+                        while __it != output_order.end()
                             && *__it.iter_deref()
                                 != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
                         {
@@ -870,8 +850,8 @@ pub unsafe fn ReadTrueTypeFont_33(
     let mut last_offset: u32 = (((12_u64 as u64)
         .wrapping_add((16_u64 as u64).wrapping_mul(((*font).num_tables as u64))))
         as u32);
-    'loop_: for __begin1 in UnsafeMap::range(&intervals as *const UnsafeMap<u32, (u32, u32)>) {
-        let i: *const (u32, u32) = &(*__begin1.iter_deref());
+    'loop_: for i in IterRange::new(intervals.begin(), intervals.end()) {
+        let i: *const (u32, u32) = &(*i.iter_deref());
         if (((*i).0) < (last_offset)) || ((((*i).0).wrapping_add((*i).1)) < ((*i).0)) {
             return false;
         }
@@ -901,11 +881,9 @@ pub unsafe fn ReadCollectionFont_34(
     }
     if !(unsafe { ReadTrueTypeFont_33(file, data, len, font) }) {
         return false;
-    }
-    'loop_: for __begin1 in
-        UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-    {
-        let entry: *mut (u32, woff2_Font_Table) = &mut (*__begin1.iter_deref());
+    };
+    'loop_: for entry in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+        let entry: *mut (u32, woff2_Font_Table) = &mut (*entry.iter_deref());
         let table: *mut woff2_Font_Table = &mut (*entry).1;
         if (*all_tables).find(&(*table).offset) == (*all_tables).end() {
             (*&mut (*(*all_tables).get_or_insert_with((*table).offset.clone(), || {
@@ -960,11 +938,10 @@ pub unsafe fn ReadTrueTypeCollection_35(
             .fonts
             .resize_with(__a0, || <woff2_Font>::default())
     };
-    let mut font_it: UnsafeRandomAccessIterator<woff2_Font> =
-        UnsafeRandomAccessIterator::Vec((*font_collection).fonts.as_mut_ptr());
+    let mut font_it: UnsafeRandomAccessIterator<woff2_Font> = (*font_collection).fonts.begin();
     let mut all_tables: UnsafeMap<u32, (u32, *mut woff2_Font_Table)> = UnsafeMap::new();
-    'loop_: for offset in 0..(offsets.len()) {
-        let offset = offsets[offset].clone();
+    'loop_: for offset in IterRange::new(offsets.begin(), offsets.end()) {
+        let offset: u32 = (*offset.iter_deref());
         if !(unsafe { woff2_Buffer::set_offset(&mut (*file), (offset as usize)) }) {
             return false;
         }
@@ -1026,10 +1003,8 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
     let mut max_offset: usize = (((12_u64 as u64)
         .wrapping_add((16_u64 as u64).wrapping_mul(((*font).num_tables as u64))))
         as usize);
-    'loop_: for __begin1 in
-        UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-    {
-        let i: *const (u32, woff2_Font_Table) = &(*__begin1.iter_deref());
+    'loop_: for i in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+        let i: *const (u32, woff2_Font_Table) = &(*i.iter_deref());
         let table: *const woff2_Font_Table = &(*i).1;
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((((*table).length) & (3_u32)))) & (3_u32)) as usize);
@@ -1049,8 +1024,11 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
 }
 pub unsafe fn FontCollectionFileSize_39(font_collection: *const woff2_FontCollection) -> usize {
     let mut max_offset: usize = 0_usize;
-    'loop_: for font in 0..((*font_collection).fonts.len()) {
-        let mut font = (*font_collection).fonts.as_ptr().add(font);
+    'loop_: for font in IterRange::new(
+        (*font_collection).fonts.begin(),
+        (*font_collection).fonts.end(),
+    ) {
+        let font: *const woff2_Font = &(*font.iter_deref());
         max_offset = ({
             let mut __tmp_0: u64 = (max_offset as u64);
             let mut __tmp_1: u64 = ((unsafe { FontFileSize_38(font) }) as u64);
@@ -1176,10 +1154,8 @@ pub unsafe fn WriteFont_41(
     (unsafe { Store16_31((search_range as i32), offset, dst) });
     (unsafe { Store16_31((max_pow2 as i32), offset, dst) });
     (unsafe { Store16_31((range_shift as i32), offset, dst) });
-    'loop_: for __begin1 in
-        UnsafeMap::range(&(*font).tables as *const UnsafeMap<u32, (u32, woff2_Font_Table)>)
-    {
-        let i: *const (u32, woff2_Font_Table) = &(*__begin1.iter_deref());
+    'loop_: for i in IterRange::new((*font).tables.begin(), (*font).tables.end()) {
+        let i: *const (u32, woff2_Font_Table) = &(*i.iter_deref());
         if !(unsafe {
             let _offset: *mut usize = offset;
             let _dst_size: usize = dst_size;
@@ -1380,8 +1356,8 @@ pub unsafe fn GetFileContent_49(mut filename: Vec<libc::c_char>) -> Vec<libc::c_
 }
 pub unsafe fn SetFileContents_50(
     mut filename: Vec<libc::c_char>,
-    mut start: *mut libc::c_char,
-    mut end: *mut libc::c_char,
+    mut start: UnsafeRandomAccessIterator<libc::c_char>,
+    mut end: UnsafeRandomAccessIterator<libc::c_char>,
 ) {
     let mut ofs: ::std::fs::File = ::std::fs::File::create(
         ::std::ffi::CStr::from_ptr(filename.as_ptr())
@@ -1390,10 +1366,13 @@ pub unsafe fn SetFileContents_50(
     )
     .unwrap();
     {
-        let __start = (start).clone() as *const u8;
-        let __end = (end).clone() as *const u8;
-        let __len = __end.offset_from(__start) as usize;
-        ofs.write_all(::std::slice::from_raw_parts(__start, __len));
+        let mut __bytes: Vec<u8> = Vec::new();
+        let mut __it = (start).clone();
+        while __it != (end).clone() {
+            __bytes.push(*__it.iter_deref() as u8);
+            __it.iter_inc();
+        }
+        ofs.write_all(&__bytes);
         ofs.try_clone().unwrap()
     };
 }

@@ -434,8 +434,8 @@ pub unsafe fn Write255UShort_10(mut out: *mut Vec<u8>, mut value: i32) {
 pub unsafe fn Store255UShort_11(mut val: i32, mut offset: *mut usize, mut dst: *mut u8) {
     let mut packed: Vec<u8> = Vec::new();
     (unsafe { Write255UShort_10((&mut packed as *mut Vec<u8>), val) });
-    'loop_: for packed_byte in 0..(packed.len()) {
-        let mut packed_byte = packed[packed_byte].clone();
+    'loop_: for packed_byte in IterRange::new(packed.begin(), packed.end()) {
+        let mut packed_byte: u8 = (*packed_byte.iter_deref());
         (*dst.offset(((*offset).postfix_inc()) as isize)) = packed_byte;
     }
 }
@@ -1773,8 +1773,8 @@ pub unsafe fn FindTable_65(
     mut tables: *mut Vec<*mut woff2_Table>,
     mut tag: u32,
 ) -> *mut woff2_Table {
-    'loop_: for table in 0..((*tables).len()) {
-        let mut table = (&(*tables))[table].clone();
+    'loop_: for table in IterRange::new((*tables).begin(), (*tables).end()) {
+        let mut table: *mut woff2_Table = (*table.iter_deref());
         if (((*table).tag) == (tag)) {
             return table;
         }
@@ -2075,8 +2075,8 @@ pub unsafe fn ComputeOffsetToFirstTable_72(hdr: *const woff2_WOFF2Header) -> u64
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut kSfntHeaderSize_23)) as u64)
                     .wrapping_mul(((*hdr).ttc_fonts.len() as u64)),
             );
-        'loop_: for ttc_font in 0..((*hdr).ttc_fonts.len()) {
-            let mut ttc_font = (*hdr).ttc_fonts.as_ptr().add(ttc_font);
+        'loop_: for ttc_font in IterRange::new((*hdr).ttc_fonts.begin(), (*hdr).ttc_fonts.end()) {
+            let ttc_font: *const woff2_TtcFont = &(*ttc_font.iter_deref());
             offset = (offset).wrapping_add(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut kSfntEntrySize_24)) as u64)
                     .wrapping_mul(((*ttc_font).table_indices.len() as u64)),
@@ -2091,16 +2091,17 @@ pub unsafe fn Tables_73(
 ) -> Vec<*mut woff2_Table> {
     let mut tables: Vec<*mut woff2_Table> = Vec::new();
     if (((*hdr).header_version as i64) != 0) {
-        'loop_: for index in 0..((&mut (*hdr)).ttc_fonts[(font_index)].table_indices.len()) {
-            let mut index = (&mut (*hdr)).ttc_fonts[(font_index)].table_indices[index].clone();
+        let __range3: *mut Vec<u16> = &mut (&mut (*hdr)).ttc_fonts[(font_index)].table_indices;
+        'loop_: for index in IterRange::new((*__range3).begin(), (*__range3).end()) {
+            let mut index: u16 = (*index.iter_deref());
             {
                 let __a1 = (&mut (&mut (*hdr)).tables[(index as usize)] as *mut woff2_Table);
                 tables.push(__a1)
             };
         }
     } else {
-        'loop_: for table in 0..((*hdr).tables.len()) {
-            let mut table = (*hdr).tables.as_mut_ptr().add(table);
+        'loop_: for table in IterRange::new((*hdr).tables.begin(), (*hdr).tables.end()) {
+            let table: *mut woff2_Table = &mut (*table.iter_deref());
             {
                 let __a1 = (table);
                 tables.push(__a1)
@@ -2630,11 +2631,14 @@ pub unsafe fn WriteHeaders_76(
         vec![0_u8; ((unsafe { ComputeOffsetToFirstTable_72(&(*hdr),) }) as usize) as usize];
     let mut sorted_tables: Vec<woff2_Table> = (*hdr).tables.clone();
     if ((*hdr).header_version != 0) {
-        'loop_: for ttc_font in 0..((*hdr).ttc_fonts.len()) {
-            let mut ttc_font = (*hdr).ttc_fonts.as_mut_ptr().add(ttc_font);
+        'loop_: for ttc_font in IterRange::new((*hdr).ttc_fonts.begin(), (*hdr).ttc_fonts.end()) {
+            let ttc_font: *mut woff2_TtcFont = &mut (*ttc_font.iter_deref());
             let mut sorted_index_by_tag: UnsafeMap<u32, (u32, u16)> = UnsafeMap::new();
-            'loop_: for table_index in 0..((*ttc_font).table_indices.len()) {
-                let mut table_index = (&(*ttc_font)).table_indices[table_index].clone();
+            'loop_: for table_index in IterRange::new(
+                (*ttc_font).table_indices.begin(),
+                (*ttc_font).table_indices.end(),
+            ) {
+                let mut table_index: u16 = (*table_index.iter_deref());
                 (*&mut (*sorted_index_by_tag.get_or_insert_with(
                     (&mut (*hdr)).tables[(table_index as usize)].tag.clone(),
                     || {
@@ -2647,37 +2651,25 @@ pub unsafe fn WriteHeaders_76(
                 .1) = table_index;
             }
             let mut index: u16 = 0_u16;
-            'loop_: for __begin4 in
-                UnsafeMap::range(&sorted_index_by_tag as *const UnsafeMap<u32, (u32, u16)>)
+            'loop_: for i in IterRange::new(sorted_index_by_tag.begin(), sorted_index_by_tag.end())
             {
-                let i: *mut (u32, u16) = &mut (*__begin4.iter_deref());
+                let i: *mut (u32, u16) = &mut (*i.iter_deref());
                 (&mut (*ttc_font)).table_indices[(index.postfix_inc() as usize)] = (*i).1;
             }
         }
     } else {
         {
-            let __n = UnsafeRandomAccessIterator::Vec(
-                sorted_tables.as_mut_ptr().add(sorted_tables.len()),
-            )
-            .iter_distance(&UnsafeRandomAccessIterator::Vec(sorted_tables.as_mut_ptr()));
+            let __n = sorted_tables.end().iter_distance(&sorted_tables.begin());
             let mut __order: Vec<isize> = (0..__n).collect();
             __order.sort_by(|&__x, &__y| {
-                (*UnsafeRandomAccessIterator::Vec(sorted_tables.as_mut_ptr()).iter_at(__x))
-                    .cmp(&*UnsafeRandomAccessIterator::Vec(sorted_tables.as_mut_ptr()).iter_at(__y))
+                (*sorted_tables.begin().iter_at(__x)).cmp(&*sorted_tables.begin().iter_at(__y))
             });
             let __values: Vec<_> = __order
                 .iter()
-                .map(|&__i| {
-                    std::ptr::read(
-                        UnsafeRandomAccessIterator::Vec(sorted_tables.as_mut_ptr()).iter_at(__i),
-                    )
-                })
+                .map(|&__i| std::ptr::read(sorted_tables.begin().iter_at(__i)))
                 .collect();
             for (__i, __v) in (0..__n).zip(__values) {
-                std::ptr::write(
-                    UnsafeRandomAccessIterator::Vec(sorted_tables.as_mut_ptr()).iter_at(__i),
-                    __v,
-                );
+                std::ptr::write(sorted_tables.begin().iter_at(__i), __v);
             }
         };
     }
@@ -2714,8 +2706,11 @@ pub unsafe fn WriteHeaders_76(
                 let _num_tables: u16 = ((*ttc_font).table_indices.len() as u16);
                 StoreOffsetTable_70(result, offset, _flavor, _num_tables)
             });
-            'loop_: for table_index in 0..((*ttc_font).table_indices.len()) {
-                let table_index = (&(*ttc_font)).table_indices[table_index].clone();
+            'loop_: for table_index in IterRange::new(
+                (*ttc_font).table_indices.begin(),
+                (*ttc_font).table_indices.end(),
+            ) {
+                let table_index: u16 = (*table_index.iter_deref());
                 let mut tag: u32 = (&mut (*hdr)).tables[(table_index as usize)].tag;
                 (*&mut (*(&mut (*metadata)).font_infos[(i)]
                     .table_entry_by_tag
@@ -2922,8 +2917,8 @@ pub unsafe fn GetFileContent_80(mut filename: Vec<libc::c_char>) -> Vec<libc::c_
 }
 pub unsafe fn SetFileContents_81(
     mut filename: Vec<libc::c_char>,
-    mut start: *mut libc::c_char,
-    mut end: *mut libc::c_char,
+    mut start: UnsafeRandomAccessIterator<libc::c_char>,
+    mut end: UnsafeRandomAccessIterator<libc::c_char>,
 ) {
     let mut ofs: ::std::fs::File = ::std::fs::File::create(
         ::std::ffi::CStr::from_ptr(filename.as_ptr())
@@ -2932,10 +2927,13 @@ pub unsafe fn SetFileContents_81(
     )
     .unwrap();
     {
-        let __start = (start).clone() as *const u8;
-        let __end = (end).clone() as *const u8;
-        let __len = __end.offset_from(__start) as usize;
-        ofs.write_all(::std::slice::from_raw_parts(__start, __len));
+        let mut __bytes: Vec<u8> = Vec::new();
+        let mut __it = (start).clone();
+        while __it != (end).clone() {
+            __bytes.push(*__it.iter_deref() as u8);
+            __it.iter_inc();
+        }
+        ofs.write_all(&__bytes);
         ofs.try_clone().unwrap()
     };
 }
@@ -3030,10 +3028,11 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
     });
     if ok {
         (unsafe {
-            let _start: *mut libc::c_char = output.as_mut_ptr();
-            let _end: *mut libc::c_char = output
-                .as_mut_ptr()
-                .add(((unsafe { out.Size() }) as isize) as usize);
+            let _start: UnsafeRandomAccessIterator<libc::c_char> =
+                UnsafeRandomAccessIterator::Vec(output.as_mut_ptr());
+            let _end: UnsafeRandomAccessIterator<libc::c_char> =
+                UnsafeRandomAccessIterator::Vec(output.as_mut_ptr())
+                    .iter_add(((unsafe { out.Size() }) as isize));
             SetFileContents_81(outfilename.clone(), _start, _end)
         });
     }

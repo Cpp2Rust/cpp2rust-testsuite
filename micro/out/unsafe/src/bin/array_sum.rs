@@ -24,12 +24,18 @@ unsafe fn main_0() -> i32 {
         );
         let mut i: i32 = 0;
         'loop_: while ((i) < (N)) {
-            array.as_mut().unwrap()[(i as usize)] = i;
+            (*array
+                .as_deref()
+                .map_or(::std::ptr::null_mut(), |s| s.as_ptr() as *mut i32)
+                .add((i as usize))) = i;
             i.prefix_inc();
         }
         let mut i: i32 = 0;
         'loop_: while ((i) < (N)) {
-            sum += (array.as_mut().unwrap()[(i as usize)] as i64);
+            sum += ((*array
+                .as_deref()
+                .map_or(::std::ptr::null_mut(), |s| s.as_ptr() as *mut i32)
+                .add((i as usize))) as i64);
             i.prefix_inc();
         }
         k.prefix_inc();

@@ -23,12 +23,16 @@ fn main_0() -> i32 {
         let mut i: i32 = 0;
         'loop_: while (i < N) {
             let __rhs = i;
-            array.as_ref().unwrap().borrow_mut()[(i as usize) as usize] = __rhs;
+            (array.as_pointer() as Ptr<i32>)
+                .offset((i as usize) as isize)
+                .write(__rhs);
             i.prefix_inc();
         }
         let mut i: i32 = 0;
         'loop_: while (i < N) {
-            sum += (array.as_ref().unwrap().borrow()[(i as usize) as usize] as i64);
+            sum += (((array.as_pointer() as Ptr<i32>)
+                .offset((i as usize) as isize)
+                .read()) as i64);
             i.prefix_inc();
         }
         k.prefix_inc();
