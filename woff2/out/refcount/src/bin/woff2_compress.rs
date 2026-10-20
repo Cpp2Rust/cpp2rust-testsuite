@@ -730,19 +730,11 @@ pub fn ReadTrueTypeFont_33(
             return false;
         }
         let __rhs = { (*table.borrow()).length };
-        (intervals.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u32>)>>)
-            .with_mut(|__m: &mut Map<u32, (Value<u32>, Value<u32>)>| {
-                __m.get_or_insert_with({ (*table.borrow()).offset }.clone(), || {
-                    (
-                        Rc::new(RefCell::new({ (*table.borrow()).offset })),
-                        Rc::new(RefCell::new(<u32>::default())),
-                    )
-                })
-                .borrow()
-                .1
-                .as_pointer()
-            })
-            .write(__rhs);
+        Map::subscript(
+            (intervals.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u32>)>>),
+            &{ (*table.borrow()).offset },
+        )
+        .write(__rhs);
         (*table.borrow_mut()).data = { data.offset(({ (*table.borrow()).offset }) as isize) };
         if (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>).with(
             |__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
@@ -754,21 +746,11 @@ pub fn ReadTrueTypeFont_33(
             return false;
         }
         let __rhs = (*table.borrow()).clone();
-        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
-            .with_mut(
-                |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                    __m.get_or_insert_with({ (*table.borrow()).tag }.clone(), || {
-                        (
-                            Rc::new(RefCell::new({ (*table.borrow()).tag })),
-                            Rc::new(RefCell::new(<woff2_Font_Table>::default())),
-                        )
-                    })
-                    .borrow()
-                    .1
-                    .as_pointer()
-                },
-            )
-            .write(__rhs);
+        Map::subscript(
+            (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>),
+            &{ (*table.borrow()).tag },
+        )
+        .write(__rhs);
         i.prefix_inc();
     }
     let mut last_offset: u32 = (((12_u64 as u64)
@@ -828,38 +810,17 @@ pub fn ReadCollectionFont_34(
             .with(|__m: &Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| __m.end())
         {
             let __rhs = ({ woff2_FontImpl::FindTable_2(&font, table.with(|__s| __s.tag)) });
-            ((all_tables).clone() as Ptr<Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>>)
-                .with_mut(
-                    |__m: &mut Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| {
-                        __m.get_or_insert_with(table.with(|__s| __s.offset).clone(), || {
-                            (
-                                Rc::new(RefCell::new(table.with(|__s| __s.offset))),
-                                Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::default())),
-                            )
-                        })
-                        .borrow()
-                        .1
-                        .as_pointer()
-                    },
-                )
-                .write(__rhs);
+            Map::subscript(
+                ((all_tables).clone() as Ptr<Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>>),
+                &table.with(|__s| __s.offset),
+            )
+            .write(__rhs);
         } else {
-            let __rhs = (((all_tables).clone()
-                as Ptr<Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>>)
-                .with_mut(
-                    |__m: &mut Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| {
-                        __m.get_or_insert_with(table.with(|__s| __s.offset).clone(), || {
-                            (
-                                Rc::new(RefCell::new(table.with(|__s| __s.offset))),
-                                Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::default())),
-                            )
-                        })
-                        .borrow()
-                        .1
-                        .as_pointer()
-                    },
-                )
-                .read());
+            let __rhs = (Map::subscript(
+                ((all_tables).clone() as Ptr<Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>>),
+                &table.with(|__s| __s.offset),
+            )
+            .read());
             field!(table, reuse_of).write(__rhs);
             if ({ table.with(|__s| __s.tag) } != {
                 table.with(|__s| __s.reuse_of.clone()).with(|__s| __s.tag)
@@ -1376,12 +1337,13 @@ pub fn RemoveDigitalSignature_48(mut font: Ptr<woff2_Font>) -> bool {
         != (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
             .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end())
     {
-        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
-            .with_mut(
-                |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                    __m.erase(&(*it.borrow()).clone())
-                },
-            );
+        {
+            let __it = (*it.borrow()).clone();
+            Map::erase(
+                (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>),
+                &__it,
+            )
+        };
         let __rhs = ((*font.upgrade().deref()).tables.len() as u16);
         field!(font, num_tables).write(__rhs);
     }
@@ -2326,21 +2288,10 @@ pub fn NormalizeOffsets_76(mut font: Ptr<woff2_Font>) -> bool {
         (Ptr::<Vec<u32>>::decay(&(__range1)) as Ptr<u32>).end(),
     ) {
         let mut tag: u32 = (tag.iter_deref().read());
-        let table: Ptr<woff2_Font_Table> = (field_ptr!(font, tables)
-            as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
-            .with_mut(
-                |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                    __m.get_or_insert_with(tag.clone(), || {
-                        (
-                            Rc::new(RefCell::new(tag)),
-                            Rc::new(RefCell::new(<woff2_Font_Table>::default())),
-                        )
-                    })
-                    .borrow()
-                    .1
-                    .as_pointer()
-                },
-            );
+        let table: Ptr<woff2_Font_Table> = Map::subscript(
+            (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>),
+            &tag,
+        );
         field!(table, offset).write(offset);
         {
             let rhs_0 = (offset).wrapping_add(({ Round4_71(table.with(|__s| __s.length)) }));
@@ -2519,21 +2470,10 @@ pub fn NormalizeFontCollection_82(mut font_collection: Ptr<woff2_FontCollection>
             (Ptr::<Vec<u32>>::decay(&(__range2)) as Ptr<u32>).end(),
         ) {
             let mut tag: u32 = (tag.iter_deref().read());
-            let table: Ptr<woff2_Font_Table> = (field_ptr!(font, tables)
-                as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
-                .with_mut(
-                    |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                        __m.get_or_insert_with(tag.clone(), || {
-                            (
-                                Rc::new(RefCell::new(tag)),
-                                Rc::new(RefCell::new(<woff2_Font_Table>::default())),
-                            )
-                        })
-                        .borrow()
-                        .1
-                        .as_pointer()
-                    },
-                );
+            let table: Ptr<woff2_Font_Table> = Map::subscript(
+                (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>),
+                &tag,
+            );
             if ({ woff2_Font_TableImpl::IsReused(&table) }) {
                 field!(table, offset).write({
                     table
@@ -2700,46 +2640,22 @@ pub fn TransformGlyfAndLocaTables_90(mut font: Ptr<woff2_Font>) -> bool {
     if ({ woff2_Font_TableImpl::IsReused(&loca_table) }) {
         return true;
     }
-    let mut transformed_glyf: Ptr<woff2_Font_Table> = ((field_ptr!(font, tables)
-        as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
-        .with_mut(
-            |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                __m.get_or_insert_with(
-                    (kGlyfTableTag_0.with(|rc| *rc.borrow()) ^ 2155905152_u32).clone(),
-                    || {
-                        (
-                            Rc::new(RefCell::new(
-                                (kGlyfTableTag_0.with(|rc| *rc.borrow()) ^ 2155905152_u32),
-                            )),
-                            Rc::new(RefCell::new(<woff2_Font_Table>::default())),
-                        )
-                    },
-                )
-                .borrow()
-                .1
-                .as_pointer()
-            },
-        ));
-    let mut transformed_loca: Ptr<woff2_Font_Table> = ((field_ptr!(font, tables)
-        as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
-        .with_mut(
-            |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                __m.get_or_insert_with(
-                    (kLocaTableTag_2.with(|rc| *rc.borrow()) ^ 2155905152_u32).clone(),
-                    || {
-                        (
-                            Rc::new(RefCell::new(
-                                (kLocaTableTag_2.with(|rc| *rc.borrow()) ^ 2155905152_u32),
-                            )),
-                            Rc::new(RefCell::new(<woff2_Font_Table>::default())),
-                        )
-                    },
-                )
-                .borrow()
-                .1
-                .as_pointer()
-            },
-        ));
+    let mut transformed_glyf: Ptr<woff2_Font_Table> = (Map::subscript_move(
+        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>),
+        Rc::new(RefCell::new(
+            (kGlyfTableTag_0.with(|rc| *rc.borrow()) ^ 2155905152_u32),
+        ))
+        .as_pointer(),
+        |__k| cpp_move!(__k),
+    ));
+    let mut transformed_loca: Ptr<woff2_Font_Table> = (Map::subscript_move(
+        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>),
+        Rc::new(RefCell::new(
+            (kLocaTableTag_2.with(|rc| *rc.borrow()) ^ 2155905152_u32),
+        ))
+        .as_pointer(),
+        |__k| cpp_move!(__k),
+    ));
     let mut num_glyphs: i32 = ({ NumGlyphs_45((font).clone()) });
     let encoder: Value<woff2_GlyfEncoder> =
         Rc::new(RefCell::new(woff2_GlyfEncoder::new({ num_glyphs })));
@@ -2892,26 +2808,14 @@ pub fn TransformHmtxTable_91(mut font: Ptr<woff2_Font>) -> bool {
         }
         i.postfix_inc();
     }
-    let mut transformed_hmtx: Ptr<woff2_Font_Table> = ((field_ptr!(font, tables)
-        as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
-        .with_mut(
-            |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                __m.get_or_insert_with(
-                    (kHmtxTableTag_5.with(|rc| *rc.borrow()) ^ 2155905152_u32).clone(),
-                    || {
-                        (
-                            Rc::new(RefCell::new(
-                                (kHmtxTableTag_5.with(|rc| *rc.borrow()) ^ 2155905152_u32),
-                            )),
-                            Rc::new(RefCell::new(<woff2_Font_Table>::default())),
-                        )
-                    },
-                )
-                .borrow()
-                .1
-                .as_pointer()
-            },
-        ));
+    let mut transformed_hmtx: Ptr<woff2_Font_Table> = (Map::subscript_move(
+        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>),
+        Rc::new(RefCell::new(
+            (kHmtxTableTag_5.with(|rc| *rc.borrow()) ^ 2155905152_u32),
+        ))
+        .as_pointer(),
+        |__k| cpp_move!(__k),
+    ));
     let flags: Value<u8> = Rc::new(RefCell::new(0_u8));
     let mut transformed_size: usize =
         (1_usize).wrapping_add((2_usize).wrapping_mul((*advance_widths.borrow()).len()));
@@ -3232,30 +3136,17 @@ pub fn ComputeWoff2Length_100(
                             .expect("failed conversion"),
                     )),
                 )));
-                let mut table_index: u16 = ((index_by_tag_offset.as_pointer()
-                    as Ptr<
-                        Map<
-                            (Value<u32>, Value<u32>),
-                            (Value<(Value<u32>, Value<u32>)>, Value<u16>),
-                        >,
-                    >)
-                    .with_mut(
-                        |__m: &mut Map<
-                            (Value<u32>, Value<u32>),
-                            (Value<(Value<u32>, Value<u32>)>, Value<u16>),
-                        >| {
-                            __m.get_or_insert_with((*tag_offset.borrow()).clone(), || {
-                                (
-                                    Rc::new(RefCell::new((*tag_offset.borrow()).clone())),
-                                    Rc::new(RefCell::new(<u16>::default())),
-                                )
-                            })
-                            .borrow()
-                            .1
-                            .as_pointer()
-                        },
-                    )
-                    .read());
+                let mut table_index: u16 = (Map::subscript(
+                    (index_by_tag_offset.as_pointer()
+                        as Ptr<
+                            Map<
+                                (Value<u32>, Value<u32>),
+                                (Value<(Value<u32>, Value<u32>)>, Value<u16>),
+                            >,
+                        >),
+                    &(*tag_offset.borrow()),
+                )
+                .read());
                 {
                     let rhs_0 = (size).wrapping_add(({ Size255UShort_9(table_index) }));
                     size = rhs_0
@@ -3624,30 +3515,17 @@ pub fn ConvertTTFToWOFF2_109(
                         >| __m.end(),
                     )
             {
-                (index_by_tag_offset.as_pointer()
-                    as Ptr<
-                        Map<
-                            (Value<u32>, Value<u32>),
-                            (Value<(Value<u32>, Value<u32>)>, Value<u16>),
-                        >,
-                    >)
-                    .with_mut(
-                        |__m: &mut Map<
-                            (Value<u32>, Value<u32>),
-                            (Value<(Value<u32>, Value<u32>)>, Value<u16>),
-                        >| {
-                            __m.get_or_insert_with((*tag_offset.borrow()).clone(), || {
-                                (
-                                    Rc::new(RefCell::new((*tag_offset.borrow()).clone())),
-                                    Rc::new(RefCell::new(<u16>::default())),
-                                )
-                            })
-                            .borrow()
-                            .1
-                            .as_pointer()
-                        },
-                    )
-                    .write(((*tables.borrow()).len() as u16));
+                Map::subscript(
+                    (index_by_tag_offset.as_pointer()
+                        as Ptr<
+                            Map<
+                                (Value<u32>, Value<u32>),
+                                (Value<(Value<u32>, Value<u32>)>, Value<u16>),
+                            >,
+                        >),
+                    &(*tag_offset.borrow()),
+                )
+                .write(((*tables.borrow()).len() as u16));
             } else {
                 return false;
             }
@@ -3899,30 +3777,17 @@ pub fn ConvertTTFToWOFF2_109(
                     eprintln!("Missing table index for offset 0x{:08x}", table_offset);
                     return false;
                 }
-                let mut index: u16 = ((index_by_tag_offset.as_pointer()
-                    as Ptr<
-                        Map<
-                            (Value<u32>, Value<u32>),
-                            (Value<(Value<u32>, Value<u32>)>, Value<u16>),
-                        >,
-                    >)
-                    .with_mut(
-                        |__m: &mut Map<
-                            (Value<u32>, Value<u32>),
-                            (Value<(Value<u32>, Value<u32>)>, Value<u16>),
-                        >| {
-                            __m.get_or_insert_with((*tag_offset.borrow()).clone(), || {
-                                (
-                                    Rc::new(RefCell::new((*tag_offset.borrow()).clone())),
-                                    Rc::new(RefCell::new(<u16>::default())),
-                                )
-                            })
-                            .borrow()
-                            .1
-                            .as_pointer()
-                        },
-                    )
-                    .read());
+                let mut index: u16 = (Map::subscript(
+                    (index_by_tag_offset.as_pointer()
+                        as Ptr<
+                            Map<
+                                (Value<u32>, Value<u32>),
+                                (Value<(Value<u32>, Value<u32>)>, Value<u16>),
+                            >,
+                        >),
+                    &(*tag_offset.borrow()),
+                )
+                .read());
                 ({ Store255UShort_11((index as i32), (offset.as_pointer()), (result).clone()) });
             }
         }

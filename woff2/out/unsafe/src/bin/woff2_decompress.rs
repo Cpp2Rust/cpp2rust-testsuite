@@ -2293,15 +2293,9 @@ pub unsafe fn ReconstructFont_74(
                     return false;
                 }
             }
-            (*&mut (*(*metadata)
-                .checksums
-                .get_or_insert_with(checksum_key.clone(), || (checksum_key, <u32>::default())))
-            .1) = checksum;
+            (*(*metadata).checksums.subscript(&checksum_key)) = checksum;
         } else {
-            checksum = (*&mut (*(*metadata)
-                .checksums
-                .get_or_insert_with(checksum_key.clone(), || (checksum_key, <u32>::default())))
-            .1);
+            checksum = (*(*metadata).checksums.subscript(&checksum_key));
         }
         font_checksum = (font_checksum).wrapping_add(checksum);
         (unsafe { StoreU32_31(table_entry.as_mut_ptr(), 0_usize, checksum) });
@@ -2310,13 +2304,8 @@ pub unsafe fn ReconstructFont_74(
         if ((!(unsafe {
             (*out).Write_3(
                 (table_entry.as_mut_ptr() as *const ::libc::c_void),
-                (((*&mut (*(*info)
-                    .table_entry_by_tag
-                    .get_or_insert_with((*table).tag.clone(), || {
-                        ((*table).tag, <u32>::default())
-                    }))
-                .1)
-                    .wrapping_add(4_u32)) as usize),
+                (((*(*info).table_entry_by_tag.subscript(&(*table).tag)).wrapping_add(4_u32))
+                    as usize),
                 12_usize,
             )
         }) as i64)
@@ -2639,16 +2628,8 @@ pub unsafe fn WriteHeaders_76(
                 (*ttc_font).table_indices.end(),
             ) {
                 let mut table_index: u16 = (*table_index.iter_deref());
-                (*&mut (*sorted_index_by_tag.get_or_insert_with(
-                    (&mut (*hdr)).tables[(table_index as usize)].tag.clone(),
-                    || {
-                        (
-                            (&mut (*hdr)).tables[(table_index as usize)].tag,
-                            <u16>::default(),
-                        )
-                    },
-                ))
-                .1) = table_index;
+                (*sorted_index_by_tag
+                    .subscript(&(&mut (*hdr)).tables[(table_index as usize)].tag)) = table_index;
             }
             let mut index: u16 = 0_u16;
             'loop_: for i in IterRange::new(sorted_index_by_tag.begin(), sorted_index_by_tag.end())
@@ -2712,10 +2693,9 @@ pub unsafe fn WriteHeaders_76(
             ) {
                 let table_index: u16 = (*table_index.iter_deref());
                 let mut tag: u32 = (&mut (*hdr)).tables[(table_index as usize)].tag;
-                (*&mut (*(&mut (*metadata)).font_infos[(i)]
+                (*(&mut (*metadata)).font_infos[(i)]
                     .table_entry_by_tag
-                    .get_or_insert_with(tag.clone(), || (tag, <u32>::default())))
-                .1) = (offset as u32);
+                    .subscript(&tag)) = (offset as u32);
                 offset = (unsafe { StoreTableEntry_71(result, (offset as u32), tag) });
             }
             (*ttc_font).header_checksum = (unsafe {
@@ -2740,12 +2720,9 @@ pub unsafe fn WriteHeaders_76(
         });
         let mut i: u16 = 0_u16;
         'loop_: while ((i as i32) < ((*hdr).num_tables as i32)) {
-            (*&mut (*(&mut (*metadata)).font_infos[(0_usize)]
+            (*(&mut (*metadata)).font_infos[(0_usize)]
                 .table_entry_by_tag
-                .get_or_insert_with(sorted_tables[(i as usize)].tag.clone(), || {
-                    (sorted_tables[(i as usize)].tag, <u32>::default())
-                }))
-            .1) = (offset as u32);
+                .subscript(&sorted_tables[(i as usize)].tag)) = (offset as u32);
             offset = (unsafe {
                 StoreTableEntry_71(result, (offset as u32), sorted_tables[(i as usize)].tag)
             });

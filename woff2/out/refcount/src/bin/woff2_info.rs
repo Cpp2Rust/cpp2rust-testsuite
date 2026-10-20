@@ -730,19 +730,11 @@ pub fn ReadTrueTypeFont_33(
             return false;
         }
         let __rhs = { (*table.borrow()).length };
-        (intervals.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u32>)>>)
-            .with_mut(|__m: &mut Map<u32, (Value<u32>, Value<u32>)>| {
-                __m.get_or_insert_with({ (*table.borrow()).offset }.clone(), || {
-                    (
-                        Rc::new(RefCell::new({ (*table.borrow()).offset })),
-                        Rc::new(RefCell::new(<u32>::default())),
-                    )
-                })
-                .borrow()
-                .1
-                .as_pointer()
-            })
-            .write(__rhs);
+        Map::subscript(
+            (intervals.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u32>)>>),
+            &{ (*table.borrow()).offset },
+        )
+        .write(__rhs);
         (*table.borrow_mut()).data = { data.offset(({ (*table.borrow()).offset }) as isize) };
         if (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>).with(
             |__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
@@ -754,21 +746,11 @@ pub fn ReadTrueTypeFont_33(
             return false;
         }
         let __rhs = (*table.borrow()).clone();
-        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
-            .with_mut(
-                |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                    __m.get_or_insert_with({ (*table.borrow()).tag }.clone(), || {
-                        (
-                            Rc::new(RefCell::new({ (*table.borrow()).tag })),
-                            Rc::new(RefCell::new(<woff2_Font_Table>::default())),
-                        )
-                    })
-                    .borrow()
-                    .1
-                    .as_pointer()
-                },
-            )
-            .write(__rhs);
+        Map::subscript(
+            (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>),
+            &{ (*table.borrow()).tag },
+        )
+        .write(__rhs);
         i.prefix_inc();
     }
     let mut last_offset: u32 = (((12_u64 as u64)
@@ -828,38 +810,17 @@ pub fn ReadCollectionFont_34(
             .with(|__m: &Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| __m.end())
         {
             let __rhs = ({ woff2_FontImpl::FindTable_2(&font, table.with(|__s| __s.tag)) });
-            ((all_tables).clone() as Ptr<Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>>)
-                .with_mut(
-                    |__m: &mut Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| {
-                        __m.get_or_insert_with(table.with(|__s| __s.offset).clone(), || {
-                            (
-                                Rc::new(RefCell::new(table.with(|__s| __s.offset))),
-                                Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::default())),
-                            )
-                        })
-                        .borrow()
-                        .1
-                        .as_pointer()
-                    },
-                )
-                .write(__rhs);
+            Map::subscript(
+                ((all_tables).clone() as Ptr<Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>>),
+                &table.with(|__s| __s.offset),
+            )
+            .write(__rhs);
         } else {
-            let __rhs = (((all_tables).clone()
-                as Ptr<Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>>)
-                .with_mut(
-                    |__m: &mut Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| {
-                        __m.get_or_insert_with(table.with(|__s| __s.offset).clone(), || {
-                            (
-                                Rc::new(RefCell::new(table.with(|__s| __s.offset))),
-                                Rc::new(RefCell::new(<Ptr<woff2_Font_Table>>::default())),
-                            )
-                        })
-                        .borrow()
-                        .1
-                        .as_pointer()
-                    },
-                )
-                .read());
+            let __rhs = (Map::subscript(
+                ((all_tables).clone() as Ptr<Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>>),
+                &table.with(|__s| __s.offset),
+            )
+            .read());
             field!(table, reuse_of).write(__rhs);
             if ({ table.with(|__s| __s.tag) } != {
                 table.with(|__s| __s.reuse_of.clone()).with(|__s| __s.tag)
@@ -1376,12 +1337,13 @@ pub fn RemoveDigitalSignature_48(mut font: Ptr<woff2_Font>) -> bool {
         != (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
             .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end())
     {
-        (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>)
-            .with_mut(
-                |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                    __m.erase(&(*it.borrow()).clone())
-                },
-            );
+        {
+            let __it = (*it.borrow()).clone();
+            Map::erase(
+                (field_ptr!(font, tables) as Ptr<Map<u32, (Value<u32>, Value<woff2_Font_Table>)>>),
+                &__it,
+            )
+        };
         let __rhs = ((*font.upgrade().deref()).tables.len() as u16);
         field!(font, num_tables).write(__rhs);
     }

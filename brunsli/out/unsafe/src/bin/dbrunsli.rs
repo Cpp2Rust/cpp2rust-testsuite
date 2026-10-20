@@ -3051,7 +3051,7 @@ impl Default for brunsli_internal_dec_State {
     }
 }
 #[repr(C)]
-#[derive(FnPtrArg, MoveCtorUnsafe)]
+#[derive(FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_Arena_brunsli_HuffmanCode_ {
     pub capacity: usize,
     pub storage: Option<Box<[brunsli_HuffmanCode]>>,
@@ -3103,7 +3103,7 @@ pub struct brunsli_HuffmanDecodingData {
     pub table_: Vec<brunsli_HuffmanCode>,
 }
 #[repr(C)]
-#[derive(FnPtrArg, MoveCtorUnsafe)]
+#[derive(FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_OutputChunk {
     pub next: *const u8,
     pub len: usize,
@@ -3207,7 +3207,7 @@ impl Default for brunsli_HuffmanCodeTable {
     }
 }
 #[repr(C)]
-#[derive(FnPtrArg, MoveCtorUnsafe, Default)]
+#[derive(FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct brunsli_internal_dec_BitWriter {
     pub healthy: bool,
     pub output: *mut Vec<brunsli_internal_dec_OutputChunk>,
@@ -3273,7 +3273,7 @@ pub const brunsli_internal_dec_EncodeScanState_Stage_HEAD:
 pub const brunsli_internal_dec_EncodeScanState_Stage_BODY:
     brunsli_internal_dec_EncodeScanState_Stage = 1;
 #[repr(C)]
-#[derive(FnPtrArg, MoveCtorUnsafe)]
+#[derive(FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_EncodeScanState {
     pub stage: brunsli_internal_dec_EncodeScanState_Stage,
     pub mcu_y: i32,
@@ -3367,7 +3367,7 @@ pub const brunsli_internal_dec_SerializationState_Stage_DONE:
 pub const brunsli_internal_dec_SerializationState_Stage_ERROR:
     brunsli_internal_dec_SerializationState_Stage = 3;
 #[repr(C)]
-#[derive(FnPtrArg, MoveCtorUnsafe)]
+#[derive(FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_SerializationState {
     pub stage: brunsli_internal_dec_SerializationState_Stage,
     pub output_queue: Vec<brunsli_internal_dec_OutputChunk>,
@@ -3859,7 +3859,7 @@ pub const brunsli_internal_dec_HistogramDataState_Stage_SKIP_CONTENT:
 pub const brunsli_internal_dec_HistogramDataState_Stage_DONE:
     brunsli_internal_dec_HistogramDataState_Stage = 7;
 #[repr(C)]
-#[derive(FnPtrArg, MoveCtorUnsafe)]
+#[derive(FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_HistogramDataState {
     pub stage: brunsli_internal_dec_HistogramDataState_Stage,
     pub br: brunsli_BrunsliBitReader,
@@ -3939,7 +3939,7 @@ impl Default for brunsli_internal_dec_Buffer {
     }
 }
 #[repr(C)]
-#[derive(FnPtrArg, MoveCtorUnsafe)]
+#[derive(FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_InternalState {
     pub ac_dc: brunsli_internal_dec_AcDcState,
     pub section: brunsli_internal_dec_SectionState,
@@ -8104,15 +8104,15 @@ pub unsafe fn UpdateSubsamplingDerivatives_178(mut jpg: *mut brunsli_JPEGData) -
     'loop_: while ((i) < ((*jpg).components.len())) {
         let mut c: *mut brunsli_JPEGComponent =
             (&mut (&mut (*jpg)).components[(i)] as *mut brunsli_JPEGComponent);
-        (*jpg).max_h_samp_factor = (*if *&(*jpg).max_h_samp_factor >= *&(*c).h_samp_factor {
-            (&(*jpg).max_h_samp_factor) as *const _
+        (*jpg).max_h_samp_factor = (*if *&mut (*jpg).max_h_samp_factor >= *&mut (*c).h_samp_factor {
+            (&mut (*jpg).max_h_samp_factor) as *const _
         } else {
-            (&(*c).h_samp_factor) as *const _
+            (&mut (*c).h_samp_factor) as *const _
         });
-        (*jpg).max_v_samp_factor = (*if *&(*jpg).max_v_samp_factor >= *&(*c).v_samp_factor {
-            (&(*jpg).max_v_samp_factor) as *const _
+        (*jpg).max_v_samp_factor = (*if *&mut (*jpg).max_v_samp_factor >= *&mut (*c).v_samp_factor {
+            (&mut (*jpg).max_v_samp_factor) as *const _
         } else {
-            (&(*c).v_samp_factor) as *const _
+            (&mut (*c).v_samp_factor) as *const _
         });
         i.prefix_inc();
     }

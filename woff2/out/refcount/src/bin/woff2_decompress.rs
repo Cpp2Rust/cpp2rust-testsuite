@@ -2401,49 +2401,29 @@ pub fn ReconstructFont_74(
                     return false;
                 }
             }
-            (field_ptr!(metadata, checksums)
-                as Ptr<
-                    Map<(Value<u32>, Value<u32>), (Value<(Value<u32>, Value<u32>)>, Value<u32>)>,
-                >)
-                .with_mut(
-                    |__m: &mut Map<
-                        (Value<u32>, Value<u32>),
-                        (Value<(Value<u32>, Value<u32>)>, Value<u32>),
-                    >| {
-                        __m.get_or_insert_with((*checksum_key.borrow()).clone(), || {
-                            (
-                                Rc::new(RefCell::new((*checksum_key.borrow()).clone())),
-                                Rc::new(RefCell::new(<u32>::default())),
-                            )
-                        })
-                        .borrow()
-                        .1
-                        .as_pointer()
-                    },
-                )
-                .write((*checksum.borrow()));
+            Map::subscript(
+                (field_ptr!(metadata, checksums)
+                    as Ptr<
+                        Map<
+                            (Value<u32>, Value<u32>),
+                            (Value<(Value<u32>, Value<u32>)>, Value<u32>),
+                        >,
+                    >),
+                &(*checksum_key.borrow()),
+            )
+            .write((*checksum.borrow()));
         } else {
-            (*checksum.borrow_mut()) = ((field_ptr!(metadata, checksums)
-                as Ptr<
-                    Map<(Value<u32>, Value<u32>), (Value<(Value<u32>, Value<u32>)>, Value<u32>)>,
-                >)
-                .with_mut(
-                    |__m: &mut Map<
-                        (Value<u32>, Value<u32>),
-                        (Value<(Value<u32>, Value<u32>)>, Value<u32>),
-                    >| {
-                        __m.get_or_insert_with((*checksum_key.borrow()).clone(), || {
-                            (
-                                Rc::new(RefCell::new((*checksum_key.borrow()).clone())),
-                                Rc::new(RefCell::new(<u32>::default())),
-                            )
-                        })
-                        .borrow()
-                        .1
-                        .as_pointer()
-                    },
-                )
-                .read());
+            (*checksum.borrow_mut()) = (Map::subscript(
+                (field_ptr!(metadata, checksums)
+                    as Ptr<
+                        Map<
+                            (Value<u32>, Value<u32>),
+                            (Value<(Value<u32>, Value<u32>)>, Value<u32>),
+                        >,
+                    >),
+                &(*checksum_key.borrow()),
+            )
+            .read());
         }
         font_checksum = { (font_checksum).wrapping_add((*checksum.borrow())) };
         ({
@@ -2470,20 +2450,12 @@ pub fn ReconstructFont_74(
         if ((!({
             (*out.upgrade().deref_mut()).Write_3(
                 ((table_entry.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any(),
-                ((((field_ptr!(info, table_entry_by_tag)
-                    as Ptr<Map<u32, (Value<u32>, Value<u32>)>>)
-                    .with_mut(|__m: &mut Map<u32, (Value<u32>, Value<u32>)>| {
-                        __m.get_or_insert_with(table.with(|__s| __s.tag).clone(), || {
-                            (
-                                Rc::new(RefCell::new(table.with(|__s| __s.tag))),
-                                Rc::new(RefCell::new(<u32>::default())),
-                            )
-                        })
-                        .borrow()
-                        .1
-                        .as_pointer()
-                    })
-                    .read())
+                (((Map::subscript(
+                    (field_ptr!(info, table_entry_by_tag)
+                        as Ptr<Map<u32, (Value<u32>, Value<u32>)>>),
+                    &table.with(|__s| __s.tag),
+                )
+                .read())
                 .wrapping_add(4_u32)) as usize),
                 12_usize,
             )
@@ -2813,27 +2785,11 @@ pub fn WriteHeaders_76(
             ) {
                 let mut table_index: u16 = (table_index.iter_deref().read());
                 let __rhs = table_index;
-                (sorted_index_by_tag.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u16>)>>)
-                    .with_mut(|__m: &mut Map<u32, (Value<u32>, Value<u16>)>| {
-                        __m.get_or_insert_with(
-                            vec_elem!(hdr, tables, (table_index as usize))
-                                .with(|__s| __s.tag)
-                                .clone(),
-                            || {
-                                (
-                                    Rc::new(RefCell::new(
-                                        vec_elem!(hdr, tables, (table_index as usize))
-                                            .with(|__s| __s.tag),
-                                    )),
-                                    Rc::new(RefCell::new(<u16>::default())),
-                                )
-                            },
-                        )
-                        .borrow()
-                        .1
-                        .as_pointer()
-                    })
-                    .write(__rhs);
+                Map::subscript(
+                    (sorted_index_by_tag.as_pointer() as Ptr<Map<u32, (Value<u32>, Value<u16>)>>),
+                    &vec_elem!(hdr, tables, (table_index as usize)).with(|__s| __s.tag),
+                )
+                .write(__rhs);
             }
             let mut index: u16 = 0_u16;
             'loop_: for i in IterRange::new(
@@ -2864,21 +2820,11 @@ pub fn WriteHeaders_76(
                             .with(|__b| __a.cmp(__b))
                     })
             });
-            let __values: Vec<_> = __order
-                .iter()
-                .map(|&__i| {
-                    (sorted_tables.as_pointer() as Ptr<woff2_Table>)
-                        .begin()
-                        .iter_at(__i)
-                        .read()
-                })
-                .collect();
-            for (__i, __v) in (0..__n).zip(__values) {
+            reorder(__order, |__i| {
                 (sorted_tables.as_pointer() as Ptr<woff2_Table>)
                     .begin()
                     .iter_at(__i)
-                    .write(__v);
-            }
+            });
         };
     }
     let mut result: Ptr<u8> = ((output.as_pointer() as Ptr<u8>).offset(0_usize));
@@ -2937,23 +2883,15 @@ pub fn WriteHeaders_76(
                 let mut table_index: u16 = (table_index.iter_deref().read());
                 let mut tag: u32 =
                     vec_elem!(hdr, tables, (table_index as usize)).with(|__s| __s.tag);
-                (field_ptr!(
-                    (field_ref!(metadata, font_infos).as_pointer() as Ptr<woff2_WOFF2FontInfo>)
-                        .offset(i),
-                    table_entry_by_tag
-                ) as Ptr<Map<u32, (Value<u32>, Value<u32>)>>)
-                    .with_mut(|__m: &mut Map<u32, (Value<u32>, Value<u32>)>| {
-                        __m.get_or_insert_with(tag.clone(), || {
-                            (
-                                Rc::new(RefCell::new(tag)),
-                                Rc::new(RefCell::new(<u32>::default())),
-                            )
-                        })
-                        .borrow()
-                        .1
-                        .as_pointer()
-                    })
-                    .write((offset as u32));
+                Map::subscript(
+                    (field_ptr!(
+                        (field_ref!(metadata, font_infos).as_pointer() as Ptr<woff2_WOFF2FontInfo>)
+                            .offset(i),
+                        table_entry_by_tag
+                    ) as Ptr<Map<u32, (Value<u32>, Value<u32>)>>),
+                    &tag,
+                )
+                .write((offset as u32));
                 let __rhs = ({ StoreTableEntry_71((result).clone(), (offset as u32), tag) });
                 offset = __rhs;
             }
@@ -2982,28 +2920,15 @@ pub fn WriteHeaders_76(
         offset = __rhs;
         let mut i: u16 = 0_u16;
         'loop_: while ({ (i as i32) } < { (hdr.with(|__s| __s.num_tables) as i32) }) {
-            (field_ptr!(
-                (field_ref!(metadata, font_infos).as_pointer() as Ptr<woff2_WOFF2FontInfo>)
-                    .offset(0_usize),
-                table_entry_by_tag
-            ) as Ptr<Map<u32, (Value<u32>, Value<u32>)>>)
-                .with_mut(|__m: &mut Map<u32, (Value<u32>, Value<u32>)>| {
-                    __m.get_or_insert_with(
-                        { (*sorted_tables.borrow())[(i as usize)].tag }.clone(),
-                        || {
-                            (
-                                Rc::new(RefCell::new({
-                                    (*sorted_tables.borrow())[(i as usize)].tag
-                                })),
-                                Rc::new(RefCell::new(<u32>::default())),
-                            )
-                        },
-                    )
-                    .borrow()
-                    .1
-                    .as_pointer()
-                })
-                .write((offset as u32));
+            Map::subscript(
+                (field_ptr!(
+                    (field_ref!(metadata, font_infos).as_pointer() as Ptr<woff2_WOFF2FontInfo>)
+                        .offset(0_usize),
+                    table_entry_by_tag
+                ) as Ptr<Map<u32, (Value<u32>, Value<u32>)>>),
+                &{ (*sorted_tables.borrow())[(i as usize)].tag },
+            )
+            .write((offset as u32));
             let __rhs = ({
                 StoreTableEntry_71((result).clone(), (offset as u32), {
                     (*sorted_tables.borrow())[(i as usize)].tag

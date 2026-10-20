@@ -834,17 +834,12 @@ pub unsafe fn ReadTrueTypeFont_33(
         {
             return false;
         }
-        (*&mut (*intervals
-            .get_or_insert_with(table.offset.clone(), || (table.offset, <u32>::default())))
-        .1) = table.length;
+        (*intervals.subscript(&table.offset)) = table.length;
         table.data = data.offset((table.offset) as isize);
         if (*font).tables.find(&table.tag) != (*font).tables.end() {
             return false;
         }
-        (*&mut (*(*font).tables.get_or_insert_with(table.tag.clone(), || {
-            (table.tag, <woff2_Font_Table>::default())
-        }))
-        .1) = (table).clone();
+        (*(*font).tables.subscript(&table.tag)) = (table).clone();
         i.prefix_inc();
     }
     let mut last_offset: u32 = (((12_u64 as u64)
@@ -886,16 +881,10 @@ pub unsafe fn ReadCollectionFont_34(
         let entry: *mut (u32, woff2_Font_Table) = &mut (*entry.iter_deref());
         let table: *mut woff2_Font_Table = &mut (*entry).1;
         if (*all_tables).find(&(*table).offset) == (*all_tables).end() {
-            (*&mut (*(*all_tables).get_or_insert_with((*table).offset.clone(), || {
-                ((*table).offset, <*mut woff2_Font_Table>::default())
-            }))
-            .1) = (unsafe { woff2_Font::FindTable_2(&mut (*font), (*table).tag) });
+            (*(*all_tables).subscript(&(*table).offset)) =
+                (unsafe { woff2_Font::FindTable_2(&mut (*font), (*table).tag) });
         } else {
-            (*table).reuse_of = (*&mut (*(*all_tables)
-                .get_or_insert_with((*table).offset.clone(), || {
-                    ((*table).offset, <*mut woff2_Font_Table>::default())
-                }))
-            .1);
+            (*table).reuse_of = (*(*all_tables).subscript(&(*table).offset));
             if (((*table).tag) != ((*(*table).reuse_of).tag)) {
                 return false;
             }

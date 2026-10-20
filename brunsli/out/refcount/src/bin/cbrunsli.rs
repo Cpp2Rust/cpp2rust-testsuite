@@ -2909,11 +2909,7 @@ pub fn CompareAndPushToQueue_132(
         return;
     };
     if ((*idx2.borrow()) < (*idx1.borrow())) {
-        {
-            let tmp = idx1.as_pointer().read();
-            idx1.as_pointer().write(idx2.as_pointer().read());
-            idx2.as_pointer().write(tmp);
-        };
+        cpp_swap!(idx1.as_pointer(), idx2.as_pointer());
     }
     let mut store_pair: bool = false;
     let p: Value<brunsli_HistogramPair> = Rc::new(RefCell::new(<brunsli_HistogramPair>::default()));
@@ -3034,21 +3030,9 @@ pub fn HistogramCombine_133(
                         .with(|__b| __a.cmp(__b))
                 })
         });
-        let __values: Vec<_> = __order
-            .iter()
-            .map(|&__i| {
-                (clusters.as_pointer() as Ptr<u64>)
-                    .begin()
-                    .iter_at(__i)
-                    .read()
-            })
-            .collect();
-        for (__i, __v) in (0..__n).zip(__values) {
-            (clusters.as_pointer() as Ptr<u64>)
-                .begin()
-                .iter_at(__i)
-                .write(__v);
-        }
+        reorder(__order, |__i| {
+            (clusters.as_pointer() as Ptr<u64>).begin().iter_at(__i)
+        });
     };
     {
         let __a0 = (if (clusters.as_pointer() as Ptr<u64>).begin()
@@ -3261,21 +3245,9 @@ pub fn HistogramRemap_135(
                         .with(|__b| __a.cmp(__b))
                 })
         });
-        let __values: Vec<_> = __order
-            .iter()
-            .map(|&__i| {
-                (all_symbols.as_pointer() as Ptr<i32>)
-                    .begin()
-                    .iter_at(__i)
-                    .read()
-            })
-            .collect();
-        for (__i, __v) in (0..__n).zip(__values) {
-            (all_symbols.as_pointer() as Ptr<i32>)
-                .begin()
-                .iter_at(__i)
-                .write(__v);
-        }
+        reorder(__order, |__i| {
+            (all_symbols.as_pointer() as Ptr<i32>).begin().iter_at(__i)
+        });
     };
     {
         let __a0 = (if (all_symbols.as_pointer() as Ptr<i32>).begin()
@@ -3366,19 +3338,12 @@ pub fn HistogramReindex_136(
         ) == (new_index.as_pointer() as Ptr<Map<i32, (Value<i32>, Value<i32>)>>)
             .with(|__m: &Map<i32, (Value<i32>, Value<i32>)>| __m.end())
         {
-            (new_index.as_pointer() as Ptr<Map<i32, (Value<i32>, Value<i32>)>>)
-                .with_mut(|__m: &mut Map<i32, (Value<i32>, Value<i32>)>| {
-                    __m.get_or_insert_with(((index!(symbols, i).read()) as i32).clone(), || {
-                        (
-                            Rc::new(RefCell::new(((index!(symbols, i).read()) as i32))),
-                            Rc::new(RefCell::new(<i32>::default())),
-                        )
-                    })
-                    .borrow()
-                    .1
-                    .as_pointer()
-                })
-                .write(next_index);
+            Map::subscript_move(
+                (new_index.as_pointer() as Ptr<Map<i32, (Value<i32>, Value<i32>)>>),
+                Rc::new(RefCell::new(((index!(symbols, i).read()) as i32))).as_pointer(),
+                |__k| cpp_move!(__k),
+            )
+            .write(next_index);
             let __rhs = (tmp[((index!(symbols, i).read()) as usize)]).clone();
             index!(out, (next_index as usize)).write(__rhs);
             next_index.prefix_inc();
@@ -3393,19 +3358,12 @@ pub fn HistogramReindex_136(
     };
     let mut i: usize = 0_usize;
     'loop_: while ({ i } < { (*symbols.upgrade().deref()).len() }) {
-        let __rhs = (((new_index.as_pointer() as Ptr<Map<i32, (Value<i32>, Value<i32>)>>)
-            .with_mut(|__m: &mut Map<i32, (Value<i32>, Value<i32>)>| {
-                __m.get_or_insert_with(((index!(symbols, i).read()) as i32).clone(), || {
-                    (
-                        Rc::new(RefCell::new(((index!(symbols, i).read()) as i32))),
-                        Rc::new(RefCell::new(<i32>::default())),
-                    )
-                })
-                .borrow()
-                .1
-                .as_pointer()
-            })
-            .read()) as u32);
+        let __rhs = ((Map::subscript_move(
+            (new_index.as_pointer() as Ptr<Map<i32, (Value<i32>, Value<i32>)>>),
+            Rc::new(RefCell::new(((index!(symbols, i).read()) as i32))).as_pointer(),
+            |__k| cpp_move!(__k),
+        )
+        .read()) as u32);
         index!(symbols, i).write(__rhs);
         i.prefix_inc();
     }
@@ -4887,21 +4845,11 @@ pub fn ComputeCoeffOrder_163(num_zeros: Ptr<Vec<i32>>, mut order: Ptr<u32>) {
             std::cmp::Ordering::Equal
         }
     });
-        let __values: Vec<_> = __order
-            .iter()
-            .map(|&__i| {
-                (pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>)
-                    .begin()
-                    .iter_at(__i)
-                    .read()
-            })
-            .collect();
-        for (__i, __v) in (0..__n).zip(__values) {
+        reorder(__order, |__i| {
             (pos_and_val.as_pointer() as Ptr<(Value<i32>, Value<i32>)>)
                 .begin()
                 .iter_at(__i)
-                .write(__v);
-        }
+        });
     };
     let mut i: usize = 0_usize;
     'loop_: while (i < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
@@ -7846,13 +7794,7 @@ pub fn StoreSimpleHuffmanTree_217(
             if ({ ((elem!(depths, (elem!(symbols, j).read())).read()) as i32) } < {
                 ((elem!(depths, (elem!(symbols, i).read())).read()) as i32)
             }) {
-                {
-                    let tmp = symbols.offset((j) as isize).read();
-                    symbols
-                        .offset((j) as isize)
-                        .write(symbols.offset((i) as isize).read());
-                    symbols.offset((i) as isize).write(tmp);
-                };
+                cpp_swap!(symbols.offset((j) as isize), symbols.offset((i) as isize));
             }
             j.postfix_inc();
         }
@@ -8183,21 +8125,11 @@ pub fn CreateHuffmanTree_220(
                     std::cmp::Ordering::Equal
                 }
             });
-            let __values: Vec<_> = __order
-                .iter()
-                .map(|&__i| {
-                    (tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
-                        .begin()
-                        .iter_at(__i)
-                        .read()
-                })
-                .collect();
-            for (__i, __v) in (0..__n).zip(__values) {
+            reorder(__order, |__i| {
                 (tree.as_pointer() as Ptr<brunsli_HuffmanTree>)
                     .begin()
                     .iter_at(__i)
-                    .write(__v);
-            }
+            });
         };
         let mut sentinel: brunsli_HuffmanTree =
             brunsli_HuffmanTree::new({ <u32>::MAX }, { (-1_i32 as i16) }, { (-1_i32 as i16) });

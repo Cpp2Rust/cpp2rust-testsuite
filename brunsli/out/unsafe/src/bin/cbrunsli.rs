@@ -2991,7 +2991,7 @@ pub unsafe fn CompareAndPushToQueue_132(
         return;
     };
     if ((idx2) < (idx1)) {
-        std::mem::swap(&mut idx1, &mut idx2);
+        cpp_swap_unsafe!(&mut idx1, &mut idx2);
     }
     let mut store_pair: bool = false;
     let mut p: brunsli_HistogramPair = <brunsli_HistogramPair>::default();
@@ -3017,10 +3017,10 @@ pub unsafe fn CompareAndPushToQueue_132(
         } else {
             {
                 let mut __tmp_0: f64 = 0_f64;
-                (*if *&mut __tmp_0 >= *&(&mut (*pairs))[(0_usize)].cost_diff {
+                (*if *&mut __tmp_0 >= *&mut (&mut (*pairs))[(0_usize)].cost_diff {
                     (&mut __tmp_0) as *const _
                 } else {
-                    (&(&mut (*pairs))[(0_usize)].cost_diff) as *const _
+                    (&mut (&mut (*pairs))[(0_usize)].cost_diff) as *const _
                 })
             }
         };
@@ -3344,11 +3344,9 @@ pub unsafe fn HistogramReindex_136(
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*(symbols).cast_const()).len())) {
         if new_index.find(&((&mut (*symbols))[(i)] as i32)) == new_index.end() {
-            (*&mut (*new_index
-                .get_or_insert_with(((&mut (*symbols))[(i)] as i32).clone(), || {
-                    (((&mut (*symbols))[(i)] as i32), <i32>::default())
-                }))
-            .1) = next_index;
+            (*new_index.subscript_move(&mut ((&mut (*symbols))[(i)] as i32), |__k| {
+                cpp_move_unsafe!(__k)
+            })) = next_index;
             (&mut (*out))[(next_index as usize)] = tmp[((&mut (*symbols))[(i)] as usize)];
             next_index.prefix_inc();
         }
@@ -3360,11 +3358,10 @@ pub unsafe fn HistogramReindex_136(
     };
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*(symbols).cast_const()).len())) {
-        (&mut (*symbols))[(i)] = ((*&mut (*new_index
-            .get_or_insert_with(((&mut (*symbols))[(i)] as i32).clone(), || {
-                (((&mut (*symbols))[(i)] as i32), <i32>::default())
-            }))
-        .1) as u32);
+        (&mut (*symbols))[(i)] = ((*new_index
+            .subscript_move(&mut ((&mut (*symbols))[(i)] as i32), |__k| {
+                cpp_move_unsafe!(__k)
+            })) as u32);
         i.prefix_inc();
     }
 }
@@ -7804,10 +7801,7 @@ pub unsafe fn StoreSimpleHuffmanTree_217(
             if (((*depths.offset((*symbols.offset((j) as isize)) as isize)) as i32)
                 < ((*depths.offset((*symbols.offset((i) as isize)) as isize)) as i32))
             {
-                std::mem::swap(
-                    &mut (*symbols.offset((j) as isize)),
-                    &mut (*symbols.offset((i) as isize)),
-                );
+                cpp_swap_unsafe!(symbols.offset((j) as isize), symbols.offset((i) as isize));
             }
             j.postfix_inc();
         }
@@ -8674,13 +8668,13 @@ pub unsafe fn ProcessSOF_235(
         (&mut (*jpg)).components[(i)].h_samp_factor = h_samp_factor;
         (&mut (*jpg)).components[(i)].v_samp_factor = v_samp_factor;
         (&mut (*jpg)).components[(i)].quant_idx = ((unsafe { ReadUint8_233(data, pos) }) as u8);
-        (*jpg).max_h_samp_factor = (*if *&(*jpg).max_h_samp_factor >= *&mut h_samp_factor {
-            (&(*jpg).max_h_samp_factor) as *const _
+        (*jpg).max_h_samp_factor = (*if *&mut (*jpg).max_h_samp_factor >= *&mut h_samp_factor {
+            (&mut (*jpg).max_h_samp_factor) as *const _
         } else {
             (&mut h_samp_factor) as *const _
         });
-        (*jpg).max_v_samp_factor = (*if *&(*jpg).max_v_samp_factor >= *&mut v_samp_factor {
-            (&(*jpg).max_v_samp_factor) as *const _
+        (*jpg).max_v_samp_factor = (*if *&mut (*jpg).max_v_samp_factor >= *&mut v_samp_factor {
+            (&mut (*jpg).max_v_samp_factor) as *const _
         } else {
             (&mut v_samp_factor) as *const _
         });

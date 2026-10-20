@@ -834,17 +834,12 @@ pub unsafe fn ReadTrueTypeFont_33(
         {
             return false;
         }
-        (*&mut (*intervals
-            .get_or_insert_with(table.offset.clone(), || (table.offset, <u32>::default())))
-        .1) = table.length;
+        (*intervals.subscript(&table.offset)) = table.length;
         table.data = data.offset((table.offset) as isize);
         if (*font).tables.find(&table.tag) != (*font).tables.end() {
             return false;
         }
-        (*&mut (*(*font).tables.get_or_insert_with(table.tag.clone(), || {
-            (table.tag, <woff2_Font_Table>::default())
-        }))
-        .1) = (table).clone();
+        (*(*font).tables.subscript(&table.tag)) = (table).clone();
         i.prefix_inc();
     }
     let mut last_offset: u32 = (((12_u64 as u64)
@@ -886,16 +881,10 @@ pub unsafe fn ReadCollectionFont_34(
         let entry: *mut (u32, woff2_Font_Table) = &mut (*entry.iter_deref());
         let table: *mut woff2_Font_Table = &mut (*entry).1;
         if (*all_tables).find(&(*table).offset) == (*all_tables).end() {
-            (*&mut (*(*all_tables).get_or_insert_with((*table).offset.clone(), || {
-                ((*table).offset, <*mut woff2_Font_Table>::default())
-            }))
-            .1) = (unsafe { woff2_Font::FindTable_2(&mut (*font), (*table).tag) });
+            (*(*all_tables).subscript(&(*table).offset)) =
+                (unsafe { woff2_Font::FindTable_2(&mut (*font), (*table).tag) });
         } else {
-            (*table).reuse_of = (*&mut (*(*all_tables)
-                .get_or_insert_with((*table).offset.clone(), || {
-                    ((*table).offset, <*mut woff2_Font_Table>::default())
-                }))
-            .1);
+            (*table).reuse_of = (*(*all_tables).subscript(&(*table).offset));
             if (((*table).tag) != ((*(*table).reuse_of).tag)) {
                 return false;
             }
@@ -2154,10 +2143,7 @@ pub unsafe fn NormalizeOffsets_76(mut font: *mut woff2_Font) -> bool {
     let __range1: *mut Vec<u32> = &mut __tmp_0;
     'loop_: for tag in IterRange::new((*__range1).begin(), (*__range1).end()) {
         let mut tag: u32 = (*tag.iter_deref());
-        let table: *mut woff2_Font_Table = &mut (*&mut (*(*font)
-            .tables
-            .get_or_insert_with(tag.clone(), || (tag, <woff2_Font_Table>::default())))
-        .1);
+        let table: *mut woff2_Font_Table = &mut (*(*font).tables.subscript(&tag));
         (*table).offset = offset;
         offset = (offset).wrapping_add((unsafe { Round4_71((*table).length) }));
     }
@@ -2318,10 +2304,7 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
         let __range2: *mut Vec<u32> = &mut __tmp_1;
         'loop_: for tag in IterRange::new((*__range2).begin(), (*__range2).end()) {
             let mut tag: u32 = (*tag.iter_deref());
-            let table: *mut woff2_Font_Table = &mut (*&mut (*(*font)
-                .tables
-                .get_or_insert_with(tag.clone(), || (tag, <woff2_Font_Table>::default())))
-            .1);
+            let table: *mut woff2_Font_Table = &mut (*(*font).tables.subscript(&tag));
             if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
                 (*table).offset = (*(*table).reuse_of).offset;
             } else {
@@ -2822,32 +2805,14 @@ pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
     if (unsafe { woff2_Font_Table::IsReused(&(*loca_table)) }) {
         return true;
     }
-    let mut transformed_glyf: *mut woff2_Font_Table =
-        (&mut (*&mut (*(*font).tables.get_or_insert_with(
-            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)) ^ (2155905152_u32))
-                .clone(),
-            || {
-                (
-                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
-                        ^ (2155905152_u32)),
-                    <woff2_Font_Table>::default(),
-                )
-            },
-        ))
-        .1) as *mut woff2_Font_Table);
-    let mut transformed_loca: *mut woff2_Font_Table =
-        (&mut (*&mut (*(*font).tables.get_or_insert_with(
-            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)) ^ (2155905152_u32))
-                .clone(),
-            || {
-                (
-                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2))
-                        ^ (2155905152_u32)),
-                    <woff2_Font_Table>::default(),
-                )
-            },
-        ))
-        .1) as *mut woff2_Font_Table);
+    let mut transformed_glyf: *mut woff2_Font_Table = (&mut (*(*font).tables.subscript_move(
+        &mut ((*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)) ^ (2155905152_u32)),
+        |__k| cpp_move_unsafe!(__k),
+    )) as *mut woff2_Font_Table);
+    let mut transformed_loca: *mut woff2_Font_Table = (&mut (*(*font).tables.subscript_move(
+        &mut ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)) ^ (2155905152_u32)),
+        |__k| cpp_move_unsafe!(__k),
+    )) as *mut woff2_Font_Table);
     let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font)) });
     let mut encoder: woff2_GlyfEncoder = woff2_GlyfEncoder::new({ num_glyphs });
     let mut i: i32 = 0;
@@ -3001,19 +2966,10 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
         }
         i.postfix_inc();
     }
-    let mut transformed_hmtx: *mut woff2_Font_Table =
-        (&mut (*&mut (*(*font).tables.get_or_insert_with(
-            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kHmtxTableTag_5)) ^ (2155905152_u32))
-                .clone(),
-            || {
-                (
-                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kHmtxTableTag_5))
-                        ^ (2155905152_u32)),
-                    <woff2_Font_Table>::default(),
-                )
-            },
-        ))
-        .1) as *mut woff2_Font_Table);
+    let mut transformed_hmtx: *mut woff2_Font_Table = (&mut (*(*font).tables.subscript_move(
+        &mut ((*std::cell::LazyCell::force_mut(&mut *&raw mut kHmtxTableTag_5)) ^ (2155905152_u32)),
+        |__k| cpp_move_unsafe!(__k),
+    )) as *mut woff2_Font_Table);
     let mut flags: u8 = 0_u8;
     let mut transformed_size: usize =
         (1_usize).wrapping_add((2_usize).wrapping_mul(advance_widths.len()));
@@ -3242,9 +3198,7 @@ pub unsafe fn ComputeWoff2Length_100(
                     continue 'loop_;
                 }
                 let mut tag_offset: (u32, u32) = ((*table).tag.into(), (*table).offset.into());
-                let mut table_index: u16 = (*&mut (*index_by_tag_offset
-                    .get_or_insert_with(tag_offset.clone(), || (tag_offset, <u16>::default())))
-                .1);
+                let mut table_index: u16 = (*index_by_tag_offset.subscript(&tag_offset));
                 size = (size).wrapping_add((unsafe { Size255UShort_9(table_index) }));
             }
         }
@@ -3534,9 +3488,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
             }
             let mut tag_offset: (u32, u32) = ((*src_table).tag.into(), (*src_table).offset.into());
             if index_by_tag_offset.find(&tag_offset) == index_by_tag_offset.end() {
-                (*&mut (*index_by_tag_offset
-                    .get_or_insert_with(tag_offset.clone(), || (tag_offset, <u16>::default())))
-                .1) = (tables.len() as u16);
+                (*index_by_tag_offset.subscript(&tag_offset)) = (tables.len() as u16);
             } else {
                 return false;
             }
@@ -3725,9 +3677,7 @@ pub unsafe fn ConvertTTFToWOFF2_109(
                     });
                     return false;
                 }
-                let mut index: u16 = (*&mut (*index_by_tag_offset
-                    .get_or_insert_with(tag_offset.clone(), || (tag_offset, <u16>::default())))
-                .1);
+                let mut index: u16 = (*index_by_tag_offset.subscript(&tag_offset));
                 (unsafe { Store255UShort_11((index as i32), (&mut offset as *mut usize), result) });
             }
         }

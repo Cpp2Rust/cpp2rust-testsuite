@@ -2813,7 +2813,7 @@ impl Default for brunsli_internal_dec_State {
         }
     }
 }
-#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(16)]
 pub struct brunsli_Arena_brunsli_HuffmanCode_ {
     #[offset(0)]
@@ -2848,7 +2848,7 @@ pub struct brunsli_HuffmanDecodingData {
     #[byte_size(24)]
     pub table_: Vec<brunsli_HuffmanCode>,
 }
-#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(24)]
 pub struct brunsli_internal_dec_OutputChunk {
     #[offset(0)]
@@ -2941,7 +2941,7 @@ impl Default for brunsli_HuffmanCodeTable {
         }
     }
 }
-#[derive(Record, ByteRepr, FnPtrArg, MoveCtor, Default)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor, MoveAssign, Default)]
 #[byte_size(72)]
 pub struct brunsli_internal_dec_BitWriter {
     #[offset(0)]
@@ -3006,7 +3006,7 @@ pub const brunsli_internal_dec_EncodeScanState_Stage_HEAD:
     brunsli_internal_dec_EncodeScanState_Stage = 0;
 pub const brunsli_internal_dec_EncodeScanState_Stage_BODY:
     brunsli_internal_dec_EncodeScanState_Stage = 1;
-#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(184)]
 pub struct brunsli_internal_dec_EncodeScanState {
     #[offset(0)]
@@ -3086,7 +3086,7 @@ pub const brunsli_internal_dec_SerializationState_Stage_DONE:
     brunsli_internal_dec_SerializationState_Stage = 2;
 pub const brunsli_internal_dec_SerializationState_Stage_ERROR:
     brunsli_internal_dec_SerializationState_Stage = 3;
-#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(376)]
 pub struct brunsli_internal_dec_SerializationState {
     #[offset(0)]
@@ -3648,7 +3648,7 @@ pub const brunsli_internal_dec_HistogramDataState_Stage_SKIP_CONTENT:
     brunsli_internal_dec_HistogramDataState_Stage = 6;
 pub const brunsli_internal_dec_HistogramDataState_Stage_DONE:
     brunsli_internal_dec_HistogramDataState_Stage = 7;
-#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(104)]
 pub struct brunsli_internal_dec_HistogramDataState {
     #[offset(0)]
@@ -3731,7 +3731,7 @@ impl Default for brunsli_internal_dec_Buffer {
         }
     }
 }
-#[derive(Record, ByteRepr, FnPtrArg, MoveCtor)]
+#[derive(Record, ByteRepr, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(1416)]
 pub struct brunsli_internal_dec_InternalState {
     #[offset(0)]
