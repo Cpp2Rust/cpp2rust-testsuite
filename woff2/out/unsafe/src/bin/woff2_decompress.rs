@@ -3040,12 +3040,12 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
             (self.buf_.offset((offset) as isize) as *mut ::libc::c_void)
         };
         self.offset_ = ({
-            let mut __tmp_0: u64 = (self.offset_ as u64);
-            let mut __tmp_1: u64 = ((offset).wrapping_add(n) as u64);
-            (*if *&mut __tmp_0 >= *&mut __tmp_1 {
-                (&mut __tmp_0) as *const _
+            let mut __tmp_2: u64 = (self.offset_ as u64);
+            let mut __tmp_3: u64 = ((offset).wrapping_add(n) as u64);
+            (*if *&mut __tmp_2 >= *&mut __tmp_3 {
+                (&mut __tmp_2) as *const _
             } else {
-                (&mut __tmp_1) as *const _
+                (&mut __tmp_3) as *const _
             })
         } as usize);
         return true;

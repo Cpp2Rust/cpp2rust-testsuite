@@ -52,17 +52,9 @@ fn main_0() -> i32 {
         let mut j: i32 = 0;
         'loop_: while (j < N) {
             let __rhs = ((i + j) % 7);
-            index!(
-                elem!((a.as_pointer() as Ptr<Vec<i32>>), (i as usize)),
-                (j as usize)
-            )
-            .write(__rhs);
+            index!(elem!(a.decay(), (i as usize)), (j as usize)).write(__rhs);
             let __rhs = ((i * j) % 5);
-            index!(
-                elem!((b.as_pointer() as Ptr<Vec<i32>>), (i as usize)),
-                (j as usize)
-            )
-            .write(__rhs);
+            index!(elem!(b.decay(), (i as usize)), (j as usize)).write(__rhs);
             j.prefix_inc();
         }
         i.prefix_inc();
@@ -86,11 +78,7 @@ fn main_0() -> i32 {
         'loop_: while (i < N) {
             let mut j: i32 = 0;
             'loop_: while (j < N) {
-                sum += ((index!(
-                    elem!((c.as_pointer() as Ptr<Vec<i32>>), (i as usize)),
-                    (j as usize)
-                )
-                .read()) as i64);
+                sum += ((index!(elem!(c.decay(), (i as usize)), (j as usize)).read()) as i64);
                 j.prefix_inc();
             }
             i.prefix_inc();

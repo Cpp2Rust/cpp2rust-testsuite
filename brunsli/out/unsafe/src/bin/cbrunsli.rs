@@ -2222,13 +2222,14 @@ impl brunsli_PermutationCoder {
         }
         (*value) = self.values_[(code)];
         {
-            let pos = <UnsafeRandomAccessIterator<u8>>::from(
+            let __it = <UnsafeRandomAccessIterator<u8>>::from(
                 self.values_.begin().iter_add((code as isize)),
-            )
-            .iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr()))
+            );
+            let pos = __it
+                .iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr()))
                 as usize;
             self.values_.remove(pos);
-            <UnsafeRandomAccessIterator<u8>>::from(self.values_.begin().iter_add((code as isize)))
+            __it
         };
         return true;
     }
@@ -2251,11 +2252,12 @@ impl brunsli_PermutationCoder {
         (*code) = (it.iter_distance(&self.values_.begin()) as i32);
         (*nbits) = (unsafe { brunsli_PermutationCoder::num_bits(self) });
         {
-            let pos = <UnsafeRandomAccessIterator<u8>>::from((it).clone())
+            let __it = <UnsafeRandomAccessIterator<u8>>::from((it).clone());
+            let pos = __it
                 .iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr()))
                 as usize;
             self.values_.remove(pos);
-            <UnsafeRandomAccessIterator<u8>>::from((it).clone())
+            __it
         };
         return true;
     }
@@ -2295,11 +2297,11 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
         };
         (*code.offset((i) as isize)) = (it.iter_distance(&items.begin()) as u32);
         {
-            let pos = <UnsafeRandomAccessIterator<u32>>::from((it).clone())
-                .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
-                as usize;
+            let __it = <UnsafeRandomAccessIterator<u32>>::from((it).clone());
+            let pos =
+                __it.iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr())) as usize;
             items.remove(pos);
-            <UnsafeRandomAccessIterator<u32>>::from((it).clone())
+            __it
         };
         i.prefix_inc();
     }
@@ -2325,12 +2327,12 @@ pub unsafe fn DecodeLehmerCode_113(
         }
         let value: u32 = items[(index as usize)];
         {
+            let __it =
+                <UnsafeRandomAccessIterator<u32>>::from(items.begin().iter_add((index as isize)));
             let pos =
-                <UnsafeRandomAccessIterator<u32>>::from(items.begin().iter_add((index as isize)))
-                    .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
-                    as usize;
+                __it.iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr())) as usize;
             items.remove(pos);
-            <UnsafeRandomAccessIterator<u32>>::from(items.begin().iter_add((index as isize)))
+            __it
         };
         (*sigma.offset((i) as isize)) = value;
         i.prefix_inc();
@@ -3170,11 +3172,12 @@ pub unsafe fn HistogramCombine_133(
         'loop_: while cluster != clusters.end() {
             if (((*cluster.iter_deref()) as usize) >= (best_idx2)) {
                 {
-                    let pos = <UnsafeRandomAccessIterator<u64>>::from((cluster).clone())
+                    let __it = <UnsafeRandomAccessIterator<u64>>::from((cluster).clone());
+                    let pos = __it
                         .iter_distance(&UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr()))
                         as usize;
                     clusters.remove(pos);
-                    <UnsafeRandomAccessIterator<u64>>::from((cluster).clone())
+                    __it
                 };
                 break;
             }
@@ -4383,14 +4386,14 @@ pub unsafe fn EncodeHuffmanCode_158(
         let mut count: i32 =
             (((&(*huff)).counts[(i as usize)]) - (if ((i) == (max_len)) { 1 } else { 0 }));
         let mut count_limit: i32 = {
-            let mut __tmp_0: i32 = ((max_count) - (total_count));
-            let mut __tmp_1: i32 = ((space)
+            let mut __tmp_1: i32 = ((max_count) - (total_count));
+            let mut __tmp_2: i32 = ((space)
                 >> ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7))
                     - (i)));
-            (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                (&mut __tmp_0) as *const _
-            } else {
+            (*if *&mut __tmp_1 <= *&mut __tmp_2 {
                 (&mut __tmp_1) as *const _
+            } else {
+                (&mut __tmp_2) as *const _
             })
         };
         if ((count) > (count_limit)) {
@@ -5398,7 +5401,7 @@ pub unsafe fn EncodeMetaData_174(
     if !(::brotli_sys::BrotliEncoderCompress(
         (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrotliQuality_142)),
         (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrotliWindowBits_143)),
-        ::brotli_sys::BROTLI_MODE_GENERIC,
+        (::brotli_sys::BROTLI_MODE_GENERIC as ::brotli_sys::BrotliEncoderMode),
         metadata.len(),
         (metadata.as_mut_ptr()).cast_const(),
         (&mut compressed_size as *mut usize),
@@ -7452,11 +7455,11 @@ pub unsafe fn EncodeCounts_125(
                 length = ((i) + (1));
                 if ((i) < (omit_pos)) {
                     omit_log = {
-                        let mut __tmp_1: i32 = ((logcounts[(i) as usize]) + (1));
-                        (*if *&mut omit_log >= *&mut __tmp_1 {
+                        let mut __tmp_0: i32 = ((logcounts[(i) as usize]) + (1));
+                        (*if *&mut omit_log >= *&mut __tmp_0 {
                             (&mut omit_log) as *const _
                         } else {
-                            (&mut __tmp_1) as *const _
+                            (&mut __tmp_0) as *const _
                         })
                     };
                 } else {
@@ -8081,11 +8084,11 @@ pub unsafe fn CreateHuffmanTree_220(
             i.prefix_dec();
             if ((*data.offset((i) as isize)) != 0) {
                 let count: u32 = {
-                    let mut __tmp_1: u32 = (count_limit).wrapping_sub(1_u32);
-                    (*if *data.offset((i) as isize) >= *&mut __tmp_1 {
+                    let mut __tmp_0: u32 = (count_limit).wrapping_sub(1_u32);
+                    (*if *data.offset((i) as isize) >= *&mut __tmp_0 {
                         (data.offset((i) as isize)) as *const _
                     } else {
-                        (&mut __tmp_1) as *const _
+                        (&mut __tmp_0) as *const _
                     })
                 };
                 {

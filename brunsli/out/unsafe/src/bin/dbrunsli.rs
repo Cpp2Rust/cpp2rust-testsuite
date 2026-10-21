@@ -2222,13 +2222,14 @@ impl brunsli_PermutationCoder {
         }
         (*value) = self.values_[(code)];
         {
-            let pos = <UnsafeRandomAccessIterator<u8>>::from(
+            let __it = <UnsafeRandomAccessIterator<u8>>::from(
                 self.values_.begin().iter_add((code as isize)),
-            )
-            .iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr()))
+            );
+            let pos = __it
+                .iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr()))
                 as usize;
             self.values_.remove(pos);
-            <UnsafeRandomAccessIterator<u8>>::from(self.values_.begin().iter_add((code as isize)))
+            __it
         };
         return true;
     }
@@ -2251,11 +2252,12 @@ impl brunsli_PermutationCoder {
         (*code) = (it.iter_distance(&self.values_.begin()) as i32);
         (*nbits) = (unsafe { brunsli_PermutationCoder::num_bits(self) });
         {
-            let pos = <UnsafeRandomAccessIterator<u8>>::from((it).clone())
+            let __it = <UnsafeRandomAccessIterator<u8>>::from((it).clone());
+            let pos = __it
                 .iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr()))
                 as usize;
             self.values_.remove(pos);
-            <UnsafeRandomAccessIterator<u8>>::from((it).clone())
+            __it
         };
         return true;
     }
@@ -2295,11 +2297,11 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
         };
         (*code.offset((i) as isize)) = (it.iter_distance(&items.begin()) as u32);
         {
-            let pos = <UnsafeRandomAccessIterator<u32>>::from((it).clone())
-                .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
-                as usize;
+            let __it = <UnsafeRandomAccessIterator<u32>>::from((it).clone());
+            let pos =
+                __it.iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr())) as usize;
             items.remove(pos);
-            <UnsafeRandomAccessIterator<u32>>::from((it).clone())
+            __it
         };
         i.prefix_inc();
     }
@@ -2325,12 +2327,12 @@ pub unsafe fn DecodeLehmerCode_113(
         }
         let value: u32 = items[(index as usize)];
         {
+            let __it =
+                <UnsafeRandomAccessIterator<u32>>::from(items.begin().iter_add((index as isize)));
             let pos =
-                <UnsafeRandomAccessIterator<u32>>::from(items.begin().iter_add((index as isize)))
-                    .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
-                    as usize;
+                __it.iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr())) as usize;
             items.remove(pos);
-            <UnsafeRandomAccessIterator<u32>>::from(items.begin().iter_add((index as isize)))
+            __it
         };
         (*sigma.offset((i) as isize)) = value;
         i.prefix_inc();
@@ -4831,13 +4833,13 @@ pub unsafe fn DecodeHuffmanCode_150(
                         )) as usize)
                             .wrapping_sub((*js).i);
                         let mut count_limit: usize = ({
-                            let mut __tmp_0: u64 =
+                            let mut __tmp_2: u64 =
                                 (((*js).max_count).wrapping_sub((*js).total_count) as u64);
-                            let mut __tmp_1: u64 = ((((*js).space) >> (shift)) as u64);
-                            (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                                (&mut __tmp_0) as *const _
+                            let mut __tmp_3: u64 = ((((*js).space) >> (shift)) as u64);
+                            (*if *&mut __tmp_2 <= *&mut __tmp_3 {
+                                (&mut __tmp_2) as *const _
                             } else {
-                                (&mut __tmp_1) as *const _
+                                (&mut __tmp_3) as *const _
                             })
                         } as usize);
                         if ((count_limit) > (0_usize)) {
@@ -4968,53 +4970,53 @@ pub unsafe fn DecodeScanInfo_151(
     );
     'loop_: while true {
         'switch: {
-            match { ( ( ( * js ) . stage  as i32 ) )  } { __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 ) )  =>  { { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
+            match { ( ( * js ) . stage  as i32 )  } { __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON as i32 )  =>  { { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
   ;
  ;
  if ! ( ( unsafe { BrunsliBitReaderCanRead_134 ( br , 22_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
- } ( * si  ) . Ss   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 6_u32 , ) } )  as i32 ) )  ;
- ( * si  ) . Se   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 6_u32 , ) } )  as i32 ) )  ;
- ( * si  ) . Ah   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 4_u32 , ) } )  as i32 ) )  ;
- ( * si  ) . Al   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 4_u32 , ) } )  as i32 ) )  ;
+ } ( * si  ) . Ss   = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 6_u32 , ) } )  as i32 )  ;
+ ( * si  ) . Se   = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 6_u32 , ) } )  as i32 )  ;
+ ( * si  ) . Ah   = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 4_u32 , ) } )  as i32 )  ;
+ ( * si  ) . Al   = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 4_u32 , ) } )  as i32 )  ;
  ( * si  ) . num_components   = ( ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  ) . wrapping_add ( 1_u32 ) ) as usize )  ;
  ( * js ) . j   = 0_usize  ;
  ( * js ) . stage   = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT  ;
  ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT as i32 ) )  =>  { { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
+ } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT as i32 )  =>  { { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
   ;
  ;
  if ( ( ( * js ) . j  ) < ( ( * si  ) . num_components  ) ) { if ! ( ( unsafe { BrunsliBitReaderCanRead_134 ( br , 6_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
- } ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . comp_idx   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as u8 ) )  ;
- ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . dc_tbl_idx   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as i32 ) )  ;
- ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . ac_tbl_idx   = ( ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as i32 ) )  ;
+ } ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . comp_idx   = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as u8 )  ;
+ ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . dc_tbl_idx   = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as i32 )  ;
+ ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . ac_tbl_idx   = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as i32 )  ;
  ( * js ) . j  .postfix_inc() ;
  } else { ( * js ) . last_block_idx   = - 1_i32  ;
  ( * js ) . stage   = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION  ;
  } ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION as i32 ) )  =>  { { if ! ( ( unsafe { BrunsliBitReaderCanRead_134 ( br , 1_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
+ } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION as i32 )  =>  { { if ! ( ( unsafe { BrunsliBitReaderCanRead_134 ( br , 1_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
  } if ( ( unsafe { BrunsliBitReaderRead_126 ( br , 1_u32 , ) } )  != 0 ) { ( * js ) . stage   = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA  ;
  } else { ( * js ) . last_block_idx   = 0  ;
  ( * js ) . last_num   = 0  ;
  ( * js ) . stage   = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION  ;
  } ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA as i32 ) )  =>  { { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
+ } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA as i32 )  =>  { { let mut si : *mut brunsli_JPEGScanInfo = ( & mut ( &mut ( * jpg  ) ) . scan_info  [ ( ( * js ) . i  ) ] as *mut brunsli_JPEGScanInfo ) ;
   ;
  ;
  if ! ( ( unsafe { DecodeVarint_144 ( ( & mut ( * js ) . varint  as *mut brunsli_internal_dec_VarintState ) , br , 28_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
- } let mut block_idx : i32 = ( ( ( ( ( * js ) . last_block_idx  ) + ( ( ( ( * js ) . varint  . value  as i32 ) ) ) ) ) + ( 1 ) ) ;
+ } let mut block_idx : i32 = ( ( ( ( ( * js ) . last_block_idx  ) + ( ( ( * js ) . varint  . value  as i32 ) ) ) ) + ( 1 ) ) ;
   ;
  ;
  {let __init = block_idx ;
-    ( * si  ) . reset_points  .push(__init)} ;
+    ( * si  ) . reset_points  .push(__init)}  ;
  ( * js ) . last_block_idx   = block_idx  ;
  if ( ( ( * js ) . last_block_idx  ) > ( ( ( ( 1 ) << ( 30 ) ) ) ) ) { return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN  ;
  } ( * js ) . stage   = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION  ;
  ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION as i32 ) )  =>  { { if ! ( ( unsafe { BrunsliBitReaderCanRead_134 ( br , 1_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
+ } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION as i32 )  =>  { { if ! ( ( unsafe { BrunsliBitReaderCanRead_134 ( br , 1_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
  } if ( ( unsafe { BrunsliBitReaderRead_126 ( br , 1_u32 , ) } )  != 0 ) { ( * js ) . stage   = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA  ;
  } else { ( unsafe { maybe_add_zero_run  .call ( ) } ) ;
  ( * js ) . i  .prefix_inc() ;
@@ -5024,8 +5026,8 @@ pub unsafe fn DecodeScanInfo_151(
  } return brunsli_BrunsliStatus_BRUNSLI_OK  ;
  } ;
  continue 'loop_ ;
- } }, __v if __v ==  ( ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA as i32 ) )  =>  { { if ! ( ( unsafe { DecodeVarint_144 ( ( & mut ( * js ) . varint  as *mut brunsli_internal_dec_VarintState ) , br , 28_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
- } let mut block_idx : i32 = ( ( ( * js ) . last_block_idx  ) + ( ( ( ( * js ) . varint  . value  as i32 ) ) ) ) ;
+ } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA as i32 )  =>  { { if ! ( ( unsafe { DecodeVarint_144 ( ( & mut ( * js ) . varint  as *mut brunsli_internal_dec_VarintState ) , br , 28_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
+ } let mut block_idx : i32 = ( ( ( * js ) . last_block_idx  ) + ( ( ( * js ) . varint  . value  as i32 ) ) ) ;
   ;
  ;
  if ( ( block_idx ) > ( ( * js ) . last_block_idx  ) ) { ( unsafe { maybe_add_zero_run  .call ( ) } ) ;
@@ -5879,12 +5881,12 @@ pub unsafe fn SkipAvailableBytes_167(
 ) -> usize {
     let mut available: usize = (unsafe { GetBytesAvailable_166(state) });
     let mut skip_bytes: usize = ({
-        let mut __tmp_0: u64 = (available as u64);
-        let mut __tmp_1: u64 = (len as u64);
-        (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-            (&mut __tmp_0) as *const _
+        let mut __tmp_4: u64 = (available as u64);
+        let mut __tmp_5: u64 = (len as u64);
+        (*if *&mut __tmp_4 <= *&mut __tmp_5 {
+            (&mut __tmp_4) as *const _
         } else {
-            (&mut __tmp_1) as *const _
+            (&mut __tmp_5) as *const _
         })
     } as usize);
     (*state).pos = ((*state).pos).wrapping_add(skip_bytes);
@@ -6443,12 +6445,12 @@ pub unsafe fn DecodeMetaDataSection_180(
         );
         'loop_: while true {
             let mut available_bytes: usize = ({
-                let mut __tmp_0: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-                let mut __tmp_1: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
-                (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                    (&mut __tmp_0) as *const _
+                let mut __tmp_6: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
+                let mut __tmp_7: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
+                (*if *&mut __tmp_6 <= *&mut __tmp_7 {
+                    (&mut __tmp_6) as *const _
                 } else {
-                    (&mut __tmp_1) as *const _
+                    (&mut __tmp_7) as *const _
                 })
             } as usize);
             let mut available_in: usize = available_bytes;
@@ -6561,12 +6563,12 @@ pub unsafe fn PrepareBitReader_182(
     mut state: *mut brunsli_internal_dec_State,
 ) {
     let mut chunk_len: usize = ({
-        let mut __tmp_0: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-        let mut __tmp_1: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
-        (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-            (&mut __tmp_0) as *const _
+        let mut __tmp_8: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
+        let mut __tmp_9: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
+        (*if *&mut __tmp_8 <= *&mut __tmp_9 {
+            (&mut __tmp_8) as *const _
         } else {
-            (&mut __tmp_1) as *const _
+            (&mut __tmp_9) as *const _
         })
     } as usize);
     (unsafe {
@@ -6589,12 +6591,12 @@ pub unsafe fn SuspendBitReader_183(
     mut result: brunsli_BrunsliStatus,
 ) -> brunsli_BrunsliStatus {
     let mut chunk_len: usize = ({
-        let mut __tmp_0: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-        let mut __tmp_1: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
-        (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-            (&mut __tmp_0) as *const _
+        let mut __tmp_10: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
+        let mut __tmp_11: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
+        (*if *&mut __tmp_10 <= *&mut __tmp_11 {
+            (&mut __tmp_10) as *const _
         } else {
-            (&mut __tmp_1) as *const _
+            (&mut __tmp_11) as *const _
         })
     } as usize);
     let mut unused_bytes: usize = (unsafe { BrunsliBitReaderSuspend_130(br) });
@@ -6942,12 +6944,12 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                         .wrapping_sub(((*dest).len() as u64))
                         as usize);
                     let mut piece_size: usize = ({
-                        let mut __tmp_0: u64 = (piece_limit as u64);
-                        let mut __tmp_1: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-                        (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                            (&mut __tmp_0) as *const _
+                        let mut __tmp_12: u64 = (piece_limit as u64);
+                        let mut __tmp_13: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
+                        (*if *&mut __tmp_12 <= *&mut __tmp_13 {
+                            (&mut __tmp_12) as *const _
                         } else {
-                            (&mut __tmp_1) as *const _
+                            (&mut __tmp_13) as *const _
                         })
                     } as usize);
                     (unsafe {
@@ -7556,12 +7558,12 @@ pub unsafe fn DecodeDCDataSection_190(
         'loop_: while true {}
     };
     let mut chunk_len: usize = ({
-        let mut __tmp_0: u64 = (available as u64);
-        let mut __tmp_1: u64 = (limit as u64);
-        (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-            (&mut __tmp_0) as *const _
+        let mut __tmp_14: u64 = (available as u64);
+        let mut __tmp_15: u64 = (limit as u64);
+        (*if *&mut __tmp_14 <= *&mut __tmp_15 {
+            (&mut __tmp_14) as *const _
         } else {
-            (&mut __tmp_1) as *const _
+            (&mut __tmp_15) as *const _
         })
     } as usize);
     let mut is_last_chunk: bool = ((chunk_len) == (limit));
@@ -7629,12 +7631,12 @@ pub unsafe fn DecodeACDataSection_191(
         'loop_: while true {}
     };
     let mut chunk_len: usize = ({
-        let mut __tmp_0: u64 = (available as u64);
-        let mut __tmp_1: u64 = (limit as u64);
-        (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-            (&mut __tmp_0) as *const _
+        let mut __tmp_16: u64 = (available as u64);
+        let mut __tmp_17: u64 = (limit as u64);
+        (*if *&mut __tmp_16 <= *&mut __tmp_17 {
+            (&mut __tmp_16) as *const _
         } else {
-            (&mut __tmp_1) as *const _
+            (&mut __tmp_17) as *const _
         })
     } as usize);
     let mut is_last_chunk: bool = ((chunk_len) == (limit));
@@ -7764,12 +7766,12 @@ pub unsafe fn DecodeOriginalJpg_192(
                         .wrapping_sub(((*fs).storage.len() as u64))
                         as usize);
                     let mut to_copy: usize = ({
-                        let mut __tmp_0: u64 = (chunk_size as u64);
-                        let mut __tmp_1: u64 = (remaining as u64);
-                        (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                            (&mut __tmp_0) as *const _
+                        let mut __tmp_18: u64 = (chunk_size as u64);
+                        let mut __tmp_19: u64 = (remaining as u64);
+                        (*if *&mut __tmp_18 <= *&mut __tmp_19 {
+                            (&mut __tmp_18) as *const _
                         } else {
-                            (&mut __tmp_1) as *const _
+                            (&mut __tmp_19) as *const _
                         })
                     } as usize);
                     {
@@ -7938,12 +7940,12 @@ pub unsafe fn ProcessSection_195(
         (!(is_known_section_tag)) || ((((*state).skip_tags) & (tag_bit as u32)) != 0);
     if skip_section {
         let mut to_skip: usize = ({
-            let mut __tmp_0: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-            let mut __tmp_1: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
-            (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                (&mut __tmp_0) as *const _
+            let mut __tmp_20: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
+            let mut __tmp_21: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
+            (*if *&mut __tmp_20 <= *&mut __tmp_21 {
+                (&mut __tmp_20) as *const _
             } else {
-                (&mut __tmp_1) as *const _
+                (&mut __tmp_21) as *const _
             })
         } as usize);
         (*state).pos = ((*state).pos).wrapping_add(to_skip);
@@ -8364,13 +8366,13 @@ pub unsafe fn LoadInput_200(mut state: *mut brunsli_internal_dec_State) {
     };
     let mut available: usize = ((*b).external_len).wrapping_sub((*b).external_pos);
     (*b).borrowed_len = ({
-        let mut __tmp_0: u64 =
+        let mut __tmp_22: u64 =
             ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBufferMaxReadAhead_199)) as u64);
-        let mut __tmp_1: u64 = (available as u64);
-        (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-            (&mut __tmp_0) as *const _
+        let mut __tmp_23: u64 = (available as u64);
+        (*if *&mut __tmp_22 <= *&mut __tmp_23 {
+            (&mut __tmp_22) as *const _
         } else {
-            (&mut __tmp_1) as *const _
+            (&mut __tmp_23) as *const _
         })
     } as usize);
     {
@@ -8635,12 +8637,12 @@ pub unsafe fn BrunsliEstimateDecoderPeakMemoryUsage_205(mut data: *const u8, len
             as usize),
     );
     return ((((out_size).wrapping_add(jpeg_data_size) as u64).wrapping_add({
-        let mut __tmp_0: u64 = (decode_peak as u64);
-        let mut __tmp_1: u64 = (jpeg_writer_size as u64);
-        (*if *&mut __tmp_0 >= *&mut __tmp_1 {
-            (&mut __tmp_0) as *const _
+        let mut __tmp_24: u64 = (decode_peak as u64);
+        let mut __tmp_25: u64 = (jpeg_writer_size as u64);
+        (*if *&mut __tmp_24 >= *&mut __tmp_25 {
+            (&mut __tmp_24) as *const _
         } else {
-            (&mut __tmp_1) as *const _
+            (&mut __tmp_25) as *const _
         })
     })) as usize);
 }
@@ -11926,12 +11928,12 @@ pub unsafe fn PushOutput_260(
         }
         let chunk: *mut brunsli_internal_dec_OutputChunk = ((*in_).first_mut().unwrap());
         let mut to_copy: usize = ({
-            let mut __tmp_0: u64 = ((*available_out) as u64);
-            let mut __tmp_1: u64 = ((*chunk).len as u64);
-            (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                (&mut __tmp_0) as *const _
+            let mut __tmp_2: u64 = ((*available_out) as u64);
+            let mut __tmp_3: u64 = ((*chunk).len as u64);
+            (*if *&mut __tmp_2 <= *&mut __tmp_3 {
+                (&mut __tmp_2) as *const _
             } else {
-                (&mut __tmp_1) as *const _
+                (&mut __tmp_3) as *const _
             })
         } as usize);
         if ((to_copy) > (0_usize)) {

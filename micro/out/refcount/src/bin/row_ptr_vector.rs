@@ -38,11 +38,7 @@ fn main_0() -> i32 {
         let mut j: i32 = 0;
         'loop_: while (j < N) {
             let __rhs = ((i * j) % 7);
-            index!(
-                elem!((grid.as_pointer() as Ptr<Vec<i32>>), (i as usize)),
-                (j as usize)
-            )
-            .write(__rhs);
+            index!(elem!(grid.decay(), (i as usize)), (j as usize)).write(__rhs);
             j.prefix_inc();
         }
         i.prefix_inc();
@@ -52,10 +48,7 @@ fn main_0() -> i32 {
     'loop_: while (r < 10) {
         let mut i: i32 = 0;
         'loop_: while (i < N) {
-            let mut p: Ptr<i32> = (((grid.as_pointer() as Ptr<Vec<i32>>)
-                .offset((i as usize))
-                .as_pointer() as Ptr<i32>)
-                .offset(0_usize));
+            let mut p: Ptr<i32> = (grid.decay().offset((i as usize)).decay().offset(0_usize));
             ({
                 let _p: Ptr<i32> = (p).clone();
                 let _n: i32 = N;

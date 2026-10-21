@@ -759,14 +759,15 @@ impl woff2_Font {
         };
         if (glyf_loc != output_order.end()) && (loca_loc != output_order.end()) {
             {
-                let pos = <UnsafeRandomAccessIterator<u32>>::from((loca_loc).clone())
+                let __it = <UnsafeRandomAccessIterator<u32>>::from((loca_loc).clone());
+                let pos = __it
                     .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
                     as usize;
                 output_order.remove(pos);
-                <UnsafeRandomAccessIterator<u32>>::from((loca_loc).clone())
+                __it
             };
             {
-                let pos = <UnsafeRandomAccessIterator<u32>>::from(
+                let __it = <UnsafeRandomAccessIterator<u32>>::from(
                     {
                         let mut __it = output_order.begin();
                         while __it != output_order.end()
@@ -778,26 +779,15 @@ impl woff2_Font {
                         __it
                     }
                     .iter_add(1_isize),
-                )
-                .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
+                );
+                let pos = __it
+                    .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
                     as usize;
                 output_order.insert(
                     pos,
                     (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)),
                 );
-                <UnsafeRandomAccessIterator<u32>>::from(
-                    {
-                        let mut __it = output_order.begin();
-                        while __it != output_order.end()
-                            && *__it.iter_deref()
-                                != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
-                        {
-                            __it.iter_inc();
-                        }
-                        __it
-                    }
-                    .iter_add(1_isize),
-                )
+                __it
             };
         }
         return std::mem::take(&mut output_order);
@@ -1019,12 +1009,12 @@ pub unsafe fn FontCollectionFileSize_39(font_collection: *const woff2_FontCollec
     ) {
         let font: *const woff2_Font = &(*font.iter_deref());
         max_offset = ({
-            let mut __tmp_0: u64 = (max_offset as u64);
-            let mut __tmp_1: u64 = ((unsafe { FontFileSize_38(font) }) as u64);
-            (*if *&mut __tmp_0 >= *&mut __tmp_1 {
-                (&mut __tmp_0) as *const _
+            let mut __tmp_2: u64 = (max_offset as u64);
+            let mut __tmp_3: u64 = ((unsafe { FontFileSize_38(font) }) as u64);
+            (*if *&mut __tmp_2 >= *&mut __tmp_3 {
+                (&mut __tmp_2) as *const _
             } else {
-                (&mut __tmp_1) as *const _
+                (&mut __tmp_3) as *const _
             })
         } as usize);
     }
@@ -3085,7 +3075,7 @@ pub unsafe fn Woff2Compress_95(
             len,
             result,
             result_len,
-            ::brotli_sys::BROTLI_MODE_FONT,
+            (::brotli_sys::BROTLI_MODE_FONT as ::brotli_sys::BrotliEncoderMode),
             quality,
         )
     });
@@ -3103,7 +3093,7 @@ pub unsafe fn TextCompress_96(
             len,
             result,
             result_len,
-            ::brotli_sys::BROTLI_MODE_TEXT,
+            (::brotli_sys::BROTLI_MODE_TEXT as ::brotli_sys::BrotliEncoderMode),
             quality,
         )
     });
