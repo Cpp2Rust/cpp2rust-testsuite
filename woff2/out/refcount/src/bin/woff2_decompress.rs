@@ -442,124 +442,17 @@ pub struct woff2_Table {
     #[byte_size(8)]
     pub dst_data: Ptr<u8>,
 }
-impl std::cmp::Ord for woff2_Table {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        {
-            if woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(woff2_Table {
-                    tag: self.tag.clone(),
-                    flags: self.flags.clone(),
-                    src_offset: self.src_offset.clone(),
-                    src_length: self.src_length.clone(),
-                    transform_length: self.transform_length.clone(),
-                    dst_offset: self.dst_offset.clone(),
-                    dst_length: self.dst_length.clone(),
-                    dst_data: self.dst_data.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(woff2_Table {
-                    tag: other.tag.clone(),
-                    flags: other.flags.clone(),
-                    src_offset: other.src_offset.clone(),
-                    src_length: other.src_length.clone(),
-                    transform_length: other.transform_length.clone(),
-                    dst_offset: other.dst_offset.clone(),
-                    dst_length: other.dst_length.clone(),
-                    dst_data: other.dst_data.clone(),
-                }))
-                .as_pointer(),
-            ) {
-                std::cmp::Ordering::Less
-            } else if woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(woff2_Table {
-                    tag: other.tag.clone(),
-                    flags: other.flags.clone(),
-                    src_offset: other.src_offset.clone(),
-                    src_length: other.src_length.clone(),
-                    transform_length: other.transform_length.clone(),
-                    dst_offset: other.dst_offset.clone(),
-                    dst_length: other.dst_length.clone(),
-                    dst_data: other.dst_data.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(woff2_Table {
-                    tag: self.tag.clone(),
-                    flags: self.flags.clone(),
-                    src_offset: self.src_offset.clone(),
-                    src_length: self.src_length.clone(),
-                    transform_length: self.transform_length.clone(),
-                    dst_offset: self.dst_offset.clone(),
-                    dst_length: self.dst_length.clone(),
-                    dst_data: self.dst_data.clone(),
-                }))
-                .as_pointer(),
-            ) {
-                std::cmp::Ordering::Greater
-            } else {
-                std::cmp::Ordering::Equal
-            }
-        }
+impl CppLess for woff2_Table {
+    fn less(__lhs: &Ptr<Self>, __rhs: &Ptr<Self>) -> bool {
+        woff2_TableImpl::operator_lt(__lhs, __rhs.clone())
     }
 }
-impl std::cmp::PartialOrd for woff2_Table {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
+impl CppEq for woff2_Table {
+    fn equal(__lhs: &Ptr<Self>, __rhs: &Ptr<Self>) -> bool {
+        !(woff2_TableImpl::operator_lt(__lhs, __rhs.clone()))
+            && !(woff2_TableImpl::operator_lt(__rhs, __lhs.clone()))
     }
 }
-impl std::cmp::PartialEq for woff2_Table {
-    fn eq(&self, other: &Self) -> bool {
-        {
-            !(woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(woff2_Table {
-                    tag: self.tag.clone(),
-                    flags: self.flags.clone(),
-                    src_offset: self.src_offset.clone(),
-                    src_length: self.src_length.clone(),
-                    transform_length: self.transform_length.clone(),
-                    dst_offset: self.dst_offset.clone(),
-                    dst_length: self.dst_length.clone(),
-                    dst_data: self.dst_data.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(woff2_Table {
-                    tag: other.tag.clone(),
-                    flags: other.flags.clone(),
-                    src_offset: other.src_offset.clone(),
-                    src_length: other.src_length.clone(),
-                    transform_length: other.transform_length.clone(),
-                    dst_offset: other.dst_offset.clone(),
-                    dst_length: other.dst_length.clone(),
-                    dst_data: other.dst_data.clone(),
-                }))
-                .as_pointer(),
-            )) && !(woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(woff2_Table {
-                    tag: other.tag.clone(),
-                    flags: other.flags.clone(),
-                    src_offset: other.src_offset.clone(),
-                    src_length: other.src_length.clone(),
-                    transform_length: other.transform_length.clone(),
-                    dst_offset: other.dst_offset.clone(),
-                    dst_length: other.dst_length.clone(),
-                    dst_data: other.dst_data.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(woff2_Table {
-                    tag: self.tag.clone(),
-                    flags: self.flags.clone(),
-                    src_offset: self.src_offset.clone(),
-                    src_length: self.src_length.clone(),
-                    transform_length: self.transform_length.clone(),
-                    dst_offset: self.dst_offset.clone(),
-                    dst_length: self.dst_length.clone(),
-                    dst_data: self.dst_data.clone(),
-                }))
-                .as_pointer(),
-            ))
-        }
-    }
-}
-impl std::cmp::Eq for woff2_Table {}
 pub fn Log2Floor_25(mut n: u32) -> i32 {
     return if (n == 0_u32) {
         -1_i32
@@ -748,7 +641,7 @@ thread_local!(
     pub static kMaxPlausibleCompressionRatio_54: Value<f32> =
         Rc::new(RefCell::new((100_f64 as f32)));
 );
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Default)]
 #[byte_size(40)]
 pub struct woff2_TtcFont {
     #[offset(0)]
@@ -761,7 +654,17 @@ pub struct woff2_TtcFont {
     #[byte_size(24)]
     pub table_indices: Vec<u16>,
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+impl woff2_TtcFont {
+    pub fn move_from(_a0: Ptr<woff2_TtcFont>) -> Self {
+        Self {
+            flavor: { (*_a0.upgrade().deref()).flavor },
+            dst_offset: { (*_a0.upgrade().deref()).dst_offset },
+            header_checksum: { (*_a0.upgrade().deref()).header_checksum },
+            table_indices: field!(_a0, table_indices).with_mut(std::mem::take),
+        }
+    }
+}
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Default)]
 #[byte_size(80)]
 pub struct woff2_WOFF2Header {
     #[offset(0)]
@@ -783,7 +686,21 @@ pub struct woff2_WOFF2Header {
     #[byte_size(24)]
     pub ttc_fonts: Vec<woff2_TtcFont>,
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+impl woff2_WOFF2Header {
+    pub fn move_from(_a0: Ptr<woff2_WOFF2Header>) -> Self {
+        Self {
+            flavor: { (*_a0.upgrade().deref()).flavor },
+            header_version: { (*_a0.upgrade().deref()).header_version },
+            num_tables: { (*_a0.upgrade().deref()).num_tables },
+            compressed_offset: { (*_a0.upgrade().deref()).compressed_offset },
+            compressed_length: { (*_a0.upgrade().deref()).compressed_length },
+            uncompressed_size: { (*_a0.upgrade().deref()).uncompressed_size },
+            tables: field!(_a0, tables).with_mut(std::mem::take),
+            ttc_fonts: field!(_a0, ttc_fonts).with_mut(std::mem::take),
+        }
+    }
+}
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Default)]
 #[byte_size(80)]
 pub struct woff2_WOFF2FontInfo {
     #[offset(0)]
@@ -799,7 +716,19 @@ pub struct woff2_WOFF2FontInfo {
     #[byte_size(48)]
     pub table_entry_by_tag: Map<u32, (Value<u32>, Value<u32>)>,
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+impl woff2_WOFF2FontInfo {
+    pub fn move_from(_a0: Ptr<woff2_WOFF2FontInfo>) -> Self {
+        Self {
+            num_glyphs: { (*_a0.upgrade().deref()).num_glyphs },
+            index_format: { (*_a0.upgrade().deref()).index_format },
+            num_hmetrics: { (*_a0.upgrade().deref()).num_hmetrics },
+            x_mins: field!(_a0, x_mins).with_mut(std::mem::take),
+            table_entry_by_tag: field_ptr!(_a0, table_entry_by_tag)
+                .with_mut(|__m: &mut Map<u32, (Value<u32>, Value<u32>)>| std::mem::take(__m)),
+        }
+    }
+}
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Default)]
 #[byte_size(80)]
 pub struct woff2_RebuildMetadata {
     #[offset(0)]
@@ -810,6 +739,20 @@ pub struct woff2_RebuildMetadata {
     #[offset(32)]
     #[byte_size(48)]
     pub checksums: Map<(Value<u32>, Value<u32>), (Value<(Value<u32>, Value<u32>)>, Value<u32>)>,
+}
+impl woff2_RebuildMetadata {
+    pub fn move_from(_a0: Ptr<woff2_RebuildMetadata>) -> Self {
+        Self {
+            header_checksum: { (*_a0.upgrade().deref()).header_checksum },
+            font_infos: field!(_a0, font_infos).with_mut(std::mem::take),
+            checksums: field_ptr!(_a0, checksums).with_mut(
+                |__m: &mut Map<
+                    (Value<u32>, Value<u32>),
+                    (Value<(Value<u32>, Value<u32>)>, Value<u32>),
+                >| std::mem::take(__m),
+            ),
+        }
+    }
 }
 pub fn WithSign_55(mut flag: i32, mut baseval: i32) -> i32 {
     return if ((flag & 1) != 0) { baseval } else { -baseval };
@@ -1101,31 +1044,31 @@ pub fn ComputeBbox_59(mut n_points: u32, mut points: Ptr<woff2_Point>, mut dst: 
     'loop_: while (i < n_points) {
         let x: Value<i32> = Rc::new(RefCell::new(elem!(points, i).with(|__s| __s.x)));
         let y: Value<i32> = Rc::new(RefCell::new(elem!(points, i).with(|__s| __s.y)));
-        let __rhs = (if x.as_pointer().read() <= x_min.as_pointer().read() {
-            x.as_pointer()
-        } else {
-            x_min.as_pointer()
+        let __rhs = ({
+            let __a = x.as_pointer();
+            let __b = x_min.as_pointer();
+            if CppLess::less(&__b, &__a) { __b } else { __a }
         }
         .read());
         (*x_min.borrow_mut()) = __rhs;
-        let __rhs = (if x.as_pointer().read() >= x_max.as_pointer().read() {
-            x.as_pointer()
-        } else {
-            x_max.as_pointer()
+        let __rhs = ({
+            let __a = x.as_pointer();
+            let __b = x_max.as_pointer();
+            if CppLess::less(&__a, &__b) { __b } else { __a }
         }
         .read());
         (*x_max.borrow_mut()) = __rhs;
-        let __rhs = (if y.as_pointer().read() <= y_min.as_pointer().read() {
-            y.as_pointer()
-        } else {
-            y_min.as_pointer()
+        let __rhs = ({
+            let __a = y.as_pointer();
+            let __b = y_min.as_pointer();
+            if CppLess::less(&__b, &__a) { __b } else { __a }
         }
         .read());
         (*y_min.borrow_mut()) = __rhs;
-        let __rhs = (if y.as_pointer().read() >= y_max.as_pointer().read() {
-            y.as_pointer()
-        } else {
-            y_max.as_pointer()
+        let __rhs = ({
+            let __a = y.as_pointer();
+            let __b = y_max.as_pointer();
+            if CppLess::less(&__a, &__b) { __b } else { __a }
         }
         .read());
         (*y_max.borrow_mut()) = __rhs;
@@ -2252,7 +2195,7 @@ pub fn ReconstructFont_74(
         )));
         let mut reused: bool = field_ptr!(metadata, checksums).with(
             |__m: &Map<(Value<u32>, Value<u32>), (Value<(Value<u32>, Value<u32>)>, Value<u32>)>| {
-                __m.find(&(*checksum_key.borrow()))
+                __m.find(&checksum_key.as_pointer())
             },
         ) != field_ptr!(metadata, checksums).with(
             |__m: &Map<(Value<u32>, Value<u32>), (Value<(Value<u32>, Value<u32>)>, Value<u32>)>| {
@@ -2379,11 +2322,11 @@ pub fn ReconstructFont_74(
                     return false;
                 }
             }
-            Map::subscript(field_ptr!(metadata, checksums), &(*checksum_key.borrow()))
+            Map::subscript(field_ptr!(metadata, checksums), checksum_key.as_pointer())
                 .write((*checksum.borrow()));
         } else {
             (*checksum.borrow_mut()) =
-                (Map::subscript(field_ptr!(metadata, checksums), &(*checksum_key.borrow())).read());
+                (Map::subscript(field_ptr!(metadata, checksums), checksum_key.as_pointer()).read());
         }
         font_checksum = { (font_checksum).wrapping_add((*checksum.borrow())) };
         ({
@@ -2410,11 +2353,8 @@ pub fn ReconstructFont_74(
         if ((!({
             (*out.upgrade().deref_mut()).Write_3(
                 ((table_entry.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any(),
-                (((Map::subscript(
-                    field_ptr!(info, table_entry_by_tag),
-                    &table.with(|__s| __s.tag),
-                )
-                .read())
+                (((Map::subscript(field_ptr!(info, table_entry_by_tag), field_ptr!(table, tag))
+                    .read())
                 .wrapping_add(4_u32)) as usize),
                 12_usize,
             )
@@ -2744,7 +2684,12 @@ pub fn WriteHeaders_76(
                 let __rhs = table_index;
                 Map::subscript(
                     sorted_index_by_tag.as_pointer(),
-                    &vec_elem!(hdr, tables, (table_index as usize)).with(|__s| __s.tag),
+                    field_ptr!(
+                        field_ref!(hdr, tables)
+                            .decay()
+                            .offset((table_index as usize)),
+                        tag
+                    ),
                 )
                 .write(__rhs);
             }
@@ -2764,21 +2709,11 @@ pub fn WriteHeaders_76(
         }
     } else {
         {
-            let __n = sorted_tables
-                .decay()
-                .end()
-                .iter_distance(&sorted_tables.decay().begin());
+            let __first = sorted_tables.decay().begin();
+            let __n = sorted_tables.decay().end().iter_distance(&__first);
             let mut __order: Vec<isize> = (0..__n).collect();
-            __order.sort_by(|&__x, &__y| {
-                sorted_tables.decay().begin().iter_at(__x).with(|__a| {
-                    sorted_tables
-                        .decay()
-                        .begin()
-                        .iter_at(__y)
-                        .with(|__b| __a.cmp(__b))
-                })
-            });
-            reorder(__order, |__i| sorted_tables.decay().begin().iter_at(__i));
+            __order.sort_by(|&__x, &__y| cpp_cmp(&__first.iter_at(__x), &__first.iter_at(__y)));
+            reorder(__order, |__i| __first.iter_at(__i));
         };
     }
     let mut result: Ptr<u8> = (output.decay().offset(0_usize));
@@ -2834,17 +2769,19 @@ pub fn WriteHeaders_76(
                 field_ref!(ttc_font, table_indices).decay().end(),
             ) {
                 let mut table_index: u16 = (table_index.iter_deref().read());
-                let mut tag: u32 =
-                    vec_elem!(hdr, tables, (table_index as usize)).with(|__s| __s.tag);
+                let tag: Value<u32> = Rc::new(RefCell::new(
+                    vec_elem!(hdr, tables, (table_index as usize)).with(|__s| __s.tag),
+                ));
                 Map::subscript(
                     field_ptr!(
                         field_ref!(metadata, font_infos).decay().offset(i),
                         table_entry_by_tag
                     ),
-                    &tag,
+                    tag.as_pointer(),
                 )
                 .write((offset as u32));
-                let __rhs = ({ StoreTableEntry_71((result).clone(), (offset as u32), tag) });
+                let __rhs =
+                    ({ StoreTableEntry_71((result).clone(), (offset as u32), (*tag.borrow())) });
                 offset = __rhs;
             }
             let __rhs = ({
@@ -2878,7 +2815,7 @@ pub fn WriteHeaders_76(
                     field_ref!(metadata, font_infos).decay().offset(0_usize),
                     table_entry_by_tag
                 ),
-                &{ (*sorted_tables.borrow())[(i as usize)].tag },
+                field_ptr!(sorted_tables.decay().offset((i as usize)), tag),
             )
             .write((offset as u32));
             let __rhs = ({
@@ -3063,14 +3000,16 @@ pub fn SetFileContents_81(
         ::std::fs::File::create(filename.decay().to_string()).expect("Failed to open file"),
     ));
     {
-        let mut __bytes: Vec<u8> = Vec::new();
         let mut __it = (*start.borrow()).clone();
-        while __it != (*end.borrow()).clone() {
+        let __last = (*end.borrow()).clone();
+        let __out = &mut (*ofs.borrow_mut());
+        let mut __bytes: Vec<u8> = Vec::new();
+        while __it != __last {
             __bytes.push(__it.iter_deref().read() as u8);
             __it.iter_inc();
         }
-        (*ofs.borrow_mut()).write_all(&__bytes);
-        (*ofs.borrow_mut()).try_clone().unwrap()
+        __out.write_all(&__bytes);
+        __out.try_clone().unwrap()
     };
 }
 pub fn main() {
@@ -3139,10 +3078,10 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
                 let __tmp_1: Value<u64> = Rc::new(RefCell::new(
                     (kDefaultMaxSize_28.with(|rc| *rc.borrow()) as u64),
                 ));
-                (if __tmp_0.as_pointer().read() <= __tmp_1.as_pointer().read() {
-                    __tmp_0.as_pointer()
-                } else {
-                    __tmp_1.as_pointer()
+                ({
+                    let __a = __tmp_0.as_pointer();
+                    let __b = __tmp_1.as_pointer();
+                    if CppLess::less(&__b, &__a) { __b } else { __a }
                 }
                 .read())
             } as usize) as usize
@@ -3195,10 +3134,10 @@ impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
         let __rhs = ({
             let __tmp_2: Value<u64> = Rc::new(RefCell::new(({ self.offset_ } as u64)));
             let __tmp_3: Value<u64> = Rc::new(RefCell::new(((offset).wrapping_add(n) as u64)));
-            (if __tmp_2.as_pointer().read() >= __tmp_3.as_pointer().read() {
-                __tmp_2.as_pointer()
-            } else {
-                __tmp_3.as_pointer()
+            ({
+                let __a = __tmp_2.as_pointer();
+                let __b = __tmp_3.as_pointer();
+                if CppLess::less(&__a, &__b) { __b } else { __a }
             }
             .read())
         } as usize);
@@ -3268,10 +3207,10 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
         let __rhs = ({
             let __tmp_0: Value<u64> = Rc::new(RefCell::new(({ self.offset_ } as u64)));
             let __tmp_1: Value<u64> = Rc::new(RefCell::new(((offset).wrapping_add(n) as u64)));
-            (if __tmp_0.as_pointer().read() >= __tmp_1.as_pointer().read() {
-                __tmp_0.as_pointer()
-            } else {
-                __tmp_1.as_pointer()
+            ({
+                let __a = __tmp_0.as_pointer();
+                let __b = __tmp_1.as_pointer();
+                if CppLess::less(&__a, &__b) { __b } else { __a }
             }
             .read())
         } as usize);
@@ -3483,12 +3422,89 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         return true;
     }
 }
+pub trait woff2_RebuildMetadataImpl {
+    fn move_assign(&self, _a0: Ptr<woff2_RebuildMetadata>) -> Ptr<woff2_RebuildMetadata>;
+}
+impl woff2_RebuildMetadataImpl for Ptr<woff2_RebuildMetadata> {
+    fn move_assign(&self, _a0: Ptr<woff2_RebuildMetadata>) -> Ptr<woff2_RebuildMetadata> {
+        field!((*self), header_checksum).write({ { (*_a0.upgrade().deref()).header_checksum } });
+        field_ref!((*self), font_infos)
+            .as_pointer()
+            .write(field!(_a0, font_infos).with_mut(std::mem::take));
+        {
+            let __src = field_ptr!(_a0, checksums).with_mut(
+                |__m: &mut Map<
+                    (Value<u32>, Value<u32>),
+                    (Value<(Value<u32>, Value<u32>)>, Value<u32>),
+                >| std::mem::take(__m),
+            );
+            field_ptr!((*self), checksums).write(__src)
+        };
+        return (*self).clone();
+    }
+}
 pub trait woff2_TableImpl {
     fn operator_lt(&self, other: Ptr<woff2_Table>) -> bool;
 }
 impl woff2_TableImpl for Ptr<woff2_Table> {
     fn operator_lt(&self, other: Ptr<woff2_Table>) -> bool {
         return ({ (*self).with(|__s| __s.tag) } < { other.with(|__s| __s.tag) });
+    }
+}
+pub trait woff2_TtcFontImpl {
+    fn move_assign(&self, _a0: Ptr<woff2_TtcFont>) -> Ptr<woff2_TtcFont>;
+}
+impl woff2_TtcFontImpl for Ptr<woff2_TtcFont> {
+    fn move_assign(&self, _a0: Ptr<woff2_TtcFont>) -> Ptr<woff2_TtcFont> {
+        field!((*self), flavor).write({ { (*_a0.upgrade().deref()).flavor } });
+        field!((*self), dst_offset).write({ { (*_a0.upgrade().deref()).dst_offset } });
+        field!((*self), header_checksum).write({ { (*_a0.upgrade().deref()).header_checksum } });
+        field_ref!((*self), table_indices)
+            .as_pointer()
+            .write(field!(_a0, table_indices).with_mut(std::mem::take));
+        return (*self).clone();
+    }
+}
+pub trait woff2_WOFF2FontInfoImpl {
+    fn move_assign(&self, _a0: Ptr<woff2_WOFF2FontInfo>) -> Ptr<woff2_WOFF2FontInfo>;
+}
+impl woff2_WOFF2FontInfoImpl for Ptr<woff2_WOFF2FontInfo> {
+    fn move_assign(&self, _a0: Ptr<woff2_WOFF2FontInfo>) -> Ptr<woff2_WOFF2FontInfo> {
+        field!((*self), num_glyphs).write({ { (*_a0.upgrade().deref()).num_glyphs } });
+        field!((*self), index_format).write({ { (*_a0.upgrade().deref()).index_format } });
+        field!((*self), num_hmetrics).write({ { (*_a0.upgrade().deref()).num_hmetrics } });
+        field_ref!((*self), x_mins)
+            .as_pointer()
+            .write(field!(_a0, x_mins).with_mut(std::mem::take));
+        {
+            let __src = field_ptr!(_a0, table_entry_by_tag)
+                .with_mut(|__m: &mut Map<u32, (Value<u32>, Value<u32>)>| std::mem::take(__m));
+            field_ptr!((*self), table_entry_by_tag).write(__src)
+        };
+        return (*self).clone();
+    }
+}
+pub trait woff2_WOFF2HeaderImpl {
+    fn move_assign(&self, _a0: Ptr<woff2_WOFF2Header>) -> Ptr<woff2_WOFF2Header>;
+}
+impl woff2_WOFF2HeaderImpl for Ptr<woff2_WOFF2Header> {
+    fn move_assign(&self, _a0: Ptr<woff2_WOFF2Header>) -> Ptr<woff2_WOFF2Header> {
+        field!((*self), flavor).write({ { (*_a0.upgrade().deref()).flavor } });
+        field!((*self), header_version).write({ { (*_a0.upgrade().deref()).header_version } });
+        field!((*self), num_tables).write({ { (*_a0.upgrade().deref()).num_tables } });
+        field!((*self), compressed_offset)
+            .write({ { (*_a0.upgrade().deref()).compressed_offset } });
+        field!((*self), compressed_length)
+            .write({ { (*_a0.upgrade().deref()).compressed_length } });
+        field!((*self), uncompressed_size)
+            .write({ { (*_a0.upgrade().deref()).uncompressed_size } });
+        field_ref!((*self), tables)
+            .as_pointer()
+            .write(field!(_a0, tables).with_mut(std::mem::take));
+        field_ref!((*self), ttc_fonts)
+            .as_pointer()
+            .write(field!(_a0, ttc_fonts).with_mut(std::mem::take));
+        return (*self).clone();
     }
 }
 pub trait woff2_WOFF2StringOutImpl {

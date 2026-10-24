@@ -754,15 +754,33 @@ pub static mut kDefaultGlyphBuf_53: std::cell::LazyCell<usize> =
 pub static mut kMaxPlausibleCompressionRatio_54: std::cell::LazyCell<f32> =
     std::cell::LazyCell::new(|| unsafe { (100_f64 as f32) });
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_TtcFont {
     pub flavor: u32,
     pub dst_offset: u32,
     pub header_checksum: u32,
     pub table_indices: Vec<u16>,
 }
+impl woff2_TtcFont {
+    pub unsafe fn move_from(_a0: *mut woff2_TtcFont) -> Self {
+        let mut this = Self {
+            flavor: (*_a0).flavor,
+            dst_offset: (*_a0).dst_offset,
+            header_checksum: (*_a0).header_checksum,
+            table_indices: std::mem::take(&mut (*_a0).table_indices),
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut woff2_TtcFont) -> *mut woff2_TtcFont {
+        self.flavor = (*_a0).flavor;
+        self.dst_offset = (*_a0).dst_offset;
+        self.header_checksum = (*_a0).header_checksum;
+        self.table_indices = std::mem::take(&mut (*_a0).table_indices);
+        return &mut (*(self as *mut woff2_TtcFont));
+    }
+}
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_WOFF2Header {
     pub flavor: u32,
     pub header_version: u32,
@@ -773,8 +791,34 @@ pub struct woff2_WOFF2Header {
     pub tables: Vec<woff2_Table>,
     pub ttc_fonts: Vec<woff2_TtcFont>,
 }
+impl woff2_WOFF2Header {
+    pub unsafe fn move_from(_a0: *mut woff2_WOFF2Header) -> Self {
+        let mut this = Self {
+            flavor: (*_a0).flavor,
+            header_version: (*_a0).header_version,
+            num_tables: (*_a0).num_tables,
+            compressed_offset: (*_a0).compressed_offset,
+            compressed_length: (*_a0).compressed_length,
+            uncompressed_size: (*_a0).uncompressed_size,
+            tables: std::mem::take(&mut (*_a0).tables),
+            ttc_fonts: std::mem::take(&mut (*_a0).ttc_fonts),
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut woff2_WOFF2Header) -> *mut woff2_WOFF2Header {
+        self.flavor = (*_a0).flavor;
+        self.header_version = (*_a0).header_version;
+        self.num_tables = (*_a0).num_tables;
+        self.compressed_offset = (*_a0).compressed_offset;
+        self.compressed_length = (*_a0).compressed_length;
+        self.uncompressed_size = (*_a0).uncompressed_size;
+        self.tables = std::mem::take(&mut (*_a0).tables);
+        self.ttc_fonts = std::mem::take(&mut (*_a0).ttc_fonts);
+        return &mut (*(self as *mut woff2_WOFF2Header));
+    }
+}
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_WOFF2FontInfo {
     pub num_glyphs: u16,
     pub index_format: u16,
@@ -782,12 +826,54 @@ pub struct woff2_WOFF2FontInfo {
     pub x_mins: Vec<i16>,
     pub table_entry_by_tag: UnsafeMap<u32, (u32, u32)>,
 }
+impl woff2_WOFF2FontInfo {
+    pub unsafe fn move_from(_a0: *mut woff2_WOFF2FontInfo) -> Self {
+        let mut this = Self {
+            num_glyphs: (*_a0).num_glyphs,
+            index_format: (*_a0).index_format,
+            num_hmetrics: (*_a0).num_hmetrics,
+            x_mins: std::mem::take(&mut (*_a0).x_mins),
+            table_entry_by_tag: std::mem::take(&mut (*_a0).table_entry_by_tag),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut woff2_WOFF2FontInfo,
+    ) -> *mut woff2_WOFF2FontInfo {
+        self.num_glyphs = (*_a0).num_glyphs;
+        self.index_format = (*_a0).index_format;
+        self.num_hmetrics = (*_a0).num_hmetrics;
+        self.x_mins = std::mem::take(&mut (*_a0).x_mins);
+        self.table_entry_by_tag = std::mem::take(&mut (*_a0).table_entry_by_tag);
+        return &mut (*(self as *mut woff2_WOFF2FontInfo));
+    }
+}
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_RebuildMetadata {
     pub header_checksum: u32,
     pub font_infos: Vec<woff2_WOFF2FontInfo>,
     pub checksums: UnsafeMap<(u32, u32), ((u32, u32), u32)>,
+}
+impl woff2_RebuildMetadata {
+    pub unsafe fn move_from(_a0: *mut woff2_RebuildMetadata) -> Self {
+        let mut this = Self {
+            header_checksum: (*_a0).header_checksum,
+            font_infos: std::mem::take(&mut (*_a0).font_infos),
+            checksums: std::mem::take(&mut (*_a0).checksums),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut woff2_RebuildMetadata,
+    ) -> *mut woff2_RebuildMetadata {
+        self.header_checksum = (*_a0).header_checksum;
+        self.font_infos = std::mem::take(&mut (*_a0).font_infos);
+        self.checksums = std::mem::take(&mut (*_a0).checksums);
+        return &mut (*(self as *mut woff2_RebuildMetadata));
+    }
 }
 pub unsafe fn WithSign_55(mut flag: i32, mut baseval: i32) -> i32 {
     return if (((flag) & (1)) != 0) {
@@ -1083,25 +1169,25 @@ pub unsafe fn ComputeBbox_59(mut n_points: u32, mut points: *const woff2_Point, 
     'loop_: while ((i) < (n_points)) {
         let mut x: i32 = (*points.offset((i) as isize)).x;
         let mut y: i32 = (*points.offset((i) as isize)).y;
-        x_min = (*if *&mut x <= *&mut x_min {
-            (&mut x) as *const _
-        } else {
-            (&mut x_min) as *const _
+        x_min = (*{
+            let __a: *const _ = &mut x;
+            let __b: *const _ = &mut x_min;
+            if *__b < *__a { __b } else { __a }
         });
-        x_max = (*if *&mut x >= *&mut x_max {
-            (&mut x) as *const _
-        } else {
-            (&mut x_max) as *const _
+        x_max = (*{
+            let __a: *const _ = &mut x;
+            let __b: *const _ = &mut x_max;
+            if *__a < *__b { __b } else { __a }
         });
-        y_min = (*if *&mut y <= *&mut y_min {
-            (&mut y) as *const _
-        } else {
-            (&mut y_min) as *const _
+        y_min = (*{
+            let __a: *const _ = &mut y;
+            let __b: *const _ = &mut y_min;
+            if *__b < *__a { __b } else { __a }
         });
-        y_max = (*if *&mut y >= *&mut y_max {
-            (&mut y) as *const _
-        } else {
-            (&mut y_max) as *const _
+        y_max = (*{
+            let __a: *const _ = &mut y;
+            let __b: *const _ = &mut y_max;
+            if *__a < *__b { __b } else { __a }
         });
         i.prefix_inc();
     }
@@ -2640,17 +2726,16 @@ pub unsafe fn WriteHeaders_76(
         }
     } else {
         {
-            let __n = sorted_tables.end().iter_distance(&sorted_tables.begin());
+            let __first = sorted_tables.begin();
+            let __n = sorted_tables.end().iter_distance(&__first);
             let mut __order: Vec<isize> = (0..__n).collect();
-            __order.sort_by(|&__x, &__y| {
-                (*sorted_tables.begin().iter_at(__x)).cmp(&*sorted_tables.begin().iter_at(__y))
-            });
+            __order.sort_by(|&__x, &__y| (*__first.iter_at(__x)).cmp(&*__first.iter_at(__y)));
             let __values: Vec<_> = __order
                 .iter()
-                .map(|&__i| std::ptr::read(sorted_tables.begin().iter_at(__i)))
+                .map(|&__i| std::ptr::read(__first.iter_at(__i)))
                 .collect();
             for (__i, __v) in (0..__n).zip(__values) {
-                std::ptr::write(sorted_tables.begin().iter_at(__i), __v);
+                std::ptr::write(__first.iter_at(__i), __v);
             }
         };
     }
@@ -2904,14 +2989,16 @@ pub unsafe fn SetFileContents_81(
     )
     .unwrap();
     {
-        let mut __bytes: Vec<u8> = Vec::new();
         let mut __it = (start).clone();
-        while __it != (end).clone() {
+        let __last = (end).clone();
+        let __out = &mut ofs;
+        let mut __bytes: Vec<u8> = Vec::new();
+        while __it != __last {
             __bytes.push(*__it.iter_deref() as u8);
             __it.iter_inc();
         }
-        ofs.write_all(&__bytes);
-        ofs.try_clone().unwrap()
+        __out.write_all(&__bytes);
+        __out.try_clone().unwrap()
     };
 }
 pub fn main() {
@@ -2983,10 +3070,10 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
                 ((unsafe { ComputeWOFF2FinalSize_77(raw_input, (input.len() - 1)) }) as u64);
             let mut __tmp_1: u64 =
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultMaxSize_28)) as u64);
-            (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                (&mut __tmp_0) as *const _
-            } else {
-                (&mut __tmp_1) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_0;
+                let __b: *const _ = &mut __tmp_1;
+                if *__b < *__a { __b } else { __a }
             })
         } as usize) as usize
     ]
@@ -3042,10 +3129,10 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
         self.offset_ = ({
             let mut __tmp_2: u64 = (self.offset_ as u64);
             let mut __tmp_3: u64 = ((offset).wrapping_add(n) as u64);
-            (*if *&mut __tmp_2 >= *&mut __tmp_3 {
-                (&mut __tmp_2) as *const _
-            } else {
-                (&mut __tmp_3) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_2;
+                let __b: *const _ = &mut __tmp_3;
+                if *__a < *__b { __b } else { __a }
             })
         } as usize);
         return true;
@@ -3092,10 +3179,10 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2StringOut {
         self.offset_ = ({
             let mut __tmp_0: u64 = (self.offset_ as u64);
             let mut __tmp_1: u64 = ((offset).wrapping_add(n) as u64);
-            (*if *&mut __tmp_0 >= *&mut __tmp_1 {
-                (&mut __tmp_0) as *const _
-            } else {
-                (&mut __tmp_1) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_0;
+                let __b: *const _ = &mut __tmp_1;
+                if *__a < *__b { __b } else { __a }
             })
         } as usize);
         return true;

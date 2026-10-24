@@ -175,7 +175,7 @@ pub struct brunsli_JPEGScanInfo_ExtraZeroRunInfo {
     pub num_extra_zero_runs: i32,
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_JPEGScanInfo {
     pub Ss: i32,
     pub Se: i32,
@@ -185,6 +185,35 @@ pub struct brunsli_JPEGScanInfo {
     pub components: Vec<brunsli_JPEGComponentScanInfo>,
     pub reset_points: Vec<i32>,
     pub extra_zero_runs: Vec<brunsli_JPEGScanInfo_ExtraZeroRunInfo>,
+}
+impl brunsli_JPEGScanInfo {
+    pub unsafe fn move_from(_a0: *mut brunsli_JPEGScanInfo) -> Self {
+        let mut this = Self {
+            Ss: (*_a0).Ss,
+            Se: (*_a0).Se,
+            Ah: (*_a0).Ah,
+            Al: (*_a0).Al,
+            num_components: (*_a0).num_components,
+            components: std::mem::take(&mut (*_a0).components),
+            reset_points: std::mem::take(&mut (*_a0).reset_points),
+            extra_zero_runs: std::mem::take(&mut (*_a0).extra_zero_runs),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_JPEGScanInfo,
+    ) -> *mut brunsli_JPEGScanInfo {
+        self.Ss = (*_a0).Ss;
+        self.Se = (*_a0).Se;
+        self.Ah = (*_a0).Ah;
+        self.Al = (*_a0).Al;
+        self.num_components = (*_a0).num_components;
+        self.components = std::mem::take(&mut (*_a0).components);
+        self.reset_points = std::mem::take(&mut (*_a0).reset_points);
+        self.extra_zero_runs = std::mem::take(&mut (*_a0).extra_zero_runs);
+        return &mut (*(self as *mut brunsli_JPEGScanInfo));
+    }
 }
 impl Default for brunsli_JPEGScanInfo {
     fn default() -> Self {
@@ -206,7 +235,7 @@ impl Default for brunsli_JPEGScanInfo {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_JPEGComponent {
     pub id: i32,
     pub h_samp_factor: i32,
@@ -231,6 +260,33 @@ impl brunsli_JPEGComponent {
         };
         this
     }
+    pub unsafe fn move_from(_a0: *mut brunsli_JPEGComponent) -> Self {
+        let mut this = Self {
+            id: (*_a0).id,
+            h_samp_factor: (*_a0).h_samp_factor,
+            v_samp_factor: (*_a0).v_samp_factor,
+            quant_idx: (*_a0).quant_idx,
+            width_in_blocks: (*_a0).width_in_blocks,
+            height_in_blocks: (*_a0).height_in_blocks,
+            num_blocks: (*_a0).num_blocks,
+            coeffs: std::mem::take(&mut (*_a0).coeffs),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_JPEGComponent,
+    ) -> *mut brunsli_JPEGComponent {
+        self.id = (*_a0).id;
+        self.h_samp_factor = (*_a0).h_samp_factor;
+        self.v_samp_factor = (*_a0).v_samp_factor;
+        self.quant_idx = (*_a0).quant_idx;
+        self.width_in_blocks = (*_a0).width_in_blocks;
+        self.height_in_blocks = (*_a0).height_in_blocks;
+        self.num_blocks = (*_a0).num_blocks;
+        self.coeffs = std::mem::take(&mut (*_a0).coeffs);
+        return &mut (*(self as *mut brunsli_JPEGComponent));
+    }
 }
 impl Default for brunsli_JPEGComponent {
     fn default() -> Self {
@@ -238,7 +294,7 @@ impl Default for brunsli_JPEGComponent {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_JPEGData {
     pub width: i32,
     pub height: i32,
@@ -290,6 +346,58 @@ impl brunsli_JPEGData {
             padding_bits: Vec::new(),
         };
         this
+    }
+    pub unsafe fn move_from(_a0: *mut brunsli_JPEGData) -> Self {
+        let mut this = Self {
+            width: (*_a0).width,
+            height: (*_a0).height,
+            version: (*_a0).version,
+            max_h_samp_factor: (*_a0).max_h_samp_factor,
+            max_v_samp_factor: (*_a0).max_v_samp_factor,
+            MCU_rows: (*_a0).MCU_rows,
+            MCU_cols: (*_a0).MCU_cols,
+            restart_interval: (*_a0).restart_interval,
+            app_data: std::mem::take(&mut (*_a0).app_data),
+            com_data: std::mem::take(&mut (*_a0).com_data),
+            quant: std::mem::take(&mut (*_a0).quant),
+            huffman_code: std::mem::take(&mut (*_a0).huffman_code),
+            components: std::mem::take(&mut (*_a0).components),
+            scan_info: std::mem::take(&mut (*_a0).scan_info),
+            marker_order: std::mem::take(&mut (*_a0).marker_order),
+            inter_marker_data: std::mem::take(&mut (*_a0).inter_marker_data),
+            tail_data: std::mem::take(&mut (*_a0).tail_data),
+            original_jpg: (*_a0).original_jpg,
+            original_jpg_size: (*_a0).original_jpg_size,
+            error: (*_a0).error,
+            has_zero_padding_bit: (*_a0).has_zero_padding_bit,
+            padding_bits: std::mem::take(&mut (*_a0).padding_bits),
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut brunsli_JPEGData) -> *mut brunsli_JPEGData {
+        self.width = (*_a0).width;
+        self.height = (*_a0).height;
+        self.version = (*_a0).version;
+        self.max_h_samp_factor = (*_a0).max_h_samp_factor;
+        self.max_v_samp_factor = (*_a0).max_v_samp_factor;
+        self.MCU_rows = (*_a0).MCU_rows;
+        self.MCU_cols = (*_a0).MCU_cols;
+        self.restart_interval = (*_a0).restart_interval;
+        self.app_data = std::mem::take(&mut (*_a0).app_data);
+        self.com_data = std::mem::take(&mut (*_a0).com_data);
+        self.quant = std::mem::take(&mut (*_a0).quant);
+        self.huffman_code = std::mem::take(&mut (*_a0).huffman_code);
+        self.components = std::mem::take(&mut (*_a0).components);
+        self.scan_info = std::mem::take(&mut (*_a0).scan_info);
+        self.marker_order = std::mem::take(&mut (*_a0).marker_order);
+        self.inter_marker_data = std::mem::take(&mut (*_a0).inter_marker_data);
+        self.tail_data = std::mem::take(&mut (*_a0).tail_data);
+        self.original_jpg = (*_a0).original_jpg;
+        self.original_jpg_size = (*_a0).original_jpg_size;
+        self.error = (*_a0).error;
+        self.has_zero_padding_bit = (*_a0).has_zero_padding_bit;
+        self.padding_bits = std::mem::take(&mut (*_a0).padding_bits);
+        return &mut (*(self as *mut brunsli_JPEGData));
     }
 }
 impl Default for brunsli_JPEGData {
@@ -1574,7 +1682,7 @@ pub unsafe fn IsEmptyBlockContext_106(mut prev: *const i32, mut x: i32) -> i32 {
     return ((*prev.offset(((x) - (1)) as isize)) + (*prev.offset((x) as isize)));
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, DestructorUnsafe)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, DestructorUnsafe)]
 pub struct brunsli_ComponentStateDC {
     pub width: i32,
     pub is_zero_prob: brunsli_Prob,
@@ -1623,6 +1731,33 @@ impl brunsli_ComponentStateDC {
             self.prev_sign.resize_with(__a0, || <i32>::default())
         };
     }
+    pub unsafe fn move_from(_a0: *mut brunsli_ComponentStateDC) -> Self {
+        let mut this = Self {
+            width: (*_a0).width,
+            is_zero_prob: (*_a0).is_zero_prob.clone(),
+            is_empty_block_prob: std::mem::take(&mut (*_a0).is_empty_block_prob),
+            sign_prob: std::mem::take(&mut (*_a0).sign_prob),
+            first_extra_bit_prob: std::mem::take(&mut (*_a0).first_extra_bit_prob),
+            prev_is_nonempty: std::mem::take(&mut (*_a0).prev_is_nonempty),
+            prev_abs_coeff: std::mem::take(&mut (*_a0).prev_abs_coeff),
+            prev_sign: std::mem::take(&mut (*_a0).prev_sign),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_ComponentStateDC,
+    ) -> *mut brunsli_ComponentStateDC {
+        self.width = (*_a0).width;
+        self.is_zero_prob = ((*_a0).is_zero_prob).clone();
+        self.is_empty_block_prob = std::mem::take(&mut (*_a0).is_empty_block_prob);
+        self.sign_prob = std::mem::take(&mut (*_a0).sign_prob);
+        self.first_extra_bit_prob = std::mem::take(&mut (*_a0).first_extra_bit_prob);
+        self.prev_is_nonempty = std::mem::take(&mut (*_a0).prev_is_nonempty);
+        self.prev_abs_coeff = std::mem::take(&mut (*_a0).prev_abs_coeff);
+        self.prev_sign = std::mem::take(&mut (*_a0).prev_sign);
+        return &mut (*(self as *mut brunsli_ComponentStateDC));
+    }
 }
 impl brunsli_ComponentStateDC {
     pub unsafe fn destructor(&mut self) {
@@ -1635,7 +1770,7 @@ impl Default for brunsli_ComponentStateDC {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, DestructorUnsafe)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, DestructorUnsafe)]
 pub struct brunsli_ComponentState {
     pub width: i32,
     pub context_offset: i32,
@@ -1742,6 +1877,83 @@ impl brunsli_ComponentState {
                     .wrapping_mul((::std::mem::size_of::<brunsli_Prob>() as u64))
                     as u64),
             ) as usize);
+    }
+    pub unsafe fn move_from(_a0: *mut brunsli_ComponentState) -> Self {
+        let mut this = Self {
+            width: (*_a0).width,
+            context_offset: (*_a0).context_offset,
+            order: std::array::from_fn::<_, 64, _>(|__i: usize| (*_a0).order[(__i)]),
+            mult_row: std::array::from_fn::<_, 64, _>(|__i: usize| (*_a0).mult_row[(__i)]),
+            mult_col: std::array::from_fn::<_, 64, _>(|__i: usize| (*_a0).mult_col[(__i)]),
+            is_zero_prob: std::mem::take(&mut (*_a0).is_zero_prob),
+            sign_prob: std::mem::take(&mut (*_a0).sign_prob),
+            num_nonzero_prob: std::array::from_fn::<_, 2016, _>(|__i: usize| {
+                (*_a0).num_nonzero_prob[(__i)].clone()
+            }),
+            first_extra_bit_prob: std::mem::take(&mut (*_a0).first_extra_bit_prob),
+            prev_is_nonempty: std::mem::take(&mut (*_a0).prev_is_nonempty),
+            prev_num_nonzeros: std::mem::take(&mut (*_a0).prev_num_nonzeros),
+            prev_abs_coeff: std::mem::take(&mut (*_a0).prev_abs_coeff),
+            prev_sign: std::mem::take(&mut (*_a0).prev_sign),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_ComponentState,
+    ) -> *mut brunsli_ComponentState {
+        self.width = (*_a0).width;
+        self.context_offset = (*_a0).context_offset;
+        {
+            if 256_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(
+                    ((&mut (*_a0).order as *mut [u32; 64]) as *const ::libc::c_void),
+                    ((&mut self.order as *mut [u32; 64]) as *mut ::libc::c_void),
+                    256_usize as usize,
+                )
+            }
+            ((&mut self.order as *mut [u32; 64]) as *mut ::libc::c_void)
+        };
+        {
+            if 256_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(
+                    ((&mut (*_a0).mult_row as *mut [i32; 64]) as *const ::libc::c_void),
+                    ((&mut self.mult_row as *mut [i32; 64]) as *mut ::libc::c_void),
+                    256_usize as usize,
+                )
+            }
+            ((&mut self.mult_row as *mut [i32; 64]) as *mut ::libc::c_void)
+        };
+        {
+            if 256_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(
+                    ((&mut (*_a0).mult_col as *mut [i32; 64]) as *const ::libc::c_void),
+                    ((&mut self.mult_col as *mut [i32; 64]) as *mut ::libc::c_void),
+                    256_usize as usize,
+                )
+            }
+            ((&mut self.mult_col as *mut [i32; 64]) as *mut ::libc::c_void)
+        };
+        self.is_zero_prob = std::mem::take(&mut (*_a0).is_zero_prob);
+        self.sign_prob = std::mem::take(&mut (*_a0).sign_prob);
+        {
+            if 8064_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(
+                    ((&mut (*_a0).num_nonzero_prob as *mut [brunsli_Prob; 2016])
+                        as *const ::libc::c_void),
+                    ((&mut self.num_nonzero_prob as *mut [brunsli_Prob; 2016])
+                        as *mut ::libc::c_void),
+                    8064_usize as usize,
+                )
+            }
+            ((&mut self.num_nonzero_prob as *mut [brunsli_Prob; 2016]) as *mut ::libc::c_void)
+        };
+        self.first_extra_bit_prob = std::mem::take(&mut (*_a0).first_extra_bit_prob);
+        self.prev_is_nonempty = std::mem::take(&mut (*_a0).prev_is_nonempty);
+        self.prev_num_nonzeros = std::mem::take(&mut (*_a0).prev_num_nonzeros);
+        self.prev_abs_coeff = std::mem::take(&mut (*_a0).prev_abs_coeff);
+        self.prev_sign = std::mem::take(&mut (*_a0).prev_sign);
+        return &mut (*(self as *mut brunsli_ComponentState));
     }
 }
 impl brunsli_ComponentState {
@@ -2186,7 +2398,7 @@ impl brunsli_ComponentState {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_PermutationCoder {
     values_: Vec<u8>,
 }
@@ -2241,7 +2453,9 @@ impl brunsli_PermutationCoder {
     ) -> bool {
         let mut it: UnsafeRandomAccessIterator<u8> = {
             let mut __it = self.values_.begin();
-            while __it != self.values_.end() && *__it.iter_deref() != value {
+            let __last = self.values_.end();
+            let __value = &value;
+            while __it != __last && *__it.iter_deref() != *__value {
                 __it.iter_inc();
             }
             __it
@@ -2260,6 +2474,19 @@ impl brunsli_PermutationCoder {
             __it
         };
         return true;
+    }
+    pub unsafe fn move_from(_a0: *mut brunsli_PermutationCoder) -> Self {
+        let mut this = Self {
+            values_: std::mem::take(&mut (*_a0).values_),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_PermutationCoder,
+    ) -> *mut brunsli_PermutationCoder {
+        self.values_ = std::mem::take(&mut (*_a0).values_);
+        return &mut (*(self as *mut brunsli_PermutationCoder));
     }
 }
 impl Default for brunsli_PermutationCoder {
@@ -2280,7 +2507,9 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
     'loop_: while ((i) < (len)) {
         let mut it: UnsafeRandomAccessIterator<u32> = {
             let mut __it = items.begin();
-            while __it != items.end() && *__it.iter_deref() != (*sigma.offset((i) as isize)) {
+            let __last = items.end();
+            let __value = &(*sigma.offset((i) as isize));
+            while __it != __last && *__it.iter_deref() != *__value {
                 __it.iter_inc();
             }
             __it
@@ -3019,10 +3248,10 @@ pub unsafe fn CompareAndPushToQueue_132(
         } else {
             {
                 let mut __tmp_0: f64 = 0_f64;
-                (*if *&mut __tmp_0 >= *&mut (&mut (*pairs))[(0_usize)].cost_diff {
-                    (&mut __tmp_0) as *const _
-                } else {
-                    (&mut (&mut (*pairs))[(0_usize)].cost_diff) as *const _
+                (*{
+                    let __a: *const _ = &mut __tmp_0;
+                    let __b: *const _ = &mut (&mut (*pairs))[(0_usize)].cost_diff;
+                    if *__a < *__b { __b } else { __a }
                 })
             }
         };
@@ -3077,35 +3306,38 @@ pub unsafe fn HistogramCombine_133(
         __v
     };
     {
-        let __n = clusters.end().iter_distance(&clusters.begin());
+        let __first = clusters.begin();
+        let __n = clusters.end().iter_distance(&__first);
         let mut __order: Vec<isize> = (0..__n).collect();
-        __order.sort_by(|&__x, &__y| {
-            (*clusters.begin().iter_at(__x)).cmp(&*clusters.begin().iter_at(__y))
-        });
+        __order.sort_by(|&__x, &__y| (*__first.iter_at(__x)).cmp(&*__first.iter_at(__y)));
         let __values: Vec<_> = __order
             .iter()
-            .map(|&__i| std::ptr::read(clusters.begin().iter_at(__i)))
+            .map(|&__i| std::ptr::read(__first.iter_at(__i)))
             .collect();
         for (__i, __v) in (0..__n).zip(__values) {
-            std::ptr::write(clusters.begin().iter_at(__i), __v);
+            std::ptr::write(__first.iter_at(__i), __v);
         }
     };
     {
-        let __a0 = (if clusters.begin() == clusters.end() {
-            clusters.end()
-        } else {
-            let mut __write = clusters.begin().clone();
-            let mut __it = clusters.begin();
-            __it.iter_inc();
-            while __it != clusters.end() {
-                if *__write.iter_deref() != *__it.iter_deref() {
-                    __write.iter_inc();
-                    *__write.iter_deref() = (*__it.iter_deref()).clone();
-                }
+        let __a0 = ({
+            let __first = clusters.begin();
+            let __last = clusters.end();
+            if __first == __last {
+                __last
+            } else {
+                let mut __write = __first.clone();
+                let mut __it = __first;
                 __it.iter_inc();
+                while __it != __last {
+                    if *__write.iter_deref() != *__it.iter_deref() {
+                        __write.iter_inc();
+                        *__write.iter_deref() = (*__it.iter_deref()).clone();
+                    }
+                    __it.iter_inc();
+                }
+                __write.iter_inc();
+                __write
             }
-            __write.iter_inc();
-            __write
         }
         .iter_distance(&clusters.begin()) as usize) as usize;
         clusters.resize_with(__a0, || <u64>::default())
@@ -3258,35 +3490,38 @@ pub unsafe fn HistogramRemap_135(
         __v
     };
     {
-        let __n = all_symbols.end().iter_distance(&all_symbols.begin());
+        let __first = all_symbols.begin();
+        let __n = all_symbols.end().iter_distance(&__first);
         let mut __order: Vec<isize> = (0..__n).collect();
-        __order.sort_by(|&__x, &__y| {
-            (*all_symbols.begin().iter_at(__x)).cmp(&*all_symbols.begin().iter_at(__y))
-        });
+        __order.sort_by(|&__x, &__y| (*__first.iter_at(__x)).cmp(&*__first.iter_at(__y)));
         let __values: Vec<_> = __order
             .iter()
-            .map(|&__i| std::ptr::read(all_symbols.begin().iter_at(__i)))
+            .map(|&__i| std::ptr::read(__first.iter_at(__i)))
             .collect();
         for (__i, __v) in (0..__n).zip(__values) {
-            std::ptr::write(all_symbols.begin().iter_at(__i), __v);
+            std::ptr::write(__first.iter_at(__i), __v);
         }
     };
     {
-        let __a0 = (if all_symbols.begin() == all_symbols.end() {
-            all_symbols.end()
-        } else {
-            let mut __write = all_symbols.begin().clone();
-            let mut __it = all_symbols.begin();
-            __it.iter_inc();
-            while __it != all_symbols.end() {
-                if *__write.iter_deref() != *__it.iter_deref() {
-                    __write.iter_inc();
-                    *__write.iter_deref() = (*__it.iter_deref()).clone();
-                }
+        let __a0 = ({
+            let __first = all_symbols.begin();
+            let __last = all_symbols.end();
+            if __first == __last {
+                __last
+            } else {
+                let mut __write = __first.clone();
+                let mut __it = __first;
                 __it.iter_inc();
+                while __it != __last {
+                    if *__write.iter_deref() != *__it.iter_deref() {
+                        __write.iter_inc();
+                        *__write.iter_deref() = (*__it.iter_deref()).clone();
+                    }
+                    __it.iter_inc();
+                }
+                __write.iter_inc();
+                __write
             }
-            __write.iter_inc();
-            __write
         }
         .iter_distance(&all_symbols.begin()) as usize) as usize;
         all_symbols.resize_with(__a0, || <i32>::default())
@@ -3561,7 +3796,7 @@ impl Default for brunsli_internal_enc_Histogram {
 static mut kMaxNumberOfHistograms_139: std::cell::LazyCell<usize> =
     std::cell::LazyCell::new(|| unsafe { 256_usize });
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct brunsli_internal_enc_EntropyCodes {
     clustered_: Vec<brunsli_internal_enc_Histogram>,
     context_map_: Vec<u32>,
@@ -3601,9 +3836,26 @@ impl brunsli_internal_enc_EntropyCodes {
         });
         this
     }
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_enc_EntropyCodes) -> Self {
+        let mut this = Self {
+            clustered_: std::mem::take(&mut (*_a0).clustered_),
+            context_map_: std::mem::take(&mut (*_a0).context_map_),
+            ans_tables_: std::mem::take(&mut (*_a0).ans_tables_),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_internal_enc_EntropyCodes,
+    ) -> *mut brunsli_internal_enc_EntropyCodes {
+        self.clustered_ = std::mem::take(&mut (*_a0).clustered_);
+        self.context_map_ = std::mem::take(&mut (*_a0).context_map_);
+        self.ans_tables_ = std::mem::take(&mut (*_a0).ans_tables_);
+        return &mut (*(self as *mut brunsli_internal_enc_EntropyCodes));
+    }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_enc_EntropySource {
     num_bands_: usize,
     histograms_: Vec<brunsli_internal_enc_Histogram>,
@@ -3615,6 +3867,21 @@ impl brunsli_internal_enc_EntropySource {
             histograms_: Vec::new(),
         };
         this
+    }
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_enc_EntropySource) -> Self {
+        let mut this = Self {
+            num_bands_: (*_a0).num_bands_,
+            histograms_: std::mem::take(&mut (*_a0).histograms_),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_internal_enc_EntropySource,
+    ) -> *mut brunsli_internal_enc_EntropySource {
+        self.num_bands_ = (*_a0).num_bands_;
+        self.histograms_ = std::mem::take(&mut (*_a0).histograms_);
+        return &mut (*(self as *mut brunsli_internal_enc_EntropySource));
     }
 }
 impl Default for brunsli_internal_enc_EntropySource {
@@ -3649,7 +3916,7 @@ impl Default for brunsli_internal_enc_DataStream_CodeWord {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_enc_DataStream {
     pos_: i32,
     bw_pos_: i32,
@@ -3676,6 +3943,35 @@ impl brunsli_internal_enc_DataStream {
         };
         this
     }
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_enc_DataStream) -> Self {
+        let mut this = Self {
+            pos_: (*_a0).pos_,
+            bw_pos_: (*_a0).bw_pos_,
+            ac_pos0_: (*_a0).ac_pos0_,
+            ac_pos1_: (*_a0).ac_pos1_,
+            low_: (*_a0).low_,
+            high_: (*_a0).high_,
+            bw_val_: (*_a0).bw_val_,
+            bw_bitpos_: (*_a0).bw_bitpos_,
+            code_words_: std::mem::take(&mut (*_a0).code_words_),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_internal_enc_DataStream,
+    ) -> *mut brunsli_internal_enc_DataStream {
+        self.pos_ = (*_a0).pos_;
+        self.bw_pos_ = (*_a0).bw_pos_;
+        self.ac_pos0_ = (*_a0).ac_pos0_;
+        self.ac_pos1_ = (*_a0).ac_pos1_;
+        self.low_ = (*_a0).low_;
+        self.high_ = (*_a0).high_;
+        self.bw_val_ = (*_a0).bw_val_;
+        self.bw_bitpos_ = (*_a0).bw_bitpos_;
+        self.code_words_ = std::mem::take(&mut (*_a0).code_words_);
+        return &mut (*(self as *mut brunsli_internal_enc_DataStream));
+    }
 }
 impl Default for brunsli_internal_enc_DataStream {
     fn default() -> Self {
@@ -3683,7 +3979,7 @@ impl Default for brunsli_internal_enc_DataStream {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_enc_State {
     pub entropy_source: brunsli_internal_enc_EntropySource,
     pub entropy_codes: *mut brunsli_internal_enc_EntropyCodes,
@@ -3692,6 +3988,48 @@ pub struct brunsli_internal_enc_State {
     pub meta: Vec<brunsli_internal_enc_ComponentMeta>,
     pub num_contexts: usize,
     pub use_legacy_context_model: bool,
+}
+impl brunsli_internal_enc_State {
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_enc_State) -> Self {
+        let mut this = Self {
+            entropy_source: brunsli_internal_enc_EntropySource::move_from({
+                &mut (*_a0).entropy_source
+            }),
+            entropy_codes: (*_a0).entropy_codes,
+            data_stream_dc: brunsli_internal_enc_DataStream::move_from({
+                &mut (*_a0).data_stream_dc
+            }),
+            data_stream_ac: brunsli_internal_enc_DataStream::move_from({
+                &mut (*_a0).data_stream_ac
+            }),
+            meta: std::mem::take(&mut (*_a0).meta),
+            num_contexts: (*_a0).num_contexts,
+            use_legacy_context_model: (*_a0).use_legacy_context_model,
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_internal_enc_State,
+    ) -> *mut brunsli_internal_enc_State {
+        (unsafe {
+            let _arg0: *mut brunsli_internal_enc_EntropySource = &mut (*_a0).entropy_source;
+            brunsli_internal_enc_EntropySource::move_assign(&mut self.entropy_source, _arg0)
+        });
+        self.entropy_codes = (*_a0).entropy_codes;
+        (unsafe {
+            let _arg0: *mut brunsli_internal_enc_DataStream = &mut (*_a0).data_stream_dc;
+            brunsli_internal_enc_DataStream::move_assign(&mut self.data_stream_dc, _arg0)
+        });
+        (unsafe {
+            let _arg0: *mut brunsli_internal_enc_DataStream = &mut (*_a0).data_stream_ac;
+            brunsli_internal_enc_DataStream::move_assign(&mut self.data_stream_ac, _arg0)
+        });
+        self.meta = std::mem::take(&mut (*_a0).meta);
+        self.num_contexts = (*_a0).num_contexts;
+        self.use_legacy_context_model = (*_a0).use_legacy_context_model;
+        return &mut (*(self as *mut brunsli_internal_enc_State));
+    }
 }
 impl Default for brunsli_internal_enc_State {
     fn default() -> Self {
@@ -4390,10 +4728,10 @@ pub unsafe fn EncodeHuffmanCode_158(
             let mut __tmp_2: i32 = ((space)
                 >> ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7))
                     - (i)));
-            (*if *&mut __tmp_1 <= *&mut __tmp_2 {
-                (&mut __tmp_1) as *const _
-            } else {
-                (&mut __tmp_2) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_1;
+                let __b: *const _ = &mut __tmp_2;
+                if *__b < *__a { __b } else { __a }
             })
         };
         if ((count) > (count_limit)) {
@@ -4766,30 +5104,22 @@ pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const Vec<i32>, mut order: *mut 
         i.prefix_inc();
     }
     {
-        let __n = pos_and_val.end().iter_distance(&pos_and_val.begin());
+        let __first = pos_and_val.begin();
+        let __n = pos_and_val.end().iter_distance(&__first);
+        let __cmp = FnPtr::<fn(*const (i32, i32), *const (i32, i32)) -> bool>::new(
+            |a: *const (i32, i32), b: *const (i32, i32)| -> bool {
+                unsafe {
+                    return (((*a).1) < ((*b).1));
+                }
+            },
+        );
         let mut __order: Vec<isize> = (0..__n).collect();
         __order.sort_by(|&__x, &__y| {
-            let __a = pos_and_val.begin().iter_at(__x) as *const _;
-            let __b = pos_and_val.begin().iter_at(__y) as *const _;
-            if FnPtr::<fn(*const (i32, i32), *const (i32, i32)) -> bool>::new(
-                |a: *const (i32, i32), b: *const (i32, i32)| -> bool {
-                    unsafe {
-                        return (((*a).1) < ((*b).1));
-                    }
-                },
-            )
-            .call(__a, __b)
-            {
+            let __a = __first.iter_at(__x) as *const _;
+            let __b = __first.iter_at(__y) as *const _;
+            if __cmp.call(__a, __b) {
                 std::cmp::Ordering::Less
-            } else if FnPtr::<fn(*const (i32, i32), *const (i32, i32)) -> bool>::new(
-                |a: *const (i32, i32), b: *const (i32, i32)| -> bool {
-                    unsafe {
-                        return (((*a).1) < ((*b).1));
-                    }
-                },
-            )
-            .call(__b, __a)
-            {
+            } else if __cmp.call(__b, __a) {
                 std::cmp::Ordering::Greater
             } else {
                 std::cmp::Ordering::Equal
@@ -4797,10 +5127,10 @@ pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const Vec<i32>, mut order: *mut 
         });
         let __values: Vec<_> = __order
             .iter()
-            .map(|&__i| std::ptr::read(pos_and_val.begin().iter_at(__i)))
+            .map(|&__i| std::ptr::read(__first.iter_at(__i)))
             .collect();
         for (__i, __v) in (0..__n).zip(__values) {
-            std::ptr::write(pos_and_val.begin().iter_at(__i), __v);
+            std::ptr::write(__first.iter_at(__i), __v);
         }
     };
     let mut i: usize = 0_usize;
@@ -6872,11 +7202,13 @@ pub unsafe fn MoveToFrontTransform_200(v: *const Vec<u32>) -> Vec<u32> {
         return (*v).clone();
     }
     let mut max_value: u32 = (*{
-        let mut __best = (*v).begin().clone();
-        if (*v).begin() != (*v).end() {
-            let mut __it = (*v).begin();
+        let __first = (*v).begin();
+        let __last = (*v).end();
+        let mut __best = __first.clone();
+        if __first != __last {
+            let mut __it = __first;
             __it.iter_inc();
-            while __it != (*v).end() {
+            while __it != __last {
                 if *__best.iter_deref() < *__it.iter_deref() {
                     __best = __it.clone();
                 }
@@ -6939,10 +7271,10 @@ pub unsafe fn RunLengthCodeZeros_201(
         max_reps = ({
             let mut __tmp_0: u64 = ((i).wrapping_sub(i0) as u64);
             let mut __tmp_1: u64 = (max_reps as u64);
-            (*if *&mut __tmp_0 >= *&mut __tmp_1 {
-                (&mut __tmp_0) as *const _
-            } else {
-                (&mut __tmp_1) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_0;
+                let __b: *const _ = &mut __tmp_1;
+                if *__a < *__b { __b } else { __a }
             })
         } as usize);
     }
@@ -6951,10 +7283,10 @@ pub unsafe fn RunLengthCodeZeros_201(
     } else {
         0
     } as u32);
-    max_prefix = (*if *&mut max_prefix <= *max_run_length_prefix {
-        (&mut max_prefix) as *const _
-    } else {
-        (max_run_length_prefix) as *const _
+    max_prefix = (*{
+        let __a: *const _ = &mut max_prefix;
+        let __b: *const _ = max_run_length_prefix;
+        if *__b < *__a { __b } else { __a }
     });
     (*max_run_length_prefix) = max_prefix;
     let mut i: usize = 0_usize;
@@ -7456,17 +7788,17 @@ pub unsafe fn EncodeCounts_125(
                 if ((i) < (omit_pos)) {
                     omit_log = {
                         let mut __tmp_0: i32 = ((logcounts[(i) as usize]) + (1));
-                        (*if *&mut omit_log >= *&mut __tmp_0 {
-                            (&mut omit_log) as *const _
-                        } else {
-                            (&mut __tmp_0) as *const _
+                        (*{
+                            let __a: *const _ = &mut omit_log;
+                            let __b: *const _ = &mut __tmp_0;
+                            if *__a < *__b { __b } else { __a }
                         })
                     };
                 } else {
-                    omit_log = (*if *&mut omit_log >= *&mut logcounts[(i) as usize] {
-                        (&mut omit_log) as *const _
-                    } else {
-                        (&mut logcounts[(i) as usize]) as *const _
+                    omit_log = (*{
+                        let __a: *const _ = &mut omit_log;
+                        let __b: *const _ = &mut logcounts[(i) as usize];
+                        if *__a < *__b { __b } else { __a }
                     });
                 }
             }
@@ -8085,10 +8417,10 @@ pub unsafe fn CreateHuffmanTree_220(
             if ((*data.offset((i) as isize)) != 0) {
                 let count: u32 = {
                     let mut __tmp_0: u32 = (count_limit).wrapping_sub(1_u32);
-                    (*if *data.offset((i) as isize) >= *&mut __tmp_0 {
-                        (data.offset((i) as isize)) as *const _
-                    } else {
-                        (&mut __tmp_0) as *const _
+                    (*{
+                        let __a: *const _ = data.offset((i) as isize);
+                        let __b: *const _ = &mut __tmp_0;
+                        if *__a < *__b { __b } else { __a }
                     })
                 };
                 {
@@ -8104,20 +8436,17 @@ pub unsafe fn CreateHuffmanTree_220(
             break;
         }
         {
-            let __n = tree.end().iter_distance(&tree.begin());
+            let __first = tree.begin();
+            let __n = tree.end().iter_distance(&__first);
+            let __cmp = (Compare_223
+                as unsafe fn(*const brunsli_HuffmanTree, *const brunsli_HuffmanTree) -> bool);
             let mut __order: Vec<isize> = (0..__n).collect();
             __order.sort_by(|&__x, &__y| {
-                let __a = tree.begin().iter_at(__x) as *const _;
-                let __b = tree.begin().iter_at(__y) as *const _;
-                if (Compare_223
-                    as unsafe fn(*const brunsli_HuffmanTree, *const brunsli_HuffmanTree) -> bool)
-                    .call(__a, __b)
-                {
+                let __a = __first.iter_at(__x) as *const _;
+                let __b = __first.iter_at(__y) as *const _;
+                if __cmp.call(__a, __b) {
                     std::cmp::Ordering::Less
-                } else if (Compare_223
-                    as unsafe fn(*const brunsli_HuffmanTree, *const brunsli_HuffmanTree) -> bool)
-                    .call(__b, __a)
-                {
+                } else if __cmp.call(__b, __a) {
                     std::cmp::Ordering::Greater
                 } else {
                     std::cmp::Ordering::Equal
@@ -8125,10 +8454,10 @@ pub unsafe fn CreateHuffmanTree_220(
             });
             let __values: Vec<_> = __order
                 .iter()
-                .map(|&__i| std::ptr::read(tree.begin().iter_at(__i)))
+                .map(|&__i| std::ptr::read(__first.iter_at(__i)))
                 .collect();
             for (__i, __v) in (0..__n).zip(__values) {
-                std::ptr::write(tree.begin().iter_at(__i), __v);
+                std::ptr::write(__first.iter_at(__i), __v);
             }
         };
         let sentinel: brunsli_HuffmanTree =
@@ -8191,13 +8520,13 @@ pub unsafe fn CreateHuffmanTree_220(
             SetDepth_222(_p, _pool, _depth, 0_u8)
         });
         if (((*{
-            let mut __best = (&mut (*depth.offset((0) as isize)) as *mut u8).clone();
-            if (&mut (*depth.offset((0) as isize)) as *mut u8)
-                != (&mut (*depth.offset((length) as isize)) as *mut u8)
-            {
-                let mut __it = (&mut (*depth.offset((0) as isize)) as *mut u8);
+            let __first = (&mut (*depth.offset((0) as isize)) as *mut u8);
+            let __last = (&mut (*depth.offset((length) as isize)) as *mut u8);
+            let mut __best = __first.clone();
+            if __first != __last {
+                let mut __it = __first;
                 __it.iter_inc();
-                while __it != (&mut (*depth.offset((length) as isize)) as *mut u8) {
+                while __it != __last {
                     if *__best.iter_deref() < *__it.iter_deref() {
                         __best = __it.clone();
                     }
@@ -8671,15 +9000,15 @@ pub unsafe fn ProcessSOF_235(
         (&mut (*jpg)).components[(i)].h_samp_factor = h_samp_factor;
         (&mut (*jpg)).components[(i)].v_samp_factor = v_samp_factor;
         (&mut (*jpg)).components[(i)].quant_idx = ((unsafe { ReadUint8_233(data, pos) }) as u8);
-        (*jpg).max_h_samp_factor = (*if *&mut (*jpg).max_h_samp_factor >= *&mut h_samp_factor {
-            (&mut (*jpg).max_h_samp_factor) as *const _
-        } else {
-            (&mut h_samp_factor) as *const _
+        (*jpg).max_h_samp_factor = (*{
+            let __a: *const _ = &mut (*jpg).max_h_samp_factor;
+            let __b: *const _ = &mut h_samp_factor;
+            if *__a < *__b { __b } else { __a }
         });
-        (*jpg).max_v_samp_factor = (*if *&mut (*jpg).max_v_samp_factor >= *&mut v_samp_factor {
-            (&mut (*jpg).max_v_samp_factor) as *const _
-        } else {
-            (&mut v_samp_factor) as *const _
+        (*jpg).max_v_samp_factor = (*{
+            let __a: *const _ = &mut (*jpg).max_v_samp_factor;
+            let __b: *const _ = &mut v_samp_factor;
+            if *__a < *__b { __b } else { __a }
         });
         i.prefix_inc();
     }

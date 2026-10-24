@@ -199,7 +199,7 @@ pub struct brunsli_JPEGScanInfo_ExtraZeroRunInfo {
     #[offset(4)]
     pub num_extra_zero_runs: i32,
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(120)]
 pub struct brunsli_JPEGScanInfo {
     #[offset(0)]
@@ -222,6 +222,20 @@ pub struct brunsli_JPEGScanInfo {
     #[byte_size(24)]
     pub extra_zero_runs: Vec<brunsli_JPEGScanInfo_ExtraZeroRunInfo>,
 }
+impl brunsli_JPEGScanInfo {
+    pub fn move_from(_a0: Ptr<brunsli_JPEGScanInfo>) -> Self {
+        Self {
+            Ss: { (*_a0.upgrade().deref()).Ss },
+            Se: { (*_a0.upgrade().deref()).Se },
+            Ah: { (*_a0.upgrade().deref()).Ah },
+            Al: { (*_a0.upgrade().deref()).Al },
+            num_components: { (*_a0.upgrade().deref()).num_components },
+            components: field!(_a0, components).with_mut(std::mem::take),
+            reset_points: field!(_a0, reset_points).with_mut(std::mem::take),
+            extra_zero_runs: field!(_a0, extra_zero_runs).with_mut(std::mem::take),
+        }
+    }
+}
 impl Default for brunsli_JPEGScanInfo {
     fn default() -> Self {
         {
@@ -241,7 +255,7 @@ impl Default for brunsli_JPEGScanInfo {
         }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(56)]
 pub struct brunsli_JPEGComponent {
     #[offset(0)]
@@ -275,13 +289,25 @@ impl brunsli_JPEGComponent {
             coeffs: Vec::new(),
         }
     }
+    pub fn move_from(_a0: Ptr<brunsli_JPEGComponent>) -> Self {
+        Self {
+            id: { (*_a0.upgrade().deref()).id },
+            h_samp_factor: { (*_a0.upgrade().deref()).h_samp_factor },
+            v_samp_factor: { (*_a0.upgrade().deref()).v_samp_factor },
+            quant_idx: { (*_a0.upgrade().deref()).quant_idx },
+            width_in_blocks: { (*_a0.upgrade().deref()).width_in_blocks },
+            height_in_blocks: { (*_a0.upgrade().deref()).height_in_blocks },
+            num_blocks: { (*_a0.upgrade().deref()).num_blocks },
+            coeffs: field!(_a0, coeffs).with_mut(std::mem::take),
+        }
+    }
 }
 impl Default for brunsli_JPEGComponent {
     fn default() -> Self {
         { brunsli_JPEGComponent::new() }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(296)]
 pub struct brunsli_JPEGData {
     #[offset(0)]
@@ -366,6 +392,32 @@ impl brunsli_JPEGData {
             error: brunsli_JPEGReadError_OK,
             has_zero_padding_bit: false,
             padding_bits: Vec::new(),
+        }
+    }
+    pub fn move_from(_a0: Ptr<brunsli_JPEGData>) -> Self {
+        Self {
+            width: { (*_a0.upgrade().deref()).width },
+            height: { (*_a0.upgrade().deref()).height },
+            version: { (*_a0.upgrade().deref()).version },
+            max_h_samp_factor: { (*_a0.upgrade().deref()).max_h_samp_factor },
+            max_v_samp_factor: { (*_a0.upgrade().deref()).max_v_samp_factor },
+            MCU_rows: { (*_a0.upgrade().deref()).MCU_rows },
+            MCU_cols: { (*_a0.upgrade().deref()).MCU_cols },
+            restart_interval: { (*_a0.upgrade().deref()).restart_interval },
+            app_data: field!(_a0, app_data).with_mut(std::mem::take),
+            com_data: field!(_a0, com_data).with_mut(std::mem::take),
+            quant: field!(_a0, quant).with_mut(std::mem::take),
+            huffman_code: field!(_a0, huffman_code).with_mut(std::mem::take),
+            components: field!(_a0, components).with_mut(std::mem::take),
+            scan_info: field!(_a0, scan_info).with_mut(std::mem::take),
+            marker_order: field!(_a0, marker_order).with_mut(std::mem::take),
+            inter_marker_data: field!(_a0, inter_marker_data).with_mut(std::mem::take),
+            tail_data: field!(_a0, tail_data).with_mut(std::mem::take),
+            original_jpg: { (*_a0.upgrade().deref()).original_jpg.clone() },
+            original_jpg_size: { (*_a0.upgrade().deref()).original_jpg_size },
+            error: { (*_a0.upgrade().deref()).error },
+            has_zero_padding_bit: { (*_a0.upgrade().deref()).has_zero_padding_bit },
+            padding_bits: field!(_a0, padding_bits).with_mut(std::mem::take),
         }
     }
 }
@@ -1623,7 +1675,7 @@ thread_local!(
 pub fn IsEmptyBlockContext_106(mut prev: Ptr<i32>, mut x: i32) -> i32 {
     return ((elem!(prev, (x - 1)).read()) + (elem!(prev, x).read()));
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Destructor)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Destructor)]
 #[byte_size(152)]
 pub struct brunsli_ComponentStateDC {
     #[offset(0)]
@@ -1673,13 +1725,25 @@ impl brunsli_ComponentStateDC {
         ({ brunsli_ComponentStateDCImpl::InitAll(&this) });
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
+    pub fn move_from(_a0: Ptr<brunsli_ComponentStateDC>) -> Self {
+        Self {
+            width: { (*_a0.upgrade().deref()).width },
+            is_zero_prob: { (*_a0.upgrade().deref()).is_zero_prob.clone() },
+            is_empty_block_prob: field!(_a0, is_empty_block_prob).with_mut(std::mem::take),
+            sign_prob: field!(_a0, sign_prob).with_mut(std::mem::take),
+            first_extra_bit_prob: field!(_a0, first_extra_bit_prob).with_mut(std::mem::take),
+            prev_is_nonempty: field!(_a0, prev_is_nonempty).with_mut(std::mem::take),
+            prev_abs_coeff: field!(_a0, prev_abs_coeff).with_mut(std::mem::take),
+            prev_sign: field!(_a0, prev_sign).with_mut(std::mem::take),
+        }
+    }
 }
 impl Default for brunsli_ComponentStateDC {
     fn default() -> Self {
         { brunsli_ComponentStateDC::new() }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Destructor)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Destructor)]
 #[byte_size(9008)]
 pub struct brunsli_ComponentState {
     #[offset(0)]
@@ -1774,6 +1838,31 @@ impl brunsli_ComponentState {
                     )) as u64)
                     .wrapping_mul((4usize as u64)) as u64),
             ) as usize);
+    }
+    pub fn move_from(_a0: Ptr<brunsli_ComponentState>) -> Self {
+        Self {
+            width: { (*_a0.upgrade().deref()).width },
+            context_offset: { (*_a0.upgrade().deref()).context_offset },
+            order: Box::new(std::array::from_fn::<_, 64, _>(|__i: usize| {
+                (*_a0.upgrade().deref()).order[(__i) as usize]
+            })),
+            mult_row: Box::new(std::array::from_fn::<_, 64, _>(|__i: usize| {
+                (*_a0.upgrade().deref()).mult_row[(__i) as usize]
+            })),
+            mult_col: Box::new(std::array::from_fn::<_, 64, _>(|__i: usize| {
+                (*_a0.upgrade().deref()).mult_col[(__i) as usize]
+            })),
+            is_zero_prob: field!(_a0, is_zero_prob).with_mut(std::mem::take),
+            sign_prob: field!(_a0, sign_prob).with_mut(std::mem::take),
+            num_nonzero_prob: Box::new(std::array::from_fn::<_, 2016, _>(|__i: usize| {
+                ((*_a0.upgrade().deref()).num_nonzero_prob[(__i) as usize]).clone()
+            })),
+            first_extra_bit_prob: field!(_a0, first_extra_bit_prob).with_mut(std::mem::take),
+            prev_is_nonempty: field!(_a0, prev_is_nonempty).with_mut(std::mem::take),
+            prev_num_nonzeros: field!(_a0, prev_num_nonzeros).with_mut(std::mem::take),
+            prev_abs_coeff: field!(_a0, prev_abs_coeff).with_mut(std::mem::take),
+            prev_sign: field!(_a0, prev_sign).with_mut(std::mem::take),
+        }
     }
 }
 impl Default for brunsli_ComponentState {
@@ -2088,7 +2177,7 @@ thread_local!(
         ]),
     ])));
 );
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(24)]
 pub struct brunsli_PermutationCoder {
     #[offset(0)]
@@ -2099,6 +2188,11 @@ impl brunsli_PermutationCoder {
     pub fn new() -> Self {
         Self {
             values_: Vec::new(),
+        }
+    }
+    pub fn move_from(_a0: Ptr<brunsli_PermutationCoder>) -> Self {
+        Self {
+            values_: field!(_a0, values_).with_mut(std::mem::take),
         }
     }
 }
@@ -2123,11 +2217,9 @@ pub fn ComputeLehmerCode_112(mut sigma: Ptr<u32>, mut len: usize, mut code: Ptr<
     'loop_: while (i < len) {
         let it: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new({
             let mut __it = items.decay().begin();
-            while __it != items.decay().end()
-                && __it
-                    .iter_deref()
-                    .with(|__v| *__v != (elem!(sigma, i).read()))
-            {
+            let __last = items.decay().end();
+            let __value = sigma.offset((i) as isize);
+            while __it != __last && !CppEq::equal(&__it.iter_deref(), &__value) {
                 __it.iter_inc();
             }
             __it
@@ -2769,92 +2861,17 @@ pub struct brunsli_HistogramPair {
     #[offset(24)]
     pub cost_diff: f64,
 }
-impl std::cmp::Ord for brunsli_HistogramPair {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        {
-            if operator_lt_128(
-                Rc::new(RefCell::new(brunsli_HistogramPair {
-                    idx1: self.idx1.clone(),
-                    idx2: self.idx2.clone(),
-                    cost_combo: self.cost_combo.clone(),
-                    cost_diff: self.cost_diff.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(brunsli_HistogramPair {
-                    idx1: other.idx1.clone(),
-                    idx2: other.idx2.clone(),
-                    cost_combo: other.cost_combo.clone(),
-                    cost_diff: other.cost_diff.clone(),
-                }))
-                .as_pointer(),
-            ) {
-                std::cmp::Ordering::Less
-            } else if operator_lt_128(
-                Rc::new(RefCell::new(brunsli_HistogramPair {
-                    idx1: other.idx1.clone(),
-                    idx2: other.idx2.clone(),
-                    cost_combo: other.cost_combo.clone(),
-                    cost_diff: other.cost_diff.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(brunsli_HistogramPair {
-                    idx1: self.idx1.clone(),
-                    idx2: self.idx2.clone(),
-                    cost_combo: self.cost_combo.clone(),
-                    cost_diff: self.cost_diff.clone(),
-                }))
-                .as_pointer(),
-            ) {
-                std::cmp::Ordering::Greater
-            } else {
-                std::cmp::Ordering::Equal
-            }
-        }
+impl CppLess for brunsli_HistogramPair {
+    fn less(__lhs: &Ptr<Self>, __rhs: &Ptr<Self>) -> bool {
+        operator_lt_128(__lhs.clone(), __rhs.clone())
     }
 }
-impl std::cmp::PartialOrd for brunsli_HistogramPair {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
+impl CppEq for brunsli_HistogramPair {
+    fn equal(__lhs: &Ptr<Self>, __rhs: &Ptr<Self>) -> bool {
+        !(operator_lt_128(__lhs.clone(), __rhs.clone()))
+            && !(operator_lt_128(__rhs.clone(), __lhs.clone()))
     }
 }
-impl std::cmp::PartialEq for brunsli_HistogramPair {
-    fn eq(&self, other: &Self) -> bool {
-        {
-            !(operator_lt_128(
-                Rc::new(RefCell::new(brunsli_HistogramPair {
-                    idx1: self.idx1.clone(),
-                    idx2: self.idx2.clone(),
-                    cost_combo: self.cost_combo.clone(),
-                    cost_diff: self.cost_diff.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(brunsli_HistogramPair {
-                    idx1: other.idx1.clone(),
-                    idx2: other.idx2.clone(),
-                    cost_combo: other.cost_combo.clone(),
-                    cost_diff: other.cost_diff.clone(),
-                }))
-                .as_pointer(),
-            )) && !(operator_lt_128(
-                Rc::new(RefCell::new(brunsli_HistogramPair {
-                    idx1: other.idx1.clone(),
-                    idx2: other.idx2.clone(),
-                    cost_combo: other.cost_combo.clone(),
-                    cost_diff: other.cost_diff.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(brunsli_HistogramPair {
-                    idx1: self.idx1.clone(),
-                    idx2: self.idx2.clone(),
-                    cost_combo: self.cost_combo.clone(),
-                    cost_diff: self.cost_diff.clone(),
-                }))
-                .as_pointer(),
-            ))
-        }
-    }
-}
-impl std::cmp::Eq for brunsli_HistogramPair {}
 pub fn operator_lt_128(p1: Ptr<brunsli_HistogramPair>, p2: Ptr<brunsli_HistogramPair>) -> bool {
     if ({ p1.with(|__s| __s.cost_diff) } != { p2.with(|__s| __s.cost_diff) }) {
         return ({ p1.with(|__s| __s.cost_diff) } > { p2.with(|__s| __s.cost_diff) });
@@ -2935,12 +2952,10 @@ pub fn CompareAndPushToQueue_132(
         } else {
             {
                 let __tmp_0: Value<f64> = Rc::new(RefCell::new(0_f64));
-                (if __tmp_0.as_pointer().read()
-                    >= field_ptr!((pairs).decay().offset(0_usize), cost_diff).read()
-                {
-                    __tmp_0.as_pointer()
-                } else {
-                    field_ptr!((pairs).decay().offset(0_usize), cost_diff)
+                ({
+                    let __a = __tmp_0.as_pointer();
+                    let __b = field_ptr!((pairs).decay().offset(0_usize), cost_diff);
+                    if CppLess::less(&__a, &__b) { __b } else { __a }
                 }
                 .read())
             }
@@ -2997,39 +3012,32 @@ pub fn HistogramCombine_133(
         __v
     }));
     {
-        let __n = clusters
-            .decay()
-            .end()
-            .iter_distance(&clusters.decay().begin());
+        let __first = clusters.decay().begin();
+        let __n = clusters.decay().end().iter_distance(&__first);
         let mut __order: Vec<isize> = (0..__n).collect();
-        __order.sort_by(|&__x, &__y| {
-            clusters.decay().begin().iter_at(__x).with(|__a| {
-                clusters
-                    .decay()
-                    .begin()
-                    .iter_at(__y)
-                    .with(|__b| __a.cmp(__b))
-            })
-        });
-        reorder(__order, |__i| clusters.decay().begin().iter_at(__i));
+        __order.sort_by(|&__x, &__y| cpp_cmp(&__first.iter_at(__x), &__first.iter_at(__y)));
+        reorder(__order, |__i| __first.iter_at(__i));
     };
     {
-        let __a0 = (if clusters.decay().begin() == clusters.decay().end() {
-            clusters.decay().end()
-        } else {
-            let mut __write = clusters.decay().begin().clone();
-            let mut __it = clusters.decay().begin();
-            __it.iter_inc();
-            while __it != clusters.decay().end() {
-                let __v = __it.iter_deref().read();
-                if __write.iter_deref().with(|__w| *__w != __v) {
-                    __write.iter_inc();
-                    __write.iter_deref().write(__v);
-                }
+        let __a0 = ({
+            let __first = clusters.decay().begin();
+            let __last = clusters.decay().end();
+            if __first == __last {
+                __last
+            } else {
+                let mut __write = __first.clone();
+                let mut __it = __first;
                 __it.iter_inc();
+                while __it != __last {
+                    if !CppEq::equal(&__write.iter_deref(), &__it.iter_deref()) {
+                        __write.iter_inc();
+                        __write.iter_deref().write(__it.iter_deref().read());
+                    }
+                    __it.iter_inc();
+                }
+                __write.iter_inc();
+                __write
             }
-            __write.iter_inc();
-            __write
         }
         .iter_distance(&clusters.decay().begin()) as usize) as usize;
         (*clusters.borrow_mut()).resize_with(__a0, || <u64>::default())
@@ -3195,39 +3203,32 @@ pub fn HistogramRemap_135(
         __v
     }));
     {
-        let __n = all_symbols
-            .decay()
-            .end()
-            .iter_distance(&all_symbols.decay().begin());
+        let __first = all_symbols.decay().begin();
+        let __n = all_symbols.decay().end().iter_distance(&__first);
         let mut __order: Vec<isize> = (0..__n).collect();
-        __order.sort_by(|&__x, &__y| {
-            all_symbols.decay().begin().iter_at(__x).with(|__a| {
-                all_symbols
-                    .decay()
-                    .begin()
-                    .iter_at(__y)
-                    .with(|__b| __a.cmp(__b))
-            })
-        });
-        reorder(__order, |__i| all_symbols.decay().begin().iter_at(__i));
+        __order.sort_by(|&__x, &__y| cpp_cmp(&__first.iter_at(__x), &__first.iter_at(__y)));
+        reorder(__order, |__i| __first.iter_at(__i));
     };
     {
-        let __a0 = (if all_symbols.decay().begin() == all_symbols.decay().end() {
-            all_symbols.decay().end()
-        } else {
-            let mut __write = all_symbols.decay().begin().clone();
-            let mut __it = all_symbols.decay().begin();
-            __it.iter_inc();
-            while __it != all_symbols.decay().end() {
-                let __v = __it.iter_deref().read();
-                if __write.iter_deref().with(|__w| *__w != __v) {
-                    __write.iter_inc();
-                    __write.iter_deref().write(__v);
-                }
+        let __a0 = ({
+            let __first = all_symbols.decay().begin();
+            let __last = all_symbols.decay().end();
+            if __first == __last {
+                __last
+            } else {
+                let mut __write = __first.clone();
+                let mut __it = __first;
                 __it.iter_inc();
+                while __it != __last {
+                    if !CppEq::equal(&__write.iter_deref(), &__it.iter_deref()) {
+                        __write.iter_inc();
+                        __write.iter_deref().write(__it.iter_deref().read());
+                    }
+                    __it.iter_inc();
+                }
+                __write.iter_inc();
+                __write
             }
-            __write.iter_inc();
-            __write
         }
         .iter_distance(&all_symbols.decay().begin()) as usize) as usize;
         (*all_symbols.borrow_mut()).resize_with(__a0, || <i32>::default())
@@ -3284,14 +3285,14 @@ pub fn HistogramReindex_136(
     let mut next_index: i32 = 0;
     let mut i: usize = 0_usize;
     'loop_: while ({ i } < { (*symbols.upgrade().deref()).len() }) {
-        if new_index
-            .as_pointer()
-            .with(|__m: &Map<i32, (Value<i32>, Value<i32>)>| {
-                __m.find(&((index!(symbols, i).read()) as i32))
-            })
-            == new_index
+        if ({
+            let __tmp_1: Value<i32> = Rc::new(RefCell::new(((index!(symbols, i).read()) as i32)));
+            new_index
                 .as_pointer()
-                .with(|__m: &Map<i32, (Value<i32>, Value<i32>)>| __m.end())
+                .with(|__m: &Map<i32, (Value<i32>, Value<i32>)>| __m.find(&__tmp_1.as_pointer()))
+        }) == new_index
+            .as_pointer()
+            .with(|__m: &Map<i32, (Value<i32>, Value<i32>)>| __m.end())
         {
             Map::subscript_move(
                 new_index.as_pointer(),
@@ -3533,7 +3534,7 @@ impl Default for brunsli_internal_enc_Histogram {
 thread_local!(
     static kMaxNumberOfHistograms_139: Value<usize> = Rc::new(RefCell::new(256_usize));
 );
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Default)]
 #[byte_size(72)]
 pub struct brunsli_internal_enc_EntropyCodes {
     #[offset(0)]
@@ -3579,8 +3580,15 @@ impl brunsli_internal_enc_EntropyCodes {
         });
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
     }
+    pub fn move_from(_a0: Ptr<brunsli_internal_enc_EntropyCodes>) -> Self {
+        Self {
+            clustered_: field!(_a0, clustered_).with_mut(std::mem::take),
+            context_map_: field!(_a0, context_map_).with_mut(std::mem::take),
+            ans_tables_: field!(_a0, ans_tables_).with_mut(std::mem::take),
+        }
+    }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(32)]
 pub struct brunsli_internal_enc_EntropySource {
     #[offset(0)]
@@ -3594,6 +3602,12 @@ impl brunsli_internal_enc_EntropySource {
         Self {
             num_bands_: 0_usize,
             histograms_: Vec::new(),
+        }
+    }
+    pub fn move_from(_a0: Ptr<brunsli_internal_enc_EntropySource>) -> Self {
+        Self {
+            num_bands_: { (*_a0.upgrade().deref()).num_bands_ },
+            histograms_: field!(_a0, histograms_).with_mut(std::mem::take),
         }
     }
 }
@@ -3632,7 +3646,7 @@ impl Default for brunsli_internal_enc_DataStream_CodeWord {
         { brunsli_internal_enc_DataStream_CodeWord::new() }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(56)]
 pub struct brunsli_internal_enc_DataStream {
     #[offset(0)]
@@ -3669,13 +3683,26 @@ impl brunsli_internal_enc_DataStream {
             code_words_: Vec::new(),
         }
     }
+    pub fn move_from(_a0: Ptr<brunsli_internal_enc_DataStream>) -> Self {
+        Self {
+            pos_: { (*_a0.upgrade().deref()).pos_ },
+            bw_pos_: { (*_a0.upgrade().deref()).bw_pos_ },
+            ac_pos0_: { (*_a0.upgrade().deref()).ac_pos0_ },
+            ac_pos1_: { (*_a0.upgrade().deref()).ac_pos1_ },
+            low_: { (*_a0.upgrade().deref()).low_ },
+            high_: { (*_a0.upgrade().deref()).high_ },
+            bw_val_: { (*_a0.upgrade().deref()).bw_val_ },
+            bw_bitpos_: { (*_a0.upgrade().deref()).bw_bitpos_ },
+            code_words_: field!(_a0, code_words_).with_mut(std::mem::take),
+        }
+    }
 }
 impl Default for brunsli_internal_enc_DataStream {
     fn default() -> Self {
         { brunsli_internal_enc_DataStream::new() }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(192)]
 pub struct brunsli_internal_enc_State {
     #[offset(0)]
@@ -3697,6 +3724,25 @@ pub struct brunsli_internal_enc_State {
     pub num_contexts: usize,
     #[offset(184)]
     pub use_legacy_context_model: bool,
+}
+impl brunsli_internal_enc_State {
+    pub fn move_from(_a0: Ptr<brunsli_internal_enc_State>) -> Self {
+        Self {
+            entropy_source: brunsli_internal_enc_EntropySource::move_from({
+                field_ptr!(_a0, entropy_source)
+            }),
+            entropy_codes: { (*_a0.upgrade().deref()).entropy_codes.clone() },
+            data_stream_dc: brunsli_internal_enc_DataStream::move_from({
+                field_ptr!(_a0, data_stream_dc)
+            }),
+            data_stream_ac: brunsli_internal_enc_DataStream::move_from({
+                field_ptr!(_a0, data_stream_ac)
+            }),
+            meta: field!(_a0, meta).with_mut(std::mem::take),
+            num_contexts: { (*_a0.upgrade().deref()).num_contexts },
+            use_legacy_context_model: { (*_a0.upgrade().deref()).use_legacy_context_model },
+        }
+    }
 }
 impl Default for brunsli_internal_enc_State {
     fn default() -> Self {
@@ -4330,14 +4376,14 @@ pub fn EncodeHuffmanCode_158(
             (if (i == max_len) { 1 } else { 0 })
         });
         let mut count_limit: i32 = {
-            let __tmp_1: Value<i32> = Rc::new(RefCell::new((max_count - total_count)));
-            let __tmp_2: Value<i32> = Rc::new(RefCell::new(
+            let __tmp_2: Value<i32> = Rc::new(RefCell::new((max_count - total_count)));
+            let __tmp_3: Value<i32> = Rc::new(RefCell::new(
                 (space >> (kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) - i)),
             ));
-            (if __tmp_1.as_pointer().read() <= __tmp_2.as_pointer().read() {
-                __tmp_1.as_pointer()
-            } else {
-                __tmp_2.as_pointer()
+            ({
+                let __a = __tmp_2.as_pointer();
+                let __b = __tmp_3.as_pointer();
+                if CppLess::less(&__b, &__a) { __b } else { __a }
             }
             .read())
         };
@@ -4727,25 +4773,31 @@ pub fn ComputeCoeffOrder_163(num_zeros: Ptr<Vec<i32>>, mut order: Ptr<u32>) {
         i.prefix_inc();
     }
     {
-        let __n = pos_and_val
-            .decay()
-            .end()
-            .iter_distance(&pos_and_val.decay().begin());
+        let __first = pos_and_val.decay().begin();
+        let __n = pos_and_val.decay().end().iter_distance(&__first);
+        let __cmp =
+            FnPtr::<fn(Ptr<(Value<i32>, Value<i32>)>, Ptr<(Value<i32>, Value<i32>)>) -> bool>::new(
+                |a: Ptr<(Value<i32>, Value<i32>)>, b: Ptr<(Value<i32>, Value<i32>)>| -> bool {
+                    {
+                        return ({ (*(*a.upgrade().deref()).1.borrow()) } < {
+                            (*(*b.upgrade().deref()).1.borrow())
+                        });
+                    }
+                },
+            );
         let mut __order: Vec<isize> = (0..__n).collect();
         __order.sort_by(|&__x, &__y| {
-        let __a = pos_and_val .decay() .begin()  .iter_at(__x);
-        let __b = pos_and_val .decay() .begin()  .iter_at(__y);
-        if FnPtr::<fn(Ptr< (Value<i32  >, Value<i32  >)  > ,Ptr< (Value<i32  >, Value<i32  >)  > ,) -> bool  >::new ( | a : Ptr< (Value<i32  >, Value<i32  >)  > , b : Ptr< (Value<i32  >, Value<i32  >)  > , | -> bool  { { return ({ (*(*a.upgrade().deref()) .1.borrow())  } < { (*(*b.upgrade().deref()) .1.borrow())  })   ;
- } } ) .call(__a.clone(), __b.clone()) {
-            std::cmp::Ordering::Less
-        } else if FnPtr::<fn(Ptr< (Value<i32  >, Value<i32  >)  > ,Ptr< (Value<i32  >, Value<i32  >)  > ,) -> bool  >::new ( | a : Ptr< (Value<i32  >, Value<i32  >)  > , b : Ptr< (Value<i32  >, Value<i32  >)  > , | -> bool  { { return ({ (*(*a.upgrade().deref()) .1.borrow())  } < { (*(*b.upgrade().deref()) .1.borrow())  })   ;
- } } ) .call(__b, __a) {
-            std::cmp::Ordering::Greater
-        } else {
-            std::cmp::Ordering::Equal
-        }
-    });
-        reorder(__order, |__i| pos_and_val.decay().begin().iter_at(__i));
+            let __a = __first.iter_at(__x);
+            let __b = __first.iter_at(__y);
+            if __cmp.call(__a.clone(), __b.clone()) {
+                std::cmp::Ordering::Less
+            } else if __cmp.call(__b, __a) {
+                std::cmp::Ordering::Greater
+            } else {
+                std::cmp::Ordering::Equal
+            }
+        });
+        reorder(__order, |__i| __first.iter_at(__i));
     };
     let mut i: usize = 0_usize;
     'loop_: while (i < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
@@ -6621,15 +6673,14 @@ pub fn MoveToFrontTransform_200(v: Ptr<Vec<u32>>) -> Vec<u32> {
         return (*v.upgrade().deref()).clone();
     }
     let mut max_value: u32 = ({
-        let mut __best = v.decay().begin().clone();
-        if v.decay().begin() != v.decay().end() {
-            let mut __it = v.decay().begin();
+        let __first = v.decay().begin();
+        let __last = v.decay().end();
+        let mut __best = __first.clone();
+        if __first != __last {
+            let mut __it = __first;
             __it.iter_inc();
-            while __it != v.decay().end() {
-                if __best
-                    .iter_deref()
-                    .with(|__b| __it.iter_deref().with(|__v| __b < __v))
-                {
+            while __it != __last {
+                if CppLess::less(&__best.iter_deref(), &__it.iter_deref()) {
                     __best = __it.clone();
                 }
                 __it.iter_inc();
@@ -6699,10 +6750,10 @@ pub fn RunLengthCodeZeros_201(
         let __rhs = ({
             let __tmp_0: Value<u64> = Rc::new(RefCell::new(((i).wrapping_sub(i0) as u64)));
             let __tmp_1: Value<u64> = Rc::new(RefCell::new(((*max_reps.borrow()) as u64)));
-            (if __tmp_0.as_pointer().read() >= __tmp_1.as_pointer().read() {
-                __tmp_0.as_pointer()
-            } else {
-                __tmp_1.as_pointer()
+            ({
+                let __a = __tmp_0.as_pointer();
+                let __b = __tmp_1.as_pointer();
+                if CppLess::less(&__a, &__b) { __b } else { __a }
             }
             .read())
         } as usize);
@@ -6715,10 +6766,10 @@ pub fn RunLengthCodeZeros_201(
             0
         } as u32),
     ));
-    let __rhs = (if max_prefix.as_pointer().read() <= (max_run_length_prefix).clone().read() {
-        max_prefix.as_pointer()
-    } else {
-        (max_run_length_prefix).clone()
+    let __rhs = ({
+        let __a = max_prefix.as_pointer();
+        let __b = (max_run_length_prefix).clone();
+        if CppLess::less(&__b, &__a) { __b } else { __a }
     }
     .read());
     (*max_prefix.borrow_mut()) = __rhs;
@@ -7245,21 +7296,19 @@ pub fn EncodeCounts_125(
                     let __rhs = {
                         let __tmp_0: Value<i32> =
                             Rc::new(RefCell::new(((*logcounts.borrow())[(i) as usize] + 1)));
-                        (if omit_log.as_pointer().read() >= __tmp_0.as_pointer().read() {
-                            omit_log.as_pointer()
-                        } else {
-                            __tmp_0.as_pointer()
+                        ({
+                            let __a = omit_log.as_pointer();
+                            let __b = __tmp_0.as_pointer();
+                            if CppLess::less(&__a, &__b) { __b } else { __a }
                         }
                         .read())
                     };
                     (*omit_log.borrow_mut()) = __rhs;
                 } else {
-                    let __rhs = (if omit_log.as_pointer().read()
-                        >= (logcounts.as_pointer() as Ptr<i32>).offset(i).read()
-                    {
-                        omit_log.as_pointer()
-                    } else {
-                        (logcounts.as_pointer() as Ptr<i32>).offset(i)
+                    let __rhs = ({
+                        let __a = omit_log.as_pointer();
+                        let __b = (logcounts.as_pointer() as Ptr<i32>).offset(i);
+                        if CppLess::less(&__a, &__b) { __b } else { __a }
                     }
                     .read());
                     (*omit_log.borrow_mut()) = __rhs;
@@ -7918,10 +7967,10 @@ pub fn CreateHuffmanTree_220(
                 let mut count: u32 = {
                     let __tmp_0: Value<u32> =
                         Rc::new(RefCell::new((count_limit).wrapping_sub(1_u32)));
-                    (if data.offset((i) as isize).read() >= __tmp_0.as_pointer().read() {
-                        data.offset((i) as isize)
-                    } else {
-                        __tmp_0.as_pointer()
+                    ({
+                        let __a = data.offset((i) as isize);
+                        let __b = __tmp_0.as_pointer();
+                        if CppLess::less(&__a, &__b) { __b } else { __a }
                     }
                     .read())
                 };
@@ -7938,20 +7987,22 @@ pub fn CreateHuffmanTree_220(
             break;
         }
         {
-            let __n = tree.decay().end().iter_distance(&tree.decay().begin());
+            let __first = tree.decay().begin();
+            let __n = tree.decay().end().iter_distance(&__first);
+            let __cmp = Compare_223;
             let mut __order: Vec<isize> = (0..__n).collect();
             __order.sort_by(|&__x, &__y| {
-                let __a = tree.decay().begin().iter_at(__x);
-                let __b = tree.decay().begin().iter_at(__y);
-                if Compare_223.call(__a.clone(), __b.clone()) {
+                let __a = __first.iter_at(__x);
+                let __b = __first.iter_at(__y);
+                if __cmp.call(__a.clone(), __b.clone()) {
                     std::cmp::Ordering::Less
-                } else if Compare_223.call(__b, __a) {
+                } else if __cmp.call(__b, __a) {
                     std::cmp::Ordering::Greater
                 } else {
                     std::cmp::Ordering::Equal
                 }
             });
-            reorder(__order, |__i| tree.decay().begin().iter_at(__i));
+            reorder(__order, |__i| __first.iter_at(__i));
         };
         let mut sentinel: brunsli_HuffmanTree =
             brunsli_HuffmanTree::new({ <u32>::MAX }, { (-1_i32 as i16) }, { (-1_i32 as i16) });
@@ -8015,15 +8066,14 @@ pub fn CreateHuffmanTree_220(
         });
         if ({
             (({
-                let mut __best = (depth.offset((0) as isize)).clone();
-                if (depth.offset((0) as isize)) != (depth.offset((length) as isize)) {
-                    let mut __it = (depth.offset((0) as isize));
+                let __first = (depth.offset((0) as isize));
+                let __last = (depth.offset((length) as isize));
+                let mut __best = __first.clone();
+                if __first != __last {
+                    let mut __it = __first;
                     __it.iter_inc();
-                    while __it != (depth.offset((length) as isize)) {
-                        if __best
-                            .iter_deref()
-                            .with(|__b| __it.iter_deref().with(|__v| __b < __v))
-                        {
+                    while __it != __last {
+                        if CppLess::less(&__best.iter_deref(), &__it.iter_deref()) {
                             __best = __it.clone();
                         }
                         __it.iter_inc();
@@ -8490,21 +8540,19 @@ pub fn ProcessSOF_235(
         field!(vec_elem!(jpg, components, i), v_samp_factor).write((*v_samp_factor.borrow()));
         let __rhs = (({ ReadUint8_233((data).clone(), (pos).clone()) }) as u8);
         field!(vec_elem!(jpg, components, i), quant_idx).write(__rhs);
-        let __rhs =
-            (if field_ptr!(jpg, max_h_samp_factor).read() >= h_samp_factor.as_pointer().read() {
-                field_ptr!(jpg, max_h_samp_factor)
-            } else {
-                h_samp_factor.as_pointer()
-            }
-            .read());
+        let __rhs = ({
+            let __a = field_ptr!(jpg, max_h_samp_factor);
+            let __b = h_samp_factor.as_pointer();
+            if CppLess::less(&__a, &__b) { __b } else { __a }
+        }
+        .read());
         field!(jpg, max_h_samp_factor).write(__rhs);
-        let __rhs =
-            (if field_ptr!(jpg, max_v_samp_factor).read() >= v_samp_factor.as_pointer().read() {
-                field_ptr!(jpg, max_v_samp_factor)
-            } else {
-                v_samp_factor.as_pointer()
-            }
-            .read());
+        let __rhs = ({
+            let __a = field_ptr!(jpg, max_v_samp_factor);
+            let __b = v_samp_factor.as_pointer();
+            if CppLess::less(&__a, &__b) { __b } else { __a }
+        }
+        .read());
         field!(jpg, max_v_samp_factor).write(__rhs);
         i.prefix_inc();
     }
@@ -10882,6 +10930,7 @@ impl brunsli_BitReaderStateImpl for Ptr<brunsli_BitReaderState> {
 pub trait brunsli_ComponentStateImpl {
     fn SetWidth(&self, w: i32);
     fn InitAll(&self);
+    fn move_assign(&self, _a0: Ptr<brunsli_ComponentState>) -> Ptr<brunsli_ComponentState>;
     fn destructor(&self);
 }
 impl brunsli_ComponentStateImpl for Ptr<brunsli_ComponentState> {
@@ -10907,6 +10956,68 @@ impl brunsli_ComponentStateImpl for Ptr<brunsli_ComponentState> {
             field!((*self), prev_sign)
                 .with_mut(|__v: &mut Vec<i32>| __v.resize_with(__a0, || <i32>::default()))
         };
+    }
+    fn move_assign(&self, _a0: Ptr<brunsli_ComponentState>) -> Ptr<brunsli_ComponentState> {
+        field!((*self), width).write({ { (*_a0.upgrade().deref()).width } });
+        field!((*self), context_offset).write({ { (*_a0.upgrade().deref()).context_offset } });
+        {
+            ((array_field_ptr!((*self), order)) as Ptr<u32>)
+                .to_any()
+                .memcpy(
+                    &((array_field_ptr!(_a0, order)) as Ptr<u32>).to_any(),
+                    256_usize as usize,
+                );
+            ((array_field_ptr!((*self), order)) as Ptr<u32>).to_any()
+        };
+        {
+            ((array_field_ptr!((*self), mult_row)) as Ptr<i32>)
+                .to_any()
+                .memcpy(
+                    &((array_field_ptr!(_a0, mult_row)) as Ptr<i32>).to_any(),
+                    256_usize as usize,
+                );
+            ((array_field_ptr!((*self), mult_row)) as Ptr<i32>).to_any()
+        };
+        {
+            ((array_field_ptr!((*self), mult_col)) as Ptr<i32>)
+                .to_any()
+                .memcpy(
+                    &((array_field_ptr!(_a0, mult_col)) as Ptr<i32>).to_any(),
+                    256_usize as usize,
+                );
+            ((array_field_ptr!((*self), mult_col)) as Ptr<i32>).to_any()
+        };
+        field_ref!((*self), is_zero_prob)
+            .as_pointer()
+            .write(field!(_a0, is_zero_prob).with_mut(std::mem::take));
+        field_ref!((*self), sign_prob)
+            .as_pointer()
+            .write(field!(_a0, sign_prob).with_mut(std::mem::take));
+        {
+            ((array_field_ptr!((*self), num_nonzero_prob)) as Ptr<brunsli_Prob>)
+                .to_any()
+                .memcpy(
+                    &((array_field_ptr!(_a0, num_nonzero_prob)) as Ptr<brunsli_Prob>).to_any(),
+                    8064_usize as usize,
+                );
+            ((array_field_ptr!((*self), num_nonzero_prob)) as Ptr<brunsli_Prob>).to_any()
+        };
+        field_ref!((*self), first_extra_bit_prob)
+            .as_pointer()
+            .write(field!(_a0, first_extra_bit_prob).with_mut(std::mem::take));
+        field_ref!((*self), prev_is_nonempty)
+            .as_pointer()
+            .write(field!(_a0, prev_is_nonempty).with_mut(std::mem::take));
+        field_ref!((*self), prev_num_nonzeros)
+            .as_pointer()
+            .write(field!(_a0, prev_num_nonzeros).with_mut(std::mem::take));
+        field_ref!((*self), prev_abs_coeff)
+            .as_pointer()
+            .write(field!(_a0, prev_abs_coeff).with_mut(std::mem::take));
+        field_ref!((*self), prev_sign)
+            .as_pointer()
+            .write(field!(_a0, prev_sign).with_mut(std::mem::take));
+        return (*self).clone();
     }
     fn destructor(&self) {
         {
@@ -11016,6 +11127,7 @@ impl brunsli_ComponentStateImpl for Ptr<brunsli_ComponentState> {
 pub trait brunsli_ComponentStateDCImpl {
     fn SetWidth(&self, w: i32);
     fn InitAll(&self);
+    fn move_assign(&self, _a0: Ptr<brunsli_ComponentStateDC>) -> Ptr<brunsli_ComponentStateDC>;
     fn destructor(&self);
 }
 impl brunsli_ComponentStateDCImpl for Ptr<brunsli_ComponentStateDC> {
@@ -11035,6 +11147,29 @@ impl brunsli_ComponentStateDCImpl for Ptr<brunsli_ComponentStateDC> {
             field!((*self), prev_sign)
                 .with_mut(|__v: &mut Vec<i32>| __v.resize_with(__a0, || <i32>::default()))
         };
+    }
+    fn move_assign(&self, _a0: Ptr<brunsli_ComponentStateDC>) -> Ptr<brunsli_ComponentStateDC> {
+        field!((*self), width).write({ { (*_a0.upgrade().deref()).width } });
+        field!((*self), is_zero_prob).write({ { (*_a0.upgrade().deref()).is_zero_prob.clone() } });
+        field_ref!((*self), is_empty_block_prob)
+            .as_pointer()
+            .write(field!(_a0, is_empty_block_prob).with_mut(std::mem::take));
+        field_ref!((*self), sign_prob)
+            .as_pointer()
+            .write(field!(_a0, sign_prob).with_mut(std::mem::take));
+        field_ref!((*self), first_extra_bit_prob)
+            .as_pointer()
+            .write(field!(_a0, first_extra_bit_prob).with_mut(std::mem::take));
+        field_ref!((*self), prev_is_nonempty)
+            .as_pointer()
+            .write(field!(_a0, prev_is_nonempty).with_mut(std::mem::take));
+        field_ref!((*self), prev_abs_coeff)
+            .as_pointer()
+            .write(field!(_a0, prev_abs_coeff).with_mut(std::mem::take));
+        field_ref!((*self), prev_sign)
+            .as_pointer()
+            .write(field!(_a0, prev_sign).with_mut(std::mem::take));
+        return (*self).clone();
     }
     fn destructor(&self) {
         field_ptr!(self, is_zero_prob).destructor();
@@ -11068,12 +11203,107 @@ impl brunsli_ComponentStateDCImpl for Ptr<brunsli_ComponentStateDC> {
         }
     }
 }
+pub trait brunsli_JPEGComponentImpl {
+    fn move_assign(&self, _a0: Ptr<brunsli_JPEGComponent>) -> Ptr<brunsli_JPEGComponent>;
+}
+impl brunsli_JPEGComponentImpl for Ptr<brunsli_JPEGComponent> {
+    fn move_assign(&self, _a0: Ptr<brunsli_JPEGComponent>) -> Ptr<brunsli_JPEGComponent> {
+        field!((*self), id).write({ { (*_a0.upgrade().deref()).id } });
+        field!((*self), h_samp_factor).write({ { (*_a0.upgrade().deref()).h_samp_factor } });
+        field!((*self), v_samp_factor).write({ { (*_a0.upgrade().deref()).v_samp_factor } });
+        field!((*self), quant_idx).write({ { (*_a0.upgrade().deref()).quant_idx } });
+        field!((*self), width_in_blocks).write({ { (*_a0.upgrade().deref()).width_in_blocks } });
+        field!((*self), height_in_blocks).write({ { (*_a0.upgrade().deref()).height_in_blocks } });
+        field!((*self), num_blocks).write({ { (*_a0.upgrade().deref()).num_blocks } });
+        field_ref!((*self), coeffs)
+            .as_pointer()
+            .write(field!(_a0, coeffs).with_mut(std::mem::take));
+        return (*self).clone();
+    }
+}
+pub trait brunsli_JPEGDataImpl {
+    fn move_assign(&self, _a0: Ptr<brunsli_JPEGData>) -> Ptr<brunsli_JPEGData>;
+}
+impl brunsli_JPEGDataImpl for Ptr<brunsli_JPEGData> {
+    fn move_assign(&self, _a0: Ptr<brunsli_JPEGData>) -> Ptr<brunsli_JPEGData> {
+        field!((*self), width).write({ { (*_a0.upgrade().deref()).width } });
+        field!((*self), height).write({ { (*_a0.upgrade().deref()).height } });
+        field!((*self), version).write({ { (*_a0.upgrade().deref()).version } });
+        field!((*self), max_h_samp_factor)
+            .write({ { (*_a0.upgrade().deref()).max_h_samp_factor } });
+        field!((*self), max_v_samp_factor)
+            .write({ { (*_a0.upgrade().deref()).max_v_samp_factor } });
+        field!((*self), MCU_rows).write({ { (*_a0.upgrade().deref()).MCU_rows } });
+        field!((*self), MCU_cols).write({ { (*_a0.upgrade().deref()).MCU_cols } });
+        field!((*self), restart_interval).write({ { (*_a0.upgrade().deref()).restart_interval } });
+        field_ref!((*self), app_data)
+            .as_pointer()
+            .write(field!(_a0, app_data).with_mut(std::mem::take));
+        field_ref!((*self), com_data)
+            .as_pointer()
+            .write(field!(_a0, com_data).with_mut(std::mem::take));
+        field_ref!((*self), quant)
+            .as_pointer()
+            .write(field!(_a0, quant).with_mut(std::mem::take));
+        field_ref!((*self), huffman_code)
+            .as_pointer()
+            .write(field!(_a0, huffman_code).with_mut(std::mem::take));
+        field_ref!((*self), components)
+            .as_pointer()
+            .write(field!(_a0, components).with_mut(std::mem::take));
+        field_ref!((*self), scan_info)
+            .as_pointer()
+            .write(field!(_a0, scan_info).with_mut(std::mem::take));
+        field_ref!((*self), marker_order)
+            .as_pointer()
+            .write(field!(_a0, marker_order).with_mut(std::mem::take));
+        field_ref!((*self), inter_marker_data)
+            .as_pointer()
+            .write(field!(_a0, inter_marker_data).with_mut(std::mem::take));
+        field_ref!((*self), tail_data)
+            .as_pointer()
+            .write(field!(_a0, tail_data).with_mut(std::mem::take));
+        field!((*self), original_jpg).write({ { (*_a0.upgrade().deref()).original_jpg.clone() } });
+        field!((*self), original_jpg_size)
+            .write({ { (*_a0.upgrade().deref()).original_jpg_size } });
+        field!((*self), error).write({ { (*_a0.upgrade().deref()).error } });
+        field!((*self), has_zero_padding_bit)
+            .write({ { (*_a0.upgrade().deref()).has_zero_padding_bit } });
+        field_ref!((*self), padding_bits)
+            .as_pointer()
+            .write(field!(_a0, padding_bits).with_mut(std::mem::take));
+        return (*self).clone();
+    }
+}
+pub trait brunsli_JPEGScanInfoImpl {
+    fn move_assign(&self, _a0: Ptr<brunsli_JPEGScanInfo>) -> Ptr<brunsli_JPEGScanInfo>;
+}
+impl brunsli_JPEGScanInfoImpl for Ptr<brunsli_JPEGScanInfo> {
+    fn move_assign(&self, _a0: Ptr<brunsli_JPEGScanInfo>) -> Ptr<brunsli_JPEGScanInfo> {
+        field!((*self), Ss).write({ { (*_a0.upgrade().deref()).Ss } });
+        field!((*self), Se).write({ { (*_a0.upgrade().deref()).Se } });
+        field!((*self), Ah).write({ { (*_a0.upgrade().deref()).Ah } });
+        field!((*self), Al).write({ { (*_a0.upgrade().deref()).Al } });
+        field!((*self), num_components).write({ { (*_a0.upgrade().deref()).num_components } });
+        field_ref!((*self), components)
+            .as_pointer()
+            .write(field!(_a0, components).with_mut(std::mem::take));
+        field_ref!((*self), reset_points)
+            .as_pointer()
+            .write(field!(_a0, reset_points).with_mut(std::mem::take));
+        field_ref!((*self), extra_zero_runs)
+            .as_pointer()
+            .write(field!(_a0, extra_zero_runs).with_mut(std::mem::take));
+        return (*self).clone();
+    }
+}
 pub trait brunsli_PermutationCoderImpl {
     fn Init(&self, values: Vec<u8>);
     fn Clear(&self);
     fn num_bits(&self) -> i32;
     fn Remove(&self, code: usize, value: Ptr<u8>) -> bool;
     fn RemoveValue(&self, value: u8, code: Ptr<i32>, nbits: Ptr<i32>) -> bool;
+    fn move_assign(&self, _a0: Ptr<brunsli_PermutationCoder>) -> Ptr<brunsli_PermutationCoder>;
 }
 impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
     fn Init(&self, values: Vec<u8>) {
@@ -11123,12 +11353,13 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         };
         return true;
     }
-    fn RemoveValue(&self, mut value: u8, mut code: Ptr<i32>, mut nbits: Ptr<i32>) -> bool {
+    fn RemoveValue(&self, value: u8, mut code: Ptr<i32>, mut nbits: Ptr<i32>) -> bool {
+        let value: Value<u8> = Rc::new(RefCell::new(value));
         let it: Value<RandomAccessIterator<u8>> = Rc::new(RefCell::new({
             let mut __it = field_ref!((*self), values_).decay().begin();
-            while __it != field_ref!((*self), values_).decay().end()
-                && __it.iter_deref().with(|__v| *__v != value)
-            {
+            let __last = field_ref!((*self), values_).decay().end();
+            let __value = value.as_pointer();
+            while __it != __last && !CppEq::equal(&__it.iter_deref(), &__value) {
                 __it.iter_inc();
             }
             __it
@@ -11150,6 +11381,12 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
             __it
         };
         return true;
+    }
+    fn move_assign(&self, _a0: Ptr<brunsli_PermutationCoder>) -> Ptr<brunsli_PermutationCoder> {
+        field_ref!((*self), values_)
+            .as_pointer()
+            .write(field!(_a0, values_).with_mut(std::mem::take));
+        return (*self).clone();
     }
 }
 pub trait brunsli_ProbImpl {
@@ -11275,8 +11512,29 @@ pub trait brunsli_internal_enc_DataStreamImpl {
         s: Ptr<brunsli_internal_enc_EntropyCodes>,
         storage: Ptr<brunsli_Storage>,
     );
+    fn move_assign(
+        &self,
+        _a0: Ptr<brunsli_internal_enc_DataStream>,
+    ) -> Ptr<brunsli_internal_enc_DataStream>;
 }
 impl brunsli_internal_enc_DataStreamImpl for Ptr<brunsli_internal_enc_DataStream> {
+    fn move_assign(
+        &self,
+        _a0: Ptr<brunsli_internal_enc_DataStream>,
+    ) -> Ptr<brunsli_internal_enc_DataStream> {
+        field!((*self), pos_).write({ { (*_a0.upgrade().deref()).pos_ } });
+        field!((*self), bw_pos_).write({ { (*_a0.upgrade().deref()).bw_pos_ } });
+        field!((*self), ac_pos0_).write({ { (*_a0.upgrade().deref()).ac_pos0_ } });
+        field!((*self), ac_pos1_).write({ { (*_a0.upgrade().deref()).ac_pos1_ } });
+        field!((*self), low_).write({ { (*_a0.upgrade().deref()).low_ } });
+        field!((*self), high_).write({ { (*_a0.upgrade().deref()).high_ } });
+        field!((*self), bw_val_).write({ { (*_a0.upgrade().deref()).bw_val_ } });
+        field!((*self), bw_bitpos_).write({ { (*_a0.upgrade().deref()).bw_bitpos_ } });
+        field_ref!((*self), code_words_)
+            .as_pointer()
+            .write(field!(_a0, code_words_).with_mut(std::mem::take));
+        return (*self).clone();
+    }
     fn Resize(&self, mut max_num_code_words: usize) {
         {
             let __a0 = max_num_code_words as usize;
@@ -11561,8 +11819,27 @@ pub trait brunsli_internal_enc_EntropyCodesImpl {
     fn EncodeContextMap(&self, storage: Ptr<brunsli_Storage>);
     fn BuildAndStoreEntropyCodes(&self, storage: Ptr<brunsli_Storage>);
     fn GetANSTable(&self, context: i32) -> Ptr<brunsli_ANSTable>;
+    fn move_assign(
+        &self,
+        _a0: Ptr<brunsli_internal_enc_EntropyCodes>,
+    ) -> Ptr<brunsli_internal_enc_EntropyCodes>;
 }
 impl brunsli_internal_enc_EntropyCodesImpl for Ptr<brunsli_internal_enc_EntropyCodes> {
+    fn move_assign(
+        &self,
+        _a0: Ptr<brunsli_internal_enc_EntropyCodes>,
+    ) -> Ptr<brunsli_internal_enc_EntropyCodes> {
+        field_ref!((*self), clustered_)
+            .as_pointer()
+            .write(field!(_a0, clustered_).with_mut(std::mem::take));
+        field_ref!((*self), context_map_)
+            .as_pointer()
+            .write(field!(_a0, context_map_).with_mut(std::mem::take));
+        field_ref!((*self), ans_tables_)
+            .as_pointer()
+            .write(field!(_a0, ans_tables_).with_mut(std::mem::take));
+        return (*self).clone();
+    }
     fn EncodeContextMap(&self, mut storage: Ptr<brunsli_Storage>) {
         ({
             let _context_map: Ptr<Vec<u32>> = field_ref!((*self), context_map_).as_pointer();
@@ -11604,8 +11881,22 @@ pub trait brunsli_internal_enc_EntropySourceImpl {
     fn AddCode(&self, code: usize, histo_ix: usize);
     fn Merge(&self, other: Ptr<brunsli_internal_enc_EntropySource>);
     fn Finish(&self, offsets: Ptr<Vec<u64>>) -> Option<Value<brunsli_internal_enc_EntropyCodes>>;
+    fn move_assign(
+        &self,
+        _a0: Ptr<brunsli_internal_enc_EntropySource>,
+    ) -> Ptr<brunsli_internal_enc_EntropySource>;
 }
 impl brunsli_internal_enc_EntropySourceImpl for Ptr<brunsli_internal_enc_EntropySource> {
+    fn move_assign(
+        &self,
+        _a0: Ptr<brunsli_internal_enc_EntropySource>,
+    ) -> Ptr<brunsli_internal_enc_EntropySource> {
+        field!((*self), num_bands_).write({ { (*_a0.upgrade().deref()).num_bands_ } });
+        field_ref!((*self), histograms_)
+            .as_pointer()
+            .write(field!(_a0, histograms_).with_mut(std::mem::take));
+        return (*self).clone();
+    }
     fn Resize(&self, mut num_bands: usize) {
         field!((*self), num_bands_).write(num_bands);
         {
@@ -11725,6 +12016,43 @@ impl brunsli_internal_enc_HistogramImpl for Ptr<brunsli_internal_enc_Histogram> 
             };
             i.prefix_inc();
         }
+    }
+}
+pub trait brunsli_internal_enc_StateImpl {
+    fn move_assign(&self, _a0: Ptr<brunsli_internal_enc_State>) -> Ptr<brunsli_internal_enc_State>;
+}
+impl brunsli_internal_enc_StateImpl for Ptr<brunsli_internal_enc_State> {
+    fn move_assign(&self, _a0: Ptr<brunsli_internal_enc_State>) -> Ptr<brunsli_internal_enc_State> {
+        ({
+            let _arg0: Ptr<brunsli_internal_enc_EntropySource> = field_ptr!(_a0, entropy_source);
+            brunsli_internal_enc_EntropySourceImpl::move_assign(
+                &field_ptr!((*self), entropy_source),
+                _arg0,
+            )
+        });
+        field!((*self), entropy_codes)
+            .write({ { (*_a0.upgrade().deref()).entropy_codes.clone() } });
+        ({
+            let _arg0: Ptr<brunsli_internal_enc_DataStream> = field_ptr!(_a0, data_stream_dc);
+            brunsli_internal_enc_DataStreamImpl::move_assign(
+                &field_ptr!((*self), data_stream_dc),
+                _arg0,
+            )
+        });
+        ({
+            let _arg0: Ptr<brunsli_internal_enc_DataStream> = field_ptr!(_a0, data_stream_ac);
+            brunsli_internal_enc_DataStreamImpl::move_assign(
+                &field_ptr!((*self), data_stream_ac),
+                _arg0,
+            )
+        });
+        field_ref!((*self), meta)
+            .as_pointer()
+            .write(field!(_a0, meta).with_mut(std::mem::take));
+        field!((*self), num_contexts).write({ { (*_a0.upgrade().deref()).num_contexts } });
+        field!((*self), use_legacy_context_model)
+            .write({ { (*_a0.upgrade().deref()).use_legacy_context_model } });
+        return (*self).clone();
     }
 }
 pub fn __cpp2rust_init_globals() {

@@ -442,124 +442,17 @@ pub struct woff2_Table {
     #[byte_size(8)]
     pub dst_data: Ptr<u8>,
 }
-impl std::cmp::Ord for woff2_Table {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        {
-            if woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(woff2_Table {
-                    tag: self.tag.clone(),
-                    flags: self.flags.clone(),
-                    src_offset: self.src_offset.clone(),
-                    src_length: self.src_length.clone(),
-                    transform_length: self.transform_length.clone(),
-                    dst_offset: self.dst_offset.clone(),
-                    dst_length: self.dst_length.clone(),
-                    dst_data: self.dst_data.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(woff2_Table {
-                    tag: other.tag.clone(),
-                    flags: other.flags.clone(),
-                    src_offset: other.src_offset.clone(),
-                    src_length: other.src_length.clone(),
-                    transform_length: other.transform_length.clone(),
-                    dst_offset: other.dst_offset.clone(),
-                    dst_length: other.dst_length.clone(),
-                    dst_data: other.dst_data.clone(),
-                }))
-                .as_pointer(),
-            ) {
-                std::cmp::Ordering::Less
-            } else if woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(woff2_Table {
-                    tag: other.tag.clone(),
-                    flags: other.flags.clone(),
-                    src_offset: other.src_offset.clone(),
-                    src_length: other.src_length.clone(),
-                    transform_length: other.transform_length.clone(),
-                    dst_offset: other.dst_offset.clone(),
-                    dst_length: other.dst_length.clone(),
-                    dst_data: other.dst_data.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(woff2_Table {
-                    tag: self.tag.clone(),
-                    flags: self.flags.clone(),
-                    src_offset: self.src_offset.clone(),
-                    src_length: self.src_length.clone(),
-                    transform_length: self.transform_length.clone(),
-                    dst_offset: self.dst_offset.clone(),
-                    dst_length: self.dst_length.clone(),
-                    dst_data: self.dst_data.clone(),
-                }))
-                .as_pointer(),
-            ) {
-                std::cmp::Ordering::Greater
-            } else {
-                std::cmp::Ordering::Equal
-            }
-        }
+impl CppLess for woff2_Table {
+    fn less(__lhs: &Ptr<Self>, __rhs: &Ptr<Self>) -> bool {
+        woff2_TableImpl::operator_lt(__lhs, __rhs.clone())
     }
 }
-impl std::cmp::PartialOrd for woff2_Table {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
+impl CppEq for woff2_Table {
+    fn equal(__lhs: &Ptr<Self>, __rhs: &Ptr<Self>) -> bool {
+        !(woff2_TableImpl::operator_lt(__lhs, __rhs.clone()))
+            && !(woff2_TableImpl::operator_lt(__rhs, __lhs.clone()))
     }
 }
-impl std::cmp::PartialEq for woff2_Table {
-    fn eq(&self, other: &Self) -> bool {
-        {
-            !(woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(woff2_Table {
-                    tag: self.tag.clone(),
-                    flags: self.flags.clone(),
-                    src_offset: self.src_offset.clone(),
-                    src_length: self.src_length.clone(),
-                    transform_length: self.transform_length.clone(),
-                    dst_offset: self.dst_offset.clone(),
-                    dst_length: self.dst_length.clone(),
-                    dst_data: self.dst_data.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(woff2_Table {
-                    tag: other.tag.clone(),
-                    flags: other.flags.clone(),
-                    src_offset: other.src_offset.clone(),
-                    src_length: other.src_length.clone(),
-                    transform_length: other.transform_length.clone(),
-                    dst_offset: other.dst_offset.clone(),
-                    dst_length: other.dst_length.clone(),
-                    dst_data: other.dst_data.clone(),
-                }))
-                .as_pointer(),
-            )) && !(woff2_TableImpl::operator_lt(
-                &Rc::new(RefCell::new(woff2_Table {
-                    tag: other.tag.clone(),
-                    flags: other.flags.clone(),
-                    src_offset: other.src_offset.clone(),
-                    src_length: other.src_length.clone(),
-                    transform_length: other.transform_length.clone(),
-                    dst_offset: other.dst_offset.clone(),
-                    dst_length: other.dst_length.clone(),
-                    dst_data: other.dst_data.clone(),
-                }))
-                .as_pointer(),
-                Rc::new(RefCell::new(woff2_Table {
-                    tag: self.tag.clone(),
-                    flags: self.flags.clone(),
-                    src_offset: self.src_offset.clone(),
-                    src_length: self.src_length.clone(),
-                    transform_length: self.transform_length.clone(),
-                    dst_offset: self.dst_offset.clone(),
-                    dst_length: self.dst_length.clone(),
-                    dst_data: self.dst_data.clone(),
-                }))
-                .as_pointer(),
-            ))
-        }
-    }
-}
-impl std::cmp::Eq for woff2_Table {}
 pub fn Log2Floor_25(mut n: u32) -> i32 {
     return if (n == 0_u32) {
         -1_i32
@@ -608,7 +501,7 @@ pub fn CollectionHeaderSize_27(mut header_version: u32, mut num_fonts: u32) -> u
     }
     return size;
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Default)]
 #[byte_size(64)]
 pub struct woff2_Font_Table {
     #[offset(0)]
@@ -631,7 +524,21 @@ pub struct woff2_Font_Table {
     #[offset(56)]
     pub flag_byte: u8,
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+impl woff2_Font_Table {
+    pub fn move_from(_a0: Ptr<woff2_Font_Table>) -> Self {
+        Self {
+            tag: { (*_a0.upgrade().deref()).tag },
+            checksum: { (*_a0.upgrade().deref()).checksum },
+            offset: { (*_a0.upgrade().deref()).offset },
+            length: { (*_a0.upgrade().deref()).length },
+            data: { (*_a0.upgrade().deref()).data.clone() },
+            buffer: field!(_a0, buffer).with_mut(std::mem::take),
+            reuse_of: { (*_a0.upgrade().deref()).reuse_of.clone() },
+            flag_byte: { (*_a0.upgrade().deref()).flag_byte },
+        }
+    }
+}
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Default)]
 #[byte_size(56)]
 pub struct woff2_Font {
     #[offset(0)]
@@ -642,7 +549,18 @@ pub struct woff2_Font {
     #[byte_size(48)]
     pub tables: Map<u32, (Value<u32>, Value<woff2_Font_Table>)>,
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+impl woff2_Font {
+    pub fn move_from(_a0: Ptr<woff2_Font>) -> Self {
+        Self {
+            flavor: { (*_a0.upgrade().deref()).flavor },
+            num_tables: { (*_a0.upgrade().deref()).num_tables },
+            tables: field_ptr!(_a0, tables).with_mut(
+                |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| std::mem::take(__m),
+            ),
+        }
+    }
+}
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Default)]
 #[byte_size(80)]
 pub struct woff2_FontCollection {
     #[offset(0)]
@@ -655,6 +573,20 @@ pub struct woff2_FontCollection {
     #[offset(56)]
     #[byte_size(24)]
     pub fonts: Vec<woff2_Font>,
+}
+impl woff2_FontCollection {
+    pub fn move_from(_a0: Ptr<woff2_FontCollection>) -> Self {
+        Self {
+            flavor: { (*_a0.upgrade().deref()).flavor },
+            header_version: { (*_a0.upgrade().deref()).header_version },
+            tables: field_ptr!(_a0, tables).with_mut(
+                |__m: &mut Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| {
+                    std::mem::take(__m)
+                },
+            ),
+            fonts: field!(_a0, fonts).with_mut(std::mem::take),
+        }
+    }
 }
 pub fn StoreU32_28(mut dst: Ptr<u8>, mut offset: usize, mut x: u32) -> usize {
     elem!(dst, offset).write({ ((x >> 24) as u8) });
@@ -727,17 +659,25 @@ pub fn ReadTrueTypeFont_33(
             return false;
         }
         let __rhs = { (*table.borrow()).length };
-        Map::subscript(intervals.as_pointer(), &{ (*table.borrow()).offset }).write(__rhs);
+        Map::subscript(
+            intervals.as_pointer(),
+            field_ptr!(table.as_pointer(), offset),
+        )
+        .write(__rhs);
         (*table.borrow_mut()).data = { data.offset(({ (*table.borrow()).offset }) as isize) };
         if field_ptr!(font, tables).with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-            __m.find(&{ (*table.borrow()).tag })
+            __m.find(&field_ptr!(table.as_pointer(), tag))
         }) != field_ptr!(font, tables)
             .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end())
         {
             return false;
         }
         let __rhs = (*table.borrow()).clone();
-        Map::subscript(field_ptr!(font, tables), &{ (*table.borrow()).tag }).write(__rhs);
+        Map::subscript(
+            field_ptr!(font, tables),
+            field_ptr!(table.as_pointer(), tag),
+        )
+        .write(__rhs);
         i.prefix_inc();
     }
     let mut last_offset: u32 = (((12_u64 as u64)
@@ -793,16 +733,15 @@ pub fn ReadCollectionFont_34(
         let table: Ptr<woff2_Font_Table> = (*entry.upgrade().deref()).1.as_pointer();
         if all_tables.with(
             |__m: &Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| {
-                __m.find(&table.with(|__s| __s.offset))
+                __m.find(&field_ptr!(table, offset))
             },
         ) == all_tables
             .with(|__m: &Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| __m.end())
         {
             let __rhs = ({ woff2_FontImpl::FindTable_2(&font, table.with(|__s| __s.tag)) });
-            Map::subscript((all_tables).clone(), &table.with(|__s| __s.offset)).write(__rhs);
+            Map::subscript((all_tables).clone(), field_ptr!(table, offset)).write(__rhs);
         } else {
-            let __rhs =
-                (Map::subscript((all_tables).clone(), &table.with(|__s| __s.offset)).read());
+            let __rhs = (Map::subscript((all_tables).clone(), field_ptr!(table, offset)).read());
             field!(table, reuse_of).write(__rhs);
             if ({ table.with(|__s| __s.tag) } != {
                 table.with(|__s| __s.reuse_of.clone()).with(|__s| __s.tag)
@@ -926,10 +865,10 @@ pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
         let __rhs = ({
             let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
             let __tmp_1: Value<u64> = Rc::new(RefCell::new(((*end_offset.borrow()) as u64)));
-            (if __tmp_0.as_pointer().read() >= __tmp_1.as_pointer().read() {
-                __tmp_0.as_pointer()
-            } else {
-                __tmp_1.as_pointer()
+            ({
+                let __a = __tmp_0.as_pointer();
+                let __b = __tmp_1.as_pointer();
+                if CppLess::less(&__a, &__b) { __b } else { __a }
             }
             .read())
         } as usize);
@@ -948,10 +887,10 @@ pub fn FontCollectionFileSize_39(font_collection: Ptr<woff2_FontCollection>) -> 
             let __tmp_2: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
             let __tmp_3: Value<u64> =
                 Rc::new(RefCell::new((({ FontFileSize_38((font).clone()) }) as u64)));
-            (if __tmp_2.as_pointer().read() >= __tmp_3.as_pointer().read() {
-                __tmp_2.as_pointer()
-            } else {
-                __tmp_3.as_pointer()
+            ({
+                let __a = __tmp_2.as_pointer();
+                let __b = __tmp_3.as_pointer();
+                if CppLess::less(&__a, &__b) { __b } else { __a }
             }
             .read())
         } as usize);
@@ -1305,7 +1244,7 @@ pub fn RemoveDigitalSignature_48(mut font: Ptr<woff2_Font>) -> bool {
     let it: Value<BidirectionalIterator<(Value<u32>, Value<woff2_Font_Table>)>> =
         Rc::new(RefCell::new(field_ptr!(font, tables).with(
             |__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                __m.find(&kDsigTableTag_3.with(|rc| *rc.borrow()))
+                __m.find(&kDsigTableTag_3.with(|v| v.as_pointer()))
             },
         )));
     if (*it.borrow())
@@ -1331,7 +1270,7 @@ pub struct woff2_Glyph_Point {
     #[offset(8)]
     pub on_curve: bool,
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(72)]
 pub struct woff2_Glyph {
     #[offset(0)]
@@ -1374,6 +1313,21 @@ impl woff2_Glyph {
             composite_data: Ptr::<u8>::null(),
             composite_data_size: 0_u32,
             have_instructions: false,
+        }
+    }
+    pub fn move_from(_a0: Ptr<woff2_Glyph>) -> Self {
+        Self {
+            x_min: { (*_a0.upgrade().deref()).x_min },
+            x_max: { (*_a0.upgrade().deref()).x_max },
+            y_min: { (*_a0.upgrade().deref()).y_min },
+            y_max: { (*_a0.upgrade().deref()).y_max },
+            instructions_size: { (*_a0.upgrade().deref()).instructions_size },
+            instructions_data: { (*_a0.upgrade().deref()).instructions_data.clone() },
+            overlap_simple_flag_set: { (*_a0.upgrade().deref()).overlap_simple_flag_set },
+            contours: field!(_a0, contours).with_mut(std::mem::take),
+            composite_data: { (*_a0.upgrade().deref()).composite_data.clone() },
+            composite_data_size: { (*_a0.upgrade().deref()).composite_data_size },
+            have_instructions: { (*_a0.upgrade().deref()).have_instructions },
         }
     }
 }
@@ -2235,8 +2189,9 @@ pub fn NormalizeOffsets_76(mut font: Ptr<woff2_Font>) -> bool {
         Rc::new(RefCell::new(({ woff2_FontImpl::OutputOrderedTags(&font) })));
     let __range1: Ptr<Vec<u32>> = __tmp_0.as_pointer();
     'loop_: for tag in IterRange::new(__range1.decay().begin(), __range1.decay().end()) {
-        let mut tag: u32 = (tag.iter_deref().read());
-        let table: Ptr<woff2_Font_Table> = Map::subscript(field_ptr!(font, tables), &tag);
+        let tag: Value<u32> = Rc::new(RefCell::new((tag.iter_deref().read())));
+        let table: Ptr<woff2_Font_Table> =
+            Map::subscript(field_ptr!(font, tables), tag.as_pointer());
         field!(table, offset).write(offset);
         {
             let rhs_0 = (offset).wrapping_add(({ Round4_71(table.with(|__s| __s.length)) }));
@@ -2407,8 +2362,9 @@ pub fn NormalizeFontCollection_82(mut font_collection: Ptr<woff2_FontCollection>
             Rc::new(RefCell::new(({ woff2_FontImpl::OutputOrderedTags(&font) })));
         let __range2: Ptr<Vec<u32>> = __tmp_1.as_pointer();
         'loop_: for tag in IterRange::new(__range2.decay().begin(), __range2.decay().end()) {
-            let mut tag: u32 = (tag.iter_deref().read());
-            let table: Ptr<woff2_Font_Table> = Map::subscript(field_ptr!(font, tables), &tag);
+            let tag: Value<u32> = Rc::new(RefCell::new((tag.iter_deref().read())));
+            let table: Ptr<woff2_Font_Table> =
+                Map::subscript(field_ptr!(font, tables), tag.as_pointer());
             if ({ woff2_Font_TableImpl::IsReused(&table) }) {
                 field!(table, offset).write({
                     table
@@ -2500,7 +2456,7 @@ pub fn WriteLong_89(mut out: Ptr<Vec<u8>>, mut value: i32) {
         out.with_mut(|__v: &mut Vec<u8>| __v.push(__a1))
     };
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign, Default)]
 #[byte_size(224)]
 pub struct woff2_GlyfEncoder {
     #[offset(0)]
@@ -2554,6 +2510,20 @@ impl woff2_GlyfEncoder {
                 .with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || <u8>::default()))
         };
         Rc::try_unwrap(__this).ok().unwrap().into_inner()
+    }
+    pub fn move_from(_a0: Ptr<woff2_GlyfEncoder>) -> Self {
+        Self {
+            n_contour_stream_: field!(_a0, n_contour_stream_).with_mut(std::mem::take),
+            n_points_stream_: field!(_a0, n_points_stream_).with_mut(std::mem::take),
+            flag_byte_stream_: field!(_a0, flag_byte_stream_).with_mut(std::mem::take),
+            composite_stream_: field!(_a0, composite_stream_).with_mut(std::mem::take),
+            bbox_bitmap_: field!(_a0, bbox_bitmap_).with_mut(std::mem::take),
+            bbox_stream_: field!(_a0, bbox_stream_).with_mut(std::mem::take),
+            glyph_stream_: field!(_a0, glyph_stream_).with_mut(std::mem::take),
+            instruction_stream_: field!(_a0, instruction_stream_).with_mut(std::mem::take),
+            overlap_bitmap_: field!(_a0, overlap_bitmap_).with_mut(std::mem::take),
+            n_glyphs_: { (*_a0.upgrade().deref()).n_glyphs_ },
+        }
     }
 }
 pub fn TransformGlyfAndLocaTables_90(mut font: Ptr<woff2_Font>) -> bool {
@@ -2814,7 +2784,7 @@ pub fn TransformHmtxTable_91(mut font: Ptr<woff2_Font>) -> bool {
     field!(transformed_hmtx, data).write(__rhs);
     return true;
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, MoveCtor, MoveAssign)]
 #[byte_size(40)]
 pub struct woff2_WOFF2Params {
     #[offset(0)]
@@ -2835,6 +2805,13 @@ impl woff2_WOFF2Params {
             },
             brotli_quality: 11,
             allow_transforms: true,
+        }
+    }
+    pub fn move_from(_a0: Ptr<woff2_WOFF2Params>) -> Self {
+        Self {
+            extended_metadata: field!(_a0, extended_metadata).with_mut(std::mem::take),
+            brotli_quality: { (*_a0.upgrade().deref()).brotli_quality },
+            allow_transforms: { (*_a0.upgrade().deref()).allow_transforms },
         }
     }
 }
@@ -3067,7 +3044,7 @@ pub fn ComputeWoff2Length_100(
                     )),
                 )));
                 let mut table_index: u16 =
-                    (Map::subscript(index_by_tag_offset.as_pointer(), &(*tag_offset.borrow()))
+                    (Map::subscript(index_by_tag_offset.as_pointer(), tag_offset.as_pointer())
                         .read());
                 {
                     let rhs_0 = (size).wrapping_add(({ Size255UShort_9(table_index) }));
@@ -3297,10 +3274,10 @@ pub fn ConvertTTFToWOFF2_109(
             Rc::new(RefCell::new(({ woff2_FontImpl::OutputOrderedTags(&font) })));
         let __range2: Ptr<Vec<u32>> = __tmp_0.as_pointer();
         'loop_: for tag in IterRange::new(__range2.decay().begin(), __range2.decay().end()) {
-            let mut tag: u32 = (tag.iter_deref().read());
+            let tag: Value<u32> = Rc::new(RefCell::new((tag.iter_deref().read())));
             let original: Ptr<woff2_Font_Table> = (*font.upgrade().deref())
                 .tables
-                .get(&tag)
+                .get(&tag.as_pointer())
                 .expect("out of range!")
                 .borrow()
                 .1
@@ -3308,11 +3285,11 @@ pub fn ConvertTTFToWOFF2_109(
             if ({ woff2_Font_TableImpl::IsReused(&original) }) {
                 continue 'loop_;
             }
-            if ((tag & 2155905152_u32) != 0) {
+            if (((*tag.borrow()) & 2155905152_u32) != 0) {
                 continue 'loop_;
             }
             let mut table_to_store: Ptr<woff2_Font_Table> = ({
-                let _tag: u32 = (tag ^ 2155905152_u32);
+                let _tag: u32 = ((*tag.borrow()) ^ 2155905152_u32);
                 woff2_FontImpl::FindTable_3(&font, _tag)
             });
             if (table_to_store).is_null() {
@@ -3397,10 +3374,10 @@ pub fn ConvertTTFToWOFF2_109(
             Rc::new(RefCell::new(({ woff2_FontImpl::OutputOrderedTags(&font) })));
         let __range2: Ptr<Vec<u32>> = __tmp_1.as_pointer();
         'loop_: for tag in IterRange::new(__range2.decay().begin(), __range2.decay().end()) {
-            let mut tag: u32 = (tag.iter_deref().read());
+            let tag: Value<u32> = Rc::new(RefCell::new((tag.iter_deref().read())));
             let src_table: Ptr<woff2_Font_Table> = (*font.upgrade().deref())
                 .tables
-                .get(&tag)
+                .get(&tag.as_pointer())
                 .expect("out of range!")
                 .borrow()
                 .1
@@ -3426,14 +3403,14 @@ pub fn ConvertTTFToWOFF2_109(
                 |__m: &Map<
                     (Value<u32>, Value<u32>),
                     (Value<(Value<u32>, Value<u32>)>, Value<u16>),
-                >| __m.find(&(*tag_offset.borrow())),
+                >| __m.find(&tag_offset.as_pointer()),
             ) == index_by_tag_offset.as_pointer().with(
                 |__m: &Map<
                     (Value<u32>, Value<u32>),
                     (Value<(Value<u32>, Value<u32>)>, Value<u16>),
                 >| __m.end(),
             ) {
-                Map::subscript(index_by_tag_offset.as_pointer(), &(*tag_offset.borrow()))
+                Map::subscript(index_by_tag_offset.as_pointer(), tag_offset.as_pointer())
                     .write(((*tables.borrow()).len() as u16));
             } else {
                 return false;
@@ -3660,7 +3637,7 @@ pub fn ConvertTTFToWOFF2_109(
                     |__m: &Map<
                         (Value<u32>, Value<u32>),
                         (Value<(Value<u32>, Value<u32>)>, Value<u16>),
-                    >| __m.find(&(*tag_offset.borrow())),
+                    >| __m.find(&tag_offset.as_pointer()),
                 ) == index_by_tag_offset.as_pointer().with(
                     |__m: &Map<
                         (Value<u32>, Value<u32>),
@@ -3671,7 +3648,7 @@ pub fn ConvertTTFToWOFF2_109(
                     return false;
                 }
                 let mut index: u16 =
-                    (Map::subscript(index_by_tag_offset.as_pointer(), &(*tag_offset.borrow()))
+                    (Map::subscript(index_by_tag_offset.as_pointer(), tag_offset.as_pointer())
                         .read());
                 ({ Store255UShort_11((index as i32), (offset.as_pointer()), (result).clone()) });
             }
@@ -3732,14 +3709,16 @@ pub fn SetFileContents_111(
         ::std::fs::File::create(filename.decay().to_string()).expect("Failed to open file"),
     ));
     {
-        let mut __bytes: Vec<u8> = Vec::new();
         let mut __it = (*start.borrow()).clone();
-        while __it != (*end.borrow()).clone() {
+        let __last = (*end.borrow()).clone();
+        let __out = &mut (*ofs.borrow_mut());
+        let mut __bytes: Vec<u8> = Vec::new();
+        while __it != __last {
             __bytes.push(__it.iter_deref().read() as u8);
             __it.iter_inc();
         }
-        (*ofs.borrow_mut()).write_all(&__bytes);
-        (*ofs.borrow_mut()).try_clone().unwrap()
+        __out.write_all(&__bytes);
+        __out.try_clone().unwrap()
     };
 }
 pub fn main() {
@@ -4043,12 +4022,25 @@ pub trait woff2_FontImpl {
     fn OutputOrderedTags(&self) -> Vec<u32>;
     fn FindTable_2(&self, tag: u32) -> Ptr<woff2_Font_Table>;
     fn FindTable_3(&self, tag: u32) -> Ptr<woff2_Font_Table>;
+    fn move_assign(&self, _a0: Ptr<woff2_Font>) -> Ptr<woff2_Font>;
 }
 impl woff2_FontImpl for Ptr<woff2_Font> {
-    fn FindTable_2(&self, mut tag: u32) -> Ptr<woff2_Font_Table> {
+    fn move_assign(&self, _a0: Ptr<woff2_Font>) -> Ptr<woff2_Font> {
+        field!((*self), flavor).write({ { (*_a0.upgrade().deref()).flavor } });
+        field!((*self), num_tables).write({ { (*_a0.upgrade().deref()).num_tables } });
+        {
+            let __src = field_ptr!(_a0, tables).with_mut(
+                |__m: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| std::mem::take(__m),
+            );
+            field_ptr!((*self), tables).write(__src)
+        };
+        return (*self).clone();
+    }
+    fn FindTable_2(&self, tag: u32) -> Ptr<woff2_Font_Table> {
+        let tag: Value<u32> = Rc::new(RefCell::new(tag));
         let it: Value<BidirectionalIterator<(Value<u32>, Value<woff2_Font_Table>)>> =
             Rc::new(RefCell::new(field_ptr!((*self), tables).with(
-                |__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.find(&tag),
+                |__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.find(&tag.as_pointer()),
             )));
         return if (*it.borrow())
             == field_ptr!((*self), tables)
@@ -4061,10 +4053,11 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                 .as_pointer())
         };
     }
-    fn FindTable_3(&self, mut tag: u32) -> Ptr<woff2_Font_Table> {
+    fn FindTable_3(&self, tag: u32) -> Ptr<woff2_Font_Table> {
+        let tag: Value<u32> = Rc::new(RefCell::new(tag));
         let it: Value<BidirectionalIterator<(Value<u32>, Value<woff2_Font_Table>)>> =
             Rc::new(RefCell::new(field_ptr!((*self), tables).with(
-                |__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.find(&tag),
+                |__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.find(&tag.as_pointer()),
             )));
         return if (*it.borrow())
             == field_ptr!((*self), tables)
@@ -4097,22 +4090,18 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
         }
         let glyf_loc: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new({
             let mut __it = output_order.decay().begin();
-            while __it != output_order.decay().end()
-                && __it
-                    .iter_deref()
-                    .with(|__v| *__v != kGlyfTableTag_0.with(|rc| *rc.borrow()))
-            {
+            let __last = output_order.decay().end();
+            let __value = kGlyfTableTag_0.with(|v| v.as_pointer());
+            while __it != __last && !CppEq::equal(&__it.iter_deref(), &__value) {
                 __it.iter_inc();
             }
             __it
         }));
         let loca_loc: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new({
             let mut __it = output_order.decay().begin();
-            while __it != output_order.decay().end()
-                && __it
-                    .iter_deref()
-                    .with(|__v| *__v != kLocaTableTag_2.with(|rc| *rc.borrow()))
-            {
+            let __last = output_order.decay().end();
+            let __value = kLocaTableTag_2.with(|v| v.as_pointer());
+            while __it != __last && !CppEq::equal(&__it.iter_deref(), &__value) {
                 __it.iter_inc();
             }
             __it
@@ -4132,11 +4121,9 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                 let __it = <RandomAccessIterator<u32>>::from(
                     {
                         let mut __it = output_order.decay().begin();
-                        while __it != output_order.decay().end()
-                            && __it
-                                .iter_deref()
-                                .with(|__v| *__v != kGlyfTableTag_0.with(|rc| *rc.borrow()))
-                        {
+                        let __last = output_order.decay().end();
+                        let __value = kGlyfTableTag_0.with(|v| v.as_pointer());
+                        while __it != __last && !CppEq::equal(&__it.iter_deref(), &__value) {
                             __it.iter_inc();
                         }
                         __it
@@ -4151,10 +4138,45 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
         return std::mem::take(&mut (*output_order.borrow_mut()));
     }
 }
+pub trait woff2_FontCollectionImpl {
+    fn move_assign(&self, _a0: Ptr<woff2_FontCollection>) -> Ptr<woff2_FontCollection>;
+}
+impl woff2_FontCollectionImpl for Ptr<woff2_FontCollection> {
+    fn move_assign(&self, _a0: Ptr<woff2_FontCollection>) -> Ptr<woff2_FontCollection> {
+        field!((*self), flavor).write({ { (*_a0.upgrade().deref()).flavor } });
+        field!((*self), header_version).write({ { (*_a0.upgrade().deref()).header_version } });
+        {
+            let __src = field_ptr!(_a0, tables).with_mut(
+                |__m: &mut Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| {
+                    std::mem::take(__m)
+                },
+            );
+            field_ptr!((*self), tables).write(__src)
+        };
+        field_ref!((*self), fonts)
+            .as_pointer()
+            .write(field!(_a0, fonts).with_mut(std::mem::take));
+        return (*self).clone();
+    }
+}
 pub trait woff2_Font_TableImpl {
     fn IsReused(&self) -> bool;
+    fn move_assign(&self, _a0: Ptr<woff2_Font_Table>) -> Ptr<woff2_Font_Table>;
 }
 impl woff2_Font_TableImpl for Ptr<woff2_Font_Table> {
+    fn move_assign(&self, _a0: Ptr<woff2_Font_Table>) -> Ptr<woff2_Font_Table> {
+        field!((*self), tag).write({ { (*_a0.upgrade().deref()).tag } });
+        field!((*self), checksum).write({ { (*_a0.upgrade().deref()).checksum } });
+        field!((*self), offset).write({ { (*_a0.upgrade().deref()).offset } });
+        field!((*self), length).write({ { (*_a0.upgrade().deref()).length } });
+        field!((*self), data).write({ { (*_a0.upgrade().deref()).data.clone() } });
+        field_ref!((*self), buffer)
+            .as_pointer()
+            .write(field!(_a0, buffer).with_mut(std::mem::take));
+        field!((*self), reuse_of).write({ { (*_a0.upgrade().deref()).reuse_of.clone() } });
+        field!((*self), flag_byte).write({ { (*_a0.upgrade().deref()).flag_byte } });
+        return (*self).clone();
+    }
     fn IsReused(&self) -> bool {
         return !(((*self).with(|__s| __s.reuse_of.clone())).is_null());
     }
@@ -4169,6 +4191,7 @@ pub trait woff2_GlyfEncoderImpl {
     fn WriteBbox(&self, glyph_id: i32, glyph: Ptr<woff2_Glyph>);
     fn WriteTriplet(&self, on_curve: bool, x: i32, y: i32);
     fn EnsureOverlapBitmap(&self);
+    fn move_assign(&self, _a0: Ptr<woff2_GlyfEncoder>) -> Ptr<woff2_GlyfEncoder>;
 }
 impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
     fn Encode(&self, mut glyph_id: i32, glyph: Ptr<woff2_Glyph>) -> bool {
@@ -4599,6 +4622,64 @@ impl woff2_GlyfEncoderImpl for Ptr<woff2_GlyfEncoder> {
             };
         }
     }
+    fn move_assign(&self, _a0: Ptr<woff2_GlyfEncoder>) -> Ptr<woff2_GlyfEncoder> {
+        field_ref!((*self), n_contour_stream_)
+            .as_pointer()
+            .write(field!(_a0, n_contour_stream_).with_mut(std::mem::take));
+        field_ref!((*self), n_points_stream_)
+            .as_pointer()
+            .write(field!(_a0, n_points_stream_).with_mut(std::mem::take));
+        field_ref!((*self), flag_byte_stream_)
+            .as_pointer()
+            .write(field!(_a0, flag_byte_stream_).with_mut(std::mem::take));
+        field_ref!((*self), composite_stream_)
+            .as_pointer()
+            .write(field!(_a0, composite_stream_).with_mut(std::mem::take));
+        field_ref!((*self), bbox_bitmap_)
+            .as_pointer()
+            .write(field!(_a0, bbox_bitmap_).with_mut(std::mem::take));
+        field_ref!((*self), bbox_stream_)
+            .as_pointer()
+            .write(field!(_a0, bbox_stream_).with_mut(std::mem::take));
+        field_ref!((*self), glyph_stream_)
+            .as_pointer()
+            .write(field!(_a0, glyph_stream_).with_mut(std::mem::take));
+        field_ref!((*self), instruction_stream_)
+            .as_pointer()
+            .write(field!(_a0, instruction_stream_).with_mut(std::mem::take));
+        field_ref!((*self), overlap_bitmap_)
+            .as_pointer()
+            .write(field!(_a0, overlap_bitmap_).with_mut(std::mem::take));
+        field!((*self), n_glyphs_).write({ { (*_a0.upgrade().deref()).n_glyphs_ } });
+        return (*self).clone();
+    }
+}
+pub trait woff2_GlyphImpl {
+    fn move_assign(&self, _a0: Ptr<woff2_Glyph>) -> Ptr<woff2_Glyph>;
+}
+impl woff2_GlyphImpl for Ptr<woff2_Glyph> {
+    fn move_assign(&self, _a0: Ptr<woff2_Glyph>) -> Ptr<woff2_Glyph> {
+        field!((*self), x_min).write({ { (*_a0.upgrade().deref()).x_min } });
+        field!((*self), x_max).write({ { (*_a0.upgrade().deref()).x_max } });
+        field!((*self), y_min).write({ { (*_a0.upgrade().deref()).y_min } });
+        field!((*self), y_max).write({ { (*_a0.upgrade().deref()).y_max } });
+        field!((*self), instructions_size)
+            .write({ { (*_a0.upgrade().deref()).instructions_size } });
+        field!((*self), instructions_data)
+            .write({ { (*_a0.upgrade().deref()).instructions_data.clone() } });
+        field!((*self), overlap_simple_flag_set)
+            .write({ { (*_a0.upgrade().deref()).overlap_simple_flag_set } });
+        field_ref!((*self), contours)
+            .as_pointer()
+            .write(field!(_a0, contours).with_mut(std::mem::take));
+        field!((*self), composite_data)
+            .write({ { (*_a0.upgrade().deref()).composite_data.clone() } });
+        field!((*self), composite_data_size)
+            .write({ { (*_a0.upgrade().deref()).composite_data_size } });
+        field!((*self), have_instructions)
+            .write({ { (*_a0.upgrade().deref()).have_instructions } });
+        return (*self).clone();
+    }
 }
 pub trait woff2_TableImpl {
     fn operator_lt(&self, other: Ptr<woff2_Table>) -> bool;
@@ -4606,6 +4687,18 @@ pub trait woff2_TableImpl {
 impl woff2_TableImpl for Ptr<woff2_Table> {
     fn operator_lt(&self, other: Ptr<woff2_Table>) -> bool {
         return ({ (*self).with(|__s| __s.tag) } < { other.with(|__s| __s.tag) });
+    }
+}
+pub trait woff2_WOFF2ParamsImpl {
+    fn move_assign(&self, _a0: Ptr<woff2_WOFF2Params>) -> Ptr<woff2_WOFF2Params>;
+}
+impl woff2_WOFF2ParamsImpl for Ptr<woff2_WOFF2Params> {
+    fn move_assign(&self, _a0: Ptr<woff2_WOFF2Params>) -> Ptr<woff2_WOFF2Params> {
+        field!((*self), extended_metadata)
+            .write({ { (*_a0.upgrade().deref()).extended_metadata.clone() } });
+        field!((*self), brotli_quality).write({ { (*_a0.upgrade().deref()).brotli_quality } });
+        field!((*self), allow_transforms).write({ { (*_a0.upgrade().deref()).allow_transforms } });
+        return (*self).clone();
     }
 }
 pub fn __cpp2rust_init_globals() {

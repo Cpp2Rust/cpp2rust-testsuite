@@ -175,7 +175,7 @@ pub struct brunsli_JPEGScanInfo_ExtraZeroRunInfo {
     pub num_extra_zero_runs: i32,
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_JPEGScanInfo {
     pub Ss: i32,
     pub Se: i32,
@@ -185,6 +185,35 @@ pub struct brunsli_JPEGScanInfo {
     pub components: Vec<brunsli_JPEGComponentScanInfo>,
     pub reset_points: Vec<i32>,
     pub extra_zero_runs: Vec<brunsli_JPEGScanInfo_ExtraZeroRunInfo>,
+}
+impl brunsli_JPEGScanInfo {
+    pub unsafe fn move_from(_a0: *mut brunsli_JPEGScanInfo) -> Self {
+        let mut this = Self {
+            Ss: (*_a0).Ss,
+            Se: (*_a0).Se,
+            Ah: (*_a0).Ah,
+            Al: (*_a0).Al,
+            num_components: (*_a0).num_components,
+            components: std::mem::take(&mut (*_a0).components),
+            reset_points: std::mem::take(&mut (*_a0).reset_points),
+            extra_zero_runs: std::mem::take(&mut (*_a0).extra_zero_runs),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_JPEGScanInfo,
+    ) -> *mut brunsli_JPEGScanInfo {
+        self.Ss = (*_a0).Ss;
+        self.Se = (*_a0).Se;
+        self.Ah = (*_a0).Ah;
+        self.Al = (*_a0).Al;
+        self.num_components = (*_a0).num_components;
+        self.components = std::mem::take(&mut (*_a0).components);
+        self.reset_points = std::mem::take(&mut (*_a0).reset_points);
+        self.extra_zero_runs = std::mem::take(&mut (*_a0).extra_zero_runs);
+        return &mut (*(self as *mut brunsli_JPEGScanInfo));
+    }
 }
 impl Default for brunsli_JPEGScanInfo {
     fn default() -> Self {
@@ -206,7 +235,7 @@ impl Default for brunsli_JPEGScanInfo {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_JPEGComponent {
     pub id: i32,
     pub h_samp_factor: i32,
@@ -231,6 +260,33 @@ impl brunsli_JPEGComponent {
         };
         this
     }
+    pub unsafe fn move_from(_a0: *mut brunsli_JPEGComponent) -> Self {
+        let mut this = Self {
+            id: (*_a0).id,
+            h_samp_factor: (*_a0).h_samp_factor,
+            v_samp_factor: (*_a0).v_samp_factor,
+            quant_idx: (*_a0).quant_idx,
+            width_in_blocks: (*_a0).width_in_blocks,
+            height_in_blocks: (*_a0).height_in_blocks,
+            num_blocks: (*_a0).num_blocks,
+            coeffs: std::mem::take(&mut (*_a0).coeffs),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_JPEGComponent,
+    ) -> *mut brunsli_JPEGComponent {
+        self.id = (*_a0).id;
+        self.h_samp_factor = (*_a0).h_samp_factor;
+        self.v_samp_factor = (*_a0).v_samp_factor;
+        self.quant_idx = (*_a0).quant_idx;
+        self.width_in_blocks = (*_a0).width_in_blocks;
+        self.height_in_blocks = (*_a0).height_in_blocks;
+        self.num_blocks = (*_a0).num_blocks;
+        self.coeffs = std::mem::take(&mut (*_a0).coeffs);
+        return &mut (*(self as *mut brunsli_JPEGComponent));
+    }
 }
 impl Default for brunsli_JPEGComponent {
     fn default() -> Self {
@@ -238,7 +294,7 @@ impl Default for brunsli_JPEGComponent {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_JPEGData {
     pub width: i32,
     pub height: i32,
@@ -290,6 +346,58 @@ impl brunsli_JPEGData {
             padding_bits: Vec::new(),
         };
         this
+    }
+    pub unsafe fn move_from(_a0: *mut brunsli_JPEGData) -> Self {
+        let mut this = Self {
+            width: (*_a0).width,
+            height: (*_a0).height,
+            version: (*_a0).version,
+            max_h_samp_factor: (*_a0).max_h_samp_factor,
+            max_v_samp_factor: (*_a0).max_v_samp_factor,
+            MCU_rows: (*_a0).MCU_rows,
+            MCU_cols: (*_a0).MCU_cols,
+            restart_interval: (*_a0).restart_interval,
+            app_data: std::mem::take(&mut (*_a0).app_data),
+            com_data: std::mem::take(&mut (*_a0).com_data),
+            quant: std::mem::take(&mut (*_a0).quant),
+            huffman_code: std::mem::take(&mut (*_a0).huffman_code),
+            components: std::mem::take(&mut (*_a0).components),
+            scan_info: std::mem::take(&mut (*_a0).scan_info),
+            marker_order: std::mem::take(&mut (*_a0).marker_order),
+            inter_marker_data: std::mem::take(&mut (*_a0).inter_marker_data),
+            tail_data: std::mem::take(&mut (*_a0).tail_data),
+            original_jpg: (*_a0).original_jpg,
+            original_jpg_size: (*_a0).original_jpg_size,
+            error: (*_a0).error,
+            has_zero_padding_bit: (*_a0).has_zero_padding_bit,
+            padding_bits: std::mem::take(&mut (*_a0).padding_bits),
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut brunsli_JPEGData) -> *mut brunsli_JPEGData {
+        self.width = (*_a0).width;
+        self.height = (*_a0).height;
+        self.version = (*_a0).version;
+        self.max_h_samp_factor = (*_a0).max_h_samp_factor;
+        self.max_v_samp_factor = (*_a0).max_v_samp_factor;
+        self.MCU_rows = (*_a0).MCU_rows;
+        self.MCU_cols = (*_a0).MCU_cols;
+        self.restart_interval = (*_a0).restart_interval;
+        self.app_data = std::mem::take(&mut (*_a0).app_data);
+        self.com_data = std::mem::take(&mut (*_a0).com_data);
+        self.quant = std::mem::take(&mut (*_a0).quant);
+        self.huffman_code = std::mem::take(&mut (*_a0).huffman_code);
+        self.components = std::mem::take(&mut (*_a0).components);
+        self.scan_info = std::mem::take(&mut (*_a0).scan_info);
+        self.marker_order = std::mem::take(&mut (*_a0).marker_order);
+        self.inter_marker_data = std::mem::take(&mut (*_a0).inter_marker_data);
+        self.tail_data = std::mem::take(&mut (*_a0).tail_data);
+        self.original_jpg = (*_a0).original_jpg;
+        self.original_jpg_size = (*_a0).original_jpg_size;
+        self.error = (*_a0).error;
+        self.has_zero_padding_bit = (*_a0).has_zero_padding_bit;
+        self.padding_bits = std::mem::take(&mut (*_a0).padding_bits);
+        return &mut (*(self as *mut brunsli_JPEGData));
     }
 }
 impl Default for brunsli_JPEGData {
@@ -1574,7 +1682,7 @@ pub unsafe fn IsEmptyBlockContext_106(mut prev: *const i32, mut x: i32) -> i32 {
     return ((*prev.offset(((x) - (1)) as isize)) + (*prev.offset((x) as isize)));
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, DestructorUnsafe)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, DestructorUnsafe)]
 pub struct brunsli_ComponentStateDC {
     pub width: i32,
     pub is_zero_prob: brunsli_Prob,
@@ -1623,6 +1731,33 @@ impl brunsli_ComponentStateDC {
             self.prev_sign.resize_with(__a0, || <i32>::default())
         };
     }
+    pub unsafe fn move_from(_a0: *mut brunsli_ComponentStateDC) -> Self {
+        let mut this = Self {
+            width: (*_a0).width,
+            is_zero_prob: (*_a0).is_zero_prob.clone(),
+            is_empty_block_prob: std::mem::take(&mut (*_a0).is_empty_block_prob),
+            sign_prob: std::mem::take(&mut (*_a0).sign_prob),
+            first_extra_bit_prob: std::mem::take(&mut (*_a0).first_extra_bit_prob),
+            prev_is_nonempty: std::mem::take(&mut (*_a0).prev_is_nonempty),
+            prev_abs_coeff: std::mem::take(&mut (*_a0).prev_abs_coeff),
+            prev_sign: std::mem::take(&mut (*_a0).prev_sign),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_ComponentStateDC,
+    ) -> *mut brunsli_ComponentStateDC {
+        self.width = (*_a0).width;
+        self.is_zero_prob = ((*_a0).is_zero_prob).clone();
+        self.is_empty_block_prob = std::mem::take(&mut (*_a0).is_empty_block_prob);
+        self.sign_prob = std::mem::take(&mut (*_a0).sign_prob);
+        self.first_extra_bit_prob = std::mem::take(&mut (*_a0).first_extra_bit_prob);
+        self.prev_is_nonempty = std::mem::take(&mut (*_a0).prev_is_nonempty);
+        self.prev_abs_coeff = std::mem::take(&mut (*_a0).prev_abs_coeff);
+        self.prev_sign = std::mem::take(&mut (*_a0).prev_sign);
+        return &mut (*(self as *mut brunsli_ComponentStateDC));
+    }
 }
 impl brunsli_ComponentStateDC {
     pub unsafe fn destructor(&mut self) {
@@ -1635,7 +1770,7 @@ impl Default for brunsli_ComponentStateDC {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, DestructorUnsafe)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, DestructorUnsafe)]
 pub struct brunsli_ComponentState {
     pub width: i32,
     pub context_offset: i32,
@@ -1742,6 +1877,83 @@ impl brunsli_ComponentState {
                     .wrapping_mul((::std::mem::size_of::<brunsli_Prob>() as u64))
                     as u64),
             ) as usize);
+    }
+    pub unsafe fn move_from(_a0: *mut brunsli_ComponentState) -> Self {
+        let mut this = Self {
+            width: (*_a0).width,
+            context_offset: (*_a0).context_offset,
+            order: std::array::from_fn::<_, 64, _>(|__i: usize| (*_a0).order[(__i)]),
+            mult_row: std::array::from_fn::<_, 64, _>(|__i: usize| (*_a0).mult_row[(__i)]),
+            mult_col: std::array::from_fn::<_, 64, _>(|__i: usize| (*_a0).mult_col[(__i)]),
+            is_zero_prob: std::mem::take(&mut (*_a0).is_zero_prob),
+            sign_prob: std::mem::take(&mut (*_a0).sign_prob),
+            num_nonzero_prob: std::array::from_fn::<_, 2016, _>(|__i: usize| {
+                (*_a0).num_nonzero_prob[(__i)].clone()
+            }),
+            first_extra_bit_prob: std::mem::take(&mut (*_a0).first_extra_bit_prob),
+            prev_is_nonempty: std::mem::take(&mut (*_a0).prev_is_nonempty),
+            prev_num_nonzeros: std::mem::take(&mut (*_a0).prev_num_nonzeros),
+            prev_abs_coeff: std::mem::take(&mut (*_a0).prev_abs_coeff),
+            prev_sign: std::mem::take(&mut (*_a0).prev_sign),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_ComponentState,
+    ) -> *mut brunsli_ComponentState {
+        self.width = (*_a0).width;
+        self.context_offset = (*_a0).context_offset;
+        {
+            if 256_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(
+                    ((&mut (*_a0).order as *mut [u32; 64]) as *const ::libc::c_void),
+                    ((&mut self.order as *mut [u32; 64]) as *mut ::libc::c_void),
+                    256_usize as usize,
+                )
+            }
+            ((&mut self.order as *mut [u32; 64]) as *mut ::libc::c_void)
+        };
+        {
+            if 256_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(
+                    ((&mut (*_a0).mult_row as *mut [i32; 64]) as *const ::libc::c_void),
+                    ((&mut self.mult_row as *mut [i32; 64]) as *mut ::libc::c_void),
+                    256_usize as usize,
+                )
+            }
+            ((&mut self.mult_row as *mut [i32; 64]) as *mut ::libc::c_void)
+        };
+        {
+            if 256_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(
+                    ((&mut (*_a0).mult_col as *mut [i32; 64]) as *const ::libc::c_void),
+                    ((&mut self.mult_col as *mut [i32; 64]) as *mut ::libc::c_void),
+                    256_usize as usize,
+                )
+            }
+            ((&mut self.mult_col as *mut [i32; 64]) as *mut ::libc::c_void)
+        };
+        self.is_zero_prob = std::mem::take(&mut (*_a0).is_zero_prob);
+        self.sign_prob = std::mem::take(&mut (*_a0).sign_prob);
+        {
+            if 8064_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(
+                    ((&mut (*_a0).num_nonzero_prob as *mut [brunsli_Prob; 2016])
+                        as *const ::libc::c_void),
+                    ((&mut self.num_nonzero_prob as *mut [brunsli_Prob; 2016])
+                        as *mut ::libc::c_void),
+                    8064_usize as usize,
+                )
+            }
+            ((&mut self.num_nonzero_prob as *mut [brunsli_Prob; 2016]) as *mut ::libc::c_void)
+        };
+        self.first_extra_bit_prob = std::mem::take(&mut (*_a0).first_extra_bit_prob);
+        self.prev_is_nonempty = std::mem::take(&mut (*_a0).prev_is_nonempty);
+        self.prev_num_nonzeros = std::mem::take(&mut (*_a0).prev_num_nonzeros);
+        self.prev_abs_coeff = std::mem::take(&mut (*_a0).prev_abs_coeff);
+        self.prev_sign = std::mem::take(&mut (*_a0).prev_sign);
+        return &mut (*(self as *mut brunsli_ComponentState));
     }
 }
 impl brunsli_ComponentState {
@@ -2186,7 +2398,7 @@ impl brunsli_ComponentState {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_PermutationCoder {
     values_: Vec<u8>,
 }
@@ -2241,7 +2453,9 @@ impl brunsli_PermutationCoder {
     ) -> bool {
         let mut it: UnsafeRandomAccessIterator<u8> = {
             let mut __it = self.values_.begin();
-            while __it != self.values_.end() && *__it.iter_deref() != value {
+            let __last = self.values_.end();
+            let __value = &value;
+            while __it != __last && *__it.iter_deref() != *__value {
                 __it.iter_inc();
             }
             __it
@@ -2260,6 +2474,19 @@ impl brunsli_PermutationCoder {
             __it
         };
         return true;
+    }
+    pub unsafe fn move_from(_a0: *mut brunsli_PermutationCoder) -> Self {
+        let mut this = Self {
+            values_: std::mem::take(&mut (*_a0).values_),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_PermutationCoder,
+    ) -> *mut brunsli_PermutationCoder {
+        self.values_ = std::mem::take(&mut (*_a0).values_);
+        return &mut (*(self as *mut brunsli_PermutationCoder));
     }
 }
 impl Default for brunsli_PermutationCoder {
@@ -2280,7 +2507,9 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
     'loop_: while ((i) < (len)) {
         let mut it: UnsafeRandomAccessIterator<u32> = {
             let mut __it = items.begin();
-            while __it != items.end() && *__it.iter_deref() != (*sigma.offset((i) as isize)) {
+            let __last = items.end();
+            let __value = &(*sigma.offset((i) as isize));
+            while __it != __last && *__it.iter_deref() != *__value {
                 __it.iter_inc();
             }
             __it
@@ -3100,9 +3329,24 @@ impl Default for brunsli_Arena_brunsli_HuffmanCode_ {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct brunsli_HuffmanDecodingData {
     pub table_: Vec<brunsli_HuffmanCode>,
+}
+impl brunsli_HuffmanDecodingData {
+    pub unsafe fn move_from(_a0: *mut brunsli_HuffmanDecodingData) -> Self {
+        let mut this = Self {
+            table_: std::mem::take(&mut (*_a0).table_),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_HuffmanDecodingData,
+    ) -> *mut brunsli_HuffmanDecodingData {
+        self.table_ = std::mem::take(&mut (*_a0).table_);
+        return &mut (*(self as *mut brunsli_HuffmanDecodingData));
+    }
 }
 #[repr(C)]
 #[derive(FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
@@ -3250,12 +3494,33 @@ impl brunsli_internal_dec_BitWriter {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_DCTCodingState {
     pub eob_run_: i32,
     pub cur_ac_huff_: *const brunsli_HuffmanCodeTable,
     pub refinement_bits_: Vec<u16>,
     pub refinement_bits_count_: usize,
+}
+impl brunsli_internal_dec_DCTCodingState {
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_DCTCodingState) -> Self {
+        let mut this = Self {
+            eob_run_: (*_a0).eob_run_,
+            cur_ac_huff_: (*_a0).cur_ac_huff_,
+            refinement_bits_: std::mem::take(&mut (*_a0).refinement_bits_),
+            refinement_bits_count_: (*_a0).refinement_bits_count_,
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_internal_dec_DCTCodingState,
+    ) -> *mut brunsli_internal_dec_DCTCodingState {
+        self.eob_run_ = (*_a0).eob_run_;
+        self.cur_ac_huff_ = (*_a0).cur_ac_huff_;
+        self.refinement_bits_ = std::mem::take(&mut (*_a0).refinement_bits_);
+        self.refinement_bits_count_ = (*_a0).refinement_bits_count_;
+        return &mut (*(self as *mut brunsli_internal_dec_DCTCodingState));
+    }
 }
 impl Default for brunsli_internal_dec_DCTCodingState {
     fn default() -> Self {
@@ -3300,7 +3565,9 @@ impl brunsli_internal_dec_EncodeScanState {
             restarts_to_go: (*_a0).restarts_to_go,
             next_restart_marker: (*_a0).next_restart_marker,
             block_scan_index: (*_a0).block_scan_index,
-            coding_state: (*_a0).coding_state.clone(),
+            coding_state: brunsli_internal_dec_DCTCodingState::move_from({
+                &mut (*_a0).coding_state
+            }),
             extra_zero_runs_pos: (*_a0).extra_zero_runs_pos,
             next_extra_zero_run_index: (*_a0).next_extra_zero_run_index,
             next_reset_point_pos: (*_a0).next_reset_point_pos,
@@ -3331,7 +3598,10 @@ impl brunsli_internal_dec_EncodeScanState {
         self.restarts_to_go = (*_a0).restarts_to_go;
         self.next_restart_marker = (*_a0).next_restart_marker;
         self.block_scan_index = (*_a0).block_scan_index;
-        self.coding_state = ((*_a0).coding_state).clone();
+        (unsafe {
+            let _arg0: *mut brunsli_internal_dec_DCTCodingState = &mut (*_a0).coding_state;
+            brunsli_internal_dec_DCTCodingState::move_assign(&mut self.coding_state, _arg0)
+        });
         self.extra_zero_runs_pos = (*_a0).extra_zero_runs_pos;
         self.next_extra_zero_run_index = (*_a0).next_extra_zero_run_index;
         self.next_reset_point_pos = (*_a0).next_reset_point_pos;
@@ -3461,7 +3731,7 @@ impl Default for brunsli_internal_dec_SerializationState {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_AcDcState {
     pub next_mcu_y: i32,
     pub next_component: usize,
@@ -3470,6 +3740,33 @@ pub struct brunsli_internal_dec_AcDcState {
     pub ac_coeffs_order_decoded: bool,
     pub ac: Vec<brunsli_ComponentState>,
     pub dc: Vec<brunsli_ComponentStateDC>,
+}
+impl brunsli_internal_dec_AcDcState {
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_AcDcState) -> Self {
+        let mut this = Self {
+            next_mcu_y: (*_a0).next_mcu_y,
+            next_component: (*_a0).next_component,
+            next_iy: (*_a0).next_iy,
+            next_x: (*_a0).next_x,
+            ac_coeffs_order_decoded: (*_a0).ac_coeffs_order_decoded,
+            ac: std::mem::take(&mut (*_a0).ac),
+            dc: std::mem::take(&mut (*_a0).dc),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_internal_dec_AcDcState,
+    ) -> *mut brunsli_internal_dec_AcDcState {
+        self.next_mcu_y = (*_a0).next_mcu_y;
+        self.next_component = (*_a0).next_component;
+        self.next_iy = (*_a0).next_iy;
+        self.next_x = (*_a0).next_x;
+        self.ac_coeffs_order_decoded = (*_a0).ac_coeffs_order_decoded;
+        self.ac = std::mem::take(&mut (*_a0).ac);
+        self.dc = std::mem::take(&mut (*_a0).dc);
+        return &mut (*(self as *mut brunsli_internal_dec_AcDcState));
+    }
 }
 impl Default for brunsli_internal_dec_AcDcState {
     fn default() -> Self {
@@ -3557,10 +3854,27 @@ pub const brunsli_internal_dec_FallbackState_Stage_READ_CONTENTS:
 pub const brunsli_internal_dec_FallbackState_Stage_DONE: brunsli_internal_dec_FallbackState_Stage =
     3;
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_FallbackState {
     pub stage: usize,
     pub storage: Vec<u8>,
+}
+impl brunsli_internal_dec_FallbackState {
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_FallbackState) -> Self {
+        let mut this = Self {
+            stage: (*_a0).stage,
+            storage: std::mem::take(&mut (*_a0).storage),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_internal_dec_FallbackState,
+    ) -> *mut brunsli_internal_dec_FallbackState {
+        self.stage = (*_a0).stage;
+        self.storage = std::mem::take(&mut (*_a0).storage);
+        return &mut (*(self as *mut brunsli_internal_dec_FallbackState));
+    }
 }
 impl Default for brunsli_internal_dec_FallbackState {
     fn default() -> Self {
@@ -3739,7 +4053,7 @@ pub const brunsli_internal_dec_JpegInternalsState_Stage_READ_INTERMARKER_DATA:
 pub const brunsli_internal_dec_JpegInternalsState_Stage_DONE:
     brunsli_internal_dec_JpegInternalsState_Stage = 137;
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_JpegInternalsState {
     pub stage: brunsli_internal_dec_JpegInternalsState_Stage,
     pub have_dri: bool,
@@ -3761,6 +4075,62 @@ pub struct brunsli_internal_dec_JpegInternalsState {
     pub last_num: i32,
     pub num_padding_bits: usize,
     pub intermarker_length: usize,
+}
+impl brunsli_internal_dec_JpegInternalsState {
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_JpegInternalsState) -> Self {
+        let mut this = Self {
+            stage: (*_a0).stage,
+            have_dri: (*_a0).have_dri,
+            num_scans: (*_a0).num_scans,
+            dht_count: (*_a0).dht_count,
+            br: (*_a0).br,
+            is_known_last_huffman_code: (*_a0).is_known_last_huffman_code,
+            terminal_huffman_code_count: (*_a0).terminal_huffman_code_count,
+            is_dc_table: (*_a0).is_dc_table,
+            total_count: (*_a0).total_count,
+            space: (*_a0).space,
+            max_len: (*_a0).max_len,
+            max_count: (*_a0).max_count,
+            i: (*_a0).i,
+            p: brunsli_PermutationCoder::move_from({ &mut (*_a0).p }),
+            varint: (*_a0).varint,
+            j: (*_a0).j,
+            last_block_idx: (*_a0).last_block_idx,
+            last_num: (*_a0).last_num,
+            num_padding_bits: (*_a0).num_padding_bits,
+            intermarker_length: (*_a0).intermarker_length,
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_internal_dec_JpegInternalsState,
+    ) -> *mut brunsli_internal_dec_JpegInternalsState {
+        self.stage = (*_a0).stage;
+        self.have_dri = (*_a0).have_dri;
+        self.num_scans = (*_a0).num_scans;
+        self.dht_count = (*_a0).dht_count;
+        self.br = (*_a0).br;
+        self.is_known_last_huffman_code = (*_a0).is_known_last_huffman_code;
+        self.terminal_huffman_code_count = (*_a0).terminal_huffman_code_count;
+        self.is_dc_table = (*_a0).is_dc_table;
+        self.total_count = (*_a0).total_count;
+        self.space = (*_a0).space;
+        self.max_len = (*_a0).max_len;
+        self.max_count = (*_a0).max_count;
+        self.i = (*_a0).i;
+        (unsafe {
+            let _arg0: *mut brunsli_PermutationCoder = &mut (*_a0).p;
+            brunsli_PermutationCoder::move_assign(&mut self.p, _arg0)
+        });
+        self.varint = (*_a0).varint;
+        self.j = (*_a0).j;
+        self.last_block_idx = (*_a0).last_block_idx;
+        self.last_num = (*_a0).last_num;
+        self.num_padding_bits = (*_a0).num_padding_bits;
+        self.intermarker_length = (*_a0).intermarker_length;
+        return &mut (*(self as *mut brunsli_internal_dec_JpegInternalsState));
+    }
 }
 impl Default for brunsli_internal_dec_JpegInternalsState {
     fn default() -> Self {
@@ -3814,7 +4184,7 @@ pub const brunsli_internal_dec_QuantDataState_Stage_READ_QUANT_IDX:
 pub const brunsli_internal_dec_QuantDataState_Stage_FINISH:
     brunsli_internal_dec_QuantDataState_Stage = 10;
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_QuantDataState {
     pub stage: brunsli_internal_dec_QuantDataState_Stage,
     pub br: brunsli_BrunsliBitReader,
@@ -3825,6 +4195,37 @@ pub struct brunsli_internal_dec_QuantDataState {
     pub delta: i32,
     pub sign: i32,
     pub predictor: Vec<u8>,
+}
+impl brunsli_internal_dec_QuantDataState {
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_QuantDataState) -> Self {
+        let mut this = Self {
+            stage: (*_a0).stage,
+            br: (*_a0).br,
+            i: (*_a0).i,
+            j: (*_a0).j,
+            data_precision: (*_a0).data_precision,
+            vs: (*_a0).vs,
+            delta: (*_a0).delta,
+            sign: (*_a0).sign,
+            predictor: std::mem::take(&mut (*_a0).predictor),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_internal_dec_QuantDataState,
+    ) -> *mut brunsli_internal_dec_QuantDataState {
+        self.stage = (*_a0).stage;
+        self.br = (*_a0).br;
+        self.i = (*_a0).i;
+        self.j = (*_a0).j;
+        self.data_precision = (*_a0).data_precision;
+        self.vs = (*_a0).vs;
+        self.delta = (*_a0).delta;
+        self.sign = (*_a0).sign;
+        self.predictor = std::mem::take(&mut (*_a0).predictor);
+        return &mut (*(self as *mut brunsli_internal_dec_QuantDataState));
+    }
 }
 impl Default for brunsli_internal_dec_QuantDataState {
     fn default() -> Self {
@@ -3917,7 +4318,7 @@ impl Default for brunsli_internal_dec_HistogramDataState {
     }
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct brunsli_internal_dec_Buffer {
     pub data_len: usize,
     pub borrowed_len: usize,
@@ -3925,6 +4326,31 @@ pub struct brunsli_internal_dec_Buffer {
     pub external_data: *const u8,
     pub external_pos: usize,
     pub external_len: usize,
+}
+impl brunsli_internal_dec_Buffer {
+    pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_Buffer) -> Self {
+        let mut this = Self {
+            data_len: (*_a0).data_len,
+            borrowed_len: (*_a0).borrowed_len,
+            data: std::mem::take(&mut (*_a0).data),
+            external_data: (*_a0).external_data,
+            external_pos: (*_a0).external_pos,
+            external_len: (*_a0).external_len,
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut brunsli_internal_dec_Buffer,
+    ) -> *mut brunsli_internal_dec_Buffer {
+        self.data_len = (*_a0).data_len;
+        self.borrowed_len = (*_a0).borrowed_len;
+        self.data = std::mem::take(&mut (*_a0).data);
+        self.external_data = (*_a0).external_data;
+        self.external_pos = (*_a0).external_pos;
+        self.external_len = (*_a0).external_len;
+        return &mut (*(self as *mut brunsli_internal_dec_Buffer));
+    }
 }
 impl Default for brunsli_internal_dec_Buffer {
     fn default() -> Self {
@@ -3971,14 +4397,16 @@ pub struct brunsli_internal_dec_InternalState {
 impl brunsli_internal_dec_InternalState {
     pub unsafe fn move_from(_a0: *mut brunsli_internal_dec_InternalState) -> Self {
         let mut this = Self {
-            ac_dc: (*_a0).ac_dc.clone(),
+            ac_dc: brunsli_internal_dec_AcDcState::move_from({ &mut (*_a0).ac_dc }),
             section: (*_a0).section,
             header: (*_a0).header.clone(),
-            fallback: (*_a0).fallback.clone(),
+            fallback: brunsli_internal_dec_FallbackState::move_from({ &mut (*_a0).fallback }),
             section_header: (*_a0).section_header,
             metadata: (*_a0).metadata,
-            internals: (*_a0).internals.clone(),
-            quant: (*_a0).quant.clone(),
+            internals: brunsli_internal_dec_JpegInternalsState::move_from({
+                &mut (*_a0).internals
+            }),
+            quant: brunsli_internal_dec_QuantDataState::move_from({ &mut (*_a0).quant }),
             histogram: brunsli_internal_dec_HistogramDataState::move_from({
                 &mut (*_a0).histogram
             }),
@@ -3995,7 +4423,7 @@ impl brunsli_internal_dec_InternalState {
             arith_decoder: (*_a0).arith_decoder,
             result: (*_a0).result,
             last_stage: (*_a0).last_stage,
-            buffer: (*_a0).buffer.clone(),
+            buffer: brunsli_internal_dec_Buffer::move_from({ &mut (*_a0).buffer }),
             serialization: brunsli_internal_dec_SerializationState::move_from({
                 &mut (*_a0).serialization
             }),
@@ -4006,14 +4434,26 @@ impl brunsli_internal_dec_InternalState {
         &mut self,
         _a0: *mut brunsli_internal_dec_InternalState,
     ) -> *mut brunsli_internal_dec_InternalState {
-        self.ac_dc = ((*_a0).ac_dc).clone();
+        (unsafe {
+            let _arg0: *mut brunsli_internal_dec_AcDcState = &mut (*_a0).ac_dc;
+            brunsli_internal_dec_AcDcState::move_assign(&mut self.ac_dc, _arg0)
+        });
         self.section = (*_a0).section;
         self.header = ((*_a0).header).clone();
-        self.fallback = ((*_a0).fallback).clone();
+        (unsafe {
+            let _arg0: *mut brunsli_internal_dec_FallbackState = &mut (*_a0).fallback;
+            brunsli_internal_dec_FallbackState::move_assign(&mut self.fallback, _arg0)
+        });
         self.section_header = (*_a0).section_header;
         self.metadata = (*_a0).metadata;
-        self.internals = ((*_a0).internals).clone();
-        self.quant = ((*_a0).quant).clone();
+        (unsafe {
+            let _arg0: *mut brunsli_internal_dec_JpegInternalsState = &mut (*_a0).internals;
+            brunsli_internal_dec_JpegInternalsState::move_assign(&mut self.internals, _arg0)
+        });
+        (unsafe {
+            let _arg0: *mut brunsli_internal_dec_QuantDataState = &mut (*_a0).quant;
+            brunsli_internal_dec_QuantDataState::move_assign(&mut self.quant, _arg0)
+        });
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_HistogramDataState = &mut (*_a0).histogram;
             brunsli_internal_dec_HistogramDataState::move_assign(&mut self.histogram, _arg0)
@@ -4031,7 +4471,10 @@ impl brunsli_internal_dec_InternalState {
         self.arith_decoder = (*_a0).arith_decoder;
         self.result = (*_a0).result;
         self.last_stage = (*_a0).last_stage;
-        self.buffer = ((*_a0).buffer).clone();
+        (unsafe {
+            let _arg0: *mut brunsli_internal_dec_Buffer = &mut (*_a0).buffer;
+            brunsli_internal_dec_Buffer::move_assign(&mut self.buffer, _arg0)
+        });
         (unsafe {
             let _arg0: *mut brunsli_internal_dec_SerializationState = &mut (*_a0).serialization;
             brunsli_internal_dec_SerializationState::move_assign(&mut self.serialization, _arg0)
@@ -4567,10 +5010,10 @@ pub unsafe fn ProcessMetaData_149(
                     let mut chunk_size: usize = ({
                         let mut __tmp_0: u64 = ((*state).remaining_multibyte_length as u64);
                         let mut __tmp_1: u64 = ((len).wrapping_sub(pos) as u64);
-                        (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                            (&mut __tmp_0) as *const _
-                        } else {
-                            (&mut __tmp_1) as *const _
+                        (*{
+                            let __a: *const _ = &mut __tmp_0;
+                            let __b: *const _ = &mut __tmp_1;
+                            if *__b < *__a { __b } else { __a }
                         })
                     } as usize);
                     (unsafe {
@@ -4836,10 +5279,10 @@ pub unsafe fn DecodeHuffmanCode_150(
                             let mut __tmp_2: u64 =
                                 (((*js).max_count).wrapping_sub((*js).total_count) as u64);
                             let mut __tmp_3: u64 = ((((*js).space) >> (shift)) as u64);
-                            (*if *&mut __tmp_2 <= *&mut __tmp_3 {
-                                (&mut __tmp_2) as *const _
-                            } else {
-                                (&mut __tmp_3) as *const _
+                            (*{
+                                let __a: *const _ = &mut __tmp_2;
+                                let __b: *const _ = &mut __tmp_3;
+                                if *__b < *__a { __b } else { __a }
                             })
                         } as usize);
                         if ((count_limit) > (0_usize)) {
@@ -4987,9 +5430,9 @@ pub unsafe fn DecodeScanInfo_151(
   ;
  ;
  if ( ( ( * js ) . j  ) < ( ( * si  ) . num_components  ) ) { if ! ( ( unsafe { BrunsliBitReaderCanRead_134 ( br , 6_usize , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA  ;
- } ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . comp_idx   = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as u8 )  ;
- ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . dc_tbl_idx   = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as i32 )  ;
- ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . ac_tbl_idx   = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as i32 )  ;
+ } ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . comp_idx    = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as u8 )  ;
+ ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . dc_tbl_idx    = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as i32 )  ;
+ ( &mut ( * si  ) ) . components  [ ( ( * js ) . j  ) ] . ac_tbl_idx    = ( ( unsafe { BrunsliBitReaderRead_126 ( br , 2_u32 , ) } )  as i32 )  ;
  ( * js ) . j  .postfix_inc() ;
  } else { ( * js ) . last_block_idx   = - 1_i32  ;
  ( * js ) . stage   = brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION  ;
@@ -5883,10 +6326,10 @@ pub unsafe fn SkipAvailableBytes_167(
     let mut skip_bytes: usize = ({
         let mut __tmp_4: u64 = (available as u64);
         let mut __tmp_5: u64 = (len as u64);
-        (*if *&mut __tmp_4 <= *&mut __tmp_5 {
-            (&mut __tmp_4) as *const _
-        } else {
-            (&mut __tmp_5) as *const _
+        (*{
+            let __a: *const _ = &mut __tmp_4;
+            let __b: *const _ = &mut __tmp_5;
+            if *__b < *__a { __b } else { __a }
         })
     } as usize);
     (*state).pos = ((*state).pos).wrapping_add(skip_bytes);
@@ -6447,10 +6890,10 @@ pub unsafe fn DecodeMetaDataSection_180(
             let mut available_bytes: usize = ({
                 let mut __tmp_6: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
                 let mut __tmp_7: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
-                (*if *&mut __tmp_6 <= *&mut __tmp_7 {
-                    (&mut __tmp_6) as *const _
-                } else {
-                    (&mut __tmp_7) as *const _
+                (*{
+                    let __a: *const _ = &mut __tmp_6;
+                    let __b: *const _ = &mut __tmp_7;
+                    if *__b < *__a { __b } else { __a }
                 })
             } as usize);
             let mut available_in: usize = available_bytes;
@@ -6565,10 +7008,10 @@ pub unsafe fn PrepareBitReader_182(
     let mut chunk_len: usize = ({
         let mut __tmp_8: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
         let mut __tmp_9: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
-        (*if *&mut __tmp_8 <= *&mut __tmp_9 {
-            (&mut __tmp_8) as *const _
-        } else {
-            (&mut __tmp_9) as *const _
+        (*{
+            let __a: *const _ = &mut __tmp_8;
+            let __b: *const _ = &mut __tmp_9;
+            if *__b < *__a { __b } else { __a }
         })
     } as usize);
     (unsafe {
@@ -6593,10 +7036,10 @@ pub unsafe fn SuspendBitReader_183(
     let mut chunk_len: usize = ({
         let mut __tmp_10: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
         let mut __tmp_11: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
-        (*if *&mut __tmp_10 <= *&mut __tmp_11 {
-            (&mut __tmp_10) as *const _
-        } else {
-            (&mut __tmp_11) as *const _
+        (*{
+            let __a: *const _ = &mut __tmp_10;
+            let __b: *const _ = &mut __tmp_11;
+            if *__b < *__a { __b } else { __a }
         })
     } as usize);
     let mut unused_bytes: usize = (unsafe { BrunsliBitReaderSuspend_130(br) });
@@ -6946,10 +7389,10 @@ pub unsafe fn DecodeJPEGInternalsSection_184(
                     let mut piece_size: usize = ({
                         let mut __tmp_12: u64 = (piece_limit as u64);
                         let mut __tmp_13: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
-                        (*if *&mut __tmp_12 <= *&mut __tmp_13 {
-                            (&mut __tmp_12) as *const _
-                        } else {
-                            (&mut __tmp_13) as *const _
+                        (*{
+                            let __a: *const _ = &mut __tmp_12;
+                            let __b: *const _ = &mut __tmp_13;
+                            if *__b < *__a { __b } else { __a }
                         })
                     } as usize);
                     (unsafe {
@@ -7560,10 +8003,10 @@ pub unsafe fn DecodeDCDataSection_190(
     let mut chunk_len: usize = ({
         let mut __tmp_14: u64 = (available as u64);
         let mut __tmp_15: u64 = (limit as u64);
-        (*if *&mut __tmp_14 <= *&mut __tmp_15 {
-            (&mut __tmp_14) as *const _
-        } else {
-            (&mut __tmp_15) as *const _
+        (*{
+            let __a: *const _ = &mut __tmp_14;
+            let __b: *const _ = &mut __tmp_15;
+            if *__b < *__a { __b } else { __a }
         })
     } as usize);
     let mut is_last_chunk: bool = ((chunk_len) == (limit));
@@ -7633,10 +8076,10 @@ pub unsafe fn DecodeACDataSection_191(
     let mut chunk_len: usize = ({
         let mut __tmp_16: u64 = (available as u64);
         let mut __tmp_17: u64 = (limit as u64);
-        (*if *&mut __tmp_16 <= *&mut __tmp_17 {
-            (&mut __tmp_16) as *const _
-        } else {
-            (&mut __tmp_17) as *const _
+        (*{
+            let __a: *const _ = &mut __tmp_16;
+            let __b: *const _ = &mut __tmp_17;
+            if *__b < *__a { __b } else { __a }
         })
     } as usize);
     let mut is_last_chunk: bool = ((chunk_len) == (limit));
@@ -7768,10 +8211,10 @@ pub unsafe fn DecodeOriginalJpg_192(
                     let mut to_copy: usize = ({
                         let mut __tmp_18: u64 = (chunk_size as u64);
                         let mut __tmp_19: u64 = (remaining as u64);
-                        (*if *&mut __tmp_18 <= *&mut __tmp_19 {
-                            (&mut __tmp_18) as *const _
-                        } else {
-                            (&mut __tmp_19) as *const _
+                        (*{
+                            let __a: *const _ = &mut __tmp_18;
+                            let __b: *const _ = &mut __tmp_19;
+                            if *__b < *__a { __b } else { __a }
                         })
                     } as usize);
                     {
@@ -7942,10 +8385,10 @@ pub unsafe fn ProcessSection_195(
         let mut to_skip: usize = ({
             let mut __tmp_20: u64 = ((unsafe { GetBytesAvailable_166(state) }) as u64);
             let mut __tmp_21: u64 = ((unsafe { RemainingSectionLength_174(state) }) as u64);
-            (*if *&mut __tmp_20 <= *&mut __tmp_21 {
-                (&mut __tmp_20) as *const _
-            } else {
-                (&mut __tmp_21) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_20;
+                let __b: *const _ = &mut __tmp_21;
+                if *__b < *__a { __b } else { __a }
             })
         } as usize);
         (*state).pos = ((*state).pos).wrapping_add(to_skip);
@@ -8106,15 +8549,15 @@ pub unsafe fn UpdateSubsamplingDerivatives_178(mut jpg: *mut brunsli_JPEGData) -
     'loop_: while ((i) < ((*jpg).components.len())) {
         let mut c: *mut brunsli_JPEGComponent =
             (&mut (&mut (*jpg)).components[(i)] as *mut brunsli_JPEGComponent);
-        (*jpg).max_h_samp_factor = (*if *&mut (*jpg).max_h_samp_factor >= *&mut (*c).h_samp_factor {
-            (&mut (*jpg).max_h_samp_factor) as *const _
-        } else {
-            (&mut (*c).h_samp_factor) as *const _
+        (*jpg).max_h_samp_factor = (*{
+            let __a: *const _ = &mut (*jpg).max_h_samp_factor;
+            let __b: *const _ = &mut (*c).h_samp_factor;
+            if *__a < *__b { __b } else { __a }
         });
-        (*jpg).max_v_samp_factor = (*if *&mut (*jpg).max_v_samp_factor >= *&mut (*c).v_samp_factor {
-            (&mut (*jpg).max_v_samp_factor) as *const _
-        } else {
-            (&mut (*c).v_samp_factor) as *const _
+        (*jpg).max_v_samp_factor = (*{
+            let __a: *const _ = &mut (*jpg).max_v_samp_factor;
+            let __b: *const _ = &mut (*c).v_samp_factor;
+            if *__a < *__b { __b } else { __a }
         });
         i.prefix_inc();
     }
@@ -8369,10 +8812,10 @@ pub unsafe fn LoadInput_200(mut state: *mut brunsli_internal_dec_State) {
         let mut __tmp_22: u64 =
             ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBufferMaxReadAhead_199)) as u64);
         let mut __tmp_23: u64 = (available as u64);
-        (*if *&mut __tmp_22 <= *&mut __tmp_23 {
-            (&mut __tmp_22) as *const _
-        } else {
-            (&mut __tmp_23) as *const _
+        (*{
+            let __a: *const _ = &mut __tmp_22;
+            let __b: *const _ = &mut __tmp_23;
+            if *__b < *__a { __b } else { __a }
         })
     } as usize);
     {
@@ -8639,10 +9082,10 @@ pub unsafe fn BrunsliEstimateDecoderPeakMemoryUsage_205(mut data: *const u8, len
     return ((((out_size).wrapping_add(jpeg_data_size) as u64).wrapping_add({
         let mut __tmp_24: u64 = (decode_peak as u64);
         let mut __tmp_25: u64 = (jpeg_writer_size as u64);
-        (*if *&mut __tmp_24 >= *&mut __tmp_25 {
-            (&mut __tmp_24) as *const _
-        } else {
-            (&mut __tmp_25) as *const _
+        (*{
+            let __a: *const _ = &mut __tmp_24;
+            let __b: *const _ = &mut __tmp_25;
+            if *__a < *__b { __b } else { __a }
         })
     })) as usize);
 }
@@ -8956,8 +9399,10 @@ pub unsafe fn ReadHistogram_189(
     let length: usize = (*(counts).cast_const()).len();
     {
         let mut __it = (*counts).begin();
-        while __it != (*counts).end() {
-            *__it.iter_deref() = Clone::clone(&0);
+        let __last = (*counts).end();
+        let __value = &0;
+        while __it != __last {
+            *__it.iter_deref() = Clone::clone(__value);
             __it.iter_inc();
         }
     };
@@ -10095,10 +10540,10 @@ pub unsafe fn BufferEndOfBand_239(
             let mut stuff_bits_count: usize = ({
                 let mut __tmp_0: u64 = ((16_usize).wrapping_sub(tail) as u64);
                 let mut __tmp_1: u64 = (new_bits_count as u64);
-                (*if *&mut __tmp_0 <= *&mut __tmp_1 {
-                    (&mut __tmp_0) as *const _
-                } else {
-                    (&mut __tmp_1) as *const _
+                (*{
+                    let __a: *const _ = &mut __tmp_0;
+                    let __b: *const _ = &mut __tmp_1;
+                    if *__b < *__a { __b } else { __a }
                 })
             } as usize);
             let mut stuff_bits: u16 =
@@ -11930,10 +12375,10 @@ pub unsafe fn PushOutput_260(
         let mut to_copy: usize = ({
             let mut __tmp_2: u64 = ((*available_out) as u64);
             let mut __tmp_3: u64 = ((*chunk).len as u64);
-            (*if *&mut __tmp_2 <= *&mut __tmp_3 {
-                (&mut __tmp_2) as *const _
-            } else {
-                (&mut __tmp_3) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_2;
+                let __b: *const _ = &mut __tmp_3;
+                if *__b < *__a { __b } else { __a }
             })
         } as usize);
         if ((to_copy) > (0_usize)) {

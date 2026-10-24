@@ -637,7 +637,7 @@ pub unsafe fn CollectionHeaderSize_27(mut header_version: u32, mut num_fonts: u3
     return size;
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_Font_Table {
     pub tag: u32,
     pub checksum: u32,
@@ -648,20 +648,83 @@ pub struct woff2_Font_Table {
     pub reuse_of: *mut woff2_Font_Table,
     pub flag_byte: u8,
 }
+impl woff2_Font_Table {
+    pub unsafe fn move_from(_a0: *mut woff2_Font_Table) -> Self {
+        let mut this = Self {
+            tag: (*_a0).tag,
+            checksum: (*_a0).checksum,
+            offset: (*_a0).offset,
+            length: (*_a0).length,
+            data: (*_a0).data,
+            buffer: std::mem::take(&mut (*_a0).buffer),
+            reuse_of: (*_a0).reuse_of,
+            flag_byte: (*_a0).flag_byte,
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut woff2_Font_Table) -> *mut woff2_Font_Table {
+        self.tag = (*_a0).tag;
+        self.checksum = (*_a0).checksum;
+        self.offset = (*_a0).offset;
+        self.length = (*_a0).length;
+        self.data = (*_a0).data;
+        self.buffer = std::mem::take(&mut (*_a0).buffer);
+        self.reuse_of = (*_a0).reuse_of;
+        self.flag_byte = (*_a0).flag_byte;
+        return &mut (*(self as *mut woff2_Font_Table));
+    }
+}
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_Font {
     pub flavor: u32,
     pub num_tables: u16,
     pub tables: UnsafeMap<u32, (u32, woff2_Font_Table)>,
 }
+impl woff2_Font {
+    pub unsafe fn move_from(_a0: *mut woff2_Font) -> Self {
+        let mut this = Self {
+            flavor: (*_a0).flavor,
+            num_tables: (*_a0).num_tables,
+            tables: std::mem::take(&mut (*_a0).tables),
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut woff2_Font) -> *mut woff2_Font {
+        self.flavor = (*_a0).flavor;
+        self.num_tables = (*_a0).num_tables;
+        self.tables = std::mem::take(&mut (*_a0).tables);
+        return &mut (*(self as *mut woff2_Font));
+    }
+}
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_FontCollection {
     pub flavor: u32,
     pub header_version: u32,
     pub tables: UnsafeMap<u32, (u32, *mut woff2_Font_Table)>,
     pub fonts: Vec<woff2_Font>,
+}
+impl woff2_FontCollection {
+    pub unsafe fn move_from(_a0: *mut woff2_FontCollection) -> Self {
+        let mut this = Self {
+            flavor: (*_a0).flavor,
+            header_version: (*_a0).header_version,
+            tables: std::mem::take(&mut (*_a0).tables),
+            fonts: std::mem::take(&mut (*_a0).fonts),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut woff2_FontCollection,
+    ) -> *mut woff2_FontCollection {
+        self.flavor = (*_a0).flavor;
+        self.header_version = (*_a0).header_version;
+        self.tables = std::mem::take(&mut (*_a0).tables);
+        self.fonts = std::mem::take(&mut (*_a0).fonts);
+        return &mut (*(self as *mut woff2_FontCollection));
+    }
 }
 pub unsafe fn StoreU32_28(mut dst: *mut u8, mut offset: usize, mut x: u32) -> usize {
     (*dst.offset((offset) as isize)) = (((x) >> (24)) as u8);
@@ -739,20 +802,18 @@ impl woff2_Font {
         }
         let mut glyf_loc: UnsafeRandomAccessIterator<u32> = {
             let mut __it = output_order.begin();
-            while __it != output_order.end()
-                && *__it.iter_deref()
-                    != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
-            {
+            let __last = output_order.end();
+            let __value = &(*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
+            while __it != __last && *__it.iter_deref() != *__value {
                 __it.iter_inc();
             }
             __it
         };
         let mut loca_loc: UnsafeRandomAccessIterator<u32> = {
             let mut __it = output_order.begin();
-            while __it != output_order.end()
-                && *__it.iter_deref()
-                    != (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2))
-            {
+            let __last = output_order.end();
+            let __value = &(*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2));
+            while __it != __last && *__it.iter_deref() != *__value {
                 __it.iter_inc();
             }
             __it
@@ -770,10 +831,10 @@ impl woff2_Font {
                 let __it = <UnsafeRandomAccessIterator<u32>>::from(
                     {
                         let mut __it = output_order.begin();
-                        while __it != output_order.end()
-                            && *__it.iter_deref()
-                                != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
-                        {
+                        let __last = output_order.end();
+                        let __value =
+                            &(*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
+                        while __it != __last && *__it.iter_deref() != *__value {
                             __it.iter_inc();
                         }
                         __it
@@ -992,10 +1053,10 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
         max_offset = ({
             let mut __tmp_0: u64 = (max_offset as u64);
             let mut __tmp_1: u64 = (end_offset as u64);
-            (*if *&mut __tmp_0 >= *&mut __tmp_1 {
-                (&mut __tmp_0) as *const _
-            } else {
-                (&mut __tmp_1) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_0;
+                let __b: *const _ = &mut __tmp_1;
+                if *__a < *__b { __b } else { __a }
             })
         } as usize);
     }
@@ -1011,10 +1072,10 @@ pub unsafe fn FontCollectionFileSize_39(font_collection: *const woff2_FontCollec
         max_offset = ({
             let mut __tmp_2: u64 = (max_offset as u64);
             let mut __tmp_3: u64 = ((unsafe { FontFileSize_38(font) }) as u64);
-            (*if *&mut __tmp_2 >= *&mut __tmp_3 {
-                (&mut __tmp_2) as *const _
-            } else {
-                (&mut __tmp_3) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_2;
+                let __b: *const _ = &mut __tmp_3;
+                if *__a < *__b { __b } else { __a }
             })
         } as usize);
     }
@@ -1345,14 +1406,16 @@ pub unsafe fn SetFileContents_50(
     )
     .unwrap();
     {
-        let mut __bytes: Vec<u8> = Vec::new();
         let mut __it = (start).clone();
-        while __it != (end).clone() {
+        let __last = (end).clone();
+        let __out = &mut ofs;
+        let mut __bytes: Vec<u8> = Vec::new();
+        while __it != __last {
             __bytes.push(*__it.iter_deref() as u8);
             __it.iter_inc();
         }
-        ofs.write_all(&__bytes);
-        ofs.try_clone().unwrap()
+        __out.write_all(&__bytes);
+        __out.try_clone().unwrap()
     };
 }
 pub unsafe fn PrintTag_51(mut tag: i32) -> Vec<libc::c_char> {

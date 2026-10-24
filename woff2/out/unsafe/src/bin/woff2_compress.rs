@@ -637,7 +637,7 @@ pub unsafe fn CollectionHeaderSize_27(mut header_version: u32, mut num_fonts: u3
     return size;
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_Font_Table {
     pub tag: u32,
     pub checksum: u32,
@@ -648,20 +648,83 @@ pub struct woff2_Font_Table {
     pub reuse_of: *mut woff2_Font_Table,
     pub flag_byte: u8,
 }
+impl woff2_Font_Table {
+    pub unsafe fn move_from(_a0: *mut woff2_Font_Table) -> Self {
+        let mut this = Self {
+            tag: (*_a0).tag,
+            checksum: (*_a0).checksum,
+            offset: (*_a0).offset,
+            length: (*_a0).length,
+            data: (*_a0).data,
+            buffer: std::mem::take(&mut (*_a0).buffer),
+            reuse_of: (*_a0).reuse_of,
+            flag_byte: (*_a0).flag_byte,
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut woff2_Font_Table) -> *mut woff2_Font_Table {
+        self.tag = (*_a0).tag;
+        self.checksum = (*_a0).checksum;
+        self.offset = (*_a0).offset;
+        self.length = (*_a0).length;
+        self.data = (*_a0).data;
+        self.buffer = std::mem::take(&mut (*_a0).buffer);
+        self.reuse_of = (*_a0).reuse_of;
+        self.flag_byte = (*_a0).flag_byte;
+        return &mut (*(self as *mut woff2_Font_Table));
+    }
+}
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_Font {
     pub flavor: u32,
     pub num_tables: u16,
     pub tables: UnsafeMap<u32, (u32, woff2_Font_Table)>,
 }
+impl woff2_Font {
+    pub unsafe fn move_from(_a0: *mut woff2_Font) -> Self {
+        let mut this = Self {
+            flavor: (*_a0).flavor,
+            num_tables: (*_a0).num_tables,
+            tables: std::mem::take(&mut (*_a0).tables),
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut woff2_Font) -> *mut woff2_Font {
+        self.flavor = (*_a0).flavor;
+        self.num_tables = (*_a0).num_tables;
+        self.tables = std::mem::take(&mut (*_a0).tables);
+        return &mut (*(self as *mut woff2_Font));
+    }
+}
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_FontCollection {
     pub flavor: u32,
     pub header_version: u32,
     pub tables: UnsafeMap<u32, (u32, *mut woff2_Font_Table)>,
     pub fonts: Vec<woff2_Font>,
+}
+impl woff2_FontCollection {
+    pub unsafe fn move_from(_a0: *mut woff2_FontCollection) -> Self {
+        let mut this = Self {
+            flavor: (*_a0).flavor,
+            header_version: (*_a0).header_version,
+            tables: std::mem::take(&mut (*_a0).tables),
+            fonts: std::mem::take(&mut (*_a0).fonts),
+        };
+        this
+    }
+    pub unsafe fn move_assign(
+        &mut self,
+        _a0: *mut woff2_FontCollection,
+    ) -> *mut woff2_FontCollection {
+        self.flavor = (*_a0).flavor;
+        self.header_version = (*_a0).header_version;
+        self.tables = std::mem::take(&mut (*_a0).tables);
+        self.fonts = std::mem::take(&mut (*_a0).fonts);
+        return &mut (*(self as *mut woff2_FontCollection));
+    }
 }
 pub unsafe fn StoreU32_28(mut dst: *mut u8, mut offset: usize, mut x: u32) -> usize {
     (*dst.offset((offset) as isize)) = (((x) >> (24)) as u8);
@@ -739,20 +802,18 @@ impl woff2_Font {
         }
         let mut glyf_loc: UnsafeRandomAccessIterator<u32> = {
             let mut __it = output_order.begin();
-            while __it != output_order.end()
-                && *__it.iter_deref()
-                    != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
-            {
+            let __last = output_order.end();
+            let __value = &(*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
+            while __it != __last && *__it.iter_deref() != *__value {
                 __it.iter_inc();
             }
             __it
         };
         let mut loca_loc: UnsafeRandomAccessIterator<u32> = {
             let mut __it = output_order.begin();
-            while __it != output_order.end()
-                && *__it.iter_deref()
-                    != (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2))
-            {
+            let __last = output_order.end();
+            let __value = &(*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2));
+            while __it != __last && *__it.iter_deref() != *__value {
                 __it.iter_inc();
             }
             __it
@@ -770,10 +831,10 @@ impl woff2_Font {
                 let __it = <UnsafeRandomAccessIterator<u32>>::from(
                     {
                         let mut __it = output_order.begin();
-                        while __it != output_order.end()
-                            && *__it.iter_deref()
-                                != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
-                        {
+                        let __last = output_order.end();
+                        let __value =
+                            &(*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
+                        while __it != __last && *__it.iter_deref() != *__value {
                             __it.iter_inc();
                         }
                         __it
@@ -992,10 +1053,10 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
         max_offset = ({
             let mut __tmp_0: u64 = (max_offset as u64);
             let mut __tmp_1: u64 = (end_offset as u64);
-            (*if *&mut __tmp_0 >= *&mut __tmp_1 {
-                (&mut __tmp_0) as *const _
-            } else {
-                (&mut __tmp_1) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_0;
+                let __b: *const _ = &mut __tmp_1;
+                if *__a < *__b { __b } else { __a }
             })
         } as usize);
     }
@@ -1011,10 +1072,10 @@ pub unsafe fn FontCollectionFileSize_39(font_collection: *const woff2_FontCollec
         max_offset = ({
             let mut __tmp_2: u64 = (max_offset as u64);
             let mut __tmp_3: u64 = ((unsafe { FontFileSize_38(font) }) as u64);
-            (*if *&mut __tmp_2 >= *&mut __tmp_3 {
-                (&mut __tmp_2) as *const _
-            } else {
-                (&mut __tmp_3) as *const _
+            (*{
+                let __a: *const _ = &mut __tmp_2;
+                let __b: *const _ = &mut __tmp_3;
+                if *__a < *__b { __b } else { __a }
             })
         } as usize);
     }
@@ -1324,7 +1385,7 @@ pub struct woff2_Glyph_Point {
     pub on_curve: bool,
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct woff2_Glyph {
     pub x_min: i16,
     pub x_max: i16,
@@ -1354,6 +1415,36 @@ impl woff2_Glyph {
             have_instructions: false,
         };
         this
+    }
+    pub unsafe fn move_from(_a0: *mut woff2_Glyph) -> Self {
+        let mut this = Self {
+            x_min: (*_a0).x_min,
+            x_max: (*_a0).x_max,
+            y_min: (*_a0).y_min,
+            y_max: (*_a0).y_max,
+            instructions_size: (*_a0).instructions_size,
+            instructions_data: (*_a0).instructions_data,
+            overlap_simple_flag_set: (*_a0).overlap_simple_flag_set,
+            contours: std::mem::take(&mut (*_a0).contours),
+            composite_data: (*_a0).composite_data,
+            composite_data_size: (*_a0).composite_data_size,
+            have_instructions: (*_a0).have_instructions,
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut woff2_Glyph) -> *mut woff2_Glyph {
+        self.x_min = (*_a0).x_min;
+        self.x_max = (*_a0).x_max;
+        self.y_min = (*_a0).y_min;
+        self.y_max = (*_a0).y_max;
+        self.instructions_size = (*_a0).instructions_size;
+        self.instructions_data = (*_a0).instructions_data;
+        self.overlap_simple_flag_set = (*_a0).overlap_simple_flag_set;
+        self.contours = std::mem::take(&mut (*_a0).contours);
+        self.composite_data = (*_a0).composite_data;
+        self.composite_data_size = (*_a0).composite_data_size;
+        self.have_instructions = (*_a0).have_instructions;
+        return &mut (*(self as *mut woff2_Glyph));
     }
 }
 impl Default for woff2_Glyph {
@@ -2385,7 +2476,7 @@ pub unsafe fn WriteLong_89(mut out: *mut Vec<u8>, mut value: i32) {
     };
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg, Default)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe, Default)]
 pub struct woff2_GlyfEncoder {
     n_contour_stream_: Vec<u8>,
     n_points_stream_: Vec<u8>,
@@ -2765,6 +2856,34 @@ impl woff2_GlyfEncoder {
             };
         }
     }
+    pub unsafe fn move_from(_a0: *mut woff2_GlyfEncoder) -> Self {
+        let mut this = Self {
+            n_contour_stream_: std::mem::take(&mut (*_a0).n_contour_stream_),
+            n_points_stream_: std::mem::take(&mut (*_a0).n_points_stream_),
+            flag_byte_stream_: std::mem::take(&mut (*_a0).flag_byte_stream_),
+            composite_stream_: std::mem::take(&mut (*_a0).composite_stream_),
+            bbox_bitmap_: std::mem::take(&mut (*_a0).bbox_bitmap_),
+            bbox_stream_: std::mem::take(&mut (*_a0).bbox_stream_),
+            glyph_stream_: std::mem::take(&mut (*_a0).glyph_stream_),
+            instruction_stream_: std::mem::take(&mut (*_a0).instruction_stream_),
+            overlap_bitmap_: std::mem::take(&mut (*_a0).overlap_bitmap_),
+            n_glyphs_: (*_a0).n_glyphs_,
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut woff2_GlyfEncoder) -> *mut woff2_GlyfEncoder {
+        self.n_contour_stream_ = std::mem::take(&mut (*_a0).n_contour_stream_);
+        self.n_points_stream_ = std::mem::take(&mut (*_a0).n_points_stream_);
+        self.flag_byte_stream_ = std::mem::take(&mut (*_a0).flag_byte_stream_);
+        self.composite_stream_ = std::mem::take(&mut (*_a0).composite_stream_);
+        self.bbox_bitmap_ = std::mem::take(&mut (*_a0).bbox_bitmap_);
+        self.bbox_stream_ = std::mem::take(&mut (*_a0).bbox_stream_);
+        self.glyph_stream_ = std::mem::take(&mut (*_a0).glyph_stream_);
+        self.instruction_stream_ = std::mem::take(&mut (*_a0).instruction_stream_);
+        self.overlap_bitmap_ = std::mem::take(&mut (*_a0).overlap_bitmap_);
+        self.n_glyphs_ = (*_a0).n_glyphs_;
+        return &mut (*(self as *mut woff2_GlyfEncoder));
+    }
 }
 pub unsafe fn TransformGlyfAndLocaTables_90(mut font: *mut woff2_Font) -> bool {
     let mut glyf_table: *const woff2_Font_Table = (unsafe {
@@ -3009,7 +3128,7 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
     return true;
 }
 #[repr(C)]
-#[derive(Clone, VaArg, FnPtrArg)]
+#[derive(Clone, VaArg, FnPtrArg, MoveCtorUnsafe, MoveAssignUnsafe)]
 pub struct woff2_WOFF2Params {
     pub extended_metadata: Vec<libc::c_char>,
     pub brotli_quality: i32,
@@ -3027,6 +3146,20 @@ impl woff2_WOFF2Params {
             allow_transforms: true,
         };
         this
+    }
+    pub unsafe fn move_from(_a0: *mut woff2_WOFF2Params) -> Self {
+        let mut this = Self {
+            extended_metadata: std::mem::take(&mut (*_a0).extended_metadata),
+            brotli_quality: (*_a0).brotli_quality,
+            allow_transforms: (*_a0).allow_transforms,
+        };
+        this
+    }
+    pub unsafe fn move_assign(&mut self, _a0: *mut woff2_WOFF2Params) -> *mut woff2_WOFF2Params {
+        self.extended_metadata = ((*_a0).extended_metadata).clone();
+        self.brotli_quality = (*_a0).brotli_quality;
+        self.allow_transforms = (*_a0).allow_transforms;
+        return &mut (*(self as *mut woff2_WOFF2Params));
     }
 }
 impl Default for woff2_WOFF2Params {
@@ -3732,14 +3865,16 @@ pub unsafe fn SetFileContents_111(
     )
     .unwrap();
     {
-        let mut __bytes: Vec<u8> = Vec::new();
         let mut __it = (start).clone();
-        while __it != (end).clone() {
+        let __last = (end).clone();
+        let __out = &mut ofs;
+        let mut __bytes: Vec<u8> = Vec::new();
+        while __it != __last {
             __bytes.push(*__it.iter_deref() as u8);
             __it.iter_inc();
         }
-        ofs.write_all(&__bytes);
-        ofs.try_clone().unwrap()
+        __out.write_all(&__bytes);
+        __out.try_clone().unwrap()
     };
 }
 pub fn main() {
