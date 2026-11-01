@@ -617,11 +617,11 @@ pub fn Store16_31(mut val: i32, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
     elem!(dst, offset.with_mut(|__v| __v.postfix_inc())).write(__rhs);
 }
 pub fn StoreBytes_32(mut data: Ptr<u8>, mut len: usize, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
-    {
-        ((dst.offset((offset.read()) as isize)) as Ptr<u8>)
-            .to_any()
-            .memcpy(&(data).to_any(), len as usize);
-        ((dst.offset((offset.read()) as isize)) as Ptr<u8>).to_any()
+    match ({ ((dst.offset((offset.read()) as isize)) as Ptr<u8>).to_any() },) {
+        (mut __tmp_0,) => {
+            __tmp_0.memcpy(&(data).to_any(), len as usize);
+            (__tmp_0).clone()
+        }
     };
     offset.write({ (offset.read()).wrapping_add(len) });
 }
@@ -863,12 +863,12 @@ pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
                 .wrapping_add((table.with(|__s| __s.length) as usize)),
         ));
         let __rhs = ({
-            let __tmp_0: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
-            let __tmp_1: Value<u64> = Rc::new(RefCell::new(((*end_offset.borrow()) as u64)));
-            ({
-                let __a = __tmp_0.as_pointer();
-                let __b = __tmp_1.as_pointer();
-                if CppLess::less(&__a, &__b) { __b } else { __a }
+            let __tmp_9: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
+            let __tmp_10: Value<u64> = Rc::new(RefCell::new(((*end_offset.borrow()) as u64)));
+            (if CppLess::less(&__tmp_9.as_pointer(), &__tmp_10.as_pointer()) {
+                __tmp_10.as_pointer()
+            } else {
+                __tmp_9.as_pointer()
             }
             .read())
         } as usize);
@@ -884,13 +884,17 @@ pub fn FontCollectionFileSize_39(font_collection: Ptr<woff2_FontCollection>) -> 
     ) {
         let font: Ptr<woff2_Font> = font.iter_deref();
         let __rhs = ({
-            let __tmp_2: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
-            let __tmp_3: Value<u64> =
-                Rc::new(RefCell::new((({ FontFileSize_38((font).clone()) }) as u64)));
-            ({
-                let __a = __tmp_2.as_pointer();
-                let __b = __tmp_3.as_pointer();
-                if CppLess::less(&__a, &__b) { __b } else { __a }
+            let __tmp_12: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
+            (match (
+                Rc::new(RefCell::new((({ FontFileSize_38((font).clone()) }) as u64))).as_pointer(),
+            ) {
+                (__tmp_11,) => {
+                    if CppLess::less(&__tmp_12.as_pointer(), &(__tmp_11).clone()) {
+                        (__tmp_11).clone()
+                    } else {
+                        __tmp_12.as_pointer()
+                    }
+                }
             }
             .read())
         } as usize);
@@ -966,14 +970,14 @@ pub fn WriteTable_43(
         }) {
             return false;
         }
-        {
-            (dst.offset((table.with(|__s| __s.offset)) as isize) as Ptr<u8>)
-                .to_any()
-                .memcpy(
+        match ({ (dst.offset((table.with(|__s| __s.offset)) as isize) as Ptr<u8>).to_any() },) {
+            (mut __tmp_13,) => {
+                __tmp_13.memcpy(
                     &(table.with(|__s| __s.data.clone()) as Ptr<u8>).to_any(),
                     (table.with(|__s| __s.length) as usize) as usize,
                 );
-            (dst.offset((table.with(|__s| __s.offset)) as isize) as Ptr<u8>).to_any()
+                (__tmp_13).clone()
+            }
         };
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((table.with(|__s| __s.length) & 3_u32))) & 3_u32) as usize);
@@ -989,14 +993,16 @@ pub fn WriteTable_43(
         {
             return false;
         }
+        match ({
+            (dst.offset((table.with(|__s| __s.offset)) as isize)
+                .offset((table.with(|__s| __s.length)) as isize) as Ptr<u8>)
+                .to_any()
+        },)
         {
-            (dst.offset((table.with(|__s| __s.offset)) as isize)
-                .offset((table.with(|__s| __s.length)) as isize) as Ptr<u8>)
-                .to_any()
-                .memset((0) as u8, padding_size as usize);
-            (dst.offset((table.with(|__s| __s.offset)) as isize)
-                .offset((table.with(|__s| __s.length)) as isize) as Ptr<u8>)
-                .to_any()
+            (mut __tmp_14,) => {
+                __tmp_14.memset((0) as u8, padding_size as usize);
+                (__tmp_14).clone()
+            }
         };
     }
     return true;
@@ -1252,6 +1258,7 @@ pub fn RemoveDigitalSignature_48(mut font: Ptr<woff2_Font>) -> bool {
             .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end())
     {
         {
+            // The block ends the borrow of the iterator, e.g., in it = m.erase(it).
             let __it = (*it.borrow()).clone();
             Map::erase(field_ptr!(font, tables), &__it)
         };
@@ -1286,17 +1293,18 @@ pub fn SetFileContents_50(
     let ofs: Value<::std::fs::File> = Rc::new(RefCell::new(
         ::std::fs::File::create(filename.decay().to_string()).expect("Failed to open file"),
     ));
-    {
-        let mut __it = (*start.borrow()).clone();
-        let __last = (*end.borrow()).clone();
-        let __out = &mut (*ofs.borrow_mut());
-        let mut __bytes: Vec<u8> = Vec::new();
-        while __it != __last {
-            __bytes.push(__it.iter_deref().read() as u8);
-            __it.iter_inc();
+    match ({ (*end.borrow()).clone() },) {
+        (mut __tmp_0,) => {
+            let mut __it = (*start.borrow()).clone();
+            let __out = &mut (*ofs.borrow_mut());
+            let mut __bytes: Vec<u8> = Vec::new();
+            while __it != __tmp_0 {
+                __bytes.push(__it.iter_deref().read() as u8);
+                __it.iter_inc();
+            }
+            __out.write_all(&__bytes);
+            __out.try_clone().unwrap()
         }
-        __out.write_all(&__bytes);
-        __out.try_clone().unwrap()
     };
 }
 pub fn PrintTag_51(mut tag: i32) -> Vec<i8> {
@@ -1351,22 +1359,23 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
         __bytes
     }));
     let outfilename: Value<Vec<i8>> = Rc::new(RefCell::new({
-        let mut __tmp2 = {
-            let mut __tmp1 = (*filename.borrow())[(0_usize) as usize
-                ..::std::cmp::min(
-                    (0_usize
-                        + Ptr::<i8>::from_string_literal(b".").with_c_str(|__lookup| {
-                            (*filename.borrow())
-                                .iter()
-                                .take((*filename.borrow()).len().saturating_sub(1))
-                                .rposition(|&x| __lookup.contains(&x))
-                                .unwrap_or(usize::MAX)
-                        })) as usize,
-                    (*filename.borrow()).len().saturating_sub(1),
-                )]
-                .to_vec();
-            __tmp1.push(0);
-            __tmp1
+        let mut __tmp2 = match ({
+            Ptr::<i8>::from_string_literal(b".").with_c_str(|__lookup| {
+                (*filename.borrow())
+                    .iter()
+                    .take((*filename.borrow()).len().saturating_sub(1))
+                    .rposition(|&x| __lookup.contains(&x))
+                    .unwrap_or(usize::MAX)
+            })
+        },)
+        {
+            (mut __tmp_1,) => filename.as_pointer().with(|__s: &Vec<i8>| {
+                let mut __tmp1 = __s
+                    [0_usize..::std::cmp::min(0_usize + __tmp_1, __s.len().saturating_sub(1))]
+                    .to_vec();
+                __tmp1.push(0);
+                __tmp1
+            }),
         };
         __tmp2.pop();
         Ptr::<i8>::from_string_literal(b".woff2").with_c_str(|__s| __tmp2.extend_from_slice(__s));
@@ -1607,16 +1616,18 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
             return false;
         }
         if !(data).is_null() {
-            {
-                (data).to_any().memcpy(
-                    &((*self)
-                        .with(|__s| __s.buffer_.clone())
-                        .offset(((*self).with(|__s| __s.offset_)) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
-                    n_bytes as usize,
-                );
-                (data).to_any()
+            match ({ (data).to_any() },) {
+                (mut __tmp_0,) => {
+                    __tmp_0.memcpy(
+                        &((*self)
+                            .with(|__s| __s.buffer_.clone())
+                            .offset(((*self).with(|__s| __s.offset_)) as isize)
+                            as Ptr<u8>)
+                            .to_any(),
+                        n_bytes as usize,
+                    );
+                    (__tmp_0).clone()
+                }
             };
         }
         field!((*self), offset_).write({ ((*self).with(|__s| __s.offset_)).wrapping_add(n_bytes) });
@@ -1646,16 +1657,18 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         {
             return false;
         }
-        {
-            (value).to_any().memcpy(
-                &((*self)
-                    .with(|__s| __s.buffer_.clone())
-                    .offset(((*self).with(|__s| __s.offset_)) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
-                ::std::mem::size_of::<u16>() as usize,
-            );
-            (value).to_any()
+        match ({ (value).to_any() },) {
+            (mut __tmp_1,) => {
+                __tmp_1.memcpy(
+                    &((*self)
+                        .with(|__s| __s.buffer_.clone())
+                        .offset(((*self).with(|__s| __s.offset_)) as isize)
+                        as Ptr<u8>)
+                        .to_any(),
+                    ::std::mem::size_of::<u16>() as usize,
+                );
+                (__tmp_1).clone()
+            }
         };
         let __rhs = u16::from_be((value.read()));
         value.write(__rhs);
@@ -1701,16 +1714,18 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         {
             return false;
         }
-        {
-            (value).to_any().memcpy(
-                &((*self)
-                    .with(|__s| __s.buffer_.clone())
-                    .offset(((*self).with(|__s| __s.offset_)) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
-                ::std::mem::size_of::<u32>() as usize,
-            );
-            (value).to_any()
+        match ({ (value).to_any() },) {
+            (mut __tmp_2,) => {
+                __tmp_2.memcpy(
+                    &((*self)
+                        .with(|__s| __s.buffer_.clone())
+                        .offset(((*self).with(|__s| __s.offset_)) as isize)
+                        as Ptr<u8>)
+                        .to_any(),
+                    ::std::mem::size_of::<u32>() as usize,
+                );
+                (__tmp_2).clone()
+            }
         };
         let __rhs = u32::from_be((value.read()));
         value.write(__rhs);
@@ -1727,16 +1742,18 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         {
             return false;
         }
-        {
-            (value).to_any().memcpy(
-                &((*self)
-                    .with(|__s| __s.buffer_.clone())
-                    .offset(((*self).with(|__s| __s.offset_)) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
-                ::std::mem::size_of::<u32>() as usize,
-            );
-            (value).to_any()
+        match ({ (value).to_any() },) {
+            (mut __tmp_3,) => {
+                __tmp_3.memcpy(
+                    &((*self)
+                        .with(|__s| __s.buffer_.clone())
+                        .offset(((*self).with(|__s| __s.offset_)) as isize)
+                        as Ptr<u8>)
+                        .to_any(),
+                    ::std::mem::size_of::<u32>() as usize,
+                );
+                (__tmp_3).clone()
+            }
         };
         field!((*self), offset_).write({ ((*self).with(|__s| __s.offset_)).wrapping_add(4_usize) });
         return true;
@@ -1748,16 +1765,18 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         {
             return false;
         }
-        {
-            (value).to_any().memcpy(
-                &((*self)
-                    .with(|__s| __s.buffer_.clone())
-                    .offset(((*self).with(|__s| __s.offset_)) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
-                ::std::mem::size_of::<u64>() as usize,
-            );
-            (value).to_any()
+        match ({ (value).to_any() },) {
+            (mut __tmp_4,) => {
+                __tmp_4.memcpy(
+                    &((*self)
+                        .with(|__s| __s.buffer_.clone())
+                        .offset(((*self).with(|__s| __s.offset_)) as isize)
+                        as Ptr<u8>)
+                        .to_any(),
+                    ::std::mem::size_of::<u64>() as usize,
+                );
+                (__tmp_4).clone()
+            }
         };
         field!((*self), offset_).write({ ((*self).with(|__s| __s.offset_)).wrapping_add(8_usize) });
         return true;
@@ -1849,51 +1868,82 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                 (*output_order.borrow_mut()).push(a0_clone)
             };
         }
-        let glyf_loc: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new({
-            let mut __it = output_order.decay().begin();
-            let __last = output_order.decay().end();
-            let __value = kGlyfTableTag_0.with(|v| v.as_pointer());
-            while __it != __last && !CppEq::equal(&__it.iter_deref(), &__value) {
-                __it.iter_inc();
-            }
-            __it
-        }));
-        let loca_loc: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new({
-            let mut __it = output_order.decay().begin();
-            let __last = output_order.decay().end();
-            let __value = kLocaTableTag_2.with(|v| v.as_pointer());
-            while __it != __last && !CppEq::equal(&__it.iter_deref(), &__value) {
-                __it.iter_inc();
-            }
-            __it
-        }));
+        let glyf_loc: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new(
+            match ({ output_order.decay().begin() }, {
+                output_order.decay().end()
+            }) {
+                (mut __tmp_1, mut __tmp_2) => {
+                    let mut __it = (__tmp_1).clone();
+                    while __it != __tmp_2
+                        && !CppEq::equal(
+                            &__it.iter_deref(),
+                            &kGlyfTableTag_0.with(|v| v.as_pointer()),
+                        )
+                    {
+                        __it.iter_inc();
+                    }
+                    __it
+                }
+            },
+        ));
+        let loca_loc: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new(
+            match ({ output_order.decay().begin() }, {
+                output_order.decay().end()
+            }) {
+                (mut __tmp_3, mut __tmp_4) => {
+                    let mut __it = (__tmp_3).clone();
+                    while __it != __tmp_4
+                        && !CppEq::equal(
+                            &__it.iter_deref(),
+                            &kLocaTableTag_2.with(|v| v.as_pointer()),
+                        )
+                    {
+                        __it.iter_inc();
+                    }
+                    __it
+                }
+            },
+        ));
         if ((*glyf_loc.borrow()) != output_order.decay().end())
             && ((*loca_loc.borrow()) != output_order.decay().end())
         {
-            {
-                let __it = <RandomAccessIterator<u32>>::from((*loca_loc.borrow()).clone());
-                let __off = __it.index();
-                output_order
-                    .as_pointer()
-                    .with_mut(|__v: &mut Vec<u32>| __v.remove(__off));
-                __it
+            match ({ <RandomAccessIterator<u32>>::from((*loca_loc.borrow()).clone()) },) {
+                (mut __tmp_5,) => {
+                    let __off = __tmp_5.index();
+                    output_order
+                        .as_pointer()
+                        .with_mut(|__v: &mut Vec<u32>| __v.remove(__off));
+                    (__tmp_5).clone()
+                }
             };
-            {
-                let __it = <RandomAccessIterator<u32>>::from(
-                    {
-                        let mut __it = output_order.decay().begin();
-                        let __last = output_order.decay().end();
-                        let __value = kGlyfTableTag_0.with(|v| v.as_pointer());
-                        while __it != __last && !CppEq::equal(&__it.iter_deref(), &__value) {
-                            __it.iter_inc();
+            match ({
+                <RandomAccessIterator<u32>>::from(
+                    match ({ output_order.decay().begin() }, {
+                        output_order.decay().end()
+                    }) {
+                        (mut __tmp_7, mut __tmp_8) => {
+                            let mut __it = (__tmp_7).clone();
+                            while __it != __tmp_8
+                                && !CppEq::equal(
+                                    &__it.iter_deref(),
+                                    &kGlyfTableTag_0.with(|v| v.as_pointer()),
+                                )
+                            {
+                                __it.iter_inc();
+                            }
+                            __it
                         }
-                        __it
                     }
                     .iter_add(1_isize),
-                );
-                let __off = __it.index();
-                (*output_order.borrow_mut()).insert(__off, kLocaTableTag_2.with(|rc| *rc.borrow()));
-                __it
+                )
+            },)
+            {
+                (mut __tmp_6,) => {
+                    let __off = __tmp_6.index();
+                    (*output_order.borrow_mut())
+                        .insert(__off, kLocaTableTag_2.with(|rc| *rc.borrow()));
+                    (__tmp_6).clone()
+                }
             };
         }
         return std::mem::take(&mut (*output_order.borrow_mut()));

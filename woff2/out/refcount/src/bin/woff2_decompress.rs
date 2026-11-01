@@ -575,11 +575,11 @@ pub fn Store16_34(mut val: i32, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
     elem!(dst, offset.with_mut(|__v| __v.postfix_inc())).write(__rhs);
 }
 pub fn StoreBytes_35(mut data: Ptr<u8>, mut len: usize, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
-    {
-        ((dst.offset((offset.read()) as isize)) as Ptr<u8>)
-            .to_any()
-            .memcpy(&(data).to_any(), len as usize);
-        ((dst.offset((offset.read()) as isize)) as Ptr<u8>).to_any()
+    match ({ ((dst.offset((offset.read()) as isize)) as Ptr<u8>).to_any() },) {
+        (mut __tmp_0,) => {
+            __tmp_0.memcpy(&(data).to_any(), len as usize);
+            (__tmp_0).clone()
+        }
     };
     offset.write({ (offset.read()).wrapping_add(len) });
 }
@@ -1044,31 +1044,31 @@ pub fn ComputeBbox_59(mut n_points: u32, mut points: Ptr<woff2_Point>, mut dst: 
     'loop_: while (i < n_points) {
         let x: Value<i32> = Rc::new(RefCell::new(elem!(points, i).with(|__s| __s.x)));
         let y: Value<i32> = Rc::new(RefCell::new(elem!(points, i).with(|__s| __s.y)));
-        let __rhs = ({
-            let __a = x.as_pointer();
-            let __b = x_min.as_pointer();
-            if CppLess::less(&__b, &__a) { __b } else { __a }
+        let __rhs = (if CppLess::less(&x_min.as_pointer(), &x.as_pointer()) {
+            x_min.as_pointer()
+        } else {
+            x.as_pointer()
         }
         .read());
         (*x_min.borrow_mut()) = __rhs;
-        let __rhs = ({
-            let __a = x.as_pointer();
-            let __b = x_max.as_pointer();
-            if CppLess::less(&__a, &__b) { __b } else { __a }
+        let __rhs = (if CppLess::less(&x.as_pointer(), &x_max.as_pointer()) {
+            x_max.as_pointer()
+        } else {
+            x.as_pointer()
         }
         .read());
         (*x_max.borrow_mut()) = __rhs;
-        let __rhs = ({
-            let __a = y.as_pointer();
-            let __b = y_min.as_pointer();
-            if CppLess::less(&__b, &__a) { __b } else { __a }
+        let __rhs = (if CppLess::less(&y_min.as_pointer(), &y.as_pointer()) {
+            y_min.as_pointer()
+        } else {
+            y.as_pointer()
         }
         .read());
         (*y_min.borrow_mut()) = __rhs;
-        let __rhs = ({
-            let __a = y.as_pointer();
-            let __b = y_max.as_pointer();
-            if CppLess::less(&__a, &__b) { __b } else { __a }
+        let __rhs = (if CppLess::less(&y.as_pointer(), &y_max.as_pointer()) {
+            y_max.as_pointer()
+        } else {
+            y.as_pointer()
         }
         .read());
         (*y_max.borrow_mut()) = __rhs;
@@ -1180,7 +1180,7 @@ pub fn StoreLoca_62(
     }
     let loca_content: Value<Vec<u8>> = Rc::new(RefCell::new(
         (0..((loca_size).wrapping_mul(offset_size) as usize) as usize)
-            .map(|_| <u8>::default())
+            .map(|_| 0_u8)
             .collect::<Vec<_>>(),
     ));
     let mut dst: Ptr<u8> = (loca_content.decay().offset(0_usize));
@@ -1229,7 +1229,12 @@ pub fn ReconstructGlyf_63(
     let version: Value<u16> = Rc::new(RefCell::new(0_u16));
     let substreams: Value<Vec<(Value<Ptr<u8>>, Value<u64>)>> = Rc::new(RefCell::new(
         (0..(kNumSubStreams_64.with(|rc| *rc.borrow()) as usize) as usize)
-            .map(|_| <(Value<Ptr<u8>>, Value<u64>)>::default())
+            .map(|_| {
+                (
+                    Rc::new(RefCell::new(Ptr::<u8>::null())),
+                    Rc::new(RefCell::new(0_u64)),
+                )
+            })
             .collect::<Vec<_>>(),
     ));
     let mut glyf_start: usize = ({ (*out.upgrade().deref_mut()).Size() });
@@ -1279,19 +1284,21 @@ pub fn ReconstructGlyf_63(
         {
             return false;
         }
-        let __rhs = (
-            Rc::new(RefCell::new(
-                data.offset((offset) as isize)
-                    .try_into()
-                    .expect("failed conversion"),
+        match (Rc::new(RefCell::new((
+            Rc::new(RefCell::new(data.offset((offset) as isize))),
+            Rc::new(RefCell::new((*substream_size.borrow()))),
+        )))
+        .as_pointer(),)
+        {
+            (__tmp_1,) => substreams.decay().offset((i as usize)).write((
+                Rc::new(RefCell::new(<Ptr<u8> as CppFrom<Ptr<u8>>>::cpp_from_move(
+                    (*__tmp_1.upgrade().deref()).0.as_pointer(),
+                ))),
+                Rc::new(RefCell::new(
+                    (((*__tmp_1.upgrade().deref()).1.as_pointer().read()) as u64),
+                )),
             )),
-            Rc::new(RefCell::new(
-                (*substream_size.borrow())
-                    .try_into()
-                    .expect("failed conversion"),
-            )),
-        );
-        (*substreams.borrow_mut())[(i as usize)] = __rhs;
+        };
         offset = { (offset).wrapping_add((*substream_size.borrow())) };
         i.prefix_inc();
     }
@@ -1338,7 +1345,7 @@ pub fn ReconstructGlyf_63(
     }
     let loca_values: Value<Vec<u32>> = Rc::new(RefCell::new(
         (0..(((info.with(|__s| __s.num_glyphs) as i32) + 1) as usize) as usize)
-            .map(|_| <u32>::default())
+            .map(|_| 0_u32)
             .collect::<Vec<_>>(),
     ));
     let mut n_points_vec: Vec<u32> = Vec::new();
@@ -1356,8 +1363,7 @@ pub fn ReconstructGlyf_63(
     ));
     {
         let __a0 = (info.with(|__s| __s.num_glyphs) as usize) as usize;
-        field!(info, x_mins)
-            .with_mut(|__v: &mut Vec<i16>| __v.resize_with(__a0, || <i16>::default()))
+        field!(info, x_mins).with_mut(|__v: &mut Vec<i16>| __v.resize_with(__a0, || 0_i16))
     };
     let mut i: u32 = 0_u32;
     'loop_: while ({ i } < { (info.with(|__s| __s.num_glyphs) as u32) }) {
@@ -1880,7 +1886,7 @@ pub fn ReconstructTransformedHmtx_67(
         (((2 * (num_glyphs as i32)) + (2 * (num_hmetrics as i32))) as u32);
     let hmtx_table: Value<Vec<u8>> = Rc::new(RefCell::new(
         (0..(hmtx_output_size as usize) as usize)
-            .map(|_| <u8>::default())
+            .map(|_| 0_u8)
             .collect::<Vec<_>>(),
     ));
     let mut dst: Ptr<u8> = (hmtx_table.decay().offset(0_usize));
@@ -1931,20 +1937,23 @@ pub fn Woff2Uncompress_68(
     mut src_size: usize,
 ) -> bool {
     let uncompressed_size: Value<usize> = Rc::new(RefCell::new(dst_size));
-    let mut result: ::brotli_sys::BrotliDecoderResult = {
-        let __out_len = (uncompressed_size.as_pointer()).read();
-        src_buf.with_slice(src_size, |__in| {
-            (uncompressed_size.as_pointer()).with_mut(|_v2| {
-                dst_buf.with_slice_mut(__out_len, |__out| unsafe {
-                    ::brotli_sys::BrotliDecoderDecompress(
-                        src_size,
-                        __in.as_ptr(),
-                        _v2 as *mut usize,
-                        __out.as_mut_ptr(),
-                    )
+    let mut result: ::brotli_sys::BrotliDecoderResult = match ({ (uncompressed_size.as_pointer()) },)
+    {
+        (mut __tmp_2,) => {
+            let __out_len = __tmp_2.read();
+            src_buf.with_slice(src_size, |__in| {
+                __tmp_2.with_mut(|_v2| {
+                    dst_buf.with_slice_mut(__out_len, |__out| unsafe {
+                        ::brotli_sys::BrotliDecoderDecompress(
+                            src_size,
+                            __in.as_ptr(),
+                            _v2 as *mut usize,
+                            __out.as_mut_ptr(),
+                        )
+                    })
                 })
             })
-        })
+        }
     };
     if (((((result as i32) != (::brotli_sys::BROTLI_DECODER_RESULT_SUCCESS as i32))
         || ((*uncompressed_size.borrow()) != dst_size)) as i64)
@@ -2180,18 +2189,8 @@ pub fn ReconstructFont_74(
     'loop_: while (i < (*tables.borrow()).len()) {
         let table: Ptr<woff2_Table> = ((*tables.borrow())[i]).clone();
         let checksum_key: Value<(Value<u32>, Value<u32>)> = Rc::new(RefCell::new((
-            Rc::new(RefCell::new(
-                table
-                    .with(|__s| __s.tag)
-                    .try_into()
-                    .expect("failed conversion"),
-            )),
-            Rc::new(RefCell::new(
-                table
-                    .with(|__s| __s.src_offset)
-                    .try_into()
-                    .expect("failed conversion"),
-            )),
+            Rc::new(RefCell::new(table.with(|__s| __s.tag))),
+            Rc::new(RefCell::new(table.with(|__s| __s.src_offset))),
         )));
         let mut reused: bool = field_ptr!(metadata, checksums).with(
             |__m: &Map<(Value<u32>, Value<u32>), (Value<(Value<u32>, Value<u32>)>, Value<u32>)>| {
@@ -2569,7 +2568,7 @@ pub fn ReadWOFF2Header_75(
             {
                 let __a0 = ((*num_tables.borrow()) as usize) as usize;
                 field!(ttc_font, table_indices)
-                    .with_mut(|__v: &mut Vec<u16>| __v.resize_with(__a0, || <u16>::default()))
+                    .with_mut(|__v: &mut Vec<u16>| __v.resize_with(__a0, || 0_u16))
             };
             let mut glyf_idx: u32 = 0_u32;
             let mut loca_idx: u32 = 0_u32;
@@ -2708,12 +2707,13 @@ pub fn WriteHeaders_76(
             }
         }
     } else {
-        {
-            let __first = sorted_tables.decay().begin();
-            let __n = sorted_tables.decay().end().iter_distance(&__first);
-            let mut __order: Vec<isize> = (0..__n).collect();
-            __order.sort_by(|&__x, &__y| cpp_cmp(&__first.iter_at(__x), &__first.iter_at(__y)));
-            reorder(__order, |__i| __first.iter_at(__i));
+        match ({ sorted_tables.decay().begin() },) {
+            (mut __tmp_3,) => {
+                let __n = sorted_tables.decay().end().iter_distance(&__tmp_3);
+                let mut __order: Vec<isize> = (0..__n).collect();
+                __order.sort_by(|&__x, &__y| cpp_cmp(&__tmp_3.iter_at(__x), &__tmp_3.iter_at(__y)));
+                reorder(__order, |__i| __tmp_3.iter_at(__i));
+            }
         };
     }
     let mut result: Ptr<u8> = (output.decay().offset(0_usize));
@@ -2908,7 +2908,7 @@ pub fn ConvertWOFF2ToTTF_79(
     let mut src_buf: Ptr<u8> = data.offset(({ (*hdr.borrow()).compressed_offset }) as isize);
     let uncompressed_buf: Value<Vec<u8>> = Rc::new(RefCell::new(
         (0..({ (*hdr.borrow()).uncompressed_size } as usize) as usize)
-            .map(|_| <u8>::default())
+            .map(|_| 0_u8)
             .collect::<Vec<_>>(),
     ));
     if ((({ (*hdr.borrow()).uncompressed_size } < 1_u32) as i64) != 0) {
@@ -2999,17 +2999,18 @@ pub fn SetFileContents_81(
     let ofs: Value<::std::fs::File> = Rc::new(RefCell::new(
         ::std::fs::File::create(filename.decay().to_string()).expect("Failed to open file"),
     ));
-    {
-        let mut __it = (*start.borrow()).clone();
-        let __last = (*end.borrow()).clone();
-        let __out = &mut (*ofs.borrow_mut());
-        let mut __bytes: Vec<u8> = Vec::new();
-        while __it != __last {
-            __bytes.push(__it.iter_deref().read() as u8);
-            __it.iter_inc();
+    match ({ (*end.borrow()).clone() },) {
+        (mut __tmp_0,) => {
+            let mut __it = (*start.borrow()).clone();
+            let __out = &mut (*ofs.borrow_mut());
+            let mut __bytes: Vec<u8> = Vec::new();
+            while __it != __tmp_0 {
+                __bytes.push(__it.iter_deref().read() as u8);
+                __it.iter_inc();
+            }
+            __out.write_all(&__bytes);
+            __out.try_clone().unwrap()
         }
-        __out.write_all(&__bytes);
-        __out.try_clone().unwrap()
     };
 }
 pub fn main() {
@@ -3036,52 +3037,60 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
         eprintln!("One argument, the input filename, must be provided.");
         return 1;
     }
-    let mut filename: Vec<i8> = {
+    let filename: Value<Vec<i8>> = Rc::new(RefCell::new({
         let mut __bytes = (elem!(argv, 1).read()).to_c_bytes();
         __bytes.push(0);
         __bytes
-    };
+    }));
     let mut outfilename: Vec<i8> = {
-        let mut __tmp2 = {
-            let mut __tmp1 = filename[(0_usize) as usize
-                ..::std::cmp::min(
-                    (0_usize
-                        + Ptr::<i8>::from_string_literal(b".").with_c_str(|__lookup| {
-                            filename
-                                .iter()
-                                .take(filename.len().saturating_sub(1))
-                                .rposition(|&x| __lookup.contains(&x))
-                                .unwrap_or(usize::MAX)
-                        })) as usize,
-                    filename.len().saturating_sub(1),
-                )]
-                .to_vec();
-            __tmp1.push(0);
-            __tmp1
+        let mut __tmp2 = match ({
+            Ptr::<i8>::from_string_literal(b".").with_c_str(|__lookup| {
+                (*filename.borrow())
+                    .iter()
+                    .take((*filename.borrow()).len().saturating_sub(1))
+                    .rposition(|&x| __lookup.contains(&x))
+                    .unwrap_or(usize::MAX)
+            })
+        },)
+        {
+            (mut __tmp_1,) => filename.as_pointer().with(|__s: &Vec<i8>| {
+                let mut __tmp1 = __s
+                    [0_usize..::std::cmp::min(0_usize + __tmp_1, __s.len().saturating_sub(1))]
+                    .to_vec();
+                __tmp1.push(0);
+                __tmp1
+            }),
         };
         __tmp2.pop();
         Ptr::<i8>::from_string_literal(b".ttf").with_c_str(|__s| __tmp2.extend_from_slice(__s));
         __tmp2.push(0);
         __tmp2
     };
-    let input: Value<Vec<i8>> = Rc::new(RefCell::new(({ GetFileContent_80((filename).clone()) })));
+    let input: Value<Vec<i8>> = Rc::new(RefCell::new(
+        ({ GetFileContent_80((*filename.borrow()).clone()) }),
+    ));
     let mut raw_input: Ptr<u8> = input.decay().reinterpret_cast::<u8>();
     let output: Value<Vec<i8>> = Rc::new(RefCell::new(
         vec![
             0_i8;
             ({
-                let __tmp_0: Value<u64> = Rc::new(RefCell::new(
+                let __tmp_3: Value<u64> = Rc::new(RefCell::new(
+                    (kDefaultMaxSize_28.with(|rc| *rc.borrow()) as u64),
+                ));
+                (match (Rc::new(RefCell::new(
                     (({
                         ComputeWOFF2FinalSize_77((raw_input).clone(), ((*input.borrow()).len() - 1))
                     }) as u64),
-                ));
-                let __tmp_1: Value<u64> = Rc::new(RefCell::new(
-                    (kDefaultMaxSize_28.with(|rc| *rc.borrow()) as u64),
-                ));
-                ({
-                    let __a = __tmp_0.as_pointer();
-                    let __b = __tmp_1.as_pointer();
-                    if CppLess::less(&__b, &__a) { __b } else { __a }
+                ))
+                .as_pointer(),)
+                {
+                    (__tmp_2,) => {
+                        if CppLess::less(&__tmp_3.as_pointer(), &(__tmp_2).clone()) {
+                            __tmp_3.as_pointer()
+                        } else {
+                            (__tmp_2).clone()
+                        }
+                    }
                 }
                 .read())
             } as usize) as usize
@@ -3125,19 +3134,19 @@ impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
         if (offset > { self.buf_size_ }) || (n > ({ self.buf_size_ }).wrapping_sub(offset)) {
             return false;
         }
-        {
-            ({ self.buf_.clone() }.offset((offset) as isize) as Ptr<u8>)
-                .to_any()
-                .memcpy(&buf, n as usize);
-            ({ self.buf_.clone() }.offset((offset) as isize) as Ptr<u8>).to_any()
+        match ({ ({ self.buf_.clone() }.offset((offset) as isize) as Ptr<u8>).to_any() },) {
+            (mut __tmp_7,) => {
+                __tmp_7.memcpy(&buf, n as usize);
+                (__tmp_7).clone()
+            }
         };
         let __rhs = ({
-            let __tmp_2: Value<u64> = Rc::new(RefCell::new(({ self.offset_ } as u64)));
-            let __tmp_3: Value<u64> = Rc::new(RefCell::new(((offset).wrapping_add(n) as u64)));
-            ({
-                let __a = __tmp_2.as_pointer();
-                let __b = __tmp_3.as_pointer();
-                if CppLess::less(&__a, &__b) { __b } else { __a }
+            let __tmp_8: Value<u64> = Rc::new(RefCell::new(({ self.offset_ } as u64)));
+            let __tmp_9: Value<u64> = Rc::new(RefCell::new(((offset).wrapping_add(n) as u64)));
+            (if CppLess::less(&__tmp_8.as_pointer(), &__tmp_9.as_pointer()) {
+                __tmp_9.as_pointer()
+            } else {
+                __tmp_8.as_pointer()
             }
             .read())
         } as usize);
@@ -3160,57 +3169,61 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
             return false;
         }
         if ({ offset } == { ((*{ self.buf_.clone() }.upgrade().deref()).len() - 1) }) {
-            {
-                { self.buf_.clone() }.with_mut(|__v: &mut Vec<i8>| {
-                    __v.pop();
-                    buf.reinterpret_cast::<i8>()
-                        .with_slice(n as usize, |__s| __v.extend_from_slice(__s));
-                    __v.push(0);
-                });
-                { self.buf_.clone() }
+            match ({ { self.buf_.clone() } }, { buf.reinterpret_cast::<i8>() }) {
+                (mut __tmp_0, mut __tmp_1) => {
+                    __tmp_0.with_mut(|__v: &mut Vec<i8>| {
+                        __v.pop();
+                        __tmp_1.with_slice(n as usize, |__s| __v.extend_from_slice(__s));
+                        __v.push(0);
+                    });
+                    (__tmp_0).clone()
+                }
             };
         } else {
             if ({ (offset).wrapping_add(n) } > {
                 ((*{ self.buf_.clone() }.upgrade().deref()).len() - 1)
             }) {
-                {
-                    { self.buf_.clone() }.with_mut(|__v: &mut Vec<i8>| __v.pop());
-                    { self.buf_.clone() }.with_mut(|__v: &mut Vec<i8>| {
-                        __v.resize(
-                            (*{ self.buf_.clone() }.upgrade().deref()).len()
-                                + (((offset).wrapping_add(n) as u64).wrapping_sub(
-                                    (((*{ self.buf_.clone() }.upgrade().deref()).len() - 1) as u64),
-                                ) as usize) as usize,
-                            0_i8,
-                        )
-                    });
-                    { self.buf_.clone() }.with_mut(|__v: &mut Vec<i8>| __v.push(0));
-                    (*{ self.buf_.clone() }.upgrade().deref()).clone()
+                match ({ { self.buf_.clone() } },) {
+                    (mut __tmp_2,) => {
+                        __tmp_2.with_mut(|__v: &mut Vec<i8>| __v.pop());
+                        __tmp_2.with_mut(|__v: &mut Vec<i8>| {
+                            __v.resize(
+                                (*__tmp_2.upgrade().deref()).len()
+                                    + (((offset).wrapping_add(n) as u64).wrapping_sub(
+                                        (((*{ self.buf_.clone() }.upgrade().deref()).len() - 1)
+                                            as u64),
+                                    ) as usize) as usize,
+                                0_i8,
+                            )
+                        });
+                        __tmp_2.with_mut(|__v: &mut Vec<i8>| __v.push(0));
+                        (*__tmp_2.upgrade().deref()).clone()
+                    }
                 };
             }
-            {
-                let pos = offset as usize;
-                let end = std::cmp::min(
-                    pos + n as usize,
-                    (*{ self.buf_.clone() }.upgrade().deref())
-                        .len()
-                        .saturating_sub(1),
-                );
-                { self.buf_.clone() }.with_mut(|__v: &mut Vec<i8>| {
-                    buf.reinterpret_cast::<i8>().with_slice(n as usize, |__s| {
-                        __v.splice(pos..end, __s.iter().copied());
+            match ({ { self.buf_.clone() } }, { buf.reinterpret_cast::<i8>() }) {
+                (mut __tmp_3, mut __tmp_4) => {
+                    let pos = offset as usize;
+                    let end = std::cmp::min(
+                        pos + n as usize,
+                        (*__tmp_3.upgrade().deref()).len().saturating_sub(1),
+                    );
+                    __tmp_3.with_mut(|__v: &mut Vec<i8>| {
+                        __tmp_4.with_slice(n as usize, |__s| {
+                            __v.splice(pos..end, __s.iter().copied());
+                        });
                     });
-                });
-                { self.buf_.clone() }
+                    (__tmp_3).clone()
+                }
             };
         }
         let __rhs = ({
-            let __tmp_0: Value<u64> = Rc::new(RefCell::new(({ self.offset_ } as u64)));
-            let __tmp_1: Value<u64> = Rc::new(RefCell::new(((offset).wrapping_add(n) as u64)));
-            ({
-                let __a = __tmp_0.as_pointer();
-                let __b = __tmp_1.as_pointer();
-                if CppLess::less(&__a, &__b) { __b } else { __a }
+            let __tmp_5: Value<u64> = Rc::new(RefCell::new(({ self.offset_ } as u64)));
+            let __tmp_6: Value<u64> = Rc::new(RefCell::new(((offset).wrapping_add(n) as u64)));
+            (if CppLess::less(&__tmp_5.as_pointer(), &__tmp_6.as_pointer()) {
+                __tmp_6.as_pointer()
+            } else {
+                __tmp_5.as_pointer()
             }
             .read())
         } as usize);
@@ -3250,16 +3263,18 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
             return false;
         }
         if !(data).is_null() {
-            {
-                (data).to_any().memcpy(
-                    &((*self)
-                        .with(|__s| __s.buffer_.clone())
-                        .offset(((*self).with(|__s| __s.offset_)) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
-                    n_bytes as usize,
-                );
-                (data).to_any()
+            match ({ (data).to_any() },) {
+                (mut __tmp_0,) => {
+                    __tmp_0.memcpy(
+                        &((*self)
+                            .with(|__s| __s.buffer_.clone())
+                            .offset(((*self).with(|__s| __s.offset_)) as isize)
+                            as Ptr<u8>)
+                            .to_any(),
+                        n_bytes as usize,
+                    );
+                    (__tmp_0).clone()
+                }
             };
         }
         field!((*self), offset_).write({ ((*self).with(|__s| __s.offset_)).wrapping_add(n_bytes) });
@@ -3289,16 +3304,18 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         {
             return false;
         }
-        {
-            (value).to_any().memcpy(
-                &((*self)
-                    .with(|__s| __s.buffer_.clone())
-                    .offset(((*self).with(|__s| __s.offset_)) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
-                ::std::mem::size_of::<u16>() as usize,
-            );
-            (value).to_any()
+        match ({ (value).to_any() },) {
+            (mut __tmp_1,) => {
+                __tmp_1.memcpy(
+                    &((*self)
+                        .with(|__s| __s.buffer_.clone())
+                        .offset(((*self).with(|__s| __s.offset_)) as isize)
+                        as Ptr<u8>)
+                        .to_any(),
+                    ::std::mem::size_of::<u16>() as usize,
+                );
+                (__tmp_1).clone()
+            }
         };
         let __rhs = u16::from_be((value.read()));
         value.write(__rhs);
@@ -3344,16 +3361,18 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         {
             return false;
         }
-        {
-            (value).to_any().memcpy(
-                &((*self)
-                    .with(|__s| __s.buffer_.clone())
-                    .offset(((*self).with(|__s| __s.offset_)) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
-                ::std::mem::size_of::<u32>() as usize,
-            );
-            (value).to_any()
+        match ({ (value).to_any() },) {
+            (mut __tmp_2,) => {
+                __tmp_2.memcpy(
+                    &((*self)
+                        .with(|__s| __s.buffer_.clone())
+                        .offset(((*self).with(|__s| __s.offset_)) as isize)
+                        as Ptr<u8>)
+                        .to_any(),
+                    ::std::mem::size_of::<u32>() as usize,
+                );
+                (__tmp_2).clone()
+            }
         };
         let __rhs = u32::from_be((value.read()));
         value.write(__rhs);
@@ -3370,16 +3389,18 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         {
             return false;
         }
-        {
-            (value).to_any().memcpy(
-                &((*self)
-                    .with(|__s| __s.buffer_.clone())
-                    .offset(((*self).with(|__s| __s.offset_)) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
-                ::std::mem::size_of::<u32>() as usize,
-            );
-            (value).to_any()
+        match ({ (value).to_any() },) {
+            (mut __tmp_3,) => {
+                __tmp_3.memcpy(
+                    &((*self)
+                        .with(|__s| __s.buffer_.clone())
+                        .offset(((*self).with(|__s| __s.offset_)) as isize)
+                        as Ptr<u8>)
+                        .to_any(),
+                    ::std::mem::size_of::<u32>() as usize,
+                );
+                (__tmp_3).clone()
+            }
         };
         field!((*self), offset_).write({ ((*self).with(|__s| __s.offset_)).wrapping_add(4_usize) });
         return true;
@@ -3391,16 +3412,18 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
         {
             return false;
         }
-        {
-            (value).to_any().memcpy(
-                &((*self)
-                    .with(|__s| __s.buffer_.clone())
-                    .offset(((*self).with(|__s| __s.offset_)) as isize)
-                    as Ptr<u8>)
-                    .to_any(),
-                ::std::mem::size_of::<u64>() as usize,
-            );
-            (value).to_any()
+        match ({ (value).to_any() },) {
+            (mut __tmp_4,) => {
+                __tmp_4.memcpy(
+                    &((*self)
+                        .with(|__s| __s.buffer_.clone())
+                        .offset(((*self).with(|__s| __s.offset_)) as isize)
+                        as Ptr<u8>)
+                        .to_any(),
+                    ::std::mem::size_of::<u64>() as usize,
+                );
+                (__tmp_4).clone()
+            }
         };
         field!((*self), offset_).write({ ((*self).with(|__s| __s.offset_)).wrapping_add(8_usize) });
         return true;

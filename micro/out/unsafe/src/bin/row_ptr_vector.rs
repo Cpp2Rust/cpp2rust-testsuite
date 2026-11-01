@@ -34,7 +34,7 @@ unsafe fn main_0() -> i32 {
     'loop_: while ((i) < (N)) {
         {
             let __a1 = (0..(N as usize) as usize)
-                .map(|_| <i32>::default())
+                .map(|_| 0_i32)
                 .collect::<Vec<_>>();
             grid.push(__a1)
         };

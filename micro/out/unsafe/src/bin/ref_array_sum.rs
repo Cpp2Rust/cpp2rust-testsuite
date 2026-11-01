@@ -39,11 +39,8 @@ unsafe fn main_0() -> i32 {
     let mut out: i64 = 0_i64;
     let mut k: i32 = 0;
     'loop_: while ((k) < (35)) {
-        let mut array: Option<Box<[i32]>> = Some(
-            (0..(N as usize))
-                .map(|_| <i32>::default())
-                .collect::<Box<[_]>>(),
-        );
+        let mut array: Option<Box<[i32]>> =
+            Some((0..(N as usize)).map(|_| 0_i32).collect::<Box<[_]>>());
         (unsafe { initialize_0(&mut array, N) });
         out += (unsafe { sum_1((&mut array as *mut Option<Box<[i32]>>), N) });
         k.prefix_inc();

@@ -244,15 +244,15 @@ impl woff2_Buffer {
             return false;
         }
         if !(data).is_null() {
-            {
-                if n_bytes != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void),
-                        (data as *mut ::libc::c_void),
-                        n_bytes as usize,
-                    )
+            match ({ (data as *mut ::libc::c_void) }, {
+                (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void)
+            }) {
+                (mut __tmp_0, mut __tmp_1) => {
+                    if n_bytes != 0 {
+                        ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, n_bytes as usize)
+                    }
+                    __tmp_0
                 }
-                (data as *mut ::libc::c_void)
             };
         }
         self.offset_ = (self.offset_).wrapping_add(n_bytes);
@@ -272,15 +272,19 @@ impl woff2_Buffer {
         {
             return false;
         }
-        {
-            if ::std::mem::size_of::<u16>() != 0 {
-                ::std::ptr::copy_nonoverlapping(
-                    (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void),
-                    (value as *mut ::libc::c_void),
-                    ::std::mem::size_of::<u16>() as usize,
-                )
+        match ({ (value as *mut ::libc::c_void) }, {
+            (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void)
+        }) {
+            (mut __tmp_2, mut __tmp_3) => {
+                if ::std::mem::size_of::<u16>() != 0 {
+                    ::std::ptr::copy_nonoverlapping(
+                        __tmp_3,
+                        __tmp_2,
+                        ::std::mem::size_of::<u16>() as usize,
+                    )
+                }
+                __tmp_2
             }
-            (value as *mut ::libc::c_void)
         };
         (*value) = u16::from_be((*value));
         self.offset_ = (self.offset_).wrapping_add(2_usize);
@@ -311,15 +315,19 @@ impl woff2_Buffer {
         {
             return false;
         }
-        {
-            if ::std::mem::size_of::<u32>() != 0 {
-                ::std::ptr::copy_nonoverlapping(
-                    (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void),
-                    (value as *mut ::libc::c_void),
-                    ::std::mem::size_of::<u32>() as usize,
-                )
+        match ({ (value as *mut ::libc::c_void) }, {
+            (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void)
+        }) {
+            (mut __tmp_4, mut __tmp_5) => {
+                if ::std::mem::size_of::<u32>() != 0 {
+                    ::std::ptr::copy_nonoverlapping(
+                        __tmp_5,
+                        __tmp_4,
+                        ::std::mem::size_of::<u32>() as usize,
+                    )
+                }
+                __tmp_4
             }
-            (value as *mut ::libc::c_void)
         };
         (*value) = u32::from_be((*value));
         self.offset_ = (self.offset_).wrapping_add(4_usize);
@@ -333,15 +341,19 @@ impl woff2_Buffer {
         {
             return false;
         }
-        {
-            if ::std::mem::size_of::<u32>() != 0 {
-                ::std::ptr::copy_nonoverlapping(
-                    (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void),
-                    (value as *mut ::libc::c_void),
-                    ::std::mem::size_of::<u32>() as usize,
-                )
+        match ({ (value as *mut ::libc::c_void) }, {
+            (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void)
+        }) {
+            (mut __tmp_6, mut __tmp_7) => {
+                if ::std::mem::size_of::<u32>() != 0 {
+                    ::std::ptr::copy_nonoverlapping(
+                        __tmp_7,
+                        __tmp_6,
+                        ::std::mem::size_of::<u32>() as usize,
+                    )
+                }
+                __tmp_6
             }
-            (value as *mut ::libc::c_void)
         };
         self.offset_ = (self.offset_).wrapping_add(4_usize);
         return true;
@@ -351,15 +363,19 @@ impl woff2_Buffer {
         {
             return false;
         }
-        {
-            if ::std::mem::size_of::<u64>() != 0 {
-                ::std::ptr::copy_nonoverlapping(
-                    (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void),
-                    (value as *mut ::libc::c_void),
-                    ::std::mem::size_of::<u64>() as usize,
-                )
+        match ({ (value as *mut ::libc::c_void) }, {
+            (self.buffer_.offset((self.offset_) as isize) as *const ::libc::c_void)
+        }) {
+            (mut __tmp_8, mut __tmp_9) => {
+                if ::std::mem::size_of::<u64>() != 0 {
+                    ::std::ptr::copy_nonoverlapping(
+                        __tmp_9,
+                        __tmp_8,
+                        ::std::mem::size_of::<u64>() as usize,
+                    )
+                }
+                __tmp_8
             }
-            (value as *mut ::libc::c_void)
         };
         self.offset_ = (self.offset_).wrapping_add(8_usize);
         return true;
@@ -754,15 +770,16 @@ pub unsafe fn StoreBytes_32(
     mut offset: *mut usize,
     mut dst: *mut u8,
 ) {
-    {
-        if len != 0 {
-            ::std::ptr::copy_nonoverlapping(
-                (data as *const ::libc::c_void),
-                ((&mut (*dst.offset((*offset) as isize)) as *mut u8) as *mut ::libc::c_void),
-                len as usize,
-            )
+    match (
+        { ((&mut (*dst.offset((*offset) as isize)) as *mut u8) as *mut ::libc::c_void) },
+        { (data as *const ::libc::c_void) },
+    ) {
+        (mut __tmp_0, mut __tmp_1) => {
+            if len != 0 {
+                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len as usize)
+            }
+            __tmp_0
         }
-        ((&mut (*dst.offset((*offset) as isize)) as *mut u8) as *mut ::libc::c_void)
     };
     (*offset) = (*offset).wrapping_add(len);
 }
@@ -800,55 +817,72 @@ impl woff2_Font {
                 output_order.push(a0_clone)
             };
         }
-        let mut glyf_loc: UnsafeRandomAccessIterator<u32> = {
-            let mut __it = output_order.begin();
-            let __last = output_order.end();
-            let __value = &(*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
-            while __it != __last && *__it.iter_deref() != *__value {
-                __it.iter_inc();
-            }
-            __it
-        };
-        let mut loca_loc: UnsafeRandomAccessIterator<u32> = {
-            let mut __it = output_order.begin();
-            let __last = output_order.end();
-            let __value = &(*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2));
-            while __it != __last && *__it.iter_deref() != *__value {
-                __it.iter_inc();
-            }
-            __it
-        };
-        if (glyf_loc != output_order.end()) && (loca_loc != output_order.end()) {
-            {
-                let __it = <UnsafeRandomAccessIterator<u32>>::from((loca_loc).clone());
-                let pos = __it
-                    .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
-                    as usize;
-                output_order.remove(pos);
-                __it
-            };
-            {
-                let __it = <UnsafeRandomAccessIterator<u32>>::from(
+        let mut glyf_loc: UnsafeRandomAccessIterator<u32> =
+            match ({ output_order.begin() }, { output_order.end() }) {
+                (mut __tmp_2, mut __tmp_3) => {
+                    let mut __it = (__tmp_2).clone();
+                    while __it != __tmp_3
+                        && *__it.iter_deref()
+                            != (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0))
                     {
-                        let mut __it = output_order.begin();
-                        let __last = output_order.end();
-                        let __value =
-                            &(*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0));
-                        while __it != __last && *__it.iter_deref() != *__value {
-                            __it.iter_inc();
+                        __it.iter_inc();
+                    }
+                    __it
+                }
+            };
+        let mut loca_loc: UnsafeRandomAccessIterator<u32> =
+            match ({ output_order.begin() }, { output_order.end() }) {
+                (mut __tmp_4, mut __tmp_5) => {
+                    let mut __it = (__tmp_4).clone();
+                    while __it != __tmp_5
+                        && *__it.iter_deref()
+                            != (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2))
+                    {
+                        __it.iter_inc();
+                    }
+                    __it
+                }
+            };
+        if (glyf_loc != output_order.end()) && (loca_loc != output_order.end()) {
+            match ({ <UnsafeRandomAccessIterator<u32>>::from((loca_loc).clone()) },) {
+                (mut __tmp_6,) => {
+                    let pos = __tmp_6
+                        .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
+                        as usize;
+                    output_order.remove(pos);
+                    (__tmp_6).clone()
+                }
+            };
+            match ({
+                <UnsafeRandomAccessIterator<u32>>::from(
+                    match ({ output_order.begin() }, { output_order.end() }) {
+                        (mut __tmp_8, mut __tmp_9) => {
+                            let mut __it = (__tmp_8).clone();
+                            while __it != __tmp_9
+                                && *__it.iter_deref()
+                                    != (*std::cell::LazyCell::force_mut(
+                                        &mut *&raw mut kGlyfTableTag_0,
+                                    ))
+                            {
+                                __it.iter_inc();
+                            }
+                            __it
                         }
-                        __it
                     }
                     .iter_add(1_isize),
-                );
-                let pos = __it
-                    .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
-                    as usize;
-                output_order.insert(
-                    pos,
-                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)),
-                );
-                __it
+                )
+            },)
+            {
+                (mut __tmp_7,) => {
+                    let pos = __tmp_7
+                        .iter_distance(&UnsafeRandomAccessIterator::Vec(output_order.as_mut_ptr()))
+                        as usize;
+                    output_order.insert(
+                        pos,
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)),
+                    );
+                    (__tmp_7).clone()
+                }
             };
         }
         return std::mem::take(&mut output_order);
@@ -1051,11 +1085,11 @@ pub unsafe fn FontFileSize_38(font: *const woff2_Font) -> usize {
         let mut end_offset: usize = ((padding_size).wrapping_add(((*table).offset as usize)))
             .wrapping_add(((*table).length as usize));
         max_offset = ({
-            let mut __tmp_0: u64 = (max_offset as u64);
-            let mut __tmp_1: u64 = (end_offset as u64);
+            let mut __tmp_10: u64 = (max_offset as u64);
+            let mut __tmp_11: u64 = (end_offset as u64);
             (*{
-                let __a: *const _ = &mut __tmp_0;
-                let __b: *const _ = &mut __tmp_1;
+                let __a: *const _ = &mut __tmp_10;
+                let __b: *const _ = &mut __tmp_11;
                 if *__a < *__b { __b } else { __a }
             })
         } as usize);
@@ -1070,12 +1104,13 @@ pub unsafe fn FontCollectionFileSize_39(font_collection: *const woff2_FontCollec
     ) {
         let font: *const woff2_Font = &(*font.iter_deref());
         max_offset = ({
-            let mut __tmp_2: u64 = (max_offset as u64);
-            let mut __tmp_3: u64 = ((unsafe { FontFileSize_38(font) }) as u64);
-            (*{
-                let __a: *const _ = &mut __tmp_2;
-                let __b: *const _ = &mut __tmp_3;
-                if *__a < *__b { __b } else { __a }
+            let mut __tmp_13: u64 = (max_offset as u64);
+            (*match ((&mut ((unsafe { FontFileSize_38(font) }) as u64) as *const u64),) {
+                (__tmp_12,) => {
+                    let __a: *const _ = &mut __tmp_13;
+                    let __b: *const _ = __tmp_12;
+                    if *__a < *__b { __b } else { __a }
+                }
             })
         } as usize);
     }
@@ -1131,15 +1166,17 @@ pub unsafe fn WriteTable_43(
         {
             return false;
         }
-        {
-            if ((*table).length as usize) != 0 {
-                ::std::ptr::copy_nonoverlapping(
-                    ((*table).data as *const ::libc::c_void),
-                    (dst.offset(((*table).offset) as isize) as *mut ::libc::c_void),
-                    ((*table).length as usize) as usize,
-                )
+        match (
+            { (dst.offset(((*table).offset) as isize) as *mut ::libc::c_void) },
+            { ((*table).data as *const ::libc::c_void) },
+            { ((*table).length as usize) },
+        ) {
+            (mut __tmp_14, mut __tmp_15, mut __tmp_16) => {
+                if __tmp_16 != 0 {
+                    ::std::ptr::copy_nonoverlapping(__tmp_15, __tmp_14, __tmp_16 as usize)
+                }
+                __tmp_14
             }
-            (dst.offset(((*table).offset) as isize) as *mut ::libc::c_void)
         };
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((((*table).length) & (3_u32)))) & (3_u32)) as usize);
@@ -1152,16 +1189,18 @@ pub unsafe fn WriteTable_43(
         {
             return false;
         }
-        {
-            let byte_0 = (dst
-                .offset(((*table).offset) as isize)
-                .offset(((*table).length) as isize)
-                as *mut ::libc::c_void) as *mut u8;
-            for offset in 0..padding_size {
-                *byte_0.offset(offset as isize) = 0 as u8;
-            }
+        match ({
             (dst.offset(((*table).offset) as isize)
                 .offset(((*table).length) as isize) as *mut ::libc::c_void)
+        },)
+        {
+            (mut __tmp_17,) => {
+                let byte_0 = __tmp_17 as *mut u8;
+                for offset in 0..padding_size {
+                    *byte_0.offset(offset as isize) = 0 as u8;
+                }
+                __tmp_17
+            }
         };
     }
     return true;
@@ -1405,26 +1444,27 @@ pub unsafe fn SetFileContents_50(
             .unwrap(),
     )
     .unwrap();
-    {
-        let mut __it = (start).clone();
-        let __last = (end).clone();
-        let __out = &mut ofs;
-        let mut __bytes: Vec<u8> = Vec::new();
-        while __it != __last {
-            __bytes.push(*__it.iter_deref() as u8);
-            __it.iter_inc();
+    match ({ (end).clone() },) {
+        (mut __tmp_0,) => {
+            let mut __it = (start).clone();
+            let __out = &mut ofs;
+            let mut __bytes: Vec<u8> = Vec::new();
+            while __it != __tmp_0 {
+                __bytes.push(*__it.iter_deref() as u8);
+                __it.iter_inc();
+            }
+            __out.write_all(&__bytes);
+            __out.try_clone().unwrap()
         }
-        __out.write_all(&__bytes);
-        __out.try_clone().unwrap()
     };
 }
 pub unsafe fn PrintTag_51(mut tag: i32) -> Vec<libc::c_char> {
     if (((tag as u32) & (2155905152_u32)) != 0) {
-        return {
-            let s = c"_xfm".as_ptr();
-            std::slice::from_raw_parts(s, (0..).take_while(|&i| *s.add(i) != 0).count() + 1)
-                .to_vec()
-        };
+        return std::slice::from_raw_parts(
+            c"_xfm".as_ptr(),
+            (0..).take_while(|&i| *c"_xfm".as_ptr().add(i) != 0).count() + 1,
+        )
+        .to_vec();
     }
     let mut printable: [libc::c_char; 4] = [
         ((((tag) >> (24)) & (255)) as libc::c_char),
@@ -1465,15 +1505,18 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         });
         return 1;
     }
-    let mut filename: Vec<libc::c_char> = {
-        let s = (*argv.offset((1) as isize)).cast_const();
-        std::slice::from_raw_parts(s, (0..).take_while(|&i| *s.add(i) != 0).count() + 1).to_vec()
+    let mut filename: Vec<libc::c_char> = match ({ (*argv.offset((1) as isize)).cast_const() },) {
+        (mut __tmp_1,) => std::slice::from_raw_parts(
+            __tmp_1,
+            (0..).take_while(|&i| *__tmp_1.add(i) != 0).count() + 1,
+        )
+        .to_vec(),
     };
     let mut outfilename: Vec<libc::c_char> = {
         let mut __tmp2 = {
-            let mut __tmp1 = filename[(0_usize) as usize
+            let __range = 0_usize
                 ..::std::cmp::min(
-                    (0_usize
+                    0_usize
                         + match filename.iter().rposition(|&c| {
                             ::std::ffi::CStr::from_ptr(c".".as_ptr())
                                 .to_str()
@@ -1482,19 +1525,18 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
                         }) {
                             Some(idx) => idx,
                             None => usize::MAX,
-                        }) as usize,
-                    filename.len() - 1,
-                )]
-                .to_vec();
+                        },
+                    (*(&mut filename as *const Vec<libc::c_char>)).len() - 1,
+                );
+            let mut __tmp1 = (&*(&mut filename as *const Vec<libc::c_char>))[__range].to_vec();
             __tmp1.push(0);
             __tmp1
         }
         .clone();
         __tmp2.pop();
-        let __from = c".woff2".as_ptr();
         __tmp2.extend_from_slice(::std::slice::from_raw_parts(
-            __from,
-            (0..).position(|i| *__from.add(i) == 0).unwrap(),
+            c".woff2".as_ptr(),
+            (0..).position(|i| *c".woff2".as_ptr().add(i) == 0).unwrap(),
         ));
         __tmp2.push(0);
         __tmp2

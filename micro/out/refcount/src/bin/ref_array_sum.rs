@@ -36,12 +36,9 @@ fn main_0() -> i32 {
     let mut out: i64 = 0_i64;
     let mut k: i32 = 0;
     'loop_: while (k < 35) {
-        let array: Value<Option<Value<Box<[i32]>>>> =
-            Rc::new(RefCell::new(Some(Rc::new(RefCell::new(
-                (0..(N as usize))
-                    .map(|_| <i32>::default())
-                    .collect::<Box<[_]>>(),
-            )))));
+        let array: Value<Option<Value<Box<[i32]>>>> = Rc::new(RefCell::new(Some(Rc::new(
+            RefCell::new((0..(N as usize)).map(|_| 0_i32).collect::<Box<[_]>>()),
+        ))));
         ({ initialize_0(array.as_pointer(), N) });
         out += ({ sum_1((array.as_pointer()), N) });
         k.prefix_inc();
