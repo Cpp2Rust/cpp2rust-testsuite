@@ -2239,7 +2239,7 @@ pub fn ComputeLehmerCode_112(mut sigma: Ptr<u32>, mut len: usize, mut code: Ptr<
         };
         let __rhs = ((*it.borrow()).iter_distance(&items.decay().begin()) as u32);
         elem!(code, i).write(__rhs);
-        match ({ <RandomAccessIterator<u32>>::from((*it.borrow()).clone()) },) {
+        match ({ <RandomAccessIterator<u32>>::from(({ (*it.borrow()).clone() })) },) {
             (mut __tmp_6,) => {
                 let __off = __tmp_6.index();
                 items
@@ -3125,7 +3125,7 @@ pub fn HistogramCombine_133(
             Rc::new(RefCell::new(clusters.decay().begin()));
         'loop_: while (*cluster.borrow()) != clusters.decay().end() {
             if ((((*cluster.borrow()).iter_deref().read()) as usize) >= best_idx2) {
-                match ({ <RandomAccessIterator<u64>>::from((*cluster.borrow()).clone()) },) {
+                match ({ <RandomAccessIterator<u64>>::from(({ (*cluster.borrow()).clone() })) },) {
                     (mut __tmp_7,) => {
                         let __off = __tmp_7.index();
                         clusters
@@ -4048,7 +4048,7 @@ pub fn TransformAppMarker_153(
         TransformApp0Marker_149(_s, _out)
     }) {
         transformed_marker_count.with_mut(|__v| __v.postfix_inc());
-        return std::mem::take(&mut (*out.borrow_mut()));
+        return ({ std::mem::take(&mut (*out.borrow_mut())) });
     }
     if ({
         let _s: Ptr<Vec<u8>> = (s).clone();
@@ -4056,7 +4056,7 @@ pub fn TransformAppMarker_153(
         TransformApp2Marker_150(_s, _out)
     }) {
         transformed_marker_count.with_mut(|__v| __v.postfix_inc());
-        return std::mem::take(&mut (*out.borrow_mut()));
+        return ({ std::mem::take(&mut (*out.borrow_mut())) });
     }
     if ({
         let _s: Ptr<Vec<u8>> = (s).clone();
@@ -4064,7 +4064,7 @@ pub fn TransformAppMarker_153(
         TransformApp12Marker_151(_s, _out)
     }) {
         transformed_marker_count.with_mut(|__v| __v.postfix_inc());
-        return std::mem::take(&mut (*out.borrow_mut()));
+        return ({ std::mem::take(&mut (*out.borrow_mut())) });
     }
     if ({
         let _s: Ptr<Vec<u8>> = (s).clone();
@@ -4072,7 +4072,7 @@ pub fn TransformAppMarker_153(
         TransformApp14Marker_152(_s, _out)
     }) {
         transformed_marker_count.with_mut(|__v| __v.postfix_inc());
-        return std::mem::take(&mut (*out.borrow_mut()));
+        return ({ std::mem::take(&mut (*out.borrow_mut())) });
     }
     return (*s.upgrade().deref()).clone();
 }
@@ -6735,7 +6735,7 @@ pub fn MoveToFrontTransform_200(v: Ptr<Vec<u32>>) -> Vec<u32> {
         (*mtf.borrow_mut())[(i as usize)] = __rhs;
         i.prefix_inc();
     }
-    let mut result: Vec<u32> = (0..((*v.upgrade().deref()).len()) as usize)
+    let mut result: Vec<u32> = (0..({ (*v.upgrade().deref()).len() }) as usize)
         .map(|_| 0_u32)
         .collect::<Vec<_>>();
     let mut i: usize = 0_usize;
@@ -6767,7 +6767,7 @@ pub fn RunLengthCodeZeros_201(
     mut v_out: Ptr<Vec<u32>>,
     mut extra_bits: Ptr<Vec<u32>>,
 ) {
-    let max_reps: Value<usize> = Rc::new(RefCell::new(0_usize));
+    let mut max_reps: usize = 0_usize;
     let mut i: usize = 0_usize;
     'loop_: while ({ i } < { (*v_in.upgrade().deref()).len() }) {
         'loop_: while ({ i } < { (*v_in.upgrade().deref()).len() })
@@ -6783,7 +6783,7 @@ pub fn RunLengthCodeZeros_201(
         }
         let __rhs = ({
             let __tmp_2: Value<u64> = Rc::new(RefCell::new(((i).wrapping_sub(i0) as u64)));
-            let __tmp_3: Value<u64> = Rc::new(RefCell::new(((*max_reps.borrow()) as u64)));
+            let __tmp_3: Value<u64> = Rc::new(RefCell::new((max_reps as u64)));
             (if CppLess::less(&__tmp_2.as_pointer(), &__tmp_3.as_pointer()) {
                 __tmp_3.as_pointer()
             } else {
@@ -6791,11 +6791,11 @@ pub fn RunLengthCodeZeros_201(
             }
             .read())
         } as usize);
-        (*max_reps.borrow_mut()) = __rhs;
+        max_reps = __rhs;
     }
     let max_prefix: Value<u32> = Rc::new(RefCell::new(
-        (if ((*max_reps.borrow()) > 0_usize) {
-            ({ Log2FloorNonZero_74(((*max_reps.borrow()) as u32)) })
+        (if (max_reps > 0_usize) {
+            ({ Log2FloorNonZero_74((max_reps as u32)) })
         } else {
             0
         } as u32),
@@ -6844,7 +6844,7 @@ pub fn RunLengthCodeZeros_201(
                     break;
                 } else {
                     {
-                        let a0_clone = (*max_prefix.borrow()).clone();
+                        let a0_clone = ({ (*max_prefix.borrow()) }).clone();
                         v_out.with_mut(|__v: &mut Vec<u32>| __v.push(a0_clone))
                     };
                     {
@@ -8555,7 +8555,7 @@ pub fn ProcessSOF_235(
         {
             (__tmp_0,) => {
                 (*__tmp_0.upgrade().deref()).write(true);
-                (*__tmp_0.upgrade().deref()).clone()
+                ({ (*__tmp_0.upgrade().deref()).clone() })
             }
         };
         field!(vec_elem!(jpg, components, i), id).write(id);
@@ -8734,7 +8734,7 @@ pub fn ProcessSOS_236(
         {
             (__tmp_1,) => {
                 (*__tmp_1.upgrade().deref()).write(true);
-                (*__tmp_1.upgrade().deref()).clone()
+                ({ (*__tmp_1.upgrade().deref()).clone() })
             }
         };
         let mut found_index: bool = false;
@@ -9036,7 +9036,7 @@ pub fn ProcessDHT_237(
             {
                 (__tmp_2,) => {
                     (*__tmp_2.upgrade().deref()).write(true);
-                    (*__tmp_2.upgrade().deref()).clone()
+                    ({ (*__tmp_2.upgrade().deref()).clone() })
                 }
             };
             vec_elem!(huff.as_pointer(), values, (i as usize)).write((value as i32));
@@ -10281,7 +10281,7 @@ pub fn ReadJpeg_196(
                 {
                     (mut __tmp_6,) => {
                         let mut __v = Vec::new();
-                        let mut __it = data.offset((*pos.borrow()) as isize);
+                        let mut __it = ({ data.offset((*pos.borrow()) as isize) });
                         while __it != __tmp_6 {
                             __v.push((__it.iter_deref().read()));
                             __it.iter_inc();
@@ -10454,7 +10454,7 @@ pub fn ReadJpeg_196(
                 match ({ data.offset((len) as isize) },) {
                     (mut __tmp_7,) => {
                         let mut __v = Vec::new();
-                        let mut __it = data.offset((*pos.borrow()) as isize);
+                        let mut __it = ({ data.offset((*pos.borrow()) as isize) });
                         while __it != __tmp_7 {
                             __v.push((__it.iter_deref().read()));
                             __it.iter_inc();
@@ -10639,21 +10639,20 @@ pub fn ReadFileInternal_253(mut file: Ptr<CFile>, mut content: Ptr<Vec<i8>>) -> 
     };
     let mut read_pos: usize = 0_usize;
     'loop_: while ({ read_pos } < { ((*content.upgrade().deref()).len() - 1) }) {
-        let mut bytes_read: usize = {
-            // Computing the arguments first ends their borrows of what the call writes.
-            let __a0 =
-                ((if read_pos as usize >= (*content.upgrade().deref()).len().saturating_sub(1) {
-                    panic!("out of bounds access")
-                } else {
-                    content.decay().offset(read_pos as isize)
-                }) as Ptr<i8>)
-                    .to_any();
-            let __a1 = 1_usize;
-            let __a2 = ((((*content.upgrade().deref()).len() - 1) as u64)
-                .wrapping_sub((read_pos as u64)) as usize);
-            let __a3 = (file).clone();
-            libcc2rs::fread_refcount(__a0, __a1, __a2, __a3)
-        };
+        let mut bytes_read: usize = libcc2rs::fread_refcount(
+            ((if read_pos as usize >= (*content.upgrade().deref()).len().saturating_sub(1) {
+                panic!("out of bounds access")
+            } else {
+                content.decay().offset(read_pos as isize)
+            }) as Ptr<i8>)
+                .to_any(),
+            1_usize,
+            ({
+                ((((*content.upgrade().deref()).len() - 1) as u64).wrapping_sub((read_pos as u64))
+                    as usize)
+            }),
+            (file).clone(),
+        );
         if (bytes_read == 0_usize) {
             eprintln!("Failed to read input file");
             return false;
@@ -10691,15 +10690,15 @@ pub fn ReadFile_254(file_name: Ptr<Vec<i8>>, mut content: Ptr<Vec<i8>>) -> bool 
 pub fn WriteFileInternal_255(mut file: Ptr<CFile>, content: Ptr<Vec<i8>>) -> bool {
     let mut write_pos: usize = 0_usize;
     'loop_: while ({ write_pos } < { ((*content.upgrade().deref()).len() - 1) }) {
-        let mut bytes_written: usize = {
-            // Computing the arguments first ends their borrows of what the call writes.
-            let __a0 = ((content.decay().offset(write_pos)) as Ptr<i8>).to_any();
-            let __a1 = 1_usize;
-            let __a2 = ((((*content.upgrade().deref()).len() - 1) as u64)
-                .wrapping_sub((write_pos as u64)) as usize);
-            let __a3 = (file).clone();
-            libcc2rs::fwrite_refcount(__a0, __a1, __a2, __a3)
-        };
+        let mut bytes_written: usize = libcc2rs::fwrite_refcount(
+            ((content.decay().offset(write_pos)) as Ptr<i8>).to_any(),
+            1_usize,
+            ({
+                ((((*content.upgrade().deref()).len() - 1) as u64).wrapping_sub((write_pos as u64))
+                    as usize)
+            }),
+            (file).clone(),
+        );
         if (bytes_written == 0_usize) {
             eprintln!("Failed to write output.");
             return false;
@@ -10774,7 +10773,7 @@ pub fn ProcessFile_257(file_name: Ptr<Vec<i8>>, outfile_name: Ptr<Vec<i8>>) -> b
         ));
         {
             (*output.borrow_mut()).pop();
-            (*output.borrow_mut()).resize((*output_size.borrow()) as usize, 0);
+            (*output.borrow_mut()).resize(({ (*output_size.borrow()) }) as usize, 0);
             (*output.borrow_mut()).push(0)
         };
         let mut output_data: Ptr<u8> = (output.decay().offset(0_usize)).reinterpret_cast::<u8>();
@@ -10791,7 +10790,7 @@ pub fn ProcessFile_257(file_name: Ptr<Vec<i8>>, outfile_name: Ptr<Vec<i8>>) -> b
         }
         {
             (*output.borrow_mut()).pop();
-            (*output.borrow_mut()).resize((*output_size.borrow()) as usize, 0);
+            (*output.borrow_mut()).resize(({ (*output_size.borrow()) }) as usize, 0);
             (*output.borrow_mut()).push(0)
         };
     }
@@ -10837,7 +10836,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
     }
     let outfile_name: Value<Vec<i8>> = Rc::new(RefCell::new(if (argc == 2) {
         {
-            let mut r = (*file_name.borrow()).clone();
+            let mut r = ({ (*file_name.borrow()).clone() });
             r.pop();
             Ptr::<i8>::from_string_literal(b".brn").with_c_str(|__s| r.extend_from_slice(__s));
             r.push(0);
@@ -11396,7 +11395,7 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         let values: Value<Vec<u8>> = Rc::new(RefCell::new(values));
         field_ref!((*self), values_)
             .as_pointer()
-            .write(std::mem::take(&mut (*values.borrow_mut())));
+            .write(({ std::mem::take(&mut (*values.borrow_mut())) }));
     }
     fn Clear(&self) {
         field!((*self), values_).with_mut(|__b0| std::mem::swap(&mut Vec::new(), &mut (*__b0)));
@@ -11467,7 +11466,7 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
         code.write(__rhs);
         let __rhs = ({ brunsli_PermutationCoderImpl::num_bits(self) });
         nbits.write(__rhs);
-        match ({ <RandomAccessIterator<u8>>::from((*it.borrow()).clone()) },) {
+        match ({ <RandomAccessIterator<u8>>::from(({ (*it.borrow()).clone() })) },) {
             (mut __tmp_3,) => {
                 let __off = __tmp_3.index();
                 field_ref!((*self), values_)
@@ -11946,7 +11945,7 @@ impl brunsli_internal_enc_EntropyCodesImpl for Ptr<brunsli_internal_enc_EntropyC
     }
     fn BuildAndStoreEntropyCodes(&self, mut storage: Ptr<brunsli_Storage>) {
         {
-            let __a0 = (*(*self).upgrade().deref()).clustered_.len() as usize;
+            let __a0 = ({ (*(*self).upgrade().deref()).clustered_.len() }) as usize;
             field!((*self), ans_tables_).with_mut(|__v: &mut Vec<brunsli_ANSTable>| {
                 __v.resize_with(__a0, || <brunsli_ANSTable>::default())
             })

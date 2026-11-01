@@ -772,13 +772,13 @@ pub fn ReadTrueTypeCollection_35(
             return false;
         }
         {
-            let a0_clone = (*offset.borrow()).clone();
+            let a0_clone = ({ (*offset.borrow()) }).clone();
             (*offsets.borrow_mut()).push(a0_clone)
         };
         i.postfix_inc();
     }
     {
-        let __a0 = (*offsets.borrow()).len() as usize;
+        let __a0 = ({ (*offsets.borrow()).len() }) as usize;
         field!(font_collection, fonts)
             .with_mut(|__v: &mut Vec<woff2_Font>| __v.resize_with(__a0, || <woff2_Font>::default()))
     };
@@ -843,11 +843,9 @@ pub fn ReadFontCollection_37(
     return ({ ReadTrueTypeCollection_35((file.as_pointer()), data, len, font_collection) });
 }
 pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
-    let max_offset: Value<usize> = Rc::new(RefCell::new(
-        (((12_u64 as u64)
-            .wrapping_add((16_u64 as u64).wrapping_mul((font.with(|__s| __s.num_tables) as u64))))
-            as usize),
-    ));
+    let mut max_offset: usize = (((12_u64 as u64)
+        .wrapping_add((16_u64 as u64).wrapping_mul((font.with(|__s| __s.num_tables) as u64))))
+        as usize);
     'loop_: for i in IterRange::new(
         field_ptr!(font, tables)
             .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.begin()),
@@ -858,13 +856,12 @@ pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
         let table: Ptr<woff2_Font_Table> = (*i.upgrade().deref()).1.as_pointer();
         let mut padding_size: usize =
             ((((4_u32).wrapping_sub((table.with(|__s| __s.length) & 3_u32))) & 3_u32) as usize);
-        let end_offset: Value<usize> = Rc::new(RefCell::new(
-            ((padding_size).wrapping_add((table.with(|__s| __s.offset) as usize)))
-                .wrapping_add((table.with(|__s| __s.length) as usize)),
-        ));
+        let mut end_offset: usize = ((padding_size)
+            .wrapping_add((table.with(|__s| __s.offset) as usize)))
+        .wrapping_add((table.with(|__s| __s.length) as usize));
         let __rhs = ({
-            let __tmp_9: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
-            let __tmp_10: Value<u64> = Rc::new(RefCell::new(((*end_offset.borrow()) as u64)));
+            let __tmp_9: Value<u64> = Rc::new(RefCell::new((max_offset as u64)));
+            let __tmp_10: Value<u64> = Rc::new(RefCell::new((end_offset as u64)));
             (if CppLess::less(&__tmp_9.as_pointer(), &__tmp_10.as_pointer()) {
                 __tmp_10.as_pointer()
             } else {
@@ -872,19 +869,19 @@ pub fn FontFileSize_38(font: Ptr<woff2_Font>) -> usize {
             }
             .read())
         } as usize);
-        (*max_offset.borrow_mut()) = __rhs;
+        max_offset = __rhs;
     }
-    return (*max_offset.borrow());
+    return max_offset;
 }
 pub fn FontCollectionFileSize_39(font_collection: Ptr<woff2_FontCollection>) -> usize {
-    let max_offset: Value<usize> = Rc::new(RefCell::new(0_usize));
+    let mut max_offset: usize = 0_usize;
     'loop_: for font in IterRange::new(
         field_ref!(font_collection, fonts).decay().begin(),
         field_ref!(font_collection, fonts).decay().end(),
     ) {
         let font: Ptr<woff2_Font> = font.iter_deref();
         let __rhs = ({
-            let __tmp_12: Value<u64> = Rc::new(RefCell::new(((*max_offset.borrow()) as u64)));
+            let __tmp_12: Value<u64> = Rc::new(RefCell::new((max_offset as u64)));
             (match (
                 Rc::new(RefCell::new((({ FontFileSize_38((font).clone()) }) as u64))).as_pointer(),
             ) {
@@ -898,9 +895,9 @@ pub fn FontCollectionFileSize_39(font_collection: Ptr<woff2_FontCollection>) -> 
             }
             .read())
         } as usize);
-        (*max_offset.borrow_mut()) = __rhs;
+        max_offset = __rhs;
     }
-    return (*max_offset.borrow());
+    return max_offset;
 }
 pub fn WriteFont_40(font: Ptr<woff2_Font>, mut dst: Ptr<u8>, mut dst_size: usize) -> bool {
     let offset: Value<usize> = Rc::new(RefCell::new(0_usize));
@@ -1257,11 +1254,7 @@ pub fn RemoveDigitalSignature_48(mut font: Ptr<woff2_Font>) -> bool {
         != field_ptr!(font, tables)
             .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end())
     {
-        {
-            // The block ends the borrow of the iterator, e.g., in it = m.erase(it).
-            let __it = (*it.borrow()).clone();
-            Map::erase(field_ptr!(font, tables), &__it)
-        };
+        Map::erase(field_ptr!(font, tables), &({ (*it.borrow()).clone() }));
         let __rhs = ((*font.upgrade().deref()).tables.len() as u16);
         field!(font, num_tables).write(__rhs);
     }
@@ -1295,7 +1288,7 @@ pub fn SetFileContents_50(
     ));
     match ({ (*end.borrow()).clone() },) {
         (mut __tmp_0,) => {
-            let mut __it = (*start.borrow()).clone();
+            let mut __it = ({ (*start.borrow()).clone() });
             let __out = &mut (*ofs.borrow_mut());
             let mut __bytes: Vec<u8> = Vec::new();
             while __it != __tmp_0 {
@@ -1492,7 +1485,7 @@ fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
             });
         }
         {
-            let a0_clone = (*tag.borrow()).clone();
+            let a0_clone = ({ (*tag.borrow()) }).clone();
             table_tags.push(a0_clone)
         };
         if !({ ReadBase128_17((file.as_pointer()), (origLength.as_pointer())) }) {
@@ -1907,7 +1900,7 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
         if ((*glyf_loc.borrow()) != output_order.decay().end())
             && ((*loca_loc.borrow()) != output_order.decay().end())
         {
-            match ({ <RandomAccessIterator<u32>>::from((*loca_loc.borrow()).clone()) },) {
+            match ({ <RandomAccessIterator<u32>>::from(({ (*loca_loc.borrow()).clone() })) },) {
                 (mut __tmp_5,) => {
                     let __off = __tmp_5.index();
                     output_order
@@ -1946,7 +1939,7 @@ impl woff2_FontImpl for Ptr<woff2_Font> {
                 }
             };
         }
-        return std::mem::take(&mut (*output_order.borrow_mut()));
+        return ({ std::mem::take(&mut (*output_order.borrow_mut())) });
     }
 }
 pub trait woff2_FontCollectionImpl {
