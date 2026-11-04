@@ -135,7 +135,7 @@ pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_PRECISION: brunsli_JPEGReadErr
 pub struct brunsli_JPEGQuantTable {
     #[offset(0)]
     #[byte_size(256)]
-    pub values: Vec<i32>,
+    pub values: Box<[i32]>,
     #[offset(256)]
     pub precision: i32,
     #[offset(260)]
@@ -147,7 +147,7 @@ impl Default for brunsli_JPEGQuantTable {
     fn default() -> Self {
         {
             brunsli_JPEGQuantTable {
-                values: std::array::from_fn::<_, 64, _>(|_| 0_i32).to_vec(),
+                values: Box::<[i32]>::from(std::array::from_fn::<_, 64, _>(|_| 0_i32)),
                 precision: 0,
                 index: 0,
                 is_last: true,
@@ -160,10 +160,10 @@ impl Default for brunsli_JPEGQuantTable {
 pub struct brunsli_JPEGHuffmanCode {
     #[offset(0)]
     #[byte_size(68)]
-    pub counts: Vec<i32>,
+    pub counts: Box<[i32]>,
     #[offset(68)]
     #[byte_size(1028)]
-    pub values: Vec<i32>,
+    pub values: Box<[i32]>,
     #[offset(1096)]
     pub slot_id: i32,
     #[offset(1100)]
@@ -173,8 +173,8 @@ impl Default for brunsli_JPEGHuffmanCode {
     fn default() -> Self {
         {
             brunsli_JPEGHuffmanCode {
-                counts: std::array::from_fn::<_, 17, _>(|_| 0_i32).to_vec(),
-                values: std::array::from_fn::<_, 257, _>(|_| 0_i32).to_vec(),
+                counts: Box::<[i32]>::from(std::array::from_fn::<_, 17, _>(|_| 0_i32)),
+                values: Box::<[i32]>::from(std::array::from_fn::<_, 257, _>(|_| 0_i32)),
                 slot_id: 0,
                 is_last: true,
             }
@@ -214,7 +214,7 @@ pub struct brunsli_JPEGScanInfo {
     pub num_components: usize,
     #[offset(24)]
     #[byte_size(48)]
-    pub components: Vec<brunsli_JPEGComponentScanInfo>,
+    pub components: Box<[brunsli_JPEGComponentScanInfo]>,
     #[offset(72)]
     #[byte_size(24)]
     pub reset_points: Vec<i32>,
@@ -230,7 +230,9 @@ impl brunsli_JPEGScanInfo {
             Ah: { (*_a0.upgrade().deref()).Ah },
             Al: { (*_a0.upgrade().deref()).Al },
             num_components: { (*_a0.upgrade().deref()).num_components },
-            components: field!(_a0, components).with_mut(std::mem::take),
+            components: (0..4)
+                .map(|__i| field_ref!(_a0, components).decay().offset(__i).read())
+                .collect(),
             reset_points: field!(_a0, reset_points).with_mut(std::mem::take),
             extra_zero_runs: field!(_a0, extra_zero_runs).with_mut(std::mem::take),
         }
@@ -245,10 +247,13 @@ impl Default for brunsli_JPEGScanInfo {
                 Ah: 0_i32,
                 Al: 0_i32,
                 num_components: 0_usize,
-                components: std::array::from_fn::<_, 4, _>(|_| {
+                components: Box::<[brunsli_JPEGComponentScanInfo]>::from(std::array::from_fn::<
+                    _,
+                    4,
+                    _,
+                >(|_| {
                     <brunsli_JPEGComponentScanInfo>::default()
-                })
-                .to_vec(),
+                })),
                 reset_points: Default::default(),
                 extra_zero_runs: Default::default(),
             }
@@ -3499,10 +3504,10 @@ pub struct brunsli_internal_enc_ComponentMeta {
     pub block_state: Ptr<u8>,
     #[offset(72)]
     #[byte_size(256)]
-    pub num_zeros: Vec<i32>,
+    pub num_zeros: Box<[i32]>,
     #[offset(328)]
     #[byte_size(256)]
-    pub quant: Vec<i32>,
+    pub quant: Box<[i32]>,
 }
 impl Default for brunsli_internal_enc_ComponentMeta {
     fn default() -> Self {
@@ -3521,8 +3526,8 @@ impl Default for brunsli_internal_enc_ComponentMeta {
                 ac_coeffs: Ptr::<i16>::null(),
                 dc_prediction_errors: Ptr::<i16>::null(),
                 block_state: Ptr::<u8>::null(),
-                num_zeros: std::array::from_fn::<_, 64, _>(|_| 0_i32).to_vec(),
-                quant: std::array::from_fn::<_, 64, _>(|_| 0_i32).to_vec(),
+                num_zeros: Box::<[i32]>::from(std::array::from_fn::<_, 64, _>(|_| 0_i32)),
+                quant: Box::<[i32]>::from(std::array::from_fn::<_, 64, _>(|_| 0_i32)),
             }
         }
     }
@@ -4086,7 +4091,7 @@ pub fn GetQuantTableId_154(
         let mut match_found: bool = true;
         let mut k: i32 = 0;
         'loop_: while (match_found) && (k < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
-            if ({ (vec_elem!(q, values, (k as usize)).read()) } != {
+            if ({ (elem!(field_ref!(q, values).decay(), (k as usize)).read()) } != {
                 (({
                     let __idx0 = (is_chroma) as usize;
                     let __idx1 = (j) as usize;
@@ -4181,7 +4186,7 @@ pub fn EncodeQuantTables_157(
                 let __idx0 = (k) as usize;
                 kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
             }) as i32);
-            if ((vec_elem!(q, values, (j as usize)).read()) == 0) {
+            if ((elem!(field_ref!(q, values).decay(), (j as usize)).read()) == 0) {
                 return false;
             }
             k.prefix_inc();
@@ -4230,9 +4235,9 @@ pub fn EncodeQuantTables_157(
                     let __idx0 = (k) as usize;
                     kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
                 }) as i32);
-                let mut new_diff: i32 = ({ (vec_elem!(q, values, (j as usize)).read()) } - {
-                    ((*quant_approx.borrow())[(j) as usize] as i32)
-                });
+                let mut new_diff: i32 = ({
+                    (elem!(field_ref!(q, values).decay(), (j as usize)).read())
+                } - { ((*quant_approx.borrow())[(j) as usize] as i32) });
                 let mut diff: i32 = (new_diff - last_diff);
                 last_diff = new_diff;
                 ({ WriteBits_120(1_usize, ((diff != 0) as u64), (storage).clone()) });
@@ -4376,19 +4381,20 @@ pub fn EncodeHuffmanCode_158(
         ({ WriteBits_120(1_usize, (stock_table_idx as u64), (storage).clone()) });
         return true;
     }
-    'loop_: while (max_len > 0) && ((vec_elem!(huff, counts, (max_len as usize)).read()) == 0) {
+    'loop_: while (max_len > 0)
+        && ((elem!(field_ref!(huff, counts).decay(), (max_len as usize)).read()) == 0)
+    {
         max_len.prefix_dec();
     }
-    if ((vec_elem!(huff, counts, 0_usize).read()) != 0) || (max_len == 0) {
+    if ((elem!(field_ref!(huff, counts).decay(), 0_usize).read()) != 0) || (max_len == 0) {
         return false;
     }
     ({ WriteBits_120(4_usize, ((max_len - 1) as u64), (storage).clone()) });
     space -= (1 << (kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) - max_len));
     let mut i: i32 = 1;
     'loop_: while (i <= max_len) {
-        let mut count: i32 = ({ (vec_elem!(huff, counts, (i as usize)).read()) } - {
-            (if (i == max_len) { 1 } else { 0 })
-        });
+        let mut count: i32 = ({ (elem!(field_ref!(huff, counts).decay(), (i as usize)).read()) }
+            - { (if (i == max_len) { 1 } else { 0 }) });
         let mut count_limit: i32 = {
             let __tmp_13: Value<i32> = Rc::new(RefCell::new(
                 (space >> (kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) - i)),
@@ -4413,7 +4419,7 @@ pub fn EncodeHuffmanCode_158(
         }
         i.prefix_inc();
     }
-    if ({ (vec_elem!(huff, values, (total_count as usize)).read()) } != {
+    if ({ (elem!(field_ref!(huff, values).decay(), (total_count as usize)).read()) } != {
         kJpegHuffmanAlphabetSize_8.with(|rc| *rc.borrow())
     }) {
         return false;
@@ -4451,7 +4457,7 @@ pub fn EncodeHuffmanCode_158(
     });
     let mut i: i32 = 0;
     'loop_: while (i < total_count) {
-        let mut val: i32 = (vec_elem!(huff, values, (i as usize)).read());
+        let mut val: i32 = (elem!(field_ref!(huff, values).decay(), (i as usize)).read());
         let code: Value<i32> = Rc::new(RefCell::new(0_i32));
         let nbits: Value<i32> = Rc::new(RefCell::new(0_i32));
         if !({
@@ -4767,7 +4773,7 @@ pub fn EncodeAuxData_162(jpg: Ptr<brunsli_JPEGData>, mut storage: Ptr<brunsli_St
     return true;
 }
 impl brunsli_internal_enc_Histogram {}
-pub fn ComputeCoeffOrder_163(num_zeros: Ptr<Vec<i32>>, mut order: Ptr<u32>) {
+pub fn ComputeCoeffOrder_163(num_zeros: Ptr<Box<[i32]>>, mut order: Ptr<u32>) {
     let pos_and_val: Value<Vec<(Value<i32>, Value<i32>)>> = Rc::new(RefCell::new(
         (0..(kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize) as usize)
             .map(|_| (Rc::new(RefCell::new(0_i32)), Rc::new(RefCell::new(0_i32))))
@@ -4777,8 +4783,8 @@ pub fn ComputeCoeffOrder_163(num_zeros: Ptr<Vec<i32>>, mut order: Ptr<u32>) {
     'loop_: while (i < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
         let __rhs = i;
         (*(*pos_and_val.borrow())[(i as usize)].0.borrow_mut()) = __rhs;
-        let __rhs = (index!(
-            num_zeros,
+        let __rhs = (elem!(
+            num_zeros.decay(),
             (({
                 let __idx0 = (i) as usize;
                 kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
@@ -5393,7 +5399,7 @@ pub fn SampleNumNonZeros_181(mut m: Ptr<brunsli_internal_enc_ComponentMeta>) -> 
     let mut coeffs: Ptr<i16> = m.with(|__s| __s.ac_coeffs.clone());
     let mut stride: usize = (m.with(|__s| __s.ac_stride) as usize);
     let mut width_in_blocks: usize = (m.with(|__s| __s.width_in_blocks) as usize);
-    let num_zeros: Ptr<Vec<i32>> = field_ref!(m, num_zeros).as_pointer();
+    let num_zeros: Ptr<Box<[i32]>> = field_ref!(m, num_zeros).as_pointer();
     let mut total_nonzeros: usize = 0_usize;
     let mut i: usize = 0_usize;
     'loop_: while (i < num_blocks) {
@@ -5405,7 +5411,7 @@ pub fn SampleNumNonZeros_181(mut m: Ptr<brunsli_internal_enc_ComponentMeta>) -> 
         let mut k: usize = 0_usize;
         'loop_: while (k < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
             if (((elem!(block, k).read()) as i32) == 0) {
-                index!(num_zeros, k).with_mut(|__v| __v.prefix_inc());
+                elem!(num_zeros.decay(), k).with_mut(|__v| __v.prefix_inc());
             }
             k.prefix_inc();
         }
@@ -5416,12 +5422,13 @@ pub fn SampleNumNonZeros_181(mut m: Ptr<brunsli_internal_enc_ComponentMeta>) -> 
     let mut i: usize = 0_usize;
     'loop_: while (i < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
         {
-            let rhs_0 = (total_nonzeros).wrapping_sub(((index!(num_zeros, i).read()) as usize));
+            let rhs_0 =
+                (total_nonzeros).wrapping_sub(((elem!(num_zeros.decay(), i).read()) as usize));
             total_nonzeros = rhs_0
         };
         i.prefix_inc();
     }
-    index!(num_zeros, 0_usize).write(0);
+    elem!(num_zeros.decay(), 0_usize).write(0);
     return (total_nonzeros).wrapping_mul((kStride_182.with(|rc| *rc.borrow()) as usize));
 }
 pub fn SelectContextBits_183(mut num_symbols: usize) -> i32 {
@@ -8742,7 +8749,10 @@ pub fn ProcessSOS_236(
         'loop_: while ({ j } < { (*jpg.upgrade().deref()).components.len() }) {
             if ({ vec_elem!(jpg, components, j).with(|__s| __s.id) } == { id }) {
                 field!(
-                    vec_elem!(scan_info.as_pointer(), components, (i as usize)),
+                    elem!(
+                        field_ref!(scan_info.as_pointer(), components).decay(),
+                        (i as usize)
+                    ),
                     comp_idx
                 )
                 .write((j as u8));
@@ -8773,12 +8783,18 @@ pub fn ProcessSOS_236(
             return false;
         };
         field!(
-            vec_elem!(scan_info.as_pointer(), components, (i as usize)),
+            elem!(
+                field_ref!(scan_info.as_pointer(), components).decay(),
+                (i as usize)
+            ),
             dc_tbl_idx
         )
         .write(dc_tbl_idx);
         field!(
-            vec_elem!(scan_info.as_pointer(), components, (i as usize)),
+            elem!(
+                field_ref!(scan_info.as_pointer(), components).decay(),
+                (i as usize)
+            ),
             ac_tbl_idx
         )
         .write(ac_tbl_idx);
@@ -8834,13 +8850,19 @@ pub fn ProcessSOS_236(
         'loop_: while ({ j } < { (*jpg.upgrade().deref()).huffman_code.len() }) {
             let mut slot_id: i32 = vec_elem!(jpg, huffman_code, j).with(|__s| __s.slot_id);
             if (slot_id
-                == vec_elem!(scan_info.as_pointer(), components, (i as usize))
-                    .with(|__s| __s.dc_tbl_idx))
+                == elem!(
+                    field_ref!(scan_info.as_pointer(), components).decay(),
+                    (i as usize)
+                )
+                .with(|__s| __s.dc_tbl_idx))
             {
                 found_dc_table = true;
             } else if (slot_id
-                == (vec_elem!(scan_info.as_pointer(), components, (i as usize))
-                    .with(|__s| __s.ac_tbl_idx)
+                == (elem!(
+                    field_ref!(scan_info.as_pointer(), components).decay(),
+                    (i as usize)
+                )
+                .with(|__s| __s.ac_tbl_idx)
                     + 16))
             {
                 found_ac_table = true;
@@ -8851,8 +8873,11 @@ pub fn ProcessSOS_236(
             write!(
                 libcc2rs::cerr(),
                 "SOS marker: Could not find DC Huffman table with index {:}\n",
-                vec_elem!(scan_info.as_pointer(), components, (i as usize))
-                    .with(|__s| __s.dc_tbl_idx),
+                elem!(
+                    field_ref!(scan_info.as_pointer(), components).decay(),
+                    (i as usize)
+                )
+                .with(|__s| __s.dc_tbl_idx),
             );
             field!(jpg, error).write(brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND);
             return false;
@@ -8861,8 +8886,11 @@ pub fn ProcessSOS_236(
             write!(
                 libcc2rs::cerr(),
                 "SOS marker: Could not find AC Huffman table with index {:}\n",
-                vec_elem!(scan_info.as_pointer(), components, (i as usize))
-                    .with(|__s| __s.ac_tbl_idx),
+                elem!(
+                    field_ref!(scan_info.as_pointer(), components).decay(),
+                    (i as usize)
+                )
+                .with(|__s| __s.ac_tbl_idx),
             );
             field!(jpg, error).write(brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND);
             return false;
@@ -8962,7 +8990,7 @@ pub fn ProcessDHT_237(
                 ((huffman_index * kJpegHuffmanLutSize_231.with(|rc| *rc.borrow())) as usize),
             ));
         }
-        vec_elem!(huff.as_pointer(), counts, 0_usize).write(0);
+        elem!(field_ref!(huff.as_pointer(), counts).decay(), 0_usize).write(0);
         let mut total_count: i32 = 0;
         let mut space: i32 = (1 << kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()));
         let mut max_depth: i32 = 1;
@@ -8972,7 +9000,7 @@ pub fn ProcessDHT_237(
             if (count != 0) {
                 max_depth = i;
             }
-            vec_elem!(huff.as_pointer(), counts, (i as usize)).write(count);
+            elem!(field_ref!(huff.as_pointer(), counts).decay(), (i as usize)).write(count);
             total_count += count;
             space -= (count * (1 << (kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) - i)));
             i.prefix_inc();
@@ -9039,12 +9067,20 @@ pub fn ProcessDHT_237(
                     ({ (*__tmp_2.upgrade().deref()).clone() })
                 }
             };
-            vec_elem!(huff.as_pointer(), values, (i as usize)).write((value as i32));
+            elem!(field_ref!(huff.as_pointer(), values).decay(), (i as usize))
+                .write((value as i32));
             i.prefix_inc();
         }
-        vec_elem!(huff.as_pointer(), counts, (max_depth as usize)).with_mut(|__v| __v.prefix_inc());
-        vec_elem!(huff.as_pointer(), values, (total_count as usize))
-            .write(kJpegHuffmanAlphabetSize_8.with(|rc| *rc.borrow()));
+        elem!(
+            field_ref!(huff.as_pointer(), counts).decay(),
+            (max_depth as usize)
+        )
+        .with_mut(|__v| __v.prefix_inc());
+        elem!(
+            field_ref!(huff.as_pointer(), values).decay(),
+            (total_count as usize)
+        )
+        .write(kJpegHuffmanAlphabetSize_8.with(|rc| *rc.borrow()));
         space -= (1 << (kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) - max_depth));
         if (space < 0) {
             write!(libcc2rs::cerr(), "Invalid Huffman code lengths.\n",);
@@ -9185,9 +9221,8 @@ pub fn ProcessDQT_239(
                 field!(jpg, error).write(brunsli_JPEGReadError_INVALID_QUANT_VAL);
                 return false;
             };
-            vec_elem!(
-                table.as_pointer(),
-                values,
+            elem!(
+                field_ref!(table.as_pointer(), values).decay(),
                 (({
                     let __idx0 = (i) as usize;
                     kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
@@ -9843,9 +9878,10 @@ pub fn ProcessScan_248(
         MCUs_per_row = jpg.with(|__s| __s.MCU_cols);
         MCU_rows = jpg.with(|__s| __s.MCU_rows);
     } else {
-        let c: Ptr<brunsli_JPEGComponent> = field_ref!(jpg, components)
-            .decay()
-            .offset((vec_elem!(scan_info, components, 0_usize).with(|__s| __s.comp_idx) as usize));
+        let c: Ptr<brunsli_JPEGComponent> = field_ref!(jpg, components).decay().offset(
+            (elem!(field_ref!(scan_info, components).decay(), 0_usize).with(|__s| __s.comp_idx)
+                as usize),
+        );
         MCUs_per_row = ({
             let _a: i32 = ({ jpg.with(|__s| __s.width) } * { c.with(|__s| __s.h_samp_factor) });
             let _b: i32 = (8 * jpg.with(|__s| __s.max_h_samp_factor));
@@ -9897,7 +9933,7 @@ pub fn ProcessScan_248(
     let mut i: usize = 0_usize;
     'loop_: while ({ i } < { scan_info.with(|__s| __s.num_components) }) {
         let mut comp_idx: i32 =
-            (vec_elem!(scan_info, components, i).with(|__s| __s.comp_idx) as i32);
+            (elem!(field_ref!(scan_info, components).decay(), i).with(|__s| __s.comp_idx) as i32);
         let mut k: i32 = Ss;
         'loop_: while (k <= Se) {
             if (({
@@ -11370,9 +11406,12 @@ impl brunsli_JPEGScanInfoImpl for Ptr<brunsli_JPEGScanInfo> {
         field!((*self), Ah).write({ { (*_a0.upgrade().deref()).Ah } });
         field!((*self), Al).write({ { (*_a0.upgrade().deref()).Al } });
         field!((*self), num_components).write({ { (*_a0.upgrade().deref()).num_components } });
-        field_ref!((*self), components)
-            .as_pointer()
-            .write(field!(_a0, components).with_mut(std::mem::take));
+        for __i in 0..4 {
+            &field_ref!((*self), components)
+                .decay()
+                .offset(__i)
+                .write(field_ref!(_a0, components).decay().offset(__i).read());
+        }
         field_ref!((*self), reset_points)
             .as_pointer()
             .write(field!(_a0, reset_points).with_mut(std::mem::take));

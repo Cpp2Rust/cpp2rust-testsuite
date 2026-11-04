@@ -124,7 +124,7 @@ pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_PRECISION: brunsli_JPEGReadErr
 #[repr(C)]
 #[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_JPEGQuantTable {
-    pub values: Vec<i32>,
+    pub values: [i32; 64],
     pub precision: i32,
     pub index: i32,
     pub is_last: bool,
@@ -133,7 +133,7 @@ impl Default for brunsli_JPEGQuantTable {
     fn default() -> Self {
         unsafe {
             brunsli_JPEGQuantTable {
-                values: std::array::from_fn::<_, 64, _>(|_| 0_i32).to_vec(),
+                values: std::array::from_fn::<_, 64, _>(|_| 0_i32),
                 precision: 0,
                 index: 0,
                 is_last: true,
@@ -144,8 +144,8 @@ impl Default for brunsli_JPEGQuantTable {
 #[repr(C)]
 #[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_JPEGHuffmanCode {
-    pub counts: Vec<i32>,
-    pub values: Vec<i32>,
+    pub counts: [i32; 17],
+    pub values: [i32; 257],
     pub slot_id: i32,
     pub is_last: bool,
 }
@@ -153,8 +153,8 @@ impl Default for brunsli_JPEGHuffmanCode {
     fn default() -> Self {
         unsafe {
             brunsli_JPEGHuffmanCode {
-                counts: std::array::from_fn::<_, 17, _>(|_| 0_i32).to_vec(),
-                values: std::array::from_fn::<_, 257, _>(|_| 0_i32).to_vec(),
+                counts: std::array::from_fn::<_, 17, _>(|_| 0_i32),
+                values: std::array::from_fn::<_, 257, _>(|_| 0_i32),
                 slot_id: 0,
                 is_last: true,
             }
@@ -182,7 +182,7 @@ pub struct brunsli_JPEGScanInfo {
     pub Ah: i32,
     pub Al: i32,
     pub num_components: usize,
-    pub components: Vec<brunsli_JPEGComponentScanInfo>,
+    pub components: [brunsli_JPEGComponentScanInfo; 4],
     pub reset_points: Vec<i32>,
     pub extra_zero_runs: Vec<brunsli_JPEGScanInfo_ExtraZeroRunInfo>,
 }
@@ -194,7 +194,7 @@ impl brunsli_JPEGScanInfo {
             Ah: (*_a0).Ah,
             Al: (*_a0).Al,
             num_components: (*_a0).num_components,
-            components: std::mem::take(&mut (*_a0).components),
+            components: std::array::from_fn(|__i| (*&mut (&mut (*_a0)).components[__i]).clone()),
             reset_points: std::mem::take(&mut (*_a0).reset_points),
             extra_zero_runs: std::mem::take(&mut (*_a0).extra_zero_runs),
         };
@@ -209,7 +209,9 @@ impl brunsli_JPEGScanInfo {
         self.Ah = (*_a0).Ah;
         self.Al = (*_a0).Al;
         self.num_components = (*_a0).num_components;
-        self.components = std::mem::take(&mut (*_a0).components);
+        for __i in 0..4 {
+            *&mut self.components[__i] = (*&mut (&mut (*_a0)).components[__i]).clone();
+        }
         self.reset_points = std::mem::take(&mut (*_a0).reset_points);
         self.extra_zero_runs = std::mem::take(&mut (*_a0).extra_zero_runs);
         return &mut (*(self as *mut brunsli_JPEGScanInfo));
@@ -226,8 +228,7 @@ impl Default for brunsli_JPEGScanInfo {
                 num_components: 0_usize,
                 components: std::array::from_fn::<_, 4, _>(|_| {
                     <brunsli_JPEGComponentScanInfo>::default()
-                })
-                .to_vec(),
+                }),
                 reset_points: Default::default(),
                 extra_zero_runs: Default::default(),
             }
@@ -3207,7 +3208,7 @@ pub struct brunsli_internal_dec_ComponentMeta {
     pub height_in_blocks: i32,
     pub ac_coeffs: *mut i16,
     pub block_state: *mut u8,
-    pub quant: Vec<i32>,
+    pub quant: [i32; 64],
 }
 impl Default for brunsli_internal_dec_ComponentMeta {
     fn default() -> Self {
@@ -3223,7 +3224,7 @@ impl Default for brunsli_internal_dec_ComponentMeta {
                 height_in_blocks: 0_i32,
                 ac_coeffs: std::ptr::null_mut(),
                 block_state: std::ptr::null_mut(),
-                quant: std::array::from_fn::<_, 64, _>(|_| 0_i32).to_vec(),
+                quant: std::array::from_fn::<_, 64, _>(|_| 0_i32),
             }
         }
     }
@@ -3831,7 +3832,7 @@ pub struct brunsli_internal_dec_HeaderState {
     pub stage: usize,
     pub section: brunsli_internal_dec_SectionState,
     pub remaining_skip_length: usize,
-    pub varint_values: Vec<u64>,
+    pub varint_values: [u64; 16],
 }
 impl Default for brunsli_internal_dec_HeaderState {
     fn default() -> Self {
@@ -3840,7 +3841,7 @@ impl Default for brunsli_internal_dec_HeaderState {
                 stage: (brunsli_internal_dec_HeaderState_Stage_READ_TAG as usize),
                 section: <brunsli_internal_dec_SectionState>::default(),
                 remaining_skip_length: 0_usize,
-                varint_values: std::array::from_fn::<_, 16, _>(|_| 0_u64).to_vec(),
+                varint_values: std::array::from_fn::<_, 16, _>(|_| 0_u64),
             }
         }
     }
@@ -10825,7 +10826,7 @@ pub unsafe fn EncodeDHT_245(
             ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)) as usize),
         );
         let mut j: usize = 0_usize;
-        'loop_: while ((j) < ((*huff).counts.len())) {
+        'loop_: while ((j) < (17)) {
             marker_len = (marker_len).wrapping_add(((&(*huff)).counts[(j)] as usize));
             j.prefix_inc();
         }
@@ -10877,7 +10878,7 @@ pub unsafe fn EncodeDHT_245(
         let mut total_count: usize = 0_usize;
         let mut max_length: usize = 0_usize;
         let mut i: usize = 0_usize;
-        'loop_: while ((i) < ((*huff).counts.len())) {
+        'loop_: while ((i) < (17)) {
             if (((&(*huff)).counts[(i)]) != (0)) {
                 max_length = i;
             }

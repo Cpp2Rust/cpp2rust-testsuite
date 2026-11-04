@@ -3214,18 +3214,13 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
                 match ({ { self.buf_.clone() } },) {
                     (mut __tmp_2,) => {
                         __tmp_2.with_mut(|__v: &mut Vec<i8>| __v.pop());
-                        __tmp_2.with_mut(|__v: &mut Vec<i8>| {
-                            __v.resize(
-                                (*__tmp_2.upgrade().deref()).len()
-                                    + ({
-                                        (((offset).wrapping_add(n) as u64).wrapping_sub(
-                                            (((*{ self.buf_.clone() }.upgrade().deref()).len() - 1)
-                                                as u64),
-                                        ) as usize)
-                                    }) as usize,
-                                0_i8,
-                            )
-                        });
+                        let __len = (*__tmp_2.upgrade().deref()).len()
+                            + ({
+                                (((offset).wrapping_add(n) as u64).wrapping_sub(
+                                    (((*{ self.buf_.clone() }.upgrade().deref()).len() - 1) as u64),
+                                ) as usize)
+                            }) as usize;
+                        __tmp_2.with_mut(|__v: &mut Vec<i8>| __v.resize(__len, 0_i8));
                         __tmp_2.with_mut(|__v: &mut Vec<i8>| __v.push(0));
                         (*__tmp_2.upgrade().deref()).clone()
                     }

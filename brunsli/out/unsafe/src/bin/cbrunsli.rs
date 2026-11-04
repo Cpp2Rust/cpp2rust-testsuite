@@ -124,7 +124,7 @@ pub const brunsli_JPEGReadError_INVALID_QUANT_TBL_PRECISION: brunsli_JPEGReadErr
 #[repr(C)]
 #[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_JPEGQuantTable {
-    pub values: Vec<i32>,
+    pub values: [i32; 64],
     pub precision: i32,
     pub index: i32,
     pub is_last: bool,
@@ -133,7 +133,7 @@ impl Default for brunsli_JPEGQuantTable {
     fn default() -> Self {
         unsafe {
             brunsli_JPEGQuantTable {
-                values: std::array::from_fn::<_, 64, _>(|_| 0_i32).to_vec(),
+                values: std::array::from_fn::<_, 64, _>(|_| 0_i32),
                 precision: 0,
                 index: 0,
                 is_last: true,
@@ -144,8 +144,8 @@ impl Default for brunsli_JPEGQuantTable {
 #[repr(C)]
 #[derive(Clone, VaArg, FnPtrArg)]
 pub struct brunsli_JPEGHuffmanCode {
-    pub counts: Vec<i32>,
-    pub values: Vec<i32>,
+    pub counts: [i32; 17],
+    pub values: [i32; 257],
     pub slot_id: i32,
     pub is_last: bool,
 }
@@ -153,8 +153,8 @@ impl Default for brunsli_JPEGHuffmanCode {
     fn default() -> Self {
         unsafe {
             brunsli_JPEGHuffmanCode {
-                counts: std::array::from_fn::<_, 17, _>(|_| 0_i32).to_vec(),
-                values: std::array::from_fn::<_, 257, _>(|_| 0_i32).to_vec(),
+                counts: std::array::from_fn::<_, 17, _>(|_| 0_i32),
+                values: std::array::from_fn::<_, 257, _>(|_| 0_i32),
                 slot_id: 0,
                 is_last: true,
             }
@@ -182,7 +182,7 @@ pub struct brunsli_JPEGScanInfo {
     pub Ah: i32,
     pub Al: i32,
     pub num_components: usize,
-    pub components: Vec<brunsli_JPEGComponentScanInfo>,
+    pub components: [brunsli_JPEGComponentScanInfo; 4],
     pub reset_points: Vec<i32>,
     pub extra_zero_runs: Vec<brunsli_JPEGScanInfo_ExtraZeroRunInfo>,
 }
@@ -194,7 +194,7 @@ impl brunsli_JPEGScanInfo {
             Ah: (*_a0).Ah,
             Al: (*_a0).Al,
             num_components: (*_a0).num_components,
-            components: std::mem::take(&mut (*_a0).components),
+            components: std::array::from_fn(|__i| (*&mut (&mut (*_a0)).components[__i]).clone()),
             reset_points: std::mem::take(&mut (*_a0).reset_points),
             extra_zero_runs: std::mem::take(&mut (*_a0).extra_zero_runs),
         };
@@ -209,7 +209,9 @@ impl brunsli_JPEGScanInfo {
         self.Ah = (*_a0).Ah;
         self.Al = (*_a0).Al;
         self.num_components = (*_a0).num_components;
-        self.components = std::mem::take(&mut (*_a0).components);
+        for __i in 0..4 {
+            *&mut self.components[__i] = (*&mut (&mut (*_a0)).components[__i]).clone();
+        }
         self.reset_points = std::mem::take(&mut (*_a0).reset_points);
         self.extra_zero_runs = std::mem::take(&mut (*_a0).extra_zero_runs);
         return &mut (*(self as *mut brunsli_JPEGScanInfo));
@@ -226,8 +228,7 @@ impl Default for brunsli_JPEGScanInfo {
                 num_components: 0_usize,
                 components: std::array::from_fn::<_, 4, _>(|_| {
                     <brunsli_JPEGComponentScanInfo>::default()
-                })
-                .to_vec(),
+                }),
                 reset_points: Default::default(),
                 extra_zero_runs: Default::default(),
             }
@@ -3755,8 +3756,8 @@ pub struct brunsli_internal_enc_ComponentMeta {
     pub ac_coeffs: *const i16,
     pub dc_prediction_errors: *mut i16,
     pub block_state: *mut u8,
-    pub num_zeros: Vec<i32>,
-    pub quant: Vec<i32>,
+    pub num_zeros: [i32; 64],
+    pub quant: [i32; 64],
 }
 impl Default for brunsli_internal_enc_ComponentMeta {
     fn default() -> Self {
@@ -3775,8 +3776,8 @@ impl Default for brunsli_internal_enc_ComponentMeta {
                 ac_coeffs: std::ptr::null(),
                 dc_prediction_errors: std::ptr::null_mut(),
                 block_state: std::ptr::null_mut(),
-                num_zeros: std::array::from_fn::<_, 64, _>(|_| 0_i32).to_vec(),
-                quant: std::array::from_fn::<_, 64, _>(|_| 0_i32).to_vec(),
+                num_zeros: std::array::from_fn::<_, 64, _>(|_| 0_i32),
+                quant: std::array::from_fn::<_, 64, _>(|_| 0_i32),
             }
         }
     }
@@ -5097,7 +5098,7 @@ impl brunsli_internal_enc_Histogram {
         }
     }
 }
-pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const Vec<i32>, mut order: *mut u32) {
+pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const [i32; 64], mut order: *mut u32) {
     let mut pos_and_val: Vec<(i32, i32)> =
         (0..((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize) as usize)
             .map(|_| <(i32, i32)>::default())
@@ -5932,7 +5933,7 @@ pub unsafe fn SampleNumNonZeros_181(mut m: *mut brunsli_internal_enc_ComponentMe
     let mut coeffs: *const i16 = (*m).ac_coeffs;
     let mut stride: usize = ((*m).ac_stride as usize);
     let mut width_in_blocks: usize = ((*m).width_in_blocks as usize);
-    let num_zeros: *mut Vec<i32> = &mut (*m).num_zeros;
+    let num_zeros: *mut [i32; 64] = &mut (*m).num_zeros;
     let mut total_nonzeros: usize = 0_usize;
     let mut i: usize = 0_usize;
     'loop_: while ((i) < (num_blocks)) {
