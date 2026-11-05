@@ -1292,14 +1292,16 @@ pub fn ReconstructGlyf_63(
         )))
         .as_pointer(),)
         {
-            (__tmp_1,) => substreams.decay().offset((i as usize)).write((
-                Rc::new(RefCell::new(<Ptr<u8> as CppFrom<Ptr<u8>>>::cpp_from_move(
+            (__tmp_1,) => {
+                let __first = <Ptr<u8> as CppFrom<Ptr<u8>>>::cpp_from_move(
                     (*__tmp_1.upgrade().deref()).0.as_pointer(),
-                ))),
-                Rc::new(RefCell::new(
-                    (((*__tmp_1.upgrade().deref()).1.as_pointer().read()) as u64),
-                )),
-            )),
+                );
+                let __second = (((*__tmp_1.upgrade().deref()).1.as_pointer().read()) as u64);
+                substreams.decay().offset((i as usize)).with(|__dst| {
+                    *__dst.0.borrow_mut() = __first;
+                    *__dst.1.borrow_mut() = __second;
+                })
+            }
         };
         offset = { (offset).wrapping_add((*substream_size.borrow())) };
         i.prefix_inc();

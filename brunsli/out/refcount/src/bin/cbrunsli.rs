@@ -3967,7 +3967,12 @@ pub fn TransformApp0Marker_149(s: Ptr<Vec<u8>>, mut out: Ptr<Vec<u8>>) -> bool {
                     | (((index!(s, 10_usize).read()) as i32) << 1))
             } | { (density_ix << 3) }) as u8);
             out.write((0..(1_usize) as usize).map(|_| 0_u8).collect::<Vec<_>>());
-            out.decay().offset(0_usize as isize).write(app0_status);
+            if 0_usize as usize >= out.decay().len() {
+                panic!("out of bounds access")
+            } else {
+                out.decay().offset(0_usize as isize)
+            }
+            .write(app0_status);
             return true;
         }
     }
@@ -11437,7 +11442,11 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
             .write(({ std::mem::take(&mut (*values.borrow_mut())) }));
     }
     fn Clear(&self) {
-        field!((*self), values_).with_mut(|__b0| std::mem::swap(&mut Vec::new(), &mut (*__b0)));
+        Rc::new(RefCell::new(Vec::new()))
+            .as_pointer()
+            .swap_with(&field_ref!((*self), values_).as_pointer(), |__v| {
+                __v.with_mut(std::mem::take)
+            });
     }
     fn num_bits(&self) -> i32 {
         let mut num_values: u32 = ((*(*self).upgrade().deref()).values_.len() as u32);
@@ -12055,8 +12064,11 @@ impl brunsli_internal_enc_EntropySourceImpl for Ptr<brunsli_internal_enc_Entropy
     fn Finish(&self, offsets: Ptr<Vec<u64>>) -> Option<Value<brunsli_internal_enc_EntropyCodes>> {
         let histograms: Value<Vec<brunsli_internal_enc_Histogram>> =
             Rc::new(RefCell::new(Vec::new()));
-        field!((*self), histograms_)
-            .with_mut(|__b0| std::mem::swap(&mut (*histograms.borrow_mut()), &mut (*__b0)));
+        histograms
+            .as_pointer()
+            .swap_with(&field_ref!((*self), histograms_).as_pointer(), |__v| {
+                __v.with_mut(std::mem::take)
+            });
         return Ptr::alloc(brunsli_internal_enc_EntropyCodes::new(
             { histograms.as_pointer() },
             { (*self).with(|__s| __s.num_bands_) },

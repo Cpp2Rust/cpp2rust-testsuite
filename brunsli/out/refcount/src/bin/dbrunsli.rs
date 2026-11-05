@@ -7139,8 +7139,11 @@ pub fn DecodeQuantDataSection_186(
             __v if __v == (brunsli_internal_dec_QuantDataState_Stage_READ_STOCK as i32) => {
                 {
                     if ({ qs.with(|__s| __s.i) } >= { (*jpg.upgrade().deref()).quant.len() }) {
-                        field!(qs, predictor)
-                            .with_mut(|__b0| std::mem::swap(&mut Vec::new(), &mut (*__b0)));
+                        Rc::new(RefCell::new(Vec::new()))
+                            .as_pointer()
+                            .swap_with(&field_ref!(qs, predictor).as_pointer(), |__v| {
+                                __v.with_mut(std::mem::take)
+                            });
                         field!(qs, i).write(0_usize);
                         field!(qs, stage)
                             .write(brunsli_internal_dec_QuantDataState_Stage_READ_QUANT_IDX);
@@ -7659,7 +7662,11 @@ pub fn DecodeHistogramDataSection_187(
             field!(hs, i).with_mut(|__v| __v.prefix_inc());
         }
         field_ptr!(hs, entropy).write(None);
-        field!(hs, counts).with_mut(|__b0| std::mem::swap(&mut Vec::new(), &mut (*__b0)));
+        Rc::new(RefCell::new(Vec::new()))
+            .as_pointer()
+            .swap_with(&field_ref!(hs, counts).as_pointer(), |__v| {
+                __v.with_mut(std::mem::take)
+            });
         ({ (*suspend_bit_reader.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_OK) });
         ({ BrunsliBitReaderFinish_131((*br.borrow()).clone()) });
         if !({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) }) {
@@ -13590,7 +13597,11 @@ impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
             .write(({ std::mem::take(&mut (*values.borrow_mut())) }));
     }
     fn Clear(&self) {
-        field!((*self), values_).with_mut(|__b0| std::mem::swap(&mut Vec::new(), &mut (*__b0)));
+        Rc::new(RefCell::new(Vec::new()))
+            .as_pointer()
+            .swap_with(&field_ref!((*self), values_).as_pointer(), |__v| {
+                __v.with_mut(std::mem::take)
+            });
     }
     fn num_bits(&self) -> i32 {
         let mut num_values: u32 = ((*(*self).upgrade().deref()).values_.len() as u32);
