@@ -18,14 +18,11 @@ pub fn matmul_1(mut a: Ptr<Box<[i32]>>, mut b: Ptr<Box<[i32]>>, mut c: Ptr<Box<[
             'loop_: while (j < N_0.with(|rc| *rc.borrow())) {
                 {
                     let __rhs = {
-                        ({ (elem!((a.offset((i) as isize).as_pointer() as Ptr::<i32>), k).read()) }
-                            * {
-                                (elem!((b.offset((k) as isize).as_pointer() as Ptr::<i32>), j)
-                                    .read())
-                            })
+                        ({ (elem!(a.offset((i) as isize).decay(), k).read()) } * {
+                            (elem!(b.offset((k) as isize).decay(), j).read())
+                        })
                     };
-                    elem!((c.offset((i) as isize).as_pointer() as Ptr::<i32>), j)
-                        .with_mut(|__v| *__v = *__v + __rhs)
+                    elem!(c.offset((i) as isize).decay(), j).with_mut(|__v| *__v = *__v + __rhs)
                 };
                 j.prefix_inc();
             }
@@ -76,13 +73,7 @@ fn main_0() -> i32 {
             }
             i.prefix_inc();
         }
-        ({
-            matmul_1(
-                (a.as_pointer() as Ptr<Box<[i32]>>),
-                (b.as_pointer() as Ptr<Box<[i32]>>),
-                (c.as_pointer() as Ptr<Box<[i32]>>),
-            )
-        });
+        ({ matmul_1(a.decay(), b.decay(), c.decay()) });
         let mut i: i32 = 0;
         'loop_: while (i < N_0.with(|rc| *rc.borrow())) {
             let mut j: i32 = 0;

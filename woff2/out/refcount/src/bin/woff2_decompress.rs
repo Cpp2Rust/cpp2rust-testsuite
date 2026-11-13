@@ -575,7 +575,7 @@ pub fn Store16_34(mut val: i32, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
     elem!(dst, offset.with_mut(|__v| __v.postfix_inc())).write(__rhs);
 }
 pub fn StoreBytes_35(mut data: Ptr<u8>, mut len: usize, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
-    match ({ ((dst.offset((offset.read()) as isize)) as Ptr<u8>).to_any() },) {
+    match ({ (dst.offset((offset.read()) as isize)).to_any() },) {
         (mut __tmp_0,) => {
             __tmp_0.memcpy(&(data).to_any(), len as usize);
             (__tmp_0).clone()
@@ -1155,10 +1155,7 @@ pub fn Pad4_61(mut out: PtrDyn<dyn woff2_WOFF2Out>) -> bool {
         as u32);
     if (pad_bytes > 0_u32) {
         if ((!({
-            (*out.upgrade().deref_mut()).Write_2(
-                ((zeroes.as_pointer()) as Ptr<u8>).to_any(),
-                (pad_bytes as usize),
-            )
+            (*out.upgrade().deref_mut()).Write_2((zeroes.decay()).to_any(), (pad_bytes as usize))
         }) as i64)
             != 0)
         {
@@ -1205,7 +1202,7 @@ pub fn StoreLoca_62(
     checksum.write(__rhs);
     if (({
         (!({
-            let _buf: AnyPtr = ((loca_content.decay().offset(0_usize)) as Ptr<u8>).to_any();
+            let _buf: AnyPtr = (loca_content.decay().offset(0_usize)).to_any();
             let _n: usize = (*loca_content.borrow()).len();
             (*out.upgrade().deref_mut()).Write_2(_buf, _n)
         }) as i64)
@@ -1423,7 +1420,7 @@ pub fn ReconstructGlyf_63(
             }
             let __rhs = ({
                 Store16_32(
-                    (*glyph_buf.borrow()).as_pointer(),
+                    (*glyph_buf.borrow()).decay(),
                     (*glyph_size.borrow()),
                     ((*n_contours.borrow()) as i32),
                 )
@@ -1434,7 +1431,7 @@ pub fn ReconstructGlyf_63(
                     woff2_BufferImpl::Read(
                         &bbox_stream.as_pointer(),
                         (*glyph_buf.borrow())
-                            .as_pointer()
+                            .decay()
                             .offset((*glyph_size.borrow()) as isize),
                         8_usize,
                     )
@@ -1449,7 +1446,7 @@ pub fn ReconstructGlyf_63(
                     woff2_BufferImpl::Read(
                         &composite_stream.as_pointer(),
                         (*glyph_buf.borrow())
-                            .as_pointer()
+                            .decay()
                             .offset((*glyph_size.borrow()) as isize),
                         (*composite_size.borrow()),
                     )
@@ -1463,7 +1460,7 @@ pub fn ReconstructGlyf_63(
             if (*have_instructions.borrow()) {
                 let __rhs = ({
                     Store16_32(
-                        (*glyph_buf.borrow()).as_pointer(),
+                        (*glyph_buf.borrow()).decay(),
                         (*glyph_size.borrow()),
                         ((*instruction_size.borrow()) as i32),
                     )
@@ -1474,7 +1471,7 @@ pub fn ReconstructGlyf_63(
                         woff2_BufferImpl::Read(
                             &instruction_stream.as_pointer(),
                             (*glyph_buf.borrow())
-                                .as_pointer()
+                                .decay()
                                 .offset((*glyph_size.borrow()) as isize),
                             ((*instruction_size.borrow()) as usize),
                         )
@@ -1553,7 +1550,7 @@ pub fn ReconstructGlyf_63(
                         (triplet_buf).clone(),
                         triplet_size,
                         total_n_points,
-                        (*points.borrow()).as_pointer(),
+                        (*points.borrow()).decay(),
                         (triplet_bytes_consumed.as_pointer()),
                     )
                 }) as i64)
@@ -1607,7 +1604,7 @@ pub fn ReconstructGlyf_63(
             }
             let __rhs = ({
                 Store16_32(
-                    (*glyph_buf.borrow()).as_pointer(),
+                    (*glyph_buf.borrow()).decay(),
                     (*glyph_size.borrow()),
                     ((*n_contours.borrow()) as i32),
                 )
@@ -1619,7 +1616,7 @@ pub fn ReconstructGlyf_63(
                         woff2_BufferImpl::Read(
                             &bbox_stream.as_pointer(),
                             (*glyph_buf.borrow())
-                                .as_pointer()
+                                .decay()
                                 .offset((*glyph_size.borrow()) as isize),
                             8_usize,
                         )
@@ -1632,8 +1629,8 @@ pub fn ReconstructGlyf_63(
                 ({
                     ComputeBbox_59(
                         total_n_points,
-                        (*points.borrow()).as_pointer(),
-                        (*glyph_buf.borrow()).as_pointer(),
+                        (*points.borrow()).decay(),
+                        (*glyph_buf.borrow()).decay(),
                     )
                 });
             }
@@ -1652,7 +1649,7 @@ pub fn ReconstructGlyf_63(
                 }
                 let __rhs = ({
                     Store16_32(
-                        (*glyph_buf.borrow()).as_pointer(),
+                        (*glyph_buf.borrow()).decay(),
                         (*glyph_size.borrow()),
                         end_point,
                     )
@@ -1662,7 +1659,7 @@ pub fn ReconstructGlyf_63(
             }
             let __rhs = ({
                 Store16_32(
-                    (*glyph_buf.borrow()).as_pointer(),
+                    (*glyph_buf.borrow()).decay(),
                     (*glyph_size.borrow()),
                     ((*instruction_size.borrow()) as i32),
                 )
@@ -1673,7 +1670,7 @@ pub fn ReconstructGlyf_63(
                     woff2_BufferImpl::Read(
                         &instruction_stream.as_pointer(),
                         (*glyph_buf.borrow())
-                            .as_pointer()
+                            .decay()
                             .offset((*glyph_size.borrow()) as isize),
                         ((*instruction_size.borrow()) as usize),
                     )
@@ -1692,11 +1689,11 @@ pub fn ReconstructGlyf_63(
                 (!({
                     StorePoints_58(
                         total_n_points,
-                        (*points.borrow()).as_pointer(),
+                        (*points.borrow()).decay(),
                         ((*n_contours.borrow()) as u32),
                         (*instruction_size.borrow()),
                         has_overlap_bit,
-                        (*glyph_buf.borrow()).as_pointer(),
+                        (*glyph_buf.borrow()).decay(),
                         glyph_buf_size,
                         (glyph_size.as_pointer()),
                     )
@@ -1716,7 +1713,7 @@ pub fn ReconstructGlyf_63(
         if (({
             (!({
                 (*out.upgrade().deref_mut()).Write_2(
-                    ((*glyph_buf.borrow()).as_pointer() as Ptr<u8>).to_any(),
+                    ((*glyph_buf.borrow()).decay()).to_any(),
                     (*glyph_size.borrow()),
                 )
             }) as i64)
@@ -1729,15 +1726,13 @@ pub fn ReconstructGlyf_63(
         }
         {
             let rhs_0 = (glyf_checksum.read()).wrapping_add(
-                ({
-                    ComputeULongSum_26((*glyph_buf.borrow()).as_pointer(), (*glyph_size.borrow()))
-                }),
+                ({ ComputeULongSum_26((*glyph_buf.borrow()).decay(), (*glyph_size.borrow())) }),
             );
             glyf_checksum.write(rhs_0)
         };
         if (((*n_contours.borrow()) as i32) > 0) {
             let x_min_buf: Value<woff2_Buffer> = Rc::new(RefCell::new(woff2_Buffer::new(
-                { (*glyph_buf.borrow()).as_pointer().offset((2) as isize) },
+                { (*glyph_buf.borrow()).decay().offset((2) as isize) },
                 { 2_usize },
             )));
             if ((!({
@@ -1937,7 +1932,7 @@ pub fn ReconstructTransformedHmtx_67(
     checksum.write(__rhs);
     if ((!({
         (*out.upgrade().deref_mut()).Write_2(
-            ((hmtx_table.decay().offset(0_usize)) as Ptr<u8>).to_any(),
+            (hmtx_table.decay().offset(0_usize)).to_any(),
             (hmtx_output_size as usize),
         )
     }) as i64)
@@ -2272,9 +2267,8 @@ pub fn ReconstructFont_74(
                 });
                 if ((!({
                     let _buf: AnyPtr = (transformed_buf
-                        .offset((table.with(|__s| __s.src_offset)) as isize)
-                        as Ptr<u8>)
-                        .to_any();
+                        .offset((table.with(|__s| __s.src_offset)) as isize))
+                    .to_any();
                     let _n: usize = (table.with(|__s| __s.src_length) as usize);
                     (*out.upgrade().deref_mut()).Write_2(_buf, _n)
                 }) as i64)
@@ -2349,30 +2343,24 @@ pub fn ReconstructFont_74(
                 (Map::subscript(field_ptr!(metadata, checksums), checksum_key.as_pointer()).read());
         }
         font_checksum = { (font_checksum).wrapping_add((*checksum.borrow())) };
+        ({ StoreU32_31(table_entry.decay(), 0_usize, (*checksum.borrow())) });
         ({
             StoreU32_31(
-                (table_entry.as_pointer() as Ptr<u8>),
-                0_usize,
-                (*checksum.borrow()),
-            )
-        });
-        ({
-            StoreU32_31(
-                (table_entry.as_pointer() as Ptr<u8>),
+                table_entry.decay(),
                 4_usize,
                 table.with(|__s| __s.dst_offset),
             )
         });
         ({
             StoreU32_31(
-                (table_entry.as_pointer() as Ptr<u8>),
+                table_entry.decay(),
                 8_usize,
                 table.with(|__s| __s.dst_length),
             )
         });
         if ((!({
             (*out.upgrade().deref_mut()).Write_3(
-                ((table_entry.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any(),
+                (table_entry.decay()).to_any(),
                 (((Map::subscript(field_ptr!(info, table_entry_by_tag), field_ptr!(table, tag))
                     .read())
                 .wrapping_add(4_u32)) as usize),
@@ -2384,9 +2372,8 @@ pub fn ReconstructFont_74(
             return false;
         }
         {
-            let rhs_0 = (font_checksum).wrapping_add(
-                ({ ComputeULongSum_26((table_entry.as_pointer() as Ptr<u8>), 12_usize) }),
-            );
+            let rhs_0 = (font_checksum)
+                .wrapping_add(({ ComputeULongSum_26(table_entry.decay(), 12_usize) }));
             font_checksum = rhs_0
         };
         if ((!({ Pad4_61((out).clone()) }) as i64) != 0) {
@@ -2417,14 +2404,14 @@ pub fn ReconstructFont_74(
             Rc::new(RefCell::new((0..4).map(|_| 0_u8).collect::<Box<[u8]>>()));
         ({
             StoreU32_31(
-                (checksum_adjustment.as_pointer() as Ptr<u8>),
+                checksum_adjustment.decay(),
                 0_usize,
                 (2981146554_u32 as u32).wrapping_sub(font_checksum),
             )
         });
         if ((!({
             (*out.upgrade().deref_mut()).Write_3(
-                ((checksum_adjustment.as_pointer() as Ptr<u8>) as Ptr<u8>).to_any(),
+                (checksum_adjustment.decay()).to_any(),
                 (((head_table.with(|__s| __s.dst_offset)).wrapping_add(8_u32)) as usize),
                 4_usize,
             )
@@ -2856,7 +2843,7 @@ pub fn WriteHeaders_76(
     }
     if (({
         (!({
-            let _buf: AnyPtr = ((output.decay().offset(0_usize)) as Ptr<u8>).to_any();
+            let _buf: AnyPtr = (output.decay().offset(0_usize)).to_any();
             let _n: usize = (*output.borrow()).len();
             (*out.upgrade().deref_mut()).Write_2(_buf, _n)
         }) as i64)
@@ -3046,7 +3033,7 @@ pub fn SetFileContents_81(
 pub fn main() {
     let size: usize = ::std::env::args().map(|arg| arg.len() + 1).sum();
     let args: Value<Box<[i8]>> = Rc::new(RefCell::new(vec![0; size].into_boxed_slice()));
-    let args_ptr: Ptr<i8> = args.as_pointer();
+    let args_ptr: Ptr<i8> = args.decay();
     let mut off = 0;
     let argv: Value<Box<[Ptr<i8>]>> = Rc::new(RefCell::new(
         ::std::env::args()
@@ -3060,7 +3047,7 @@ pub fn main() {
             .collect(),
     ));
     __cpp2rust_init_globals();
-    ::std::process::exit(main_0(::std::env::args().len() as i32, argv.as_pointer()));
+    ::std::process::exit(main_0(::std::env::args().len() as i32, argv.decay()));
 }
 fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
     if (argc != 2) {
@@ -3164,7 +3151,7 @@ impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
         if (offset > { self.buf_size_ }) || (n > ({ self.buf_size_ }).wrapping_sub(offset)) {
             return false;
         }
-        match ({ ({ self.buf_.clone() }.offset((offset) as isize) as Ptr<u8>).to_any() },) {
+        match ({ ({ self.buf_.clone() }.offset((offset) as isize)).to_any() },) {
             (mut __tmp_7,) => {
                 __tmp_7.memcpy(&buf, n as usize);
                 (__tmp_7).clone()
@@ -3295,9 +3282,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                     __tmp_0.memcpy(
                         &((*self)
                             .with(|__s| __s.buffer_.clone())
-                            .offset(((*self).with(|__s| __s.offset_)) as isize)
-                            as Ptr<u8>)
-                            .to_any(),
+                            .offset(((*self).with(|__s| __s.offset_)) as isize))
+                        .to_any(),
                         n_bytes as usize,
                     );
                     (__tmp_0).clone()
@@ -3336,9 +3322,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                 __tmp_1.memcpy(
                     &((*self)
                         .with(|__s| __s.buffer_.clone())
-                        .offset(((*self).with(|__s| __s.offset_)) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset(((*self).with(|__s| __s.offset_)) as isize))
+                    .to_any(),
                     ::std::mem::size_of::<u16>() as usize,
                 );
                 (__tmp_1).clone()
@@ -3393,9 +3378,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                 __tmp_2.memcpy(
                     &((*self)
                         .with(|__s| __s.buffer_.clone())
-                        .offset(((*self).with(|__s| __s.offset_)) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset(((*self).with(|__s| __s.offset_)) as isize))
+                    .to_any(),
                     ::std::mem::size_of::<u32>() as usize,
                 );
                 (__tmp_2).clone()
@@ -3421,9 +3405,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                 __tmp_3.memcpy(
                     &((*self)
                         .with(|__s| __s.buffer_.clone())
-                        .offset(((*self).with(|__s| __s.offset_)) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset(((*self).with(|__s| __s.offset_)) as isize))
+                    .to_any(),
                     ::std::mem::size_of::<u32>() as usize,
                 );
                 (__tmp_3).clone()
@@ -3444,9 +3427,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                 __tmp_4.memcpy(
                     &((*self)
                         .with(|__s| __s.buffer_.clone())
-                        .offset(((*self).with(|__s| __s.offset_)) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset(((*self).with(|__s| __s.offset_)) as isize))
+                    .to_any(),
                     ::std::mem::size_of::<u64>() as usize,
                 );
                 (__tmp_4).clone()

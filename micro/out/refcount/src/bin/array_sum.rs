@@ -21,16 +21,12 @@ fn main_0() -> i32 {
         let mut i: i32 = 0;
         'loop_: while (i < N) {
             let __rhs = i;
-            (array.as_pointer() as Ptr<i32>)
-                .offset((i as usize) as isize)
-                .write(__rhs);
+            array.decay().offset((i as usize)).write(__rhs);
             i.prefix_inc();
         }
         let mut i: i32 = 0;
         'loop_: while (i < N) {
-            sum += (((array.as_pointer() as Ptr<i32>)
-                .offset((i as usize) as isize)
-                .read()) as i64);
+            sum += ((array.decay().offset((i as usize)).read()) as i64);
             i.prefix_inc();
         }
         k.prefix_inc();

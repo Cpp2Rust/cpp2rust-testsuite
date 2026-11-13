@@ -1173,21 +1173,18 @@ pub unsafe fn Log2FloorNonZero_74(mut n: u32) -> i32 {
     return ((31) ^ (n.leading_zeros() as i32));
 }
 pub unsafe fn BrunsliSuppressUnusedFunctions_75() {
-    &(std::mem::transmute::<
-        Option<unsafe fn(*mut Vec<u8>, *const Vec<u8>)>,
-        Option<unsafe fn(*mut Vec<u8>, *const Vec<u8>)>,
-    >((Some(Append_73))));
-    &(Some(BrunsliSuppressUnusedFunctions_75));
-    &(Some(BrunsliUnalignedRead16_66));
-    &(Some(BrunsliUnalignedWrite16_67));
-    &(Some(BrunsliUnalignedRead32_68));
-    &(Some(BrunsliUnalignedRead64_69));
-    &(Some(BrunsliUnalignedWrite64_70));
-    &(Some(BrunsliUnalignedRead16_66));
-    &(Some(BrunsliUnalignedWrite16_67));
-    &(Some(BrunsliUnalignedRead32_68));
-    &(Some(BrunsliUnalignedRead64_69));
-    &(Some(BrunsliUnalignedWrite64_70));
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
 }
 pub static mut kNormalizeThreshold_76: std::cell::LazyCell<u8> =
     std::cell::LazyCell::new(|| unsafe { 254_u8 });
@@ -11010,7 +11007,7 @@ pub unsafe fn EncodeAPP_249(
     mut marker: u8,
     mut state: *mut brunsli_internal_dec_SerializationState,
 ) -> bool {
-    &(marker);
+    ();
     let mut app_index: usize = ((*state).app_index.postfix_inc() as usize);
     if ((app_index) >= ((*jpg).app_data.len())) {
         return false;

@@ -617,7 +617,7 @@ pub fn Store16_31(mut val: i32, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
     elem!(dst, offset.with_mut(|__v| __v.postfix_inc())).write(__rhs);
 }
 pub fn StoreBytes_32(mut data: Ptr<u8>, mut len: usize, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
-    match ({ ((dst.offset((offset.read()) as isize)) as Ptr<u8>).to_any() },) {
+    match ({ (dst.offset((offset.read()) as isize)).to_any() },) {
         (mut __tmp_0,) => {
             __tmp_0.memcpy(&(data).to_any(), len as usize);
             (__tmp_0).clone()
@@ -967,10 +967,10 @@ pub fn WriteTable_43(
         }) {
             return false;
         }
-        match ({ (dst.offset((table.with(|__s| __s.offset)) as isize) as Ptr<u8>).to_any() },) {
+        match ({ (dst.offset((table.with(|__s| __s.offset)) as isize)).to_any() },) {
             (mut __tmp_13,) => {
                 __tmp_13.memcpy(
-                    &(table.with(|__s| __s.data.clone()) as Ptr<u8>).to_any(),
+                    &(table.with(|__s| __s.data.clone())).to_any(),
                     (table.with(|__s| __s.length) as usize) as usize,
                 );
                 (__tmp_13).clone()
@@ -992,8 +992,8 @@ pub fn WriteTable_43(
         }
         match ({
             (dst.offset((table.with(|__s| __s.offset)) as isize)
-                .offset((table.with(|__s| __s.length)) as isize) as Ptr<u8>)
-                .to_any()
+                .offset((table.with(|__s| __s.length)) as isize))
+            .to_any()
         },)
         {
             (mut __tmp_14,) => {
@@ -1316,7 +1316,8 @@ pub fn PrintTag_51(mut tag: i32) -> Vec<i8> {
     ])));
     return {
         let mut __v = Vec::with_capacity(4_usize as usize + 1);
-        (printable.as_pointer() as Ptr<i8>)
+        printable
+            .decay()
             .with_slice(4_usize as usize, |__s| __v.extend_from_slice(__s));
         __v.push(0);
         __v
@@ -1325,7 +1326,7 @@ pub fn PrintTag_51(mut tag: i32) -> Vec<i8> {
 pub fn main() {
     let size: usize = ::std::env::args().map(|arg| arg.len() + 1).sum();
     let args: Value<Box<[i8]>> = Rc::new(RefCell::new(vec![0; size].into_boxed_slice()));
-    let args_ptr: Ptr<i8> = args.as_pointer();
+    let args_ptr: Ptr<i8> = args.decay();
     let mut off = 0;
     let argv: Value<Box<[Ptr<i8>]>> = Rc::new(RefCell::new(
         ::std::env::args()
@@ -1339,7 +1340,7 @@ pub fn main() {
             .collect(),
     ));
     __cpp2rust_init_globals();
-    ::std::process::exit(main_0(::std::env::args().len() as i32, argv.as_pointer()));
+    ::std::process::exit(main_0(::std::env::args().len() as i32, argv.decay()));
 }
 fn main_0(argc: i32, argv: Ptr<Ptr<i8>>) -> i32 {
     if (argc != 2) {
@@ -1614,9 +1615,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                     __tmp_0.memcpy(
                         &((*self)
                             .with(|__s| __s.buffer_.clone())
-                            .offset(((*self).with(|__s| __s.offset_)) as isize)
-                            as Ptr<u8>)
-                            .to_any(),
+                            .offset(((*self).with(|__s| __s.offset_)) as isize))
+                        .to_any(),
                         n_bytes as usize,
                     );
                     (__tmp_0).clone()
@@ -1655,9 +1655,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                 __tmp_1.memcpy(
                     &((*self)
                         .with(|__s| __s.buffer_.clone())
-                        .offset(((*self).with(|__s| __s.offset_)) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset(((*self).with(|__s| __s.offset_)) as isize))
+                    .to_any(),
                     ::std::mem::size_of::<u16>() as usize,
                 );
                 (__tmp_1).clone()
@@ -1712,9 +1711,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                 __tmp_2.memcpy(
                     &((*self)
                         .with(|__s| __s.buffer_.clone())
-                        .offset(((*self).with(|__s| __s.offset_)) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset(((*self).with(|__s| __s.offset_)) as isize))
+                    .to_any(),
                     ::std::mem::size_of::<u32>() as usize,
                 );
                 (__tmp_2).clone()
@@ -1740,9 +1738,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                 __tmp_3.memcpy(
                     &((*self)
                         .with(|__s| __s.buffer_.clone())
-                        .offset(((*self).with(|__s| __s.offset_)) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset(((*self).with(|__s| __s.offset_)) as isize))
+                    .to_any(),
                     ::std::mem::size_of::<u32>() as usize,
                 );
                 (__tmp_3).clone()
@@ -1763,9 +1760,8 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                 __tmp_4.memcpy(
                     &((*self)
                         .with(|__s| __s.buffer_.clone())
-                        .offset(((*self).with(|__s| __s.offset_)) as isize)
-                        as Ptr<u8>)
-                        .to_any(),
+                        .offset(((*self).with(|__s| __s.offset_)) as isize))
+                    .to_any(),
                     ::std::mem::size_of::<u64>() as usize,
                 );
                 (__tmp_4).clone()

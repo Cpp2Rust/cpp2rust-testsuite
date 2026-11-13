@@ -1173,21 +1173,18 @@ pub unsafe fn Log2FloorNonZero_74(mut n: u32) -> i32 {
     return ((31) ^ (n.leading_zeros() as i32));
 }
 pub unsafe fn BrunsliSuppressUnusedFunctions_75() {
-    &(std::mem::transmute::<
-        Option<unsafe fn(*mut Vec<u8>, *const Vec<u8>)>,
-        Option<unsafe fn(*mut Vec<u8>, *const Vec<u8>)>,
-    >((Some(Append_73))));
-    &(Some(BrunsliSuppressUnusedFunctions_75));
-    &(Some(BrunsliUnalignedRead16_66));
-    &(Some(BrunsliUnalignedWrite16_67));
-    &(Some(BrunsliUnalignedRead32_68));
-    &(Some(BrunsliUnalignedRead64_69));
-    &(Some(BrunsliUnalignedWrite64_70));
-    &(Some(BrunsliUnalignedRead16_66));
-    &(Some(BrunsliUnalignedWrite16_67));
-    &(Some(BrunsliUnalignedRead32_68));
-    &(Some(BrunsliUnalignedRead64_69));
-    &(Some(BrunsliUnalignedWrite64_70));
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
+    ();
 }
 pub static mut kNormalizeThreshold_76: std::cell::LazyCell<u8> =
     std::cell::LazyCell::new(|| unsafe { 254_u8 });
@@ -5600,7 +5597,7 @@ pub unsafe fn EncodeHeader_173(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    &(state);
+    ();
     let mut version: usize = ((*jpg).version as usize);
     let mut is_fallback: bool = (((version) & (1_usize))
         == ((*std::cell::LazyCell::force_mut(&mut *&raw mut kFallbackVersion_2)) as usize));
@@ -5665,7 +5662,7 @@ pub unsafe fn EncodeMetaData_174(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    &(state);
+    ();
     let mut metadata: Vec<u8> = Vec::new();
     let mut transformed_marker_count: usize = 0_usize;
     let mut i: usize = 0_usize;
@@ -5770,7 +5767,7 @@ pub unsafe fn EncodeJPEGInternals_175(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    &(state);
+    ();
     let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     if !(unsafe {
         let _jpg: *const brunsli_JPEGData = jpg;
@@ -5788,7 +5785,7 @@ pub unsafe fn EncodeQuantData_176(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    &(state);
+    ();
     let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     if !(unsafe {
         let _jpg: *const brunsli_JPEGData = jpg;
@@ -5839,7 +5836,7 @@ pub unsafe fn EncodeDCData_178(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    &(*jpg);
+    ();
     let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     (unsafe {
         let _s: *mut brunsli_internal_enc_EntropyCodes = (*state).entropy_codes;
@@ -5858,7 +5855,7 @@ pub unsafe fn EncodeACData_179(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    &(*jpg);
+    ();
     let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     (unsafe {
         let _s: *mut brunsli_internal_enc_EntropyCodes = (*state).entropy_codes;
@@ -7054,7 +7051,7 @@ pub unsafe fn EncodeOriginalJpg_194(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    &(state);
+    ();
     if (((*jpg).original_jpg).is_null()) || (((*jpg).original_jpg_size) > (*len)) {
         return false;
     }

@@ -45,10 +45,10 @@ fn main_0() -> i32 {
     let mut out: i64 = 0_i64;
     let mut r: i32 = 0;
     'loop_: while (r < 40) {
-        let mut row: Ptr<Box<[i32]>> = (grid.as_pointer() as Ptr<Box<[i32]>>);
+        let mut row: Ptr<Box<[i32]>> = grid.decay();
         let mut i: i32 = 0;
         'loop_: while (i < N_0.with(|rc| *rc.borrow())) {
-            let mut p: Ptr<i32> = ((row).as_pointer() as Ptr<i32>).clone();
+            let mut p: Ptr<i32> = row.decay();
             ({
                 let _p: Ptr<i32> = (p).clone();
                 let _n: i32 = N_0.with(|rc| *rc.borrow());
