@@ -4,5 +4,4 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-brotli-sys = "0.3.2"
 libcc2rs = { version = "0.1.0", path = "../../../../cpp2rust/libcc2rs" }
