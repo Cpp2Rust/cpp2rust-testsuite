@@ -249,7 +249,7 @@ impl woff2_Buffer {
             }) {
                 (mut __tmp_0, mut __tmp_1) => {
                     if n_bytes != 0 {
-                        ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, n_bytes as usize)
+                        ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, n_bytes)
                     }
                     __tmp_0
                 }
@@ -277,11 +277,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_2, mut __tmp_3) => {
                 if ::std::mem::size_of::<u16>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_3,
-                        __tmp_2,
-                        ::std::mem::size_of::<u16>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_3, __tmp_2, ::std::mem::size_of::<u16>())
                 }
                 __tmp_2
             }
@@ -320,11 +316,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_4, mut __tmp_5) => {
                 if ::std::mem::size_of::<u32>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_5,
-                        __tmp_4,
-                        ::std::mem::size_of::<u32>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_5, __tmp_4, ::std::mem::size_of::<u32>())
                 }
                 __tmp_4
             }
@@ -346,11 +338,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_6, mut __tmp_7) => {
                 if ::std::mem::size_of::<u32>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_7,
-                        __tmp_6,
-                        ::std::mem::size_of::<u32>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_7, __tmp_6, ::std::mem::size_of::<u32>())
                 }
                 __tmp_6
             }
@@ -368,11 +356,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_8, mut __tmp_9) => {
                 if ::std::mem::size_of::<u64>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_9,
-                        __tmp_8,
-                        ::std::mem::size_of::<u64>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_9, __tmp_8, ::std::mem::size_of::<u64>())
                 }
                 __tmp_8
             }
@@ -776,7 +760,7 @@ pub unsafe fn StoreBytes_32(
     ) {
         (mut __tmp_0, mut __tmp_1) => {
             if len != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len as usize)
+                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len)
             }
             __tmp_0
         }
@@ -1007,7 +991,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
         i.postfix_inc();
     }
     {
-        let __a0 = offsets.len() as usize;
+        let __a0 = offsets.len();
         (*font_collection)
             .fonts
             .resize_with(__a0, || <woff2_Font>::default())
@@ -1058,7 +1042,7 @@ pub unsafe fn ReadFontCollection_37(
         != (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
     {
         {
-            let __a0 = 1_usize as usize;
+            let __a0 = 1_usize;
             (*font_collection)
                 .fonts
                 .resize_with(__a0, || <woff2_Font>::default())
@@ -1173,7 +1157,7 @@ pub unsafe fn WriteTable_43(
         ) {
             (mut __tmp_14, mut __tmp_15, mut __tmp_16) => {
                 if __tmp_16 != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_15, __tmp_14, __tmp_16 as usize)
+                    ::std::ptr::copy_nonoverlapping(__tmp_15, __tmp_14, __tmp_16)
                 }
                 __tmp_14
             }
@@ -1599,7 +1583,7 @@ pub unsafe fn ReadGlyph_63(
     }
     if ((num_contours as i32) > (0)) {
         {
-            let __a0 = (num_contours as usize) as usize;
+            let __a0 = (num_contours as usize);
             (*glyph).contours.resize_with(__a0, || Default::default())
         };
         let mut last_point_index: u16 = 0_u16;
@@ -1613,7 +1597,7 @@ pub unsafe fn ReadGlyph_63(
                 + (if ((i) == (0)) { 1 } else { 0 }))
                 as u16);
             {
-                let __a0 = (num_points as usize) as usize;
+                let __a0 = (num_points as usize);
                 (&mut (*glyph)).contours[(i as usize)]
                     .resize_with(__a0, || <woff2_Glyph_Point>::default())
             };
@@ -1640,7 +1624,7 @@ pub unsafe fn ReadGlyph_63(
             'loop_: while ((i) < (num_contours as i32)) {
                 match ((&mut flags[(i as usize)] as *mut Vec<u8>),) {
                     (__tmp_0,) => {
-                        let __a0 = (&mut (*glyph)).contours[(i as usize)].len() as usize;
+                        let __a0 = (&mut (*glyph)).contours[(i as usize)].len();
                         (*__tmp_0).resize_with(__a0, || 0_u8)
                     }
                 };
@@ -2076,7 +2060,7 @@ pub unsafe fn WriteNormalizedLoca_73(
     });
     let mut glyph_sz: i32 = if ((index_fmt) == (0)) { 2 } else { 4 };
     {
-        let __a0 = (((unsafe { Round4_69(((num_glyphs) + (1))) }) * (glyph_sz)) as usize) as usize;
+        let __a0 = (((unsafe { Round4_69(((num_glyphs) + (1))) }) * (glyph_sz)) as usize);
         (*loca_table).buffer.resize_with(__a0, || 0_u8)
     };
     (*loca_table).length = ((((num_glyphs) + (1)) * (glyph_sz)) as u32);
@@ -2146,7 +2130,7 @@ pub unsafe fn WriteNormalizedLoca_73(
         )
     });
     {
-        let __a0 = (glyf_offset as usize) as usize;
+        let __a0 = (glyf_offset as usize);
         (*glyf_table).buffer.resize_with(__a0, || 0_u8)
     };
     (*glyf_table).data = (if (glyf_offset != 0) {
@@ -2175,7 +2159,7 @@ pub unsafe fn MakeEditableBuffer_74(mut font: *mut woff2_Font, mut tableTag: i32
     }
     let mut sz: i32 = ((unsafe { Round4_71((*table).length) }) as i32);
     {
-        let __a0 = (sz as usize) as usize;
+        let __a0 = (sz as usize);
         (*table).buffer.resize_with(__a0, || 0_u8)
     };
     let mut buf: *mut u8 = (&mut (&mut (*table)).buffer[(0_usize)] as *mut u8);
@@ -2186,7 +2170,7 @@ pub unsafe fn MakeEditableBuffer_74(mut font: *mut woff2_Font, mut tableTag: i32
     ) {
         (mut __tmp_0, mut __tmp_1, mut __tmp_2) => {
             if __tmp_2 != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, __tmp_2 as usize)
+                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, __tmp_2)
             }
             __tmp_0
         }
@@ -2246,7 +2230,7 @@ pub unsafe fn NormalizeGlyphs_75(mut font: *mut woff2_Font) -> bool {
     let mut max_normalized_glyf_size: usize =
         ((((1.1_f64) * ((*glyf_table).length as f64)) + (((2) * (num_glyphs)) as f64)) as usize);
     {
-        let __a0 = max_normalized_glyf_size as usize;
+        let __a0 = max_normalized_glyf_size;
         (*glyf_table).buffer.resize_with(__a0, || 0_u8)
     };
     if !(unsafe { WriteNormalizedLoca_73(index_fmt, num_glyphs, font) }) {
@@ -2466,7 +2450,7 @@ pub unsafe fn WriteBytes_86(mut out: *mut Vec<u8>, mut data: *const u8, mut len:
     }
     let mut offset: usize = (*(out).cast_const()).len();
     {
-        let __a0 = (offset).wrapping_add(len) as usize;
+        let __a0 = (offset).wrapping_add(len);
         (*out).resize_with(__a0, || 0_u8)
     };
     match (
@@ -2475,7 +2459,7 @@ pub unsafe fn WriteBytes_86(mut out: *mut Vec<u8>, mut data: *const u8, mut len:
     ) {
         (mut __tmp_0, mut __tmp_1) => {
             if len != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len as usize)
+                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len)
             }
             __tmp_0
         }
@@ -2548,7 +2532,7 @@ impl woff2_GlyfEncoder {
             n_glyphs_: num_glyphs,
         };
         {
-            let __a0 = (((((num_glyphs) + (31)) >> (5)) << (2)) as usize) as usize;
+            let __a0 = (((((num_glyphs) + (31)) >> (5)) << (2)) as usize);
             this.bbox_bitmap_.resize_with(__a0, || 0_u8)
         };
         this
@@ -2895,7 +2879,7 @@ impl woff2_GlyfEncoder {
     unsafe fn EnsureOverlapBitmap(&mut self) {
         if self.overlap_bitmap_.is_empty() {
             {
-                let __a0 = ((((self.n_glyphs_) + (7)) >> (3)) as usize) as usize;
+                let __a0 = ((((self.n_glyphs_) + (7)) >> (3)) as usize);
                 self.overlap_bitmap_.resize_with(__a0, || 0_u8)
             };
         }
@@ -3140,11 +3124,11 @@ pub unsafe fn TransformHmtxTable_91(mut font: *mut woff2_Font) -> bool {
             .wrapping_add(((2_usize).wrapping_mul(monospace_lsbs.len()) as u64)))
             as usize;
     }
-    if transformed_size as usize > (*transformed_hmtx).buffer.capacity() as usize {
+    if transformed_size > (*transformed_hmtx).buffer.capacity() as usize {
         let len_0 = (*transformed_hmtx).buffer.len();
         (*transformed_hmtx)
             .buffer
-            .reserve_exact(transformed_size as usize - len_0 as usize);
+            .reserve_exact(transformed_size - len_0 as usize);
     };
     let mut out: *mut Vec<u8> = (&mut (*transformed_hmtx).buffer as *mut Vec<u8>);
     (unsafe { WriteBytes_86(out, (&mut flags as *mut u8).cast_const(), 1_usize) });

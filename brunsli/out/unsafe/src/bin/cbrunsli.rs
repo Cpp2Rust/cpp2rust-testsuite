@@ -1089,7 +1089,7 @@ pub unsafe fn BrunsliUnalignedRead16_66(mut p: *const ::libc::c_void) -> u16 {
     match ({ ((&mut t as *mut u16) as *mut ::libc::c_void) },) {
         (mut __tmp_0,) => {
             if ::std::mem::size_of::<u16>() != 0 {
-                ::std::ptr::copy_nonoverlapping(p, __tmp_0, ::std::mem::size_of::<u16>() as usize)
+                ::std::ptr::copy_nonoverlapping(p, __tmp_0, ::std::mem::size_of::<u16>())
             }
             __tmp_0
         }
@@ -1100,7 +1100,7 @@ pub unsafe fn BrunsliUnalignedWrite16_67(mut p: *mut ::libc::c_void, mut v: u16)
     match ({ ((&mut v as *mut u16) as *const ::libc::c_void) },) {
         (mut __tmp_1,) => {
             if ::std::mem::size_of::<u16>() != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_1, p, ::std::mem::size_of::<u16>() as usize)
+                ::std::ptr::copy_nonoverlapping(__tmp_1, p, ::std::mem::size_of::<u16>())
             }
             p
         }
@@ -1111,7 +1111,7 @@ pub unsafe fn BrunsliUnalignedRead32_68(mut p: *const ::libc::c_void) -> u32 {
     match ({ ((&mut t as *mut u32) as *mut ::libc::c_void) },) {
         (mut __tmp_2,) => {
             if ::std::mem::size_of::<u32>() != 0 {
-                ::std::ptr::copy_nonoverlapping(p, __tmp_2, ::std::mem::size_of::<u32>() as usize)
+                ::std::ptr::copy_nonoverlapping(p, __tmp_2, ::std::mem::size_of::<u32>())
             }
             __tmp_2
         }
@@ -1123,7 +1123,7 @@ pub unsafe fn BrunsliUnalignedRead64_69(mut p: *const ::libc::c_void) -> u64 {
     match ({ ((&mut t as *mut u64) as *mut ::libc::c_void) },) {
         (mut __tmp_3,) => {
             if ::std::mem::size_of::<u64>() != 0 {
-                ::std::ptr::copy_nonoverlapping(p, __tmp_3, ::std::mem::size_of::<u64>() as usize)
+                ::std::ptr::copy_nonoverlapping(p, __tmp_3, ::std::mem::size_of::<u64>())
             }
             __tmp_3
         }
@@ -1134,7 +1134,7 @@ pub unsafe fn BrunsliUnalignedWrite64_70(mut p: *mut ::libc::c_void, mut v: u64)
     match ({ ((&mut v as *mut u64) as *const ::libc::c_void) },) {
         (mut __tmp_4,) => {
             if ::std::mem::size_of::<u64>() != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_4, p, ::std::mem::size_of::<u64>() as usize)
+                ::std::ptr::copy_nonoverlapping(__tmp_4, p, ::std::mem::size_of::<u64>())
             }
             p
         }
@@ -1172,20 +1172,7 @@ pub unsafe fn Append_73(mut dst: *mut Vec<u8>, src: *const Vec<u8>) {
 pub unsafe fn Log2FloorNonZero_74(mut n: u32) -> i32 {
     return ((31) ^ (n.leading_zeros() as i32));
 }
-pub unsafe fn BrunsliSuppressUnusedFunctions_75() {
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-}
+pub unsafe fn BrunsliSuppressUnusedFunctions_75() {}
 pub static mut kNormalizeThreshold_76: std::cell::LazyCell<u8> =
     std::cell::LazyCell::new(|| unsafe { 254_u8 });
 pub static mut kDivLut17_77: std::cell::LazyCell<[u16; 255]> =
@@ -1707,15 +1694,15 @@ impl brunsli_ComponentStateDC {
     pub unsafe fn SetWidth(&mut self, mut w: i32) {
         self.width = w;
         {
-            let __a0 = (((w) + (1)) as usize) as usize;
+            let __a0 = (((w) + (1)) as usize);
             self.prev_is_nonempty.resize(__a0, 1)
         };
         {
-            let __a0 = (((w) + (3)) as usize) as usize;
+            let __a0 = (((w) + (3)) as usize);
             self.prev_abs_coeff.resize_with(__a0, || 0_i32)
         };
         {
-            let __a0 = (((w) + (1)) as usize) as usize;
+            let __a0 = (((w) + (1)) as usize);
             self.prev_sign.resize_with(__a0, || 0_i32)
         };
     }
@@ -1815,21 +1802,21 @@ impl brunsli_ComponentState {
     pub unsafe fn SetWidth(&mut self, mut w: i32) {
         self.width = w;
         {
-            let __a0 = (((w) + (1)) as usize) as usize;
+            let __a0 = (((w) + (1)) as usize);
             self.prev_is_nonempty.resize(__a0, 1)
         };
         {
-            let __a0 = (w as usize) as usize;
+            let __a0 = (w as usize);
             self.prev_num_nonzeros.resize_with(__a0, || 0_u8)
         };
         {
             let __a0 = ((((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) * (2))
-                * ((w) + (3))) as usize) as usize;
+                * ((w) + (3))) as usize);
             self.prev_abs_coeff.resize_with(__a0, || 0_i32)
         };
         {
             let __a0 = (((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
-                * ((w) + (1))) as usize) as usize;
+                * ((w) + (1))) as usize);
             self.prev_sign.resize_with(__a0, || 0_i32)
         };
     }
@@ -1898,7 +1885,7 @@ impl brunsli_ComponentState {
         ) {
             (mut __tmp_5, mut __tmp_6) => {
                 if 256_usize != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_6, __tmp_5, 256_usize as usize)
+                    ::std::ptr::copy_nonoverlapping(__tmp_6, __tmp_5, 256_usize)
                 }
                 __tmp_5
             }
@@ -1909,7 +1896,7 @@ impl brunsli_ComponentState {
         ) {
             (mut __tmp_7, mut __tmp_8) => {
                 if 256_usize != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_8, __tmp_7, 256_usize as usize)
+                    ::std::ptr::copy_nonoverlapping(__tmp_8, __tmp_7, 256_usize)
                 }
                 __tmp_7
             }
@@ -1920,7 +1907,7 @@ impl brunsli_ComponentState {
         ) {
             (mut __tmp_9, mut __tmp_10) => {
                 if 256_usize != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_10, __tmp_9, 256_usize as usize)
+                    ::std::ptr::copy_nonoverlapping(__tmp_10, __tmp_9, 256_usize)
                 }
                 __tmp_9
             }
@@ -1936,7 +1923,7 @@ impl brunsli_ComponentState {
         ) {
             (mut __tmp_11, mut __tmp_12) => {
                 if 8064_usize != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_12, __tmp_11, 8064_usize as usize)
+                    ::std::ptr::copy_nonoverlapping(__tmp_12, __tmp_11, 8064_usize)
                 }
                 __tmp_11
             }
@@ -3343,7 +3330,7 @@ pub unsafe fn HistogramCombine_133(
                 }
             }
         }
-        .iter_distance(&clusters.begin()) as usize) as usize;
+        .iter_distance(&clusters.begin()) as usize);
         clusters.resize_with(__a0, || 0_u64)
     };
     let mut pairs: Vec<brunsli_HistogramPair> = Vec::new();
@@ -3353,9 +3340,9 @@ pub unsafe fn HistogramCombine_133(
     },)
     {
         (mut __tmp_5,) => {
-            if __tmp_5 as usize > pairs.capacity() as usize {
+            if __tmp_5 > pairs.capacity() as usize {
                 let len_0 = pairs.len();
-                pairs.reserve_exact(__tmp_5 as usize - len_0 as usize);
+                pairs.reserve_exact(__tmp_5 - len_0 as usize);
             }
         }
     };
@@ -3444,7 +3431,7 @@ pub unsafe fn HistogramCombine_133(
             copy_to.iter_inc();
         }
         {
-            let __a0 = (copy_to.iter_distance(&pairs.begin()) as usize) as usize;
+            let __a0 = (copy_to.iter_distance(&pairs.begin()) as usize);
             pairs.resize_with(__a0, || <brunsli_HistogramPair>::default())
         };
         let mut i: usize = 0_usize;
@@ -3532,7 +3519,7 @@ pub unsafe fn HistogramRemap_135(
                 }
             }
         }
-        .iter_distance(&all_symbols.begin()) as usize) as usize;
+        .iter_distance(&all_symbols.begin()) as usize);
         all_symbols.resize_with(__a0, || 0_i32)
     };
     let mut i: usize = 0_usize;
@@ -3600,7 +3587,7 @@ pub unsafe fn HistogramReindex_136(
         i.prefix_inc();
     }
     {
-        let __a0 = (next_index as usize) as usize;
+        let __a0 = (next_index as usize);
         (*out).resize_with(__a0, || <brunsli_internal_enc_Histogram>::default())
     };
     let mut i: usize = 0_usize;
@@ -3622,13 +3609,13 @@ pub unsafe fn ClusterHistograms_137(
     mut histogram_symbols: *mut Vec<u32>,
 ) {
     let in_size: usize = (num_contexts).wrapping_mul(num_blocks);
-    let mut cluster_size: Vec<i32> = vec![1; in_size as usize];
+    let mut cluster_size: Vec<i32> = vec![1; in_size];
     {
-        let __a0 = in_size as usize;
+        let __a0 = in_size;
         (*out).resize_with(__a0, || <brunsli_internal_enc_Histogram>::default())
     };
     {
-        let __a0 = in_size as usize;
+        let __a0 = in_size;
         (*histogram_symbols).resize_with(__a0, || 0_u32)
     };
     let mut i: usize = 0_usize;
@@ -4147,12 +4134,12 @@ pub unsafe fn TransformApp0Marker_149(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
     if (({
         let sa = core::slice::from_raw_parts(
             ((*s).as_ptr() as *const ::libc::c_void) as *const u8,
-            9_usize as usize,
+            9_usize,
         );
         let sb = core::slice::from_raw_parts(
             ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xe0_62)).as_ptr()
                 as *const ::libc::c_void) as *const u8,
-            9_usize as usize,
+            9_usize,
         );
         let mut diff = 0_i32;
         for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4195,7 +4182,7 @@ pub unsafe fn TransformApp0Marker_149(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
                 | (((&(*s))[(10_usize)] as i32) << (1)))
                 | ((density_ix) << (3))) as u8);
             (*out) = (0..(1_usize) as usize).map(|_| 0_u8).collect::<Vec<_>>();
-            (*(&mut (&mut (*out))[0_usize as usize] as *mut u8)) = app0_status;
+            (*(&mut (&mut (*out))[0_usize] as *mut u8)) = app0_status;
             return true;
         }
     }
@@ -4206,12 +4193,12 @@ pub unsafe fn TransformApp2Marker_150(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
         && (!({
             let sa = core::slice::from_raw_parts(
                 ((*s).as_ptr() as *const ::libc::c_void) as *const u8,
-                84_usize as usize,
+                84_usize,
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xe2_63)).as_ptr()
                     as *const ::libc::c_void) as *const u8,
-                84_usize as usize,
+                84_usize,
             );
             let mut diff = 0_i32;
             for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4225,13 +4212,13 @@ pub unsafe fn TransformApp2Marker_150(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
         && (!({
             let sa = core::slice::from_raw_parts(
                 ((*s).as_ptr().offset((85) as isize) as *const ::libc::c_void) as *const u8,
-                (((3161) - (85)) as usize) as usize,
+                (((3161) - (85)) as usize),
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xe2_63))
                     .as_ptr()
                     .offset((85) as isize) as *const ::libc::c_void) as *const u8,
-                (((3161) - (85)) as usize) as usize,
+                (((3161) - (85)) as usize),
             );
             let mut diff = 0_i32;
             for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4256,12 +4243,12 @@ pub unsafe fn TransformApp12Marker_151(s: *const Vec<u8>, mut out: *mut Vec<u8>)
         && (!({
             let sa = core::slice::from_raw_parts(
                 ((*s).as_ptr() as *const ::libc::c_void) as *const u8,
-                15_usize as usize,
+                15_usize,
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xec_64)).as_ptr()
                     as *const ::libc::c_void) as *const u8,
-                15_usize as usize,
+                15_usize,
             );
             let mut diff = 0_i32;
             for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4275,13 +4262,13 @@ pub unsafe fn TransformApp12Marker_151(s: *const Vec<u8>, mut out: *mut Vec<u8>)
         && (!({
             let sa = core::slice::from_raw_parts(
                 ((*s).as_ptr().offset((16) as isize) as *const ::libc::c_void) as *const u8,
-                (((18) - (16)) as usize) as usize,
+                (((18) - (16)) as usize),
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xec_64))
                     .as_ptr()
                     .offset((16) as isize) as *const ::libc::c_void) as *const u8,
-                (((18) - (16)) as usize) as usize,
+                (((18) - (16)) as usize),
             );
             let mut diff = 0_i32;
             for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4306,12 +4293,12 @@ pub unsafe fn TransformApp14Marker_152(s: *const Vec<u8>, mut out: *mut Vec<u8>)
         && (!({
             let sa = core::slice::from_raw_parts(
                 ((&(&(*s))[(0_usize)] as *const u8) as *const ::libc::c_void) as *const u8,
-                10_usize as usize,
+                10_usize,
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xee_65)).as_ptr()
                     as *const ::libc::c_void) as *const u8,
-                10_usize as usize,
+                10_usize,
             );
             let mut diff = 0_i32;
             for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4325,13 +4312,13 @@ pub unsafe fn TransformApp14Marker_152(s: *const Vec<u8>, mut out: *mut Vec<u8>)
         && (!({
             let sa = core::slice::from_raw_parts(
                 ((&(&(*s))[(11_usize)] as *const u8) as *const ::libc::c_void) as *const u8,
-                (((15) - (11)) as usize) as usize,
+                (((15) - (11)) as usize),
             );
             let sb = core::slice::from_raw_parts(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut AppData_0xee_65))
                     .as_ptr()
                     .offset((11) as isize) as *const ::libc::c_void) as *const u8,
-                (((15) - (11)) as usize) as usize,
+                (((15) - (11)) as usize),
             );
             let mut diff = 0_i32;
             for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4602,13 +4589,13 @@ pub unsafe fn EncodeHuffmanCode_158(
                 let sa = core::slice::from_raw_parts(
                     ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const ::libc::c_void)
                         as *const u8,
-                    ::std::mem::size_of::<[i32; 16]>() as usize,
+                    ::std::mem::size_of::<[i32; 16]>(),
                 );
                 let sb = core::slice::from_raw_parts(
                     ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStockDCHuffmanCodeCounts_54))
                         [(i) as usize]
                         .as_ptr() as *const ::libc::c_void) as *const u8,
-                    ::std::mem::size_of::<[i32; 16]>() as usize,
+                    ::std::mem::size_of::<[i32; 16]>(),
                 );
                 let mut diff = 0_i32;
                 for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4623,7 +4610,7 @@ pub unsafe fn EncodeHuffmanCode_158(
                     let sa = core::slice::from_raw_parts(
                         ((&(&(*huff)).values[(0_usize)] as *const i32) as *const ::libc::c_void)
                             as *const u8,
-                        ::std::mem::size_of::<[i32; 13]>() as usize,
+                        ::std::mem::size_of::<[i32; 13]>(),
                     );
                     let sb = core::slice::from_raw_parts(
                         ((*std::cell::LazyCell::force_mut(
@@ -4631,7 +4618,7 @@ pub unsafe fn EncodeHuffmanCode_158(
                         ))[(i) as usize]
                             .as_ptr() as *const ::libc::c_void)
                             as *const u8,
-                        ::std::mem::size_of::<[i32; 13]>() as usize,
+                        ::std::mem::size_of::<[i32; 13]>(),
                     );
                     let mut diff = 0_i32;
                     for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4658,13 +4645,13 @@ pub unsafe fn EncodeHuffmanCode_158(
                 let sa = core::slice::from_raw_parts(
                     ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const ::libc::c_void)
                         as *const u8,
-                    ::std::mem::size_of::<[i32; 16]>() as usize,
+                    ::std::mem::size_of::<[i32; 16]>(),
                 );
                 let sb = core::slice::from_raw_parts(
                     ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStockACHuffmanCodeCounts_57))
                         [(i) as usize]
                         .as_ptr() as *const ::libc::c_void) as *const u8,
-                    ::std::mem::size_of::<[i32; 16]>() as usize,
+                    ::std::mem::size_of::<[i32; 16]>(),
                 );
                 let mut diff = 0_i32;
                 for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4679,7 +4666,7 @@ pub unsafe fn EncodeHuffmanCode_158(
                     let sa = core::slice::from_raw_parts(
                         ((&(&(*huff)).values[(0_usize)] as *const i32) as *const ::libc::c_void)
                             as *const u8,
-                        ::std::mem::size_of::<[i32; 163]>() as usize,
+                        ::std::mem::size_of::<[i32; 163]>(),
                     );
                     let sb = core::slice::from_raw_parts(
                         ((*std::cell::LazyCell::force_mut(
@@ -4687,7 +4674,7 @@ pub unsafe fn EncodeHuffmanCode_158(
                         ))[(i) as usize]
                             .as_ptr() as *const ::libc::c_void)
                             as *const u8,
-                        ::std::mem::size_of::<[i32; 163]>() as usize,
+                        ::std::mem::size_of::<[i32; 163]>(),
                     );
                     let mut diff = 0_i32;
                     for (x, y) in sa.iter().zip(sb.iter()) {
@@ -5154,9 +5141,9 @@ impl brunsli_internal_enc_EntropySource {
     pub unsafe fn Resize(&mut self, mut num_bands: usize) {
         self.num_bands_ = num_bands;
         {
-            let __a0 = (num_bands)
-                .wrapping_mul((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumAvrgContexts_83)))
-                as usize;
+            let __a0 = (num_bands).wrapping_mul(
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumAvrgContexts_83)),
+            );
             self.histograms_
                 .resize_with(__a0, || <brunsli_internal_enc_Histogram>::default())
         };
@@ -5214,7 +5201,7 @@ impl brunsli_internal_enc_EntropyCodes {
 impl brunsli_internal_enc_EntropyCodes {
     pub unsafe fn BuildAndStoreEntropyCodes(&mut self, mut storage: *mut brunsli_Storage) {
         {
-            let __a0 = self.clustered_.len() as usize;
+            let __a0 = self.clustered_.len();
             self.ans_tables_
                 .resize_with(__a0, || <brunsli_ANSTable>::default())
         };
@@ -5241,7 +5228,7 @@ impl brunsli_internal_enc_DataStream {}
 impl brunsli_internal_enc_DataStream {
     pub unsafe fn Resize(&mut self, mut max_num_code_words: usize) {
         {
-            let __a0 = max_num_code_words as usize;
+            let __a0 = max_num_code_words;
             self.code_words_.resize_with(__a0, || {
                 <brunsli_internal_enc_DataStream_CodeWord>::default()
             })
@@ -5261,7 +5248,7 @@ impl brunsli_internal_enc_DataStream {
                     (*std::cell::LazyCell::force_mut(&mut *&raw mut kSlackForOneBlock_140)),
                 );
             {
-                let __a0 = new_size as usize;
+                let __a0 = new_size;
                 self.code_words_.resize_with(__a0, || {
                     <brunsli_internal_enc_DataStream_CodeWord>::default()
                 })
@@ -5565,8 +5552,7 @@ pub unsafe fn EncodeSignature_171(mut len: usize, mut data: *mut u8, mut pos: *m
                     ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignature_44)).as_ptr()
                         as *const ::libc::c_void),
                     __tmp_19,
-                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43))
-                        as usize,
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)),
                 )
             }
             __tmp_19
@@ -5597,7 +5583,6 @@ pub unsafe fn EncodeHeader_173(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    ();
     let mut version: usize = ((*jpg).version as usize);
     let mut is_fallback: bool = (((version) & (1_usize))
         == ((*std::cell::LazyCell::force_mut(&mut *&raw mut kFallbackVersion_2)) as usize));
@@ -5662,7 +5647,6 @@ pub unsafe fn EncodeMetaData_174(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    ();
     let mut metadata: Vec<u8> = Vec::new();
     let mut transformed_marker_count: usize = 0_usize;
     let mut i: usize = 0_usize;
@@ -5767,7 +5751,6 @@ pub unsafe fn EncodeJPEGInternals_175(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    ();
     let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     if !(unsafe {
         let _jpg: *const brunsli_JPEGData = jpg;
@@ -5785,7 +5768,6 @@ pub unsafe fn EncodeQuantData_176(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    ();
     let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     if !(unsafe {
         let _jpg: *const brunsli_JPEGData = jpg;
@@ -5836,7 +5818,6 @@ pub unsafe fn EncodeDCData_178(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    ();
     let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     (unsafe {
         let _s: *mut brunsli_internal_enc_EntropyCodes = (*state).entropy_codes;
@@ -5855,7 +5836,6 @@ pub unsafe fn EncodeACData_179(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    ();
     let mut storage: brunsli_Storage = brunsli_Storage::new({ data }, { (*len) });
     (unsafe {
         let _s: *mut brunsli_internal_enc_EntropyCodes = (*state).entropy_codes;
@@ -6034,7 +6014,7 @@ pub unsafe fn CalculateMeta_186(
     let num_components: usize = (*jpg).components.len();
     let meta: *mut Vec<brunsli_internal_enc_ComponentMeta> = &mut (*state).meta;
     {
-        let __a0 = num_components as usize;
+        let __a0 = num_components;
         (*meta).resize_with(__a0, || <brunsli_internal_enc_ComponentMeta>::default())
     };
     let mut i: usize = 0_usize;
@@ -6065,9 +6045,9 @@ pub unsafe fn CalculateMeta_186(
                     ::std::ptr::copy_nonoverlapping(
                         __tmp_21,
                         __tmp_20,
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize)
-                            .wrapping_mul((::std::mem::size_of::<i32>() as usize))
-                            as usize,
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                            as usize)
+                            .wrapping_mul((::std::mem::size_of::<i32>() as usize)),
                     )
                 }
                 __tmp_20
@@ -6993,8 +6973,7 @@ pub unsafe fn BrunsliEncodeJpeg_191(
         match ((&mut dc_prediction_errors[(i)] as *mut Vec<i16>),) {
             (__tmp_22,) => {
                 let __a0 = ((((&mut (*meta))[(i)].width_in_blocks)
-                    * ((&mut (*meta))[(i)].height_in_blocks)) as usize)
-                    as usize;
+                    * ((&mut (*meta))[(i)].height_in_blocks)) as usize);
                 (*__tmp_22).resize_with(__a0, || 0_i16)
             }
         };
@@ -7012,8 +6991,7 @@ pub unsafe fn BrunsliEncodeJpeg_191(
         match ((&mut block_state[(i)] as *mut Vec<u8>),) {
             (__tmp_23,) => {
                 let __a0 = ((((&mut (*meta))[(i)].width_in_blocks)
-                    * ((&mut (*meta))[(i)].height_in_blocks)) as usize)
-                    as usize;
+                    * ((&mut (*meta))[(i)].height_in_blocks)) as usize);
                 (*__tmp_23).resize_with(__a0, || 0_u8)
             }
         };
@@ -7051,7 +7029,6 @@ pub unsafe fn EncodeOriginalJpg_194(
     mut data: *mut u8,
     mut len: *mut usize,
 ) -> bool {
-    ();
     if (((*jpg).original_jpg).is_null()) || (((*jpg).original_jpg_size) > (*len)) {
         return false;
     }
@@ -7062,7 +7039,7 @@ pub unsafe fn EncodeOriginalJpg_194(
     ) {
         (mut __tmp_24, mut __tmp_25, mut __tmp_26) => {
             if __tmp_26 != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_25, __tmp_24, __tmp_26 as usize)
+                ::std::ptr::copy_nonoverlapping(__tmp_25, __tmp_24, __tmp_26)
             }
             __tmp_24
         }
@@ -7097,7 +7074,7 @@ pub unsafe fn BrunsliEncodeJpegBypass_195(
         jpg.width = 0;
         jpg.height = 0;
         {
-            let __a0 = 1_usize as usize;
+            let __a0 = 1_usize;
             jpg.components
                 .resize_with(__a0, || <brunsli_JPEGComponent>::default())
         };
@@ -8433,9 +8410,9 @@ pub unsafe fn CreateHuffmanTree_220(
         let mut tree: Vec<brunsli_HuffmanTree> = Vec::new();
         match ({ ((2_usize).wrapping_mul(length)).wrapping_add(1_usize) },) {
             (mut __tmp_0,) => {
-                if __tmp_0 as usize > tree.capacity() as usize {
+                if __tmp_0 > tree.capacity() as usize {
                     let len_0 = tree.len();
-                    tree.reserve_exact(__tmp_0 as usize - len_0 as usize);
+                    tree.reserve_exact(__tmp_0 - len_0 as usize);
                 }
             }
         };
@@ -8993,7 +8970,7 @@ pub unsafe fn ProcessSOF_235(
     (*jpg).height = height;
     (*jpg).width = width;
     {
-        let __a0 = (num_components as usize) as usize;
+        let __a0 = (num_components as usize);
         (*jpg)
             .components
             .resize_with(__a0, || <brunsli_JPEGComponent>::default())
@@ -9004,12 +8981,12 @@ pub unsafe fn ProcessSOF_235(
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*jpg).components.len())) {
         let id: i32 = (unsafe { ReadUint8_233(data, pos) });
-        if *(&mut (ids_seen)[(id as usize) as usize] as *mut bool) {
+        if *(&mut (ids_seen)[(id as usize)] as *mut bool) {
             write!((*libcc2rs::cerr_unsafe()), "Duplicate ID {:} in SOF.\n", id,);
             (*jpg).error = brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID;
             return false;
         }
-        match ((&mut (&mut (ids_seen)[(id as usize) as usize] as *mut bool) as *mut *mut bool),) {
+        match ((&mut (&mut (ids_seen)[(id as usize)] as *mut bool) as *mut *mut bool),) {
             (__tmp_0,) => {
                 *(*__tmp_0) = true;
                 (*__tmp_0)
@@ -9098,7 +9075,7 @@ pub unsafe fn ProcessSOF_235(
             {
                 let __a0 = ((((*c).num_blocks).wrapping_mul(
                     ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as u32),
-                )) as usize) as usize;
+                )) as usize);
                 (*c).coeffs.resize_with(__a0, || 0_i16)
             };
         }
@@ -9166,12 +9143,12 @@ pub unsafe fn ProcessSOS_236(
     let mut i: i32 = 0;
     'loop_: while ((i) < (comps_in_scan)) {
         let mut id: i32 = (unsafe { ReadUint8_233(data, pos) });
-        if *(&mut (ids_seen)[(id as usize) as usize] as *mut bool) {
+        if *(&mut (ids_seen)[(id as usize)] as *mut bool) {
             write!((*libcc2rs::cerr_unsafe()), "Duplicate ID {:} in SOS.\n", id,);
             (*jpg).error = brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID;
             return false;
         }
-        match ((&mut (&mut (ids_seen)[(id as usize) as usize] as *mut bool) as *mut *mut bool),) {
+        match ((&mut (&mut (ids_seen)[(id as usize)] as *mut bool) as *mut *mut bool),) {
             (__tmp_1,) => {
                 *(*__tmp_1) = true;
                 (*__tmp_1)
@@ -9472,17 +9449,14 @@ pub unsafe fn ProcessDHT_237(
                     return false;
                 };
             }
-            if *(&mut (values_seen)[(value as usize) as usize] as *mut bool) {
+            if *(&mut (values_seen)[(value as usize)] as *mut bool) {
                 write!((*libcc2rs::cerr_unsafe()), "Duplicate Huffman code value ",);
                 (*libcc2rs::cerr_unsafe())
                     .write_all(&([(&[value as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()));
                 (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
                 return false;
             }
-            match (
-                (&mut (&mut (values_seen)[(value as usize) as usize] as *mut bool)
-                    as *mut *mut bool),
-            ) {
+            match ((&mut (&mut (values_seen)[(value as usize)] as *mut bool) as *mut *mut bool),) {
                 (__tmp_2,) => {
                     *(*__tmp_2) = true;
                     (*__tmp_2)
@@ -10699,7 +10673,7 @@ pub unsafe fn ReadJpeg_196(
         [0; 64],
     ];
     {
-        let __a0 = 0_usize as usize;
+        let __a0 = 0_usize;
         (*jpg).padding_bits.resize_with(__a0, || 0_i32)
     };
     let mut is_progressive: bool = false;
@@ -11072,7 +11046,7 @@ impl brunsli_Storage {
         ) {
             (mut __tmp_0, mut __tmp_1) => {
                 if len != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len as usize)
+                    ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len)
                 }
                 __tmp_0
             }
@@ -11130,10 +11104,10 @@ pub unsafe fn ReadFileInternal_253(
     let mut read_pos: usize = 0_usize;
     'loop_: while ((read_pos) < ((*(content).cast_const()).len() - 1)) {
         let bytes_read: usize = libcc2rs::fread_unsafe(
-            ((if read_pos as usize >= (*content).len() - 1 {
+            ((if read_pos >= (*content).len() - 1 {
                 panic!("out of bounds access")
             } else {
-                (&mut (&mut (*content))[read_pos as usize] as *mut libc::c_char)
+                (&mut (&mut (*content))[read_pos] as *mut libc::c_char)
             }) as *mut ::libc::c_void),
             1_usize,
             ((((*(content).cast_const()).len() - 1) as u64).wrapping_sub((read_pos as u64))

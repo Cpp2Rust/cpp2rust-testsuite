@@ -1126,7 +1126,7 @@ pub fn BrunsliUnalignedRead16_66(mut p: AnyPtr) -> u16 {
     let t: Value<u16> = Rc::new(RefCell::new(0_u16));
     match ({ (t.as_pointer()).to_any() },) {
         (mut __tmp_0,) => {
-            __tmp_0.memcpy(&p, ::std::mem::size_of::<u16>() as usize);
+            __tmp_0.memcpy(&p, ::std::mem::size_of::<u16>());
             (__tmp_0).clone()
         }
     };
@@ -1135,10 +1135,7 @@ pub fn BrunsliUnalignedRead16_66(mut p: AnyPtr) -> u16 {
 pub fn BrunsliUnalignedWrite16_67(mut p: AnyPtr, v: u16) {
     let v: Value<u16> = Rc::new(RefCell::new(v));
     {
-        p.memcpy(
-            &(v.as_pointer()).to_any(),
-            ::std::mem::size_of::<u16>() as usize,
-        );
+        p.memcpy(&(v.as_pointer()).to_any(), ::std::mem::size_of::<u16>());
         (p).clone()
     };
 }
@@ -1146,7 +1143,7 @@ pub fn BrunsliUnalignedRead32_68(mut p: AnyPtr) -> u32 {
     let t: Value<u32> = Rc::new(RefCell::new(0_u32));
     match ({ (t.as_pointer()).to_any() },) {
         (mut __tmp_1,) => {
-            __tmp_1.memcpy(&p, ::std::mem::size_of::<u32>() as usize);
+            __tmp_1.memcpy(&p, ::std::mem::size_of::<u32>());
             (__tmp_1).clone()
         }
     };
@@ -1156,7 +1153,7 @@ pub fn BrunsliUnalignedRead64_69(mut p: AnyPtr) -> u64 {
     let t: Value<u64> = Rc::new(RefCell::new(0_u64));
     match ({ (t.as_pointer()).to_any() },) {
         (mut __tmp_2,) => {
-            __tmp_2.memcpy(&p, ::std::mem::size_of::<u64>() as usize);
+            __tmp_2.memcpy(&p, ::std::mem::size_of::<u64>());
             (__tmp_2).clone()
         }
     };
@@ -1165,10 +1162,7 @@ pub fn BrunsliUnalignedRead64_69(mut p: AnyPtr) -> u64 {
 pub fn BrunsliUnalignedWrite64_70(mut p: AnyPtr, v: u64) {
     let v: Value<u64> = Rc::new(RefCell::new(v));
     {
-        p.memcpy(
-            &(v.as_pointer()).to_any(),
-            ::std::mem::size_of::<u64>() as usize,
-        );
+        p.memcpy(&(v.as_pointer()).to_any(), ::std::mem::size_of::<u64>());
         (p).clone()
     };
 }
@@ -1206,20 +1200,7 @@ pub fn Append_73(mut dst: Ptr<Vec<u8>>, src: Ptr<Vec<u8>>) {
 pub fn Log2FloorNonZero_74(mut n: u32) -> i32 {
     return (31 ^ n.leading_zeros() as i32);
 }
-pub fn BrunsliSuppressUnusedFunctions_75() {
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-    ();
-}
+pub fn BrunsliSuppressUnusedFunctions_75() {}
 thread_local!(
     pub static kNormalizeThreshold_76: Value<u8> = Rc::new(RefCell::new(254_u8));
 );
@@ -3510,7 +3491,7 @@ pub struct brunsli_internal_dec_MetadataState {
     pub stage: usize,
     #[offset(40)]
     #[byte_size(8)]
-    pub brotli: *mut ::brotli_sys::BrotliDecoderState,
+    pub brotli: Ptr<BrotliDecoderState>,
     #[offset(48)]
     pub metadata_size: usize,
     #[offset(56)]
@@ -3531,7 +3512,7 @@ impl Default for brunsli_internal_dec_MetadataState {
                 remaining_multibyte_length: 0_usize,
                 multibyte_sink: Ptr::<Vec<u8>>::null(),
                 stage: (brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize),
-                brotli: std::ptr::null_mut(),
+                brotli: Ptr::null(),
                 metadata_size: 0_usize,
                 decompressed_size: 0_usize,
                 result: brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR,
@@ -4633,7 +4614,7 @@ pub fn DecodeHuffmanCode_150(
                                             .offset(huff_table_idx)
                                             .decay())
                                         .to_any(),
-                                        ::std::mem::size_of::<[i32; 16]>() as usize,
+                                        ::std::mem::size_of::<[i32; 16]>(),
                                     );
                                     (__tmp_4).clone()
                                 }
@@ -4647,7 +4628,7 @@ pub fn DecodeHuffmanCode_150(
                                             .offset(huff_table_idx)
                                             .decay())
                                         .to_any(),
-                                        ::std::mem::size_of::<[i32; 13]>() as usize,
+                                        ::std::mem::size_of::<[i32; 13]>(),
                                     );
                                     (__tmp_5).clone()
                                 }
@@ -4664,7 +4645,7 @@ pub fn DecodeHuffmanCode_150(
                                             .offset(huff_table_idx)
                                             .decay())
                                         .to_any(),
-                                        ::std::mem::size_of::<[i32; 16]>() as usize,
+                                        ::std::mem::size_of::<[i32; 16]>(),
                                     );
                                     (__tmp_6).clone()
                                 }
@@ -4678,7 +4659,7 @@ pub fn DecodeHuffmanCode_150(
                                             .offset(huff_table_idx)
                                             .decay())
                                         .to_any(),
-                                        ::std::mem::size_of::<[i32; 163]>() as usize,
+                                        ::std::mem::size_of::<[i32; 163]>(),
                                     );
                                     (__tmp_7).clone()
                                 }
@@ -5156,7 +5137,7 @@ pub fn DecodeDC_157(
     let comps: Ptr<Vec<brunsli_ComponentStateDC>> = field_ref!(ac_dc_state, dc).as_pointer();
     if (*comps.upgrade().deref()).is_empty() {
         {
-            let __a0 = num_components as usize;
+            let __a0 = num_components;
             comps.with_mut(|__v: &mut Vec<brunsli_ComponentStateDC>| {
                 __v.resize_with(__a0, || <brunsli_ComponentStateDC>::default())
             })
@@ -5632,7 +5613,7 @@ pub fn DecodeAC_160(
     let comps: Ptr<Vec<brunsli_ComponentState>> = field_ref!(ac_dc_state, ac).as_pointer();
     if (*comps.upgrade().deref()).is_empty() {
         {
-            let __a0 = num_components as usize;
+            let __a0 = num_components;
             comps.with_mut(|__v: &mut Vec<brunsli_ComponentState>| {
                 __v.resize_with(__a0, || <brunsli_ComponentState>::default())
             })
@@ -6199,7 +6180,7 @@ pub fn DecodeHeader_177(
                     let mut num_components: usize =
                         (version_and_comp_count & 3_usize).wrapping_add(1_usize);
                     {
-                        let __a0 = num_components as usize;
+                        let __a0 = num_components;
                         field!(jpg, components).with_mut(|__v: &mut Vec<brunsli_JPEGComponent>| {
                             __v.resize_with(__a0, || <brunsli_JPEGComponent>::default())
                         })
@@ -6318,9 +6299,7 @@ pub fn DecodeMetaDataSection_180(
         if (({ RemainingSectionLength_174((state).clone()) }) == 0_usize) {
             return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
         }
-        field!(ms, brotli).write(unsafe {
-            ::brotli_sys::BrotliDecoderCreateInstance(None, None, std::ptr::null_mut())
-        });
+        field!(ms, brotli).write(Ptr::alloc(BrotliDecoderState::default()));
         if (ms.with(|__s| __s.brotli.clone())).is_null() {
             return brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR;
         }
@@ -6346,12 +6325,8 @@ pub fn DecodeMetaDataSection_180(
                         });
                         'loop_: while true {}
                     };
-                    unsafe {
-                        ::brotli_sys::BrotliDecoderDestroyInstance(
-                            ms.with(|__s| __s.brotli.clone()),
-                        )
-                    };
-                    field!(ms, brotli).write(std::ptr::null_mut());
+                    BrotliDecoderDestroyInstance(ms.with(|__s| __s.brotli.clone()));
+                    field!(ms, brotli).write(Ptr::null());
                     field!(ms, decompression_stage)
                         .write(brunsli_internal_dec_MetadataDecompressionStage_DONE);
                     return result;
@@ -6384,50 +6359,24 @@ pub fn DecodeMetaDataSection_180(
                     .offset((state.with(|__s| __s.pos)) as isize),
             ));
             let available_out: Value<usize> = Rc::new(RefCell::new(0_usize));
-            let mut result: ::brotli_sys::BrotliDecoderResult = match (
-                { ms.with(|__s| __s.brotli.clone()) },
-                { (available_in.as_pointer()) },
-                { (next_in.as_pointer()) },
-                { (available_out.as_pointer()) },
-            ) {
-                (mut __tmp_16, mut __tmp_17, mut __tmp_18, mut __tmp_19) => {
-                    let __in = __tmp_18.read();
-                    let __in_len = __tmp_17.read();
-                    let __r = __in.with_slice(__in_len, |__s| {
-                        __tmp_17.with_mut(|_v1| {
-                            __tmp_19.with_mut(|_v3| unsafe {
-                                ::brotli_sys::BrotliDecoderDecompressStream(
-                                    __tmp_16,
-                                    _v1,
-                                    &mut __s.as_ptr(),
-                                    _v3,
-                                    std::ptr::null_mut(),
-                                    std::ptr::null_mut(),
-                                )
-                            })
-                        })
-                    });
-                    __tmp_18.write(__in.offset(__in_len - __tmp_17.read()));
-                    __r
-                }
-            };
+            let mut result: ::brotli_sys::BrotliDecoderResult = BrotliDecoderDecompressStream(
+                ms.with(|__s| __s.brotli.clone()),
+                (available_in.as_pointer()),
+                (next_in.as_pointer()),
+                (available_out.as_pointer()),
+                Ptr::<Ptr<u8>>::null(),
+                Ptr::<usize>::null(),
+            );
             if ((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_ERROR as i32)) {
                 return ({
                     (*finish_decompression.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             let chunk_size: Value<usize> = Rc::new(RefCell::new(0_usize));
-            let mut chunk_data: Ptr<u8> = match ({ ms.with(|__s| __s.brotli.clone()) },) {
-                (mut __tmp_20,) => unsafe {
-                    (chunk_size.as_pointer()).with_mut(|_v1| {
-                        let output: *const u8 =
-                            ::brotli_sys::BrotliDecoderTakeOutput(__tmp_20, _v1 as *mut usize);
-                        let slice = std::slice::from_raw_parts(output, *_v1);
-                        let result: Ptr<Vec<u8>> = Ptr::alloc(slice.to_vec());
-                        result.decay()
-                    })
-                },
-            };
+            let mut chunk_data: Ptr<u8> = BrotliDecoderTakeOutput(
+                ms.with(|__s| __s.brotli.clone()),
+                (chunk_size.as_pointer()),
+            );
             field!(ms, decompressed_size).write({
                 (ms.with(|__s| __s.decompressed_size)).wrapping_add((*chunk_size.borrow()))
             });
@@ -6542,11 +6491,11 @@ pub fn PrepareBitReader_182(
         ))
         .as_pointer(),
     ) {
-        (__tmp_21, __tmp_22) => {
-            if CppLess::less(&(__tmp_22).clone(), &(__tmp_21).clone()) {
-                (__tmp_22).clone()
+        (__tmp_16, __tmp_17) => {
+            if CppLess::less(&(__tmp_17).clone(), &(__tmp_16).clone()) {
+                (__tmp_17).clone()
             } else {
-                (__tmp_21).clone()
+                (__tmp_16).clone()
             }
         }
     }
@@ -6586,11 +6535,11 @@ pub fn SuspendBitReader_183(
         ))
         .as_pointer(),
     ) {
-        (__tmp_23, __tmp_24) => {
-            if CppLess::less(&(__tmp_24).clone(), &(__tmp_23).clone()) {
-                (__tmp_24).clone()
+        (__tmp_18, __tmp_19) => {
+            if CppLess::less(&(__tmp_19).clone(), &(__tmp_18).clone()) {
+                (__tmp_19).clone()
             } else {
-                (__tmp_23).clone()
+                (__tmp_18).clone()
             }
         }
     }
@@ -6711,7 +6660,7 @@ pub fn DecodeJPEGInternalsSection_184(
         }
         if (js.with(|__s| __s.num_scans) > 0_usize) {
             {
-                let __a0 = js.with(|__s| __s.num_scans) as usize;
+                let __a0 = js.with(|__s| __s.num_scans);
                 field!(jpg, scan_info).with_mut(|__v: &mut Vec<brunsli_JPEGScanInfo>| {
                     __v.resize_with(__a0, || <brunsli_JPEGScanInfo>::default())
                 })
@@ -6745,7 +6694,7 @@ pub fn DecodeJPEGInternalsSection_184(
             ((({ BrunsliBitReaderRead_126((*br.borrow()).clone(), 2_u32) }).wrapping_add(1_u32))
                 as i32);
         {
-            let __a0 = (num_quant_tables as usize) as usize;
+            let __a0 = (num_quant_tables as usize);
             field!(jpg, quant).with_mut(|__v: &mut Vec<brunsli_JPEGQuantTable>| {
                 __v.resize_with(__a0, || <brunsli_JPEGQuantTable>::default())
             })
@@ -6968,17 +6917,17 @@ pub fn DecodeJPEGInternalsSection_184(
                         .wrapping_sub(((*dest.upgrade().deref()).len() as u64))
                         as usize);
                     let mut piece_size: usize = ({
-                        let __tmp_26: Value<u64> = Rc::new(RefCell::new((piece_limit as u64)));
+                        let __tmp_21: Value<u64> = Rc::new(RefCell::new((piece_limit as u64)));
                         (match (Rc::new(RefCell::new(
                             (({ GetBytesAvailable_166((*state.borrow()).clone()) }) as u64),
                         ))
                         .as_pointer(),)
                         {
-                            (__tmp_25,) => {
-                                if CppLess::less(&(__tmp_25).clone(), &__tmp_26.as_pointer()) {
-                                    (__tmp_25).clone()
+                            (__tmp_20,) => {
+                                if CppLess::less(&(__tmp_20).clone(), &__tmp_21.as_pointer()) {
+                                    (__tmp_20).clone()
                                 } else {
-                                    __tmp_26.as_pointer()
+                                    __tmp_21.as_pointer()
                                 }
                             }
                         }
@@ -7080,7 +7029,7 @@ pub fn DecodeQuantDataSection_186(
             });
         }
         {
-            let __a0 = (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize) as usize;
+            let __a0 = (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize);
             field!(qs, predictor).with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || 0_u8))
         };
         field!(qs, i).write(0_usize);
@@ -7454,14 +7403,13 @@ pub fn DecodeHistogramDataSection_187(
         } else {
             {
                 let __a0 = (s.with(|__s| __s.num_contexts))
-                    .wrapping_mul(kNumAvrgContexts_83.with(|rc| *rc.borrow()))
-                    as usize;
+                    .wrapping_mul(kNumAvrgContexts_83.with(|rc| *rc.borrow()));
                 field!(s, context_map_).with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || 0_u8))
             };
             let __rhs = field_ref!(s, context_map_).decay();
             field!((*state.borrow()), context_map).write(__rhs);
             {
-                let __a0 = s.with(|__s| __s.num_histograms) as usize;
+                let __a0 = s.with(|__s| __s.num_histograms);
                 field!(s, entropy_codes_).with_mut(|__v: &mut Vec<brunsli_ANSDecodingData>| {
                     __v.resize_with(__a0, || <brunsli_ANSDecodingData>::default())
                 })
@@ -7474,7 +7422,7 @@ pub fn DecodeHistogramDataSection_187(
             } else {
                 field!(hs, i).write(0_usize);
                 {
-                    let __a0 = (kCoeffAlphabetSize_136.with(|rc| *rc.borrow()) as usize) as usize;
+                    let __a0 = (kCoeffAlphabetSize_136.with(|rc| *rc.borrow()) as usize);
                     field!(hs, counts)
                         .with_mut(|__v: &mut Vec<u32>| __v.resize_with(__a0, || 0_u32))
                 };
@@ -7567,7 +7515,7 @@ pub fn DecodeHistogramDataSection_187(
         }
         field!(hs, i).write(0_usize);
         {
-            let __a0 = (kCoeffAlphabetSize_136.with(|rc| *rc.borrow()) as usize) as usize;
+            let __a0 = (kCoeffAlphabetSize_136.with(|rc| *rc.borrow()) as usize);
             field!(hs, counts).with_mut(|__v: &mut Vec<u32>| __v.resize_with(__a0, || 0_u32))
         };
         field!(hs, stage).write(brunsli_internal_dec_HistogramDataState_Stage_READ_HISTOGRAMS);
@@ -7660,12 +7608,12 @@ pub fn DecodeDCDataSection_190(
         'loop_: while true {}
     };
     let mut chunk_len: usize = ({
-        let __tmp_27: Value<u64> = Rc::new(RefCell::new((limit as u64)));
-        let __tmp_28: Value<u64> = Rc::new(RefCell::new((available as u64)));
-        (if CppLess::less(&__tmp_27.as_pointer(), &__tmp_28.as_pointer()) {
-            __tmp_27.as_pointer()
+        let __tmp_22: Value<u64> = Rc::new(RefCell::new((limit as u64)));
+        let __tmp_23: Value<u64> = Rc::new(RefCell::new((available as u64)));
+        (if CppLess::less(&__tmp_22.as_pointer(), &__tmp_23.as_pointer()) {
+            __tmp_22.as_pointer()
         } else {
-            __tmp_28.as_pointer()
+            __tmp_23.as_pointer()
         }
         .read())
     } as usize);
@@ -7737,12 +7685,12 @@ pub fn DecodeACDataSection_191(
         'loop_: while true {}
     };
     let mut chunk_len: usize = ({
-        let __tmp_29: Value<u64> = Rc::new(RefCell::new((limit as u64)));
-        let __tmp_30: Value<u64> = Rc::new(RefCell::new((available as u64)));
-        (if CppLess::less(&__tmp_29.as_pointer(), &__tmp_30.as_pointer()) {
-            __tmp_29.as_pointer()
+        let __tmp_24: Value<u64> = Rc::new(RefCell::new((limit as u64)));
+        let __tmp_25: Value<u64> = Rc::new(RefCell::new((available as u64)));
+        (if CppLess::less(&__tmp_24.as_pointer(), &__tmp_25.as_pointer()) {
+            __tmp_24.as_pointer()
         } else {
-            __tmp_30.as_pointer()
+            __tmp_25.as_pointer()
         }
         .read())
     } as usize);
@@ -7871,23 +7819,23 @@ pub fn DecodeOriginalJpg_192(
                         .wrapping_sub(((*fs.upgrade().deref()).storage.len() as u64))
                         as usize);
                     let mut to_copy: usize = ({
-                        let __tmp_31: Value<u64> = Rc::new(RefCell::new((remaining as u64)));
-                        let __tmp_32: Value<u64> = Rc::new(RefCell::new((chunk_size as u64)));
-                        (if CppLess::less(&__tmp_31.as_pointer(), &__tmp_32.as_pointer()) {
-                            __tmp_31.as_pointer()
+                        let __tmp_26: Value<u64> = Rc::new(RefCell::new((remaining as u64)));
+                        let __tmp_27: Value<u64> = Rc::new(RefCell::new((chunk_size as u64)));
+                        (if CppLess::less(&__tmp_26.as_pointer(), &__tmp_27.as_pointer()) {
+                            __tmp_26.as_pointer()
                         } else {
-                            __tmp_32.as_pointer()
+                            __tmp_27.as_pointer()
                         }
                         .read())
                     } as usize);
                     match ({ field_ref!(fs, storage).decay().end() }, {
                         src.offset((to_copy) as isize)
                     }) {
-                        (mut __tmp_33, mut __tmp_34) => {
-                            let start_idx = __tmp_33.index();
+                        (mut __tmp_28, mut __tmp_29) => {
+                            let start_idx = __tmp_28.index();
                             let mut temp_vec: Vec<u8> = Vec::new();
                             let mut __it = (src).clone();
-                            while __it != __tmp_34 {
+                            while __it != __tmp_29 {
                                 temp_vec.push(__it.iter_deref().read());
                                 __it.iter_inc();
                             }
@@ -7896,7 +7844,7 @@ pub fn DecodeOriginalJpg_192(
                                 .with_mut(|v: &mut Vec<u8>| {
                                     v.splice(start_idx..start_idx, temp_vec);
                                 });
-                            (__tmp_33).clone()
+                            (__tmp_28).clone()
                         }
                     };
                     ({ SkipBytes_165((state).clone(), to_copy) });
@@ -8034,11 +7982,11 @@ pub fn ProcessSection_195(
             ))
             .as_pointer(),
         ) {
-            (__tmp_35, __tmp_36) => {
-                if CppLess::less(&(__tmp_36).clone(), &(__tmp_35).clone()) {
-                    (__tmp_36).clone()
+            (__tmp_30, __tmp_31) => {
+                if CppLess::less(&(__tmp_31).clone(), &(__tmp_30).clone()) {
+                    (__tmp_31).clone()
                 } else {
-                    (__tmp_35).clone()
+                    (__tmp_30).clone()
                 }
             }
         }
@@ -8254,13 +8202,13 @@ pub fn PrepareMeta_179(mut jpg: Ptr<brunsli_JPEGData>, mut state: Ptr<brunsli_in
         state.with(|__s| __s.internal.clone()).as_pointer();
     let mut num_components: usize = (*jpg.upgrade().deref()).components.len();
     {
-        let __a0 = num_components as usize;
+        let __a0 = num_components;
         field!(s, block_state_)
             .with_mut(|__v: &mut Vec<Vec<u8>>| __v.resize_with(__a0, || Default::default()))
     };
     let meta: Ptr<Vec<brunsli_internal_dec_ComponentMeta>> = field_ref!(state, meta).as_pointer();
     {
-        let __a0 = num_components as usize;
+        let __a0 = num_components;
         meta.with_mut(|__v: &mut Vec<brunsli_internal_dec_ComponentMeta>| {
             __v.resize_with(__a0, || <brunsli_internal_dec_ComponentMeta>::default())
         })
@@ -8291,14 +8239,13 @@ pub fn WarmupMeta_196(mut jpg: Ptr<brunsli_JPEGData>, mut state: Ptr<brunsli_int
                 index!(meta, i).with(|__s| __s.height_in_blocks)
             }) as usize);
             {
-                let __a0 = (num_blocks)
-                    .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize))
-                    as usize;
+                let __a0 =
+                    (num_blocks).wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize));
                 field!(vec_elem!(jpg, components, i), coeffs)
                     .with_mut(|__v: &mut Vec<i16>| __v.resize_with(__a0, || 0_i16))
             };
             {
-                let __a0 = num_blocks as usize;
+                let __a0 = num_blocks;
                 vec_elem!(s, block_state_, i)
                     .with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || 0_u8))
             };
@@ -8324,14 +8271,13 @@ pub fn WarmupMeta_196(mut jpg: Ptr<brunsli_JPEGData>, mut state: Ptr<brunsli_int
             });
             field!(m, b_stride).write({ m.with(|__s| __s.width_in_blocks) });
             match ({ (field_ref!(m, quant).decay()).to_any() },) {
-                (mut __tmp_37,) => {
-                    __tmp_37.memcpy(
+                (mut __tmp_32,) => {
+                    __tmp_32.memcpy(
                         &(field_ref!(q, values).decay()).to_any(),
                         (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)
-                            .wrapping_mul((::std::mem::size_of::<i32>() as usize))
-                            as usize,
+                            .wrapping_mul((::std::mem::size_of::<i32>() as usize)),
                     );
-                    (__tmp_37).clone()
+                    (__tmp_32).clone()
                 }
             };
             c.prefix_inc();
@@ -8437,14 +8383,14 @@ pub fn LoadInput_200(mut state: Ptr<brunsli_internal_dec_State>) {
         (b.with(|__s| __s.external_len)).wrapping_sub(b.with(|__s| __s.external_pos));
     field!(b, borrowed_len).write(
         ({
-            let __tmp_38: Value<u64> = Rc::new(RefCell::new((available as u64)));
-            let __tmp_39: Value<u64> = Rc::new(RefCell::new(
+            let __tmp_33: Value<u64> = Rc::new(RefCell::new((available as u64)));
+            let __tmp_34: Value<u64> = Rc::new(RefCell::new(
                 (kBufferMaxReadAhead_199.with(|rc| *rc.borrow()) as u64),
             ));
-            (if CppLess::less(&__tmp_38.as_pointer(), &__tmp_39.as_pointer()) {
-                __tmp_38.as_pointer()
+            (if CppLess::less(&__tmp_33.as_pointer(), &__tmp_34.as_pointer()) {
+                __tmp_33.as_pointer()
             } else {
-                __tmp_39.as_pointer()
+                __tmp_34.as_pointer()
             }
             .read())
         } as usize),
@@ -8456,14 +8402,14 @@ pub fn LoadInput_200(mut state: Ptr<brunsli_internal_dec_State>) {
         .to_any()
     },)
     {
-        (mut __tmp_40,) => {
-            __tmp_40.memcpy(
+        (mut __tmp_35,) => {
+            __tmp_35.memcpy(
                 &(b.with(|__s| __s.external_data.clone())
                     .offset((b.with(|__s| __s.external_pos)) as isize))
                 .to_any(),
-                b.with(|__s| __s.borrowed_len) as usize,
+                b.with(|__s| __s.borrowed_len),
             );
-            (__tmp_40).clone()
+            (__tmp_35).clone()
         }
     };
     let __rhs = field_ref!(b, data).decay();
@@ -8518,21 +8464,20 @@ pub fn UnloadInput_201(
         };
         if (*b.upgrade().deref()).data.is_empty() {
             {
-                let __a0 = (2_usize).wrapping_mul(kBufferMaxReadAhead_199.with(|rc| *rc.borrow()))
-                    as usize;
+                let __a0 = (2_usize).wrapping_mul(kBufferMaxReadAhead_199.with(|rc| *rc.borrow()));
                 field!(b, data).with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || 0_u8))
             };
         }
         field!(b, data_len).write(available);
         match ({ (field_ref!(b, data).decay()).to_any() },) {
-            (mut __tmp_41,) => {
-                __tmp_41.memcpy(
+            (mut __tmp_36,) => {
+                __tmp_36.memcpy(
                     &(b.with(|__s| __s.external_data.clone())
                         .offset((b.with(|__s| __s.external_pos)) as isize))
                     .to_any(),
-                    b.with(|__s| __s.data_len) as usize,
+                    b.with(|__s| __s.data_len),
                 );
-                (__tmp_41).clone()
+                (__tmp_36).clone()
             }
         };
         field!(b, external_pos).write({ (b.with(|__s| __s.external_pos)).wrapping_add(available) });
@@ -8591,15 +8536,15 @@ pub fn UnloadInput_201(
     };
     if (state.with(|__s| __s.pos) > 0_usize) && (b.with(|__s| __s.data_len) > 0_usize) {
         match ({ (field_ref!(b, data).decay()).to_any() },) {
-            (mut __tmp_42,) => {
-                __tmp_42.memcpy(
+            (mut __tmp_37,) => {
+                __tmp_37.memcpy(
                     &(field_ref!(b, data)
                         .decay()
                         .offset((state.with(|__s| __s.pos)) as isize))
                     .to_any(),
-                    b.with(|__s| __s.data_len) as usize,
+                    b.with(|__s| __s.data_len),
                 );
-                (__tmp_42).clone()
+                (__tmp_37).clone()
             }
         };
     }
@@ -8741,12 +8686,12 @@ pub fn BrunsliEstimateDecoderPeakMemoryUsage_205(mut data: Ptr<u8>, mut len: usi
             as usize),
     );
     return ((((out_size).wrapping_add(jpeg_data_size) as u64).wrapping_add({
-        let __tmp_43: Value<u64> = Rc::new(RefCell::new((decode_peak as u64)));
-        let __tmp_44: Value<u64> = Rc::new(RefCell::new((jpeg_writer_size as u64)));
-        (if CppLess::less(&__tmp_43.as_pointer(), &__tmp_44.as_pointer()) {
-            __tmp_44.as_pointer()
+        let __tmp_38: Value<u64> = Rc::new(RefCell::new((decode_peak as u64)));
+        let __tmp_39: Value<u64> = Rc::new(RefCell::new((jpeg_writer_size as u64)));
+        (if CppLess::less(&__tmp_38.as_pointer(), &__tmp_39.as_pointer()) {
+            __tmp_39.as_pointer()
         } else {
-            __tmp_43.as_pointer()
+            __tmp_38.as_pointer()
         }
         .read())
     })) as usize);
@@ -9145,7 +9090,7 @@ pub fn ReadHuffmanCodeLengths_217(
             }
             match ({ (code_lengths.offset((symbol) as isize)).to_any() },) {
                 (mut __tmp_0,) => {
-                    __tmp_0.memset((repeat_code_len as i32) as u8, repeat_delta as usize);
+                    __tmp_0.memset((repeat_code_len as i32) as u8, repeat_delta);
                     (__tmp_0).clone()
                 }
             };
@@ -9161,7 +9106,7 @@ pub fn ReadHuffmanCodeLengths_217(
     }
     match ({ (code_lengths.offset((symbol) as isize)).to_any() },) {
         (mut __tmp_1,) => {
-            __tmp_1.memset((0) as u8, ((num_symbols).wrapping_sub(symbol)) as usize);
+            __tmp_1.memset((0) as u8, ((num_symbols).wrapping_sub(symbol)));
             (__tmp_1).clone()
         }
     };
@@ -9394,7 +9339,7 @@ pub fn ReadSimpleCode_219(
             (mut __tmp_2,) => {
                 __tmp_2.memcpy(
                     &(table.offset((0) as isize)).to_any(),
-                    ((table_size as u64).wrapping_mul((4usize as u64)) as usize) as usize,
+                    ((table_size as u64).wrapping_mul((4usize as u64)) as usize),
                 );
                 (__tmp_2).clone()
             }
@@ -9600,7 +9545,7 @@ pub fn BuildHuffmanTable_218(
             (mut __tmp_0,) => {
                 __tmp_0.memcpy(
                     &(table.offset((0) as isize)).to_any(),
-                    (table_size as usize).wrapping_mul((4usize as usize)) as usize,
+                    (table_size as usize).wrapping_mul((4usize as usize)),
                 );
                 (__tmp_0).clone()
             }
@@ -9922,10 +9867,10 @@ pub fn DCTCodingStateInit_237(mut s: Ptr<brunsli_internal_dec_DCTCodingState>) {
     field!(s, eob_run_).write(0);
     field!(s, cur_ac_huff_).write(Ptr::<brunsli_HuffmanCodeTable>::null());
     field!(s, refinement_bits_).with_mut(|__v: &mut Vec<u16>| __v.clear());
-    if 64_usize as usize > (*s.upgrade().deref()).refinement_bits_.capacity() as usize {
+    if 64_usize > (*s.upgrade().deref()).refinement_bits_.capacity() as usize {
         let len_0 = (*s.upgrade().deref()).refinement_bits_.len();
         field!(s, refinement_bits_)
-            .with_mut(|__v: &mut Vec<u16>| __v.reserve_exact(64_usize as usize - len_0 as usize));
+            .with_mut(|__v: &mut Vec<u16>| __v.reserve_exact(64_usize - len_0 as usize));
     };
     field!(s, refinement_bits_count_).write(0_usize);
 }
@@ -10457,7 +10402,6 @@ pub fn EncodeAPP_249(
     mut marker: u8,
     mut state: Ptr<brunsli_internal_dec_SerializationState>,
 ) -> bool {
-    ();
     let mut app_index: usize =
         (field!(state, app_index).with_mut(|__v| __v.postfix_inc()) as usize);
     if ({ app_index } >= { (*jpg.upgrade().deref()).app_data.len() }) {
@@ -10976,7 +10920,7 @@ pub fn DoEncodeScan_255(
         field!(ss, mcu_y).write(0);
         match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
             (mut __tmp_2,) => {
-                __tmp_2.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
+                __tmp_2.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
                 (__tmp_2).clone()
             }
         };
@@ -11084,7 +11028,7 @@ pub fn DoEncodeScan_255(
                 field!(ss, restarts_to_go).write(restart_interval);
                 match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
                     (mut __tmp_3,) => {
-                        __tmp_3.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
+                        __tmp_3.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
                         (__tmp_3).clone()
                     }
                 };
@@ -11290,7 +11234,7 @@ pub fn DoEncodeScan_256(
         field!(ss, mcu_y).write(0);
         match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
             (mut __tmp_4,) => {
-                __tmp_4.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
+                __tmp_4.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
                 (__tmp_4).clone()
             }
         };
@@ -11398,7 +11342,7 @@ pub fn DoEncodeScan_256(
                 field!(ss, restarts_to_go).write(restart_interval);
                 match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
                     (mut __tmp_5,) => {
-                        __tmp_5.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
+                        __tmp_5.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
                         (__tmp_5).clone()
                     }
                 };
@@ -11616,7 +11560,7 @@ pub fn DoEncodeScan_257(
         field!(ss, mcu_y).write(0);
         match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
             (mut __tmp_6,) => {
-                __tmp_6.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
+                __tmp_6.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
                 (__tmp_6).clone()
             }
         };
@@ -11724,7 +11668,7 @@ pub fn DoEncodeScan_257(
                 field!(ss, restarts_to_go).write(restart_interval);
                 match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
                     (mut __tmp_7,) => {
-                        __tmp_7.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>() as usize);
+                        __tmp_7.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
                         (__tmp_7).clone()
                     }
                 };
@@ -12081,10 +12025,7 @@ pub fn PushOutput_260(
         if (to_copy > 0_usize) {
             match ({ (next_out.read()).to_any() },) {
                 (mut __tmp_10,) => {
-                    __tmp_10.memcpy(
-                        &(chunk.with(|__s| __s.next.clone())).to_any(),
-                        to_copy as usize,
-                    );
+                    __tmp_10.memcpy(&(chunk.with(|__s| __s.next.clone())).to_any(), to_copy);
                     (__tmp_10).clone()
                 }
             };
@@ -12230,7 +12171,7 @@ pub fn SerializeJpeg_206(
                         break;
                     }
                     {
-                        let __a0 = (kMaxHuffmanTables_6.with(|rc| *rc.borrow()) as usize) as usize;
+                        let __a0 = (kMaxHuffmanTables_6.with(|rc| *rc.borrow()) as usize);
                         field!(ss, dc_huff_table).with_mut(
                             |__v: &mut Vec<brunsli_HuffmanCodeTable>| {
                                 __v.resize_with(__a0, || <brunsli_HuffmanCodeTable>::default())
@@ -12238,7 +12179,7 @@ pub fn SerializeJpeg_206(
                         )
                     };
                     {
-                        let __a0 = (kMaxHuffmanTables_6.with(|rc| *rc.borrow()) as usize) as usize;
+                        let __a0 = (kMaxHuffmanTables_6.with(|rc| *rc.borrow()) as usize);
                         field!(ss, ac_huff_table).with_mut(
                             |__v: &mut Vec<brunsli_HuffmanCodeTable>| {
                                 __v.resize_with(__a0, || <brunsli_HuffmanCodeTable>::default())
@@ -12374,7 +12315,7 @@ pub fn StringWriter_262(mut data: AnyPtr, mut buf: Ptr<u8>, mut count: usize) ->
         (mut __tmp_0,) => {
             output.with_mut(|__v: &mut Vec<i8>| {
                 __v.pop();
-                __tmp_0.with_slice(count as usize, |__s| __v.extend_from_slice(__s));
+                __tmp_0.with_slice(count, |__s| __v.extend_from_slice(__s));
                 __v.push(0);
             });
             (output).clone()
@@ -12412,7 +12353,7 @@ pub fn ReadFileInternal_263(mut file: Ptr<CFile>, mut content: Ptr<Vec<i8>>) -> 
     let mut read_pos: usize = 0_usize;
     'loop_: while ({ read_pos } < { ((*content.upgrade().deref()).len() - 1) }) {
         let mut bytes_read: usize = libcc2rs::fread_refcount(
-            (if read_pos as usize >= (*content.upgrade().deref()).len().saturating_sub(1) {
+            (if read_pos >= (*content.upgrade().deref()).len().saturating_sub(1) {
                 panic!("out of bounds access")
             } else {
                 content.decay().offset(read_pos as isize)
@@ -12970,22 +12911,21 @@ impl brunsli_ComponentStateImpl for Ptr<brunsli_ComponentState> {
     fn SetWidth(&self, mut w: i32) {
         field!((*self), width).write(w);
         {
-            let __a0 = ((w + 1) as usize) as usize;
+            let __a0 = ((w + 1) as usize);
             field!((*self), prev_is_nonempty).with_mut(|__v: &mut Vec<i32>| __v.resize(__a0, 1))
         };
         {
-            let __a0 = (w as usize) as usize;
+            let __a0 = (w as usize);
             field!((*self), prev_num_nonzeros)
                 .with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || 0_u8))
         };
         {
-            let __a0 =
-                (((kDCTBlockSize_3.with(|rc| *rc.borrow()) * 2) * (w + 3)) as usize) as usize;
+            let __a0 = (((kDCTBlockSize_3.with(|rc| *rc.borrow()) * 2) * (w + 3)) as usize);
             field!((*self), prev_abs_coeff)
                 .with_mut(|__v: &mut Vec<i32>| __v.resize_with(__a0, || 0_i32))
         };
         {
-            let __a0 = ((kDCTBlockSize_3.with(|rc| *rc.borrow()) * (w + 1)) as usize) as usize;
+            let __a0 = ((kDCTBlockSize_3.with(|rc| *rc.borrow()) * (w + 1)) as usize);
             field!((*self), prev_sign)
                 .with_mut(|__v: &mut Vec<i32>| __v.resize_with(__a0, || 0_i32))
         };
@@ -12995,25 +12935,19 @@ impl brunsli_ComponentStateImpl for Ptr<brunsli_ComponentState> {
         field!((*self), context_offset).write({ { (*_a0.upgrade().deref()).context_offset } });
         match ({ (array_field_ptr!((*self), order)).to_any() },) {
             (mut __tmp_4,) => {
-                __tmp_4.memcpy(&(array_field_ptr!(_a0, order)).to_any(), 256_usize as usize);
+                __tmp_4.memcpy(&(array_field_ptr!(_a0, order)).to_any(), 256_usize);
                 (__tmp_4).clone()
             }
         };
         match ({ (array_field_ptr!((*self), mult_row)).to_any() },) {
             (mut __tmp_5,) => {
-                __tmp_5.memcpy(
-                    &(array_field_ptr!(_a0, mult_row)).to_any(),
-                    256_usize as usize,
-                );
+                __tmp_5.memcpy(&(array_field_ptr!(_a0, mult_row)).to_any(), 256_usize);
                 (__tmp_5).clone()
             }
         };
         match ({ (array_field_ptr!((*self), mult_col)).to_any() },) {
             (mut __tmp_6,) => {
-                __tmp_6.memcpy(
-                    &(array_field_ptr!(_a0, mult_col)).to_any(),
-                    256_usize as usize,
-                );
+                __tmp_6.memcpy(&(array_field_ptr!(_a0, mult_col)).to_any(), 256_usize);
                 (__tmp_6).clone()
             }
         };
@@ -13027,7 +12961,7 @@ impl brunsli_ComponentStateImpl for Ptr<brunsli_ComponentState> {
             (mut __tmp_7,) => {
                 __tmp_7.memcpy(
                     &(array_field_ptr!(_a0, num_nonzero_prob)).to_any(),
-                    8064_usize as usize,
+                    8064_usize,
                 );
                 (__tmp_7).clone()
             }
@@ -13164,16 +13098,16 @@ impl brunsli_ComponentStateDCImpl for Ptr<brunsli_ComponentStateDC> {
     fn SetWidth(&self, mut w: i32) {
         field!((*self), width).write(w);
         {
-            let __a0 = ((w + 1) as usize) as usize;
+            let __a0 = ((w + 1) as usize);
             field!((*self), prev_is_nonempty).with_mut(|__v: &mut Vec<i32>| __v.resize(__a0, 1))
         };
         {
-            let __a0 = ((w + 3) as usize) as usize;
+            let __a0 = ((w + 3) as usize);
             field!((*self), prev_abs_coeff)
                 .with_mut(|__v: &mut Vec<i32>| __v.resize_with(__a0, || 0_i32))
         };
         {
-            let __a0 = ((w + 1) as usize) as usize;
+            let __a0 = ((w + 1) as usize);
             field!((*self), prev_sign)
                 .with_mut(|__v: &mut Vec<i32>| __v.resize_with(__a0, || 0_i32))
         };
@@ -13276,13 +13210,11 @@ impl brunsli_HuffmanDecodingDataImpl for Ptr<brunsli_HuffmanDecodingData> {
         if (alphabet_size > ((1 << kMaxHuffmanBits_22.with(|rc| *rc.borrow())) as usize)) {
             return false;
         }
-        let code_lengths: Value<Vec<u8>> =
-            Rc::new(RefCell::new(vec![0_u8; alphabet_size as usize]));
+        let code_lengths: Value<Vec<u8>> = Rc::new(RefCell::new(vec![0_u8; alphabet_size]));
         let mut simple_code_or_skip: u32 = ({ BrunsliBitReaderRead_126((br).clone(), 2_u32) });
         if (simple_code_or_skip == 1_u32) {
             {
-                let __a0 =
-                    ((1_u32 << kHuffmanTableBits_21.with(|rc| *rc.borrow())) as usize) as usize;
+                let __a0 = ((1_u32 << kHuffmanTableBits_21.with(|rc| *rc.borrow())) as usize);
                 field!((*self), table_).with_mut(|__v: &mut Vec<brunsli_HuffmanCode>| {
                     __v.resize_with(__a0, || <brunsli_HuffmanCode>::default())
                 })
@@ -13808,10 +13740,7 @@ impl brunsli_internal_dec_EncodeScanStateImpl for Ptr<brunsli_internal_dec_Encod
         });
         match ({ (array_field_ptr!((*self), last_dc_coeff)).to_any() },) {
             (mut __tmp_0,) => {
-                __tmp_0.memcpy(
-                    &(array_field_ptr!(_a0, last_dc_coeff)).to_any(),
-                    8_usize as usize,
-                );
+                __tmp_0.memcpy(&(array_field_ptr!(_a0, last_dc_coeff)).to_any(), 8_usize);
                 (__tmp_0).clone()
             }
         };
@@ -14021,10 +13950,8 @@ impl brunsli_internal_dec_MetadataStateImpl for Ptr<brunsli_internal_dec_Metadat
     }
     fn destructor(&self) {
         if !(((*self).with(|__s| __s.brotli.clone())).is_null()) {
-            unsafe {
-                ::brotli_sys::BrotliDecoderDestroyInstance((*self).with(|__s| __s.brotli.clone()))
-            };
-            field!((*self), brotli).write(std::ptr::null_mut());
+            BrotliDecoderDestroyInstance((*self).with(|__s| __s.brotli.clone()));
+            field!((*self), brotli).write(Ptr::null());
         }
     }
 }

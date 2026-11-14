@@ -249,7 +249,7 @@ impl woff2_Buffer {
             }) {
                 (mut __tmp_0, mut __tmp_1) => {
                     if n_bytes != 0 {
-                        ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, n_bytes as usize)
+                        ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, n_bytes)
                     }
                     __tmp_0
                 }
@@ -277,11 +277,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_2, mut __tmp_3) => {
                 if ::std::mem::size_of::<u16>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_3,
-                        __tmp_2,
-                        ::std::mem::size_of::<u16>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_3, __tmp_2, ::std::mem::size_of::<u16>())
                 }
                 __tmp_2
             }
@@ -320,11 +316,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_4, mut __tmp_5) => {
                 if ::std::mem::size_of::<u32>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_5,
-                        __tmp_4,
-                        ::std::mem::size_of::<u32>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_5, __tmp_4, ::std::mem::size_of::<u32>())
                 }
                 __tmp_4
             }
@@ -346,11 +338,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_6, mut __tmp_7) => {
                 if ::std::mem::size_of::<u32>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_7,
-                        __tmp_6,
-                        ::std::mem::size_of::<u32>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_7, __tmp_6, ::std::mem::size_of::<u32>())
                 }
                 __tmp_6
             }
@@ -368,11 +356,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_8, mut __tmp_9) => {
                 if ::std::mem::size_of::<u64>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_9,
-                        __tmp_8,
-                        ::std::mem::size_of::<u64>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_9, __tmp_8, ::std::mem::size_of::<u64>())
                 }
                 __tmp_8
             }
@@ -776,7 +760,7 @@ pub unsafe fn StoreBytes_32(
     ) {
         (mut __tmp_0, mut __tmp_1) => {
             if len != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len as usize)
+                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len)
             }
             __tmp_0
         }
@@ -1007,7 +991,7 @@ pub unsafe fn ReadTrueTypeCollection_35(
         i.postfix_inc();
     }
     {
-        let __a0 = offsets.len() as usize;
+        let __a0 = offsets.len();
         (*font_collection)
             .fonts
             .resize_with(__a0, || <woff2_Font>::default())
@@ -1058,7 +1042,7 @@ pub unsafe fn ReadFontCollection_37(
         != (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
     {
         {
-            let __a0 = 1_usize as usize;
+            let __a0 = 1_usize;
             (*font_collection)
                 .fonts
                 .resize_with(__a0, || <woff2_Font>::default())
@@ -1173,7 +1157,7 @@ pub unsafe fn WriteTable_43(
         ) {
             (mut __tmp_14, mut __tmp_15, mut __tmp_16) => {
                 if __tmp_16 != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_15, __tmp_14, __tmp_16 as usize)
+                    ::std::ptr::copy_nonoverlapping(__tmp_15, __tmp_14, __tmp_16)
                 }
                 __tmp_14
             }
@@ -1472,7 +1456,7 @@ pub unsafe fn PrintTag_51(mut tag: i32) -> Vec<libc::c_char> {
         ((((tag) >> (8)) & (255)) as libc::c_char),
         (((tag) & (255)) as libc::c_char),
     ];
-    return std::slice::from_raw_parts((printable.as_mut_ptr()).cast_const(), 4_usize as usize)
+    return std::slice::from_raw_parts((printable.as_mut_ptr()).cast_const(), 4_usize)
         .to_vec()
         .iter()
         .copied()

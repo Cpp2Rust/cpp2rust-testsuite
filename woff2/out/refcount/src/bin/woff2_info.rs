@@ -619,7 +619,7 @@ pub fn Store16_31(mut val: i32, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
 pub fn StoreBytes_32(mut data: Ptr<u8>, mut len: usize, mut offset: Ptr<usize>, mut dst: Ptr<u8>) {
     match ({ (dst.offset((offset.read()) as isize)).to_any() },) {
         (mut __tmp_0,) => {
-            __tmp_0.memcpy(&(data).to_any(), len as usize);
+            __tmp_0.memcpy(&(data).to_any(), len);
             (__tmp_0).clone()
         }
     };
@@ -778,7 +778,7 @@ pub fn ReadTrueTypeCollection_35(
         i.postfix_inc();
     }
     {
-        let __a0 = ({ (*offsets.borrow()).len() }) as usize;
+        let __a0 = ({ (*offsets.borrow()).len() });
         field!(font_collection, fonts)
             .with_mut(|__v: &mut Vec<woff2_Font>| __v.resize_with(__a0, || <woff2_Font>::default()))
     };
@@ -831,7 +831,7 @@ pub fn ReadFontCollection_37(
     if ({ font_collection.with(|__s| __s.flavor) } != { kTtcFontFlavor_22.with(|rc| *rc.borrow()) })
     {
         {
-            let __a0 = 1_usize as usize;
+            let __a0 = 1_usize;
             field!(font_collection, fonts).with_mut(|__v: &mut Vec<woff2_Font>| {
                 __v.resize_with(__a0, || <woff2_Font>::default())
             })
@@ -971,7 +971,7 @@ pub fn WriteTable_43(
             (mut __tmp_13,) => {
                 __tmp_13.memcpy(
                     &(table.with(|__s| __s.data.clone())).to_any(),
-                    (table.with(|__s| __s.length) as usize) as usize,
+                    (table.with(|__s| __s.length) as usize),
                 );
                 (__tmp_13).clone()
             }
@@ -997,7 +997,7 @@ pub fn WriteTable_43(
         },)
         {
             (mut __tmp_14,) => {
-                __tmp_14.memset((0) as u8, padding_size as usize);
+                __tmp_14.memset((0) as u8, padding_size);
                 (__tmp_14).clone()
             }
         };
@@ -1315,10 +1315,10 @@ pub fn PrintTag_51(mut tag: i32) -> Vec<i8> {
         ((tag & 255) as i8),
     ])));
     return {
-        let mut __v = Vec::with_capacity(4_usize as usize + 1);
+        let mut __v = Vec::with_capacity(4_usize + 1);
         printable
             .decay()
-            .with_slice(4_usize as usize, |__s| __v.extend_from_slice(__s));
+            .with_slice(4_usize, |__s| __v.extend_from_slice(__s));
         __v.push(0);
         __v
     };
@@ -1617,7 +1617,7 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                             .with(|__s| __s.buffer_.clone())
                             .offset(((*self).with(|__s| __s.offset_)) as isize))
                         .to_any(),
-                        n_bytes as usize,
+                        n_bytes,
                     );
                     (__tmp_0).clone()
                 }
@@ -1657,7 +1657,7 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                         .with(|__s| __s.buffer_.clone())
                         .offset(((*self).with(|__s| __s.offset_)) as isize))
                     .to_any(),
-                    ::std::mem::size_of::<u16>() as usize,
+                    ::std::mem::size_of::<u16>(),
                 );
                 (__tmp_1).clone()
             }
@@ -1713,7 +1713,7 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                         .with(|__s| __s.buffer_.clone())
                         .offset(((*self).with(|__s| __s.offset_)) as isize))
                     .to_any(),
-                    ::std::mem::size_of::<u32>() as usize,
+                    ::std::mem::size_of::<u32>(),
                 );
                 (__tmp_2).clone()
             }
@@ -1740,7 +1740,7 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                         .with(|__s| __s.buffer_.clone())
                         .offset(((*self).with(|__s| __s.offset_)) as isize))
                     .to_any(),
-                    ::std::mem::size_of::<u32>() as usize,
+                    ::std::mem::size_of::<u32>(),
                 );
                 (__tmp_3).clone()
             }
@@ -1762,7 +1762,7 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
                         .with(|__s| __s.buffer_.clone())
                         .offset(((*self).with(|__s| __s.offset_)) as isize))
                     .to_any(),
-                    ::std::mem::size_of::<u64>() as usize,
+                    ::std::mem::size_of::<u64>(),
                 );
                 (__tmp_4).clone()
             }

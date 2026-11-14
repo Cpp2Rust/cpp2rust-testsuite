@@ -249,7 +249,7 @@ impl woff2_Buffer {
             }) {
                 (mut __tmp_0, mut __tmp_1) => {
                     if n_bytes != 0 {
-                        ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, n_bytes as usize)
+                        ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, n_bytes)
                     }
                     __tmp_0
                 }
@@ -277,11 +277,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_2, mut __tmp_3) => {
                 if ::std::mem::size_of::<u16>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_3,
-                        __tmp_2,
-                        ::std::mem::size_of::<u16>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_3, __tmp_2, ::std::mem::size_of::<u16>())
                 }
                 __tmp_2
             }
@@ -320,11 +316,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_4, mut __tmp_5) => {
                 if ::std::mem::size_of::<u32>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_5,
-                        __tmp_4,
-                        ::std::mem::size_of::<u32>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_5, __tmp_4, ::std::mem::size_of::<u32>())
                 }
                 __tmp_4
             }
@@ -346,11 +338,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_6, mut __tmp_7) => {
                 if ::std::mem::size_of::<u32>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_7,
-                        __tmp_6,
-                        ::std::mem::size_of::<u32>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_7, __tmp_6, ::std::mem::size_of::<u32>())
                 }
                 __tmp_6
             }
@@ -368,11 +356,7 @@ impl woff2_Buffer {
         }) {
             (mut __tmp_8, mut __tmp_9) => {
                 if ::std::mem::size_of::<u64>() != 0 {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_9,
-                        __tmp_8,
-                        ::std::mem::size_of::<u64>() as usize,
-                    )
+                    ::std::ptr::copy_nonoverlapping(__tmp_9, __tmp_8, ::std::mem::size_of::<u64>())
                 }
                 __tmp_8
             }
@@ -725,7 +709,7 @@ pub unsafe fn StoreBytes_35(
     ) {
         (mut __tmp_0, mut __tmp_1) => {
             if len != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len as usize)
+                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len)
             }
             __tmp_0
         }
@@ -1460,7 +1444,7 @@ pub unsafe fn ReconstructGlyf_63(
         (0..glyph_buf_size).map(|_| 0_u8).collect::<Box<[u8]>>(),
     )));
     {
-        let __a0 = ((*info).num_glyphs as usize) as usize;
+        let __a0 = ((*info).num_glyphs as usize);
         (*info).x_mins.resize_with(__a0, || 0_i16)
     };
     let mut i: u32 = 0_u32;
@@ -2549,7 +2533,7 @@ pub unsafe fn ReadWOFF2Header_75(
         }
     }
     {
-        let __a0 = ((*hdr).num_tables as usize) as usize;
+        let __a0 = ((*hdr).num_tables as usize);
         (*hdr).tables.resize_with(__a0, || <woff2_Table>::default())
     };
     if ((!(unsafe {
@@ -2593,7 +2577,7 @@ pub unsafe fn ReadWOFF2Header_75(
             return false;
         }
         {
-            let __a0 = (num_fonts as usize) as usize;
+            let __a0 = (num_fonts as usize);
             (*hdr)
                 .ttc_fonts
                 .resize_with(__a0, || <woff2_TtcFont>::default())
@@ -2620,7 +2604,7 @@ pub unsafe fn ReadWOFF2Header_75(
                 return false;
             }
             {
-                let __a0 = (num_tables as usize) as usize;
+                let __a0 = (num_tables as usize);
                 (*ttc_font).table_indices.resize_with(__a0, || 0_u16)
             };
             let mut glyf_idx: u32 = 0_u32;
@@ -2725,7 +2709,7 @@ pub unsafe fn WriteHeaders_76(
     mut out: *mut dyn woff2_WOFF2Out,
 ) -> bool {
     let mut output: Vec<u8> =
-        vec![0_u8; ((unsafe { ComputeOffsetToFirstTable_72(&(*hdr),) }) as usize) as usize];
+        vec![0_u8; ((unsafe { ComputeOffsetToFirstTable_72(&(*hdr),) }) as usize)];
     let mut sorted_tables: Vec<woff2_Table> = (*hdr).tables.clone();
     if ((*hdr).header_version != 0) {
         'loop_: for ttc_font in IterRange::new((*hdr).ttc_fonts.begin(), (*hdr).ttc_fonts.end()) {
@@ -2780,7 +2764,7 @@ pub unsafe fn WriteHeaders_76(
             offset = (unsafe { StoreU32_31(result, offset, 0_u32) });
         }
         {
-            let __a0 = (*hdr).ttc_fonts.len() as usize;
+            let __a0 = (*hdr).ttc_fonts.len();
             (*metadata)
                 .font_infos
                 .resize_with(__a0, || <woff2_WOFF2FontInfo>::default())
@@ -2816,7 +2800,7 @@ pub unsafe fn WriteHeaders_76(
         }
     } else {
         {
-            let __a0 = 1_usize as usize;
+            let __a0 = 1_usize;
             (*metadata)
                 .font_infos
                 .resize_with(__a0, || <woff2_WOFF2FontInfo>::default())
@@ -3148,7 +3132,7 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
         match ({ (self.buf_.offset((offset) as isize) as *mut ::libc::c_void) },) {
             (mut __tmp_4,) => {
                 if n != 0 {
-                    ::std::ptr::copy_nonoverlapping(buf, __tmp_4, n as usize)
+                    ::std::ptr::copy_nonoverlapping(buf, __tmp_4, n)
                 }
                 __tmp_4
             }
@@ -3184,8 +3168,7 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2StringOut {
                 (mut __tmp_0,) => {
                     (*__tmp_0).splice((*__tmp_0).len().saturating_sub(1)..(*__tmp_0).len(), {
                         let mut v =
-                            ::std::slice::from_raw_parts((buf as *const libc::c_char), n as usize)
-                                .to_vec();
+                            ::std::slice::from_raw_parts((buf as *const libc::c_char), n).to_vec();
                         v.push(0);
                         v
                     });
@@ -3201,15 +3184,15 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2StringOut {
                                 (0 as libc::c_char),
                                 (((offset).wrapping_add(n) as u64)
                                     .wrapping_sub((((*(self.buf_).cast_const()).len() - 1) as u64))
-                                    as usize) as usize,
+                                    as usize),
                             ),
                         );
                     }
                 };
             }
             (*self.buf_).splice(
-                offset as usize..offset as usize + n as usize,
-                ::std::slice::from_raw_parts((buf as *const libc::c_char), n as usize).to_vec(),
+                offset..offset + n,
+                ::std::slice::from_raw_parts((buf as *const libc::c_char), n).to_vec(),
             );
         }
         self.offset_ = ({
