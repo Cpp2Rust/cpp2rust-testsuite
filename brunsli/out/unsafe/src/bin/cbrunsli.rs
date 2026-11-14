@@ -5722,10 +5722,10 @@ pub unsafe fn EncodeMetaData_174(
     }
     let mut pos: usize = (unsafe { EncodeBase128_147(metadata.len(), data) });
     let mut compressed_size: usize = (*len).wrapping_sub(pos);
-    if !(::brotli_sys::BrotliEncoderCompress(
+    if !(BrotliEncoderCompress_unsafe(
         (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrotliQuality_142)),
         (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrotliWindowBits_143)),
-        (::brotli_sys::BROTLI_MODE_GENERIC as ::brotli_sys::BrotliEncoderMode),
+        (BROTLI_MODE_GENERIC as BrotliEncoderMode),
         metadata.len(),
         (metadata.as_mut_ptr()).cast_const(),
         (&mut compressed_size as *mut usize),

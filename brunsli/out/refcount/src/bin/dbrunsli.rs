@@ -6359,7 +6359,7 @@ pub fn DecodeMetaDataSection_180(
                     .offset((state.with(|__s| __s.pos)) as isize),
             ));
             let available_out: Value<usize> = Rc::new(RefCell::new(0_usize));
-            let mut result: ::brotli_sys::BrotliDecoderResult = BrotliDecoderDecompressStream(
+            let mut result: BrotliDecoderResult = BrotliDecoderDecompressStream(
                 ms.with(|__s| __s.brotli.clone()),
                 (available_in.as_pointer()),
                 (next_in.as_pointer()),
@@ -6367,7 +6367,7 @@ pub fn DecodeMetaDataSection_180(
                 Ptr::<Ptr<u8>>::null(),
                 Ptr::<usize>::null(),
             );
-            if ((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_ERROR as i32)) {
+            if ((result as i32) == (BROTLI_DECODER_RESULT_ERROR as i32)) {
                 return ({
                     (*finish_decompression.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
@@ -6401,7 +6401,7 @@ pub fn DecodeMetaDataSection_180(
                     (*finish_decompression.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
-            if ((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_SUCCESS as i32)) {
+            if ((result as i32) == (BROTLI_DECODER_RESULT_SUCCESS as i32)) {
                 if (({ RemainingSectionLength_174((state).clone()) }) != 0_usize) {
                     return ({
                         (*finish_decompression.borrow())
@@ -6426,10 +6426,10 @@ pub fn DecodeMetaDataSection_180(
                     (*finish_decompression.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_OK)
                 });
             }
-            if ((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT as i32)) {
+            if ((result as i32) == (BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT as i32)) {
                 continue 'loop_;
             }
-            if !((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_NEEDS_MORE_INPUT as i32)) {
+            if !((result as i32) == (BROTLI_DECODER_RESULT_NEEDS_MORE_INPUT as i32)) {
                 ({
                     BrunsliDumpAndAbort_79(
                         Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),

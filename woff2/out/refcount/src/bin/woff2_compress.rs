@@ -2829,7 +2829,7 @@ pub fn Compress_94(
     mut len: usize,
     mut result: Ptr<u8>,
     mut result_len: Ptr<u32>,
-    mut mode: ::brotli_sys::BrotliEncoderMode,
+    mut mode: BrotliEncoderMode,
     mut quality: i32,
 ) -> bool {
     let compressed_len: Value<usize> = Rc::new(RefCell::new(((result_len.read()) as usize)));
@@ -2861,7 +2861,7 @@ pub fn Woff2Compress_95(
             len,
             result,
             result_len,
-            (::brotli_sys::BROTLI_MODE_FONT as ::brotli_sys::BrotliEncoderMode),
+            (BROTLI_MODE_FONT as BrotliEncoderMode),
             quality,
         )
     });
@@ -2879,7 +2879,7 @@ pub fn TextCompress_96(
             len,
             result,
             result_len,
-            (::brotli_sys::BROTLI_MODE_TEXT as ::brotli_sys::BrotliEncoderMode),
+            (BROTLI_MODE_TEXT as BrotliEncoderMode),
             quality,
         )
     });

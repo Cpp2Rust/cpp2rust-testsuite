@@ -5123,7 +5123,7 @@ pub fn EncodeMetaData_174(
     if !(BrotliEncoderCompress(
         kBrotliQuality_142.with(|rc| *rc.borrow()),
         kBrotliWindowBits_143.with(|rc| *rc.borrow()),
-        (::brotli_sys::BROTLI_MODE_GENERIC as ::brotli_sys::BrotliEncoderMode),
+        (BROTLI_MODE_GENERIC as BrotliEncoderMode),
         ({ (*metadata.borrow()).len() }),
         metadata.decay(),
         (compressed_size.as_pointer()),

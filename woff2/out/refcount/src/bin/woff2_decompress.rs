@@ -1949,14 +1949,14 @@ pub fn Woff2Uncompress_68(
     mut src_size: usize,
 ) -> bool {
     let uncompressed_size: Value<usize> = Rc::new(RefCell::new(dst_size));
-    let mut result: ::brotli_sys::BrotliDecoderResult = BrotliDecoderDecompress(
+    let mut result: BrotliDecoderResult = BrotliDecoderDecompress(
         src_size,
         (src_buf).clone(),
         (uncompressed_size.as_pointer()),
         (dst_buf).clone(),
     );
     if (({
-        ((((result as i32) != (::brotli_sys::BROTLI_DECODER_RESULT_SUCCESS as i32))
+        ((((result as i32) != (BROTLI_DECODER_RESULT_SUCCESS as i32))
             || ((*uncompressed_size.borrow()) != dst_size)) as i64)
     }) != 0)
     {

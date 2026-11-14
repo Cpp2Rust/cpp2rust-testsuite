@@ -2036,13 +2036,13 @@ pub unsafe fn Woff2Uncompress_68(
     mut src_size: usize,
 ) -> bool {
     let mut uncompressed_size: usize = dst_size;
-    let mut result: ::brotli_sys::BrotliDecoderResult = ::brotli_sys::BrotliDecoderDecompress(
+    let mut result: BrotliDecoderResult = BrotliDecoderDecompress_unsafe(
         src_size,
         src_buf,
         (&mut uncompressed_size as *mut usize),
         dst_buf,
     );
-    if (((((result as i32) != (::brotli_sys::BROTLI_DECODER_RESULT_SUCCESS as i32))
+    if (((((result as i32) != (BROTLI_DECODER_RESULT_SUCCESS as i32))
         || ((uncompressed_size) != (dst_size))) as i64)
         != 0)
     {

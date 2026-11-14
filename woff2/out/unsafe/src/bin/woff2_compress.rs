@@ -3204,11 +3204,11 @@ pub unsafe fn Compress_94(
     len: usize,
     mut result: *mut u8,
     mut result_len: *mut u32,
-    mut mode: ::brotli_sys::BrotliEncoderMode,
+    mut mode: BrotliEncoderMode,
     mut quality: i32,
 ) -> bool {
     let mut compressed_len: usize = ((*result_len) as usize);
-    if ((::brotli_sys::BrotliEncoderCompress(
+    if ((BrotliEncoderCompress_unsafe(
         quality,
         22,
         mode,
@@ -3236,7 +3236,7 @@ pub unsafe fn Woff2Compress_95(
             len,
             result,
             result_len,
-            (::brotli_sys::BROTLI_MODE_FONT as ::brotli_sys::BrotliEncoderMode),
+            (BROTLI_MODE_FONT as BrotliEncoderMode),
             quality,
         )
     });
@@ -3254,7 +3254,7 @@ pub unsafe fn TextCompress_96(
             len,
             result,
             result_len,
-            (::brotli_sys::BROTLI_MODE_TEXT as ::brotli_sys::BrotliEncoderMode),
+            (BROTLI_MODE_TEXT as BrotliEncoderMode),
             quality,
         )
     });

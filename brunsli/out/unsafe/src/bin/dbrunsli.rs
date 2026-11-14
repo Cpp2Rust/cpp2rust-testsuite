@@ -3926,7 +3926,7 @@ pub struct brunsli_internal_dec_MetadataState {
     pub remaining_multibyte_length: usize,
     pub multibyte_sink: *mut Vec<u8>,
     pub stage: usize,
-    pub brotli: *mut ::brotli_sys::BrotliDecoderState,
+    pub brotli: *mut BrotliDecoderState,
     pub metadata_size: usize,
     pub decompressed_size: usize,
     pub result: brunsli_BrunsliStatus,
@@ -6872,7 +6872,7 @@ pub unsafe fn DecodeMetaDataSection_180(
         if ((unsafe { RemainingSectionLength_174(state) }) == (0_usize)) {
             return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
         }
-        (*ms).brotli = ::brotli_sys::BrotliDecoderCreateInstance(None, None, std::ptr::null_mut());
+        (*ms).brotli = BrotliDecoderCreateInstance_unsafe();
         if ((*ms).brotli).is_null() {
             return brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR;
         }
@@ -6896,7 +6896,7 @@ pub unsafe fn DecodeMetaDataSection_180(
                     });
                     'loop_: while true {}
                 };
-                ::brotli_sys::BrotliDecoderDestroyInstance((*ms).brotli);
+                BrotliDecoderDestroyInstance_unsafe((*ms).brotli);
                 (*ms).brotli = std::ptr::null_mut();
                 (*ms).decompression_stage = brunsli_internal_dec_MetadataDecompressionStage_DONE;
                 return result;
@@ -6916,25 +6916,22 @@ pub unsafe fn DecodeMetaDataSection_180(
             let mut available_in: usize = available_bytes;
             let mut next_in: *const u8 = (*state).data.offset(((*state).pos) as isize);
             let mut available_out: usize = 0_usize;
-            let mut result: ::brotli_sys::BrotliDecoderResult =
-                ::brotli_sys::BrotliDecoderDecompressStream(
-                    (*ms).brotli,
-                    (&mut available_in as *mut usize),
-                    (&mut next_in as *mut *const u8),
-                    (&mut available_out as *mut usize),
-                    std::ptr::null_mut(),
-                    std::ptr::null_mut(),
-                );
-            if ((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_ERROR as i32)) {
+            let mut result: BrotliDecoderResult = BrotliDecoderDecompressStream_unsafe(
+                (*ms).brotli,
+                (&mut available_in as *mut usize),
+                (&mut next_in as *mut *const u8),
+                (&mut available_out as *mut usize),
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+            );
+            if ((result as i32) == (BROTLI_DECODER_RESULT_ERROR as i32)) {
                 return (unsafe {
                     finish_decompression.call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
             let mut chunk_size: usize = 0_usize;
-            let mut chunk_data: *const u8 = ::brotli_sys::BrotliDecoderTakeOutput(
-                (*ms).brotli,
-                (&mut chunk_size as *mut usize),
-            );
+            let mut chunk_data: *const u8 =
+                BrotliDecoderTakeOutput_unsafe((*ms).brotli, (&mut chunk_size as *mut usize));
             (*ms).decompressed_size = ((*ms).decompressed_size).wrapping_add(chunk_size);
             if (((*ms).decompressed_size) > ((*ms).metadata_size)) {
                 return (unsafe {
@@ -6950,7 +6947,7 @@ pub unsafe fn DecodeMetaDataSection_180(
                     finish_decompression.call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
-            if ((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_SUCCESS as i32)) {
+            if ((result as i32) == (BROTLI_DECODER_RESULT_SUCCESS as i32)) {
                 if ((unsafe { RemainingSectionLength_174(state) }) != (0_usize)) {
                     return (unsafe {
                         finish_decompression.call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
@@ -6968,10 +6965,10 @@ pub unsafe fn DecodeMetaDataSection_180(
                 }
                 return (unsafe { finish_decompression.call(brunsli_BrunsliStatus_BRUNSLI_OK) });
             }
-            if ((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT as i32)) {
+            if ((result as i32) == (BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT as i32)) {
                 continue 'loop_;
             }
-            if !((result as i32) == (::brotli_sys::BROTLI_DECODER_RESULT_NEEDS_MORE_INPUT as i32)) {
+            if !((result as i32) == (BROTLI_DECODER_RESULT_NEEDS_MORE_INPUT as i32)) {
                 (unsafe {
                     BrunsliDumpAndAbort_79(
                         c"brunsli_decode.cc".as_ptr(),
@@ -12708,7 +12705,7 @@ impl brunsli_internal_dec_State {
 impl brunsli_internal_dec_MetadataState {
     pub unsafe fn destructor(&mut self) {
         if !((self.brotli).is_null()) {
-            ::brotli_sys::BrotliDecoderDestroyInstance(self.brotli);
+            BrotliDecoderDestroyInstance_unsafe(self.brotli);
             self.brotli = std::ptr::null_mut();
         }
     }
