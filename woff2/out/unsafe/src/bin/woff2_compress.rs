@@ -3177,7 +3177,7 @@ impl woff2_WOFF2Params {
     }
     pub unsafe fn move_from(_a0: *mut woff2_WOFF2Params) -> Self {
         let mut this = Self {
-            extended_metadata: std::mem::take(&mut (*_a0).extended_metadata),
+            extended_metadata: std::mem::replace(&mut (*_a0).extended_metadata, vec![0]),
             brotli_quality: (*_a0).brotli_quality,
             allow_transforms: (*_a0).allow_transforms,
         };

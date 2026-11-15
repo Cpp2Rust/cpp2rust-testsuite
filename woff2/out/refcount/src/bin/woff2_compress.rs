@@ -2807,7 +2807,8 @@ impl woff2_WOFF2Params {
     }
     pub fn move_from(_a0: Ptr<woff2_WOFF2Params>) -> Self {
         Self {
-            extended_metadata: field!(_a0, extended_metadata).with_mut(std::mem::take),
+            extended_metadata: field!(_a0, extended_metadata)
+                .with_mut(|__v| std::mem::replace(__v, vec![0])),
             brotli_quality: { (*_a0.upgrade().deref()).brotli_quality },
             allow_transforms: { (*_a0.upgrade().deref()).allow_transforms },
         }
