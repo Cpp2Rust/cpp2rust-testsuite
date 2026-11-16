@@ -2128,7 +2128,7 @@ pub fn Tables_73(mut hdr: Ptr<woff2_WOFF2Header>, mut font_index: usize) -> Vec<
         ) {
             let table: Ptr<woff2_Table> = table.iter_deref();
             {
-                let __a1 = (table);
+                let __a1 = (table).clone();
                 tables.push(__a1)
             };
         }
