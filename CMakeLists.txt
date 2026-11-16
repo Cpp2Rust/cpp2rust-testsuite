@@ -4,7 +4,19 @@ project(Cpp2Rust-TestSuite)
 set(CPP2RUST_PROGRAMS micro brunsli woff2)
 set(CPP2RUST_MODELS   unsafe refcount)
 set(CPP2RUST_SRCDIR   ${CMAKE_CURRENT_SOURCE_DIR}/../cpp2rust)
-set(CPP2RUST_BINARY   ${CPP2RUST_SRCDIR}/build/cpp2rust/cpp2rust)
+set(CPP2RUST_BUILD_DIR ${CPP2RUST_SRCDIR}/build CACHE PATH "cpp2rust build directory")
+set(CPP2RUST_BINARY   ${CPP2RUST_BUILD_DIR}/cpp2rust/cpp2rust)
+
+# Compile the original C/C++ programs with the same clang used to build cpp2rust
+load_cache(${CPP2RUST_BUILD_DIR} READ_WITH_PREFIX "" CPP2RUST_CXX_COMPILER)
+set(BENCH_CXX ${CPP2RUST_CXX_COMPILER})
+cmake_path(NORMAL_PATH BENCH_CXX)
+if (NOT EXISTS ${BENCH_CXX})
+  message(FATAL_ERROR "CPP2RUST_CXX_COMPILER from ${CPP2RUST_BUILD_DIR} not found: '${BENCH_CXX}' (reconfigure cpp2rust?)")
+endif()
+cmake_path(GET BENCH_CXX PARENT_PATH _clang_bin)
+set(BENCH_CC ${_clang_bin}/clang)
+message(STATUS "Benchmark C++ compiler: ${BENCH_CXX}")
 
 # -----------------------------------------------------------------------------
 
@@ -58,7 +70,7 @@ list(TRANSFORM CPP2RUST_PROGRAMS PREPEND "build-"     OUTPUT_VARIABLE _build_tar
 list(TRANSFORM CPP2RUST_PROGRAMS PREPEND "check-"     OUTPUT_VARIABLE _check_targets)
 list(TRANSFORM CPP2RUST_PROGRAMS PREPEND "regen-"     OUTPUT_VARIABLE _regen_targets)
 
-add_custom_target("build"     DEPENDS ${_build_targets})
+add_custom_target("build" ALL DEPENDS ${_build_targets})
 add_custom_target("check"     DEPENDS ${_check_targets})
 add_custom_target("regen"     DEPENDS ${_regen_targets})
 

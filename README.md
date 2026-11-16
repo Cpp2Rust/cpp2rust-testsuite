@@ -17,8 +17,13 @@ cd build
 cmake -GNinja ..
 ```
 
+By default, cpp2rust is expected to be built in `../cpp2rust/build`. Use
+`-DCPP2RUST_BUILD_DIR=<path>` to point to a different build directory.
+The original C/C++ programs are compiled with the same clang used to build
+cpp2rust.
+
 Available commands:
- - `ninja build` - Compile the original and Rust programs.
+ - `ninja build` (or just `ninja`) - Compile the original and Rust programs.
  - `ninja check` - Run the original and Rust binaries and compare the output.
  - `ninja benchmark` - Compare the performance of the original and the Rust
    binaries.

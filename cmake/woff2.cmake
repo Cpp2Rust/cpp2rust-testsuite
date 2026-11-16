@@ -13,10 +13,12 @@ add_custom_target("build-woff2-original"
   COMMAND ${CMAKE_COMMAND} -S ${WOFF2_SRC_DIR}
                            -B ${WOFF2_SRC_DIR}/build
                            -G Ninja
+                           -DCMAKE_C_COMPILER=${BENCH_CC}
+                           -DCMAKE_CXX_COMPILER=${BENCH_CXX}
                            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
   # Only the Makefile build links against the bundled Brotli
   # Important so the compressed files match perfectly
-  COMMAND make
+  COMMAND make CC=${BENCH_CC} CXX=${BENCH_CXX}
   WORKING_DIRECTORY "${WOFF2_SRC_DIR}"
 )
 

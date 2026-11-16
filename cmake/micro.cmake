@@ -11,7 +11,7 @@ foreach(_src_path IN LISTS MICRO_SRCS)
     add_custom_command(
         OUTPUT "${_bin_output}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${MICRO_SRC_DIR}/build"
-        COMMAND clang++ -O3 "${_src_path}" -o "${_bin_output}"
+        COMMAND ${BENCH_CXX} -O3 "${_src_path}" -o "${_bin_output}"
         DEPENDS "${_src_path}"
     )
 endforeach()
