@@ -9,7 +9,12 @@ shift 2
 MODELS=("$@")
 
 FONTS_DIR="$SRC_DIR/tests"
-TMP_DIR="$BUILD_DIR/tmp-woff2"
+if [ -d /dev/shm ] && [ -w /dev/shm ]; then
+  TMP_DIR=$(mktemp -d /dev/shm/cpp2rust-woff2.XXXXXX)
+else
+  TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/cpp2rust-woff2.XXXXXX")
+fi
+trap 'rm -fr "$TMP_DIR"' EXIT
 
 # Wait for all PIDs, failing if any exited non-zero.
 wait_all() {
@@ -20,7 +25,6 @@ wait_all() {
   return $fail
 }
 
-rm -fr "$TMP_DIR"
 mkdir -p "$TMP_DIR/original"
 
 for f in "$FONTS_DIR"/**/*.ttf; do
@@ -95,5 +99,3 @@ for model in "${MODELS[@]}"; do
 
   echo "WOFF2 $model tests passed!"
 done
-
-rm -fr "$TMP_DIR"

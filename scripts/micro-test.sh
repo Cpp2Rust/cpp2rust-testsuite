@@ -8,7 +8,12 @@ SRC_DIR="$2/micro"
 shift 2
 MODELS=("$@")
 
-TMP_DIR="$BUILD_DIR/tmp-micro"
+if [ -d /dev/shm ] && [ -w /dev/shm ]; then
+  TMP_DIR=$(mktemp -d /dev/shm/cpp2rust-micro.XXXXXX)
+else
+  TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/cpp2rust-micro.XXXXXX")
+fi
+trap 'rm -fr "$TMP_DIR"' EXIT
 CPP_BIN_DIR="$SRC_DIR/src/build"
 
 # Wait for all PIDs, failing if any exited non-zero.
@@ -20,7 +25,6 @@ wait_all() {
   return $fail
 }
 
-rm -fr "$TMP_DIR"
 mkdir -p "$TMP_DIR/cpp"
 
 # Collect and run C++ reference binaries
@@ -67,5 +71,3 @@ for MODEL in "${MODELS[@]}"; do
 
   echo "Micro $MODEL tests passed!"
 done
-
-rm -fr "$TMP_DIR"

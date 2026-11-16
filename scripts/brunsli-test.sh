@@ -9,7 +9,12 @@ shift 2
 MODELS=("$@")
 
 IMGS_DIR="$SRC_DIR/tests"
-TMP_DIR="$BUILD_DIR/tmp-brunsli"
+if [ -d /dev/shm ] && [ -w /dev/shm ]; then
+  TMP_DIR=$(mktemp -d /dev/shm/cpp2rust-brunsli.XXXXXX)
+else
+  TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/cpp2rust-brunsli.XXXXXX")
+fi
+trap 'rm -fr "$TMP_DIR"' EXIT
 
 # Wait for all PIDs, failing if any exited non-zero.
 wait_all() {
@@ -20,7 +25,6 @@ wait_all() {
   return $fail
 }
 
-rm -fr "$TMP_DIR"
 mkdir -p "$TMP_DIR/cpp"
 
 # Run original binaries
@@ -82,5 +86,3 @@ for model in "${MODELS[@]}"; do
 
   echo "Brunsli $model tests passed!"
 done
-
-rm -fr "$TMP_DIR"
