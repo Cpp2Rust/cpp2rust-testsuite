@@ -7,23 +7,27 @@ use std::io::{Read, Seek, Write};
 use std::os::fd::{AsFd, FromRawFd, IntoRawFd};
 use std::rc::Rc;
 pub unsafe fn is_prime_0(x: *const i32) -> bool {
-    let mut i: i32 = 2;
-    'loop_: while ((i) < (*x)) {
-        if (((*x) % (i)) == (0)) {
-            return false;
+    {
+        let mut i: i32 = 2;
+        'loop_: while ((i) < (*x)) {
+            if (((*x) % (i)) == (0)) {
+                return false;
+            }
+            i.prefix_inc();
         }
-        i.prefix_inc();
     }
     return true;
 }
 pub unsafe fn largest_prime_1(n: *const i32) -> i32 {
     let mut max: i32 = -1_i32;
-    let mut i: i32 = 0;
-    'loop_: while ((i) < (*n)) {
-        if (unsafe { is_prime_0(&i) }) {
-            max = i;
+    {
+        let mut i: i32 = 0;
+        'loop_: while ((i) < (*n)) {
+            if (unsafe { is_prime_0(&i) }) {
+                max = i;
+            }
+            i.prefix_inc();
         }
-        i.prefix_inc();
     }
     return max;
 }

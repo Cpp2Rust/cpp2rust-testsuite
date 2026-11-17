@@ -56,29 +56,33 @@ fn main_0() -> i32 {
         right: Ptr::<node_t>::null(),
         value: 0,
     });
-    let mut i: i32 = 0;
-    'loop_: while (i < N) {
-        ({
-            insert_1(
-                (tree).clone(),
-                Ptr::alloc(node_t {
-                    left: Ptr::<node_t>::null(),
-                    right: Ptr::<node_t>::null(),
-                    value: i,
-                }),
-            )
-        });
-        i.prefix_inc();
+    {
+        let mut i: i32 = 0;
+        'loop_: while (i < N) {
+            ({
+                insert_1(
+                    (tree).clone(),
+                    Ptr::alloc(node_t {
+                        left: Ptr::<node_t>::null(),
+                        right: Ptr::<node_t>::null(),
+                        value: i,
+                    }),
+                )
+            });
+            i.prefix_inc();
+        }
     }
-    let mut i: i32 = 0;
-    'loop_: while (i < N) {
-        write!(
-            libcc2rs::cout(),
-            "Value: {:}, Found: {:}\n",
-            i,
-            ({ find_0((tree).clone(), i,) }).with(|__s| __s.value),
-        );
-        i.prefix_inc();
+    {
+        let mut i: i32 = 0;
+        'loop_: while (i < N) {
+            write!(
+                libcc2rs::cout(),
+                "Value: {:}, Found: {:}\n",
+                i,
+                ({ find_0((tree).clone(), i,) }).with(|__s| __s.value),
+            );
+            i.prefix_inc();
+        }
     }
     return 0;
 }

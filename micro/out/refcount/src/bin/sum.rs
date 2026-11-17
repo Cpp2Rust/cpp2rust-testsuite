@@ -13,14 +13,16 @@ pub fn main() {
 fn main_0() -> i32 {
     let mut N: u64 = 25000000000_u64;
     let mut sum: u64 = 0_u64;
-    let mut i: u64 = 0_u64;
-    let mut j: u64 = N;
-    'loop_: while (i < j) {
-        sum = { (sum).wrapping_add((i).wrapping_add(j)) };
-        {
-            i.prefix_inc();
-            j.prefix_dec()
-        };
+    {
+        let mut i: u64 = 0_u64;
+        let mut j: u64 = N;
+        'loop_: while (i < j) {
+            sum = { (sum).wrapping_add((i).wrapping_add(j)) };
+            {
+                i.prefix_inc();
+                j.prefix_dec()
+            };
+        }
     }
     write!(libcc2rs::cout(), "Sum: {:}\n", sum,);
     return 0;

@@ -1870,27 +1870,29 @@ pub fn ComputeACPredictMultipliers_109(
     mut mult_row: Ptr<i32>,
     mut mult_col: Ptr<i32>,
 ) {
-    let mut y: usize = 0_usize;
-    'loop_: while (y < 8_usize) {
-        let mut x: usize = 0_usize;
-        'loop_: while (x < 8_usize) {
-            elem!(mult_row, (x).wrapping_add((8_usize).wrapping_mul(y))).write({
-                ({
-                    ({ (elem!(quant, (x).wrapping_add((8_usize).wrapping_mul(y))).read()) } * {
-                        kSqrt2FixedPoint_108.with(|rc| *rc.borrow())
-                    })
-                } / { (elem!(quant, (y).wrapping_mul(8_usize)).read()) })
-            });
-            elem!(mult_col, ((x).wrapping_mul(8_usize)).wrapping_add(y)).write({
-                ({
-                    ({ (elem!(quant, (x).wrapping_add((8_usize).wrapping_mul(y))).read()) } * {
-                        kSqrt2FixedPoint_108.with(|rc| *rc.borrow())
-                    })
-                } / { (elem!(quant, x).read()) })
-            });
-            x.prefix_inc();
+    {
+        let mut y: usize = 0_usize;
+        'loop_: while (y < 8_usize) {
+            {
+                let mut x: usize = 0_usize;
+                'loop_: while (x < 8_usize) {
+                    elem!(mult_row, (x).wrapping_add((8_usize).wrapping_mul(y))).write({
+                        ({
+                            ({ (elem!(quant, (x).wrapping_add((8_usize).wrapping_mul(y))).read()) }
+                                * { kSqrt2FixedPoint_108.with(|rc| *rc.borrow()) })
+                        } / { (elem!(quant, (y).wrapping_mul(8_usize)).read()) })
+                    });
+                    elem!(mult_col, ((x).wrapping_mul(8_usize)).wrapping_add(y)).write({
+                        ({
+                            ({ (elem!(quant, (x).wrapping_add((8_usize).wrapping_mul(y))).read()) }
+                                * { kSqrt2FixedPoint_108.with(|rc| *rc.borrow()) })
+                        } / { (elem!(quant, x).read()) })
+                    });
+                    x.prefix_inc();
+                }
+            }
+            y.prefix_inc();
         }
-        y.prefix_inc();
     }
 }
 thread_local!(
@@ -2191,82 +2193,90 @@ pub fn ComputeLehmerCode_112(mut sigma: Ptr<u32>, mut len: usize, mut code: Ptr<
     let items: Value<Vec<u32>> = Rc::new(RefCell::new(
         (0..(len) as usize).map(|_| 0_u32).collect::<Vec<_>>(),
     ));
-    let mut i: usize = 0_usize;
-    'loop_: while (i < len) {
-        let __rhs = (i as u32);
-        (*items.borrow_mut())[i] = __rhs;
-        i.prefix_inc();
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < len) {
+            let __rhs = (i as u32);
+            (*items.borrow_mut())[i] = __rhs;
+            i.prefix_inc();
+        }
     }
-    let mut i: usize = 0_usize;
-    'loop_: while (i < len) {
-        let it: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new(
-            match ({ items.decay().begin() }, { items.decay().end() }) {
-                (mut __tmp_4, mut __tmp_5) => {
-                    let mut __it = (__tmp_4).clone();
-                    while __it != __tmp_5
-                        && !CppEq::equal(&__it.iter_deref(), &sigma.offset((i) as isize))
-                    {
-                        __it.iter_inc();
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < len) {
+            let it: Value<RandomAccessIterator<u32>> = Rc::new(RefCell::new(
+                match ({ items.decay().begin() }, { items.decay().end() }) {
+                    (mut __tmp_4, mut __tmp_5) => {
+                        let mut __it = (__tmp_4).clone();
+                        while __it != __tmp_5
+                            && !CppEq::equal(&__it.iter_deref(), &sigma.offset((i) as isize))
+                        {
+                            __it.iter_inc();
+                        }
+                        __it
                     }
-                    __it
+                },
+            ));
+            if !((*it.borrow()) != items.decay().end()) {
+                ({
+                    BrunsliDumpAndAbort_79(
+                        Ptr::<i8>::from_string_literal(b"lehmer_code.cc"),
+                        21,
+                        Ptr::<i8>::from_string_literal(b"ComputeLehmerCode"),
+                    )
+                });
+                'loop_: while true {}
+            };
+            let __rhs = ((*it.borrow()).iter_distance(&items.decay().begin()) as u32);
+            elem!(code, i).write(__rhs);
+            match ({ <RandomAccessIterator<u32>>::from(({ (*it.borrow()).clone() })) },) {
+                (mut __tmp_6,) => {
+                    let __off = __tmp_6.index();
+                    items
+                        .as_pointer()
+                        .with_mut(|__v: &mut Vec<u32>| __v.remove(__off));
+                    (__tmp_6).clone()
                 }
-            },
-        ));
-        if !((*it.borrow()) != items.decay().end()) {
-            ({
-                BrunsliDumpAndAbort_79(
-                    Ptr::<i8>::from_string_literal(b"lehmer_code.cc"),
-                    21,
-                    Ptr::<i8>::from_string_literal(b"ComputeLehmerCode"),
-                )
-            });
-            'loop_: while true {}
-        };
-        let __rhs = ((*it.borrow()).iter_distance(&items.decay().begin()) as u32);
-        elem!(code, i).write(__rhs);
-        match ({ <RandomAccessIterator<u32>>::from(({ (*it.borrow()).clone() })) },) {
-            (mut __tmp_6,) => {
-                let __off = __tmp_6.index();
-                items
-                    .as_pointer()
-                    .with_mut(|__v: &mut Vec<u32>| __v.remove(__off));
-                (__tmp_6).clone()
-            }
-        };
-        i.prefix_inc();
+            };
+            i.prefix_inc();
+        }
     }
 }
 pub fn DecodeLehmerCode_113(mut code: Ptr<u32>, mut len: usize, mut sigma: Ptr<u32>) -> bool {
     let items: Value<Vec<u32>> = Rc::new(RefCell::new(
         (0..(len) as usize).map(|_| 0_u32).collect::<Vec<_>>(),
     ));
-    let mut i: usize = 0_usize;
-    'loop_: while (i < len) {
-        let __rhs = (i as u32);
-        (*items.borrow_mut())[i] = __rhs;
-        i.prefix_inc();
-    }
-    let mut i: usize = 0_usize;
-    'loop_: while (i < len) {
-        let mut index: u32 = (elem!(code, i).read());
-        if ((index as usize) >= (*items.borrow()).len()) {
-            return false;
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < len) {
+            let __rhs = (i as u32);
+            (*items.borrow_mut())[i] = __rhs;
+            i.prefix_inc();
         }
-        let mut value: u32 = { (*items.borrow())[(index as usize)] };
-        match ({
-            <RandomAccessIterator<u32>>::from(items.decay().begin().iter_add((index as isize)))
-        },)
-        {
-            (mut __tmp_7,) => {
-                let __off = __tmp_7.index();
-                items
-                    .as_pointer()
-                    .with_mut(|__v: &mut Vec<u32>| __v.remove(__off));
-                (__tmp_7).clone()
+    }
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < len) {
+            let mut index: u32 = (elem!(code, i).read());
+            if ((index as usize) >= (*items.borrow()).len()) {
+                return false;
             }
-        };
-        elem!(sigma, i).write({ value });
-        i.prefix_inc();
+            let mut value: u32 = { (*items.borrow())[(index as usize)] };
+            match ({
+                <RandomAccessIterator<u32>>::from(items.decay().begin().iter_add((index as isize)))
+            },)
+            {
+                (mut __tmp_7,) => {
+                    let __off = __tmp_7.index();
+                    items
+                        .as_pointer()
+                        .with_mut(|__v: &mut Vec<u32>| __v.remove(__off));
+                    (__tmp_7).clone()
+                }
+            };
+            elem!(sigma, i).write({ value });
+            i.prefix_inc();
+        }
     }
     return true;
 }
@@ -2339,18 +2349,20 @@ pub fn FillQuantMatrix_118(mut is_chroma: bool, mut q: u32, mut dst: Ptr<u8>) {
         .with(|v| v.decay())
         .offset(is_chroma)
         .decay();
-    let mut i: i32 = 0;
-    'loop_: while (i < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
-        let mut v: u32 =
-            (((((elem!(in_, i).read()) as u32).wrapping_mul(q)).wrapping_add(32_u32)) >> 6);
-        elem!(dst, i).write({
-            (if (v < 1_u32) {
-                1_u32
-            } else {
-                if (v > 255_u32) { 255_u32 } else { v }
-            } as u8)
-        });
-        i.prefix_inc();
+    {
+        let mut i: i32 = 0;
+        'loop_: while (i < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
+            let mut v: u32 =
+                (((((elem!(in_, i).read()) as u32).wrapping_mul(q)).wrapping_add(32_u32)) >> 6);
+            elem!(dst, i).write({
+                (if (v < 1_u32) {
+                    1_u32
+                } else {
+                    if (v > 255_u32) { 255_u32 } else { v }
+                } as u8)
+            });
+            i.prefix_inc();
+        }
     }
 }
 pub fn FindBestMatrix_119(mut src: Ptr<i32>, mut is_chroma: bool, mut dst: Ptr<u8>) -> u32 {
@@ -2359,51 +2371,57 @@ pub fn FindBestMatrix_119(mut src: Ptr<i32>, mut is_chroma: bool, mut dst: Ptr<u
     let mut kWorstLen: usize = ((kDCTBlockSize_3.with(|rc| *rc.borrow()) + 1) as usize)
         .wrapping_mul((((kMaxDiffCost).wrapping_add(1_usize)) as usize));
     let mut best_len: usize = kWorstLen;
-    let mut q: u32 = 0_u32;
-    'loop_: while ((q as usize) < kQFactorLimit_117.with(|rc| *rc.borrow())) {
-        ({ FillQuantMatrix_118(is_chroma, q, (dst).clone()) });
-        let mut last_diff: i32 = 0;
-        let mut len: usize = 0_usize;
-        let mut k: i32 = 0;
-        'loop_: while (k < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
-            let mut j: i32 = (({
-                let __idx0 = (k) as usize;
-                kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
-            }) as i32);
-            let mut new_diff: i32 =
-                ({ (elem!(src, j).read()) } - { ((elem!(dst, j).read()) as i32) });
-            let mut diff: i32 = (new_diff - last_diff);
-            last_diff = new_diff;
-            if (diff != 0) {
-                len = { (len).wrapping_add(1_usize) };
-                if (diff < 0) {
-                    diff = { -diff };
-                }
-                diff -= 1;
-                if (diff == 0) {
-                    len.postfix_inc();
-                } else if (diff > 65535) {
-                    len = kWorstLen;
-                    break;
-                } else {
-                    let mut diff_len: u32 = ((({ Log2FloorNonZero_74((diff as u32)) }) + 1) as u32);
-                    if (diff_len == 16_u32) {
-                        diff_len.postfix_dec();
+    {
+        let mut q: u32 = 0_u32;
+        'loop_: while ((q as usize) < kQFactorLimit_117.with(|rc| *rc.borrow())) {
+            ({ FillQuantMatrix_118(is_chroma, q, (dst).clone()) });
+            let mut last_diff: i32 = 0;
+            let mut len: usize = 0_usize;
+            {
+                let mut k: i32 = 0;
+                'loop_: while (k < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
+                    let mut j: i32 = (({
+                        let __idx0 = (k) as usize;
+                        kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
+                    }) as i32);
+                    let mut new_diff: i32 =
+                        ({ (elem!(src, j).read()) } - { ((elem!(dst, j).read()) as i32) });
+                    let mut diff: i32 = (new_diff - last_diff);
+                    last_diff = new_diff;
+                    if (diff != 0) {
+                        len = { (len).wrapping_add(1_usize) };
+                        if (diff < 0) {
+                            diff = { -diff };
+                        }
+                        diff -= 1;
+                        if (diff == 0) {
+                            len.postfix_inc();
+                        } else if (diff > 65535) {
+                            len = kWorstLen;
+                            break;
+                        } else {
+                            let mut diff_len: u32 =
+                                ((({ Log2FloorNonZero_74((diff as u32)) }) + 1) as u32);
+                            if (diff_len == 16_u32) {
+                                diff_len.postfix_dec();
+                            }
+                            len = {
+                                (len).wrapping_add(
+                                    ((((2_u32).wrapping_mul(diff_len)).wrapping_add(1_u32))
+                                        as usize),
+                                )
+                            };
+                        }
                     }
-                    len = {
-                        (len).wrapping_add(
-                            ((((2_u32).wrapping_mul(diff_len)).wrapping_add(1_u32)) as usize),
-                        )
-                    };
+                    k.prefix_inc();
                 }
             }
-            k.prefix_inc();
+            if (len < best_len) {
+                best_len = len;
+                best_q = q;
+            }
+            q.prefix_inc();
         }
-        if (len < best_len) {
-            best_len = len;
-            best_q = q;
-        }
-        q.prefix_inc();
     }
     ({ FillQuantMatrix_118(is_chroma, best_q, (dst).clone()) });
     return best_q;
@@ -4996,31 +5014,36 @@ pub fn DecodeCoeffOrder_152(
         0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
         0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
     ])));
-    let mut i: i32 = 0;
-    'loop_: while (i < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
-        if !(({ brunsli_BitSourceImpl::ReadBits(&br, 1, (in_).clone()) }) != 0) {
-            i += kSpan_153.with(|rc| *rc.borrow());
-            continue 'loop_;
-        }
-        let mut start: i32 = if (i > 0) { i } else { 1 };
-        let mut end: i32 = (i + kSpan_153.with(|rc| *rc.borrow()));
-        let mut j: i32 = start;
-        'loop_: while (j < end) {
-            let mut v: u32 = 0_u32;
-            'loop_: while (v <= (kDCTBlockSize_3.with(|rc| *rc.borrow()) as u32)) {
-                let mut bits: u32 = ({ brunsli_BitSourceImpl::ReadBits(&br, 3, (in_).clone()) });
-                v = { (v).wrapping_add(bits) };
-                if (bits < 7_u32) {
-                    break;
+    {
+        let mut i: i32 = 0;
+        'loop_: while (i < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
+            if !(({ brunsli_BitSourceImpl::ReadBits(&br, 1, (in_).clone()) }) != 0) {
+                i += kSpan_153.with(|rc| *rc.borrow());
+                continue 'loop_;
+            }
+            let mut start: i32 = if (i > 0) { i } else { 1 };
+            let mut end: i32 = (i + kSpan_153.with(|rc| *rc.borrow()));
+            {
+                let mut j: i32 = start;
+                'loop_: while (j < end) {
+                    let mut v: u32 = 0_u32;
+                    'loop_: while (v <= (kDCTBlockSize_3.with(|rc| *rc.borrow()) as u32)) {
+                        let mut bits: u32 =
+                            ({ brunsli_BitSourceImpl::ReadBits(&br, 3, (in_).clone()) });
+                        v = { (v).wrapping_add(bits) };
+                        if (bits < 7_u32) {
+                            break;
+                        }
+                    }
+                    if (v > (kDCTBlockSize_3.with(|rc| *rc.borrow()) as u32)) {
+                        return false;
+                    }
+                    (*lehmer.borrow_mut())[(j) as usize] = v;
+                    j.prefix_inc();
                 }
             }
-            if (v > (kDCTBlockSize_3.with(|rc| *rc.borrow()) as u32)) {
-                return false;
-            }
-            (*lehmer.borrow_mut())[(j) as usize] = v;
-            j.prefix_inc();
+            i += kSpan_153.with(|rc| *rc.borrow());
         }
-        i += kSpan_153.with(|rc| *rc.borrow());
     }
     let mut end: i32 = (kDCTBlockSize_3.with(|rc| *rc.borrow()) - 1);
     'loop_: while (end >= 1) && ((*lehmer.borrow())[(end) as usize] == 0_u32) {
@@ -5029,13 +5052,15 @@ pub fn DecodeCoeffOrder_152(
     if ((*lehmer.borrow())[(end) as usize] == 1_u32) {
         return false;
     }
-    let mut i: i32 = 1;
-    'loop_: while (i <= end) {
-        if ((*lehmer.borrow())[(i) as usize] == 0_u32) {
-            return false;
+    {
+        let mut i: i32 = 1;
+        'loop_: while (i <= end) {
+            if ((*lehmer.borrow())[(i) as usize] == 0_u32) {
+                return false;
+            }
+            (*lehmer.borrow_mut())[(i) as usize].prefix_dec();
+            i.prefix_inc();
         }
-        (*lehmer.borrow_mut())[(i) as usize].prefix_dec();
-        i.prefix_inc();
     }
     if !({
         DecodeLehmerCode_113(
@@ -5046,15 +5071,17 @@ pub fn DecodeCoeffOrder_152(
     }) {
         return false;
     }
-    let mut k: i32 = 0;
-    'loop_: while (k < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
-        elem!(order, k).write({
-            ({
-                let __idx0 = (elem!(order, k).read()) as usize;
-                kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
-            })
-        });
-        k.prefix_inc();
+    {
+        let mut k: i32 = 0;
+        'loop_: while (k < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
+            elem!(order, k).write({
+                ({
+                    let __idx0 = (elem!(order, k).read()) as usize;
+                    kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
+                })
+            });
+            k.prefix_inc();
+        }
     }
     return true;
 }
@@ -5065,21 +5092,23 @@ pub fn DecodeNumNonzeros_154(
 ) -> usize {
     let mut bst: Ptr<brunsli_Prob> = p.offset(-((1) as isize));
     let mut ctx: usize = 1_usize;
-    let mut b: usize = 0_usize;
-    'loop_: while (b < kNumNonZeroBits_84.with(|rc| *rc.borrow())) {
-        let mut bit: i32 = ({
-            brunsli_BinaryArithmeticDecoderImpl::ReadBit(
-                &ac,
-                (({ brunsli_ProbImpl::get_proba(&bst.offset((ctx) as isize)) }) as i32),
-                (in_).clone(),
-            )
-        });
-        ({
-            let _val: i32 = bit;
-            brunsli_ProbImpl::Add(&bst.offset((ctx) as isize), _val)
-        });
-        ctx = { ((2_usize).wrapping_mul(ctx)).wrapping_add((bit as usize)) };
-        b.prefix_inc();
+    {
+        let mut b: usize = 0_usize;
+        'loop_: while (b < kNumNonZeroBits_84.with(|rc| *rc.borrow())) {
+            let mut bit: i32 = ({
+                brunsli_BinaryArithmeticDecoderImpl::ReadBit(
+                    &ac,
+                    (({ brunsli_ProbImpl::get_proba(&bst.offset((ctx) as isize)) }) as i32),
+                    (in_).clone(),
+                )
+            });
+            ({
+                let _val: i32 = bit;
+                brunsli_ProbImpl::Add(&bst.offset((ctx) as isize), _val)
+            });
+            ctx = { ((2_usize).wrapping_mul(ctx)).wrapping_add((bit as usize)) };
+            b.prefix_inc();
+        }
     }
     let mut val: usize =
         (ctx).wrapping_sub(((1_u32 << kNumNonZeroBits_84.with(|rc| *rc.borrow())) as usize));
@@ -5142,13 +5171,15 @@ pub fn DecodeDC_157(
                 __v.resize_with(__a0, || <brunsli_ComponentStateDC>::default())
             })
         };
-        let mut c: usize = 0_usize;
-        'loop_: while (c < num_components) {
-            ({
-                let _w: i32 = index!(meta, c).with(|__s| __s.width_in_blocks);
-                brunsli_ComponentStateDCImpl::SetWidth(&comps.decay().offset(c), _w)
-            });
-            c.prefix_inc();
+        {
+            let mut c: usize = 0_usize;
+            'loop_: while (c < num_components) {
+                ({
+                    let _w: i32 = index!(meta, c).with(|__s| __s.width_in_blocks);
+                    brunsli_ComponentStateDCImpl::SetWidth(&comps.decay().offset(c), _w)
+                });
+                c.prefix_inc();
+            }
         }
     }
     if !({ brunsli_WordSourceImpl::CanRead(&in_, 5_usize) }) {
@@ -5160,163 +5191,217 @@ pub fn DecodeDC_157(
     let br: Value<brunsli_BitSource> = Rc::new(RefCell::new(s.with(|__s| __s.bit_reader.clone())));
     let ac: Value<brunsli_BinaryArithmeticDecoder> =
         Rc::new(RefCell::new(s.with(|__s| __s.arith_decoder.clone())));
-    let mut mcu_y: i32 = ac_dc_state.with(|__s| __s.next_mcu_y);
-    'loop_: while (mcu_y < mcu_rows) {
-        let mut i: usize = ac_dc_state.with(|__s| __s.next_component);
-        'loop_: while (i < num_components) {
-            let mut c: Ptr<brunsli_ComponentStateDC> = (comps.decay().offset(i));
-            let m: Ptr<brunsli_internal_dec_ComponentMeta> = meta.decay().offset(i);
-            let mut context_map: Ptr<u8> = state
-                .with(|__s| __s.context_map.clone())
-                .offset(((i).wrapping_mul(kNumAvrgContexts_83.with(|rc| *rc.borrow()))) as isize);
-            let mut ac_stride: i32 = (m.with(|__s| __s.ac_stride) as i32);
-            let mut b_stride: usize = (m.with(|__s| __s.b_stride) as usize);
-            let mut width: i32 = m.with(|__s| __s.width_in_blocks);
-            let mut y: i32 = ({ ({ mcu_y } * { m.with(|__s| __s.v_samp) }) } + {
-                ac_dc_state.with(|__s| __s.next_iy)
-            });
-            let mut prev_sgn: Ptr<i32> = (field_ref!(c, prev_sign).decay().offset(1_usize));
-            let mut prev_abs: Ptr<i32> = (field_ref!(c, prev_abs_coeff).decay().offset(2_usize));
-            let mut iy: i32 = ac_dc_state.with(|__s| __s.next_iy);
-            'loop_: while ({ iy } < { m.with(|__s| __s.v_samp) }) {
-                let mut coeffs: Ptr<i16> = m
-                    .with(|__s| __s.ac_coeffs.clone())
-                    .offset((y * ac_stride) as isize)
-                    .offset(
-                        ({ ac_dc_state.with(|__s| __s.next_x) } * {
-                            kDCTBlockSize_3.with(|rc| *rc.borrow())
-                        }) as isize,
-                    );
-                let mut block_state: Ptr<u8> = m
-                    .with(|__s| __s.block_state.clone())
-                    .offset(((y as usize).wrapping_mul(b_stride)) as isize)
-                    .offset((ac_dc_state.with(|__s| __s.next_x)) as isize);
-                let mut x: i32 = ac_dc_state.with(|__s| __s.next_x);
-                'loop_: while (x < width) {
-                    if ((!({ brunsli_WordSourceImpl::CanRead(&in_, 6_usize) }) as i64) != 0) {
-                        field!(ac_dc_state, next_mcu_y).write(mcu_y);
-                        field!(ac_dc_state, next_component).write(i);
-                        field!(ac_dc_state, next_iy).write(iy);
-                        field!(ac_dc_state, next_x).write(x);
-                        field!(s, ans_decoder).write((*ans.borrow()).clone());
-                        field!(s, bit_reader).write((*br.borrow()).clone());
-                        field!(s, arith_decoder).write((*ac.borrow()).clone());
-                        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
-                    }
-                    let mut is_empty_ctx: i32 = ({
-                        IsEmptyBlockContext_106(
-                            (field_ref!(c, prev_is_nonempty).decay().offset(1_usize)),
-                            x,
-                        )
+    {
+        let mut mcu_y: i32 = ac_dc_state.with(|__s| __s.next_mcu_y);
+        'loop_: while (mcu_y < mcu_rows) {
+            {
+                let mut i: usize = ac_dc_state.with(|__s| __s.next_component);
+                'loop_: while (i < num_components) {
+                    let mut c: Ptr<brunsli_ComponentStateDC> = (comps.decay().offset(i));
+                    let m: Ptr<brunsli_internal_dec_ComponentMeta> = meta.decay().offset(i);
+                    let mut context_map: Ptr<u8> =
+                        state.with(|__s| __s.context_map.clone()).offset(
+                            ((i).wrapping_mul(kNumAvrgContexts_83.with(|rc| *rc.borrow())))
+                                as isize,
+                        );
+                    let mut ac_stride: i32 = (m.with(|__s| __s.ac_stride) as i32);
+                    let mut b_stride: usize = (m.with(|__s| __s.b_stride) as usize);
+                    let mut width: i32 = m.with(|__s| __s.width_in_blocks);
+                    let mut y: i32 = ({ ({ mcu_y } * { m.with(|__s| __s.v_samp) }) } + {
+                        ac_dc_state.with(|__s| __s.next_iy)
                     });
-                    let mut is_empty_p: Ptr<brunsli_Prob> = (field_ref!(c, is_empty_block_prob)
-                        .decay()
-                        .offset((is_empty_ctx as usize)));
-                    let mut is_empty_block: bool = !(({
-                        brunsli_BinaryArithmeticDecoderImpl::ReadBit(
-                            &ac.as_pointer(),
-                            (({ brunsli_ProbImpl::get_proba(&is_empty_p) }) as i32),
-                            (in_).clone(),
-                        )
-                    }) != 0);
-                    ({ brunsli_ProbImpl::Add(&is_empty_p, (!(is_empty_block) as i32)) });
-                    vec_elem!(c, prev_is_nonempty, ((x + 1) as usize))
-                        .write((!(is_empty_block) as i32));
-                    block_state.write({ (is_empty_block as u8) });
-                    let mut abs_val: i32 = 0;
-                    let mut sign: i32 = 0;
-                    if !(is_empty_block) {
-                        let mut p_is_zero: Ptr<brunsli_Prob> = (field_ptr!(c, is_zero_prob));
-                        let mut is_zero: i32 = ({
-                            brunsli_BinaryArithmeticDecoderImpl::ReadBit(
-                                &ac.as_pointer(),
-                                (({ brunsli_ProbImpl::get_proba(&p_is_zero) }) as i32),
-                                (in_).clone(),
-                            )
-                        });
-                        ({ brunsli_ProbImpl::Add(&p_is_zero, is_zero) });
-                        if !(is_zero != 0) {
-                            let mut avg_ctx: i32 = ({
-                                let _vals: Ptr<i32> = (prev_abs).clone();
-                                let _x: i32 = x;
-                                WeightedAverageContextDC_97(_vals, _x)
-                            });
-                            let mut sign_ctx: i32 = (((elem!(prev_sgn, x).read()) * 3)
-                                + (elem!(prev_sgn, (x - 1)).read()));
-                            let mut sign_p: Ptr<brunsli_Prob> =
-                                (field_ref!(c, sign_prob).decay().offset((sign_ctx as usize)));
-                            sign = ({
-                                brunsli_BinaryArithmeticDecoderImpl::ReadBit(
-                                    &ac.as_pointer(),
-                                    (({ brunsli_ProbImpl::get_proba(&sign_p) }) as i32),
-                                    (in_).clone(),
-                                )
-                            });
-                            ({ brunsli_ProbImpl::Add(&sign_p, sign) });
-                            let mut entropy_ix: i32 = ((elem!(context_map, avg_ctx).read()) as i32);
-                            let mut code: i32 = ({
-                                let _code: Ptr<brunsli_ANSDecodingData> = state
-                                    .with(|__s| __s.entropy_codes.clone())
-                                    .offset((entropy_ix) as isize);
-                                let _in_: Ptr<brunsli_WordSource> = (in_).clone();
-                                brunsli_ANSDecoderImpl::ReadSymbol(&ans.as_pointer(), _code, _in_)
-                            });
-                            if (code < kNumDirectCodes_135.with(|rc| *rc.borrow())) {
-                                abs_val = (code + 1);
-                            } else {
-                                let mut nbits: i32 =
-                                    (code - kNumDirectCodes_135.with(|rc| *rc.borrow()));
-                                let mut p_first_extra_bit: Ptr<brunsli_Prob> =
-                                    (field_ref!(c, first_extra_bit_prob)
-                                        .decay()
-                                        .offset((nbits as usize)));
-                                let mut first_extra_bit: i32 = ({
-                                    brunsli_BinaryArithmeticDecoderImpl::ReadBit(
-                                        &ac.as_pointer(),
-                                        (({ brunsli_ProbImpl::get_proba(&p_first_extra_bit) })
-                                            as i32),
-                                        (in_).clone(),
-                                    )
-                                });
-                                ({ brunsli_ProbImpl::Add(&p_first_extra_bit, first_extra_bit) });
-                                let mut extra_bits_val: i32 = (first_extra_bit << nbits);
-                                if (nbits > 0) {
-                                    extra_bits_val |= (({
-                                        brunsli_BitSourceImpl::ReadBits(
-                                            &br.as_pointer(),
-                                            nbits,
+                    let mut prev_sgn: Ptr<i32> = (field_ref!(c, prev_sign).decay().offset(1_usize));
+                    let mut prev_abs: Ptr<i32> =
+                        (field_ref!(c, prev_abs_coeff).decay().offset(2_usize));
+                    {
+                        let mut iy: i32 = ac_dc_state.with(|__s| __s.next_iy);
+                        'loop_: while ({ iy } < { m.with(|__s| __s.v_samp) }) {
+                            let mut coeffs: Ptr<i16> = m
+                                .with(|__s| __s.ac_coeffs.clone())
+                                .offset((y * ac_stride) as isize)
+                                .offset(
+                                    ({ ac_dc_state.with(|__s| __s.next_x) } * {
+                                        kDCTBlockSize_3.with(|rc| *rc.borrow())
+                                    }) as isize,
+                                );
+                            let mut block_state: Ptr<u8> = m
+                                .with(|__s| __s.block_state.clone())
+                                .offset(((y as usize).wrapping_mul(b_stride)) as isize)
+                                .offset((ac_dc_state.with(|__s| __s.next_x)) as isize);
+                            {
+                                let mut x: i32 = ac_dc_state.with(|__s| __s.next_x);
+                                'loop_: while (x < width) {
+                                    if ((!({ brunsli_WordSourceImpl::CanRead(&in_, 6_usize) })
+                                        as i64)
+                                        != 0)
+                                    {
+                                        field!(ac_dc_state, next_mcu_y).write(mcu_y);
+                                        field!(ac_dc_state, next_component).write(i);
+                                        field!(ac_dc_state, next_iy).write(iy);
+                                        field!(ac_dc_state, next_x).write(x);
+                                        field!(s, ans_decoder).write((*ans.borrow()).clone());
+                                        field!(s, bit_reader).write((*br.borrow()).clone());
+                                        field!(s, arith_decoder).write((*ac.borrow()).clone());
+                                        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
+                                    }
+                                    let mut is_empty_ctx: i32 = ({
+                                        IsEmptyBlockContext_106(
+                                            (field_ref!(c, prev_is_nonempty)
+                                                .decay()
+                                                .offset(1_usize)),
+                                            x,
+                                        )
+                                    });
+                                    let mut is_empty_p: Ptr<brunsli_Prob> =
+                                        (field_ref!(c, is_empty_block_prob)
+                                            .decay()
+                                            .offset((is_empty_ctx as usize)));
+                                    let mut is_empty_block: bool = !(({
+                                        brunsli_BinaryArithmeticDecoderImpl::ReadBit(
+                                            &ac.as_pointer(),
+                                            (({ brunsli_ProbImpl::get_proba(&is_empty_p) }) as i32),
                                             (in_).clone(),
                                         )
-                                    })
-                                        as i32);
+                                    }) != 0);
+                                    ({
+                                        brunsli_ProbImpl::Add(
+                                            &is_empty_p,
+                                            (!(is_empty_block) as i32),
+                                        )
+                                    });
+                                    vec_elem!(c, prev_is_nonempty, ((x + 1) as usize))
+                                        .write((!(is_empty_block) as i32));
+                                    block_state.write({ (is_empty_block as u8) });
+                                    let mut abs_val: i32 = 0;
+                                    let mut sign: i32 = 0;
+                                    if !(is_empty_block) {
+                                        let mut p_is_zero: Ptr<brunsli_Prob> =
+                                            (field_ptr!(c, is_zero_prob));
+                                        let mut is_zero: i32 = ({
+                                            brunsli_BinaryArithmeticDecoderImpl::ReadBit(
+                                                &ac.as_pointer(),
+                                                (({ brunsli_ProbImpl::get_proba(&p_is_zero) })
+                                                    as i32),
+                                                (in_).clone(),
+                                            )
+                                        });
+                                        ({ brunsli_ProbImpl::Add(&p_is_zero, is_zero) });
+                                        if !(is_zero != 0) {
+                                            let mut avg_ctx: i32 = ({
+                                                let _vals: Ptr<i32> = (prev_abs).clone();
+                                                let _x: i32 = x;
+                                                WeightedAverageContextDC_97(_vals, _x)
+                                            });
+                                            let mut sign_ctx: i32 = (((elem!(prev_sgn, x).read())
+                                                * 3)
+                                                + (elem!(prev_sgn, (x - 1)).read()));
+                                            let mut sign_p: Ptr<brunsli_Prob> =
+                                                (field_ref!(c, sign_prob)
+                                                    .decay()
+                                                    .offset((sign_ctx as usize)));
+                                            sign = ({
+                                                brunsli_BinaryArithmeticDecoderImpl::ReadBit(
+                                                    &ac.as_pointer(),
+                                                    (({ brunsli_ProbImpl::get_proba(&sign_p) })
+                                                        as i32),
+                                                    (in_).clone(),
+                                                )
+                                            });
+                                            ({ brunsli_ProbImpl::Add(&sign_p, sign) });
+                                            let mut entropy_ix: i32 =
+                                                ((elem!(context_map, avg_ctx).read()) as i32);
+                                            let mut code: i32 = ({
+                                                let _code: Ptr<brunsli_ANSDecodingData> = state
+                                                    .with(|__s| __s.entropy_codes.clone())
+                                                    .offset((entropy_ix) as isize);
+                                                let _in_: Ptr<brunsli_WordSource> = (in_).clone();
+                                                brunsli_ANSDecoderImpl::ReadSymbol(
+                                                    &ans.as_pointer(),
+                                                    _code,
+                                                    _in_,
+                                                )
+                                            });
+                                            if (code < kNumDirectCodes_135.with(|rc| *rc.borrow()))
+                                            {
+                                                abs_val = (code + 1);
+                                            } else {
+                                                let mut nbits: i32 = (code
+                                                    - kNumDirectCodes_135.with(|rc| *rc.borrow()));
+                                                let mut p_first_extra_bit: Ptr<brunsli_Prob> =
+                                                    (field_ref!(c, first_extra_bit_prob)
+                                                        .decay()
+                                                        .offset((nbits as usize)));
+                                                let mut first_extra_bit: i32 = ({
+                                                    brunsli_BinaryArithmeticDecoderImpl::ReadBit(
+                                                        &ac.as_pointer(),
+                                                        (({
+                                                            brunsli_ProbImpl::get_proba(
+                                                                &p_first_extra_bit,
+                                                            )
+                                                        })
+                                                            as i32),
+                                                        (in_).clone(),
+                                                    )
+                                                });
+                                                ({
+                                                    brunsli_ProbImpl::Add(
+                                                        &p_first_extra_bit,
+                                                        first_extra_bit,
+                                                    )
+                                                });
+                                                let mut extra_bits_val: i32 =
+                                                    (first_extra_bit << nbits);
+                                                if (nbits > 0) {
+                                                    extra_bits_val |= (({
+                                                        brunsli_BitSourceImpl::ReadBits(
+                                                            &br.as_pointer(),
+                                                            nbits,
+                                                            (in_).clone(),
+                                                        )
+                                                    })
+                                                        as i32);
+                                                }
+                                                abs_val = (((kNumDirectCodes_135
+                                                    .with(|rc| *rc.borrow())
+                                                    - 1)
+                                                    + (2 << nbits))
+                                                    + extra_bits_val);
+                                            }
+                                        }
+                                    }
+                                    elem!(prev_abs, x).write({ abs_val });
+                                    elem!(prev_sgn, x)
+                                        .write({ if (abs_val != 0) { (sign + 1) } else { 0 } });
+                                    let __rhs = (({ ((1 - (2 * sign)) * abs_val) } + {
+                                        ({
+                                            PredictWithAdaptiveMedian_115(
+                                                (coeffs).clone(),
+                                                x,
+                                                y,
+                                                ac_stride,
+                                            )
+                                        })
+                                    }) as i16);
+                                    elem!(coeffs, 0).write(__rhs);
+                                    block_state.postfix_inc();
+                                    coeffs += kDCTBlockSize_3.with(|rc| *rc.borrow());
+                                    x.prefix_inc();
                                 }
-                                abs_val = (((kNumDirectCodes_135.with(|rc| *rc.borrow()) - 1)
-                                    + (2 << nbits))
-                                    + extra_bits_val);
                             }
+                            field!(ac_dc_state, next_x).write(0);
+                            {
+                                iy.prefix_inc();
+                                y.prefix_inc()
+                            };
                         }
                     }
-                    elem!(prev_abs, x).write({ abs_val });
-                    elem!(prev_sgn, x).write({ if (abs_val != 0) { (sign + 1) } else { 0 } });
-                    let __rhs = (({ ((1 - (2 * sign)) * abs_val) } + {
-                        ({ PredictWithAdaptiveMedian_115((coeffs).clone(), x, y, ac_stride) })
-                    }) as i16);
-                    elem!(coeffs, 0).write(__rhs);
-                    block_state.postfix_inc();
-                    coeffs += kDCTBlockSize_3.with(|rc| *rc.borrow());
-                    x.prefix_inc();
+                    field!(ac_dc_state, next_iy).write(0);
+                    i.prefix_inc();
                 }
-                field!(ac_dc_state, next_x).write(0);
-                {
-                    iy.prefix_inc();
-                    y.prefix_inc()
-                };
             }
-            field!(ac_dc_state, next_iy).write(0);
-            i.prefix_inc();
+            field!(ac_dc_state, next_component).write(0_usize);
+            mcu_y.prefix_inc();
         }
-        field!(ac_dc_state, next_component).write(0_usize);
-        mcu_y.prefix_inc();
     }
     field!(ac_dc_state, next_mcu_y).write(0);
     field!(ac_dc_state, next_component).write(0_usize);
@@ -5333,11 +5418,13 @@ pub fn DecodeDC_157(
     return brunsli_BrunsliStatus_BRUNSLI_OK;
 }
 pub fn DecodeEmptyAcBlock_158(mut prev_sgn: Ptr<i32>, mut prev_abs: Ptr<i32>) {
-    let mut k: i32 = 1;
-    'loop_: while (k < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
-        elem!(prev_sgn, k).write(0);
-        elem!(prev_abs, k).write(0);
-        k.prefix_inc();
+    {
+        let mut k: i32 = 1;
+        'loop_: while (k < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
+            elem!(prev_sgn, k).write(0);
+            elem!(prev_abs, k).write(0);
+            k.prefix_inc();
+        }
     }
 }
 #[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
@@ -5436,126 +5523,28 @@ pub fn DecodeAcBlock_159(cookie: Ptr<brunsli_AcBlockCookie>) -> usize {
             (in_).clone(),
         )
     });
-    let mut k: usize = (last_nz).wrapping_add(1_usize);
-    'loop_: while (k < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
-        elem!(c.prev_sgn, k).write(0);
-        elem!(c.prev_abs, k).write(0);
-        k.prefix_inc();
-    }
-    let mut k: usize = last_nz;
-    'loop_: while (k > 0_usize) {
-        let mut is_zero: i32 = 0;
-        if (k < last_nz) {
-            let mut bucket: usize = (({
-                let __idx0 = ((num_nonzeros).wrapping_sub(1_usize)) as usize;
-                kNonzeroBuckets_89.with(|rc| rc.borrow()[__idx0])
-            }) as usize);
-            let mut is_zero_ctx: usize = ((bucket)
-                .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)))
-            .wrapping_add(k);
-            let p: Ptr<brunsli_Prob> = c.is_zero_prob.offset((is_zero_ctx) as isize);
-            is_zero = ({
-                brunsli_BinaryArithmeticDecoderImpl::ReadBit(
-                    &ac.as_pointer(),
-                    (({ brunsli_ProbImpl::get_proba(&p) }) as i32),
-                    (in_).clone(),
-                )
-            });
-            ({
-                let _val: i32 = is_zero;
-                brunsli_ProbImpl::Add(&p, _val)
-            });
+    {
+        let mut k: usize = (last_nz).wrapping_add(1_usize);
+        'loop_: while (k < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
+            elem!(c.prev_sgn, k).write(0);
+            elem!(c.prev_abs, k).write(0);
+            k.prefix_inc();
         }
-        let mut abs_val: i32 = 0;
-        let mut sign: i32 = 1;
-        let mut k_nat: i32 = ((elem!(c.order, k).read()) as i32);
-        if !(is_zero != 0) {
-            let mut context_type: usize = ((elem!(c.context_modes, k_nat).read()) as usize);
-            let avg_ctx: Value<usize> = Rc::new(RefCell::new(0_usize));
-            let sign_ctx: Value<usize> =
-                Rc::new(RefCell::new(kMaxAverageContext_82.with(|rc| *rc.borrow())));
-            if ((context_type & 1_usize) != 0) && (c.y > 0) {
-                let mut offset: usize = ((k_nat & 7) as usize);
-                ({
-                    let _prev: Ptr<i16> = c.prev_row_coeffs.offset((offset) as isize);
-                    let _cur: Ptr<i16> = c.coeffs.offset((offset) as isize);
-                    let _mult: Ptr<i32> =
-                        c.mult_col.offset(((offset).wrapping_mul(8_usize)) as isize);
-                    ACPredictContextRow_103(
-                        _prev,
-                        _cur,
-                        _mult,
-                        (avg_ctx.as_pointer()),
-                        (sign_ctx.as_pointer()),
-                    )
-                });
-            } else if ((context_type & 2_usize) != 0) && (c.x > 0) {
-                let mut offset: usize = ((k_nat & !7) as usize);
-                ({
-                    let _prev: Ptr<i16> = c.prev_col_coeffs.offset((offset) as isize);
-                    let _cur: Ptr<i16> = c.coeffs.offset((offset) as isize);
-                    let _mult: Ptr<i32> = c.mult_row.offset((offset) as isize);
-                    ACPredictContextCol_102(
-                        _prev,
-                        _cur,
-                        _mult,
-                        (avg_ctx.as_pointer()),
-                        (sign_ctx.as_pointer()),
-                    )
-                });
-            } else if !(context_type != 0) {
-                (*avg_ctx.borrow_mut()) = (({
-                    let _vals: Ptr<i32> = c.prev_abs.offset((k) as isize);
-                    let _prev_row_delta: i32 = c.prev_row_delta;
-                    WeightedAverageContext_98(_vals, _prev_row_delta)
+    }
+    {
+        let mut k: usize = last_nz;
+        'loop_: while (k > 0_usize) {
+            let mut is_zero: i32 = 0;
+            if (k < last_nz) {
+                let mut bucket: usize = (({
+                    let __idx0 = ((num_nonzeros).wrapping_sub(1_usize)) as usize;
+                    kNonzeroBuckets_89.with(|rc| rc.borrow()[__idx0])
                 }) as usize);
-                (*sign_ctx.borrow_mut()) = (({ ((elem!(c.prev_sgn, k).read()) * 3) } + {
-                    (elem!(
-                        c.prev_sgn,
-                        ((k as i32) - kDCTBlockSize_3.with(|rc| *rc.borrow()))
-                    )
-                    .read())
-                }) as usize);
-            }
-            (*sign_ctx.borrow_mut()) = {
-                ((*sign_ctx.borrow())
+                let mut is_zero_ctx: usize = ((bucket)
                     .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)))
-                .wrapping_add(k)
-            };
-            let sign_p: Ptr<brunsli_Prob> = c.sign_prob.offset((*sign_ctx.borrow()) as isize);
-            sign = ({
-                brunsli_BinaryArithmeticDecoderImpl::ReadBit(
-                    &ac.as_pointer(),
-                    (({ brunsli_ProbImpl::get_proba(&sign_p) }) as i32),
-                    (in_).clone(),
-                )
-            });
-            ({
-                let _val: i32 = sign;
-                brunsli_ProbImpl::Add(&sign_p, _val)
-            });
-            elem!(c.prev_sgn, k).write({ (sign + 1) });
-            sign = { (1 - (2 * sign)) };
-            let mut z_dens_ctx: usize =
-                (({ ZeroDensityContext_96(num_nonzeros, k, c.context_bits) }) as usize);
-            let mut histo_ix: usize = ((z_dens_ctx)
-                .wrapping_mul(kNumAvrgContexts_83.with(|rc| *rc.borrow())))
-            .wrapping_add((*avg_ctx.borrow()));
-            let mut entropy_ix: usize = ((elem!(c.context_map, histo_ix).read()) as usize);
-            let mut code: i32 = ({
-                let _code: Ptr<brunsli_ANSDecodingData> =
-                    c.entropy_codes.offset((entropy_ix) as isize);
-                let _in_: Ptr<brunsli_WordSource> = (in_).clone();
-                brunsli_ANSDecoderImpl::ReadSymbol(&ans.as_pointer(), _code, _in_)
-            });
-            if (code < kNumDirectCodes_135.with(|rc| *rc.borrow())) {
-                abs_val = (code + 1);
-            } else {
-                let mut nbits: i32 = (code - kNumDirectCodes_135.with(|rc| *rc.borrow()));
-                let p: Ptr<brunsli_Prob> = c
-                    .first_extra_bit_prob
-                    .offset((((k).wrapping_mul(10_usize)).wrapping_add((nbits as usize))) as isize);
-                let mut first_extra_bit: i32 = ({
+                .wrapping_add(k);
+                let p: Ptr<brunsli_Prob> = c.is_zero_prob.offset((is_zero_ctx) as isize);
+                is_zero = ({
                     brunsli_BinaryArithmeticDecoderImpl::ReadBit(
                         &ac.as_pointer(),
                         (({ brunsli_ProbImpl::get_proba(&p) }) as i32),
@@ -5563,35 +5552,137 @@ pub fn DecodeAcBlock_159(cookie: Ptr<brunsli_AcBlockCookie>) -> usize {
                     )
                 });
                 ({
-                    let _val: i32 = first_extra_bit;
+                    let _val: i32 = is_zero;
                     brunsli_ProbImpl::Add(&p, _val)
                 });
-                let mut extra_bits_val: i32 = (first_extra_bit << nbits);
-                if (nbits > 0) {
-                    {
-                        let rhs_0 = ((extra_bits_val as u32)
-                            | ({
-                                brunsli_BitSourceImpl::ReadBits(
-                                    &br.as_pointer(),
-                                    nbits,
-                                    (in_).clone(),
-                                )
-                            })) as i32;
-                        extra_bits_val = rhs_0
-                    };
-                }
-                abs_val = (((((kNumDirectCodes_135.with(|rc| *rc.borrow()) - 1) as u32)
-                    .wrapping_add((2_u32 << nbits)))
-                .wrapping_add((extra_bits_val as u32))) as i32);
             }
-            num_nonzeros.prefix_inc();
-        } else {
-            elem!(c.prev_sgn, k).write(0);
+            let mut abs_val: i32 = 0;
+            let mut sign: i32 = 1;
+            let mut k_nat: i32 = ((elem!(c.order, k).read()) as i32);
+            if !(is_zero != 0) {
+                let mut context_type: usize = ((elem!(c.context_modes, k_nat).read()) as usize);
+                let avg_ctx: Value<usize> = Rc::new(RefCell::new(0_usize));
+                let sign_ctx: Value<usize> =
+                    Rc::new(RefCell::new(kMaxAverageContext_82.with(|rc| *rc.borrow())));
+                if ((context_type & 1_usize) != 0) && (c.y > 0) {
+                    let mut offset: usize = ((k_nat & 7) as usize);
+                    ({
+                        let _prev: Ptr<i16> = c.prev_row_coeffs.offset((offset) as isize);
+                        let _cur: Ptr<i16> = c.coeffs.offset((offset) as isize);
+                        let _mult: Ptr<i32> =
+                            c.mult_col.offset(((offset).wrapping_mul(8_usize)) as isize);
+                        ACPredictContextRow_103(
+                            _prev,
+                            _cur,
+                            _mult,
+                            (avg_ctx.as_pointer()),
+                            (sign_ctx.as_pointer()),
+                        )
+                    });
+                } else if ((context_type & 2_usize) != 0) && (c.x > 0) {
+                    let mut offset: usize = ((k_nat & !7) as usize);
+                    ({
+                        let _prev: Ptr<i16> = c.prev_col_coeffs.offset((offset) as isize);
+                        let _cur: Ptr<i16> = c.coeffs.offset((offset) as isize);
+                        let _mult: Ptr<i32> = c.mult_row.offset((offset) as isize);
+                        ACPredictContextCol_102(
+                            _prev,
+                            _cur,
+                            _mult,
+                            (avg_ctx.as_pointer()),
+                            (sign_ctx.as_pointer()),
+                        )
+                    });
+                } else if !(context_type != 0) {
+                    (*avg_ctx.borrow_mut()) = (({
+                        let _vals: Ptr<i32> = c.prev_abs.offset((k) as isize);
+                        let _prev_row_delta: i32 = c.prev_row_delta;
+                        WeightedAverageContext_98(_vals, _prev_row_delta)
+                    }) as usize);
+                    (*sign_ctx.borrow_mut()) = (({ ((elem!(c.prev_sgn, k).read()) * 3) } + {
+                        (elem!(
+                            c.prev_sgn,
+                            ((k as i32) - kDCTBlockSize_3.with(|rc| *rc.borrow()))
+                        )
+                        .read())
+                    }) as usize);
+                }
+                (*sign_ctx.borrow_mut()) = {
+                    ((*sign_ctx.borrow())
+                        .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)))
+                    .wrapping_add(k)
+                };
+                let sign_p: Ptr<brunsli_Prob> = c.sign_prob.offset((*sign_ctx.borrow()) as isize);
+                sign = ({
+                    brunsli_BinaryArithmeticDecoderImpl::ReadBit(
+                        &ac.as_pointer(),
+                        (({ brunsli_ProbImpl::get_proba(&sign_p) }) as i32),
+                        (in_).clone(),
+                    )
+                });
+                ({
+                    let _val: i32 = sign;
+                    brunsli_ProbImpl::Add(&sign_p, _val)
+                });
+                elem!(c.prev_sgn, k).write({ (sign + 1) });
+                sign = { (1 - (2 * sign)) };
+                let mut z_dens_ctx: usize =
+                    (({ ZeroDensityContext_96(num_nonzeros, k, c.context_bits) }) as usize);
+                let mut histo_ix: usize = ((z_dens_ctx)
+                    .wrapping_mul(kNumAvrgContexts_83.with(|rc| *rc.borrow())))
+                .wrapping_add((*avg_ctx.borrow()));
+                let mut entropy_ix: usize = ((elem!(c.context_map, histo_ix).read()) as usize);
+                let mut code: i32 = ({
+                    let _code: Ptr<brunsli_ANSDecodingData> =
+                        c.entropy_codes.offset((entropy_ix) as isize);
+                    let _in_: Ptr<brunsli_WordSource> = (in_).clone();
+                    brunsli_ANSDecoderImpl::ReadSymbol(&ans.as_pointer(), _code, _in_)
+                });
+                if (code < kNumDirectCodes_135.with(|rc| *rc.borrow())) {
+                    abs_val = (code + 1);
+                } else {
+                    let mut nbits: i32 = (code - kNumDirectCodes_135.with(|rc| *rc.borrow()));
+                    let p: Ptr<brunsli_Prob> = c.first_extra_bit_prob.offset(
+                        (((k).wrapping_mul(10_usize)).wrapping_add((nbits as usize))) as isize,
+                    );
+                    let mut first_extra_bit: i32 = ({
+                        brunsli_BinaryArithmeticDecoderImpl::ReadBit(
+                            &ac.as_pointer(),
+                            (({ brunsli_ProbImpl::get_proba(&p) }) as i32),
+                            (in_).clone(),
+                        )
+                    });
+                    ({
+                        let _val: i32 = first_extra_bit;
+                        brunsli_ProbImpl::Add(&p, _val)
+                    });
+                    let mut extra_bits_val: i32 = (first_extra_bit << nbits);
+                    if (nbits > 0) {
+                        {
+                            let rhs_0 = ((extra_bits_val as u32)
+                                | ({
+                                    brunsli_BitSourceImpl::ReadBits(
+                                        &br.as_pointer(),
+                                        nbits,
+                                        (in_).clone(),
+                                    )
+                                })) as i32;
+                            extra_bits_val = rhs_0
+                        };
+                    }
+                    abs_val = (((((kNumDirectCodes_135.with(|rc| *rc.borrow()) - 1) as u32)
+                        .wrapping_add((2_u32 << nbits)))
+                    .wrapping_add((extra_bits_val as u32))) as i32);
+                }
+                num_nonzeros.prefix_inc();
+            } else {
+                elem!(c.prev_sgn, k).write(0);
+            }
+            let mut coeff: i32 = (sign * abs_val);
+            elem!(c.coeffs, k_nat).write({ (coeff as i16) });
+            elem!(c.prev_abs, k).write({ abs_val });
+            k.prefix_dec();
         }
-        let mut coeff: i32 = (sign * abs_val);
-        elem!(c.coeffs, k_nat).write({ (coeff as i16) });
-        elem!(c.prev_abs, k).write({ abs_val });
-        k.prefix_dec();
     }
     c.ans.write({ (*ans.borrow()).clone() });
     c.br.write({ (*br.borrow()).clone() });
@@ -5618,21 +5709,23 @@ pub fn DecodeAC_160(
                 __v.resize_with(__a0, || <brunsli_ComponentState>::default())
             })
         };
-        let mut c: usize = 0_usize;
-        'loop_: while (c < num_components) {
-            ({
-                let _w: i32 = index!(meta, c).with(|__s| __s.width_in_blocks);
-                brunsli_ComponentStateImpl::SetWidth(&comps.decay().offset(c), _w)
-            });
-            ({
-                let _quant: Ptr<i32> = (field_ref!(meta.decay().offset(c), quant)
-                    .decay()
-                    .offset(0_usize));
-                let _mult_row: Ptr<i32> = array_field_ptr!(comps.decay().offset(c), mult_row);
-                let _mult_col: Ptr<i32> = array_field_ptr!(comps.decay().offset(c), mult_col);
-                ComputeACPredictMultipliers_109(_quant, _mult_row, _mult_col)
-            });
-            c.prefix_inc();
+        {
+            let mut c: usize = 0_usize;
+            'loop_: while (c < num_components) {
+                ({
+                    let _w: i32 = index!(meta, c).with(|__s| __s.width_in_blocks);
+                    brunsli_ComponentStateImpl::SetWidth(&comps.decay().offset(c), _w)
+                });
+                ({
+                    let _quant: Ptr<i32> = (field_ref!(meta.decay().offset(c), quant)
+                        .decay()
+                        .offset(0_usize));
+                    let _mult_row: Ptr<i32> = array_field_ptr!(comps.decay().offset(c), mult_row);
+                    let _mult_col: Ptr<i32> = array_field_ptr!(comps.decay().offset(c), mult_col);
+                    ComputeACPredictMultipliers_109(_quant, _mult_row, _mult_col)
+                });
+                c.prefix_inc();
+            }
         }
     }
     if !({ brunsli_WordSourceImpl::CanRead(&in_, 5_usize) }) {
@@ -5676,126 +5769,160 @@ pub fn DecodeAC_160(
             0
         }) as isize,
     );
-    let mut mcu_y: i32 = ac_dc_state.with(|__s| __s.next_mcu_y);
-    'loop_: while (mcu_y < mcu_rows) {
-        let mut i: usize = ac_dc_state.with(|__s| __s.next_component);
-        'loop_: while (i < num_components) {
-            let cst: Ptr<brunsli_ComponentState> = comps.decay().offset(i);
-            (*c.borrow_mut()).prev_num_nonzeros = field_ref!(cst, prev_num_nonzeros).decay();
-            (*c.borrow_mut()).num_nonzero_prob = array_field_ptr!(cst, num_nonzero_prob);
-            (*c.borrow_mut()).is_zero_prob = field_ref!(cst, is_zero_prob).decay();
-            (*c.borrow_mut()).order = array_field_ptr!(cst, order);
-            (*c.borrow_mut()).mult_col = array_field_ptr!(cst, mult_col);
-            (*c.borrow_mut()).mult_row = array_field_ptr!(cst, mult_row);
-            (*c.borrow_mut()).sign_prob = field_ref!(cst, sign_prob).decay();
-            (*c.borrow_mut()).first_extra_bit_prob = field_ref!(cst, first_extra_bit_prob).decay();
-            let m: Ptr<brunsli_internal_dec_ComponentMeta> = meta.decay().offset(i);
-            (*c.borrow_mut()).context_map = state.with(|__s| __s.context_map.clone()).offset(
-                ((m.with(|__s| __s.context_offset))
-                    .wrapping_mul(kNumAvrgContexts_83.with(|rc| *rc.borrow())))
-                    as isize,
-            );
-            (*c.borrow_mut()).context_bits = m.with(|__s| __s.context_bits);
-            let mut width: i32 = m.with(|__s| __s.width_in_blocks);
-            let mut ac_stride: usize = (m.with(|__s| __s.ac_stride) as usize);
-            let mut b_stride: usize = (m.with(|__s| __s.b_stride) as usize);
-            let mut next_iy: i32 = ac_dc_state.with(|__s| __s.next_iy);
-            (*c.borrow_mut()).y = ({ ({ mcu_y } * { m.with(|__s| __s.v_samp) }) } + { next_iy });
-            (*c.borrow_mut()).prev_row_delta = {
-                (((((1_u32)
-                    .wrapping_sub((2_u32).wrapping_mul((({ (*c.borrow()).y } as u32) & 1_u32))))
-                .wrapping_mul(((width + 3) as u32)))
-                .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as u32)))
-                    as i32)
-            };
-            let mut iy: i32 = next_iy;
-            'loop_: while ({ iy } < { m.with(|__s| __s.v_samp) }) {
-                let mut next_x: i32 = ac_dc_state.with(|__s| __s.next_x);
-                let mut block_offset: usize =
-                    ((next_x * kDCTBlockSize_3.with(|rc| *rc.borrow())) as usize);
-                (*c.borrow_mut()).coeffs = {
-                    m.with(|__s| __s.ac_coeffs.clone())
-                        .offset((({ (*c.borrow()).y } as usize).wrapping_mul(ac_stride)) as isize)
-                        .offset((block_offset) as isize)
-                };
-                (*c.borrow_mut()).prev_row_coeffs =
-                    { { (*c.borrow()).coeffs.clone() }.offset(-((ac_stride) as isize)) };
-                (*c.borrow_mut()).prev_col_coeffs = {
-                    { (*c.borrow()).coeffs.clone() }
-                        .offset(-((kDCTBlockSize_3.with(|rc| *rc.borrow())) as isize))
-                };
-                let mut block_state: Ptr<u8> = m
-                    .with(|__s| __s.block_state.clone())
-                    .offset((({ (*c.borrow()).y } as usize).wrapping_mul(b_stride)) as isize)
-                    .offset((next_x) as isize);
-                (*c.borrow_mut()).prev_sgn = (field_ref!(cst, prev_sign)
-                    .decay()
-                    .offset((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)))
-                .offset((block_offset) as isize);
-                let __rhs = (field_ref!(cst, prev_abs_coeff).decay().offset(
-                    (((((({ (*c.borrow()).y } as u32) & 1_u32).wrapping_mul(((width + 3) as u32)))
-                        .wrapping_add(2_u32))
-                    .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as u32)))
-                        as usize),
-                ))
-                .offset((block_offset) as isize);
-                (*c.borrow_mut()).prev_abs = __rhs;
-                (*c.borrow_mut()).x = next_x;
-                'loop_: while ({ (*c.borrow()).x } < width) {
-                    let mut is_empty: bool = (((block_state.postfix_inc()).read()) != 0);
-                    if !(is_empty) {
-                        if ((!({ brunsli_WordSourceImpl::CanRead(&in_, 297_usize) }) as i64) != 0) {
-                            field!(ac_dc_state, next_mcu_y).write(mcu_y);
-                            field!(ac_dc_state, next_component).write(i);
-                            field!(ac_dc_state, next_iy).write(iy);
-                            field!(ac_dc_state, next_x).write({ (*c.borrow()).x });
-                            return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
-                        }
-                        let mut num_nonzeros: usize = ({ DecodeAcBlock_159(c.as_pointer()) });
-                        if !(num_nonzeros <= kNumNonZeroTreeSize_85.with(|rc| *rc.borrow())) {
-                            ({
-                                BrunsliDumpAndAbort_79(
-                                    Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),
-                                    949,
-                                    Ptr::<i8>::from_string_literal(b"DecodeAC"),
+    {
+        let mut mcu_y: i32 = ac_dc_state.with(|__s| __s.next_mcu_y);
+        'loop_: while (mcu_y < mcu_rows) {
+            {
+                let mut i: usize = ac_dc_state.with(|__s| __s.next_component);
+                'loop_: while (i < num_components) {
+                    let cst: Ptr<brunsli_ComponentState> = comps.decay().offset(i);
+                    (*c.borrow_mut()).prev_num_nonzeros =
+                        field_ref!(cst, prev_num_nonzeros).decay();
+                    (*c.borrow_mut()).num_nonzero_prob = array_field_ptr!(cst, num_nonzero_prob);
+                    (*c.borrow_mut()).is_zero_prob = field_ref!(cst, is_zero_prob).decay();
+                    (*c.borrow_mut()).order = array_field_ptr!(cst, order);
+                    (*c.borrow_mut()).mult_col = array_field_ptr!(cst, mult_col);
+                    (*c.borrow_mut()).mult_row = array_field_ptr!(cst, mult_row);
+                    (*c.borrow_mut()).sign_prob = field_ref!(cst, sign_prob).decay();
+                    (*c.borrow_mut()).first_extra_bit_prob =
+                        field_ref!(cst, first_extra_bit_prob).decay();
+                    let m: Ptr<brunsli_internal_dec_ComponentMeta> = meta.decay().offset(i);
+                    (*c.borrow_mut()).context_map =
+                        state.with(|__s| __s.context_map.clone()).offset(
+                            ((m.with(|__s| __s.context_offset))
+                                .wrapping_mul(kNumAvrgContexts_83.with(|rc| *rc.borrow())))
+                                as isize,
+                        );
+                    (*c.borrow_mut()).context_bits = m.with(|__s| __s.context_bits);
+                    let mut width: i32 = m.with(|__s| __s.width_in_blocks);
+                    let mut ac_stride: usize = (m.with(|__s| __s.ac_stride) as usize);
+                    let mut b_stride: usize = (m.with(|__s| __s.b_stride) as usize);
+                    let mut next_iy: i32 = ac_dc_state.with(|__s| __s.next_iy);
+                    (*c.borrow_mut()).y =
+                        ({ ({ mcu_y } * { m.with(|__s| __s.v_samp) }) } + { next_iy });
+                    (*c.borrow_mut()).prev_row_delta = {
+                        (((((1_u32).wrapping_sub(
+                            (2_u32).wrapping_mul((({ (*c.borrow()).y } as u32) & 1_u32)),
+                        ))
+                        .wrapping_mul(((width + 3) as u32)))
+                        .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as u32)))
+                            as i32)
+                    };
+                    {
+                        let mut iy: i32 = next_iy;
+                        'loop_: while ({ iy } < { m.with(|__s| __s.v_samp) }) {
+                            let mut next_x: i32 = ac_dc_state.with(|__s| __s.next_x);
+                            let mut block_offset: usize =
+                                ((next_x * kDCTBlockSize_3.with(|rc| *rc.borrow())) as usize);
+                            (*c.borrow_mut()).coeffs = {
+                                m.with(|__s| __s.ac_coeffs.clone())
+                                    .offset(
+                                        (({ (*c.borrow()).y } as usize).wrapping_mul(ac_stride))
+                                            as isize,
+                                    )
+                                    .offset((block_offset) as isize)
+                            };
+                            (*c.borrow_mut()).prev_row_coeffs = {
+                                { (*c.borrow()).coeffs.clone() }.offset(-((ac_stride) as isize))
+                            };
+                            (*c.borrow_mut()).prev_col_coeffs = {
+                                { (*c.borrow()).coeffs.clone() }
+                                    .offset(-((kDCTBlockSize_3.with(|rc| *rc.borrow())) as isize))
+                            };
+                            let mut block_state: Ptr<u8> = m
+                                .with(|__s| __s.block_state.clone())
+                                .offset(
+                                    (({ (*c.borrow()).y } as usize).wrapping_mul(b_stride))
+                                        as isize,
                                 )
-                            });
-                            'loop_: while true {}
-                        };
-                        elem!({ (*c.borrow()).prev_num_nonzeros.clone() }, {
-                            (*c.borrow()).x
-                        })
-                        .write({ (num_nonzeros as u8) });
-                    } else {
-                        ({
-                            let _prev_sgn: Ptr<i32> = { (*c.borrow()).prev_sgn.clone() };
-                            let _prev_abs: Ptr<i32> = { (*c.borrow()).prev_abs.clone() };
-                            DecodeEmptyAcBlock_158(_prev_sgn, _prev_abs)
-                        });
-                        elem!({ (*c.borrow()).prev_num_nonzeros.clone() }, {
-                            (*c.borrow()).x
-                        })
-                        .write(0_u8);
+                                .offset((next_x) as isize);
+                            (*c.borrow_mut()).prev_sgn = (field_ref!(cst, prev_sign)
+                                .decay()
+                                .offset((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)))
+                            .offset((block_offset) as isize);
+                            let __rhs = (field_ref!(cst, prev_abs_coeff).decay().offset(
+                                (((((({ (*c.borrow()).y } as u32) & 1_u32)
+                                    .wrapping_mul(((width + 3) as u32)))
+                                .wrapping_add(2_u32))
+                                .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as u32)))
+                                    as usize),
+                            ))
+                            .offset((block_offset) as isize);
+                            (*c.borrow_mut()).prev_abs = __rhs;
+                            (*c.borrow_mut()).x = next_x;
+                            'loop_: while ({ (*c.borrow()).x } < width) {
+                                let mut is_empty: bool =
+                                    (((block_state.postfix_inc()).read()) != 0);
+                                if !(is_empty) {
+                                    if ((!({ brunsli_WordSourceImpl::CanRead(&in_, 297_usize) })
+                                        as i64)
+                                        != 0)
+                                    {
+                                        field!(ac_dc_state, next_mcu_y).write(mcu_y);
+                                        field!(ac_dc_state, next_component).write(i);
+                                        field!(ac_dc_state, next_iy).write(iy);
+                                        field!(ac_dc_state, next_x).write({ (*c.borrow()).x });
+                                        return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
+                                    }
+                                    let mut num_nonzeros: usize =
+                                        ({ DecodeAcBlock_159(c.as_pointer()) });
+                                    if !(num_nonzeros
+                                        <= kNumNonZeroTreeSize_85.with(|rc| *rc.borrow()))
+                                    {
+                                        ({
+                                            BrunsliDumpAndAbort_79(
+                                                Ptr::<i8>::from_string_literal(
+                                                    b"brunsli_decode.cc",
+                                                ),
+                                                949,
+                                                Ptr::<i8>::from_string_literal(b"DecodeAC"),
+                                            )
+                                        });
+                                        'loop_: while true {}
+                                    };
+                                    elem!({ (*c.borrow()).prev_num_nonzeros.clone() }, {
+                                        (*c.borrow()).x
+                                    })
+                                    .write({ (num_nonzeros as u8) });
+                                } else {
+                                    ({
+                                        let _prev_sgn: Ptr<i32> =
+                                            { (*c.borrow()).prev_sgn.clone() };
+                                        let _prev_abs: Ptr<i32> =
+                                            { (*c.borrow()).prev_abs.clone() };
+                                        DecodeEmptyAcBlock_158(_prev_sgn, _prev_abs)
+                                    });
+                                    elem!({ (*c.borrow()).prev_num_nonzeros.clone() }, {
+                                        (*c.borrow()).x
+                                    })
+                                    .write(0_u8);
+                                }
+                                (*c.borrow_mut()).coeffs += kDCTBlockSize_3.with(|rc| *rc.borrow());
+                                (*c.borrow_mut()).prev_sgn +=
+                                    kDCTBlockSize_3.with(|rc| *rc.borrow());
+                                (*c.borrow_mut()).prev_abs +=
+                                    kDCTBlockSize_3.with(|rc| *rc.borrow());
+                                (*c.borrow_mut()).prev_row_coeffs +=
+                                    kDCTBlockSize_3.with(|rc| *rc.borrow());
+                                (*c.borrow_mut()).prev_col_coeffs +=
+                                    kDCTBlockSize_3.with(|rc| *rc.borrow());
+                                (*c.borrow_mut()).x.prefix_inc();
+                            }
+                            (*c.borrow_mut()).prev_row_delta *= -1_i32;
+                            field!(ac_dc_state, next_x).write(0);
+                            {
+                                iy.prefix_inc();
+                                (*c.borrow_mut()).y.prefix_inc()
+                            };
+                        }
                     }
-                    (*c.borrow_mut()).coeffs += kDCTBlockSize_3.with(|rc| *rc.borrow());
-                    (*c.borrow_mut()).prev_sgn += kDCTBlockSize_3.with(|rc| *rc.borrow());
-                    (*c.borrow_mut()).prev_abs += kDCTBlockSize_3.with(|rc| *rc.borrow());
-                    (*c.borrow_mut()).prev_row_coeffs += kDCTBlockSize_3.with(|rc| *rc.borrow());
-                    (*c.borrow_mut()).prev_col_coeffs += kDCTBlockSize_3.with(|rc| *rc.borrow());
-                    (*c.borrow_mut()).x.prefix_inc();
+                    field!(ac_dc_state, next_iy).write(0);
+                    i.prefix_inc();
                 }
-                (*c.borrow_mut()).prev_row_delta *= -1_i32;
-                field!(ac_dc_state, next_x).write(0);
-                {
-                    iy.prefix_inc();
-                    (*c.borrow_mut()).y.prefix_inc()
-                };
             }
-            field!(ac_dc_state, next_iy).write(0);
-            i.prefix_inc();
+            field!(ac_dc_state, next_component).write(0_usize);
+            mcu_y.prefix_inc();
         }
-        field!(ac_dc_state, next_component).write(0_usize);
-        mcu_y.prefix_inc();
     }
     field!(ac_dc_state, next_mcu_y).write(0);
     comps.with_mut(|__v: &mut Vec<brunsli_ComponentState>| __v.clear());
@@ -6196,31 +6323,35 @@ pub fn DecodeHeader_177(
                         (kBrunsliHeaderSubsamplingTag_42.with(|rc| *rc.borrow()) as usize)
                     )
                     .read()) as usize);
-                    let mut i: usize = 0_usize;
-                    'loop_: while ({ i } < { (*jpg.upgrade().deref()).components.len() }) {
-                        let mut c: Ptr<brunsli_JPEGComponent> =
-                            (field_ref!(jpg, components).decay().offset(i));
-                        field!(c, v_samp_factor)
-                            .write((((subsampling_code & 15_usize).wrapping_add(1_usize)) as i32));
-                        subsampling_code >>= 4_u32;
-                        field!(c, h_samp_factor)
-                            .write((((subsampling_code & 15_usize).wrapping_add(1_usize)) as i32));
-                        subsampling_code >>= 4_u32;
-                        if ({ c.with(|__s| __s.v_samp_factor) } > {
-                            kBrunsliMaxSampling_27.with(|rc| *rc.borrow())
-                        }) {
-                            return ({
-                                Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
-                            });
+                    {
+                        let mut i: usize = 0_usize;
+                        'loop_: while ({ i } < { (*jpg.upgrade().deref()).components.len() }) {
+                            let mut c: Ptr<brunsli_JPEGComponent> =
+                                (field_ref!(jpg, components).decay().offset(i));
+                            field!(c, v_samp_factor).write(
+                                (((subsampling_code & 15_usize).wrapping_add(1_usize)) as i32),
+                            );
+                            subsampling_code >>= 4_u32;
+                            field!(c, h_samp_factor).write(
+                                (((subsampling_code & 15_usize).wrapping_add(1_usize)) as i32),
+                            );
+                            subsampling_code >>= 4_u32;
+                            if ({ c.with(|__s| __s.v_samp_factor) } > {
+                                kBrunsliMaxSampling_27.with(|rc| *rc.borrow())
+                            }) {
+                                return ({
+                                    Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
+                                });
+                            }
+                            if ({ c.with(|__s| __s.h_samp_factor) } > {
+                                kBrunsliMaxSampling_27.with(|rc| *rc.borrow())
+                            }) {
+                                return ({
+                                    Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
+                                });
+                            }
+                            i.prefix_inc();
                         }
-                        if ({ c.with(|__s| __s.h_samp_factor) } > {
-                            kBrunsliMaxSampling_27.with(|rc| *rc.borrow())
-                        }) {
-                            return ({
-                                Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
-                            });
-                        }
-                        i.prefix_inc();
                     }
                     if !({ UpdateSubsamplingDerivatives_178((jpg).clone()) }) {
                         return ({ Fail_169(state, brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN) });
@@ -7073,18 +7204,20 @@ pub fn DecodeQuantDataSection_186(
                         } else {
                             0
                         } as usize);
-                        let mut k: usize = 0_usize;
-                        'loop_: while (k < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
-                            elem!(table, k).write({
-                                (({
-                                    let __idx0 = (selector) as usize;
-                                    let __idx1 = (short_code) as usize;
-                                    let __idx2 = (k) as usize;
-                                    kStockQuantizationTables_48
-                                        .with(|rc| rc.borrow()[__idx0][__idx1][__idx2])
-                                }) as i32)
-                            });
-                            k.prefix_inc();
+                        {
+                            let mut k: usize = 0_usize;
+                            'loop_: while (k < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
+                                elem!(table, k).write({
+                                    (({
+                                        let __idx0 = (selector) as usize;
+                                        let __idx1 = (short_code) as usize;
+                                        let __idx2 = (k) as usize;
+                                        kStockQuantizationTables_48
+                                            .with(|rc| rc.borrow()[__idx0][__idx1][__idx2])
+                                    }) as i32)
+                                });
+                                k.prefix_inc();
+                            }
                         }
                         field!(qs, stage).write(brunsli_internal_dec_QuantDataState_Stage_UPDATE);
                     } else {
@@ -7352,28 +7485,31 @@ pub fn DecodeHistogramDataSection_187(
                 (*suspend_bit_reader.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA)
             });
         }
-        let mut i: usize = 0_usize;
-        'loop_: while (i < num_components) {
-            let mut scheme: usize =
-                (({ BrunsliBitReaderRead_126((*br.borrow()).clone(), 3_u32) }) as usize);
-            if (scheme >= (kNumSchemes_91.with(|rc| *rc.borrow()) as usize)) {
-                return ({
-                    (*suspend_bit_reader.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < num_components) {
+                let mut scheme: usize =
+                    (({ BrunsliBitReaderRead_126((*br.borrow()).clone(), 3_u32) }) as usize);
+                if (scheme >= (kNumSchemes_91.with(|rc| *rc.borrow()) as usize)) {
+                    return ({
+                        (*suspend_bit_reader.borrow())
+                            .call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
+                    });
+                }
+                let m: Ptr<brunsli_internal_dec_ComponentMeta> =
+                    field_ref!((*state.borrow()), meta).decay().offset(i);
+                field!(m, context_bits).write(scheme);
+                field!(m, context_offset).write(s.with(|__s| __s.num_contexts));
+                field!(s, num_contexts).write({
+                    (s.with(|__s| __s.num_contexts)).wrapping_add(
+                        (({
+                            let __idx0 = (scheme) as usize;
+                            kNumNonzeroContextSkip_94.with(|rc| rc.borrow()[__idx0])
+                        }) as usize),
+                    )
                 });
+                i.prefix_inc();
             }
-            let m: Ptr<brunsli_internal_dec_ComponentMeta> =
-                field_ref!((*state.borrow()), meta).decay().offset(i);
-            field!(m, context_bits).write(scheme);
-            field!(m, context_offset).write(s.with(|__s| __s.num_contexts));
-            field!(s, num_contexts).write({
-                (s.with(|__s| __s.num_contexts)).wrapping_add(
-                    (({
-                        let __idx0 = (scheme) as usize;
-                        kNumNonzeroContextSkip_94.with(|rc| rc.borrow()[__idx0])
-                    }) as usize),
-                )
-            });
-            i.prefix_inc();
         }
         if !({ BrunsliBitReaderIsHealthy_132((*br.borrow()).clone()) }) {
             return ({
@@ -8121,30 +8257,32 @@ pub fn ProcessSection_195(
     return brunsli_internal_dec_Stage_SECTION;
 }
 pub fn UpdateSubsamplingDerivatives_178(mut jpg: Ptr<brunsli_JPEGData>) -> bool {
-    let mut i: usize = 0_usize;
-    'loop_: while ({ i } < { (*jpg.upgrade().deref()).components.len() }) {
-        let mut c: Ptr<brunsli_JPEGComponent> = (field_ref!(jpg, components).decay().offset(i));
-        let __rhs = (if CppLess::less(
-            &field_ptr!(jpg, max_h_samp_factor),
-            &field_ptr!(c, h_samp_factor),
-        ) {
-            field_ptr!(c, h_samp_factor)
-        } else {
-            field_ptr!(jpg, max_h_samp_factor)
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while ({ i } < { (*jpg.upgrade().deref()).components.len() }) {
+            let mut c: Ptr<brunsli_JPEGComponent> = (field_ref!(jpg, components).decay().offset(i));
+            let __rhs = (if CppLess::less(
+                &field_ptr!(jpg, max_h_samp_factor),
+                &field_ptr!(c, h_samp_factor),
+            ) {
+                field_ptr!(c, h_samp_factor)
+            } else {
+                field_ptr!(jpg, max_h_samp_factor)
+            }
+            .read());
+            field!(jpg, max_h_samp_factor).write(__rhs);
+            let __rhs = (if CppLess::less(
+                &field_ptr!(jpg, max_v_samp_factor),
+                &field_ptr!(c, v_samp_factor),
+            ) {
+                field_ptr!(c, v_samp_factor)
+            } else {
+                field_ptr!(jpg, max_v_samp_factor)
+            }
+            .read());
+            field!(jpg, max_v_samp_factor).write(__rhs);
+            i.prefix_inc();
         }
-        .read());
-        field!(jpg, max_h_samp_factor).write(__rhs);
-        let __rhs = (if CppLess::less(
-            &field_ptr!(jpg, max_v_samp_factor),
-            &field_ptr!(c, v_samp_factor),
-        ) {
-            field_ptr!(c, v_samp_factor)
-        } else {
-            field_ptr!(jpg, max_v_samp_factor)
-        }
-        .read());
-        field!(jpg, max_v_samp_factor).write(__rhs);
-        i.prefix_inc();
     }
     let __rhs = ({
         let _a: i32 = jpg.with(|__s| __s.height);
@@ -8158,42 +8296,44 @@ pub fn UpdateSubsamplingDerivatives_178(mut jpg: Ptr<brunsli_JPEGData>) -> bool 
         DivCeil_142(_a, _b)
     });
     field!(jpg, MCU_cols).write(__rhs);
-    let mut i: usize = 0_usize;
-    'loop_: while ({ i } < { (*jpg.upgrade().deref()).components.len() }) {
-        let mut c: Ptr<brunsli_JPEGComponent> = (field_ref!(jpg, components).decay().offset(i));
-        field!(c, width_in_blocks).write({
-            (({ jpg.with(|__s| __s.MCU_cols) } * { c.with(|__s| __s.h_samp_factor) }) as u32)
-        });
-        field!(c, height_in_blocks).write({
-            (({ jpg.with(|__s| __s.MCU_rows) } * { c.with(|__s| __s.v_samp_factor) }) as u32)
-        });
-        if !(c.with(|__s| __s.width_in_blocks) <= 8205_u32) {
-            ({
-                BrunsliDumpAndAbort_79(
-                    Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),
-                    2211,
-                    Ptr::<i8>::from_string_literal(b"UpdateSubsamplingDerivatives"),
-                )
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while ({ i } < { (*jpg.upgrade().deref()).components.len() }) {
+            let mut c: Ptr<brunsli_JPEGComponent> = (field_ref!(jpg, components).decay().offset(i));
+            field!(c, width_in_blocks).write({
+                (({ jpg.with(|__s| __s.MCU_cols) } * { c.with(|__s| __s.h_samp_factor) }) as u32)
             });
-            'loop_: while true {}
-        };
-        if !(c.with(|__s| __s.height_in_blocks) <= 8205_u32) {
-            ({
-                BrunsliDumpAndAbort_79(
-                    Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),
-                    2212,
-                    Ptr::<i8>::from_string_literal(b"UpdateSubsamplingDerivatives"),
-                )
+            field!(c, height_in_blocks).write({
+                (({ jpg.with(|__s| __s.MCU_rows) } * { c.with(|__s| __s.v_samp_factor) }) as u32)
             });
-            'loop_: while true {}
-        };
-        let mut num_blocks: u32 =
-            (c.with(|__s| __s.width_in_blocks)).wrapping_mul(c.with(|__s| __s.height_in_blocks));
-        if ((num_blocks as usize) > kBrunsliMaxNumBlocks_18.with(|rc| *rc.borrow())) {
-            return false;
+            if !(c.with(|__s| __s.width_in_blocks) <= 8205_u32) {
+                ({
+                    BrunsliDumpAndAbort_79(
+                        Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),
+                        2211,
+                        Ptr::<i8>::from_string_literal(b"UpdateSubsamplingDerivatives"),
+                    )
+                });
+                'loop_: while true {}
+            };
+            if !(c.with(|__s| __s.height_in_blocks) <= 8205_u32) {
+                ({
+                    BrunsliDumpAndAbort_79(
+                        Ptr::<i8>::from_string_literal(b"brunsli_decode.cc"),
+                        2212,
+                        Ptr::<i8>::from_string_literal(b"UpdateSubsamplingDerivatives"),
+                    )
+                });
+                'loop_: while true {}
+            };
+            let mut num_blocks: u32 = (c.with(|__s| __s.width_in_blocks))
+                .wrapping_mul(c.with(|__s| __s.height_in_blocks));
+            if ((num_blocks as usize) > kBrunsliMaxNumBlocks_18.with(|rc| *rc.borrow())) {
+                return false;
+            }
+            field!(c, num_blocks).write(num_blocks);
+            i.prefix_inc();
         }
-        field!(c, num_blocks).write(num_blocks);
-        i.prefix_inc();
     }
     return true;
 }
@@ -8213,17 +8353,19 @@ pub fn PrepareMeta_179(mut jpg: Ptr<brunsli_JPEGData>, mut state: Ptr<brunsli_in
             __v.resize_with(__a0, || <brunsli_internal_dec_ComponentMeta>::default())
         })
     };
-    let mut i: usize = 0_usize;
-    'loop_: while (i < num_components) {
-        let c: Ptr<brunsli_JPEGComponent> = field_ref!(jpg, components).decay().offset(i);
-        let m: Ptr<brunsli_internal_dec_ComponentMeta> = meta.decay().offset(i);
-        field!(m, h_samp).write(c.with(|__s| __s.h_samp_factor));
-        field!(m, v_samp).write(c.with(|__s| __s.v_samp_factor));
-        field!(m, width_in_blocks)
-            .write({ ({ jpg.with(|__s| __s.MCU_cols) } * { m.with(|__s| __s.h_samp) }) });
-        field!(m, height_in_blocks)
-            .write({ ({ jpg.with(|__s| __s.MCU_rows) } * { m.with(|__s| __s.v_samp) }) });
-        i.prefix_inc();
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < num_components) {
+            let c: Ptr<brunsli_JPEGComponent> = field_ref!(jpg, components).decay().offset(i);
+            let m: Ptr<brunsli_internal_dec_ComponentMeta> = meta.decay().offset(i);
+            field!(m, h_samp).write(c.with(|__s| __s.h_samp_factor));
+            field!(m, v_samp).write(c.with(|__s| __s.v_samp_factor));
+            field!(m, width_in_blocks)
+                .write({ ({ jpg.with(|__s| __s.MCU_cols) } * { m.with(|__s| __s.h_samp) }) });
+            field!(m, height_in_blocks)
+                .write({ ({ jpg.with(|__s| __s.MCU_rows) } * { m.with(|__s| __s.v_samp) }) });
+            i.prefix_inc();
+        }
     }
 }
 pub fn WarmupMeta_196(mut jpg: Ptr<brunsli_JPEGData>, mut state: Ptr<brunsli_internal_dec_State>) {
@@ -8233,54 +8375,59 @@ pub fn WarmupMeta_196(mut jpg: Ptr<brunsli_JPEGData>, mut state: Ptr<brunsli_int
     let mut num_components: usize = (*meta.upgrade().deref()).len();
     if !(state.with(|__s| __s.is_storage_allocated)) {
         field!(state, is_storage_allocated).write(true);
-        let mut i: usize = 0_usize;
-        'loop_: while (i < num_components) {
-            let mut num_blocks: usize = (({ index!(meta, i).with(|__s| __s.width_in_blocks) } * {
-                index!(meta, i).with(|__s| __s.height_in_blocks)
-            }) as usize);
-            {
-                let __a0 =
-                    (num_blocks).wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize));
-                field!(vec_elem!(jpg, components, i), coeffs)
-                    .with_mut(|__v: &mut Vec<i16>| __v.resize_with(__a0, || 0_i16))
-            };
-            {
-                let __a0 = num_blocks;
-                vec_elem!(s, block_state_, i)
-                    .with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || 0_u8))
-            };
-            let __rhs = field_ref!(s, block_state_).decay().offset(i).decay();
-            field!(index!(meta, i), block_state).write(__rhs);
-            i.prefix_inc();
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < num_components) {
+                let mut num_blocks: usize = (({ index!(meta, i).with(|__s| __s.width_in_blocks) }
+                    * { index!(meta, i).with(|__s| __s.height_in_blocks) })
+                    as usize);
+                {
+                    let __a0 = (num_blocks)
+                        .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize));
+                    field!(vec_elem!(jpg, components, i), coeffs)
+                        .with_mut(|__v: &mut Vec<i16>| __v.resize_with(__a0, || 0_i16))
+                };
+                {
+                    let __a0 = num_blocks;
+                    vec_elem!(s, block_state_, i)
+                        .with_mut(|__v: &mut Vec<u8>| __v.resize_with(__a0, || 0_u8))
+                };
+                let __rhs = field_ref!(s, block_state_).decay().offset(i).decay();
+                field!(index!(meta, i), block_state).write(__rhs);
+                i.prefix_inc();
+            }
         }
     }
     if !(s.with(|__s| __s.is_meta_warm)) {
         field!(s, is_meta_warm).write(true);
-        let mut c: usize = 0_usize;
-        'loop_: while (c < num_components) {
-            let m: Ptr<brunsli_internal_dec_ComponentMeta> = meta.decay().offset(c);
-            let q: Ptr<brunsli_JPEGQuantTable> = field_ref!(jpg, quant)
-                .decay()
-                .offset((vec_elem!(jpg, components, c).with(|__s| __s.quant_idx) as usize));
-            field!(m, ac_coeffs)
-                .write(field_ref!(field_ref!(jpg, components).decay().offset(c), coeffs).decay());
-            field!(m, ac_stride).write({
-                ({ m.with(|__s| __s.width_in_blocks) } * {
-                    kDCTBlockSize_3.with(|rc| *rc.borrow())
-                })
-            });
-            field!(m, b_stride).write({ m.with(|__s| __s.width_in_blocks) });
-            match ({ (field_ref!(m, quant).decay()).to_any() },) {
-                (mut __tmp_32,) => {
-                    __tmp_32.memcpy(
-                        &(field_ref!(q, values).decay()).to_any(),
-                        (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)
-                            .wrapping_mul((::std::mem::size_of::<i32>() as usize)),
-                    );
-                    (__tmp_32).clone()
-                }
-            };
-            c.prefix_inc();
+        {
+            let mut c: usize = 0_usize;
+            'loop_: while (c < num_components) {
+                let m: Ptr<brunsli_internal_dec_ComponentMeta> = meta.decay().offset(c);
+                let q: Ptr<brunsli_JPEGQuantTable> = field_ref!(jpg, quant)
+                    .decay()
+                    .offset((vec_elem!(jpg, components, c).with(|__s| __s.quant_idx) as usize));
+                field!(m, ac_coeffs).write(
+                    field_ref!(field_ref!(jpg, components).decay().offset(c), coeffs).decay(),
+                );
+                field!(m, ac_stride).write({
+                    ({ m.with(|__s| __s.width_in_blocks) } * {
+                        kDCTBlockSize_3.with(|rc| *rc.borrow())
+                    })
+                });
+                field!(m, b_stride).write({ m.with(|__s| __s.width_in_blocks) });
+                match ({ (field_ref!(m, quant).decay()).to_any() },) {
+                    (mut __tmp_32,) => {
+                        __tmp_32.memcpy(
+                            &(field_ref!(q, values).decay()).to_any(),
+                            (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)
+                                .wrapping_mul((::std::mem::size_of::<i32>() as usize)),
+                        );
+                        (__tmp_32).clone()
+                    }
+                };
+                c.prefix_inc();
+            }
         }
     }
 }
@@ -8652,21 +8799,25 @@ pub fn BrunsliEstimateDecoderPeakMemoryUsage_205(mut data: Ptr<u8>, mut len: usi
     let mut out_size: usize = (2_usize).wrapping_mul(len);
     let mut total_num_blocks: usize = 0_usize;
     let mut component_state_size: usize = 0_usize;
-    let mut i: usize = 0_usize;
-    'loop_: while (i < (*jpg.borrow()).components.len()) {
-        let c: Ptr<brunsli_JPEGComponent> =
-            field_ref!(jpg.as_pointer(), components).decay().offset(i);
-        total_num_blocks =
-            { (total_num_blocks).wrapping_add((c.with(|__s| __s.num_blocks) as usize)) };
-        {
-            let rhs_0 = (component_state_size).wrapping_add(
-                ({
-                    brunsli_ComponentState::SizeInBytes((c.with(|__s| __s.width_in_blocks) as i32))
-                }),
-            );
-            component_state_size = rhs_0
-        };
-        i.prefix_inc();
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < (*jpg.borrow()).components.len()) {
+            let c: Ptr<brunsli_JPEGComponent> =
+                field_ref!(jpg.as_pointer(), components).decay().offset(i);
+            total_num_blocks =
+                { (total_num_blocks).wrapping_add((c.with(|__s| __s.num_blocks) as usize)) };
+            {
+                let rhs_0 = (component_state_size).wrapping_add(
+                    ({
+                        brunsli_ComponentState::SizeInBytes(
+                            (c.with(|__s| __s.width_in_blocks) as i32),
+                        )
+                    }),
+                );
+                component_state_size = rhs_0
+            };
+            i.prefix_inc();
+        }
     }
     let mut jpeg_data_size: usize =
         (((total_num_blocks).wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize))
@@ -8725,19 +8876,23 @@ pub fn MoveToFront_207(mut v: Ptr<u8>, mut index: u8) {
 pub fn InverseMoveToFrontTransform_208(mut v: Ptr<u8>, mut v_len: usize) {
     let mtf: Value<Box<[u8]>> =
         Rc::new(RefCell::new((0..256).map(|_| 0_u8).collect::<Box<[u8]>>()));
-    let mut i: usize = 0_usize;
-    'loop_: while (i < 256_usize) {
-        (*mtf.borrow_mut())[(i) as usize] = { (i as u8) };
-        i.prefix_inc();
-    }
-    let mut i: usize = 0_usize;
-    'loop_: while (i < v_len) {
-        let mut index: u8 = (elem!(v, i).read());
-        elem!(v, i).write({ (*mtf.borrow())[(index) as usize] });
-        if (index != 0) {
-            ({ MoveToFront_207(mtf.decay(), index) });
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < 256_usize) {
+            (*mtf.borrow_mut())[(i) as usize] = { (i as u8) };
+            i.prefix_inc();
         }
-        i.prefix_inc();
+    }
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < v_len) {
+            let mut index: u8 = (elem!(v, i).read());
+            elem!(v, i).write({ (*mtf.borrow())[(index) as usize] });
+            if (index != 0) {
+                ({ MoveToFront_207(mtf.decay(), index) });
+            }
+            i.prefix_inc();
+        }
     }
 }
 pub fn DecodeContextMap_188(
@@ -8908,12 +9063,14 @@ pub fn ReadHistogram_189(
             max_bits_counter >>= 1;
             max_bits.prefix_inc();
         }
-        let mut i: usize = 0_usize;
-        'loop_: while (i < num_symbols) {
-            let __rhs = (((({ BrunsliBitReaderRead_126((br).clone(), max_bits) }) as usize)
-                .wrapping_rem(length)) as i32);
-            symbols[(i) as usize] = __rhs;
-            i.prefix_inc();
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < num_symbols) {
+                let __rhs = (((({ BrunsliBitReaderRead_126((br).clone(), max_bits) }) as usize)
+                    .wrapping_rem(length)) as i32);
+                symbols[(i) as usize] = __rhs;
+                i.prefix_inc();
+            }
         }
         if (num_symbols == 1_usize) {
             elem!(histogram, symbols[(0) as usize]).write({ space });
@@ -8941,16 +9098,18 @@ pub fn ReadHistogram_189(
             });
             'loop_: while true {}
         };
-        let mut i: usize = 0_usize;
-        'loop_: while (i < real_length) {
-            let __rhs = (({
-                ReadShortHuffmanCode_212((br).clone(), kLogCountTree_211.with(|v| v.decay()))
-            }) as u32);
-            log_counts[(i) as usize] = __rhs;
-            if (log_counts[(i) as usize] > log_counts[(omit_pos) as usize]) {
-                omit_pos = i;
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < real_length) {
+                let __rhs = (({
+                    ReadShortHuffmanCode_212((br).clone(), kLogCountTree_211.with(|v| v.decay()))
+                }) as u32);
+                log_counts[(i) as usize] = __rhs;
+                if (log_counts[(i) as usize] > log_counts[(omit_pos) as usize]) {
+                    omit_pos = i;
+                }
+                i.prefix_inc();
             }
-            i.prefix_inc();
         }
         if !(omit_pos >= 0_usize) {
             ({
@@ -8962,29 +9121,31 @@ pub fn ReadHistogram_189(
             });
             'loop_: while true {}
         };
-        let mut i: usize = 0_usize;
-        'loop_: while (i < real_length) {
-            let mut code: u32 = log_counts[(i) as usize];
-            if (i == omit_pos) {
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < real_length) {
+                let mut code: u32 = log_counts[(i) as usize];
+                if (i == omit_pos) {
+                    i.prefix_inc();
+                    continue 'loop_;
+                } else if (code == 0_u32) {
+                    i.prefix_inc();
+                    continue 'loop_;
+                } else if (code == 1_u32) {
+                    elem!(histogram, i).write(1_u32);
+                } else {
+                    let mut bit_count: u32 =
+                        ({ GetPopulationCountPrecision_209((code).wrapping_sub(1_u32)) });
+                    let __rhs = (1_u32 << ((code).wrapping_sub(1_u32))).wrapping_add(
+                        ({ ({ BrunsliBitReaderRead_126((br).clone(), bit_count) }) } << {
+                            (((code).wrapping_sub(1_u32)).wrapping_sub(bit_count))
+                        }),
+                    );
+                    elem!(histogram, i).write(__rhs);
+                }
+                total_count = { (total_count).wrapping_add((elem!(histogram, i).read())) };
                 i.prefix_inc();
-                continue 'loop_;
-            } else if (code == 0_u32) {
-                i.prefix_inc();
-                continue 'loop_;
-            } else if (code == 1_u32) {
-                elem!(histogram, i).write(1_u32);
-            } else {
-                let mut bit_count: u32 =
-                    ({ GetPopulationCountPrecision_209((code).wrapping_sub(1_u32)) });
-                let __rhs = (1_u32 << ((code).wrapping_sub(1_u32))).wrapping_add(
-                    ({ ({ BrunsliBitReaderRead_126((br).clone(), bit_count) }) } << {
-                        (((code).wrapping_sub(1_u32)).wrapping_sub(bit_count))
-                    }),
-                );
-                elem!(histogram, i).write(__rhs);
             }
-            total_count = { (total_count).wrapping_add((elem!(histogram, i).read())) };
-            i.prefix_inc();
         }
         if (total_count >= space) {
             return false;
@@ -9029,10 +9190,13 @@ pub fn ReadHuffmanCodeLengths_217(
         0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
         0_u16, 0_u16, 0_u16,
     ])));
-    let mut i: i32 = 0;
-    'loop_: while (i < kCodeLengthCodes_213.with(|rc| *rc.borrow())) {
-        (*counts.borrow_mut())[(elem!(code_length_code_lengths, i).read()) as usize].prefix_inc();
-        i.prefix_inc();
+    {
+        let mut i: i32 = 0;
+        'loop_: while (i < kCodeLengthCodes_213.with(|rc| *rc.borrow())) {
+            (*counts.borrow_mut())[(elem!(code_length_code_lengths, i).read()) as usize]
+                .prefix_inc();
+            i.prefix_inc();
+        }
     }
     if !(({
         BuildHuffmanTable_218(
@@ -9125,27 +9289,33 @@ pub fn ReadSimpleCode_219(
     let mut num_symbols: usize =
         ((({ BrunsliBitReaderRead_126((br).clone(), 2_u32) }).wrapping_add(1_u32)) as usize);
     let symbols: Value<Box<[u16]>> = Rc::new(RefCell::new(Box::new([0_u16, 0_u16, 0_u16, 0_u16])));
-    let mut i: usize = 0_usize;
-    'loop_: while (i < num_symbols) {
-        let mut symbol: u16 = (({ BrunsliBitReaderRead_126((br).clone(), max_bits) }) as u16);
-        if ((symbol as i32) >= (alphabet_size as i32)) {
-            return false;
-        }
-        (*symbols.borrow_mut())[(i) as usize] = symbol;
-        i.prefix_inc();
-    }
-    let mut i: usize = 0_usize;
-    'loop_: while (i < (num_symbols).wrapping_sub(1_usize)) {
-        let mut j: usize = (i).wrapping_add(1_usize);
-        'loop_: while (j < num_symbols) {
-            if (((*symbols.borrow())[(i) as usize] as i32)
-                == ((*symbols.borrow())[(j) as usize] as i32))
-            {
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < num_symbols) {
+            let mut symbol: u16 = (({ BrunsliBitReaderRead_126((br).clone(), max_bits) }) as u16);
+            if ((symbol as i32) >= (alphabet_size as i32)) {
                 return false;
             }
-            j.prefix_inc();
+            (*symbols.borrow_mut())[(i) as usize] = symbol;
+            i.prefix_inc();
         }
-        i.prefix_inc();
+    }
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < (num_symbols).wrapping_sub(1_usize)) {
+            {
+                let mut j: usize = (i).wrapping_add(1_usize);
+                'loop_: while (j < num_symbols) {
+                    if (((*symbols.borrow())[(i) as usize] as i32)
+                        == ((*symbols.borrow())[(j) as usize] as i32))
+                    {
+                        return false;
+                    }
+                    j.prefix_inc();
+                }
+            }
+            i.prefix_inc();
+        }
     }
     if (num_symbols == 4_usize) {
         {
@@ -9231,18 +9401,22 @@ pub fn ReadSimpleCode_219(
                 break 'switch;
             }
             __v if __v == 4_usize => {
-                let mut i: usize = 0_usize;
-                'loop_: while (i < 3_usize) {
-                    let mut j: usize = (i).wrapping_add(1_usize);
-                    'loop_: while (j < 4_usize) {
-                        if (((*symbols.borrow())[(i) as usize] as i32)
-                            > ((*symbols.borrow())[(j) as usize] as i32))
+                {
+                    let mut i: usize = 0_usize;
+                    'loop_: while (i < 3_usize) {
                         {
-                            ({ (*swap_symbols.borrow()).call(i, j) });
+                            let mut j: usize = (i).wrapping_add(1_usize);
+                            'loop_: while (j < 4_usize) {
+                                if (((*symbols.borrow())[(i) as usize] as i32)
+                                    > ((*symbols.borrow())[(j) as usize] as i32))
+                                {
+                                    ({ (*swap_symbols.borrow()).call(i, j) });
+                                }
+                                j.prefix_inc();
+                            }
                         }
-                        j.prefix_inc();
+                        i.prefix_inc();
                     }
-                    i.prefix_inc();
                 }
                 elem!(table, 0).write({
                     brunsli_HuffmanCode {
@@ -9898,16 +10072,18 @@ pub fn Flush_238(
         field!(s, eob_run_).write(0);
     }
     let mut num_words: usize = (s.with(|__s| __s.refinement_bits_count_) >> 4);
-    let mut i: usize = 0_usize;
-    'loop_: while (i < num_words) {
-        ({
-            WriteBits_233(
-                (bw).clone(),
-                16,
-                ((vec_elem!(s, refinement_bits_, i).read()) as u64),
-            )
-        });
-        i.prefix_inc();
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < num_words) {
+            ({
+                WriteBits_233(
+                    (bw).clone(),
+                    16,
+                    ((vec_elem!(s, refinement_bits_, i).read()) as u64),
+                )
+            });
+            i.prefix_inc();
+        }
     }
     let mut tail: usize = (s.with(|__s| __s.refinement_bits_count_) & 15_usize);
     if (tail != 0) {
@@ -9935,10 +10111,13 @@ pub fn BufferEndOfBand_239(
     field!(s, eob_run_).with_mut(|__v| __v.prefix_inc());
     if (new_bits_count != 0) {
         let mut new_bits: u64 = 0_u64;
-        let mut i: usize = 0_usize;
-        'loop_: while (i < new_bits_count) {
-            new_bits = { ({ (new_bits << 1) } | { ((elem!(new_bits_array, i).read()) as u64) }) };
-            i.prefix_inc();
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < new_bits_count) {
+                new_bits =
+                    { ({ (new_bits << 1) } | { ((elem!(new_bits_array, i).read()) as u64) }) };
+                i.prefix_inc();
+            }
         }
         let mut tail: usize = (s.with(|__s| __s.refinement_bits_count_) & 15_usize);
         if (tail != 0) {
@@ -10008,16 +10187,18 @@ pub fn BuildHuffmanCodeTable_240(
     let mut huff_code: [i32; 256] = [0_i32; 256];
     let mut huff_size: [u32; 257] = [0_u32; 257];
     let mut p: i32 = 0;
-    let mut l: usize = 1_usize;
-    'loop_: while (l <= (kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) as usize)) {
-        let mut i: i32 = (elem!(field_ref!(huff, counts).decay(), l).read());
-        if ((p + i) > (kJpegHuffmanAlphabetSize_8.with(|rc| *rc.borrow()) + 1)) {
-            return false;
+    {
+        let mut l: usize = 1_usize;
+        'loop_: while (l <= (kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) as usize)) {
+            let mut i: i32 = (elem!(field_ref!(huff, counts).decay(), l).read());
+            if ((p + i) > (kJpegHuffmanAlphabetSize_8.with(|rc| *rc.borrow()) + 1)) {
+                return false;
+            }
+            'loop_: while (i.postfix_dec() != 0) {
+                huff_size[(p.postfix_inc()) as usize] = (l as u32);
+            }
+            l.prefix_inc();
         }
-        'loop_: while (i.postfix_dec() != 0) {
-            huff_size[(p.postfix_inc()) as usize] = (l as u32);
-        }
-        l.prefix_inc();
     }
     if (p == 0) {
         return true;
@@ -10111,22 +10292,25 @@ pub fn EncodeSOF_243(
     elem!(data, pos.postfix_inc()).write(__rhs);
     let __rhs = (n_comps as u8);
     elem!(data, pos.postfix_inc()).write(__rhs);
-    let mut i: usize = 0_usize;
-    'loop_: while (i < n_comps) {
-        let __rhs = (vec_elem!(jpg, components, i).with(|__s| __s.id) as u8);
-        elem!(data, pos.postfix_inc()).write(__rhs);
-        let __rhs = (({ (vec_elem!(jpg, components, i).with(|__s| __s.h_samp_factor) << 4_u32) }
-            | { (vec_elem!(jpg, components, i).with(|__s| __s.v_samp_factor)) })
-            as u8);
-        elem!(data, pos.postfix_inc()).write(__rhs);
-        let mut quant_idx: usize =
-            (vec_elem!(jpg, components, i).with(|__s| __s.quant_idx) as usize);
-        if ({ quant_idx } >= { (*jpg.upgrade().deref()).quant.len() }) {
-            return false;
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < n_comps) {
+            let __rhs = (vec_elem!(jpg, components, i).with(|__s| __s.id) as u8);
+            elem!(data, pos.postfix_inc()).write(__rhs);
+            let __rhs = (({
+                (vec_elem!(jpg, components, i).with(|__s| __s.h_samp_factor) << 4_u32)
+            } | { (vec_elem!(jpg, components, i).with(|__s| __s.v_samp_factor)) })
+                as u8);
+            elem!(data, pos.postfix_inc()).write(__rhs);
+            let mut quant_idx: usize =
+                (vec_elem!(jpg, components, i).with(|__s| __s.quant_idx) as usize);
+            if ({ quant_idx } >= { (*jpg.upgrade().deref()).quant.len() }) {
+                return false;
+            }
+            let __rhs = (vec_elem!(jpg, quant, quant_idx).with(|__s| __s.index) as u8);
+            elem!(data, pos.postfix_inc()).write(__rhs);
+            i.prefix_inc();
         }
-        let __rhs = (vec_elem!(jpg, quant, quant_idx).with(|__s| __s.index) as u8);
-        elem!(data, pos.postfix_inc()).write(__rhs);
-        i.prefix_inc();
     }
     return true;
 }
@@ -10158,23 +10342,25 @@ pub fn EncodeSOS_244(
     elem!(data, pos.postfix_inc()).write(__rhs);
     let __rhs = (n_scans as u8);
     elem!(data, pos.postfix_inc()).write(__rhs);
-    let mut i: usize = 0_usize;
-    'loop_: while (i < n_scans) {
-        let si: Ptr<brunsli_JPEGComponentScanInfo> =
-            field_ref!(scan_info, components).decay().offset(i);
-        if ({ (si.with(|__s| __s.comp_idx) as usize) } >= {
-            (*jpg.upgrade().deref()).components.len()
-        }) {
-            return false;
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while (i < n_scans) {
+            let si: Ptr<brunsli_JPEGComponentScanInfo> =
+                field_ref!(scan_info, components).decay().offset(i);
+            if ({ (si.with(|__s| __s.comp_idx) as usize) } >= {
+                (*jpg.upgrade().deref()).components.len()
+            }) {
+                return false;
+            }
+            let __rhs = (vec_elem!(jpg, components, (si.with(|__s| __s.comp_idx) as usize))
+                .with(|__s| __s.id) as u8);
+            elem!(data, pos.postfix_inc()).write(__rhs);
+            let __rhs =
+                (({ (si.with(|__s| __s.dc_tbl_idx) << 4_u32) } + { si.with(|__s| __s.ac_tbl_idx) })
+                    as u8);
+            elem!(data, pos.postfix_inc()).write(__rhs);
+            i.prefix_inc();
         }
-        let __rhs = (vec_elem!(jpg, components, (si.with(|__s| __s.comp_idx) as usize))
-            .with(|__s| __s.id) as u8);
-        elem!(data, pos.postfix_inc()).write(__rhs);
-        let __rhs =
-            (({ (si.with(|__s| __s.dc_tbl_idx) << 4_u32) } + { si.with(|__s| __s.ac_tbl_idx) })
-                as u8);
-        elem!(data, pos.postfix_inc()).write(__rhs);
-        i.prefix_inc();
     }
     let __rhs = (scan_info.with(|__s| __s.Ss) as u8);
     elem!(data, pos.postfix_inc()).write(__rhs);
@@ -10192,25 +10378,31 @@ pub fn EncodeDHT_245(
     let huffman_code: Ptr<Vec<brunsli_JPEGHuffmanCode>> =
         field_ref!(jpg, huffman_code).as_pointer();
     let mut marker_len: usize = 2_usize;
-    let mut i: usize = (state.with(|__s| __s.dht_index) as usize);
-    'loop_: while ({ i } < { (*huffman_code.upgrade().deref()).len() }) {
-        let huff: Ptr<brunsli_JPEGHuffmanCode> = huffman_code.decay().offset(i);
-        marker_len = {
-            (marker_len).wrapping_add((kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) as usize))
-        };
-        let mut j: usize = 0_usize;
-        'loop_: while ({ j } < { 17 }) {
-            {
-                let rhs_0 = (marker_len)
-                    .wrapping_add(((elem!(field_ref!(huff, counts).decay(), j).read()) as usize));
-                marker_len = rhs_0
+    {
+        let mut i: usize = (state.with(|__s| __s.dht_index) as usize);
+        'loop_: while ({ i } < { (*huffman_code.upgrade().deref()).len() }) {
+            let huff: Ptr<brunsli_JPEGHuffmanCode> = huffman_code.decay().offset(i);
+            marker_len = {
+                (marker_len)
+                    .wrapping_add((kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) as usize))
             };
-            j.prefix_inc();
+            {
+                let mut j: usize = 0_usize;
+                'loop_: while ({ j } < { 17 }) {
+                    {
+                        let rhs_0 = (marker_len).wrapping_add(
+                            ((elem!(field_ref!(huff, counts).decay(), j).read()) as usize),
+                        );
+                        marker_len = rhs_0
+                    };
+                    j.prefix_inc();
+                }
+            }
+            if huff.with(|__s| __s.is_last) {
+                break;
+            }
+            i.prefix_inc();
         }
-        if huff.with(|__s| __s.is_last) {
-            break;
-        }
-        i.prefix_inc();
     }
     {
         let __init =
@@ -10255,36 +10447,43 @@ pub fn EncodeDHT_245(
         }
         let mut total_count: usize = 0_usize;
         let mut max_length: usize = 0_usize;
-        let mut i: usize = 0_usize;
-        'loop_: while ({ i } < { 17 }) {
-            if ((elem!(field_ref!(huff, counts).decay(), i).read()) != 0) {
-                max_length = i;
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while ({ i } < { 17 }) {
+                if ((elem!(field_ref!(huff, counts).decay(), i).read()) != 0) {
+                    max_length = i;
+                }
+                {
+                    let rhs_0 = (total_count).wrapping_add(
+                        ((elem!(field_ref!(huff, counts).decay(), i).read()) as usize),
+                    );
+                    total_count = rhs_0
+                };
+                i.prefix_inc();
             }
-            {
-                let rhs_0 = (total_count)
-                    .wrapping_add(((elem!(field_ref!(huff, counts).decay(), i).read()) as usize));
-                total_count = rhs_0
-            };
-            i.prefix_inc();
         }
         total_count.prefix_dec();
         let __rhs = (huff.with(|__s| __s.slot_id) as u8);
         elem!(data, pos.postfix_inc()).write(__rhs);
-        let mut i: usize = 1_usize;
-        'loop_: while (i <= (kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) as usize)) {
-            let __rhs = ((if (i == max_length) {
-                ((elem!(field_ref!(huff, counts).decay(), i).read()) - 1)
-            } else {
-                (elem!(field_ref!(huff, counts).decay(), i).read())
-            }) as u8);
-            elem!(data, pos.postfix_inc()).write(__rhs);
-            i.prefix_inc();
+        {
+            let mut i: usize = 1_usize;
+            'loop_: while (i <= (kJpegHuffmanMaxBitLength_7.with(|rc| *rc.borrow()) as usize)) {
+                let __rhs = ((if (i == max_length) {
+                    ((elem!(field_ref!(huff, counts).decay(), i).read()) - 1)
+                } else {
+                    (elem!(field_ref!(huff, counts).decay(), i).read())
+                }) as u8);
+                elem!(data, pos.postfix_inc()).write(__rhs);
+                i.prefix_inc();
+            }
         }
-        let mut i: usize = 0_usize;
-        'loop_: while (i < total_count) {
-            let __rhs = ((elem!(field_ref!(huff, values).decay(), i).read()) as u8);
-            elem!(data, pos.postfix_inc()).write(__rhs);
-            i.prefix_inc();
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < total_count) {
+                let __rhs = ((elem!(field_ref!(huff, values).decay(), i).read()) as u8);
+                elem!(data, pos.postfix_inc()).write(__rhs);
+                i.prefix_inc();
+            }
         }
         if huff.with(|__s| __s.is_last) {
             break;
@@ -10297,21 +10496,23 @@ pub fn EncodeDQT_246(
     mut state: Ptr<brunsli_internal_dec_SerializationState>,
 ) -> bool {
     let mut marker_len: i32 = 2;
-    let mut i: usize = (state.with(|__s| __s.dqt_index) as usize);
-    'loop_: while ({ i } < { (*jpg.upgrade().deref()).quant.len() }) {
-        let table: Ptr<brunsli_JPEGQuantTable> = field_ref!(jpg, quant).decay().offset(i);
-        marker_len += (1
-            + ({
-                (if (table.with(|__s| __s.precision) != 0) {
-                    2
-                } else {
-                    1
-                })
-            } * { kDCTBlockSize_3.with(|rc| *rc.borrow()) }));
-        if table.with(|__s| __s.is_last) {
-            break;
+    {
+        let mut i: usize = (state.with(|__s| __s.dqt_index) as usize);
+        'loop_: while ({ i } < { (*jpg.upgrade().deref()).quant.len() }) {
+            let table: Ptr<brunsli_JPEGQuantTable> = field_ref!(jpg, quant).decay().offset(i);
+            marker_len += (1
+                + ({
+                    (if (table.with(|__s| __s.precision) != 0) {
+                        2
+                    } else {
+                        1
+                    })
+                } * { kDCTBlockSize_3.with(|rc| *rc.borrow()) }));
+            if table.with(|__s| __s.is_last) {
+                break;
+            }
+            i.prefix_inc();
         }
-        i.prefix_inc();
     }
     {
         let __init = brunsli_internal_dec_OutputChunk::new_3({ Some(((marker_len + 2) as usize)) });
@@ -10341,21 +10542,23 @@ pub fn EncodeDQT_246(
             (({ (table.with(|__s| __s.precision) << 4_u32) } + { table.with(|__s| __s.index) })
                 as u8);
         elem!(data, pos.postfix_inc()).write(__rhs);
-        let mut i: usize = 0_usize;
-        'loop_: while (i < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
-            let mut val_idx: i32 = (({
-                let __idx0 = (i) as usize;
-                kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
-            }) as i32);
-            let mut val: i32 =
-                (elem!(field_ref!(table, values).decay(), (val_idx as usize)).read());
-            if (table.with(|__s| __s.precision) != 0) {
-                let __rhs = ((val >> 8_u32) as u8);
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
+                let mut val_idx: i32 = (({
+                    let __idx0 = (i) as usize;
+                    kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
+                }) as i32);
+                let mut val: i32 =
+                    (elem!(field_ref!(table, values).decay(), (val_idx as usize)).read());
+                if (table.with(|__s| __s.precision) != 0) {
+                    let __rhs = ((val >> 8_u32) as u8);
+                    elem!(data, pos.postfix_inc()).write(__rhs);
+                }
+                let __rhs = (((val as u32) & 255_u32) as u8);
                 elem!(data, pos.postfix_inc()).write(__rhs);
+                i.prefix_inc();
             }
-            let __rhs = (((val as u32) & 255_u32) as u8);
-            elem!(data, pos.postfix_inc()).write(__rhs);
-            i.prefix_inc();
         }
         if table.with(|__s| __s.is_last) {
             break;
@@ -10497,65 +10700,69 @@ pub fn EncodeDCTBlockSequential_252(
         });
     }
     let mut r: i32 = 0;
-    let mut k: i32 = 1;
-    'loop_: while (k < 64) {
-        if ((({
-            temp = {
-                (elem!(
-                    coeffs,
-                    ({
-                        let __idx0 = (k) as usize;
-                        kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
-                    })
-                )
-                .read())
-            };
-            temp
-        }) as i32)
-            == 0)
-        {
-            r.postfix_inc();
+    {
+        let mut k: i32 = 1;
+        'loop_: while (k < 64) {
+            if ((({
+                temp = {
+                    (elem!(
+                        coeffs,
+                        ({
+                            let __idx0 = (k) as usize;
+                            kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
+                        })
+                    )
+                    .read())
+                };
+                temp
+            }) as i32)
+                == 0)
+            {
+                r.postfix_inc();
+                k.prefix_inc();
+                continue 'loop_;
+            }
+            if ((temp as i32) < 0) {
+                temp = { (-(temp as i32) as i16) };
+                temp2 = (!(temp as i32) as i16);
+            } else {
+                temp2 = temp;
+            }
+            'loop_: while (r > 15) {
+                ({
+                    let _nbits: i32 = (array_elem!(ac_huff, depth, 240).read());
+                    let _bits: u64 = ((array_elem!(ac_huff, code, 240).read()) as u64);
+                    WriteBits_233((bw).clone(), _nbits, _bits)
+                });
+                r -= 16;
+            }
+            let mut ac_nbits: i32 = (({ Log2FloorNonZero_74((temp as u32)) }) + 1);
+            let mut symbol: i32 = ((r << 4_u32) + ac_nbits);
+            ({
+                let _nbits: i32 = (array_elem!(ac_huff, depth, symbol).read());
+                let _bits: u64 = ((array_elem!(ac_huff, code, symbol).read()) as u64);
+                WriteBits_233((bw).clone(), _nbits, _bits)
+            });
+            ({
+                let _nbits: i32 = ac_nbits;
+                let _bits: u64 = (((temp2 as i32) & ((1 << ac_nbits) - 1)) as u64);
+                WriteBits_233((bw).clone(), _nbits, _bits)
+            });
+            r = 0;
             k.prefix_inc();
-            continue 'loop_;
         }
-        if ((temp as i32) < 0) {
-            temp = { (-(temp as i32) as i16) };
-            temp2 = (!(temp as i32) as i16);
-        } else {
-            temp2 = temp;
-        }
-        'loop_: while (r > 15) {
+    }
+    {
+        let mut i: i32 = 0;
+        'loop_: while (i < num_zero_runs) {
             ({
                 let _nbits: i32 = (array_elem!(ac_huff, depth, 240).read());
                 let _bits: u64 = ((array_elem!(ac_huff, code, 240).read()) as u64);
                 WriteBits_233((bw).clone(), _nbits, _bits)
             });
             r -= 16;
+            i.prefix_inc();
         }
-        let mut ac_nbits: i32 = (({ Log2FloorNonZero_74((temp as u32)) }) + 1);
-        let mut symbol: i32 = ((r << 4_u32) + ac_nbits);
-        ({
-            let _nbits: i32 = (array_elem!(ac_huff, depth, symbol).read());
-            let _bits: u64 = ((array_elem!(ac_huff, code, symbol).read()) as u64);
-            WriteBits_233((bw).clone(), _nbits, _bits)
-        });
-        ({
-            let _nbits: i32 = ac_nbits;
-            let _bits: u64 = (((temp2 as i32) & ((1 << ac_nbits) - 1)) as u64);
-            WriteBits_233((bw).clone(), _nbits, _bits)
-        });
-        r = 0;
-        k.prefix_inc();
-    }
-    let mut i: i32 = 0;
-    'loop_: while (i < num_zero_runs) {
-        ({
-            let _nbits: i32 = (array_elem!(ac_huff, depth, 240).read());
-            let _bits: u64 = ((array_elem!(ac_huff, code, 240).read()) as u64);
-            WriteBits_233((bw).clone(), _nbits, _bits)
-        });
-        r -= 16;
-        i.prefix_inc();
     }
     if (r > 0) {
         ({
@@ -10613,75 +10820,79 @@ pub fn EncodeDCTBlockProgressive_253(
         return true;
     }
     let mut r: i32 = 0;
-    let mut k: i32 = Ss;
-    'loop_: while (k <= Se) {
-        if ((({
-            temp = {
-                (elem!(
-                    coeffs,
-                    ({
-                        let __idx0 = (k) as usize;
-                        kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
-                    })
-                )
-                .read())
-            };
-            temp
-        }) as i32)
-            == 0)
-        {
-            r.postfix_inc();
-            k.prefix_inc();
-            continue 'loop_;
-        }
-        if ((temp as i32) < 0) {
-            temp = { (-(temp as i32) as i16) };
-            temp = { ((temp as i32) >> Al) as i16 };
-            temp2 = (!(temp as i32) as i16);
-        } else {
-            temp = { ((temp as i32) >> Al) as i16 };
-            temp2 = temp;
-        }
-        if ((temp as i32) == 0) {
-            r.postfix_inc();
-            k.prefix_inc();
-            continue 'loop_;
-        }
-        ({ Flush_238((coding_state).clone(), (bw).clone()) });
-        'loop_: while (r > 15) {
+    {
+        let mut k: i32 = Ss;
+        'loop_: while (k <= Se) {
+            if ((({
+                temp = {
+                    (elem!(
+                        coeffs,
+                        ({
+                            let __idx0 = (k) as usize;
+                            kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
+                        })
+                    )
+                    .read())
+                };
+                temp
+            }) as i32)
+                == 0)
+            {
+                r.postfix_inc();
+                k.prefix_inc();
+                continue 'loop_;
+            }
+            if ((temp as i32) < 0) {
+                temp = { (-(temp as i32) as i16) };
+                temp = { ((temp as i32) >> Al) as i16 };
+                temp2 = (!(temp as i32) as i16);
+            } else {
+                temp = { ((temp as i32) >> Al) as i16 };
+                temp2 = temp;
+            }
+            if ((temp as i32) == 0) {
+                r.postfix_inc();
+                k.prefix_inc();
+                continue 'loop_;
+            }
+            ({ Flush_238((coding_state).clone(), (bw).clone()) });
+            'loop_: while (r > 15) {
+                ({
+                    let _nbits: i32 = (array_elem!(ac_huff, depth, 240).read());
+                    let _bits: u64 = ((array_elem!(ac_huff, code, 240).read()) as u64);
+                    WriteBits_233((bw).clone(), _nbits, _bits)
+                });
+                r -= 16;
+            }
+            let mut nbits: i32 = (({ Log2FloorNonZero_74((temp as u32)) }) + 1);
+            let mut symbol: i32 = ((r << 4_u32) + nbits);
             ({
-                let _nbits: i32 = (array_elem!(ac_huff, depth, 240).read());
-                let _bits: u64 = ((array_elem!(ac_huff, code, 240).read()) as u64);
+                let _nbits: i32 = (array_elem!(ac_huff, depth, symbol).read());
+                let _bits: u64 = ((array_elem!(ac_huff, code, symbol).read()) as u64);
                 WriteBits_233((bw).clone(), _nbits, _bits)
             });
-            r -= 16;
+            ({
+                let _nbits: i32 = nbits;
+                let _bits: u64 = (((temp2 as i32) & ((1 << nbits) - 1)) as u64);
+                WriteBits_233((bw).clone(), _nbits, _bits)
+            });
+            r = 0;
+            k.prefix_inc();
         }
-        let mut nbits: i32 = (({ Log2FloorNonZero_74((temp as u32)) }) + 1);
-        let mut symbol: i32 = ((r << 4_u32) + nbits);
-        ({
-            let _nbits: i32 = (array_elem!(ac_huff, depth, symbol).read());
-            let _bits: u64 = ((array_elem!(ac_huff, code, symbol).read()) as u64);
-            WriteBits_233((bw).clone(), _nbits, _bits)
-        });
-        ({
-            let _nbits: i32 = nbits;
-            let _bits: u64 = (((temp2 as i32) & ((1 << nbits) - 1)) as u64);
-            WriteBits_233((bw).clone(), _nbits, _bits)
-        });
-        r = 0;
-        k.prefix_inc();
     }
     if (num_zero_runs > 0) {
         ({ Flush_238((coding_state).clone(), (bw).clone()) });
-        let mut i: i32 = 0;
-        'loop_: while (i < num_zero_runs) {
-            ({
-                let _nbits: i32 = (array_elem!(ac_huff, depth, 240).read());
-                let _bits: u64 = ((array_elem!(ac_huff, code, 240).read()) as u64);
-                WriteBits_233((bw).clone(), _nbits, _bits)
-            });
-            r -= 16;
-            i.prefix_inc();
+        {
+            let mut i: i32 = 0;
+            'loop_: while (i < num_zero_runs) {
+                ({
+                    let _nbits: i32 = (array_elem!(ac_huff, depth, 240).read());
+                    let _bits: u64 = ((array_elem!(ac_huff, code, 240).read()) as u64);
+                    WriteBits_233((bw).clone(), _nbits, _bits)
+                });
+                r -= 16;
+                i.prefix_inc();
+            }
         }
     }
     if (r > 0) {
@@ -10725,97 +10936,105 @@ pub fn EncodeRefinementBits_254(
     }
     let mut abs_values: [i32; 64] = [0_i32; 64];
     let mut eob: i32 = 0;
-    let mut k: i32 = Ss;
-    'loop_: while (k <= Se) {
-        let mut abs_val: i16 = (((elem!(
-            coeffs,
-            ({
-                let __idx0 = (k) as usize;
-                kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
-            })
-        )
-        .read()) as i32)
-            .abs() as i16);
-        abs_values[(k) as usize] = ((abs_val as i32) >> Al);
-        if (abs_values[(k) as usize] == 1) {
-            eob = k;
+    {
+        let mut k: i32 = Ss;
+        'loop_: while (k <= Se) {
+            let mut abs_val: i16 = (((elem!(
+                coeffs,
+                ({
+                    let __idx0 = (k) as usize;
+                    kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
+                })
+            )
+            .read()) as i32)
+                .abs() as i16);
+            abs_values[(k) as usize] = ((abs_val as i32) >> Al);
+            if (abs_values[(k) as usize] == 1) {
+                eob = k;
+            }
+            k.postfix_inc();
         }
-        k.postfix_inc();
     }
     let mut r: i32 = 0;
     let refinement_bits: Value<Box<[i32]>> =
         Rc::new(RefCell::new((0..64).map(|_| 0_i32).collect::<Box<[i32]>>()));
     let mut refinement_bits_count: usize = 0_usize;
-    let mut k: i32 = Ss;
-    'loop_: while (k <= Se) {
-        if (abs_values[(k) as usize] == 0) {
-            r.postfix_inc();
-            k.postfix_inc();
-            continue 'loop_;
-        }
-        'loop_: while (r > 15) && (k <= eob) {
+    {
+        let mut k: i32 = Ss;
+        'loop_: while (k <= Se) {
+            if (abs_values[(k) as usize] == 0) {
+                r.postfix_inc();
+                k.postfix_inc();
+                continue 'loop_;
+            }
+            'loop_: while (r > 15) && (k <= eob) {
+                ({ Flush_238((coding_state).clone(), (bw).clone()) });
+                ({
+                    let _nbits: i32 = (array_elem!(ac_huff, depth, 240).read());
+                    let _bits: u64 = ((array_elem!(ac_huff, code, 240).read()) as u64);
+                    WriteBits_233((bw).clone(), _nbits, _bits)
+                });
+                r -= 16;
+                {
+                    let mut i: usize = 0_usize;
+                    'loop_: while (i < refinement_bits_count) {
+                        ({
+                            WriteBits_233(
+                                (bw).clone(),
+                                1,
+                                ((*refinement_bits.borrow())[(i) as usize] as u64),
+                            )
+                        });
+                        i.prefix_inc();
+                    }
+                }
+                refinement_bits_count = 0_usize;
+            }
+            if (abs_values[(k) as usize] > 1) {
+                (*refinement_bits.borrow_mut())[(refinement_bits_count.postfix_inc()) as usize] =
+                    (((abs_values[(k) as usize] as u32) & 1_u32) as i32);
+                k.postfix_inc();
+                continue 'loop_;
+            }
             ({ Flush_238((coding_state).clone(), (bw).clone()) });
+            let mut symbol: i32 = ((r << 4_u32) + 1);
+            let mut new_non_zero_bit: i32 = if (((elem!(
+                coeffs,
+                ({
+                    let __idx0 = (k) as usize;
+                    kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
+                })
+            )
+            .read()) as i32)
+                < 0)
+            {
+                0
+            } else {
+                1
+            };
             ({
-                let _nbits: i32 = (array_elem!(ac_huff, depth, 240).read());
-                let _bits: u64 = ((array_elem!(ac_huff, code, 240).read()) as u64);
+                let _nbits: i32 = (array_elem!(ac_huff, depth, symbol).read());
+                let _bits: u64 = ((array_elem!(ac_huff, code, symbol).read()) as u64);
                 WriteBits_233((bw).clone(), _nbits, _bits)
             });
-            r -= 16;
-            let mut i: usize = 0_usize;
-            'loop_: while (i < refinement_bits_count) {
-                ({
-                    WriteBits_233(
-                        (bw).clone(),
-                        1,
-                        ((*refinement_bits.borrow())[(i) as usize] as u64),
-                    )
-                });
-                i.prefix_inc();
+            ({ WriteBits_233((bw).clone(), 1, (new_non_zero_bit as u64)) });
+            {
+                let mut i: usize = 0_usize;
+                'loop_: while (i < refinement_bits_count) {
+                    ({
+                        WriteBits_233(
+                            (bw).clone(),
+                            1,
+                            ((*refinement_bits.borrow())[(i) as usize] as u64),
+                        )
+                    });
+                    i.prefix_inc();
+                }
             }
             refinement_bits_count = 0_usize;
-        }
-        if (abs_values[(k) as usize] > 1) {
-            (*refinement_bits.borrow_mut())[(refinement_bits_count.postfix_inc()) as usize] =
-                (((abs_values[(k) as usize] as u32) & 1_u32) as i32);
+            r = 0;
             k.postfix_inc();
-            continue 'loop_;
         }
-        ({ Flush_238((coding_state).clone(), (bw).clone()) });
-        let mut symbol: i32 = ((r << 4_u32) + 1);
-        let mut new_non_zero_bit: i32 = if (((elem!(
-            coeffs,
-            ({
-                let __idx0 = (k) as usize;
-                kJPEGNaturalOrder_13.with(|rc| rc.borrow()[__idx0])
-            })
-        )
-        .read()) as i32)
-            < 0)
-        {
-            0
-        } else {
-            1
-        };
-        ({
-            let _nbits: i32 = (array_elem!(ac_huff, depth, symbol).read());
-            let _bits: u64 = ((array_elem!(ac_huff, code, symbol).read()) as u64);
-            WriteBits_233((bw).clone(), _nbits, _bits)
-        });
-        ({ WriteBits_233((bw).clone(), 1, (new_non_zero_bit as u64)) });
-        let mut i: usize = 0_usize;
-        'loop_: while (i < refinement_bits_count) {
-            ({
-                WriteBits_233(
-                    (bw).clone(),
-                    1,
-                    ((*refinement_bits.borrow())[(i) as usize] as u64),
-                )
-            });
-            i.prefix_inc();
-        }
-        refinement_bits_count = 0_usize;
-        r = 0;
-        k.postfix_inc();
     }
     if (r > 0) || (refinement_bits_count != 0) {
         if !({
@@ -11007,123 +11226,149 @@ pub fn DoEncodeScan_255(
         } * { v_group })
     };
     'loop_: while ({ ss.with(|__s| __s.mcu_y) } < { last_mcu_y }) {
-        let mut mcu_x: i32 = 0;
-        'loop_: while (mcu_x < MCUs_per_row) {
-            if (restart_interval > 0) && (ss.with(|__s| __s.restarts_to_go) == 0) {
-                ({ Flush_238((coding_state).clone(), (bw).clone()) });
-                if !({
-                    let _pad_bits: Ptr<Ptr<i32>> = (field_ptr!(state, pad_bits));
-                    let _pad_bits_end: Ptr<i32> = state.with(|__s| __s.pad_bits_end.clone());
-                    JumpToByteBoundary_235((bw).clone(), _pad_bits, _pad_bits_end)
-                }) {
-                    return brunsli_internal_dec_SerializationStatus_ERROR;
-                }
-                ({ EmitMarker_234((bw).clone(), (208 + ss.with(|__s| __s.next_restart_marker))) });
-                {
-                    field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v + 1)
-                };
-                {
-                    field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v & 7)
-                };
-                field!(ss, restarts_to_go).write(restart_interval);
-                match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
-                    (mut __tmp_3,) => {
-                        __tmp_3.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
-                        (__tmp_3).clone()
+        {
+            let mut mcu_x: i32 = 0;
+            'loop_: while (mcu_x < MCUs_per_row) {
+                if (restart_interval > 0) && (ss.with(|__s| __s.restarts_to_go) == 0) {
+                    ({ Flush_238((coding_state).clone(), (bw).clone()) });
+                    if !({
+                        let _pad_bits: Ptr<Ptr<i32>> = (field_ptr!(state, pad_bits));
+                        let _pad_bits_end: Ptr<i32> = state.with(|__s| __s.pad_bits_end.clone());
+                        JumpToByteBoundary_235((bw).clone(), _pad_bits, _pad_bits_end)
+                    }) {
+                        return brunsli_internal_dec_SerializationStatus_ERROR;
                     }
-                };
-            }
-            let mut i: usize = 0_usize;
-            'loop_: while ({ i } < { scan_info.with(|__s| __s.num_components) }) {
-                let si: Ptr<brunsli_JPEGComponentScanInfo> =
-                    field_ref!(scan_info, components).decay().offset(i);
-                let c: Ptr<brunsli_JPEGComponent> = field_ref!(jpg, components)
-                    .decay()
-                    .offset((si.with(|__s| __s.comp_idx) as usize));
-                let dc_huff: Ptr<brunsli_HuffmanCodeTable> = field_ref!(state, dc_huff_table)
-                    .decay()
-                    .offset((si.with(|__s| __s.dc_tbl_idx) as usize));
-                let ac_huff: Ptr<brunsli_HuffmanCodeTable> = field_ref!(state, ac_huff_table)
-                    .decay()
-                    .offset((si.with(|__s| __s.ac_tbl_idx) as usize));
-                let mut n_blocks_y: i32 = if is_interleaved {
-                    c.with(|__s| __s.v_samp_factor)
-                } else {
-                    1
-                };
-                let mut n_blocks_x: i32 = if is_interleaved {
-                    c.with(|__s| __s.h_samp_factor)
-                } else {
-                    1
-                };
-                let mut iy: i32 = 0;
-                'loop_: while (iy < n_blocks_y) {
-                    let mut ix: i32 = 0;
-                    'loop_: while (ix < n_blocks_x) {
-                        let mut block_y: i32 =
-                            ({ ({ ss.with(|__s| __s.mcu_y) } * { n_blocks_y }) } + { iy });
-                        let mut block_x: i32 = ((mcu_x * n_blocks_x) + ix);
-                        let mut block_idx: i32 = ((((block_y as u32)
-                            .wrapping_mul(c.with(|__s| __s.width_in_blocks)))
-                        .wrapping_add((block_x as u32)))
-                            as i32);
-                        if ({ ss.with(|__s| __s.block_scan_index) } == {
-                            ss.with(|__s| __s.next_reset_point)
-                        }) {
-                            ({ Flush_238((coding_state).clone(), (bw).clone()) });
-                            field!(ss, next_reset_point)
-                                .write(({ (*get_next_reset_point.borrow()).call() }).clone());
+                    ({
+                        EmitMarker_234((bw).clone(), (208 + ss.with(|__s| __s.next_restart_marker)))
+                    });
+                    {
+                        field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v + 1)
+                    };
+                    {
+                        field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v & 7)
+                    };
+                    field!(ss, restarts_to_go).write(restart_interval);
+                    match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
+                        (mut __tmp_3,) => {
+                            __tmp_3.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
+                            (__tmp_3).clone()
                         }
-                        let mut num_zero_runs: i32 = 0;
-                        if ({ ss.with(|__s| __s.block_scan_index) } == {
-                            ss.with(|__s| __s.next_extra_zero_run_index)
-                        }) {
-                            num_zero_runs = vec_elem!(
-                                scan_info,
-                                extra_zero_runs,
-                                ss.with(|__s| __s.extra_zero_runs_pos)
-                            )
-                            .with(|__s| __s.num_extra_zero_runs);
-                            field!(ss, extra_zero_runs_pos).with_mut(|__v| __v.prefix_inc());
-                            field!(ss, next_extra_zero_run_index).write(
-                                ({ (*get_next_extra_zero_run_index.borrow()).call() }).clone(),
-                            );
-                        }
-                        let mut coeffs: Ptr<i16> = (field_ref!(c, coeffs)
+                    };
+                }
+                {
+                    let mut i: usize = 0_usize;
+                    'loop_: while ({ i } < { scan_info.with(|__s| __s.num_components) }) {
+                        let si: Ptr<brunsli_JPEGComponentScanInfo> =
+                            field_ref!(scan_info, components).decay().offset(i);
+                        let c: Ptr<brunsli_JPEGComponent> = field_ref!(jpg, components)
                             .decay()
-                            .offset(((block_idx << 6) as usize)));
-                        let mut ok: bool = false;
+                            .offset((si.with(|__s| __s.comp_idx) as usize));
+                        let dc_huff: Ptr<brunsli_HuffmanCodeTable> =
+                            field_ref!(state, dc_huff_table)
+                                .decay()
+                                .offset((si.with(|__s| __s.dc_tbl_idx) as usize));
+                        let ac_huff: Ptr<brunsli_HuffmanCodeTable> =
+                            field_ref!(state, ac_huff_table)
+                                .decay()
+                                .offset((si.with(|__s| __s.ac_tbl_idx) as usize));
+                        let mut n_blocks_y: i32 = if is_interleaved {
+                            c.with(|__s| __s.v_samp_factor)
+                        } else {
+                            1
+                        };
+                        let mut n_blocks_x: i32 = if is_interleaved {
+                            c.with(|__s| __s.h_samp_factor)
+                        } else {
+                            1
+                        };
                         {
-                            ok = ({
-                                let _coeffs: Ptr<i16> = (coeffs).clone();
-                                let _dc_huff: Ptr<brunsli_HuffmanCodeTable> = (dc_huff).clone();
-                                let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                let _num_zero_runs: i32 = num_zero_runs;
-                                let _last_dc_coeff: Ptr<i16> = array_field_ptr!(ss, last_dc_coeff)
-                                    .offset((si.with(|__s| __s.comp_idx) as i32) as isize);
-                                let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                EncodeDCTBlockSequential_252(
-                                    _coeffs,
-                                    _dc_huff,
-                                    _ac_huff,
-                                    _num_zero_runs,
-                                    _last_dc_coeff,
-                                    _bw,
-                                )
-                            });
+                            let mut iy: i32 = 0;
+                            'loop_: while (iy < n_blocks_y) {
+                                {
+                                    let mut ix: i32 = 0;
+                                    'loop_: while (ix < n_blocks_x) {
+                                        let mut block_y: i32 =
+                                            ({ ({ ss.with(|__s| __s.mcu_y) } * { n_blocks_y }) }
+                                                + { iy });
+                                        let mut block_x: i32 = ((mcu_x * n_blocks_x) + ix);
+                                        let mut block_idx: i32 = ((((block_y as u32)
+                                            .wrapping_mul(c.with(|__s| __s.width_in_blocks)))
+                                        .wrapping_add((block_x as u32)))
+                                            as i32);
+                                        if ({ ss.with(|__s| __s.block_scan_index) } == {
+                                            ss.with(|__s| __s.next_reset_point)
+                                        }) {
+                                            ({ Flush_238((coding_state).clone(), (bw).clone()) });
+                                            field!(ss, next_reset_point).write(
+                                                ({ (*get_next_reset_point.borrow()).call() })
+                                                    .clone(),
+                                            );
+                                        }
+                                        let mut num_zero_runs: i32 = 0;
+                                        if ({ ss.with(|__s| __s.block_scan_index) } == {
+                                            ss.with(|__s| __s.next_extra_zero_run_index)
+                                        }) {
+                                            num_zero_runs = vec_elem!(
+                                                scan_info,
+                                                extra_zero_runs,
+                                                ss.with(|__s| __s.extra_zero_runs_pos)
+                                            )
+                                            .with(|__s| __s.num_extra_zero_runs);
+                                            field!(ss, extra_zero_runs_pos)
+                                                .with_mut(|__v| __v.prefix_inc());
+                                            field!(ss, next_extra_zero_run_index).write(
+                                                ({
+                                                    (*get_next_extra_zero_run_index.borrow()).call()
+                                                })
+                                                .clone(),
+                                            );
+                                        }
+                                        let mut coeffs: Ptr<i16> = (field_ref!(c, coeffs)
+                                            .decay()
+                                            .offset(((block_idx << 6) as usize)));
+                                        let mut ok: bool = false;
+                                        {
+                                            ok = ({
+                                                let _coeffs: Ptr<i16> = (coeffs).clone();
+                                                let _dc_huff: Ptr<brunsli_HuffmanCodeTable> =
+                                                    (dc_huff).clone();
+                                                let _ac_huff: Ptr<brunsli_HuffmanCodeTable> =
+                                                    (ac_huff).clone();
+                                                let _num_zero_runs: i32 = num_zero_runs;
+                                                let _last_dc_coeff: Ptr<i16> =
+                                                    array_field_ptr!(ss, last_dc_coeff).offset(
+                                                        (si.with(|__s| __s.comp_idx) as i32)
+                                                            as isize,
+                                                    );
+                                                let _bw: Ptr<brunsli_internal_dec_BitWriter> =
+                                                    (bw).clone();
+                                                EncodeDCTBlockSequential_252(
+                                                    _coeffs,
+                                                    _dc_huff,
+                                                    _ac_huff,
+                                                    _num_zero_runs,
+                                                    _last_dc_coeff,
+                                                    _bw,
+                                                )
+                                            });
+                                        }
+                                        if !(ok) {
+                                            return brunsli_internal_dec_SerializationStatus_ERROR;
+                                        }
+                                        field!(ss, block_scan_index)
+                                            .with_mut(|__v| __v.prefix_inc());
+                                        ix.prefix_inc();
+                                    }
+                                }
+                                iy.prefix_inc();
+                            }
                         }
-                        if !(ok) {
-                            return brunsli_internal_dec_SerializationStatus_ERROR;
-                        }
-                        field!(ss, block_scan_index).with_mut(|__v| __v.prefix_inc());
-                        ix.prefix_inc();
+                        i.prefix_inc();
                     }
-                    iy.prefix_inc();
                 }
-                i.prefix_inc();
+                field!(ss, restarts_to_go).with_mut(|__v| __v.prefix_dec());
+                mcu_x.prefix_inc();
             }
-            field!(ss, restarts_to_go).with_mut(|__v| __v.prefix_dec());
-            mcu_x.prefix_inc();
         }
         field!(ss, mcu_y).with_mut(|__v| __v.prefix_inc());
     }
@@ -11321,135 +11566,161 @@ pub fn DoEncodeScan_256(
         } * { v_group })
     };
     'loop_: while ({ ss.with(|__s| __s.mcu_y) } < { last_mcu_y }) {
-        let mut mcu_x: i32 = 0;
-        'loop_: while (mcu_x < MCUs_per_row) {
-            if (restart_interval > 0) && (ss.with(|__s| __s.restarts_to_go) == 0) {
-                ({ Flush_238((coding_state).clone(), (bw).clone()) });
-                if !({
-                    let _pad_bits: Ptr<Ptr<i32>> = (field_ptr!(state, pad_bits));
-                    let _pad_bits_end: Ptr<i32> = state.with(|__s| __s.pad_bits_end.clone());
-                    JumpToByteBoundary_235((bw).clone(), _pad_bits, _pad_bits_end)
-                }) {
-                    return brunsli_internal_dec_SerializationStatus_ERROR;
-                }
-                ({ EmitMarker_234((bw).clone(), (208 + ss.with(|__s| __s.next_restart_marker))) });
-                {
-                    field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v + 1)
-                };
-                {
-                    field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v & 7)
-                };
-                field!(ss, restarts_to_go).write(restart_interval);
-                match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
-                    (mut __tmp_5,) => {
-                        __tmp_5.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
-                        (__tmp_5).clone()
+        {
+            let mut mcu_x: i32 = 0;
+            'loop_: while (mcu_x < MCUs_per_row) {
+                if (restart_interval > 0) && (ss.with(|__s| __s.restarts_to_go) == 0) {
+                    ({ Flush_238((coding_state).clone(), (bw).clone()) });
+                    if !({
+                        let _pad_bits: Ptr<Ptr<i32>> = (field_ptr!(state, pad_bits));
+                        let _pad_bits_end: Ptr<i32> = state.with(|__s| __s.pad_bits_end.clone());
+                        JumpToByteBoundary_235((bw).clone(), _pad_bits, _pad_bits_end)
+                    }) {
+                        return brunsli_internal_dec_SerializationStatus_ERROR;
                     }
-                };
-            }
-            let mut i: usize = 0_usize;
-            'loop_: while ({ i } < { scan_info.with(|__s| __s.num_components) }) {
-                let si: Ptr<brunsli_JPEGComponentScanInfo> =
-                    field_ref!(scan_info, components).decay().offset(i);
-                let c: Ptr<brunsli_JPEGComponent> = field_ref!(jpg, components)
-                    .decay()
-                    .offset((si.with(|__s| __s.comp_idx) as usize));
-                let dc_huff: Ptr<brunsli_HuffmanCodeTable> = field_ref!(state, dc_huff_table)
-                    .decay()
-                    .offset((si.with(|__s| __s.dc_tbl_idx) as usize));
-                let ac_huff: Ptr<brunsli_HuffmanCodeTable> = field_ref!(state, ac_huff_table)
-                    .decay()
-                    .offset((si.with(|__s| __s.ac_tbl_idx) as usize));
-                let mut n_blocks_y: i32 = if is_interleaved {
-                    c.with(|__s| __s.v_samp_factor)
-                } else {
-                    1
-                };
-                let mut n_blocks_x: i32 = if is_interleaved {
-                    c.with(|__s| __s.h_samp_factor)
-                } else {
-                    1
-                };
-                let mut iy: i32 = 0;
-                'loop_: while (iy < n_blocks_y) {
-                    let mut ix: i32 = 0;
-                    'loop_: while (ix < n_blocks_x) {
-                        let mut block_y: i32 =
-                            ({ ({ ss.with(|__s| __s.mcu_y) } * { n_blocks_y }) } + { iy });
-                        let mut block_x: i32 = ((mcu_x * n_blocks_x) + ix);
-                        let mut block_idx: i32 = ((((block_y as u32)
-                            .wrapping_mul(c.with(|__s| __s.width_in_blocks)))
-                        .wrapping_add((block_x as u32)))
-                            as i32);
-                        if ({ ss.with(|__s| __s.block_scan_index) } == {
-                            ss.with(|__s| __s.next_reset_point)
-                        }) {
-                            ({ Flush_238((coding_state).clone(), (bw).clone()) });
-                            field!(ss, next_reset_point)
-                                .write(({ (*get_next_reset_point.borrow()).call() }).clone());
+                    ({
+                        EmitMarker_234((bw).clone(), (208 + ss.with(|__s| __s.next_restart_marker)))
+                    });
+                    {
+                        field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v + 1)
+                    };
+                    {
+                        field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v & 7)
+                    };
+                    field!(ss, restarts_to_go).write(restart_interval);
+                    match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
+                        (mut __tmp_5,) => {
+                            __tmp_5.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
+                            (__tmp_5).clone()
                         }
-                        let mut num_zero_runs: i32 = 0;
-                        if ({ ss.with(|__s| __s.block_scan_index) } == {
-                            ss.with(|__s| __s.next_extra_zero_run_index)
-                        }) {
-                            num_zero_runs = vec_elem!(
-                                scan_info,
-                                extra_zero_runs,
-                                ss.with(|__s| __s.extra_zero_runs_pos)
-                            )
-                            .with(|__s| __s.num_extra_zero_runs);
-                            field!(ss, extra_zero_runs_pos).with_mut(|__v| __v.prefix_inc());
-                            field!(ss, next_extra_zero_run_index).write(
-                                ({ (*get_next_extra_zero_run_index.borrow()).call() }).clone(),
-                            );
-                        }
-                        let mut coeffs: Ptr<i16> = (field_ref!(c, coeffs)
+                    };
+                }
+                {
+                    let mut i: usize = 0_usize;
+                    'loop_: while ({ i } < { scan_info.with(|__s| __s.num_components) }) {
+                        let si: Ptr<brunsli_JPEGComponentScanInfo> =
+                            field_ref!(scan_info, components).decay().offset(i);
+                        let c: Ptr<brunsli_JPEGComponent> = field_ref!(jpg, components)
                             .decay()
-                            .offset(((block_idx << 6) as usize)));
-                        let mut ok: bool = false;
+                            .offset((si.with(|__s| __s.comp_idx) as usize));
+                        let dc_huff: Ptr<brunsli_HuffmanCodeTable> =
+                            field_ref!(state, dc_huff_table)
+                                .decay()
+                                .offset((si.with(|__s| __s.dc_tbl_idx) as usize));
+                        let ac_huff: Ptr<brunsli_HuffmanCodeTable> =
+                            field_ref!(state, ac_huff_table)
+                                .decay()
+                                .offset((si.with(|__s| __s.ac_tbl_idx) as usize));
+                        let mut n_blocks_y: i32 = if is_interleaved {
+                            c.with(|__s| __s.v_samp_factor)
+                        } else {
+                            1
+                        };
+                        let mut n_blocks_x: i32 = if is_interleaved {
+                            c.with(|__s| __s.h_samp_factor)
+                        } else {
+                            1
+                        };
                         {
-                            {
-                                ok = ({
-                                    let _coeffs: Ptr<i16> = (coeffs).clone();
-                                    let _dc_huff: Ptr<brunsli_HuffmanCodeTable> = (dc_huff).clone();
-                                    let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                    let _Ss: i32 = Ss;
-                                    let _Se: i32 = Se;
-                                    let _Al: i32 = Al;
-                                    let _num_zero_runs: i32 = num_zero_runs;
-                                    let _coding_state: Ptr<brunsli_internal_dec_DCTCodingState> =
-                                        (coding_state).clone();
-                                    let _last_dc_coeff: Ptr<i16> =
-                                        array_field_ptr!(ss, last_dc_coeff)
-                                            .offset((si.with(|__s| __s.comp_idx) as i32) as isize);
-                                    let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                    EncodeDCTBlockProgressive_253(
-                                        _coeffs,
-                                        _dc_huff,
-                                        _ac_huff,
-                                        _Ss,
-                                        _Se,
-                                        _Al,
-                                        _num_zero_runs,
-                                        _coding_state,
-                                        _last_dc_coeff,
-                                        _bw,
-                                    )
-                                });
+                            let mut iy: i32 = 0;
+                            'loop_: while (iy < n_blocks_y) {
+                                {
+                                    let mut ix: i32 = 0;
+                                    'loop_: while (ix < n_blocks_x) {
+                                        let mut block_y: i32 =
+                                            ({ ({ ss.with(|__s| __s.mcu_y) } * { n_blocks_y }) }
+                                                + { iy });
+                                        let mut block_x: i32 = ((mcu_x * n_blocks_x) + ix);
+                                        let mut block_idx: i32 = ((((block_y as u32)
+                                            .wrapping_mul(c.with(|__s| __s.width_in_blocks)))
+                                        .wrapping_add((block_x as u32)))
+                                            as i32);
+                                        if ({ ss.with(|__s| __s.block_scan_index) } == {
+                                            ss.with(|__s| __s.next_reset_point)
+                                        }) {
+                                            ({ Flush_238((coding_state).clone(), (bw).clone()) });
+                                            field!(ss, next_reset_point).write(
+                                                ({ (*get_next_reset_point.borrow()).call() })
+                                                    .clone(),
+                                            );
+                                        }
+                                        let mut num_zero_runs: i32 = 0;
+                                        if ({ ss.with(|__s| __s.block_scan_index) } == {
+                                            ss.with(|__s| __s.next_extra_zero_run_index)
+                                        }) {
+                                            num_zero_runs = vec_elem!(
+                                                scan_info,
+                                                extra_zero_runs,
+                                                ss.with(|__s| __s.extra_zero_runs_pos)
+                                            )
+                                            .with(|__s| __s.num_extra_zero_runs);
+                                            field!(ss, extra_zero_runs_pos)
+                                                .with_mut(|__v| __v.prefix_inc());
+                                            field!(ss, next_extra_zero_run_index).write(
+                                                ({
+                                                    (*get_next_extra_zero_run_index.borrow()).call()
+                                                })
+                                                .clone(),
+                                            );
+                                        }
+                                        let mut coeffs: Ptr<i16> = (field_ref!(c, coeffs)
+                                            .decay()
+                                            .offset(((block_idx << 6) as usize)));
+                                        let mut ok: bool = false;
+                                        {
+                                            {
+                                                ok = ({
+                                                    let _coeffs: Ptr<i16> = (coeffs).clone();
+                                                    let _dc_huff: Ptr<brunsli_HuffmanCodeTable> =
+                                                        (dc_huff).clone();
+                                                    let _ac_huff: Ptr<brunsli_HuffmanCodeTable> =
+                                                        (ac_huff).clone();
+                                                    let _Ss: i32 = Ss;
+                                                    let _Se: i32 = Se;
+                                                    let _Al: i32 = Al;
+                                                    let _num_zero_runs: i32 = num_zero_runs;
+                                                    let _coding_state: Ptr<
+                                                        brunsli_internal_dec_DCTCodingState,
+                                                    > = (coding_state).clone();
+                                                    let _last_dc_coeff: Ptr<i16> =
+                                                        array_field_ptr!(ss, last_dc_coeff).offset(
+                                                            (si.with(|__s| __s.comp_idx) as i32)
+                                                                as isize,
+                                                        );
+                                                    let _bw: Ptr<brunsli_internal_dec_BitWriter> =
+                                                        (bw).clone();
+                                                    EncodeDCTBlockProgressive_253(
+                                                        _coeffs,
+                                                        _dc_huff,
+                                                        _ac_huff,
+                                                        _Ss,
+                                                        _Se,
+                                                        _Al,
+                                                        _num_zero_runs,
+                                                        _coding_state,
+                                                        _last_dc_coeff,
+                                                        _bw,
+                                                    )
+                                                });
+                                            }
+                                        }
+                                        if !(ok) {
+                                            return brunsli_internal_dec_SerializationStatus_ERROR;
+                                        }
+                                        field!(ss, block_scan_index)
+                                            .with_mut(|__v| __v.prefix_inc());
+                                        ix.prefix_inc();
+                                    }
+                                }
+                                iy.prefix_inc();
                             }
                         }
-                        if !(ok) {
-                            return brunsli_internal_dec_SerializationStatus_ERROR;
-                        }
-                        field!(ss, block_scan_index).with_mut(|__v| __v.prefix_inc());
-                        ix.prefix_inc();
+                        i.prefix_inc();
                     }
-                    iy.prefix_inc();
                 }
-                i.prefix_inc();
+                field!(ss, restarts_to_go).with_mut(|__v| __v.prefix_dec());
+                mcu_x.prefix_inc();
             }
-            field!(ss, restarts_to_go).with_mut(|__v| __v.prefix_dec());
-            mcu_x.prefix_inc();
         }
         field!(ss, mcu_y).with_mut(|__v| __v.prefix_inc());
     }
@@ -11647,127 +11918,150 @@ pub fn DoEncodeScan_257(
         } * { v_group })
     };
     'loop_: while ({ ss.with(|__s| __s.mcu_y) } < { last_mcu_y }) {
-        let mut mcu_x: i32 = 0;
-        'loop_: while (mcu_x < MCUs_per_row) {
-            if (restart_interval > 0) && (ss.with(|__s| __s.restarts_to_go) == 0) {
-                ({ Flush_238((coding_state).clone(), (bw).clone()) });
-                if !({
-                    let _pad_bits: Ptr<Ptr<i32>> = (field_ptr!(state, pad_bits));
-                    let _pad_bits_end: Ptr<i32> = state.with(|__s| __s.pad_bits_end.clone());
-                    JumpToByteBoundary_235((bw).clone(), _pad_bits, _pad_bits_end)
-                }) {
-                    return brunsli_internal_dec_SerializationStatus_ERROR;
-                }
-                ({ EmitMarker_234((bw).clone(), (208 + ss.with(|__s| __s.next_restart_marker))) });
-                {
-                    field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v + 1)
-                };
-                {
-                    field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v & 7)
-                };
-                field!(ss, restarts_to_go).write(restart_interval);
-                match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
-                    (mut __tmp_7,) => {
-                        __tmp_7.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
-                        (__tmp_7).clone()
+        {
+            let mut mcu_x: i32 = 0;
+            'loop_: while (mcu_x < MCUs_per_row) {
+                if (restart_interval > 0) && (ss.with(|__s| __s.restarts_to_go) == 0) {
+                    ({ Flush_238((coding_state).clone(), (bw).clone()) });
+                    if !({
+                        let _pad_bits: Ptr<Ptr<i32>> = (field_ptr!(state, pad_bits));
+                        let _pad_bits_end: Ptr<i32> = state.with(|__s| __s.pad_bits_end.clone());
+                        JumpToByteBoundary_235((bw).clone(), _pad_bits, _pad_bits_end)
+                    }) {
+                        return brunsli_internal_dec_SerializationStatus_ERROR;
                     }
-                };
-            }
-            let mut i: usize = 0_usize;
-            'loop_: while ({ i } < { scan_info.with(|__s| __s.num_components) }) {
-                let si: Ptr<brunsli_JPEGComponentScanInfo> =
-                    field_ref!(scan_info, components).decay().offset(i);
-                let c: Ptr<brunsli_JPEGComponent> = field_ref!(jpg, components)
-                    .decay()
-                    .offset((si.with(|__s| __s.comp_idx) as usize));
-                let dc_huff: Ptr<brunsli_HuffmanCodeTable> = field_ref!(state, dc_huff_table)
-                    .decay()
-                    .offset((si.with(|__s| __s.dc_tbl_idx) as usize));
-                let ac_huff: Ptr<brunsli_HuffmanCodeTable> = field_ref!(state, ac_huff_table)
-                    .decay()
-                    .offset((si.with(|__s| __s.ac_tbl_idx) as usize));
-                let mut n_blocks_y: i32 = if is_interleaved {
-                    c.with(|__s| __s.v_samp_factor)
-                } else {
-                    1
-                };
-                let mut n_blocks_x: i32 = if is_interleaved {
-                    c.with(|__s| __s.h_samp_factor)
-                } else {
-                    1
-                };
-                let mut iy: i32 = 0;
-                'loop_: while (iy < n_blocks_y) {
-                    let mut ix: i32 = 0;
-                    'loop_: while (ix < n_blocks_x) {
-                        let mut block_y: i32 =
-                            ({ ({ ss.with(|__s| __s.mcu_y) } * { n_blocks_y }) } + { iy });
-                        let mut block_x: i32 = ((mcu_x * n_blocks_x) + ix);
-                        let mut block_idx: i32 = ((((block_y as u32)
-                            .wrapping_mul(c.with(|__s| __s.width_in_blocks)))
-                        .wrapping_add((block_x as u32)))
-                            as i32);
-                        if ({ ss.with(|__s| __s.block_scan_index) } == {
-                            ss.with(|__s| __s.next_reset_point)
-                        }) {
-                            ({ Flush_238((coding_state).clone(), (bw).clone()) });
-                            field!(ss, next_reset_point)
-                                .write(({ (*get_next_reset_point.borrow()).call() }).clone());
+                    ({
+                        EmitMarker_234((bw).clone(), (208 + ss.with(|__s| __s.next_restart_marker)))
+                    });
+                    {
+                        field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v + 1)
+                    };
+                    {
+                        field!(ss, next_restart_marker).with_mut(|__v| *__v = *__v & 7)
+                    };
+                    field!(ss, restarts_to_go).write(restart_interval);
+                    match ({ (array_field_ptr!(ss, last_dc_coeff)).to_any() },) {
+                        (mut __tmp_7,) => {
+                            __tmp_7.memset((0) as u8, ::std::mem::size_of::<[i16; 4]>());
+                            (__tmp_7).clone()
                         }
-                        let mut num_zero_runs: i32 = 0;
-                        if ({ ss.with(|__s| __s.block_scan_index) } == {
-                            ss.with(|__s| __s.next_extra_zero_run_index)
-                        }) {
-                            num_zero_runs = vec_elem!(
-                                scan_info,
-                                extra_zero_runs,
-                                ss.with(|__s| __s.extra_zero_runs_pos)
-                            )
-                            .with(|__s| __s.num_extra_zero_runs);
-                            field!(ss, extra_zero_runs_pos).with_mut(|__v| __v.prefix_inc());
-                            field!(ss, next_extra_zero_run_index).write(
-                                ({ (*get_next_extra_zero_run_index.borrow()).call() }).clone(),
-                            );
-                        }
-                        let mut coeffs: Ptr<i16> = (field_ref!(c, coeffs)
+                    };
+                }
+                {
+                    let mut i: usize = 0_usize;
+                    'loop_: while ({ i } < { scan_info.with(|__s| __s.num_components) }) {
+                        let si: Ptr<brunsli_JPEGComponentScanInfo> =
+                            field_ref!(scan_info, components).decay().offset(i);
+                        let c: Ptr<brunsli_JPEGComponent> = field_ref!(jpg, components)
                             .decay()
-                            .offset(((block_idx << 6) as usize)));
-                        let mut ok: bool = false;
+                            .offset((si.with(|__s| __s.comp_idx) as usize));
+                        let dc_huff: Ptr<brunsli_HuffmanCodeTable> =
+                            field_ref!(state, dc_huff_table)
+                                .decay()
+                                .offset((si.with(|__s| __s.dc_tbl_idx) as usize));
+                        let ac_huff: Ptr<brunsli_HuffmanCodeTable> =
+                            field_ref!(state, ac_huff_table)
+                                .decay()
+                                .offset((si.with(|__s| __s.ac_tbl_idx) as usize));
+                        let mut n_blocks_y: i32 = if is_interleaved {
+                            c.with(|__s| __s.v_samp_factor)
+                        } else {
+                            1
+                        };
+                        let mut n_blocks_x: i32 = if is_interleaved {
+                            c.with(|__s| __s.h_samp_factor)
+                        } else {
+                            1
+                        };
                         {
-                            {
-                                ok = ({
-                                    let _coeffs: Ptr<i16> = (coeffs).clone();
-                                    let _ac_huff: Ptr<brunsli_HuffmanCodeTable> = (ac_huff).clone();
-                                    let _Ss: i32 = Ss;
-                                    let _Se: i32 = Se;
-                                    let _Al: i32 = Al;
-                                    let _coding_state: Ptr<brunsli_internal_dec_DCTCodingState> =
-                                        (coding_state).clone();
-                                    let _bw: Ptr<brunsli_internal_dec_BitWriter> = (bw).clone();
-                                    EncodeRefinementBits_254(
-                                        _coeffs,
-                                        _ac_huff,
-                                        _Ss,
-                                        _Se,
-                                        _Al,
-                                        _coding_state,
-                                        _bw,
-                                    )
-                                });
+                            let mut iy: i32 = 0;
+                            'loop_: while (iy < n_blocks_y) {
+                                {
+                                    let mut ix: i32 = 0;
+                                    'loop_: while (ix < n_blocks_x) {
+                                        let mut block_y: i32 =
+                                            ({ ({ ss.with(|__s| __s.mcu_y) } * { n_blocks_y }) }
+                                                + { iy });
+                                        let mut block_x: i32 = ((mcu_x * n_blocks_x) + ix);
+                                        let mut block_idx: i32 = ((((block_y as u32)
+                                            .wrapping_mul(c.with(|__s| __s.width_in_blocks)))
+                                        .wrapping_add((block_x as u32)))
+                                            as i32);
+                                        if ({ ss.with(|__s| __s.block_scan_index) } == {
+                                            ss.with(|__s| __s.next_reset_point)
+                                        }) {
+                                            ({ Flush_238((coding_state).clone(), (bw).clone()) });
+                                            field!(ss, next_reset_point).write(
+                                                ({ (*get_next_reset_point.borrow()).call() })
+                                                    .clone(),
+                                            );
+                                        }
+                                        let mut num_zero_runs: i32 = 0;
+                                        if ({ ss.with(|__s| __s.block_scan_index) } == {
+                                            ss.with(|__s| __s.next_extra_zero_run_index)
+                                        }) {
+                                            num_zero_runs = vec_elem!(
+                                                scan_info,
+                                                extra_zero_runs,
+                                                ss.with(|__s| __s.extra_zero_runs_pos)
+                                            )
+                                            .with(|__s| __s.num_extra_zero_runs);
+                                            field!(ss, extra_zero_runs_pos)
+                                                .with_mut(|__v| __v.prefix_inc());
+                                            field!(ss, next_extra_zero_run_index).write(
+                                                ({
+                                                    (*get_next_extra_zero_run_index.borrow()).call()
+                                                })
+                                                .clone(),
+                                            );
+                                        }
+                                        let mut coeffs: Ptr<i16> = (field_ref!(c, coeffs)
+                                            .decay()
+                                            .offset(((block_idx << 6) as usize)));
+                                        let mut ok: bool = false;
+                                        {
+                                            {
+                                                ok = ({
+                                                    let _coeffs: Ptr<i16> = (coeffs).clone();
+                                                    let _ac_huff: Ptr<brunsli_HuffmanCodeTable> =
+                                                        (ac_huff).clone();
+                                                    let _Ss: i32 = Ss;
+                                                    let _Se: i32 = Se;
+                                                    let _Al: i32 = Al;
+                                                    let _coding_state: Ptr<
+                                                        brunsli_internal_dec_DCTCodingState,
+                                                    > = (coding_state).clone();
+                                                    let _bw: Ptr<brunsli_internal_dec_BitWriter> =
+                                                        (bw).clone();
+                                                    EncodeRefinementBits_254(
+                                                        _coeffs,
+                                                        _ac_huff,
+                                                        _Ss,
+                                                        _Se,
+                                                        _Al,
+                                                        _coding_state,
+                                                        _bw,
+                                                    )
+                                                });
+                                            }
+                                        }
+                                        if !(ok) {
+                                            return brunsli_internal_dec_SerializationStatus_ERROR;
+                                        }
+                                        field!(ss, block_scan_index)
+                                            .with_mut(|__v| __v.prefix_inc());
+                                        ix.prefix_inc();
+                                    }
+                                }
+                                iy.prefix_inc();
                             }
                         }
-                        if !(ok) {
-                            return brunsli_internal_dec_SerializationStatus_ERROR;
-                        }
-                        field!(ss, block_scan_index).with_mut(|__v| __v.prefix_inc());
-                        ix.prefix_inc();
+                        i.prefix_inc();
                     }
-                    iy.prefix_inc();
                 }
-                i.prefix_inc();
+                field!(ss, restarts_to_go).with_mut(|__v| __v.prefix_dec());
+                mcu_x.prefix_inc();
             }
-            field!(ss, restarts_to_go).with_mut(|__v| __v.prefix_dec());
-            mcu_x.prefix_inc();
         }
         field!(ss, mcu_y).with_mut(|__v| __v.prefix_inc());
     }
@@ -12597,20 +12891,24 @@ pub trait brunsli_ANSDecodingDataImpl {
 impl brunsli_ANSDecodingDataImpl for Ptr<brunsli_ANSDecodingData> {
     fn Init(&self, counts: Ptr<Vec<u32>>) -> bool {
         let mut pos: usize = 0_usize;
-        let mut i: usize = 0_usize;
-        'loop_: while ({ i } < { (*counts.upgrade().deref()).len() }) {
-            let mut j: usize = 0_usize;
-            'loop_: while ({ j } < { ((index!(counts, i).read()) as usize) }) {
-                field!(array_elem!((*self), map_, pos), symbol_).write((i as u8));
-                let __rhs = ((index!(counts, i).read()) as u16);
-                field!(array_elem!((*self), map_, pos), freq_).write(__rhs);
-                field!(array_elem!((*self), map_, pos), offset_).write((j as u16));
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while ({ i } < { (*counts.upgrade().deref()).len() }) {
                 {
-                    j.prefix_inc();
-                    pos.prefix_inc()
-                };
+                    let mut j: usize = 0_usize;
+                    'loop_: while ({ j } < { ((index!(counts, i).read()) as usize) }) {
+                        field!(array_elem!((*self), map_, pos), symbol_).write((i as u8));
+                        let __rhs = ((index!(counts, i).read()) as u16);
+                        field!(array_elem!((*self), map_, pos), freq_).write(__rhs);
+                        field!(array_elem!((*self), map_, pos), offset_).write((j as u16));
+                        {
+                            j.prefix_inc();
+                            pos.prefix_inc()
+                        };
+                    }
+                }
+                i.prefix_inc();
             }
-            i.prefix_inc();
         }
         return (pos == (BRUNSLI_ANS_TAB_SIZE_1.with(|rc| *rc.borrow()) as usize));
     }
@@ -12992,99 +13290,114 @@ impl brunsli_ComponentStateImpl for Ptr<brunsli_ComponentState> {
         }
     }
     fn InitAll(&self) {
-        let mut i: i32 = 0;
-        'loop_: while (i < (kNumNonzeroBuckets_90.with(|rc| *rc.borrow()) as i32)) {
-            let mut k: i32 = 0;
-            'loop_: while (k < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
-                let mut v: i32 = ((({
-                    let __idx0 = (k) as usize;
-                    kInitProb_110.with(|rc| rc.borrow()[__idx0])
-                }) as i32)
-                    + (9 * (i - 7)));
-                if !(v <= 255) {
+        {
+            let mut i: i32 = 0;
+            'loop_: while (i < (kNumNonzeroBuckets_90.with(|rc| *rc.borrow()) as i32)) {
+                {
+                    let mut k: i32 = 0;
+                    'loop_: while (k < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
+                        let mut v: i32 = ((({
+                            let __idx0 = (k) as usize;
+                            kInitProb_110.with(|rc| rc.borrow()[__idx0])
+                        }) as i32)
+                            + (9 * (i - 7)));
+                        if !(v <= 255) {
+                            ({
+                                BrunsliDumpAndAbort_79(
+                                    Ptr::<i8>::from_string_literal(b"context.cc"),
+                                    227,
+                                    Ptr::<i8>::from_string_literal(b"InitAll"),
+                                )
+                            });
+                            'loop_: while true {}
+                        };
+                        ({
+                            brunsli_ProbImpl::Init(
+                                &field_ref!((*self), is_zero_prob).decay().offset(
+                                    (((i * kDCTBlockSize_3.with(|rc| *rc.borrow())) + k) as usize),
+                                ),
+                                (v as u8),
+                            )
+                        });
+                        k.prefix_inc();
+                    }
+                }
+                i.prefix_inc();
+            }
+        }
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < (*(*self).upgrade().deref()).sign_prob.len()) {
+                if (i
+                    < (kMaxAverageContext_82.with(|rc| *rc.borrow()))
+                        .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)))
+                {
                     ({
-                        BrunsliDumpAndAbort_79(
-                            Ptr::<i8>::from_string_literal(b"context.cc"),
-                            227,
-                            Ptr::<i8>::from_string_literal(b"InitAll"),
+                        brunsli_ProbImpl::Init(
+                            &field_ref!((*self), sign_prob).decay().offset(i),
+                            108_u8,
                         )
                     });
-                    'loop_: while true {}
-                };
-                ({
-                    brunsli_ProbImpl::Init(
-                        &field_ref!((*self), is_zero_prob)
-                            .decay()
-                            .offset((((i * kDCTBlockSize_3.with(|rc| *rc.borrow())) + k) as usize)),
-                        (v as u8),
-                    )
-                });
-                k.prefix_inc();
-            }
-            i.prefix_inc();
-        }
-        let mut i: usize = 0_usize;
-        'loop_: while (i < (*(*self).upgrade().deref()).sign_prob.len()) {
-            if (i
-                < (kMaxAverageContext_82.with(|rc| *rc.borrow()))
-                    .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)))
-            {
-                ({
-                    brunsli_ProbImpl::Init(
-                        &field_ref!((*self), sign_prob).decay().offset(i),
-                        108_u8,
-                    )
-                });
-            } else if (i
-                < (((kMaxAverageContext_82.with(|rc| *rc.borrow())).wrapping_add(1_usize))
-                    as usize)
-                    .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)))
-            {
-                ({
-                    brunsli_ProbImpl::Init(
-                        &field_ref!((*self), sign_prob).decay().offset(i),
-                        128_u8,
-                    )
-                });
-            } else {
-                ({
-                    brunsli_ProbImpl::Init(
-                        &field_ref!((*self), sign_prob).decay().offset(i),
-                        148_u8,
-                    )
-                });
-            }
-            i.prefix_inc();
-        }
-        let mut i: usize = 0_usize;
-        'loop_: while (i < (*(*self).upgrade().deref()).first_extra_bit_prob.len()) {
-            ({
-                brunsli_ProbImpl::Init(
-                    &field_ref!((*self), first_extra_bit_prob).decay().offset(i),
-                    158_u8,
-                )
-            });
-            i.prefix_inc();
-        }
-        let mut i: usize = 0_usize;
-        'loop_: while (i < kNumNonZeroContextCount_88.with(|rc| *rc.borrow())) {
-            let mut non_zero_probs: Ptr<brunsli_Prob> = array_field_ptr!((*self), num_nonzero_prob)
-                .offset(
-                    ((i).wrapping_mul(kNumNonZeroTreeSize_85.with(|rc| *rc.borrow()))) as isize,
-                );
-            let mut j: usize = 0_usize;
-            'loop_: while (j < kNumNonZeroTreeSize_85.with(|rc| *rc.borrow())) {
-                ({
-                    let _probability: u8 = ({
-                        let __idx0 = (i) as usize;
-                        let __idx1 = (j) as usize;
-                        kInitProbNonzero_111.with(|rc| rc.borrow()[__idx0][__idx1])
+                } else if (i
+                    < (((kMaxAverageContext_82.with(|rc| *rc.borrow())).wrapping_add(1_usize))
+                        as usize)
+                        .wrapping_mul((kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)))
+                {
+                    ({
+                        brunsli_ProbImpl::Init(
+                            &field_ref!((*self), sign_prob).decay().offset(i),
+                            128_u8,
+                        )
                     });
-                    brunsli_ProbImpl::Init(&non_zero_probs.offset((j) as isize), _probability)
-                });
-                j.prefix_inc();
+                } else {
+                    ({
+                        brunsli_ProbImpl::Init(
+                            &field_ref!((*self), sign_prob).decay().offset(i),
+                            148_u8,
+                        )
+                    });
+                }
+                i.prefix_inc();
             }
-            i.prefix_inc();
+        }
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < (*(*self).upgrade().deref()).first_extra_bit_prob.len()) {
+                ({
+                    brunsli_ProbImpl::Init(
+                        &field_ref!((*self), first_extra_bit_prob).decay().offset(i),
+                        158_u8,
+                    )
+                });
+                i.prefix_inc();
+            }
+        }
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < kNumNonZeroContextCount_88.with(|rc| *rc.borrow())) {
+                let mut non_zero_probs: Ptr<brunsli_Prob> =
+                    array_field_ptr!((*self), num_nonzero_prob).offset(
+                        ((i).wrapping_mul(kNumNonZeroTreeSize_85.with(|rc| *rc.borrow()))) as isize,
+                    );
+                {
+                    let mut j: usize = 0_usize;
+                    'loop_: while (j < kNumNonZeroTreeSize_85.with(|rc| *rc.borrow())) {
+                        ({
+                            let _probability: u8 = ({
+                                let __idx0 = (i) as usize;
+                                let __idx1 = (j) as usize;
+                                kInitProbNonzero_111.with(|rc| rc.borrow()[__idx0][__idx1])
+                            });
+                            brunsli_ProbImpl::Init(
+                                &non_zero_probs.offset((j) as isize),
+                                _probability,
+                            )
+                        });
+                        j.prefix_inc();
+                    }
+                }
+                i.prefix_inc();
+            }
         }
     }
 }
@@ -13140,30 +13453,41 @@ impl brunsli_ComponentStateDCImpl for Ptr<brunsli_ComponentStateDC> {
     }
     fn InitAll(&self) {
         ({ brunsli_ProbImpl::Init(&field_ptr!((*self), is_zero_prob), 135_u8) });
-        let mut i: usize = 0_usize;
-        'loop_: while (i < (*(*self).upgrade().deref()).sign_prob.len()) {
-            ({ brunsli_ProbImpl::Init(&field_ref!((*self), sign_prob).decay().offset(i), 128_u8) });
-            i.prefix_inc();
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < (*(*self).upgrade().deref()).sign_prob.len()) {
+                ({
+                    brunsli_ProbImpl::Init(
+                        &field_ref!((*self), sign_prob).decay().offset(i),
+                        128_u8,
+                    )
+                });
+                i.prefix_inc();
+            }
         }
-        let mut i: usize = 0_usize;
-        'loop_: while (i < (*(*self).upgrade().deref()).is_empty_block_prob.len()) {
-            ({
-                brunsli_ProbImpl::Init(
-                    &field_ref!((*self), is_empty_block_prob).decay().offset(i),
-                    74_u8,
-                )
-            });
-            i.prefix_inc();
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < (*(*self).upgrade().deref()).is_empty_block_prob.len()) {
+                ({
+                    brunsli_ProbImpl::Init(
+                        &field_ref!((*self), is_empty_block_prob).decay().offset(i),
+                        74_u8,
+                    )
+                });
+                i.prefix_inc();
+            }
         }
-        let mut i: usize = 0_usize;
-        'loop_: while (i < (*(*self).upgrade().deref()).first_extra_bit_prob.len()) {
-            ({
-                brunsli_ProbImpl::Init(
-                    &field_ref!((*self), first_extra_bit_prob).decay().offset(i),
-                    150_u8,
-                )
-            });
-            i.prefix_inc();
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < (*(*self).upgrade().deref()).first_extra_bit_prob.len()) {
+                ({
+                    brunsli_ProbImpl::Init(
+                        &field_ref!((*self), first_extra_bit_prob).decay().offset(i),
+                        150_u8,
+                    )
+                });
+                i.prefix_inc();
+            }
         }
     }
 }
@@ -13233,23 +13557,27 @@ impl brunsli_HuffmanDecodingDataImpl for Ptr<brunsli_HuffmanDecodingData> {
         ])));
         let mut space: i32 = 32;
         let mut num_codes: i32 = 0;
-        let mut i: usize = (simple_code_or_skip as usize);
-        'loop_: while (i < (kCodeLengthCodes_213.with(|rc| *rc.borrow()) as usize)) && (space > 0) {
-            let mut code_len_idx: i32 = (({
-                let __idx0 = (i) as usize;
-                kCodeLengthCodeOrder_214.with(|rc| rc.borrow()[__idx0])
-            }) as i32);
-            let mut p: Ptr<brunsli_HuffmanCode> = huff_220.with(|v| v.decay());
-            let mut v: u8 = 0_u8;
-            p += ({ BrunsliBitReaderGet_124((br).clone(), 4_u32) });
-            ({ BrunsliBitReaderDrop_125((br).clone(), (p.with(|__s| __s.bits) as u32)) });
-            v = (p.with(|__s| __s.value) as u8);
-            (*code_length_code_lengths.borrow_mut())[(code_len_idx) as usize] = v;
-            if ((v as i32) != 0) {
-                space = { ((space as u32).wrapping_sub((32_u32 >> (v as i32)))) as i32 };
-                num_codes.prefix_inc();
+        {
+            let mut i: usize = (simple_code_or_skip as usize);
+            'loop_: while (i < (kCodeLengthCodes_213.with(|rc| *rc.borrow()) as usize))
+                && (space > 0)
+            {
+                let mut code_len_idx: i32 = (({
+                    let __idx0 = (i) as usize;
+                    kCodeLengthCodeOrder_214.with(|rc| rc.borrow()[__idx0])
+                }) as i32);
+                let mut p: Ptr<brunsli_HuffmanCode> = huff_220.with(|v| v.decay());
+                let mut v: u8 = 0_u8;
+                p += ({ BrunsliBitReaderGet_124((br).clone(), 4_u32) });
+                ({ BrunsliBitReaderDrop_125((br).clone(), (p.with(|__s| __s.bits) as u32)) });
+                v = (p.with(|__s| __s.value) as u8);
+                (*code_length_code_lengths.borrow_mut())[(code_len_idx) as usize] = v;
+                if ((v as i32) != 0) {
+                    space = { ((space as u32).wrapping_sub((32_u32 >> (v as i32)))) as i32 };
+                    num_codes.prefix_inc();
+                }
+                i.prefix_inc();
             }
-            i.prefix_inc();
         }
         let mut ok: bool = ((num_codes == 1) || (space == 0))
             && ({
@@ -13267,10 +13595,12 @@ impl brunsli_HuffmanDecodingDataImpl for Ptr<brunsli_HuffmanDecodingData> {
             0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
             0_u16, 0_u16, 0_u16, 0_u16,
         ])));
-        let mut i: usize = 0_usize;
-        'loop_: while (i < alphabet_size) {
-            (*counts.borrow_mut())[({ (*code_lengths.borrow())[i] }) as usize].prefix_inc();
-            i.prefix_inc();
+        {
+            let mut i: usize = 0_usize;
+            'loop_: while (i < alphabet_size) {
+                (*counts.borrow_mut())[({ (*code_lengths.borrow())[i] }) as usize].prefix_inc();
+                i.prefix_inc();
+            }
         }
         ({
             brunsli_Arena_brunsli_HuffmanCode_Impl::reserve(
@@ -13455,11 +13785,10 @@ pub trait brunsli_PermutationCoderImpl {
     fn move_assign(&self, _a0: Ptr<brunsli_PermutationCoder>) -> Ptr<brunsli_PermutationCoder>;
 }
 impl brunsli_PermutationCoderImpl for Ptr<brunsli_PermutationCoder> {
-    fn Init(&self, values: Vec<u8>) {
-        let values: Value<Vec<u8>> = Rc::new(RefCell::new(values));
+    fn Init(&self, mut values: Vec<u8>) {
         field_ref!((*self), values_)
             .as_pointer()
-            .write(({ std::mem::take(&mut (*values.borrow_mut())) }));
+            .write(std::mem::take(&mut values));
     }
     fn Clear(&self) {
         Rc::new(RefCell::new(Vec::new()))

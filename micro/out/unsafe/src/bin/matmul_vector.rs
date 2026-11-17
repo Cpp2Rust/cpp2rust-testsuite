@@ -12,19 +12,26 @@ pub unsafe fn matmul_0(
     c: *mut Vec<Vec<i32>>,
     mut n: i32,
 ) {
-    let mut i: i32 = 0;
-    'loop_: while ((i) < (n)) {
-        let mut k: i32 = 0;
-        'loop_: while ((k) < (n)) {
-            let mut j: i32 = 0;
-            'loop_: while ((j) < (n)) {
-                (&mut (*c))[(i as usize)][(j as usize)] +=
-                    (((&(*a))[(i as usize)][(k as usize)]) * ((&(*b))[(k as usize)][(j as usize)]));
-                j.prefix_inc();
+    {
+        let mut i: i32 = 0;
+        'loop_: while ((i) < (n)) {
+            {
+                let mut k: i32 = 0;
+                'loop_: while ((k) < (n)) {
+                    {
+                        let mut j: i32 = 0;
+                        'loop_: while ((j) < (n)) {
+                            (&mut (*c))[(i as usize)][(j as usize)] += (((&(*a))[(i as usize)]
+                                [(k as usize)])
+                                * ((&(*b))[(k as usize)][(j as usize)]));
+                            j.prefix_inc();
+                        }
+                    }
+                    k.prefix_inc();
+                }
             }
-            k.prefix_inc();
+            i.prefix_inc();
         }
-        i.prefix_inc();
     }
 }
 pub fn main() {
@@ -37,53 +44,65 @@ unsafe fn main_0() -> i32 {
     let mut N: i32 = 400;
     let mut a: Vec<Vec<i32>> = Vec::new();
     let mut b: Vec<Vec<i32>> = Vec::new();
-    let mut i: i32 = 0;
-    'loop_: while ((i) < (N)) {
-        {
-            let __a1 = (0..(N as usize) as usize)
-                .map(|_| 0_i32)
-                .collect::<Vec<_>>();
-            a.push(__a1)
-        };
-        {
-            let __a1 = (0..(N as usize) as usize)
-                .map(|_| 0_i32)
-                .collect::<Vec<_>>();
-            b.push(__a1)
-        };
-        let mut j: i32 = 0;
-        'loop_: while ((j) < (N)) {
-            a[(i as usize)][(j as usize)] = (((i) + (j)) % (7));
-            b[(i as usize)][(j as usize)] = (((i) * (j)) % (5));
-            j.prefix_inc();
-        }
-        i.prefix_inc();
-    }
-    let mut sum: i64 = 0_i64;
-    let mut r: i32 = 0;
-    'loop_: while ((r) < (5)) {
-        let mut c: Vec<Vec<i32>> = Vec::new();
+    {
         let mut i: i32 = 0;
         'loop_: while ((i) < (N)) {
             {
                 let __a1 = (0..(N as usize) as usize)
                     .map(|_| 0_i32)
                     .collect::<Vec<_>>();
-                c.push(__a1)
+                a.push(__a1)
             };
-            i.prefix_inc();
-        }
-        (unsafe { matmul_0(&a, &b, &mut c, N) });
-        let mut i: i32 = 0;
-        'loop_: while ((i) < (N)) {
-            let mut j: i32 = 0;
-            'loop_: while ((j) < (N)) {
-                sum += (c[(i as usize)][(j as usize)] as i64);
-                j.prefix_inc();
+            {
+                let __a1 = (0..(N as usize) as usize)
+                    .map(|_| 0_i32)
+                    .collect::<Vec<_>>();
+                b.push(__a1)
+            };
+            {
+                let mut j: i32 = 0;
+                'loop_: while ((j) < (N)) {
+                    a[(i as usize)][(j as usize)] = (((i) + (j)) % (7));
+                    b[(i as usize)][(j as usize)] = (((i) * (j)) % (5));
+                    j.prefix_inc();
+                }
             }
             i.prefix_inc();
         }
-        r.prefix_inc();
+    }
+    let mut sum: i64 = 0_i64;
+    {
+        let mut r: i32 = 0;
+        'loop_: while ((r) < (5)) {
+            let mut c: Vec<Vec<i32>> = Vec::new();
+            {
+                let mut i: i32 = 0;
+                'loop_: while ((i) < (N)) {
+                    {
+                        let __a1 = (0..(N as usize) as usize)
+                            .map(|_| 0_i32)
+                            .collect::<Vec<_>>();
+                        c.push(__a1)
+                    };
+                    i.prefix_inc();
+                }
+            }
+            (unsafe { matmul_0(&a, &b, &mut c, N) });
+            {
+                let mut i: i32 = 0;
+                'loop_: while ((i) < (N)) {
+                    {
+                        let mut j: i32 = 0;
+                        'loop_: while ((j) < (N)) {
+                            sum += (c[(i as usize)][(j as usize)] as i64);
+                            j.prefix_inc();
+                        }
+                    }
+                    i.prefix_inc();
+                }
+            }
+            r.prefix_inc();
+        }
     }
     write!((*libcc2rs::cout_unsafe()), "{:}\n", sum,);
     return 0;

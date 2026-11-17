@@ -7,23 +7,27 @@ use std::io::{Read, Seek, Write};
 use std::os::fd::AsFd;
 use std::rc::{Rc, Weak};
 pub fn is_prime_0(mut x: i32) -> bool {
-    let mut i: i32 = 2;
-    'loop_: while (i < x) {
-        if ((x % i) == 0) {
-            return false;
+    {
+        let mut i: i32 = 2;
+        'loop_: while (i < x) {
+            if ((x % i) == 0) {
+                return false;
+            }
+            i.prefix_inc();
         }
-        i.prefix_inc();
     }
     return true;
 }
 pub fn largest_prime_1(mut n: i32) -> i32 {
     let mut max: i32 = -1_i32;
-    let mut i: i32 = 0;
-    'loop_: while (i < n) {
-        if ({ is_prime_0(i) }) {
-            max = i;
+    {
+        let mut i: i32 = 0;
+        'loop_: while (i < n) {
+            if ({ is_prime_0(i) }) {
+                max = i;
+            }
+            i.prefix_inc();
         }
-        i.prefix_inc();
     }
     return max;
 }

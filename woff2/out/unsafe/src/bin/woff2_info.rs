@@ -481,24 +481,26 @@ pub unsafe fn Read255UShort_12(mut buf: *mut woff2_Buffer, mut value: *mut u32) 
 }
 pub unsafe fn ReadBase128_17(mut buf: *mut woff2_Buffer, mut value: *mut u32) -> bool {
     let mut result: u32 = 0_u32;
-    let mut i: usize = 0_usize;
-    'loop_: while ((i) < (5_usize)) {
-        let mut code: u8 = 0_u8;
-        if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
-            return false;
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while ((i) < (5_usize)) {
+            let mut code: u8 = 0_u8;
+            if !(unsafe { woff2_Buffer::ReadU8(&mut (*buf), (&mut code as *mut u8)) }) {
+                return false;
+            }
+            if ((i) == (0_usize)) && ((code as i32) == (128)) {
+                return false;
+            }
+            if (((result) & (4261412864_u32)) != 0) {
+                return false;
+            }
+            result = (((result) << (7)) | (((code as i32) & (127)) as u32));
+            if (((code as i32) & (128)) == (0)) {
+                (*value) = result;
+                return true;
+            }
+            i.prefix_inc();
         }
-        if ((i) == (0_usize)) && ((code as i32) == (128)) {
-            return false;
-        }
-        if (((result) & (4261412864_u32)) != 0) {
-            return false;
-        }
-        result = (((result) << (7)) | (((code as i32) & (127)) as u32));
-        if (((code as i32) & (128)) == (0)) {
-            (*value) = result;
-            return true;
-        }
-        i.prefix_inc();
     }
     return false;
 }
@@ -512,16 +514,18 @@ pub unsafe fn Base128Size_18(mut n: usize) -> usize {
 }
 pub unsafe fn StoreBase128_19(mut len: usize, mut offset: *mut usize, mut dst: *mut u8) {
     let mut size: usize = (unsafe { Base128Size_18(len) });
-    let mut i: usize = 0_usize;
-    'loop_: while ((i) < (size)) {
-        let mut b: i32 = ((((len)
-            >> ((7_usize).wrapping_mul((((size).wrapping_sub(i)).wrapping_sub(1_usize)))))
-            & (127_usize)) as i32);
-        if ((i) < ((size).wrapping_sub(1_usize))) {
-            b |= 128;
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while ((i) < (size)) {
+            let mut b: i32 = ((((len)
+                >> ((7_usize).wrapping_mul((((size).wrapping_sub(i)).wrapping_sub(1_usize)))))
+                & (127_usize)) as i32);
+            if ((i) < ((size).wrapping_sub(1_usize))) {
+                b |= 128;
+            }
+            (*dst.offset(((*offset).postfix_inc()) as isize)) = (b as u8);
+            i.prefix_inc();
         }
-        (*dst.offset(((*offset).postfix_inc()) as isize)) = (b as u8);
-        i.prefix_inc();
     }
 }
 static mut kWordCode_13: std::cell::LazyCell<i32> = std::cell::LazyCell::new(|| unsafe { 253 });
@@ -601,25 +605,29 @@ pub unsafe fn Log2Floor_25(mut n: u32) -> i32 {
 pub unsafe fn ComputeULongSum_26(mut buf: *const u8, mut size: usize) -> u32 {
     let mut checksum: u32 = 0_u32;
     let mut aligned_size: usize = ((size) & (!3 as usize));
-    let mut i: usize = 0_usize;
-    'loop_: while ((i) < (aligned_size)) {
-        checksum = (checksum).wrapping_add(
-            (((((((*buf.offset((i) as isize)) as i32) << (24))
-                | (((*buf.offset(((i).wrapping_add(1_usize)) as isize)) as i32) << (16)))
-                | (((*buf.offset(((i).wrapping_add(2_usize)) as isize)) as i32) << (8)))
-                | ((*buf.offset(((i).wrapping_add(3_usize)) as isize)) as i32))
-                as u32),
-        );
-        i = (i).wrapping_add(4_usize);
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while ((i) < (aligned_size)) {
+            checksum = (checksum).wrapping_add(
+                (((((((*buf.offset((i) as isize)) as i32) << (24))
+                    | (((*buf.offset(((i).wrapping_add(1_usize)) as isize)) as i32) << (16)))
+                    | (((*buf.offset(((i).wrapping_add(2_usize)) as isize)) as i32) << (8)))
+                    | ((*buf.offset(((i).wrapping_add(3_usize)) as isize)) as i32))
+                    as u32),
+            );
+            i = (i).wrapping_add(4_usize);
+        }
     }
     if ((size) != (aligned_size)) {
         let mut v: u32 = 0_u32;
-        let mut i: usize = aligned_size;
-        'loop_: while ((i) < (size)) {
-            v |= ((((*buf.offset((i) as isize)) as i32)
-                << ((24_usize).wrapping_sub((8_usize).wrapping_mul(((i) & (3_usize))))))
-                as u32);
-            i.prefix_inc();
+        {
+            let mut i: usize = aligned_size;
+            'loop_: while ((i) < (size)) {
+                v |= ((((*buf.offset((i) as isize)) as i32)
+                    << ((24_usize).wrapping_sub((8_usize).wrapping_mul(((i) & (3_usize))))))
+                    as u32);
+                i.prefix_inc();
+            }
         }
         checksum = (checksum).wrapping_add(v);
     }
@@ -884,32 +892,38 @@ pub unsafe fn ReadTrueTypeFont_33(
         return false;
     }
     let mut intervals: UnsafeMap<u32, (u32, u32)> = UnsafeMap::new();
-    let mut i: u16 = 0_u16;
-    'loop_: while ((i as i32) < ((*font).num_tables as i32)) {
-        let mut table: woff2_Font_Table = <woff2_Font_Table>::default();
-        table.flag_byte = 0_u8;
-        table.reuse_of = std::ptr::null_mut();
-        if (((!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut table.tag as *mut u32)) }))
-            || (!(unsafe {
-                woff2_Buffer::ReadU32(&mut (*file), (&mut table.checksum as *mut u32))
-            })))
-            || (!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut table.offset as *mut u32)) })))
-            || (!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut table.length as *mut u32)) }))
-        {
-            return false;
+    {
+        let mut i: u16 = 0_u16;
+        'loop_: while ((i as i32) < ((*font).num_tables as i32)) {
+            let mut table: woff2_Font_Table = <woff2_Font_Table>::default();
+            table.flag_byte = 0_u8;
+            table.reuse_of = std::ptr::null_mut();
+            if (((!(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut table.tag as *mut u32)) }))
+                || (!(unsafe {
+                    woff2_Buffer::ReadU32(&mut (*file), (&mut table.checksum as *mut u32))
+                })))
+                || (!(unsafe {
+                    woff2_Buffer::ReadU32(&mut (*file), (&mut table.offset as *mut u32))
+                })))
+                || (!(unsafe {
+                    woff2_Buffer::ReadU32(&mut (*file), (&mut table.length as *mut u32))
+                }))
+            {
+                return false;
+            }
+            if ((((table.offset) & (3_u32)) != (0_u32)) || ((table.length as usize) > (len)))
+                || (((len).wrapping_sub((table.length as usize))) < (table.offset as usize))
+            {
+                return false;
+            }
+            (*intervals.subscript(&table.offset)) = table.length;
+            table.data = data.offset((table.offset) as isize);
+            if (*font).tables.find(&table.tag) != (*font).tables.end() {
+                return false;
+            }
+            (*(*font).tables.subscript(&table.tag)) = (table).clone();
+            i.prefix_inc();
         }
-        if ((((table.offset) & (3_u32)) != (0_u32)) || ((table.length as usize) > (len)))
-            || (((len).wrapping_sub((table.length as usize))) < (table.offset as usize))
-        {
-            return false;
-        }
-        (*intervals.subscript(&table.offset)) = table.length;
-        table.data = data.offset((table.offset) as isize);
-        if (*font).tables.find(&table.tag) != (*font).tables.end() {
-            return false;
-        }
-        (*(*font).tables.subscript(&table.tag)) = (table).clone();
-        i.prefix_inc();
     }
     let mut last_offset: u32 = (((12_u64 as u64)
         .wrapping_add((16_u64 as u64).wrapping_mul(((*font).num_tables as u64))))
@@ -978,17 +992,19 @@ pub unsafe fn ReadTrueTypeCollection_35(
         return false;
     }
     let mut offsets: Vec<u32> = Vec::new();
-    let mut i: usize = 0_usize;
-    'loop_: while ((i) < (num_fonts as usize)) {
-        let mut offset: u32 = 0_u32;
-        if !(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut offset as *mut u32)) }) {
-            return false;
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while ((i) < (num_fonts as usize)) {
+            let mut offset: u32 = 0_u32;
+            if !(unsafe { woff2_Buffer::ReadU32(&mut (*file), (&mut offset as *mut u32)) }) {
+                return false;
+            }
+            {
+                let a0_clone = offset.clone();
+                offsets.push(a0_clone)
+            };
+            i.postfix_inc();
         }
-        {
-            let a0_clone = offset.clone();
-            offsets.push(a0_clone)
-        };
-        i.postfix_inc();
     }
     {
         let __a0 = offsets.len();
@@ -1269,30 +1285,34 @@ pub unsafe fn WriteFontCollection_44(
         )
     });
     let mut offset_table: usize = offset;
-    let mut i: usize = 0_usize;
-    'loop_: while ((i) < ((*font_collection).fonts.len())) {
-        (unsafe { StoreU32_30(0_u32, (&mut offset as *mut usize), dst) });
-        i.postfix_inc();
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while ((i) < ((*font_collection).fonts.len())) {
+            (unsafe { StoreU32_30(0_u32, (&mut offset as *mut usize), dst) });
+            i.postfix_inc();
+        }
     }
     if (((*font_collection).header_version) == (131072_u32)) {
         (unsafe { StoreU32_30(0_u32, (&mut offset as *mut usize), dst) });
         (unsafe { StoreU32_30(0_u32, (&mut offset as *mut usize), dst) });
         (unsafe { StoreU32_30(0_u32, (&mut offset as *mut usize), dst) });
     }
-    let mut i: usize = 0_usize;
-    'loop_: while ((i) < ((*font_collection).fonts.len())) {
-        let font: *const woff2_Font = &(&(*font_collection)).fonts[(i)];
-        (unsafe { StoreU32_30((offset as u32), (&mut offset_table as *mut usize), dst) });
-        if !(unsafe {
-            let _font: *const woff2_Font = font;
-            let _offset: *mut usize = (&mut offset as *mut usize);
-            let _dst: *mut u8 = dst;
-            let _dst_size: usize = dst_size;
-            WriteFont_41(_font, _offset, _dst, _dst_size)
-        }) {
-            return false;
+    {
+        let mut i: usize = 0_usize;
+        'loop_: while ((i) < ((*font_collection).fonts.len())) {
+            let font: *const woff2_Font = &(&(*font_collection)).fonts[(i)];
+            (unsafe { StoreU32_30((offset as u32), (&mut offset_table as *mut usize), dst) });
+            if !(unsafe {
+                let _font: *const woff2_Font = font;
+                let _offset: *mut usize = (&mut offset as *mut usize);
+                let _dst: *mut u8 = dst;
+                let _dst_size: usize = dst_size;
+                WriteFont_41(_font, _offset, _dst, _dst_size)
+            }) {
+                return false;
+            }
+            i.postfix_inc();
         }
-        i.postfix_inc();
     }
     return true;
 }
@@ -1698,51 +1718,65 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
             c"Entry offset flags tag  origLength txLength\n".as_ptr() as *const libc::c_char
         )
     });
-    let mut i: i32 = 0;
-    'loop_: while ((i) < (num_tables as i32)) {
-        let mut offset: usize = (unsafe { woff2_Buffer::offset(&file) });
-        let mut flags: u8 = 0_u8;
-        let mut tag: u32 = 0_u32;
-        let mut origLength: u32 = 0_u32;
-        let mut transformLength: u32 = 0_u32;
-        if !(unsafe { woff2_Buffer::ReadU8(&mut file, (&mut flags as *mut u8)) }) {
-            return 1;
-        }
-        if (((flags as i32) & (63)) == (63)) {
-            if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut tag as *mut u32)) }) {
+    {
+        let mut i: i32 = 0;
+        'loop_: while ((i) < (num_tables as i32)) {
+            let mut offset: usize = (unsafe { woff2_Buffer::offset(&file) });
+            let mut flags: u8 = 0_u8;
+            let mut tag: u32 = 0_u32;
+            let mut origLength: u32 = 0_u32;
+            let mut transformLength: u32 = 0_u32;
+            if !(unsafe { woff2_Buffer::ReadU8(&mut file, (&mut flags as *mut u8)) }) {
                 return 1;
             }
-        } else {
-            tag = (*std::cell::LazyCell::force_mut(&mut *&raw mut kKnownTags_8))
-                [((flags as i32) & (63)) as usize];
-        }
-        {
-            let a0_clone = tag.clone();
-            table_tags.push(a0_clone)
-        };
-        if !(unsafe {
-            ReadBase128_17(
-                (&mut file as *mut woff2_Buffer),
-                (&mut origLength as *mut u32),
-            )
-        }) {
-            return 1;
-        }
-        (unsafe {
-            libc::printf(
-                c"%5d %6zu  0x%02x %s %10d".as_ptr() as *const libc::c_char,
-                (i),
-                (offset),
-                (flags as i32),
-                ((unsafe { PrintTag_51((tag as i32)) }).as_ptr()),
-                (origLength),
-            )
-        });
-        let mut xform_version: u8 = ((((flags as i32) >> (6)) & (3)) as u8);
-        if ((tag) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)))
-            || ((tag) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)))
-        {
-            if ((xform_version as i32) == (0)) {
+            if (((flags as i32) & (63)) == (63)) {
+                if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut tag as *mut u32)) }) {
+                    return 1;
+                }
+            } else {
+                tag = (*std::cell::LazyCell::force_mut(&mut *&raw mut kKnownTags_8))
+                    [((flags as i32) & (63)) as usize];
+            }
+            {
+                let a0_clone = tag.clone();
+                table_tags.push(a0_clone)
+            };
+            if !(unsafe {
+                ReadBase128_17(
+                    (&mut file as *mut woff2_Buffer),
+                    (&mut origLength as *mut u32),
+                )
+            }) {
+                return 1;
+            }
+            (unsafe {
+                libc::printf(
+                    c"%5d %6zu  0x%02x %s %10d".as_ptr() as *const libc::c_char,
+                    (i),
+                    (offset),
+                    (flags as i32),
+                    ((unsafe { PrintTag_51((tag as i32)) }).as_ptr()),
+                    (origLength),
+                )
+            });
+            let mut xform_version: u8 = ((((flags as i32) >> (6)) & (3)) as u8);
+            if ((tag) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)))
+                || ((tag) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)))
+            {
+                if ((xform_version as i32) == (0)) {
+                    if !(unsafe {
+                        ReadBase128_17(
+                            (&mut file as *mut woff2_Buffer),
+                            (&mut transformLength as *mut u32),
+                        )
+                    }) {
+                        return 1;
+                    }
+                    (unsafe {
+                        libc::printf(c" %8d".as_ptr() as *const libc::c_char, (transformLength))
+                    });
+                }
+            } else if ((xform_version as i32) > (0)) {
                 if !(unsafe {
                     ReadBase128_17(
                         (&mut file as *mut woff2_Buffer),
@@ -1755,19 +1789,9 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
                     libc::printf(c" %8d".as_ptr() as *const libc::c_char, (transformLength))
                 });
             }
-        } else if ((xform_version as i32) > (0)) {
-            if !(unsafe {
-                ReadBase128_17(
-                    (&mut file as *mut woff2_Buffer),
-                    (&mut transformLength as *mut u32),
-                )
-            }) {
-                return 1;
-            }
-            (unsafe { libc::printf(c" %8d".as_ptr() as *const libc::c_char, (transformLength)) });
+            (unsafe { libc::printf(c"\n".as_ptr() as *const libc::c_char) });
+            i.postfix_inc();
         }
-        (unsafe { libc::printf(c"\n".as_ptr() as *const libc::c_char) });
-        i.postfix_inc();
     }
     if ((flavor) == (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22))) {
         let mut version: u32 = 0_u32;
@@ -1790,56 +1814,62 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
                 (numFonts),
             )
         });
-        let mut i: i32 = 0;
-        'loop_: while ((i as u32) < (numFonts)) {
-            let mut numTables: u32 = 0_u32;
-            let mut flavor: u32 = 0_u32;
-            if !(unsafe {
-                Read255UShort_12(
-                    (&mut file as *mut woff2_Buffer),
-                    (&mut numTables as *mut u32),
-                )
-            }) {
-                return 1;
-            }
-            if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut flavor as *mut u32)) }) {
-                return 1;
-            }
-            (unsafe {
-                libc::printf(
-                    c"CollectionFontEntry %d flavor 0x%08x %d tables\n".as_ptr()
-                        as *const libc::c_char,
-                    (i),
-                    (flavor),
-                    (numTables),
-                )
-            });
-            let mut j: i32 = 0;
-            'loop_: while ((j as u32) < (numTables)) {
-                let mut table_idx: u32 = 0_u32;
+        {
+            let mut i: i32 = 0;
+            'loop_: while ((i as u32) < (numFonts)) {
+                let mut numTables: u32 = 0_u32;
+                let mut flavor: u32 = 0_u32;
                 if !(unsafe {
                     Read255UShort_12(
                         (&mut file as *mut woff2_Buffer),
-                        (&mut table_idx as *mut u32),
+                        (&mut numTables as *mut u32),
                     )
                 }) {
                     return 1;
                 }
-                if ((table_idx as usize) >= (table_tags.len())) {
+                if !(unsafe { woff2_Buffer::ReadU32(&mut file, (&mut flavor as *mut u32)) }) {
                     return 1;
                 }
                 (unsafe {
                     libc::printf(
-                        c"  %d %s (idx %d)\n".as_ptr() as *const libc::c_char,
-                        (j),
-                        ((unsafe { PrintTag_51((table_tags[(table_idx as usize)] as i32)) })
-                            .as_ptr()),
-                        (table_idx),
+                        c"CollectionFontEntry %d flavor 0x%08x %d tables\n".as_ptr()
+                            as *const libc::c_char,
+                        (i),
+                        (flavor),
+                        (numTables),
                     )
                 });
-                j.postfix_inc();
+                {
+                    let mut j: i32 = 0;
+                    'loop_: while ((j as u32) < (numTables)) {
+                        let mut table_idx: u32 = 0_u32;
+                        if !(unsafe {
+                            Read255UShort_12(
+                                (&mut file as *mut woff2_Buffer),
+                                (&mut table_idx as *mut u32),
+                            )
+                        }) {
+                            return 1;
+                        }
+                        if ((table_idx as usize) >= (table_tags.len())) {
+                            return 1;
+                        }
+                        (unsafe {
+                            libc::printf(
+                                c"  %d %s (idx %d)\n".as_ptr() as *const libc::c_char,
+                                (j),
+                                ((unsafe {
+                                    PrintTag_51((table_tags[(table_idx as usize)] as i32))
+                                })
+                                .as_ptr()),
+                                (table_idx),
+                            )
+                        });
+                        j.postfix_inc();
+                    }
+                }
+                i.postfix_inc();
             }
-            i.postfix_inc();
         }
     }
     (unsafe {

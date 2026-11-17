@@ -15,27 +15,33 @@ pub fn main() {
 unsafe fn main_0() -> i32 {
     let mut N: i32 = 100000000;
     let mut sum: i64 = 0_i64;
-    let mut k: i32 = 0;
-    'loop_: while ((k) < (35)) {
-        let mut array: Option<Box<[i32]>> =
-            Some((0..(N as usize)).map(|_| 0_i32).collect::<Box<[_]>>());
-        let mut i: i32 = 0;
-        'loop_: while ((i) < (N)) {
-            (*array
-                .as_deref()
-                .map_or(::std::ptr::null_mut(), |s| s.as_ptr() as *mut i32)
-                .add((i as usize))) = i;
-            i.prefix_inc();
+    {
+        let mut k: i32 = 0;
+        'loop_: while ((k) < (35)) {
+            let mut array: Option<Box<[i32]>> =
+                Some((0..(N as usize)).map(|_| 0_i32).collect::<Box<[_]>>());
+            {
+                let mut i: i32 = 0;
+                'loop_: while ((i) < (N)) {
+                    (*array
+                        .as_deref()
+                        .map_or(::std::ptr::null_mut(), |s| s.as_ptr() as *mut i32)
+                        .add((i as usize))) = i;
+                    i.prefix_inc();
+                }
+            }
+            {
+                let mut i: i32 = 0;
+                'loop_: while ((i) < (N)) {
+                    sum += ((*array
+                        .as_deref()
+                        .map_or(::std::ptr::null_mut(), |s| s.as_ptr() as *mut i32)
+                        .add((i as usize))) as i64);
+                    i.prefix_inc();
+                }
+            }
+            k.prefix_inc();
         }
-        let mut i: i32 = 0;
-        'loop_: while ((i) < (N)) {
-            sum += ((*array
-                .as_deref()
-                .map_or(::std::ptr::null_mut(), |s| s.as_ptr() as *mut i32)
-                .add((i as usize))) as i64);
-            i.prefix_inc();
-        }
-        k.prefix_inc();
     }
     write!((*libcc2rs::cout_unsafe()), "{:}\n", sum,);
     return 0;
