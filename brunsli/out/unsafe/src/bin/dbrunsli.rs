@@ -1323,13 +1323,7 @@ pub static mut kNumSchemes_91: std::cell::LazyCell<i32> = std::cell::LazyCell::n
 pub static mut kFreqContext_92: std::cell::LazyCell<[[u8; 64]; 7]> =
     std::cell::LazyCell::new(|| unsafe {
         [
-            [
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            ],
+            [0_u8; 64],
             [
                 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
                 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8,
@@ -3666,7 +3660,7 @@ impl Default for brunsli_internal_dec_EncodeScanState {
                 stage: brunsli_internal_dec_EncodeScanState_Stage_HEAD,
                 mcu_y: 0_i32,
                 bw: <brunsli_internal_dec_BitWriter>::default(),
-                last_dc_coeff: [0_i16, 0_i16, 0_i16, 0_i16],
+                last_dc_coeff: [0_i16; 4],
                 restarts_to_go: 0_i32,
                 next_restart_marker: 0_i32,
                 block_scan_index: 0_i32,
@@ -5571,13 +5565,7 @@ pub unsafe fn DecodeCoeffOrder_152(
     mut br: *mut brunsli_BitSource,
     mut in_: *mut brunsli_WordSource,
 ) -> bool {
-    let mut lehmer: [u32; 64] = [
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-    ];
+    let mut lehmer: [u32; 64] = [0_u32; 64];
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
@@ -9629,7 +9617,7 @@ pub unsafe fn ReadHistogram_189(
     if ((simple_code) == (1)) {
         let mut max_bits_counter: usize = (length).wrapping_sub(1_usize);
         let mut max_bits: u32 = 0_u32;
-        let mut symbols: [i32; 2] = [0, 0_i32];
+        let mut symbols: [i32; 2] = [0_i32; 2];
         let num_symbols: usize = (((unsafe { BrunsliBitReaderRead_126(br, 1_u32) })
             .wrapping_add((1_u32 as u32))) as usize);
         'loop_: while (max_bits_counter != 0) {
@@ -9767,10 +9755,7 @@ pub unsafe fn ReadHuffmanCodeLengths_217(
     let kFullSpace: i32 = ((1) << (15));
     let mut space: i32 = kFullSpace;
     let mut table: [brunsli_HuffmanCode; 32] = [<brunsli_HuffmanCode>::default(); 32];
-    let mut counts: [u16; 16] = [
-        0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-        0_u16, 0_u16, 0_u16,
-    ];
+    let mut counts: [u16; 16] = [0_u16; 16];
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kCodeLengthCodes_213)))
@@ -9884,7 +9869,7 @@ pub unsafe fn ReadSimpleCode_219(
     } as u32);
     let mut num_symbols: usize =
         (((unsafe { BrunsliBitReaderRead_126(br, 2_u32) }).wrapping_add(1_u32)) as usize);
-    let mut symbols: [u16; 4] = [0_u16, 0_u16, 0_u16, 0_u16];
+    let mut symbols: [u16; 4] = [0_u16; 4];
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_symbols)) {
@@ -10114,10 +10099,7 @@ impl brunsli_HuffmanDecodingData {
                 ReadSimpleCode_219((alphabet_size as u16), br, self.table_.as_mut_ptr())
             });
         }
-        let mut code_length_code_lengths: [u8; 18] = [
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8,
-        ];
+        let mut code_length_code_lengths: [u8; 18] = [0_u8; 18];
         let mut space: i32 = 32;
         let mut num_codes: i32 = 0;
         {
@@ -10155,10 +10137,7 @@ impl brunsli_HuffmanDecodingData {
         if (!(ok)) || (!(unsafe { BrunsliBitReaderIsHealthy_132(br) })) {
             return false;
         }
-        let mut counts: [u16; 16] = [
-            0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-            0_u16, 0_u16, 0_u16, 0_u16,
-        ];
+        let mut counts: [u16; 16] = [0_u16; 16];
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (alphabet_size)) {

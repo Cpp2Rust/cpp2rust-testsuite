@@ -181,7 +181,7 @@ impl Default for brunsli_JPEGHuffmanCode {
         }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(12)]
 pub struct brunsli_JPEGComponentScanInfo {
     #[offset(0)]
@@ -191,7 +191,7 @@ pub struct brunsli_JPEGComponentScanInfo {
     #[offset(8)]
     pub ac_tbl_idx: i32,
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(8)]
 pub struct brunsli_JPEGScanInfo_ExtraZeroRunInfo {
     #[offset(0)]
@@ -1334,13 +1334,7 @@ thread_local!(
 );
 thread_local!(
     pub static kFreqContext_92: Value<Box<[Box<[u8]>]>> = Rc::new(RefCell::new(Box::new([
-        Box::new([
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        ]),
+        Box::new([0_u8; 64]),
         Box::new([
             0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
             0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8,
@@ -2457,7 +2451,7 @@ impl brunsli_WordSource {
         }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg)]
 #[byte_size(8)]
 pub struct brunsli_BitSource {
     #[offset(0)]
@@ -2478,7 +2472,7 @@ impl Default for brunsli_BitSource {
         { brunsli_BitSource::new() }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(6)]
 pub struct brunsli_ANSSymbolInfo {
     #[offset(0)]
@@ -2509,7 +2503,7 @@ impl Default for brunsli_ANSDecodingData {
         { brunsli_ANSDecodingData::new() }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg)]
 #[byte_size(4)]
 pub struct brunsli_ANSDecoder {
     #[offset(0)]
@@ -2742,7 +2736,7 @@ impl Default for brunsli_BrunsliDecoder {
         { brunsli_BrunsliDecoder::new() }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg)]
 #[byte_size(12)]
 pub struct brunsli_BinaryArithmeticDecoder {
     #[offset(0)]
@@ -2766,7 +2760,7 @@ impl Default for brunsli_BinaryArithmeticDecoder {
         { brunsli_BinaryArithmeticDecoder::new() }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(4)]
 pub struct brunsli_HuffmanCode {
     #[offset(0)]
@@ -3175,7 +3169,7 @@ impl Default for brunsli_internal_dec_EncodeScanState {
                 stage: brunsli_internal_dec_EncodeScanState_Stage_HEAD,
                 mcu_y: 0_i32,
                 bw: <brunsli_internal_dec_BitWriter>::default(),
-                last_dc_coeff: Box::new([0_i16, 0_i16, 0_i16, 0_i16]),
+                last_dc_coeff: Box::new([0_i16; 4]),
                 restarts_to_go: 0_i32,
                 next_restart_marker: 0_i32,
                 block_scan_index: 0_i32,
@@ -3335,7 +3329,7 @@ impl Default for brunsli_internal_dec_AcDcState {
         }
     }
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg)]
 #[byte_size(40)]
 pub struct brunsli_internal_dec_SectionState {
     #[offset(0)]
@@ -3454,7 +3448,7 @@ pub const brunsli_internal_dec_SectionHeaderState_Stage_ENTER_SECTION:
     brunsli_internal_dec_SectionHeaderState_Stage = 2;
 pub const brunsli_internal_dec_SectionHeaderState_Stage_DONE:
     brunsli_internal_dec_SectionHeaderState_Stage = 3;
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg)]
 #[byte_size(8)]
 pub struct brunsli_internal_dec_SectionHeaderState {
     #[offset(0)]
@@ -3545,7 +3539,7 @@ pub const brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION:
     brunsli_internal_dec_VarintState_Stage = 1;
 pub const brunsli_internal_dec_VarintState_Stage_READ_DATA: brunsli_internal_dec_VarintState_Stage =
     2;
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg)]
 #[byte_size(24)]
 pub struct brunsli_internal_dec_VarintState {
     #[offset(0)]
@@ -3687,7 +3681,7 @@ impl brunsli_internal_dec_JpegInternalsState {
             max_count: { (*_a0.upgrade().deref()).max_count },
             i: { (*_a0.upgrade().deref()).i },
             p: brunsli_PermutationCoder::move_from({ field_ptr!(_a0, p) }),
-            varint: { (*_a0.upgrade().deref()).varint.clone() },
+            varint: { (*_a0.upgrade().deref()).varint },
             j: { (*_a0.upgrade().deref()).j },
             last_block_idx: { (*_a0.upgrade().deref()).last_block_idx },
             last_num: { (*_a0.upgrade().deref()).last_num },
@@ -3780,7 +3774,7 @@ impl brunsli_internal_dec_QuantDataState {
             i: { (*_a0.upgrade().deref()).i },
             j: { (*_a0.upgrade().deref()).j },
             data_precision: { (*_a0.upgrade().deref()).data_precision },
-            vs: { (*_a0.upgrade().deref()).vs.clone() },
+            vs: { (*_a0.upgrade().deref()).vs },
             delta: { (*_a0.upgrade().deref()).delta },
             sign: { (*_a0.upgrade().deref()).sign },
             predictor: field!(_a0, predictor).with_mut(std::mem::take),
@@ -3990,10 +3984,10 @@ impl brunsli_internal_dec_InternalState {
     pub fn move_from(_a0: Ptr<brunsli_internal_dec_InternalState>) -> Self {
         Self {
             ac_dc: brunsli_internal_dec_AcDcState::move_from({ field_ptr!(_a0, ac_dc) }),
-            section: { (*_a0.upgrade().deref()).section.clone() },
+            section: { (*_a0.upgrade().deref()).section },
             header: { (*_a0.upgrade().deref()).header.clone() },
             fallback: brunsli_internal_dec_FallbackState::move_from({ field_ptr!(_a0, fallback) }),
-            section_header: { (*_a0.upgrade().deref()).section_header.clone() },
+            section_header: { (*_a0.upgrade().deref()).section_header },
             metadata: { (*_a0.upgrade().deref()).metadata.clone() },
             internals: brunsli_internal_dec_JpegInternalsState::move_from({
                 field_ptr!(_a0, internals)
@@ -4010,9 +4004,9 @@ impl brunsli_internal_dec_InternalState {
             num_contexts: { (*_a0.upgrade().deref()).num_contexts },
             num_histograms: { (*_a0.upgrade().deref()).num_histograms },
             subdecoders_initialized: { (*_a0.upgrade().deref()).subdecoders_initialized },
-            ans_decoder: { (*_a0.upgrade().deref()).ans_decoder.clone() },
-            bit_reader: { (*_a0.upgrade().deref()).bit_reader.clone() },
-            arith_decoder: { (*_a0.upgrade().deref()).arith_decoder.clone() },
+            ans_decoder: { (*_a0.upgrade().deref()).ans_decoder },
+            bit_reader: { (*_a0.upgrade().deref()).bit_reader },
+            arith_decoder: { (*_a0.upgrade().deref()).arith_decoder },
             result: { (*_a0.upgrade().deref()).result },
             last_stage: { (*_a0.upgrade().deref()).last_stage },
             buffer: brunsli_internal_dec_Buffer::move_from({ field_ptr!(_a0, buffer) }),
@@ -5020,13 +5014,7 @@ pub fn DecodeCoeffOrder_152(
     mut br: Ptr<brunsli_BitSource>,
     mut in_: Ptr<brunsli_WordSource>,
 ) -> bool {
-    let lehmer: Value<Box<[u32]>> = Rc::new(RefCell::new(Box::new([
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-    ])));
+    let lehmer: Value<Box<[u32]>> = Rc::new(RefCell::new(Box::new([0_u32; 64])));
     {
         let mut i: i32 = 0;
         'loop_: while (i < kDCTBlockSize_3.with(|rc| *rc.borrow())) {
@@ -5199,11 +5187,10 @@ pub fn DecodeDC_157(
         return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
     }
     ({ EnsureSubdecodersInitialized_155((state).clone(), (in_).clone()) });
-    let ans: Value<brunsli_ANSDecoder> =
-        Rc::new(RefCell::new(s.with(|__s| __s.ans_decoder.clone())));
-    let br: Value<brunsli_BitSource> = Rc::new(RefCell::new(s.with(|__s| __s.bit_reader.clone())));
+    let ans: Value<brunsli_ANSDecoder> = Rc::new(RefCell::new(s.with(|__s| __s.ans_decoder)));
+    let br: Value<brunsli_BitSource> = Rc::new(RefCell::new(s.with(|__s| __s.bit_reader)));
     let ac: Value<brunsli_BinaryArithmeticDecoder> =
-        Rc::new(RefCell::new(s.with(|__s| __s.arith_decoder.clone())));
+        Rc::new(RefCell::new(s.with(|__s| __s.arith_decoder)));
     {
         let mut mcu_y: i32 = ac_dc_state.with(|__s| __s.next_mcu_y);
         'loop_: while (mcu_y < mcu_rows) {
@@ -5252,9 +5239,9 @@ pub fn DecodeDC_157(
                                         field!(ac_dc_state, next_component).write(i);
                                         field!(ac_dc_state, next_iy).write(iy);
                                         field!(ac_dc_state, next_x).write(x);
-                                        field!(s, ans_decoder).write((*ans.borrow()).clone());
-                                        field!(s, bit_reader).write((*br.borrow()).clone());
-                                        field!(s, arith_decoder).write((*ac.borrow()).clone());
+                                        field!(s, ans_decoder).write((*ans.borrow()));
+                                        field!(s, bit_reader).write((*br.borrow()));
+                                        field!(s, arith_decoder).write((*ac.borrow()));
                                         return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                                     }
                                     let mut is_empty_ctx: i32 = ({
@@ -5422,9 +5409,9 @@ pub fn DecodeDC_157(
     field!(ac_dc_state, next_x).write(0);
     comps.with_mut(|__v: &mut Vec<brunsli_ComponentStateDC>| __v.clear());
     comps.with_mut(|__v: &mut Vec<brunsli_ComponentStateDC>| __v.shrink_to_fit());
-    field!(s, ans_decoder).write((*ans.borrow()).clone());
-    field!(s, bit_reader).write((*br.borrow()).clone());
-    field!(s, arith_decoder).write((*ac.borrow()).clone());
+    field!(s, ans_decoder).write((*ans.borrow()));
+    field!(s, bit_reader).write((*br.borrow()));
+    field!(s, arith_decoder).write((*ac.borrow()));
     if !({ FinalizeSubdecoders_156((state).clone()) }) {
         return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
     }
@@ -5515,10 +5502,10 @@ pub struct brunsli_AcBlockCookie {
 pub fn DecodeAcBlock_159(cookie: Ptr<brunsli_AcBlockCookie>) -> usize {
     let mut c: brunsli_AcBlockCookie = (*cookie.upgrade().deref()).clone();
     let ac: Value<brunsli_BinaryArithmeticDecoder> =
-        Rc::new(RefCell::new((*c.ac.upgrade().deref()).clone()));
+        Rc::new(RefCell::new((*c.ac.upgrade().deref())));
     let mut in_: Ptr<brunsli_WordSource> = (c.in_).clone();
-    let ans: Value<brunsli_ANSDecoder> = Rc::new(RefCell::new((*c.ans.upgrade().deref()).clone()));
-    let br: Value<brunsli_BitSource> = Rc::new(RefCell::new((*c.br.upgrade().deref()).clone()));
+    let ans: Value<brunsli_ANSDecoder> = Rc::new(RefCell::new((*c.ans.upgrade().deref())));
+    let br: Value<brunsli_BitSource> = Rc::new(RefCell::new((*c.br.upgrade().deref())));
     let mut num_nonzeros: usize = 0_usize;
     let mut nonzero_ctx: u8 = ({
         let _prev: Ptr<u8> = (c.prev_num_nonzeros).clone();
@@ -5697,9 +5684,9 @@ pub fn DecodeAcBlock_159(cookie: Ptr<brunsli_AcBlockCookie>) -> usize {
             k.prefix_dec();
         }
     }
-    c.ans.write({ (*ans.borrow()).clone() });
-    c.br.write({ (*br.borrow()).clone() });
-    c.ac.write({ (*ac.borrow()).clone() });
+    c.ans.write({ (*ans.borrow()) });
+    c.br.write({ (*br.borrow()) });
+    c.ac.write({ (*ac.borrow()) });
     return num_nonzeros;
 }
 pub fn DecodeAC_160(
@@ -9097,7 +9084,7 @@ pub fn ReadHistogram_189(
     if (simple_code == 1) {
         let mut max_bits_counter: usize = (length).wrapping_sub(1_usize);
         let mut max_bits: u32 = 0_u32;
-        let mut symbols: [i32; 2] = [0, 0_i32];
+        let mut symbols: [i32; 2] = [0_i32; 2];
         let mut num_symbols: usize = ((({ BrunsliBitReaderRead_126((br).clone(), 1_u32) })
             .wrapping_add((1_u32 as u32))) as usize);
         'loop_: while (max_bits_counter != 0) {
@@ -9227,10 +9214,7 @@ pub fn ReadHuffmanCodeLengths_217(
             .map(|_| <brunsli_HuffmanCode>::default())
             .collect::<Box<[brunsli_HuffmanCode]>>(),
     ));
-    let counts: Value<Box<[u16]>> = Rc::new(RefCell::new(Box::new([
-        0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-        0_u16, 0_u16, 0_u16,
-    ])));
+    let counts: Value<Box<[u16]>> = Rc::new(RefCell::new(Box::new([0_u16; 16])));
     {
         let mut i: i32 = 0;
         'loop_: while (i < kCodeLengthCodes_213.with(|rc| *rc.borrow())) {
@@ -9329,7 +9313,7 @@ pub fn ReadSimpleCode_219(
     } as u32);
     let mut num_symbols: usize =
         ((({ BrunsliBitReaderRead_126((br).clone(), 2_u32) }).wrapping_add(1_u32)) as usize);
-    let symbols: Value<Box<[u16]>> = Rc::new(RefCell::new(Box::new([0_u16, 0_u16, 0_u16, 0_u16])));
+    let symbols: Value<Box<[u16]>> = Rc::new(RefCell::new(Box::new([0_u16; 4])));
     {
         let mut i: usize = 0_usize;
         'loop_: while (i < num_symbols) {
@@ -9648,7 +9632,7 @@ pub fn ReplicateValue_222(
     'loop_: while __do_while || (end > 0) {
         __do_while = false;
         end -= step;
-        elem!(table, end).write({ (code).clone() });
+        elem!(table, end).write({ code });
     }
 }
 pub fn NextTableBitSize_223(mut count: Ptr<u16>, mut len: usize, mut root_bits: usize) -> usize {
@@ -9725,7 +9709,7 @@ pub fn BuildHuffmanTable_218(
         code.value = { (elem!(sorted, 0).read()) };
         key = 0;
         'loop_: while (key < total_size) {
-            elem!(table, key).write({ (code).clone() });
+            elem!(table, key).write({ code });
             key.prefix_inc();
         }
         return (total_size as u32);
@@ -9746,7 +9730,7 @@ pub fn BuildHuffmanTable_218(
             code.value = __rhs;
             ({
                 let _table: Ptr<brunsli_HuffmanCode> = (table.offset((key) as isize));
-                let _code: brunsli_HuffmanCode = (code).clone();
+                let _code: brunsli_HuffmanCode = code;
                 ReplicateValue_222(_table, step, table_size, _code)
             });
             let __rhs = ({ GetNextKey_221(key, (code.bits as usize)) });
@@ -9795,7 +9779,7 @@ pub fn BuildHuffmanTable_218(
             code.value = __rhs;
             ({
                 let _table: Ptr<brunsli_HuffmanCode> = (table.offset((key >> root_bits) as isize));
-                let _code: brunsli_HuffmanCode = (code).clone();
+                let _code: brunsli_HuffmanCode = code;
                 ReplicateValue_222(_table, step, table_size, _code)
             });
             let __rhs = ({ GetNextKey_221(key, len) });
@@ -13618,10 +13602,8 @@ impl brunsli_HuffmanDecodingDataImpl for Ptr<brunsli_HuffmanDecodingData> {
                 )
             });
         }
-        let code_length_code_lengths: Value<Box<[u8]>> = Rc::new(RefCell::new(Box::new([
-            0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            0_u8, 0_u8, 0_u8, 0_u8,
-        ])));
+        let code_length_code_lengths: Value<Box<[u8]>> =
+            Rc::new(RefCell::new(Box::new([0_u8; 18])));
         let mut space: i32 = 32;
         let mut num_codes: i32 = 0;
         {
@@ -13658,10 +13640,7 @@ impl brunsli_HuffmanDecodingDataImpl for Ptr<brunsli_HuffmanDecodingData> {
         if (!(ok)) || (!({ BrunsliBitReaderIsHealthy_132((br).clone()) })) {
             return false;
         }
-        let counts: Value<Box<[u16]>> = Rc::new(RefCell::new(Box::new([
-            0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-            0_u16, 0_u16, 0_u16, 0_u16,
-        ])));
+        let counts: Value<Box<[u16]>> = Rc::new(RefCell::new(Box::new([0_u16; 16])));
         {
             let mut i: usize = 0_usize;
             'loop_: while (i < alphabet_size) {
@@ -14228,7 +14207,7 @@ impl brunsli_internal_dec_InternalStateImpl for Ptr<brunsli_internal_dec_Interna
             let _arg0: Ptr<brunsli_internal_dec_AcDcState> = field_ptr!(_a0, ac_dc);
             brunsli_internal_dec_AcDcStateImpl::move_assign(&field_ptr!((*self), ac_dc), _arg0)
         });
-        field!((*self), section).write({ { (*_a0.upgrade().deref()).section.clone() } });
+        field!((*self), section).write({ { (*_a0.upgrade().deref()).section } });
         field!((*self), header).write({ { (*_a0.upgrade().deref()).header.clone() } });
         ({
             let _arg0: Ptr<brunsli_internal_dec_FallbackState> = field_ptr!(_a0, fallback);
@@ -14237,8 +14216,7 @@ impl brunsli_internal_dec_InternalStateImpl for Ptr<brunsli_internal_dec_Interna
                 _arg0,
             )
         });
-        field!((*self), section_header)
-            .write({ { (*_a0.upgrade().deref()).section_header.clone() } });
+        field!((*self), section_header).write({ { (*_a0.upgrade().deref()).section_header } });
         field!((*self), metadata).write({ { (*_a0.upgrade().deref()).metadata.clone() } });
         ({
             let _arg0: Ptr<brunsli_internal_dec_JpegInternalsState> = field_ptr!(_a0, internals);
@@ -14274,10 +14252,9 @@ impl brunsli_internal_dec_InternalStateImpl for Ptr<brunsli_internal_dec_Interna
         field!((*self), num_histograms).write({ { (*_a0.upgrade().deref()).num_histograms } });
         field!((*self), subdecoders_initialized)
             .write({ { (*_a0.upgrade().deref()).subdecoders_initialized } });
-        field!((*self), ans_decoder).write({ { (*_a0.upgrade().deref()).ans_decoder.clone() } });
-        field!((*self), bit_reader).write({ { (*_a0.upgrade().deref()).bit_reader.clone() } });
-        field!((*self), arith_decoder)
-            .write({ { (*_a0.upgrade().deref()).arith_decoder.clone() } });
+        field!((*self), ans_decoder).write({ { (*_a0.upgrade().deref()).ans_decoder } });
+        field!((*self), bit_reader).write({ { (*_a0.upgrade().deref()).bit_reader } });
+        field!((*self), arith_decoder).write({ { (*_a0.upgrade().deref()).arith_decoder } });
         field!((*self), result).write({ { (*_a0.upgrade().deref()).result } });
         field!((*self), last_stage).write({ { (*_a0.upgrade().deref()).last_stage } });
         ({
@@ -14325,7 +14302,7 @@ impl brunsli_internal_dec_JpegInternalsStateImpl for Ptr<brunsli_internal_dec_Jp
             let _arg0: Ptr<brunsli_PermutationCoder> = field_ptr!(_a0, p);
             brunsli_PermutationCoderImpl::move_assign(&field_ptr!((*self), p), _arg0)
         });
-        field!((*self), varint).write({ { (*_a0.upgrade().deref()).varint.clone() } });
+        field!((*self), varint).write({ { (*_a0.upgrade().deref()).varint } });
         field!((*self), j).write({ { (*_a0.upgrade().deref()).j } });
         field!((*self), last_block_idx).write({ { (*_a0.upgrade().deref()).last_block_idx } });
         field!((*self), last_num).write({ { (*_a0.upgrade().deref()).last_num } });
@@ -14389,7 +14366,7 @@ impl brunsli_internal_dec_QuantDataStateImpl for Ptr<brunsli_internal_dec_QuantD
         field!((*self), i).write({ { (*_a0.upgrade().deref()).i } });
         field!((*self), j).write({ { (*_a0.upgrade().deref()).j } });
         field!((*self), data_precision).write({ { (*_a0.upgrade().deref()).data_precision } });
-        field!((*self), vs).write({ { (*_a0.upgrade().deref()).vs.clone() } });
+        field!((*self), vs).write({ { (*_a0.upgrade().deref()).vs } });
         field!((*self), delta).write({ { (*_a0.upgrade().deref()).delta } });
         field!((*self), sign).write({ { (*_a0.upgrade().deref()).sign } });
         field_ref!((*self), predictor)

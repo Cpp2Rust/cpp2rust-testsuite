@@ -1323,13 +1323,7 @@ pub static mut kNumSchemes_91: std::cell::LazyCell<i32> = std::cell::LazyCell::n
 pub static mut kFreqContext_92: std::cell::LazyCell<[[u8; 64]; 7]> =
     std::cell::LazyCell::new(|| unsafe {
         [
-            [
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-                0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-            ],
+            [0_u8; 64],
             [
                 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
                 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 1_u8, 1_u8, 1_u8, 1_u8,
@@ -2870,7 +2864,7 @@ pub unsafe fn BuildAndStoreANSEncodingData_123(
     mut storage: *mut brunsli_Storage,
 ) {
     let mut num_symbols: i32 = 0_i32;
-    let mut symbols: [i32; 4] = [0, 0_i32, 0_i32, 0_i32];
+    let mut symbols: [i32; 4] = [0_i32; 4];
     let mut counts: Vec<i32> = match ({ histogram.offset((18) as isize) },) {
         (mut __tmp_0,) => {
             let mut __v = Vec::new();
@@ -6648,16 +6642,7 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                                             &mut (*data_stream),
                                         )
                                     });
-                                    let mut coeffs: [i16; 64] = [
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                    ];
+                                    let mut coeffs: [i16; 64] = [0_i16; 64];
                                     let mut last_nz: i32 = 0;
                                     let is_empty_block: bool = ((*block_state) != 0);
                                     if !(is_empty_block) {
@@ -6710,16 +6695,7 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                                         }
                                     }
                                     let mut num_nzeros: usize = 0_usize;
-                                    let mut encoded_coeffs: [i16; 64] = [
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                        0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16, 0_i16,
-                                    ];
+                                    let mut encoded_coeffs: [i16; 64] = [0_i16; 64];
                                     {
                                         let mut k: i32 = last_nz;
                                         'loop_: while ((k) >= (1)) {
@@ -8152,10 +8128,7 @@ pub unsafe fn EncodeCounts_125(
     } else {
         (unsafe { WriteBits_120(1_usize, 0_u64, storage) });
         let mut length: i32 = 0;
-        let mut logcounts: [i32; 18] = [
-            0, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32,
-            0_i32, 0_i32, 0_i32, 0_i32, 0_i32,
-        ];
+        let mut logcounts: [i32; 18] = [0_i32; 18];
         let mut omit_log: i32 = 0;
         {
             let mut i: i32 = 0;
@@ -8668,10 +8641,7 @@ pub unsafe fn StoreHuffmanTree_218(
             huffman_tree_extra_bits,
         )
     });
-    let mut huffman_tree_histogram: [u32; 18] = [
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-        0_u32, 0_u32, 0_u32, 0_u32, 0_u32,
-    ];
+    let mut huffman_tree_histogram: [u32; 18] = [0_u32; 18];
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (huffman_tree_size)) {
@@ -8697,14 +8667,8 @@ pub unsafe fn StoreHuffmanTree_218(
             i.prefix_inc();
         }
     }
-    let mut code_length_bitdepth: [u8; 18] = [
-        0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
-        0_u8, 0_u8, 0_u8,
-    ];
-    let mut code_length_bitdepth_symbols: [u16; 18] = [
-        0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-        0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-    ];
+    let mut code_length_bitdepth: [u8; 18] = [0_u8; 18];
+    let mut code_length_bitdepth_symbols: [u16; 18] = [0_u16; 18];
     (unsafe {
         CreateHuffmanTree_220(
             (&mut huffman_tree_histogram[(0) as usize] as *mut u32).cast_const(),
@@ -8749,7 +8713,7 @@ pub unsafe fn BuildAndStoreHuffmanTree_202(
     mut storage: *mut brunsli_Storage,
 ) {
     let mut count: usize = 0_usize;
-    let mut s4: [usize; 4] = [0_usize, 0_usize, 0_usize, 0_usize];
+    let mut s4: [usize; 4] = [0_usize; 4];
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (length)) {
@@ -9273,10 +9237,7 @@ pub unsafe fn ConvertBitDepthsToSymbols_221(
     mut bits: *mut u16,
 ) {
     let kMaxBits: i32 = 16;
-    let mut bl_count: [u16; 16] = [
-        0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-        0_u16, 0_u16, 0_u16,
-    ];
+    let mut bl_count: [u16; 16] = [0_u16; 16];
     {
         {
             let mut i: usize = 0_usize;
@@ -10826,7 +10787,7 @@ pub unsafe fn ProcessScan_249(
             DivCeil_232(_a, _b)
         });
     }
-    let mut last_dc_coeff: [i16; 4] = [0_i16, 0_i16, 0_i16, 0_i16];
+    let mut last_dc_coeff: [i16; 4] = [0_i16; 4];
     let mut br: BitReaderState_243 = BitReaderState_243::new({ data }, { len }, { (*pos) });
     let mut restarts_to_go: i32 = (*jpg).restart_interval;
     let mut next_restart_marker: i32 = 0;
@@ -11183,19 +11144,7 @@ pub unsafe fn ReadJpeg_196(
         .collect::<Vec<_>>();
     let mut found_sof: bool = false;
     let mut found_dri: bool = false;
-    let mut scan_progression: [[u16; 64]; 4] = [
-        [
-            0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-            0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-            0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-            0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-            0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16, 0_u16,
-            0_u16, 0_u16, 0_u16, 0_u16,
-        ],
-        [0; 64],
-        [0; 64],
-        [0; 64],
-    ];
+    let mut scan_progression: [[u16; 64]; 4] = [[0_u16; 64], [0; 64], [0; 64], [0; 64]];
     {
         let __a0 = 0_usize;
         (*jpg).padding_bits.resize_with(__a0, || 0_i32)
@@ -11450,10 +11399,7 @@ pub unsafe fn BuildJpegHuffmanTable_238(
     let mut low: i32 = 0_i32;
     let mut table_bits: i32 = 0_i32;
     let mut table_size: i32 = 0_i32;
-    let mut tmp_count: [i32; 17] = [
-        0, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32, 0_i32,
-        0_i32, 0_i32, 0_i32, 0_i32,
-    ];
+    let mut tmp_count: [i32; 17] = [0_i32; 17];
     let mut total_count: i32 = 0;
     len = 1;
     'loop_: while ((len)

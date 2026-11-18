@@ -415,7 +415,7 @@ thread_local!(
 thread_local!(
     pub static kSfntEntrySize_24: Value<usize> = Rc::new(RefCell::new(16_usize));
 );
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(12)]
 pub struct woff2_Point {
     #[offset(0)]
@@ -3273,16 +3273,19 @@ impl woff2_WOFF2Out for woff2_WOFF2StringOut {
             }) {
                 match ({ { self.buf_.clone() } },) {
                     (mut __tmp_2,) => {
-                        __tmp_2.with_mut(|__v: &mut Vec<i8>| __v.pop());
-                        let __len = (*__tmp_2.upgrade().deref()).len()
-                            + ({
-                                (((offset).wrapping_add(n) as u64).wrapping_sub(
-                                    (((*{ self.buf_.clone() }.upgrade().deref()).len() - 1) as u64),
-                                ) as usize)
-                            }) as usize;
-                        __tmp_2.with_mut(|__v: &mut Vec<i8>| __v.resize(__len, 0_i8));
-                        __tmp_2.with_mut(|__v: &mut Vec<i8>| __v.push(0));
-                        (*__tmp_2.upgrade().deref()).clone()
+                        let __count = ({
+                            (((offset).wrapping_add(n) as u64).wrapping_sub(
+                                (((*{ self.buf_.clone() }.upgrade().deref()).len() - 1) as u64),
+                            ) as usize)
+                        }) as usize;
+                        let __ch = 0_i8;
+                        __tmp_2.with_mut(|__v: &mut Vec<i8>| {
+                            __v.pop();
+                            let __len = __v.len() + __count;
+                            __v.resize(__len, __ch);
+                            __v.push(0);
+                        });
+                        (__tmp_2).clone()
                     }
                 };
             }

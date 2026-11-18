@@ -3245,15 +3245,17 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2StringOut {
             if (((offset).wrapping_add(n)) > ((*(self.buf_).cast_const()).len() - 1)) {
                 match ({ self.buf_ },) {
                     (mut __tmp_1,) => {
-                        (*__tmp_1).splice(
-                            (*__tmp_1).len() - 1..(*__tmp_1).len() - 1,
+                        (*(__tmp_1 as *mut Vec<libc::c_char>)).splice(
+                            (*(__tmp_1 as *mut Vec<libc::c_char>)).len() - 1
+                                ..(*(__tmp_1 as *mut Vec<libc::c_char>)).len() - 1,
                             ::std::vec::from_elem(
                                 (0 as libc::c_char),
                                 (((offset).wrapping_add(n) as u64)
                                     .wrapping_sub((((*(self.buf_).cast_const()).len() - 1) as u64))
-                                    as usize),
+                                    as usize) as usize,
                             ),
                         );
+                        (__tmp_1 as *mut Vec<libc::c_char>)
                     }
                 };
             }

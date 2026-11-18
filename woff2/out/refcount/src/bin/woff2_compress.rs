@@ -415,7 +415,7 @@ thread_local!(
 thread_local!(
     pub static kSfntEntrySize_24: Value<usize> = Rc::new(RefCell::new(16_usize));
 );
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(12)]
 pub struct woff2_Point {
     #[offset(0)]
@@ -1283,7 +1283,7 @@ pub fn RemoveDigitalSignature_48(mut font: Ptr<woff2_Font>) -> bool {
     }
     return true;
 }
-#[derive(Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
+#[derive(Copy, Clone, Record, ByteRepr, VaArg, FnPtrArg, Default)]
 #[byte_size(12)]
 pub struct woff2_Glyph_Point {
     #[offset(0)]
