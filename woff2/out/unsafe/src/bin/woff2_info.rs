@@ -676,7 +676,9 @@ impl woff2_Font_Table {
         self.offset = (*_a0).offset;
         self.length = (*_a0).length;
         self.data = (*_a0).data;
-        self.buffer = std::mem::take(&mut (*_a0).buffer);
+        {
+            self.buffer = std::mem::take(&mut (*_a0).buffer);
+        };
         self.reuse_of = (*_a0).reuse_of;
         self.flag_byte = (*_a0).flag_byte;
         return &mut (*(self as *mut woff2_Font_Table));
@@ -701,7 +703,9 @@ impl woff2_Font {
     pub unsafe fn move_assign(&mut self, _a0: *mut woff2_Font) -> *mut woff2_Font {
         self.flavor = (*_a0).flavor;
         self.num_tables = (*_a0).num_tables;
-        self.tables = std::mem::take(&mut (*_a0).tables);
+        {
+            self.tables = std::mem::take(&mut (*_a0).tables);
+        };
         return &mut (*(self as *mut woff2_Font));
     }
 }
@@ -729,8 +733,12 @@ impl woff2_FontCollection {
     ) -> *mut woff2_FontCollection {
         self.flavor = (*_a0).flavor;
         self.header_version = (*_a0).header_version;
-        self.tables = std::mem::take(&mut (*_a0).tables);
-        self.fonts = std::mem::take(&mut (*_a0).fonts);
+        {
+            self.tables = std::mem::take(&mut (*_a0).tables);
+        };
+        {
+            self.fonts = std::mem::take(&mut (*_a0).fonts);
+        };
         return &mut (*(self as *mut woff2_FontCollection));
     }
 }
@@ -1006,12 +1014,9 @@ pub unsafe fn ReadTrueTypeCollection_35(
             i.postfix_inc();
         }
     }
-    {
-        let __a0 = offsets.len();
-        (*font_collection)
-            .fonts
-            .resize_with(__a0, || <woff2_Font>::default())
-    };
+    (*font_collection)
+        .fonts
+        .resize_with(offsets.len(), || <woff2_Font>::default());
     let mut font_it: UnsafeRandomAccessIterator<woff2_Font> = (*font_collection).fonts.begin();
     let mut all_tables: UnsafeMap<u32, (u32, *mut woff2_Font_Table)> = UnsafeMap::new();
     'loop_: for offset in IterRange::new(offsets.begin(), offsets.end()) {
@@ -1057,12 +1062,9 @@ pub unsafe fn ReadFontCollection_37(
     if (((*font_collection).flavor)
         != (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
     {
-        {
-            let __a0 = 1_usize;
-            (*font_collection)
-                .fonts
-                .resize_with(__a0, || <woff2_Font>::default())
-        };
+        (*font_collection)
+            .fonts
+            .resize_with(1_usize, || <woff2_Font>::default());
         let font: *mut woff2_Font = &mut (&mut (*font_collection)).fonts[(0_usize)];
         (*font).flavor = (*font_collection).flavor;
         return (unsafe {
@@ -1495,7 +1497,7 @@ pub fn main() {
     argv.push(::std::ptr::null_mut());
     unsafe {
         __cpp2rust_init_globals();
-        ::std::process::exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32)
+        libcc2rs::cpp2rust_exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32)
     }
 }
 unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {

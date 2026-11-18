@@ -36,7 +36,7 @@ pub fn matmul_0(a: Ptr<Vec<Vec<i32>>>, b: Ptr<Vec<Vec<i32>>>, c: Ptr<Vec<Vec<i32
 }
 pub fn main() {
     __cpp2rust_init_globals();
-    std::process::exit(main_0());
+    libcc2rs::cpp2rust_exit(main_0());
 }
 fn main_0() -> i32 {
     let mut N: i32 = 400;

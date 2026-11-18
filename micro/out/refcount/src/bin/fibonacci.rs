@@ -15,7 +15,7 @@ pub fn fib_0(mut n: u64) -> u64 {
 }
 pub fn main() {
     __cpp2rust_init_globals();
-    std::process::exit(main_0());
+    libcc2rs::cpp2rust_exit(main_0());
 }
 fn main_0() -> i32 {
     write!(libcc2rs::cout(), "{:}\n", ({ fib_0(46_u64,) }),);

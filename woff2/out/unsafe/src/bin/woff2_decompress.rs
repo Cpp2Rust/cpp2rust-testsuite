@@ -784,7 +784,9 @@ impl TtcFont_55 {
         self.flavor = (*_a0).flavor;
         self.dst_offset = (*_a0).dst_offset;
         self.header_checksum = (*_a0).header_checksum;
-        self.table_indices = std::mem::take(&mut (*_a0).table_indices);
+        {
+            self.table_indices = std::mem::take(&mut (*_a0).table_indices);
+        };
         return &mut (*(self as *mut TtcFont_55));
     }
 }
@@ -821,8 +823,12 @@ impl WOFF2Header_56 {
         self.compressed_offset = (*_a0).compressed_offset;
         self.compressed_length = (*_a0).compressed_length;
         self.uncompressed_size = (*_a0).uncompressed_size;
-        self.tables = std::mem::take(&mut (*_a0).tables);
-        self.ttc_fonts = std::mem::take(&mut (*_a0).ttc_fonts);
+        {
+            self.tables = std::mem::take(&mut (*_a0).tables);
+        };
+        {
+            self.ttc_fonts = std::mem::take(&mut (*_a0).ttc_fonts);
+        };
         return &mut (*(self as *mut WOFF2Header_56));
     }
 }
@@ -850,8 +856,12 @@ impl WOFF2FontInfo_57 {
         self.num_glyphs = (*_a0).num_glyphs;
         self.index_format = (*_a0).index_format;
         self.num_hmetrics = (*_a0).num_hmetrics;
-        self.x_mins = std::mem::take(&mut (*_a0).x_mins);
-        self.table_entry_by_tag = std::mem::take(&mut (*_a0).table_entry_by_tag);
+        {
+            self.x_mins = std::mem::take(&mut (*_a0).x_mins);
+        };
+        {
+            self.table_entry_by_tag = std::mem::take(&mut (*_a0).table_entry_by_tag);
+        };
         return &mut (*(self as *mut WOFF2FontInfo_57));
     }
 }
@@ -873,8 +883,12 @@ impl RebuildMetadata_58 {
     }
     pub unsafe fn move_assign(&mut self, _a0: *mut RebuildMetadata_58) -> *mut RebuildMetadata_58 {
         self.header_checksum = (*_a0).header_checksum;
-        self.font_infos = std::mem::take(&mut (*_a0).font_infos);
-        self.checksums = std::mem::take(&mut (*_a0).checksums);
+        {
+            self.font_infos = std::mem::take(&mut (*_a0).font_infos);
+        };
+        {
+            self.checksums = std::mem::take(&mut (*_a0).checksums);
+        };
         return &mut (*(self as *mut RebuildMetadata_58));
     }
 }
@@ -1403,13 +1417,15 @@ pub unsafe fn ReconstructGlyf_67(
             {
                 return false;
             }
-            match ((&mut (data.offset((offset) as isize), substream_size) as *mut (*const u8, u32)),)
-            {
-                (__tmp_2,) => {
-                    substreams[(i as usize)] = (
-                        cpp_move_unsafe!(&mut (*__tmp_2).0),
-                        ((*&mut (*__tmp_2).1) as u64),
-                    )
+            match (
+                (&mut substreams[(i as usize)] as *mut (*const u8, u64)),
+                (&mut (data.offset((offset) as isize), substream_size) as *mut (*const u8, u32)),
+            ) {
+                (__tmp_2, __tmp_3) => {
+                    (*__tmp_2) = (
+                        cpp_move_unsafe!(&mut (*__tmp_3).0),
+                        ((*&mut (*__tmp_3).1) as u64),
+                    );
                 }
             };
             offset = (offset).wrapping_add(substream_size);
@@ -1465,10 +1481,9 @@ pub unsafe fn ReconstructGlyf_67(
     let mut glyph_buf: Option<Box<[u8]>> = Some(Box::from_raw(Box::leak(
         (0..glyph_buf_size).map(|_| 0_u8).collect::<Box<[u8]>>(),
     )));
-    {
-        let __a0 = ((*info).num_glyphs as usize);
-        (*info).x_mins.resize_with(__a0, || 0_i16)
-    };
+    (*info)
+        .x_mins
+        .resize_with(((*info).num_glyphs as usize), || 0_i16);
     {
         let mut i: u32 = 0_u32;
         'loop_: while ((i) < ((*info).num_glyphs as u32)) {
@@ -2586,10 +2601,9 @@ pub unsafe fn ReadWOFF2Header_79(
             return false;
         }
     }
-    {
-        let __a0 = ((*hdr).num_tables as usize);
-        (*hdr).tables.resize_with(__a0, || <woff2_Table>::default())
-    };
+    (*hdr)
+        .tables
+        .resize_with(((*hdr).num_tables as usize), || <woff2_Table>::default());
     if ((!(unsafe {
         let _tables: *mut Vec<woff2_Table> = (&mut (*hdr).tables as *mut Vec<woff2_Table>);
         let _num_tables: usize = ((*hdr).num_tables as usize);
@@ -2599,7 +2613,10 @@ pub unsafe fn ReadWOFF2Header_79(
     {
         return false;
     }
-    let last_table: *mut woff2_Table = (((*hdr).tables).last_mut().unwrap());
+    let last_table: *mut woff2_Table = {
+        let __n = (*hdr).tables.len() - 1;
+        &raw mut (&mut (*hdr)).tables[__n]
+    };
     (*hdr).uncompressed_size = ((*last_table).src_offset).wrapping_add((*last_table).src_length);
     if (((((*hdr).uncompressed_size) < ((*last_table).src_offset)) as i64) != 0) {
         return false;
@@ -2630,12 +2647,9 @@ pub unsafe fn ReadWOFF2Header_79(
         {
             return false;
         }
-        {
-            let __a0 = (num_fonts as usize);
-            (*hdr)
-                .ttc_fonts
-                .resize_with(__a0, || <TtcFont_55>::default())
-        };
+        (*hdr)
+            .ttc_fonts
+            .resize_with((num_fonts as usize), || <TtcFont_55>::default());
         {
             let mut i: u32 = 0_u32;
             'loop_: while ((i) < (num_fonts)) {
@@ -2658,10 +2672,9 @@ pub unsafe fn ReadWOFF2Header_79(
                 {
                     return false;
                 }
-                {
-                    let __a0 = (num_tables as usize);
-                    (*ttc_font).table_indices.resize_with(__a0, || 0_u16)
-                };
+                (*ttc_font)
+                    .table_indices
+                    .resize_with((num_tables as usize), || 0_u16);
                 let mut glyf_idx: u32 = 0_u32;
                 let mut loca_idx: u32 = 0_u32;
                 {
@@ -2791,16 +2804,16 @@ pub unsafe fn WriteHeaders_80(
         }
     } else {
         match ({ sorted_tables.begin() },) {
-            (mut __tmp_3,) => {
-                let __n = sorted_tables.end().iter_distance(&__tmp_3);
+            (mut __tmp_4,) => {
+                let __n = sorted_tables.end().iter_distance(&__tmp_4);
                 let mut __order: Vec<isize> = (0..__n).collect();
-                __order.sort_by(|&__x, &__y| (*__tmp_3.iter_at(__x)).cmp(&*__tmp_3.iter_at(__y)));
+                __order.sort_by(|&__x, &__y| (*__tmp_4.iter_at(__x)).cmp(&*__tmp_4.iter_at(__y)));
                 let __values: Vec<_> = __order
                     .iter()
-                    .map(|&__i| std::ptr::read(__tmp_3.iter_at(__i)))
+                    .map(|&__i| std::ptr::read(__tmp_4.iter_at(__i)))
                     .collect();
                 for (__i, __v) in (0..__n).zip(__values) {
-                    std::ptr::write(__tmp_3.iter_at(__i), __v);
+                    std::ptr::write(__tmp_4.iter_at(__i), __v);
                 }
             }
         };
@@ -2824,12 +2837,9 @@ pub unsafe fn WriteHeaders_80(
             offset = (unsafe { StoreU32_31(result, offset, 0_u32) });
             offset = (unsafe { StoreU32_31(result, offset, 0_u32) });
         }
-        {
-            let __a0 = (*hdr).ttc_fonts.len();
-            (*metadata)
-                .font_infos
-                .resize_with(__a0, || <WOFF2FontInfo_57>::default())
-        };
+        (*metadata)
+            .font_infos
+            .resize_with((*hdr).ttc_fonts.len(), || <WOFF2FontInfo_57>::default());
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < ((*hdr).ttc_fonts.len())) {
@@ -2862,12 +2872,9 @@ pub unsafe fn WriteHeaders_80(
             }
         }
     } else {
-        {
-            let __a0 = 1_usize;
-            (*metadata)
-                .font_infos
-                .resize_with(__a0, || <WOFF2FontInfo_57>::default())
-        };
+        (*metadata)
+            .font_infos
+            .resize_with(1_usize, || <WOFF2FontInfo_57>::default());
         offset = (unsafe {
             let _flavor: u32 = (*hdr).flavor;
             let _num_tables: u16 = (*hdr).num_tables;
@@ -3088,7 +3095,7 @@ pub fn main() {
     argv.push(::std::ptr::null_mut());
     unsafe {
         __cpp2rust_init_globals();
-        ::std::process::exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32)
+        libcc2rs::cpp2rust_exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32)
     }
 }
 unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
@@ -3197,19 +3204,19 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2MemoryOut {
             return false;
         }
         match ({ (self.buf_.offset((offset) as isize) as *mut ::libc::c_void) },) {
-            (mut __tmp_4,) => {
+            (mut __tmp_5,) => {
                 if n != 0 {
-                    ::std::ptr::copy_nonoverlapping(buf, __tmp_4, n)
+                    ::std::ptr::copy_nonoverlapping(buf, __tmp_5, n)
                 }
-                __tmp_4
+                __tmp_5
             }
         };
         self.offset_ = ({
-            let mut __tmp_5: u64 = (self.offset_ as u64);
-            let mut __tmp_6: u64 = ((offset).wrapping_add(n) as u64);
+            let mut __tmp_6: u64 = (self.offset_ as u64);
+            let mut __tmp_7: u64 = ((offset).wrapping_add(n) as u64);
             (*{
-                let __a: *const _ = &mut __tmp_5;
-                let __b: *const _ = &mut __tmp_6;
+                let __a: *const _ = &mut __tmp_6;
+                let __b: *const _ = &mut __tmp_7;
                 if *__a < *__b { __b } else { __a }
             })
         } as usize);
@@ -3245,9 +3252,8 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2StringOut {
             if (((offset).wrapping_add(n)) > ((*(self.buf_).cast_const()).len() - 1)) {
                 match ({ self.buf_ },) {
                     (mut __tmp_1,) => {
-                        (*(__tmp_1 as *mut Vec<libc::c_char>)).splice(
-                            (*(__tmp_1 as *mut Vec<libc::c_char>)).len() - 1
-                                ..(*(__tmp_1 as *mut Vec<libc::c_char>)).len() - 1,
+                        (*__tmp_1).splice(
+                            (*__tmp_1).len() - 1..(*__tmp_1).len() - 1,
                             ::std::vec::from_elem(
                                 (0 as libc::c_char),
                                 (((offset).wrapping_add(n) as u64)
@@ -3255,21 +3261,24 @@ unsafe impl woff2_WOFF2Out for woff2_WOFF2StringOut {
                                     as usize) as usize,
                             ),
                         );
-                        (__tmp_1 as *mut Vec<libc::c_char>)
                     }
                 };
             }
-            (*self.buf_).splice(
-                offset..offset + n,
-                ::std::slice::from_raw_parts((buf as *const libc::c_char), n).to_vec(),
-            );
+            match ({ self.buf_ },) {
+                (mut __tmp_2,) => {
+                    (*__tmp_2).splice(
+                        offset..offset + n,
+                        ::std::slice::from_raw_parts((buf as *const libc::c_char), n).to_vec(),
+                    );
+                }
+            };
         }
         self.offset_ = ({
-            let mut __tmp_2: u64 = (self.offset_ as u64);
-            let mut __tmp_3: u64 = ((offset).wrapping_add(n) as u64);
+            let mut __tmp_3: u64 = (self.offset_ as u64);
+            let mut __tmp_4: u64 = ((offset).wrapping_add(n) as u64);
             (*{
-                let __a: *const _ = &mut __tmp_2;
-                let __b: *const _ = &mut __tmp_3;
+                let __a: *const _ = &mut __tmp_3;
+                let __b: *const _ = &mut __tmp_4;
                 if *__a < *__b { __b } else { __a }
             })
         } as usize);

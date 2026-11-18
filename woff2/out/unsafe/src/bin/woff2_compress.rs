@@ -676,7 +676,9 @@ impl woff2_Font_Table {
         self.offset = (*_a0).offset;
         self.length = (*_a0).length;
         self.data = (*_a0).data;
-        self.buffer = std::mem::take(&mut (*_a0).buffer);
+        {
+            self.buffer = std::mem::take(&mut (*_a0).buffer);
+        };
         self.reuse_of = (*_a0).reuse_of;
         self.flag_byte = (*_a0).flag_byte;
         return &mut (*(self as *mut woff2_Font_Table));
@@ -701,7 +703,9 @@ impl woff2_Font {
     pub unsafe fn move_assign(&mut self, _a0: *mut woff2_Font) -> *mut woff2_Font {
         self.flavor = (*_a0).flavor;
         self.num_tables = (*_a0).num_tables;
-        self.tables = std::mem::take(&mut (*_a0).tables);
+        {
+            self.tables = std::mem::take(&mut (*_a0).tables);
+        };
         return &mut (*(self as *mut woff2_Font));
     }
 }
@@ -729,8 +733,12 @@ impl woff2_FontCollection {
     ) -> *mut woff2_FontCollection {
         self.flavor = (*_a0).flavor;
         self.header_version = (*_a0).header_version;
-        self.tables = std::mem::take(&mut (*_a0).tables);
-        self.fonts = std::mem::take(&mut (*_a0).fonts);
+        {
+            self.tables = std::mem::take(&mut (*_a0).tables);
+        };
+        {
+            self.fonts = std::mem::take(&mut (*_a0).fonts);
+        };
         return &mut (*(self as *mut woff2_FontCollection));
     }
 }
@@ -1006,12 +1014,9 @@ pub unsafe fn ReadTrueTypeCollection_35(
             i.postfix_inc();
         }
     }
-    {
-        let __a0 = offsets.len();
-        (*font_collection)
-            .fonts
-            .resize_with(__a0, || <woff2_Font>::default())
-    };
+    (*font_collection)
+        .fonts
+        .resize_with(offsets.len(), || <woff2_Font>::default());
     let mut font_it: UnsafeRandomAccessIterator<woff2_Font> = (*font_collection).fonts.begin();
     let mut all_tables: UnsafeMap<u32, (u32, *mut woff2_Font_Table)> = UnsafeMap::new();
     'loop_: for offset in IterRange::new(offsets.begin(), offsets.end()) {
@@ -1057,12 +1062,9 @@ pub unsafe fn ReadFontCollection_37(
     if (((*font_collection).flavor)
         != (*std::cell::LazyCell::force_mut(&mut *&raw mut kTtcFontFlavor_22)))
     {
-        {
-            let __a0 = 1_usize;
-            (*font_collection)
-                .fonts
-                .resize_with(__a0, || <woff2_Font>::default())
-        };
+        (*font_collection)
+            .fonts
+            .resize_with(1_usize, || <woff2_Font>::default());
         let font: *mut woff2_Font = &mut (&mut (*font_collection)).fonts[(0_usize)];
         (*font).flavor = (*font_collection).flavor;
         return (unsafe {
@@ -1483,7 +1485,9 @@ impl woff2_Glyph {
         self.instructions_size = (*_a0).instructions_size;
         self.instructions_data = (*_a0).instructions_data;
         self.overlap_simple_flag_set = (*_a0).overlap_simple_flag_set;
-        self.contours = std::mem::take(&mut (*_a0).contours);
+        {
+            self.contours = std::mem::take(&mut (*_a0).contours);
+        };
         self.composite_data = (*_a0).composite_data;
         self.composite_data_size = (*_a0).composite_data_size;
         self.have_instructions = (*_a0).have_instructions;
@@ -1602,10 +1606,9 @@ pub unsafe fn ReadGlyph_63(
         return true;
     }
     if ((num_contours as i32) > (0)) {
-        {
-            let __a0 = (num_contours as usize);
-            (*glyph).contours.resize_with(__a0, || Default::default())
-        };
+        (*glyph)
+            .contours
+            .resize_with((num_contours as usize), || Default::default());
         let mut last_point_index: u16 = 0_u16;
         {
             let mut i: i32 = 0;
@@ -1618,11 +1621,8 @@ pub unsafe fn ReadGlyph_63(
                 let mut num_points: u16 = ((((point_index as i32) - (last_point_index as i32))
                     + (if ((i) == (0)) { 1 } else { 0 }))
                     as u16);
-                {
-                    let __a0 = (num_points as usize);
-                    (&mut (*glyph)).contours[(i as usize)]
-                        .resize_with(__a0, || <woff2_Glyph_Point>::default())
-                };
+                (&mut (*glyph)).contours[(i as usize)]
+                    .resize_with((num_points as usize), || <woff2_Glyph_Point>::default());
                 last_point_index = point_index;
                 i.prefix_inc();
             }
@@ -1646,12 +1646,8 @@ pub unsafe fn ReadGlyph_63(
             {
                 let mut i: i32 = 0;
                 'loop_: while ((i) < (num_contours as i32)) {
-                    match ((&mut flags[(i as usize)] as *mut Vec<u8>),) {
-                        (__tmp_0,) => {
-                            let __a0 = (&mut (*glyph)).contours[(i as usize)].len();
-                            (*__tmp_0).resize_with(__a0, || 0_u8)
-                        }
-                    };
+                    flags[(i as usize)]
+                        .resize_with((&mut (*glyph)).contours[(i as usize)].len(), || 0_u8);
                     {
                         let mut j: usize = 0_usize;
                         'loop_: while ((j) < ((&mut (*glyph)).contours[(i as usize)].len())) {
@@ -2118,10 +2114,10 @@ pub unsafe fn WriteNormalizedLoca_73(
         )
     });
     let mut glyph_sz: i32 = if ((index_fmt) == (0)) { 2 } else { 4 };
-    {
-        let __a0 = (((unsafe { Round4_69(((num_glyphs) + (1))) }) * (glyph_sz)) as usize);
-        (*loca_table).buffer.resize_with(__a0, || 0_u8)
-    };
+    (*loca_table).buffer.resize_with(
+        (((unsafe { Round4_69(((num_glyphs) + (1))) }) * (glyph_sz)) as usize),
+        || 0_u8,
+    );
     (*loca_table).length = ((((num_glyphs) + (1)) * (glyph_sz)) as u32);
     let mut glyf_dst: *mut u8 = if (num_glyphs != 0) {
         (&mut (&mut (*glyf_table)).buffer[(0_usize)] as *mut u8)
@@ -2190,10 +2186,9 @@ pub unsafe fn WriteNormalizedLoca_73(
             loca_dst,
         )
     });
-    {
-        let __a0 = (glyf_offset as usize);
-        (*glyf_table).buffer.resize_with(__a0, || 0_u8)
-    };
+    (*glyf_table)
+        .buffer
+        .resize_with((glyf_offset as usize), || 0_u8);
     (*glyf_table).data = (if (glyf_offset != 0) {
         (&mut (&mut (*glyf_table)).buffer[(0_usize)] as *mut u8)
     } else {
@@ -2219,10 +2214,7 @@ pub unsafe fn MakeEditableBuffer_74(mut font: *mut woff2_Font, mut tableTag: i32
         return true;
     }
     let mut sz: i32 = ((unsafe { Round4_71((*table).length) }) as i32);
-    {
-        let __a0 = (sz as usize);
-        (*table).buffer.resize_with(__a0, || 0_u8)
-    };
+    (*table).buffer.resize_with((sz as usize), || 0_u8);
     let mut buf: *mut u8 = (&mut (&mut (*table)).buffer[(0_usize)] as *mut u8);
     match (
         { (buf as *mut ::libc::c_void) },
@@ -2290,10 +2282,9 @@ pub unsafe fn NormalizeGlyphs_75(mut font: *mut woff2_Font) -> bool {
     let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font)) });
     let mut max_normalized_glyf_size: usize =
         ((((1.1_f64) * ((*glyf_table).length as f64)) + (((2) * (num_glyphs)) as f64)) as usize);
-    {
-        let __a0 = max_normalized_glyf_size;
-        (*glyf_table).buffer.resize_with(__a0, || 0_u8)
-    };
+    (*glyf_table)
+        .buffer
+        .resize_with(max_normalized_glyf_size, || 0_u8);
     if !(unsafe { WriteNormalizedLoca_73(index_fmt, num_glyphs, font) }) {
         if ((index_fmt) != (0)) {
             return false;
@@ -2510,10 +2501,7 @@ pub unsafe fn WriteBytes_86(mut out: *mut Vec<u8>, mut data: *const u8, mut len:
         return;
     }
     let mut offset: usize = (*(out).cast_const()).len();
-    {
-        let __a0 = (offset).wrapping_add(len);
-        (*out).resize_with(__a0, || 0_u8)
-    };
+    (*out).resize_with((offset).wrapping_add(len), || 0_u8);
     match (
         { ((&mut (&mut (*out))[(offset)] as *mut u8) as *mut ::libc::c_void) },
         { (data as *const ::libc::c_void) },
@@ -2594,10 +2582,8 @@ impl GlyfEncoder_90 {
             overlap_bitmap_: Vec::new(),
             n_glyphs_: num_glyphs,
         };
-        {
-            let __a0 = (((((num_glyphs) + (31)) >> (5)) << (2)) as usize);
-            this.bbox_bitmap_.resize_with(__a0, || 0_u8)
-        };
+        this.bbox_bitmap_
+            .resize_with((((((num_glyphs) + (31)) >> (5)) << (2)) as usize), || 0_u8);
         this
     }
     pub unsafe fn Encode(&mut self, mut glyph_id: i32, glyph: *const woff2_Glyph) -> bool {
@@ -2947,10 +2933,8 @@ impl GlyfEncoder_90 {
     }
     unsafe fn EnsureOverlapBitmap(&mut self) {
         if self.overlap_bitmap_.is_empty() {
-            {
-                let __a0 = ((((self.n_glyphs_) + (7)) >> (3)) as usize);
-                self.overlap_bitmap_.resize_with(__a0, || 0_u8)
-            };
+            self.overlap_bitmap_
+                .resize_with(((((self.n_glyphs_) + (7)) >> (3)) as usize), || 0_u8);
         }
     }
     pub unsafe fn move_from(_a0: *mut GlyfEncoder_90) -> Self {
@@ -2969,15 +2953,33 @@ impl GlyfEncoder_90 {
         this
     }
     pub unsafe fn move_assign(&mut self, _a0: *mut GlyfEncoder_90) -> *mut GlyfEncoder_90 {
-        self.n_contour_stream_ = std::mem::take(&mut (*_a0).n_contour_stream_);
-        self.n_points_stream_ = std::mem::take(&mut (*_a0).n_points_stream_);
-        self.flag_byte_stream_ = std::mem::take(&mut (*_a0).flag_byte_stream_);
-        self.composite_stream_ = std::mem::take(&mut (*_a0).composite_stream_);
-        self.bbox_bitmap_ = std::mem::take(&mut (*_a0).bbox_bitmap_);
-        self.bbox_stream_ = std::mem::take(&mut (*_a0).bbox_stream_);
-        self.glyph_stream_ = std::mem::take(&mut (*_a0).glyph_stream_);
-        self.instruction_stream_ = std::mem::take(&mut (*_a0).instruction_stream_);
-        self.overlap_bitmap_ = std::mem::take(&mut (*_a0).overlap_bitmap_);
+        {
+            self.n_contour_stream_ = std::mem::take(&mut (*_a0).n_contour_stream_);
+        };
+        {
+            self.n_points_stream_ = std::mem::take(&mut (*_a0).n_points_stream_);
+        };
+        {
+            self.flag_byte_stream_ = std::mem::take(&mut (*_a0).flag_byte_stream_);
+        };
+        {
+            self.composite_stream_ = std::mem::take(&mut (*_a0).composite_stream_);
+        };
+        {
+            self.bbox_bitmap_ = std::mem::take(&mut (*_a0).bbox_bitmap_);
+        };
+        {
+            self.bbox_stream_ = std::mem::take(&mut (*_a0).bbox_stream_);
+        };
+        {
+            self.glyph_stream_ = std::mem::take(&mut (*_a0).glyph_stream_);
+        };
+        {
+            self.instruction_stream_ = std::mem::take(&mut (*_a0).instruction_stream_);
+        };
+        {
+            self.overlap_bitmap_ = std::mem::take(&mut (*_a0).overlap_bitmap_);
+        };
         self.n_glyphs_ = (*_a0).n_glyphs_;
         return &mut (*(self as *mut GlyfEncoder_90));
     }
@@ -3995,7 +3997,7 @@ pub fn main() {
     argv.push(::std::ptr::null_mut());
     unsafe {
         __cpp2rust_init_globals();
-        ::std::process::exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32)
+        libcc2rs::cpp2rust_exit(main_0((argv.len() - 1) as i32, argv.as_mut_ptr()) as i32)
     }
 }
 unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {

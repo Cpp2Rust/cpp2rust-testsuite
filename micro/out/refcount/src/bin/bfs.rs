@@ -90,7 +90,7 @@ pub fn BFS_0(graph: Ptr<Graph>, mut start_vertex: u32) -> Ptr<u32> {
 }
 pub fn main() {
     __cpp2rust_init_globals();
-    std::process::exit(main_0());
+    libcc2rs::cpp2rust_exit(main_0());
 }
 fn main_0() -> i32 {
     let mut N: usize = 300_usize;
