@@ -9496,7 +9496,7 @@ pub unsafe fn DecodeContextMap_188(
             let mut reps: usize = ((((1_u32 as u32).wrapping_add(((1_u32) << (code))))
                 .wrapping_add((((unsafe { BrunsliBitReaderRead_126(br, code) }) as i32) as u32)))
                 as usize);
-            'loop_: while (reps.prefix_dec() != 0) {
+            'loop_: while ((*reps.prefix_dec()) != 0) {
                 if ((*i) >= (length)) {
                     return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
                 }
@@ -10416,7 +10416,7 @@ pub unsafe fn BuildHuffmanTable_218(
     code.bits = 1_u8;
     step = 2;
     let mut __do_while = true;
-    'loop_: while __do_while || ((code.bits.prefix_inc() as usize) <= (table_bits)) {
+    'loop_: while __do_while || (((*code.bits.prefix_inc()) as usize) <= (table_bits)) {
         __do_while = false;
         'loop_: while (((*count.offset((code.bits) as isize)) as i32) != (0)) {
             code.value = (*sorted.offset((symbol.postfix_inc()) as isize));

@@ -3475,7 +3475,10 @@ pub unsafe fn HistogramCombine_133(
                     };
                     break;
                 }
-                cluster.iter_inc();
+                {
+                    (*(&mut cluster as *mut UnsafeRandomAccessIterator<u64>)).iter_inc();
+                    (&mut cluster as *mut UnsafeRandomAccessIterator<u64>)
+                };
             }
         }
         let mut copy_to: UnsafeRandomAccessIterator<brunsli_HistogramPair> = pairs.begin();
@@ -3498,7 +3501,11 @@ pub unsafe fn HistogramCombine_133(
             } else {
                 (*copy_to.iter_deref()) = (*p);
             }
-            copy_to.iter_inc();
+            {
+                (*(&mut copy_to as *mut UnsafeRandomAccessIterator<brunsli_HistogramPair>))
+                    .iter_inc();
+                (&mut copy_to as *mut UnsafeRandomAccessIterator<brunsli_HistogramPair>)
+            };
         }
         {
             let __a0 = (copy_to.iter_distance(&pairs.begin()) as usize);
@@ -10675,7 +10682,7 @@ pub unsafe fn RefineDCTBlock_247(
                             [(k) as usize]) as isize,
                     )) = thiscoef;
                 } else {
-                    if ((r.prefix_dec()) < (0)) {
+                    if ((*r.prefix_dec()) < (0)) {
                         break;
                     }
                 }

@@ -4146,7 +4146,9 @@ pub fn DecodeVarint_144(
                         let __rhs = { ({ next_bit } << { s.with(|__s| __s.i) }) };
                         field!(s, value).with_mut(|__v| *__v = *__v | __rhs)
                     };
-                    field!(s, i).with_mut(|__v| __v.prefix_inc());
+                    field!(s, i).with_mut(|__v| {
+                        __v.prefix_inc();
+                    });
                     field!(s, stage)
                         .write(brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION);
                     continue 'loop_;
@@ -4210,7 +4212,9 @@ pub fn DecodeLimitedVarint_145(
                         };
                         field!(s, value).with_mut(|__v| *__v = *__v | __rhs)
                     };
-                    field!(s, i).with_mut(|__v| __v.prefix_inc());
+                    field!(s, i).with_mut(|__v| {
+                        __v.prefix_inc();
+                    });
                     field!(s, stage)
                         .write(brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION);
                     continue 'loop_;
@@ -4274,7 +4278,9 @@ pub fn DecodeLimitedVarint_146(
                         };
                         field!(s, value).with_mut(|__v| *__v = *__v | __rhs)
                     };
-                    field!(s, i).with_mut(|__v| __v.prefix_inc());
+                    field!(s, i).with_mut(|__v| {
+                        __v.prefix_inc();
+                    });
                     field!(s, stage)
                         .write(brunsli_internal_dec_VarintState_Stage_READ_CONTINUATION);
                     continue 'loop_;
@@ -4800,11 +4806,16 @@ pub fn DecodeHuffmanCode_150(
                                     .wrapping_sub((count).wrapping_mul((1_usize << shift)))
                             });
                         }
-                        field!(js, i).with_mut(|__v| __v.prefix_inc());
+                        field!(js, i).with_mut(|__v| {
+                            __v.prefix_inc();
+                        });
                         continue 'loop_;
                     }
-                    elem!(field_ref!(huff, counts).decay(), js.with(|__s| __s.max_len))
-                        .with_mut(|__v| __v.prefix_inc());
+                    elem!(field_ref!(huff, counts).decay(), js.with(|__s| __s.max_len)).with_mut(
+                        |__v| {
+                            __v.prefix_inc();
+                        },
+                    );
                     field!(js, i).write(0_usize);
                     field!(js, stage).write(
                         brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_PERMUTATION,
@@ -4842,7 +4853,9 @@ pub fn DecodeHuffmanCode_150(
                         }
                         elem!(field_ref!(huff, values).decay(), js.with(|__s| __s.i))
                             .write(((*value.borrow()) as i32));
-                        field!(js, i).with_mut(|__v| __v.prefix_inc());
+                        field!(js, i).with_mut(|__v| {
+                            __v.prefix_inc();
+                        });
                         continue 'loop_;
                     }
                     elem!(
@@ -4978,7 +4991,7 @@ pub fn DecodeScanInfo_151(
  } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION as i32 )  =>  { { if ! ( ( { BrunsliBitReaderCanRead_134 ( (br ).clone() , 1_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
  } if ( ( { BrunsliBitReaderRead_126 ( (br ).clone() , 1_u32  , ) } )  != 0 ) { field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA  ) ;
  } else { ( { (*maybe_add_zero_run.borrow())  .call ( ) } ) ;
- field!(js, i) .with_mut(|__v| __v. prefix_inc ()) ;
+ field!(js, i) .with_mut(|__v| { __v. prefix_inc (); }) ;
  if ({ js.with(|__s| __s . i )  } < { js.with(|__s| __s . num_scans )  }) { field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON  ) ;
  ;
  continue 'loop_ ;
@@ -4990,7 +5003,7 @@ pub fn DecodeScanInfo_151(
   ;
  ;
  if ({ block_idx  } > { js.with(|__s| __s . last_block_idx )  }) { ( { (*maybe_add_zero_run.borrow())  .call ( ) } ) ;
- } field!(js, last_num) .with_mut(|__v| __v. prefix_inc ()) ;
+ } field!(js, last_num) .with_mut(|__v| { __v. prefix_inc (); }) ;
  field!(js, last_block_idx) .write( block_idx  ) ;
  if ( js.with(|__s| __s . last_block_idx ) > ( ( 1 << 30 ) ) ) { return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN   ;
  } field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION  ) ;
@@ -6739,13 +6752,17 @@ pub fn DecodeJPEGInternalsSection_184(
                 field!(jpg, marker_order).with_mut(|__v: &mut Vec<u8>| __v.push(a0_clone))
             };
             if ((marker as i32) == 196) {
-                field!(js, dht_count).with_mut(|__v| __v.prefix_inc());
+                field!(js, dht_count).with_mut(|__v| {
+                    __v.prefix_inc();
+                });
             }
             if ((marker as i32) == 221) {
                 field!(js, have_dri).write(true);
             }
             if ((marker as i32) == 218) {
-                field!(js, num_scans).with_mut(|__v| __v.prefix_inc());
+                field!(js, num_scans).with_mut(|__v| {
+                    __v.prefix_inc();
+                });
             }
             if ((marker as i32) == 217) {
                 break;
@@ -6866,7 +6883,9 @@ pub fn DecodeJPEGInternalsSection_184(
                 (*suspend_bit_reader.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
-        field!(js, i).with_mut(|__v| __v.prefix_inc());
+        field!(js, i).with_mut(|__v| {
+            __v.prefix_inc();
+        });
     }
     if ((js.with(|__s| __s.stage) as i32)
         == (brunsli_internal_dec_JpegInternalsState_Stage_READ_COMP_ID_SCHEME as i32))
@@ -6932,7 +6951,9 @@ pub fn DecodeJPEGInternalsSection_184(
             }
             let __rhs = (({ BrunsliBitReaderRead_126((*br.borrow()).clone(), 8_u32) }) as i32);
             field!(vec_elem!(jpg, components, js.with(|__s| __s.i)), id).write(__rhs);
-            field!(js, i).with_mut(|__v| __v.prefix_inc());
+            field!(js, i).with_mut(|__v| {
+                __v.prefix_inc();
+            });
         }
         field!(js, stage)
             .write(brunsli_internal_dec_JpegInternalsState_Stage_READ_NUM_PADDING_BITS);
@@ -6977,7 +6998,9 @@ pub fn DecodeJPEGInternalsSection_184(
                 let __init = (({ BrunsliBitReaderRead_126((*br.borrow()).clone(), 1_u32) }) as i32);
                 field!(jpg, padding_bits).with_mut(|__v: &mut Vec<i32>| __v.push(__init))
             };
-            field!(js, i).with_mut(|__v| __v.prefix_inc());
+            field!(js, i).with_mut(|__v| {
+                __v.prefix_inc();
+            });
         }
         ({ (*suspend_bit_reader.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_OK) });
         ({ BrunsliBitReaderFinish_131((*br.borrow()).clone()) });
@@ -7005,7 +7028,9 @@ pub fn DecodeJPEGInternalsSection_184(
                             brunsli_internal_dec_JpegInternalsState_Stage_READ_INTERMARKER_LENGTH,
                         );
                     } else {
-                        field!(js, i).with_mut(|__v| __v.prefix_inc());
+                        field!(js, i).with_mut(|__v| {
+                            __v.prefix_inc();
+                        });
                     };
                     continue 'loop_;
                 }
@@ -7100,7 +7125,9 @@ pub fn DecodeJPEGInternalsSection_184(
                         };
                         return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA;
                     }
-                    field!(js, i).with_mut(|__v| __v.prefix_inc());
+                    field!(js, i).with_mut(|__v| {
+                        __v.prefix_inc();
+                    });
                     field!(js, stage)
                         .write(brunsli_internal_dec_JpegInternalsState_Stage_ITERATE_MARKERS);
                     continue 'loop_;
@@ -7344,7 +7371,9 @@ pub fn DecodeQuantDataSection_186(
                                 .call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
-                    field!(qs, j).with_mut(|__v| __v.prefix_inc());
+                    field!(qs, j).with_mut(|__v| {
+                        __v.prefix_inc();
+                    });
                     field!(qs, stage)
                         .write(brunsli_internal_dec_QuantDataState_Stage_READ_DIFF_IS_ZERO);
                     continue 'loop_;
@@ -7360,7 +7389,9 @@ pub fn DecodeQuantDataSection_186(
                                 .call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                         });
                     }
-                    field!(qs, i).with_mut(|__v| __v.prefix_inc());
+                    field!(qs, i).with_mut(|__v| {
+                        __v.prefix_inc();
+                    });
                     field!(qs, stage).write(brunsli_internal_dec_QuantDataState_Stage_READ_STOCK);
                     continue 'loop_;
                 }
@@ -7394,7 +7425,9 @@ pub fn DecodeQuantDataSection_186(
                 (*suspend_bit_reader.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
             });
         }
-        field!(qs, i).with_mut(|__v| __v.prefix_inc());
+        field!(qs, i).with_mut(|__v| {
+            __v.prefix_inc();
+        });
     }
     if !((qs.with(|__s| __s.stage) as i32)
         == (brunsli_internal_dec_QuantDataState_Stage_FINISH as i32))
@@ -7695,7 +7728,9 @@ pub fn DecodeHistogramDataSection_187(
                     (*suspend_bit_reader.borrow()).call(brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN)
                 });
             }
-            field!(hs, i).with_mut(|__v| __v.prefix_inc());
+            field!(hs, i).with_mut(|__v| {
+                __v.prefix_inc();
+            });
         }
         field_ptr!(hs, entropy).write(None);
         Rc::new(RefCell::new(Vec::new()))
@@ -8920,22 +8955,28 @@ pub fn DecodeContextMap_188(
         }) as u32);
         if (code == 0_u32) {
             elem!(map, (i.read())).write(0_u8);
-            i.with_mut(|__v| __v.prefix_inc());
+            i.with_mut(|__v| {
+                __v.prefix_inc();
+            });
         } else if ((code as usize) <= max_run_length_prefix) {
             let mut reps: usize = ((((1_u32 as u32).wrapping_add((1_u32 << code)))
                 .wrapping_add(((({ BrunsliBitReaderRead_126((br).clone(), code) }) as i32) as u32)))
                 as usize);
-            'loop_: while (reps.prefix_dec() != 0) {
+            'loop_: while ((*reps.prefix_dec()) != 0) {
                 if ({ (i.read()) } >= { length }) {
                     return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN;
                 }
                 elem!(map, (i.read())).write(0_u8);
-                i.with_mut(|__v| __v.prefix_inc());
+                i.with_mut(|__v| {
+                    __v.prefix_inc();
+                });
             }
         } else {
             elem!(map, (i.read()))
                 .write({ (((code as usize).wrapping_sub(max_run_length_prefix)) as u8) });
-            i.with_mut(|__v| __v.prefix_inc());
+            i.with_mut(|__v| {
+                __v.prefix_inc();
+            });
         }
     }
     if (({ BrunsliBitReaderRead_126((br).clone(), 1_u32) }) != 0) {
@@ -9698,7 +9739,7 @@ pub fn BuildHuffmanTable_218(
     code.bits = 1_u8;
     step = 2;
     let mut __do_while = true;
-    'loop_: while __do_while || ((code.bits.prefix_inc() as usize) <= table_bits) {
+    'loop_: while __do_while || (((*code.bits.prefix_inc()) as usize) <= table_bits) {
         __do_while = false;
         'loop_: while (((elem!(count, code.bits).read()) as i32) != 0) {
             let __rhs = (elem!(sorted, symbol.postfix_inc()).read());
@@ -9710,7 +9751,9 @@ pub fn BuildHuffmanTable_218(
             });
             let __rhs = ({ GetNextKey_221(key, (code.bits as usize)) });
             key = __rhs;
-            elem!(count, code.bits).with_mut(|__v| __v.prefix_dec());
+            elem!(count, code.bits).with_mut(|__v| {
+                __v.prefix_dec();
+            });
         }
         step <<= 1;
     }
@@ -9757,7 +9800,9 @@ pub fn BuildHuffmanTable_218(
             });
             let __rhs = ({ GetNextKey_221(key, len) });
             key = __rhs;
-            elem!(count, len).with_mut(|__v| __v.prefix_dec());
+            elem!(count, len).with_mut(|__v| {
+                __v.prefix_dec();
+            });
         }
         {
             len.prefix_inc();
@@ -10108,7 +10153,9 @@ pub fn BufferEndOfBand_239(
     if (s.with(|__s| __s.eob_run_) == 0) {
         field!(s, cur_ac_huff_).write((ac_huff).clone());
     }
-    field!(s, eob_run_).with_mut(|__v| __v.prefix_inc());
+    field!(s, eob_run_).with_mut(|__v| {
+        __v.prefix_inc();
+    });
     if (new_bits_count != 0) {
         let mut new_bits: u64 = 0_u64;
         {
@@ -11314,8 +11361,9 @@ pub fn DoEncodeScan_255(
                                                 ss.with(|__s| __s.extra_zero_runs_pos)
                                             )
                                             .with(|__s| __s.num_extra_zero_runs);
-                                            field!(ss, extra_zero_runs_pos)
-                                                .with_mut(|__v| __v.prefix_inc());
+                                            field!(ss, extra_zero_runs_pos).with_mut(|__v| {
+                                                __v.prefix_inc();
+                                            });
                                             field!(ss, next_extra_zero_run_index).write(
                                                 ({
                                                     (*get_next_extra_zero_run_index.borrow()).call()
@@ -11355,8 +11403,9 @@ pub fn DoEncodeScan_255(
                                         if !(ok) {
                                             return brunsli_internal_dec_SerializationStatus_ERROR;
                                         }
-                                        field!(ss, block_scan_index)
-                                            .with_mut(|__v| __v.prefix_inc());
+                                        field!(ss, block_scan_index).with_mut(|__v| {
+                                            __v.prefix_inc();
+                                        });
                                         ix.prefix_inc();
                                     }
                                 }
@@ -11366,11 +11415,15 @@ pub fn DoEncodeScan_255(
                         i.prefix_inc();
                     }
                 }
-                field!(ss, restarts_to_go).with_mut(|__v| __v.prefix_dec());
+                field!(ss, restarts_to_go).with_mut(|__v| {
+                    __v.prefix_dec();
+                });
                 mcu_x.prefix_inc();
             }
         }
-        field!(ss, mcu_y).with_mut(|__v| __v.prefix_inc());
+        field!(ss, mcu_y).with_mut(|__v| {
+            __v.prefix_inc();
+        });
     }
     if ({ ss.with(|__s| __s.mcu_y) } < { MCU_rows }) {
         if !(bw.with(|__s| __s.healthy)) {
@@ -11654,8 +11707,9 @@ pub fn DoEncodeScan_256(
                                                 ss.with(|__s| __s.extra_zero_runs_pos)
                                             )
                                             .with(|__s| __s.num_extra_zero_runs);
-                                            field!(ss, extra_zero_runs_pos)
-                                                .with_mut(|__v| __v.prefix_inc());
+                                            field!(ss, extra_zero_runs_pos).with_mut(|__v| {
+                                                __v.prefix_inc();
+                                            });
                                             field!(ss, next_extra_zero_run_index).write(
                                                 ({
                                                     (*get_next_extra_zero_run_index.borrow()).call()
@@ -11707,8 +11761,9 @@ pub fn DoEncodeScan_256(
                                         if !(ok) {
                                             return brunsli_internal_dec_SerializationStatus_ERROR;
                                         }
-                                        field!(ss, block_scan_index)
-                                            .with_mut(|__v| __v.prefix_inc());
+                                        field!(ss, block_scan_index).with_mut(|__v| {
+                                            __v.prefix_inc();
+                                        });
                                         ix.prefix_inc();
                                     }
                                 }
@@ -11718,11 +11773,15 @@ pub fn DoEncodeScan_256(
                         i.prefix_inc();
                     }
                 }
-                field!(ss, restarts_to_go).with_mut(|__v| __v.prefix_dec());
+                field!(ss, restarts_to_go).with_mut(|__v| {
+                    __v.prefix_dec();
+                });
                 mcu_x.prefix_inc();
             }
         }
-        field!(ss, mcu_y).with_mut(|__v| __v.prefix_inc());
+        field!(ss, mcu_y).with_mut(|__v| {
+            __v.prefix_inc();
+        });
     }
     if ({ ss.with(|__s| __s.mcu_y) } < { MCU_rows }) {
         if !(bw.with(|__s| __s.healthy)) {
@@ -12006,8 +12065,9 @@ pub fn DoEncodeScan_257(
                                                 ss.with(|__s| __s.extra_zero_runs_pos)
                                             )
                                             .with(|__s| __s.num_extra_zero_runs);
-                                            field!(ss, extra_zero_runs_pos)
-                                                .with_mut(|__v| __v.prefix_inc());
+                                            field!(ss, extra_zero_runs_pos).with_mut(|__v| {
+                                                __v.prefix_inc();
+                                            });
                                             field!(ss, next_extra_zero_run_index).write(
                                                 ({
                                                     (*get_next_extra_zero_run_index.borrow()).call()
@@ -12048,8 +12108,9 @@ pub fn DoEncodeScan_257(
                                         if !(ok) {
                                             return brunsli_internal_dec_SerializationStatus_ERROR;
                                         }
-                                        field!(ss, block_scan_index)
-                                            .with_mut(|__v| __v.prefix_inc());
+                                        field!(ss, block_scan_index).with_mut(|__v| {
+                                            __v.prefix_inc();
+                                        });
                                         ix.prefix_inc();
                                     }
                                 }
@@ -12059,11 +12120,15 @@ pub fn DoEncodeScan_257(
                         i.prefix_inc();
                     }
                 }
-                field!(ss, restarts_to_go).with_mut(|__v| __v.prefix_dec());
+                field!(ss, restarts_to_go).with_mut(|__v| {
+                    __v.prefix_dec();
+                });
                 mcu_x.prefix_inc();
             }
         }
-        field!(ss, mcu_y).with_mut(|__v| __v.prefix_inc());
+        field!(ss, mcu_y).with_mut(|__v| {
+            __v.prefix_inc();
+        });
     }
     if ({ ss.with(|__s| __s.mcu_y) } < { MCU_rows }) {
         if !(bw.with(|__s| __s.healthy)) {
@@ -12537,7 +12602,9 @@ pub fn SerializeJpeg_206(
                             .write(brunsli_internal_dec_SerializationState_Stage_ERROR);
                         break;
                     }
-                    field!(ss, section_index).with_mut(|__v| __v.prefix_inc());
+                    field!(ss, section_index).with_mut(|__v| {
+                        __v.prefix_inc();
+                    });
                     break;
                 }
             }
@@ -13897,11 +13964,15 @@ impl brunsli_ProbImpl for Ptr<brunsli_Prob> {
         );
     }
     fn Add(&self, mut val: i32) {
-        field!((*self), total).with_mut(|__v| __v.prefix_inc());
+        field!((*self), total).with_mut(|__v| {
+            __v.prefix_inc();
+        });
         if (val == 0) {
             field!((*self), count).write({ (((*self).with(|__s| __s.count) as i32) + 256) as u16 });
         } else {
-            field!((*self), count).with_mut(|__v| __v.prefix_inc());
+            field!((*self), count).with_mut(|__v| {
+                __v.prefix_inc();
+            });
         }
         field!((*self), prob8).write(
             ({

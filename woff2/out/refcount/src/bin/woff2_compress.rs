@@ -4387,7 +4387,9 @@ impl woff2_BufferImpl for Ptr<woff2_Buffer> {
             )
             .read())
         });
-        field!((*self), offset_).with_mut(|__v| __v.prefix_inc());
+        field!((*self), offset_).with_mut(|__v| {
+            __v.prefix_inc();
+        });
         return true;
     }
     fn ReadU16(&self, mut value: Ptr<u16>) -> bool {

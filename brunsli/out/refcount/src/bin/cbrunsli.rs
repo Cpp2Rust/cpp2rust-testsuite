@@ -3150,7 +3150,12 @@ pub fn HistogramCombine_133(
                     };
                     break;
                 }
-                (*cluster.borrow_mut()).iter_inc();
+                {
+                    cluster.as_pointer().with_mut(|__it| {
+                        __it.iter_inc();
+                    });
+                    cluster.as_pointer()
+                };
             }
         }
         let copy_to: Value<RandomAccessIterator<brunsli_HistogramPair>> =
@@ -3177,7 +3182,12 @@ pub fn HistogramCombine_133(
                 let __rhs = (*p.upgrade().deref()).clone();
                 (*copy_to.borrow()).iter_deref().write(__rhs);
             }
-            (*copy_to.borrow_mut()).iter_inc();
+            {
+                copy_to.as_pointer().with_mut(|__it| {
+                    __it.iter_inc();
+                });
+                copy_to.as_pointer()
+            };
         }
         {
             let __a0 = ((*copy_to.borrow()).iter_distance(&pairs.decay().begin()) as usize);
@@ -5472,7 +5482,9 @@ pub fn SampleNumNonZeros_181(mut m: Ptr<brunsli_internal_enc_ComponentMeta>) -> 
                 let mut k: usize = 0_usize;
                 'loop_: while (k < (kDCTBlockSize_3.with(|rc| *rc.borrow()) as usize)) {
                     if (((elem!(block, k).read()) as i32) == 0) {
-                        elem!(num_zeros.decay(), k).with_mut(|__v| __v.prefix_inc());
+                        elem!(num_zeros.decay(), k).with_mut(|__v| {
+                            __v.prefix_inc();
+                        });
                     }
                     k.prefix_inc();
                 }
@@ -8450,13 +8462,17 @@ pub fn WriteHuffmanTreeRepetitions_225(
     if ((previous_value as i32) != (value as i32)) {
         elem!(tree, (tree_size.read())).write({ value });
         elem!(extra_bits_data, (tree_size.read())).write(0_u8);
-        tree_size.with_mut(|__v| __v.prefix_inc());
+        tree_size.with_mut(|__v| {
+            __v.prefix_inc();
+        });
         repetitions.prefix_dec();
     }
     if (repetitions == 7_usize) {
         elem!(tree, (tree_size.read())).write({ value });
         elem!(extra_bits_data, (tree_size.read())).write(0_u8);
-        tree_size.with_mut(|__v| __v.prefix_inc());
+        tree_size.with_mut(|__v| {
+            __v.prefix_inc();
+        });
         repetitions.prefix_dec();
     }
     if (repetitions < 3_usize) {
@@ -8465,7 +8481,9 @@ pub fn WriteHuffmanTreeRepetitions_225(
             'loop_: while (i < repetitions) {
                 elem!(tree, (tree_size.read())).write({ value });
                 elem!(extra_bits_data, (tree_size.read())).write(0_u8);
-                tree_size.with_mut(|__v| __v.prefix_inc());
+                tree_size.with_mut(|__v| {
+                    __v.prefix_inc();
+                });
                 i.prefix_inc();
             }
         }
@@ -8475,7 +8493,9 @@ pub fn WriteHuffmanTreeRepetitions_225(
         'loop_: while true {
             elem!(tree, (tree_size.read())).write(16_u8);
             elem!(extra_bits_data, (tree_size.read())).write({ ((repetitions & 3_usize) as u8) });
-            tree_size.with_mut(|__v| __v.prefix_inc());
+            tree_size.with_mut(|__v| {
+                __v.prefix_inc();
+            });
             repetitions >>= 2;
             if (repetitions == 0_usize) {
                 break;
@@ -8505,7 +8525,9 @@ pub fn WriteHuffmanTreeRepetitionsZeros_226(
     if (repetitions == 11_usize) {
         elem!(tree, (tree_size.read())).write(0_u8);
         elem!(extra_bits_data, (tree_size.read())).write(0_u8);
-        tree_size.with_mut(|__v| __v.prefix_inc());
+        tree_size.with_mut(|__v| {
+            __v.prefix_inc();
+        });
         repetitions.prefix_dec();
     }
     if (repetitions < 3_usize) {
@@ -8514,7 +8536,9 @@ pub fn WriteHuffmanTreeRepetitionsZeros_226(
             'loop_: while (i < repetitions) {
                 elem!(tree, (tree_size.read())).write(0_u8);
                 elem!(extra_bits_data, (tree_size.read())).write(0_u8);
-                tree_size.with_mut(|__v| __v.prefix_inc());
+                tree_size.with_mut(|__v| {
+                    __v.prefix_inc();
+                });
                 i.prefix_inc();
             }
         }
@@ -8524,7 +8548,9 @@ pub fn WriteHuffmanTreeRepetitionsZeros_226(
         'loop_: while true {
             elem!(tree, (tree_size.read())).write(17_u8);
             elem!(extra_bits_data, (tree_size.read())).write({ ((repetitions & 7_usize) as u8) });
-            tree_size.with_mut(|__v| __v.prefix_inc());
+            tree_size.with_mut(|__v| {
+                __v.prefix_inc();
+            });
             repetitions >>= 3;
             if (repetitions == 0_usize) {
                 break;
@@ -9403,7 +9429,9 @@ pub fn ProcessDHT_237(
             field_ref!(huff.as_pointer(), counts).decay(),
             (max_depth as usize)
         )
-        .with_mut(|__v| __v.prefix_inc());
+        .with_mut(|__v| {
+            __v.prefix_inc();
+        });
         elem!(
             field_ref!(huff.as_pointer(), values).decay(),
             (total_count as usize)
@@ -9873,7 +9901,9 @@ pub fn DecodeDCTBlock_246(
         return true;
     }
     if ((eobrun.read()) > 0) {
-        eobrun.with_mut(|__v| __v.prefix_dec());
+        eobrun.with_mut(|__v| {
+            __v.prefix_dec();
+        });
         return true;
     }
     num_zero_runs.write(0);
@@ -9930,7 +9960,9 @@ pub fn DecodeDCTBlock_246(
                 num_zero_runs.write(0);
             } else if (r == 15) {
                 k += 15;
-                num_zero_runs.with_mut(|__v| __v.prefix_inc());
+                num_zero_runs.with_mut(|__v| {
+                    __v.prefix_inc();
+                });
             } else {
                 if ((eobrun_allowed) && (k == Ss)) && ((eobrun.read()) == 0) {
                     reset_state.write(true);
@@ -9952,7 +9984,9 @@ pub fn DecodeDCTBlock_246(
             k.postfix_inc();
         }
     }
-    eobrun.with_mut(|__v| __v.prefix_dec());
+    eobrun.with_mut(|__v| {
+        __v.prefix_dec();
+    });
     return true;
 }
 pub fn RefineDCTBlock_247(
@@ -10067,7 +10101,7 @@ pub fn RefineDCTBlock_247(
                     )
                     .write({ thiscoef });
                 } else {
-                    if (r.prefix_dec() < 0) {
+                    if ((*r.prefix_dec()) < 0) {
                         break;
                     }
                 }
@@ -10134,7 +10168,9 @@ pub fn RefineDCTBlock_247(
             k.postfix_inc();
         }
     }
-    eobrun.with_mut(|__v| __v.prefix_dec());
+    eobrun.with_mut(|__v| {
+        __v.prefix_dec();
+    });
     return true;
 }
 pub fn ProcessRestart_248(
@@ -11241,7 +11277,9 @@ impl BitReaderState_243Impl for Ptr<BitReaderState_243> {
     }
     fn GetNextByte(&self) -> u8 {
         if ((*self).with(|__s| __s.pos_) >= (*self).with(|__s| __s.next_marker_pos_)) {
-            field!((*self), pos_).with_mut(|__v| __v.prefix_inc());
+            field!((*self), pos_).with_mut(|__v| {
+                __v.prefix_inc();
+            });
             return 0_u8;
         }
         let mut c: u8 = (elem!(
@@ -11256,7 +11294,9 @@ impl BitReaderState_243Impl for Ptr<BitReaderState_243> {
             )
             .read());
             if ((escape as i32) == 0) {
-                field!((*self), pos_).with_mut(|__v| __v.prefix_inc());
+                field!((*self), pos_).with_mut(|__v| {
+                    __v.prefix_inc();
+                });
             } else {
                 field!((*self), next_marker_pos_)
                     .write(((*self).with(|__s| __s.pos_)).wrapping_sub(1_usize));
@@ -11328,7 +11368,9 @@ impl BitReaderState_243Impl for Ptr<BitReaderState_243> {
         }
         let mut unused_bytes_left: i32 = ((*self).with(|__s| __s.bits_left_) >> 3);
         'loop_: while (unused_bytes_left.postfix_dec() > 0) {
-            field!((*self), pos_).with_mut(|__v| __v.prefix_dec());
+            field!((*self), pos_).with_mut(|__v| {
+                __v.prefix_dec();
+            });
             if (((*self).with(|__s| __s.pos_) < (*self).with(|__s| __s.next_marker_pos_))
                 && (((elem!(
                     (*self).with(|__s| __s.data_.clone()),
@@ -11343,7 +11385,9 @@ impl BitReaderState_243Impl for Ptr<BitReaderState_243> {
                 .read()) as i32)
                     == 255)
             {
-                field!((*self), pos_).with_mut(|__v| __v.prefix_dec());
+                field!((*self), pos_).with_mut(|__v| {
+                    __v.prefix_dec();
+                });
             }
         }
         if ((*self).with(|__s| __s.pos_) > (*self).with(|__s| __s.next_marker_pos_)) {
@@ -11894,11 +11938,15 @@ impl brunsli_ProbImpl for Ptr<brunsli_Prob> {
         );
     }
     fn Add(&self, mut val: i32) {
-        field!((*self), total).with_mut(|__v| __v.prefix_inc());
+        field!((*self), total).with_mut(|__v| {
+            __v.prefix_inc();
+        });
         if (val == 0) {
             field!((*self), count).write({ (((*self).with(|__s| __s.count) as i32) + 256) as u16 });
         } else {
-            field!((*self), count).with_mut(|__v| __v.prefix_inc());
+            field!((*self), count).with_mut(|__v| {
+                __v.prefix_inc();
+            });
         }
         field!((*self), prob8).write(
             ({
@@ -12117,7 +12165,9 @@ impl brunsli_internal_enc_DataStreamImpl for Ptr<brunsli_internal_enc_DataStream
             )
             .write((word).clone());
             field!((*self), bw_pos_).write((*self).with(|__s| __s.pos_));
-            field!((*self), pos_).with_mut(|__v| __v.prefix_inc());
+            field!((*self), pos_).with_mut(|__v| {
+                __v.prefix_inc();
+            });
             {
                 field!((*self), bw_val_).with_mut(|__v| *__v = *__v >> 16)
             };
@@ -12220,7 +12270,9 @@ impl brunsli_internal_enc_DataStreamImpl for Ptr<brunsli_internal_enc_DataStream
             .write(16_u8);
             field!((*self), ac_pos0_).write((*self).with(|__s| __s.ac_pos1_));
             field!((*self), ac_pos1_).write((*self).with(|__s| __s.pos_));
-            field!((*self), pos_).with_mut(|__v| __v.prefix_inc());
+            field!((*self), pos_).with_mut(|__v| {
+                __v.prefix_inc();
+            });
             {
                 field!((*self), low_).with_mut(|__v| *__v = *__v << 16)
             };
@@ -12500,8 +12552,12 @@ impl brunsli_internal_enc_HistogramImpl for Ptr<brunsli_internal_enc_Histogram> 
             });
             'loop_: while true {}
         };
-        array_elem!((*self), data_, val).with_mut(|__v| __v.prefix_inc());
-        field!((*self), total_count_).with_mut(|__v| __v.prefix_inc());
+        array_elem!((*self), data_, val).with_mut(|__v| {
+            __v.prefix_inc();
+        });
+        field!((*self), total_count_).with_mut(|__v| {
+            __v.prefix_inc();
+        });
     }
     fn Merge(&self, other: Ptr<brunsli_internal_enc_Histogram>) {
         if (other.with(|__s| __s.total_count_) == 0) {
