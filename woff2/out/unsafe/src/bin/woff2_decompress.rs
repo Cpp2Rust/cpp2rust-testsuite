@@ -2443,9 +2443,9 @@ pub unsafe fn ReconstructFont_78(
                         return false;
                     }
                 }
-                (*(*metadata).checksums.subscript(&checksum_key)) = checksum;
+                (*(*metadata).checksums.subscript(&checksum_key, || 0_u32)) = checksum;
             } else {
-                checksum = (*(*metadata).checksums.subscript(&checksum_key));
+                checksum = (*(*metadata).checksums.subscript(&checksum_key, || 0_u32));
             }
             font_checksum = (font_checksum).wrapping_add(checksum);
             (unsafe { StoreU32_31(table_entry.as_mut_ptr(), 0_usize, checksum) });
@@ -2454,8 +2454,10 @@ pub unsafe fn ReconstructFont_78(
             if ((!(unsafe {
                 (*out).Write_3(
                     (table_entry.as_mut_ptr() as *const ::libc::c_void),
-                    (((*(*info).table_entry_by_tag.subscript(&(*table).tag)).wrapping_add(4_u32))
-                        as usize),
+                    (((*(*info)
+                        .table_entry_by_tag
+                        .subscript(&(*table).tag, || 0_u32))
+                    .wrapping_add(4_u32)) as usize),
                     12_usize,
                 )
             }) as i64)
@@ -2781,7 +2783,8 @@ pub unsafe fn WriteHeaders_80(
             ) {
                 let mut table_index: u16 = (*table_index.iter_deref());
                 (*sorted_index_by_tag
-                    .subscript(&(&mut (*hdr)).tables[(table_index as usize)].tag)) = table_index;
+                    .subscript(&(&mut (*hdr)).tables[(table_index as usize)].tag, || 0_u16)) =
+                    table_index;
             }
             let mut index: u16 = 0_u16;
             'loop_: for i in IterRange::new(sorted_index_by_tag.begin(), sorted_index_by_tag.end())
@@ -2846,7 +2849,7 @@ pub unsafe fn WriteHeaders_80(
                     let mut tag: u32 = (&mut (*hdr)).tables[(table_index as usize)].tag;
                     (*(&mut (*metadata)).font_infos[(i)]
                         .table_entry_by_tag
-                        .subscript(&tag)) = (offset as u32);
+                        .subscript(&tag, || 0_u32)) = (offset as u32);
                     offset = (unsafe { StoreTableEntry_75(result, (offset as u32), tag) });
                 }
                 (*ttc_font).header_checksum = (unsafe {
@@ -2872,7 +2875,7 @@ pub unsafe fn WriteHeaders_80(
             'loop_: while ((i as i32) < ((*hdr).num_tables as i32)) {
                 (*(&mut (*metadata)).font_infos[(0_usize)]
                     .table_entry_by_tag
-                    .subscript(&sorted_tables[(i as usize)].tag)) = (offset as u32);
+                    .subscript(&sorted_tables[(i as usize)].tag, || 0_u32)) = (offset as u32);
                 offset = (unsafe {
                     StoreTableEntry_75(result, (offset as u32), sorted_tables[(i as usize)].tag)
                 });

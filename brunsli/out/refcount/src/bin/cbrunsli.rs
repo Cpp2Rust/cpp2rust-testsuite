@@ -3322,7 +3322,11 @@ pub fn HistogramReindex_136(
                 match (Rc::new(RefCell::new(((index!(symbols, i).read()) as i32))).as_pointer(),) {
                     (__tmp_16,) => {
                         ({
-                            (*new_index.borrow_mut()).subscript_move(__tmp_16, |__k| cpp_move!(__k))
+                            (*new_index.borrow_mut()).subscript_move(
+                                __tmp_16,
+                                |__k| cpp_move!(__k),
+                                || 0_i32,
+                            )
                         })
                     }
                 }
@@ -3347,7 +3351,11 @@ pub fn HistogramReindex_136(
                 {
                     (__tmp_17,) => {
                         ({
-                            (*new_index.borrow_mut()).subscript_move(__tmp_17, |__k| cpp_move!(__k))
+                            (*new_index.borrow_mut()).subscript_move(
+                                __tmp_17,
+                                |__k| cpp_move!(__k),
+                                || 0_i32,
+                            )
                         })
                     }
                 }

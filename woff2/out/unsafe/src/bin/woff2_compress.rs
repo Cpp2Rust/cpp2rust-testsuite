@@ -906,12 +906,14 @@ pub unsafe fn ReadTrueTypeFont_33(
             {
                 return false;
             }
-            (*intervals.subscript(&table.offset)) = table.length;
+            (*intervals.subscript(&table.offset, || 0_u32)) = table.length;
             table.data = data.offset((table.offset) as isize);
             if (*font).tables.find(&table.tag) != (*font).tables.end() {
                 return false;
             }
-            (*(*font).tables.subscript(&table.tag)) = (table).clone();
+            (*(*font)
+                .tables
+                .subscript(&table.tag, || <woff2_Font_Table>::default())) = (table).clone();
             i.prefix_inc();
         }
     }
@@ -954,10 +956,11 @@ pub unsafe fn ReadCollectionFont_34(
         let entry: *mut (u32, woff2_Font_Table) = &mut (*entry.iter_deref());
         let table: *mut woff2_Font_Table = &mut (*entry).1;
         if (*all_tables).find(&(*table).offset) == (*all_tables).end() {
-            (*(*all_tables).subscript(&(*table).offset)) =
+            (*(*all_tables).subscript(&(*table).offset, || std::ptr::null_mut())) =
                 (unsafe { woff2_Font::FindTable_2(&mut (*font), (*table).tag) });
         } else {
-            (*table).reuse_of = (*(*all_tables).subscript(&(*table).offset));
+            (*table).reuse_of =
+                (*(*all_tables).subscript(&(*table).offset, || std::ptr::null_mut()));
             if (((*table).tag) != ((*(*table).reuse_of).tag)) {
                 return false;
             }
@@ -2274,7 +2277,9 @@ pub unsafe fn NormalizeOffsets_76(mut font: *mut woff2_Font) -> bool {
     let __range1: *mut Vec<u32> = &mut __tmp_4;
     'loop_: for tag in IterRange::new((*__range1).begin(), (*__range1).end()) {
         let mut tag: u32 = (*tag.iter_deref());
-        let table: *mut woff2_Font_Table = &mut (*(*font).tables.subscript(&tag));
+        let table: *mut woff2_Font_Table = &mut (*(*font)
+            .tables
+            .subscript(&tag, || <woff2_Font_Table>::default()));
         (*table).offset = offset;
         offset = (offset).wrapping_add((unsafe { Round4_71((*table).length) }));
     }
@@ -2435,7 +2440,9 @@ pub unsafe fn NormalizeFontCollection_82(mut font_collection: *mut woff2_FontCol
         let __range2: *mut Vec<u32> = &mut __tmp_5;
         'loop_: for tag in IterRange::new((*__range2).begin(), (*__range2).end()) {
             let mut tag: u32 = (*tag.iter_deref());
-            let table: *mut woff2_Font_Table = &mut (*(*font).tables.subscript(&tag));
+            let table: *mut woff2_Font_Table = &mut (*(*font)
+                .tables
+                .subscript(&tag, || <woff2_Font_Table>::default()));
             if (unsafe { woff2_Font_Table::IsReused(&(*table)) }) {
                 (*table).offset = (*(*table).reuse_of).offset;
             } else {
@@ -2984,10 +2991,12 @@ pub unsafe fn TransformGlyfAndLocaTables_91(mut font: *mut woff2_Font) -> bool {
     let mut transformed_glyf: *mut woff2_Font_Table = (&mut (*(*font).tables.subscript_move(
         &mut ((*std::cell::LazyCell::force_mut(&mut *&raw mut kGlyfTableTag_0)) ^ (2155905152_u32)),
         |__k| cpp_move_unsafe!(__k),
+        || <woff2_Font_Table>::default(),
     )) as *mut woff2_Font_Table);
     let mut transformed_loca: *mut woff2_Font_Table = (&mut (*(*font).tables.subscript_move(
         &mut ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLocaTableTag_2)) ^ (2155905152_u32)),
         |__k| cpp_move_unsafe!(__k),
+        || <woff2_Font_Table>::default(),
     )) as *mut woff2_Font_Table);
     let mut num_glyphs: i32 = (unsafe { NumGlyphs_45(&(*font)) });
     let mut encoder: GlyfEncoder_90 = GlyfEncoder_90::new({ num_glyphs });
@@ -3150,6 +3159,7 @@ pub unsafe fn TransformHmtxTable_92(mut font: *mut woff2_Font) -> bool {
     let mut transformed_hmtx: *mut woff2_Font_Table = (&mut (*(*font).tables.subscript_move(
         &mut ((*std::cell::LazyCell::force_mut(&mut *&raw mut kHmtxTableTag_5)) ^ (2155905152_u32)),
         |__k| cpp_move_unsafe!(__k),
+        || <woff2_Font_Table>::default(),
     )) as *mut woff2_Font_Table);
     let mut flags: u8 = 0_u8;
     let mut transformed_size: usize =
@@ -3397,7 +3407,7 @@ pub unsafe fn ComputeWoff2Length_101(
                     continue 'loop_;
                 }
                 let mut tag_offset: (u32, u32) = ((*table).tag, (*table).offset);
-                let mut table_index: u16 = (*index_by_tag_offset.subscript(&tag_offset));
+                let mut table_index: u16 = (*index_by_tag_offset.subscript(&tag_offset, || 0_u16));
                 size = (size).wrapping_add((unsafe { Size255UShort_9(table_index) }));
             }
         }
@@ -3681,7 +3691,7 @@ pub unsafe fn ConvertTTFToWOFF2_110(
             }
             let mut tag_offset: (u32, u32) = ((*src_table).tag, (*src_table).offset);
             if index_by_tag_offset.find(&tag_offset) == index_by_tag_offset.end() {
-                (*index_by_tag_offset.subscript(&tag_offset)) = ((tables.len()) as u16);
+                (*index_by_tag_offset.subscript(&tag_offset, || 0_u16)) = ((tables.len()) as u16);
             } else {
                 return false;
             }
@@ -3870,7 +3880,7 @@ pub unsafe fn ConvertTTFToWOFF2_110(
                     });
                     return false;
                 }
-                let mut index: u16 = (*index_by_tag_offset.subscript(&tag_offset));
+                let mut index: u16 = (*index_by_tag_offset.subscript(&tag_offset, || 0_u16));
                 (unsafe { Store255UShort_11((index as i32), (&mut offset as *mut usize), result) });
             }
         }

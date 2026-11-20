@@ -906,12 +906,14 @@ pub unsafe fn ReadTrueTypeFont_33(
             {
                 return false;
             }
-            (*intervals.subscript(&table.offset)) = table.length;
+            (*intervals.subscript(&table.offset, || 0_u32)) = table.length;
             table.data = data.offset((table.offset) as isize);
             if (*font).tables.find(&table.tag) != (*font).tables.end() {
                 return false;
             }
-            (*(*font).tables.subscript(&table.tag)) = (table).clone();
+            (*(*font)
+                .tables
+                .subscript(&table.tag, || <woff2_Font_Table>::default())) = (table).clone();
             i.prefix_inc();
         }
     }
@@ -954,10 +956,11 @@ pub unsafe fn ReadCollectionFont_34(
         let entry: *mut (u32, woff2_Font_Table) = &mut (*entry.iter_deref());
         let table: *mut woff2_Font_Table = &mut (*entry).1;
         if (*all_tables).find(&(*table).offset) == (*all_tables).end() {
-            (*(*all_tables).subscript(&(*table).offset)) =
+            (*(*all_tables).subscript(&(*table).offset, || std::ptr::null_mut())) =
                 (unsafe { woff2_Font::FindTable_2(&mut (*font), (*table).tag) });
         } else {
-            (*table).reuse_of = (*(*all_tables).subscript(&(*table).offset));
+            (*table).reuse_of =
+                (*(*all_tables).subscript(&(*table).offset, || std::ptr::null_mut()));
             if (((*table).tag) != ((*(*table).reuse_of).tag)) {
                 return false;
             }

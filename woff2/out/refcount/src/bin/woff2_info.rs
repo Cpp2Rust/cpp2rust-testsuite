@@ -673,7 +673,7 @@ pub fn ReadTrueTypeFont_33(
             }
             let __rhs = { (*table.borrow()).length };
             match (field_ptr!(table.as_pointer(), offset),) {
-                (__tmp_9,) => ({ (*intervals.borrow_mut()).subscript(__tmp_9) }),
+                (__tmp_9,) => ({ (*intervals.borrow_mut()).subscript(__tmp_9, || 0_u32) }),
             }
             .write(__rhs);
             (*table.borrow_mut()).data = { data.offset(({ (*table.borrow()).offset }) as isize) };
@@ -690,7 +690,7 @@ pub fn ReadTrueTypeFont_33(
             match (field_ptr!(table.as_pointer(), tag),) {
                 (__tmp_10,) => field!(font, tables).with_mut(
                     |__v: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                        __v.subscript(__tmp_10)
+                        __v.subscript(__tmp_10, || <woff2_Font_Table>::default())
                     },
                 ),
             }
@@ -760,7 +760,7 @@ pub fn ReadCollectionFont_34(
             match (field_ptr!(table, offset),) {
                 (__tmp_11,) => all_tables.with_mut(
                     |__v: &mut Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| {
-                        __v.subscript(__tmp_11)
+                        __v.subscript(__tmp_11, || Ptr::<woff2_Font_Table>::null())
                     },
                 ),
             }
@@ -769,7 +769,7 @@ pub fn ReadCollectionFont_34(
             let __rhs = (match (field_ptr!(table, offset),) {
                 (__tmp_12,) => all_tables.with_mut(
                     |__v: &mut Map<u32, (Value<u32>, Value<Ptr<woff2_Font_Table>>)>| {
-                        __v.subscript(__tmp_12)
+                        __v.subscript(__tmp_12, || Ptr::<woff2_Font_Table>::null())
                     },
                 ),
             }

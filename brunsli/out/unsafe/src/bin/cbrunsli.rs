@@ -3670,9 +3670,11 @@ pub unsafe fn HistogramReindex_136(
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*(symbols).cast_const()).len())) {
             if new_index.find(&((&mut (*symbols))[(i)] as i32)) == new_index.end() {
-                (*new_index.subscript_move(&mut ((&mut (*symbols))[(i)] as i32), |__k| {
-                    cpp_move_unsafe!(__k)
-                })) = next_index;
+                (*new_index.subscript_move(
+                    &mut ((&mut (*symbols))[(i)] as i32),
+                    |__k| cpp_move_unsafe!(__k),
+                    || 0_i32,
+                )) = next_index;
                 (&mut (*out))[(next_index as usize)] = tmp[((&mut (*symbols))[(i)] as usize)];
                 next_index.prefix_inc();
             }
@@ -3685,10 +3687,11 @@ pub unsafe fn HistogramReindex_136(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*(symbols).cast_const()).len())) {
-            (&mut (*symbols))[(i)] = ((*new_index
-                .subscript_move(&mut ((&mut (*symbols))[(i)] as i32), |__k| {
-                    cpp_move_unsafe!(__k)
-                })) as u32);
+            (&mut (*symbols))[(i)] = ((*new_index.subscript_move(
+                &mut ((&mut (*symbols))[(i)] as i32),
+                |__k| cpp_move_unsafe!(__k),
+                || 0_i32,
+            )) as u32);
             i.prefix_inc();
         }
     }

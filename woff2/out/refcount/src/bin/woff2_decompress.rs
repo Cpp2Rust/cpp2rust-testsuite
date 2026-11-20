@@ -2387,7 +2387,7 @@ pub fn ReconstructFont_78(
                         |__v: &mut Map<
                             (Value<u32>, Value<u32>),
                             (Value<(Value<u32>, Value<u32>)>, Value<u32>),
-                        >| __v.subscript(__tmp_4),
+                        >| __v.subscript(__tmp_4, || 0_u32),
                     ),
                 }
                 .write((*checksum.borrow()));
@@ -2397,7 +2397,7 @@ pub fn ReconstructFont_78(
                         |__v: &mut Map<
                             (Value<u32>, Value<u32>),
                             (Value<(Value<u32>, Value<u32>)>, Value<u32>),
-                        >| __v.subscript(__tmp_5),
+                        >| __v.subscript(__tmp_5, || 0_u32),
                     ),
                 }
                 .read());
@@ -2423,7 +2423,9 @@ pub fn ReconstructFont_78(
                     (table_entry.decay()).to_any(),
                     (((match (field_ptr!(table, tag),) {
                         (__tmp_6,) => field!(info, table_entry_by_tag).with_mut(
-                            |__v: &mut Map<u32, (Value<u32>, Value<u32>)>| __v.subscript(__tmp_6),
+                            |__v: &mut Map<u32, (Value<u32>, Value<u32>)>| {
+                                __v.subscript(__tmp_6, || 0_u32)
+                            },
                         ),
                     }
                     .read())
@@ -2784,7 +2786,9 @@ pub fn WriteHeaders_80(
                     tag
                 ),)
                 {
-                    (__tmp_8,) => ({ (*sorted_index_by_tag.borrow_mut()).subscript(__tmp_8) }),
+                    (__tmp_8,) => {
+                        ({ (*sorted_index_by_tag.borrow_mut()).subscript(__tmp_8, || 0_u16) })
+                    }
                 }
                 .write(__rhs);
             }
@@ -2873,7 +2877,7 @@ pub fn WriteHeaders_80(
                     ));
                     field!(vec_elem!(metadata, font_infos, i), table_entry_by_tag)
                         .with_mut(|__v: &mut Map<u32, (Value<u32>, Value<u32>)>| {
-                            __v.subscript(tag.as_pointer())
+                            __v.subscript(tag.as_pointer(), || 0_u32)
                         })
                         .write((offset as u32));
                     let __rhs = ({
@@ -2908,7 +2912,10 @@ pub fn WriteHeaders_80(
             'loop_: while ({ (i as i32) } < { (hdr.with(|__s| __s.num_tables) as i32) }) {
                 field!(vec_elem!(metadata, font_infos, 0_usize), table_entry_by_tag)
                     .with_mut(|__v: &mut Map<u32, (Value<u32>, Value<u32>)>| {
-                        __v.subscript(field_ptr!(sorted_tables.decay().offset((i as usize)), tag))
+                        __v.subscript(
+                            field_ptr!(sorted_tables.decay().offset((i as usize)), tag),
+                            || 0_u32,
+                        )
                     })
                     .write((offset as u32));
                 let __rhs = ({

@@ -4543,7 +4543,7 @@ pub fn ProcessMetaData_149(
                     if (state.with(|__s| __s.remaining_multibyte_length) == 0_usize) {
                         field!(state, stage)
                             .write((brunsli_internal_dec_MetadataState_Stage_READ_MARKER as usize));
-                    };
+                    }
                     continue 'loop_;
                 }
                 _ => {
@@ -4709,7 +4709,7 @@ pub fn DecodeHuffmanCode_150(
                         field!(js, stage).write(
                             brunsli_internal_dec_JpegInternalsState_Stage_READ_HUFFMAN_MAX_LEN,
                         );
-                    };
+                    }
                     continue 'loop_;
                 }
                 __v if __v
@@ -4941,7 +4941,6 @@ pub fn DecodeScanInfo_151(
  field!(si , num_components) .write( __rhs ) ;
  field!(js, j) .write( 0_usize  ) ;
  field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT  ) ;
- ;
  continue 'loop_ ;
  } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMPONENT as i32 )  =>  { { let mut si : Ptr< brunsli_JPEGScanInfo  >  = ( field_ref!((*jpg.borrow())  , scan_info).decay()  .offset(js.with(|__s| __s . i ) )  )  ;
   ;
@@ -4956,15 +4955,13 @@ pub fn DecodeScanInfo_151(
  field!(js, j) .with_mut(|__v| __v. postfix_inc ()) ;
  } else { field!(js, last_block_idx) .write( - 1_i32  ) ;
  field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION  ) ;
- } ;
- continue 'loop_ ;
+ } continue 'loop_ ;
  } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION as i32 )  =>  { { if ! ( ( { BrunsliBitReaderCanRead_134 ( (br ).clone() , 1_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
  } if ( ( { BrunsliBitReaderRead_126 ( (br ).clone() , 1_u32  , ) } )  != 0 ) { field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA  ) ;
  } else { field!(js, last_block_idx) .write( 0  ) ;
  field!(js, last_num) .write( 0  ) ;
  field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION  ) ;
- } ;
- continue 'loop_ ;
+ } continue 'loop_ ;
  } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_DATA as i32 )  =>  { { let mut si : Ptr< brunsli_JPEGScanInfo  >  = ( field_ref!((*jpg.borrow())  , scan_info).decay()  .offset(js.with(|__s| __s . i ) )  )  ;
   ;
  ;
@@ -4976,18 +4973,15 @@ pub fn DecodeScanInfo_151(
  field!(js, last_block_idx) .write( (*block_idx.borrow())  ) ;
  if ( js.with(|__s| __s . last_block_idx ) > ( ( 1 << 30 ) ) ) { return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN   ;
  } field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_RESET_POINT_CONTINUATION  ) ;
- ;
  continue 'loop_ ;
  } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION as i32 )  =>  { { if ! ( ( { BrunsliBitReaderCanRead_134 ( (br ).clone() , 1_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
  } if ( ( { BrunsliBitReaderRead_126 ( (br ).clone() , 1_u32  , ) } )  != 0 ) { field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA  ) ;
  } else { ( { (*maybe_add_zero_run.borrow())  .call ( ) } ) ;
  field!(js, i) .with_mut(|__v| { __v. prefix_inc (); }) ;
  if ({ js.with(|__s| __s . i )  } < { js.with(|__s| __s . num_scans )  }) { field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_COMMON  ) ;
- ;
  continue 'loop_ ;
  } return brunsli_BrunsliStatus_BRUNSLI_OK   ;
- } ;
- continue 'loop_ ;
+ } continue 'loop_ ;
  } }, __v if __v ==  ( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_DATA as i32 )  =>  { { if ! ( ( { DecodeVarint_144 ( ( field_ptr!(js , varint)   )  , (br ).clone() , 28_usize  , ) } )  ) { return brunsli_BrunsliStatus_BRUNSLI_NOT_ENOUGH_DATA   ;
  } let mut block_idx : i32  = ({ js.with(|__s| __s . last_block_idx )  } + { ( js.with(|__s| __s . varint  . value ) as i32 )  })  ;
   ;
@@ -4997,7 +4991,6 @@ pub fn DecodeScanInfo_151(
  field!(js, last_block_idx) .write( block_idx  ) ;
  if ( js.with(|__s| __s . last_block_idx ) > ( ( 1 << 30 ) ) ) { return brunsli_BrunsliStatus_BRUNSLI_INVALID_BRN   ;
  } field!(js, stage) .write( brunsli_internal_dec_JpegInternalsState_Stage_READ_SCAN_ZERO_RUN_CONTINUATION  ) ;
- ;
  continue 'loop_ ;
  } }, _ =>  { return brunsli_BrunsliStatus_BRUNSLI_DECOMPRESSION_ERROR   ;
  }, }
@@ -7005,7 +6998,7 @@ pub fn DecodeJPEGInternalsSection_184(
                         field!(js, i).with_mut(|__v| {
                             __v.prefix_inc();
                         });
-                    };
+                    }
                     continue 'loop_;
                 }
             }
@@ -7225,7 +7218,7 @@ pub fn DecodeQuantDataSection_186(
                     } else {
                         field!(qs, stage)
                             .write(brunsli_internal_dec_QuantDataState_Stage_READ_Q_FACTOR);
-                    };
+                    }
                     continue 'loop_;
                 }
             }
@@ -7271,7 +7264,7 @@ pub fn DecodeQuantDataSection_186(
                     } else {
                         field!(qs, stage)
                             .write(brunsli_internal_dec_QuantDataState_Stage_APPLY_DIFF);
-                    };
+                    }
                     continue 'loop_;
                 }
             }
