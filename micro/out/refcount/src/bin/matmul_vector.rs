@@ -46,15 +46,11 @@ fn main_0() -> i32 {
         let mut i: i32 = 0;
         'loop_: while (i < N) {
             {
-                let __a1 = (0..(N as usize) as usize)
-                    .map(|_| 0_i32)
-                    .collect::<Vec<_>>();
+                let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
                 (*a.borrow_mut()).push(__a1)
             };
             {
-                let __a1 = (0..(N as usize) as usize)
-                    .map(|_| 0_i32)
-                    .collect::<Vec<_>>();
+                let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
                 (*b.borrow_mut()).push(__a1)
             };
             {
@@ -79,9 +75,7 @@ fn main_0() -> i32 {
                 let mut i: i32 = 0;
                 'loop_: while (i < N) {
                     {
-                        let __a1 = (0..(N as usize) as usize)
-                            .map(|_| 0_i32)
-                            .collect::<Vec<_>>();
+                        let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
                         (*c.borrow_mut()).push(__a1)
                     };
                     i.prefix_inc();

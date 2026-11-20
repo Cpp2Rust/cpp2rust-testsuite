@@ -33,9 +33,7 @@ fn main_0() -> i32 {
         let mut i: i32 = 0;
         'loop_: while (i < N) {
             {
-                let __a1 = (0..(N as usize) as usize)
-                    .map(|_| 0_i32)
-                    .collect::<Vec<_>>();
+                let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
                 (*grid.borrow_mut()).push(__a1)
             };
             {

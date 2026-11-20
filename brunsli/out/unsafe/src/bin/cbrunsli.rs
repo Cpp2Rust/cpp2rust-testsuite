@@ -1114,58 +1114,53 @@ pub static mut AppData_0xe2_63: std::cell::LazyCell<[u8; 3161]> =
     });
 pub unsafe fn BrunsliUnalignedRead16_66(mut p: *const ::libc::c_void) -> u16 {
     let mut t: u16 = 0_u16;
-    match ({ ((&mut t as *mut u16) as *mut ::libc::c_void) },) {
-        (mut __tmp_0,) => {
-            if ::std::mem::size_of::<u16>() != 0 {
-                ::std::ptr::copy_nonoverlapping(p, __tmp_0, ::std::mem::size_of::<u16>())
-            }
-            __tmp_0
+    {
+        let mut __tmp_0 = { ((&mut t as *mut u16) as *mut ::libc::c_void) };
+        if ::std::mem::size_of::<u16>() != 0 {
+            ::std::ptr::copy_nonoverlapping(p, __tmp_0, ::std::mem::size_of::<u16>())
         }
+        __tmp_0
     };
     return t;
 }
 pub unsafe fn BrunsliUnalignedWrite16_67(mut p: *mut ::libc::c_void, mut v: u16) {
-    match ({ ((&mut v as *mut u16) as *const ::libc::c_void) },) {
-        (mut __tmp_1,) => {
-            if ::std::mem::size_of::<u16>() != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_1, p, ::std::mem::size_of::<u16>())
-            }
-            p
+    {
+        let mut __tmp_1 = { ((&mut v as *mut u16) as *const ::libc::c_void) };
+        if ::std::mem::size_of::<u16>() != 0 {
+            ::std::ptr::copy_nonoverlapping(__tmp_1, p, ::std::mem::size_of::<u16>())
         }
+        p
     };
 }
 pub unsafe fn BrunsliUnalignedRead32_68(mut p: *const ::libc::c_void) -> u32 {
     let mut t: u32 = 0_u32;
-    match ({ ((&mut t as *mut u32) as *mut ::libc::c_void) },) {
-        (mut __tmp_2,) => {
-            if ::std::mem::size_of::<u32>() != 0 {
-                ::std::ptr::copy_nonoverlapping(p, __tmp_2, ::std::mem::size_of::<u32>())
-            }
-            __tmp_2
+    {
+        let mut __tmp_2 = { ((&mut t as *mut u32) as *mut ::libc::c_void) };
+        if ::std::mem::size_of::<u32>() != 0 {
+            ::std::ptr::copy_nonoverlapping(p, __tmp_2, ::std::mem::size_of::<u32>())
         }
+        __tmp_2
     };
     return t;
 }
 pub unsafe fn BrunsliUnalignedRead64_69(mut p: *const ::libc::c_void) -> u64 {
     let mut t: u64 = 0_u64;
-    match ({ ((&mut t as *mut u64) as *mut ::libc::c_void) },) {
-        (mut __tmp_3,) => {
-            if ::std::mem::size_of::<u64>() != 0 {
-                ::std::ptr::copy_nonoverlapping(p, __tmp_3, ::std::mem::size_of::<u64>())
-            }
-            __tmp_3
+    {
+        let mut __tmp_3 = { ((&mut t as *mut u64) as *mut ::libc::c_void) };
+        if ::std::mem::size_of::<u64>() != 0 {
+            ::std::ptr::copy_nonoverlapping(p, __tmp_3, ::std::mem::size_of::<u64>())
         }
+        __tmp_3
     };
     return t;
 }
 pub unsafe fn BrunsliUnalignedWrite64_70(mut p: *mut ::libc::c_void, mut v: u64) {
-    match ({ ((&mut v as *mut u64) as *const ::libc::c_void) },) {
-        (mut __tmp_4,) => {
-            if ::std::mem::size_of::<u64>() != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_4, p, ::std::mem::size_of::<u64>())
-            }
-            p
+    {
+        let mut __tmp_4 = { ((&mut v as *mut u64) as *const ::libc::c_void) };
+        if ::std::mem::size_of::<u64>() != 0 {
+            ::std::ptr::copy_nonoverlapping(__tmp_4, p, ::std::mem::size_of::<u64>())
         }
+        p
     };
 }
 pub unsafe fn Append_71(mut dst: *mut Vec<u8>, mut begin: *const u8, mut end: *const u8) {
@@ -1695,17 +1690,13 @@ impl brunsli_ComponentStateDC {
         let mut this = Self {
             width: 0,
             is_zero_prob: brunsli_Prob::new(),
-            is_empty_block_prob: (0..((*std::cell::LazyCell::force_mut(
-                &mut *&raw mut kNumIsEmptyBlockContexts_105,
-            )) as usize) as usize)
-                .map(|_| <brunsli_Prob>::default())
-                .collect::<Vec<_>>(),
-            sign_prob: (0..(9_usize) as usize)
-                .map(|_| <brunsli_Prob>::default())
-                .collect::<Vec<_>>(),
-            first_extra_bit_prob: (0..(10_usize) as usize)
-                .map(|_| <brunsli_Prob>::default())
-                .collect::<Vec<_>>(),
+            is_empty_block_prob: Vec::from_fn(
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumIsEmptyBlockContexts_105))
+                    as usize),
+                |_| <brunsli_Prob>::default(),
+            ),
+            sign_prob: Vec::from_fn(9_usize, |_| <brunsli_Prob>::default()),
+            first_extra_bit_prob: Vec::from_fn(10_usize, |_| <brunsli_Prob>::default()),
             prev_is_nonempty: Vec::new(),
             prev_abs_coeff: Vec::new(),
             prev_sign: Vec::new(),
@@ -1795,28 +1786,29 @@ impl brunsli_ComponentState {
             order: [0_u32; 64],
             mult_row: [0_i32; 64],
             mult_col: [0_i32; 64],
-            is_zero_prob: (0..((((*std::cell::LazyCell::force_mut(
-                &mut *&raw mut kNumNonzeroBuckets_90,
-            )) as i32)
-                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
-                as usize) as usize)
-                .map(|_| <brunsli_Prob>::default())
-                .collect::<Vec<_>>(),
-            sign_prob: (0..(((((2_usize).wrapping_mul(
-                (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82)),
-            ) as usize)
-                .wrapping_add(1_usize)) as usize)
-                .wrapping_mul(
-                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize),
-                )) as usize)
-                .map(|_| <brunsli_Prob>::default())
-                .collect::<Vec<_>>(),
+            is_zero_prob: Vec::from_fn(
+                ((((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonzeroBuckets_90)) as i32)
+                    * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                    as usize),
+                |_| <brunsli_Prob>::default(),
+            ),
+            sign_prob: Vec::from_fn(
+                ((((2_usize).wrapping_mul(
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82)),
+                ) as usize)
+                    .wrapping_add(1_usize)) as usize)
+                    .wrapping_mul(
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                            as usize),
+                    ),
+                |_| <brunsli_Prob>::default(),
+            ),
             num_nonzero_prob: std::array::from_fn::<_, 2016, _>(|_| brunsli_Prob::new()),
-            first_extra_bit_prob: (0..(((10)
-                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
-                as usize) as usize)
-                .map(|_| <brunsli_Prob>::default())
-                .collect::<Vec<_>>(),
+            first_extra_bit_prob: Vec::from_fn(
+                (((10) * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                    as usize),
+                |_| <brunsli_Prob>::default(),
+            ),
             prev_is_nonempty: Vec::new(),
             prev_num_nonzeros: Vec::new(),
             prev_abs_coeff: Vec::new(),
@@ -1899,38 +1891,31 @@ impl brunsli_ComponentState {
     ) -> *mut brunsli_ComponentState {
         self.width = (*_a0).width;
         self.context_offset = (*_a0).context_offset;
-        match (
-            { ((&mut self.order as *mut [u32; 64]) as *mut ::libc::c_void) },
-            { ((&mut (*_a0).order as *mut [u32; 64]) as *const ::libc::c_void) },
-        ) {
-            (mut __tmp_5, mut __tmp_6) => {
-                if 256_usize != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_6, __tmp_5, 256_usize)
-                }
-                __tmp_5
+        {
+            let mut __tmp_5 = { ((&mut self.order as *mut [u32; 64]) as *mut ::libc::c_void) };
+            let mut __tmp_6 = { ((&mut (*_a0).order as *mut [u32; 64]) as *const ::libc::c_void) };
+            if 256_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(__tmp_6, __tmp_5, 256_usize)
             }
+            __tmp_5
         };
-        match (
-            { ((&mut self.mult_row as *mut [i32; 64]) as *mut ::libc::c_void) },
-            { ((&mut (*_a0).mult_row as *mut [i32; 64]) as *const ::libc::c_void) },
-        ) {
-            (mut __tmp_7, mut __tmp_8) => {
-                if 256_usize != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_8, __tmp_7, 256_usize)
-                }
-                __tmp_7
+        {
+            let mut __tmp_7 = { ((&mut self.mult_row as *mut [i32; 64]) as *mut ::libc::c_void) };
+            let mut __tmp_8 =
+                { ((&mut (*_a0).mult_row as *mut [i32; 64]) as *const ::libc::c_void) };
+            if 256_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(__tmp_8, __tmp_7, 256_usize)
             }
+            __tmp_7
         };
-        match (
-            { ((&mut self.mult_col as *mut [i32; 64]) as *mut ::libc::c_void) },
-            { ((&mut (*_a0).mult_col as *mut [i32; 64]) as *const ::libc::c_void) },
-        ) {
-            (mut __tmp_9, mut __tmp_10) => {
-                if 256_usize != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_10, __tmp_9, 256_usize)
-                }
-                __tmp_9
+        {
+            let mut __tmp_9 = { ((&mut self.mult_col as *mut [i32; 64]) as *mut ::libc::c_void) };
+            let mut __tmp_10 =
+                { ((&mut (*_a0).mult_col as *mut [i32; 64]) as *const ::libc::c_void) };
+            if 256_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(__tmp_10, __tmp_9, 256_usize)
             }
+            __tmp_9
         };
         {
             self.is_zero_prob = std::mem::take(&mut (*_a0).is_zero_prob);
@@ -1938,19 +1923,18 @@ impl brunsli_ComponentState {
         {
             self.sign_prob = std::mem::take(&mut (*_a0).sign_prob);
         };
-        match (
-            { ((&mut self.num_nonzero_prob as *mut [brunsli_Prob; 2016]) as *mut ::libc::c_void) },
-            {
+        {
+            let mut __tmp_11 = {
+                ((&mut self.num_nonzero_prob as *mut [brunsli_Prob; 2016]) as *mut ::libc::c_void)
+            };
+            let mut __tmp_12 = {
                 ((&mut (*_a0).num_nonzero_prob as *mut [brunsli_Prob; 2016])
                     as *const ::libc::c_void)
-            },
-        ) {
-            (mut __tmp_11, mut __tmp_12) => {
-                if 8064_usize != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_12, __tmp_11, 8064_usize)
-                }
-                __tmp_11
+            };
+            if 8064_usize != 0 {
+                ::std::ptr::copy_nonoverlapping(__tmp_12, __tmp_11, 8064_usize)
             }
+            __tmp_11
         };
         {
             self.first_extra_bit_prob = std::mem::take(&mut (*_a0).first_extra_bit_prob);
@@ -2473,7 +2457,7 @@ impl brunsli_PermutationCoder {
         std::mem::swap(&mut Vec::new(), &mut self.values_);
     }
     pub unsafe fn num_bits(&self) -> i32 {
-        let mut num_values: u32 = (self.values_.len() as u32);
+        let mut num_values: u32 = ((self.values_.len()) as u32);
         if !((num_values) > (0_u32)) {
             (unsafe {
                 BrunsliDumpAndAbort_79(c"lehmer_code.cc".as_ptr(), 51, c"num_bits".as_ptr())
@@ -2490,17 +2474,17 @@ impl brunsli_PermutationCoder {
             return false;
         }
         (*value) = self.values_[(code)];
-        match ({
-            <UnsafeRandomAccessIterator<u8>>::from(self.values_.begin().iter_add((code as isize)))
-        },)
         {
-            (mut __tmp_0,) => {
-                let pos = __tmp_0
-                    .iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr()))
-                    as usize;
-                self.values_.remove(pos);
-                (__tmp_0).clone()
-            }
+            let mut __tmp_0 = {
+                <UnsafeRandomAccessIterator<u8>>::from(
+                    self.values_.begin().iter_add((code as isize)),
+                )
+            };
+            let pos = __tmp_0
+                .iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr()))
+                as usize;
+            self.values_.remove(pos);
+            (__tmp_0).clone()
         };
         return true;
     }
@@ -2510,29 +2494,27 @@ impl brunsli_PermutationCoder {
         mut code: *mut i32,
         mut nbits: *mut i32,
     ) -> bool {
-        let mut it: UnsafeRandomAccessIterator<u8> =
-            match ({ self.values_.begin() }, { self.values_.end() }) {
-                (mut __tmp_1, mut __tmp_2) => {
-                    let mut __it = (__tmp_1).clone();
-                    while __it != __tmp_2 && *__it.iter_deref() != value {
-                        __it.iter_inc();
-                    }
-                    __it
-                }
-            };
+        let mut it: UnsafeRandomAccessIterator<u8> = {
+            let mut __tmp_1 = { self.values_.begin() };
+            let mut __tmp_2 = { self.values_.end() };
+            let mut __it = (__tmp_1).clone();
+            while __it != __tmp_2 && *__it.iter_deref() != value {
+                __it.iter_inc();
+            }
+            __it
+        };
         if it == self.values_.end() {
             return false;
         }
-        (*code) = (it.iter_distance(&self.values_.begin()) as i32);
+        (*code) = ((it.iter_distance(&self.values_.begin())) as i32);
         (*nbits) = (unsafe { brunsli_PermutationCoder::num_bits(self) });
-        match ({ <UnsafeRandomAccessIterator<u8>>::from((it).clone()) },) {
-            (mut __tmp_3,) => {
-                let pos = __tmp_3
-                    .iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr()))
-                    as usize;
-                self.values_.remove(pos);
-                (__tmp_3).clone()
-            }
+        {
+            let mut __tmp_3 = { <UnsafeRandomAccessIterator<u8>>::from((it).clone()) };
+            let pos = __tmp_3
+                .iter_distance(&UnsafeRandomAccessIterator::Vec(self.values_.as_mut_ptr()))
+                as usize;
+            self.values_.remove(pos);
+            (__tmp_3).clone()
         };
         return true;
     }
@@ -2558,7 +2540,7 @@ impl Default for brunsli_PermutationCoder {
     }
 }
 pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code: *mut u32) {
-    let mut items: Vec<u32> = (0..(len) as usize).map(|_| 0_u32).collect::<Vec<_>>();
+    let mut items: Vec<u32> = Vec::from_fn(len, |_| 0_u32);
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (len)) {
@@ -2569,15 +2551,14 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (len)) {
-            let mut it: UnsafeRandomAccessIterator<u32> = match ({ items.begin() }, { items.end() })
-            {
-                (mut __tmp_4, mut __tmp_5) => {
-                    let mut __it = (__tmp_4).clone();
-                    while __it != __tmp_5 && *__it.iter_deref() != (*sigma.offset((i) as isize)) {
-                        __it.iter_inc();
-                    }
-                    __it
+            let mut it: UnsafeRandomAccessIterator<u32> = {
+                let mut __tmp_4 = { items.begin() };
+                let mut __tmp_5 = { items.end() };
+                let mut __it = (__tmp_4).clone();
+                while __it != __tmp_5 && *__it.iter_deref() != (*sigma.offset((i) as isize)) {
+                    __it.iter_inc();
                 }
+                __it
             };
             if !(it != items.end()) {
                 (unsafe {
@@ -2589,15 +2570,14 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
                 });
                 'loop_: while true {}
             };
-            (*code.offset((i) as isize)) = (it.iter_distance(&items.begin()) as u32);
-            match ({ <UnsafeRandomAccessIterator<u32>>::from((it).clone()) },) {
-                (mut __tmp_6,) => {
-                    let pos = __tmp_6
-                        .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
-                        as usize;
-                    items.remove(pos);
-                    (__tmp_6).clone()
-                }
+            (*code.offset((i) as isize)) = ((it.iter_distance(&items.begin())) as u32);
+            {
+                let mut __tmp_6 = { <UnsafeRandomAccessIterator<u32>>::from((it).clone()) };
+                let pos = __tmp_6
+                    .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
+                    as usize;
+                items.remove(pos);
+                (__tmp_6).clone()
             };
             i.prefix_inc();
         }
@@ -2608,7 +2588,7 @@ pub unsafe fn DecodeLehmerCode_113(
     mut len: usize,
     mut sigma: *mut u32,
 ) -> bool {
-    let mut items: Vec<u32> = (0..(len) as usize).map(|_| 0_u32).collect::<Vec<_>>();
+    let mut items: Vec<u32> = Vec::from_fn(len, |_| 0_u32);
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (len)) {
@@ -2624,17 +2604,17 @@ pub unsafe fn DecodeLehmerCode_113(
                 return false;
             }
             let value: u32 = items[(index as usize)];
-            match ({
-                <UnsafeRandomAccessIterator<u32>>::from(items.begin().iter_add((index as isize)))
-            },)
             {
-                (mut __tmp_7,) => {
-                    let pos = __tmp_7
-                        .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
-                        as usize;
-                    items.remove(pos);
-                    (__tmp_7).clone()
-                }
+                let mut __tmp_7 = {
+                    <UnsafeRandomAccessIterator<u32>>::from(
+                        items.begin().iter_add((index as isize)),
+                    )
+                };
+                let pos = __tmp_7
+                    .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
+                    as usize;
+                items.remove(pos);
+                (__tmp_7).clone()
             };
             (*sigma.offset((i) as isize)) = value;
             i.prefix_inc();
@@ -2909,16 +2889,15 @@ pub unsafe fn BuildAndStoreANSEncodingData_123(
 ) {
     let mut num_symbols: i32 = 0_i32;
     let mut symbols: [i32; 4] = [0_i32; 4];
-    let mut counts: Vec<i32> = match ({ histogram.offset((18) as isize) },) {
-        (mut __tmp_0,) => {
-            let mut __v = Vec::new();
-            let mut __it = histogram;
-            while __it != __tmp_0 {
-                __v.push((*__it.iter_deref()));
-                __it.iter_inc();
-            }
-            __v
+    let mut counts: Vec<i32> = {
+        let mut __tmp_0 = { histogram.offset((18) as isize) };
+        let mut __v = Vec::new();
+        let mut __it = histogram;
+        while __it != __tmp_0 {
+            __v.push((*__it.iter_deref()));
+            __it.iter_inc();
         }
+        __v
     };
     let mut omit_pos: i32 = 0;
     (unsafe {
@@ -3384,66 +3363,62 @@ pub unsafe fn HistogramCombine_133(
 ) -> usize {
     let mut cost_diff_threshold: f64 = 0_f64;
     let mut min_cluster_size: usize = 1_usize;
-    let mut clusters: Vec<u64> = match ({ symbols.offset((symbols_size) as isize) },) {
-        (mut __tmp_1,) => {
-            let mut __v = Vec::new();
-            let mut __it = symbols;
-            while __it != __tmp_1 {
-                __v.push(((*__it.iter_deref()) as u64));
-                __it.iter_inc();
-            }
-            __v
+    let mut clusters: Vec<u64> = {
+        let mut __tmp_1 = { symbols.offset((symbols_size) as isize) };
+        let mut __v = Vec::new();
+        let mut __it = symbols;
+        while __it != __tmp_1 {
+            __v.push(((*__it.iter_deref()) as u64));
+            __it.iter_inc();
         }
+        __v
     };
-    match ({ clusters.begin() },) {
-        (mut __tmp_2,) => {
-            let __n = clusters.end().iter_distance(&__tmp_2);
-            let mut __order: Vec<isize> = (0..__n).collect();
-            __order.sort_by(|&__x, &__y| (*__tmp_2.iter_at(__x)).cmp(&*__tmp_2.iter_at(__y)));
-            let __values: Vec<_> = __order
-                .iter()
-                .map(|&__i| std::ptr::read(__tmp_2.iter_at(__i)))
-                .collect();
-            for (__i, __v) in (0..__n).zip(__values) {
-                std::ptr::write(__tmp_2.iter_at(__i), __v);
-            }
+    {
+        let mut __tmp_2 = { clusters.begin() };
+        let __n = clusters.end().iter_distance(&__tmp_2);
+        let mut __order: Vec<isize> = (0..__n).collect();
+        __order.sort_by(|&__x, &__y| (*__tmp_2.iter_at(__x)).cmp(&*__tmp_2.iter_at(__y)));
+        let __values: Vec<_> = __order
+            .iter()
+            .map(|&__i| std::ptr::read(__tmp_2.iter_at(__i)))
+            .collect();
+        for (__i, __v) in (0..__n).zip(__values) {
+            std::ptr::write(__tmp_2.iter_at(__i), __v);
         }
     };
     clusters.resize_with(
-        (match ({ clusters.begin() }, { clusters.end() }) {
-            (mut __tmp_3, mut __tmp_4) => {
-                if __tmp_3 == __tmp_4 {
-                    (__tmp_4).clone()
-                } else {
-                    let mut __write = __tmp_3.clone();
-                    let mut __it = (__tmp_3).clone();
-                    __it.iter_inc();
-                    while __it != __tmp_4 {
-                        if *__write.iter_deref() != *__it.iter_deref() {
-                            __write.iter_inc();
-                            *__write.iter_deref() = (*__it.iter_deref()).clone();
-                        }
-                        __it.iter_inc();
+        (({
+            let mut __tmp_3 = { clusters.begin() };
+            let mut __tmp_4 = { clusters.end() };
+            if __tmp_3 == __tmp_4 {
+                (__tmp_4).clone()
+            } else {
+                let mut __write = __tmp_3.clone();
+                let mut __it = (__tmp_3).clone();
+                __it.iter_inc();
+                while __it != __tmp_4 {
+                    if *__write.iter_deref() != *__it.iter_deref() {
+                        __write.iter_inc();
+                        *__write.iter_deref() = (*__it.iter_deref()).clone();
                     }
-                    __write.iter_inc();
-                    __write
+                    __it.iter_inc();
                 }
+                __write.iter_inc();
+                __write
             }
         }
-        .iter_distance(&clusters.begin()) as usize),
+        .iter_distance(&clusters.begin())) as usize),
         || 0_u64,
     );
     let mut pairs: Vec<brunsli_HistogramPair> = Vec::new();
-    match ({
-        ((clusters.len()).wrapping_mul(((clusters.len()).wrapping_add(1_usize))))
-            .wrapping_div(2_usize)
-    },)
     {
-        (mut __tmp_5,) => {
-            if __tmp_5 > pairs.capacity() as usize {
-                let len_0 = pairs.len();
-                pairs.reserve_exact(__tmp_5 - len_0 as usize);
-            }
+        let mut __tmp_5 = {
+            ((clusters.len()).wrapping_mul(((clusters.len()).wrapping_add(1_usize))))
+                .wrapping_div(2_usize)
+        };
+        if __tmp_5 > pairs.capacity() as usize {
+            let len_0 = pairs.len();
+            pairs.reserve_exact(__tmp_5 - len_0 as usize);
         }
     };
     {
@@ -3502,14 +3477,14 @@ pub unsafe fn HistogramCombine_133(
             let mut cluster: UnsafeRandomAccessIterator<u64> = clusters.begin();
             'loop_: while cluster != clusters.end() {
                 if (((*cluster.iter_deref()) as usize) >= (best_idx2)) {
-                    match ({ <UnsafeRandomAccessIterator<u64>>::from((cluster).clone()) },) {
-                        (mut __tmp_6,) => {
-                            let pos = __tmp_6.iter_distance(&UnsafeRandomAccessIterator::Vec(
-                                clusters.as_mut_ptr(),
-                            )) as usize;
-                            clusters.remove(pos);
-                            (__tmp_6).clone()
-                        }
+                    {
+                        let mut __tmp_6 =
+                            { <UnsafeRandomAccessIterator<u64>>::from((cluster).clone()) };
+                        let pos = __tmp_6
+                            .iter_distance(&UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr()))
+                            as usize;
+                        clusters.remove(pos);
+                        (__tmp_6).clone()
                     };
                     break;
                 }
@@ -3542,7 +3517,7 @@ pub unsafe fn HistogramCombine_133(
                 copy_to.iter_inc();
             };
         }
-        pairs.resize_with((copy_to.iter_distance(&pairs.begin()) as usize), || {
+        pairs.resize_with(((copy_to.iter_distance(&pairs.begin())) as usize), || {
             <brunsli_HistogramPair>::default()
         });
         {
@@ -3586,53 +3561,51 @@ pub unsafe fn HistogramRemap_135(
     mut out: *mut brunsli_internal_enc_Histogram,
     mut symbols: *mut u32,
 ) {
-    let mut all_symbols: Vec<i32> = match ({ symbols.offset((in_size) as isize) },) {
-        (mut __tmp_7,) => {
-            let mut __v = Vec::new();
-            let mut __it = symbols;
-            while __it != __tmp_7 {
-                __v.push(((*__it.iter_deref()) as i32));
-                __it.iter_inc();
-            }
-            __v
+    let mut all_symbols: Vec<i32> = {
+        let mut __tmp_7 = { symbols.offset((in_size) as isize) };
+        let mut __v = Vec::new();
+        let mut __it = symbols;
+        while __it != __tmp_7 {
+            __v.push(((*__it.iter_deref()) as i32));
+            __it.iter_inc();
         }
+        __v
     };
-    match ({ all_symbols.begin() },) {
-        (mut __tmp_8,) => {
-            let __n = all_symbols.end().iter_distance(&__tmp_8);
-            let mut __order: Vec<isize> = (0..__n).collect();
-            __order.sort_by(|&__x, &__y| (*__tmp_8.iter_at(__x)).cmp(&*__tmp_8.iter_at(__y)));
-            let __values: Vec<_> = __order
-                .iter()
-                .map(|&__i| std::ptr::read(__tmp_8.iter_at(__i)))
-                .collect();
-            for (__i, __v) in (0..__n).zip(__values) {
-                std::ptr::write(__tmp_8.iter_at(__i), __v);
-            }
+    {
+        let mut __tmp_8 = { all_symbols.begin() };
+        let __n = all_symbols.end().iter_distance(&__tmp_8);
+        let mut __order: Vec<isize> = (0..__n).collect();
+        __order.sort_by(|&__x, &__y| (*__tmp_8.iter_at(__x)).cmp(&*__tmp_8.iter_at(__y)));
+        let __values: Vec<_> = __order
+            .iter()
+            .map(|&__i| std::ptr::read(__tmp_8.iter_at(__i)))
+            .collect();
+        for (__i, __v) in (0..__n).zip(__values) {
+            std::ptr::write(__tmp_8.iter_at(__i), __v);
         }
     };
     all_symbols.resize_with(
-        (match ({ all_symbols.begin() }, { all_symbols.end() }) {
-            (mut __tmp_9, mut __tmp_10) => {
-                if __tmp_9 == __tmp_10 {
-                    (__tmp_10).clone()
-                } else {
-                    let mut __write = __tmp_9.clone();
-                    let mut __it = (__tmp_9).clone();
-                    __it.iter_inc();
-                    while __it != __tmp_10 {
-                        if *__write.iter_deref() != *__it.iter_deref() {
-                            __write.iter_inc();
-                            *__write.iter_deref() = (*__it.iter_deref()).clone();
-                        }
-                        __it.iter_inc();
+        (({
+            let mut __tmp_9 = { all_symbols.begin() };
+            let mut __tmp_10 = { all_symbols.end() };
+            if __tmp_9 == __tmp_10 {
+                (__tmp_10).clone()
+            } else {
+                let mut __write = __tmp_9.clone();
+                let mut __it = (__tmp_9).clone();
+                __it.iter_inc();
+                while __it != __tmp_10 {
+                    if *__write.iter_deref() != *__it.iter_deref() {
+                        __write.iter_inc();
+                        *__write.iter_deref() = (*__it.iter_deref()).clone();
                     }
-                    __write.iter_inc();
-                    __write
+                    __it.iter_inc();
                 }
+                __write.iter_inc();
+                __write
             }
         }
-        .iter_distance(&all_symbols.begin()) as usize),
+        .iter_distance(&all_symbols.begin())) as usize),
         || 0_i32,
     );
     {
@@ -4324,7 +4297,7 @@ pub unsafe fn TransformApp0Marker_149(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
                 | (((&(*s))[(10_usize)] as i32) << (1)))
                 | ((density_ix) << (3))) as u8);
             {
-                (*out) = (0..(1_usize) as usize).map(|_| 0_u8).collect::<Vec<_>>();
+                (*out) = Vec::from_fn(1_usize, |_| 0_u8);
             };
             (&mut (*out))[0_usize] = app0_status;
             return true;
@@ -4374,7 +4347,7 @@ pub unsafe fn TransformApp2Marker_150(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
             diff
         } != 0))
     {
-        let mut code: Vec<u8> = (0..(2_usize) as usize).map(|_| 0_u8).collect::<Vec<_>>();
+        let mut code: Vec<u8> = Vec::from_fn(2_usize, |_| 0_u8);
         code[(0_usize)] = 128_u8;
         code[(1_usize)] = (&(*s))[(84_usize)];
         {
@@ -4426,7 +4399,7 @@ pub unsafe fn TransformApp12Marker_151(s: *const Vec<u8>, mut out: *mut Vec<u8>)
             diff
         } != 0))
     {
-        let mut code: Vec<u8> = (0..(2_usize) as usize).map(|_| 0_u8).collect::<Vec<_>>();
+        let mut code: Vec<u8> = Vec::from_fn(2_usize, |_| 0_u8);
         code[(0_usize)] = 129_u8;
         code[(1_usize)] = (&(*s))[(15_usize)];
         {
@@ -4478,7 +4451,7 @@ pub unsafe fn TransformApp14Marker_152(s: *const Vec<u8>, mut out: *mut Vec<u8>)
             diff
         } != 0))
     {
-        let mut code: Vec<u8> = (0..(2_usize) as usize).map(|_| 0_u8).collect::<Vec<_>>();
+        let mut code: Vec<u8> = Vec::from_fn(2_usize, |_| 0_u8);
         code[(0_usize)] = 130_u8;
         code[(1_usize)] = (&(*s))[(10_usize)];
         {
@@ -4935,48 +4908,48 @@ pub unsafe fn EncodeHuffmanCode_158(
         brunsli_PermutationCoder::Init(
             &mut p,
             if (is_dc_table != 0) {
-                match ({
-                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultDCValues_60))
-                        .as_ptr()
-                        .add(
-                            (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultDCValues_60))
-                                .len(),
-                        )
-                },)
                 {
-                    (mut __tmp_13,) => {
-                        let mut __v = Vec::new();
-                        let mut __it =
-                            (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultDCValues_60))
-                                .as_ptr();
-                        while __it != __tmp_13 {
-                            __v.push((*__it.iter_deref()));
-                            __it.iter_inc();
-                        }
-                        __v
+                    let mut __tmp_13 = {
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultDCValues_60))
+                            .as_ptr()
+                            .add(
+                                (*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kDefaultDCValues_60,
+                                ))
+                                .len(),
+                            )
+                    };
+                    let mut __v = Vec::new();
+                    let mut __it =
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultDCValues_60))
+                            .as_ptr();
+                    while __it != __tmp_13 {
+                        __v.push((*__it.iter_deref()));
+                        __it.iter_inc();
                     }
+                    __v
                 }
             } else {
-                match ({
-                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultACValues_61))
-                        .as_ptr()
-                        .add(
-                            (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultACValues_61))
-                                .len(),
-                        )
-                },)
                 {
-                    (mut __tmp_14,) => {
-                        let mut __v = Vec::new();
-                        let mut __it =
-                            (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultACValues_61))
-                                .as_ptr();
-                        while __it != __tmp_14 {
-                            __v.push((*__it.iter_deref()));
-                            __it.iter_inc();
-                        }
-                        __v
+                    let mut __tmp_14 = {
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultACValues_61))
+                            .as_ptr()
+                            .add(
+                                (*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kDefaultACValues_61,
+                                ))
+                                .len(),
+                            )
+                    };
+                    let mut __v = Vec::new();
+                    let mut __it =
+                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kDefaultACValues_61))
+                            .as_ptr();
+                    while __it != __tmp_14 {
+                        __v.push((*__it.iter_deref()));
+                        __it.iter_inc();
                     }
+                    __v
                 }
             },
         )
@@ -5255,14 +5228,13 @@ pub unsafe fn EncodeAuxData_162(
 impl brunsli_internal_enc_Histogram {}
 impl brunsli_internal_enc_Histogram {
     pub unsafe fn Clear(&mut self) {
-        match ({ (self.data_.as_mut_ptr() as *mut ::libc::c_void) },) {
-            (mut __tmp_15,) => {
-                let byte_0 = __tmp_15 as *mut u8;
-                for offset in 0..::std::mem::size_of::<[i32; 18]>() {
-                    *byte_0.offset(offset as isize) = 0 as u8;
-                }
-                __tmp_15
+        {
+            let mut __tmp_15 = { (self.data_.as_mut_ptr() as *mut ::libc::c_void) };
+            let byte_0 = __tmp_15 as *mut u8;
+            for offset in 0..::std::mem::size_of::<[i32; 18]>() {
+                *byte_0.offset(offset as isize) = 0 as u8;
             }
+            __tmp_15
         };
         self.total_count_ = 0;
     }
@@ -5307,10 +5279,10 @@ impl brunsli_internal_enc_Histogram {
     }
 }
 pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const [i32; 64], mut order: *mut u32) {
-    let mut pos_and_val: Vec<(i32, i32)> =
-        (0..((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize) as usize)
-            .map(|_| <(i32, i32)>::default())
-            .collect::<Vec<_>>();
+    let mut pos_and_val: Vec<(i32, i32)> = Vec::from_fn(
+        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize),
+        |_| <(i32, i32)>::default(),
+    );
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
@@ -5321,36 +5293,37 @@ pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const [i32; 64], mut order: *mut
             i.prefix_inc();
         }
     }
-    match ({ pos_and_val.begin() }, { pos_and_val.end() }, {
-        FnPtr::<fn(*const (i32, i32), *const (i32, i32)) -> bool>::new(
-            |a: *const (i32, i32), b: *const (i32, i32)| -> bool {
-                unsafe {
-                    return (((*a).1) < ((*b).1));
-                }
-            },
-        )
-    }) {
-        (mut __tmp_16, mut __tmp_17, mut __tmp_18) => {
-            let __n = __tmp_17.iter_distance(&__tmp_16);
-            let mut __order: Vec<isize> = (0..__n).collect();
-            __order.sort_by(|&__x, &__y| {
-                let __a = __tmp_16.iter_at(__x) as *const _;
-                let __b = __tmp_16.iter_at(__y) as *const _;
-                if __tmp_18.call(__a, __b) {
-                    std::cmp::Ordering::Less
-                } else if __tmp_18.call(__b, __a) {
-                    std::cmp::Ordering::Greater
-                } else {
-                    std::cmp::Ordering::Equal
-                }
-            });
-            let __values: Vec<_> = __order
-                .iter()
-                .map(|&__i| std::ptr::read(__tmp_16.iter_at(__i)))
-                .collect();
-            for (__i, __v) in (0..__n).zip(__values) {
-                std::ptr::write(__tmp_16.iter_at(__i), __v);
+    {
+        let mut __tmp_16 = { pos_and_val.begin() };
+        let mut __tmp_17 = { pos_and_val.end() };
+        let mut __tmp_18 = {
+            FnPtr::<fn(*const (i32, i32), *const (i32, i32)) -> bool>::new(
+                |a: *const (i32, i32), b: *const (i32, i32)| -> bool {
+                    unsafe {
+                        return (((*a).1) < ((*b).1));
+                    }
+                },
+            )
+        };
+        let __n = __tmp_17.iter_distance(&__tmp_16);
+        let mut __order: Vec<isize> = (0..__n).collect();
+        __order.sort_by(|&__x, &__y| {
+            let __a = __tmp_16.iter_at(__x) as *const _;
+            let __b = __tmp_16.iter_at(__y) as *const _;
+            if __tmp_18.call(__a, __b) {
+                std::cmp::Ordering::Less
+            } else if __tmp_18.call(__b, __a) {
+                std::cmp::Ordering::Greater
+            } else {
+                std::cmp::Ordering::Equal
             }
+        });
+        let __values: Vec<_> = __order
+            .iter()
+            .map(|&__i| std::ptr::read(__tmp_16.iter_at(__i)))
+            .collect();
+        for (__i, __v) in (0..__n).zip(__values) {
+            std::ptr::write(__tmp_16.iter_at(__i), __v);
         }
     };
     {
@@ -5468,7 +5441,7 @@ impl brunsli_internal_enc_DataStream {
             > (self.code_words_.len()))
         {
             let new_size: usize = (((*std::cell::LazyCell::force_mut(&mut *&raw mut kGrowMult_165))
-                * (self.code_words_.capacity() as f64))
+                * ((self.code_words_.capacity()) as f64))
                 as usize)
                 .wrapping_add(
                     (*std::cell::LazyCell::force_mut(&mut *&raw mut kSlackForOneBlock_140)),
@@ -5794,18 +5767,18 @@ pub unsafe fn EncodeSignature_171(mut len: usize, mut data: *mut u8, mut pos: *m
     {
         return false;
     }
-    match ({ ((&mut (*data.offset((*pos) as isize)) as *mut u8) as *mut ::libc::c_void) },) {
-        (mut __tmp_19,) => {
-            if (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)) != 0 {
-                ::std::ptr::copy_nonoverlapping(
-                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignature_44)).as_ptr()
-                        as *const ::libc::c_void),
-                    __tmp_19,
-                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)),
-                )
-            }
-            __tmp_19
+    {
+        let mut __tmp_19 =
+            { ((&mut (*data.offset((*pos) as isize)) as *mut u8) as *mut ::libc::c_void) };
+        if (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)) != 0 {
+            ::std::ptr::copy_nonoverlapping(
+                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignature_44)).as_ptr()
+                    as *const ::libc::c_void),
+                __tmp_19,
+                (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)),
+            )
         }
+        __tmp_19
     };
     (*pos) = (*pos)
         .wrapping_add((*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliSignatureSize_43)));
@@ -5976,7 +5949,7 @@ pub unsafe fn EncodeMetaData_174(
     if !(BrotliEncoderCompress_unsafe(
         (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrotliQuality_142)),
         (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrotliWindowBits_143)),
-        (BROTLI_MODE_GENERIC as BrotliEncoderMode),
+        ((BROTLI_MODE_GENERIC) as BrotliEncoderMode),
         metadata.len(),
         (metadata.as_mut_ptr()).cast_const(),
         (&mut compressed_size as *mut usize),
@@ -6307,24 +6280,23 @@ pub unsafe fn CalculateMeta_186(
                 * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)));
             (*m).dc_stride = (*m).width_in_blocks;
             (*m).b_stride = (*m).width_in_blocks;
-            match ({ ((*m).quant.as_mut_ptr() as *mut ::libc::c_void) }, {
-                ((&(&(*q)).values[(0_usize)] as *const i32) as *const ::libc::c_void)
-            }) {
-                (mut __tmp_20, mut __tmp_21) => {
-                    if ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize)
-                        .wrapping_mul((::std::mem::size_of::<i32>() as usize))
-                        != 0
-                    {
-                        ::std::ptr::copy_nonoverlapping(
-                            __tmp_21,
-                            __tmp_20,
-                            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
-                                as usize)
-                                .wrapping_mul((::std::mem::size_of::<i32>() as usize)),
-                        )
-                    }
-                    __tmp_20
+            {
+                let mut __tmp_20 = { ((*m).quant.as_mut_ptr() as *mut ::libc::c_void) };
+                let mut __tmp_21 =
+                    { ((&(&(*q)).values[(0_usize)] as *const i32) as *const ::libc::c_void) };
+                if ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize)
+                    .wrapping_mul((::std::mem::size_of::<i32>() as usize))
+                    != 0
+                {
+                    ::std::ptr::copy_nonoverlapping(
+                        __tmp_21,
+                        __tmp_20,
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                            as usize)
+                            .wrapping_mul((::std::mem::size_of::<i32>() as usize)),
+                    )
                 }
+                __tmp_20
             };
             i.prefix_inc();
         }
@@ -6337,9 +6309,8 @@ pub unsafe fn EncodeDC_187(mut state: *mut brunsli_internal_enc_State) {
     let mcu_rows: i32 = (((&(*meta))[(0_usize)].height_in_blocks) / ((&(*meta))[(0_usize)].v_samp));
     let entropy_source: *mut brunsli_internal_enc_EntropySource = &mut (*state).entropy_source;
     let data_stream: *mut brunsli_internal_enc_DataStream = &mut (*state).data_stream_dc;
-    let mut comps: Vec<brunsli_ComponentStateDC> = (0..(num_components) as usize)
-        .map(|_| <brunsli_ComponentStateDC>::default())
-        .collect::<Vec<_>>();
+    let mut comps: Vec<brunsli_ComponentStateDC> =
+        Vec::from_fn(num_components, |_| <brunsli_ComponentStateDC>::default());
     let mut total_num_blocks: usize = 0_usize;
     {
         let mut i: usize = 0_usize;
@@ -6592,9 +6563,8 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
                 }) as isize,
             );
     let mut num_code_words: usize = 0_usize;
-    let mut comps: Vec<brunsli_ComponentState> = (0..(num_components) as usize)
-        .map(|_| <brunsli_ComponentState>::default())
-        .collect::<Vec<_>>();
+    let mut comps: Vec<brunsli_ComponentState> =
+        Vec::from_fn(num_components, |_| <brunsli_ComponentState>::default());
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
@@ -7047,10 +7017,8 @@ pub unsafe fn PrepareEntropyCodes_189(
 ) -> Option<Box<brunsli_internal_enc_EntropyCodes>> {
     let meta: *mut Vec<brunsli_internal_enc_ComponentMeta> = &mut (*state).meta;
     let num_components: usize = (*meta).len();
-    let mut group_context_offsets: Vec<u64> = (0..((1_usize).wrapping_add(num_components))
-        as usize)
-        .map(|_| 0_u64)
-        .collect::<Vec<_>>();
+    let mut group_context_offsets: Vec<u64> =
+        Vec::from_fn((1_usize).wrapping_add(num_components), |_| 0_u64);
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
@@ -7349,9 +7317,8 @@ pub unsafe fn BrunsliEncodeJpeg_191(
         }
     }
     state.num_contexts = num_contexts;
-    let mut dc_prediction_errors: Vec<Vec<i16>> = (0..(num_components) as usize)
-        .map(|_| Default::default())
-        .collect::<Vec<_>>();
+    let mut dc_prediction_errors: Vec<Vec<i16>> =
+        Vec::from_fn(num_components, |_| Default::default());
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
@@ -7367,9 +7334,7 @@ pub unsafe fn BrunsliEncodeJpeg_191(
     if !(unsafe { PredictDCCoeffs_185((&mut state as *mut brunsli_internal_enc_State)) }) {
         return false;
     }
-    let mut block_state: Vec<Vec<u8>> = (0..(num_components) as usize)
-        .map(|_| Default::default())
-        .collect::<Vec<_>>();
+    let mut block_state: Vec<Vec<u8>> = Vec::from_fn(num_components, |_| Default::default());
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
@@ -7416,17 +7381,14 @@ pub unsafe fn EncodeOriginalJpg_194(
     if (((*jpg).original_jpg).is_null()) || (((*jpg).original_jpg_size) > (*len)) {
         return false;
     }
-    match (
-        { (data as *mut ::libc::c_void) },
-        { ((*jpg).original_jpg as *const ::libc::c_void) },
-        { (*jpg).original_jpg_size },
-    ) {
-        (mut __tmp_22, mut __tmp_23, mut __tmp_24) => {
-            if __tmp_24 != 0 {
-                ::std::ptr::copy_nonoverlapping(__tmp_23, __tmp_22, __tmp_24)
-            }
-            __tmp_22
+    {
+        let mut __tmp_22 = { (data as *mut ::libc::c_void) };
+        let mut __tmp_23 = { ((*jpg).original_jpg as *const ::libc::c_void) };
+        let mut __tmp_24 = { (*jpg).original_jpg_size };
+        if __tmp_24 != 0 {
+            ::std::ptr::copy_nonoverlapping(__tmp_23, __tmp_22, __tmp_24)
         }
+        __tmp_22
     };
     (*len) = (*jpg).original_jpg_size;
     return true;
@@ -7583,26 +7545,24 @@ pub unsafe fn MoveToFrontTransform_200(v: *const Vec<u32>) -> Vec<u32> {
     if (*v).is_empty() {
         return (*v).clone();
     }
-    let mut max_value: u32 = (*match ({ (*v).begin() }, { (*v).end() }) {
-        (mut __tmp_0, mut __tmp_1) => {
-            let mut __best = __tmp_0.clone();
-            if __tmp_0 != __tmp_1 {
-                let mut __it = (__tmp_0).clone();
-                __it.iter_inc();
-                while __it != __tmp_1 {
-                    if *__best.iter_deref() < *__it.iter_deref() {
-                        __best = __it.clone();
-                    }
-                    __it.iter_inc();
+    let mut max_value: u32 = (*{
+        let mut __tmp_0 = { (*v).begin() };
+        let mut __tmp_1 = { (*v).end() };
+        let mut __best = __tmp_0.clone();
+        if __tmp_0 != __tmp_1 {
+            let mut __it = (__tmp_0).clone();
+            __it.iter_inc();
+            while __it != __tmp_1 {
+                if *__best.iter_deref() < *__it.iter_deref() {
+                    __best = __it.clone();
                 }
+                __it.iter_inc();
             }
-            __best
         }
+        __best
     }
     .iter_deref());
-    let mut mtf: Vec<u32> = (0..(((max_value).wrapping_add(1_u32)) as usize) as usize)
-        .map(|_| 0_u32)
-        .collect::<Vec<_>>();
+    let mut mtf: Vec<u32> = Vec::from_fn((((max_value).wrapping_add(1_u32)) as usize), |_| 0_u32);
     {
         let mut i: u32 = 0_u32;
         'loop_: while ((i) <= (max_value)) {
@@ -7610,9 +7570,7 @@ pub unsafe fn MoveToFrontTransform_200(v: *const Vec<u32>) -> Vec<u32> {
             i.prefix_inc();
         }
     }
-    let mut result: Vec<u32> = (0..((*v).len()) as usize)
-        .map(|_| 0_u32)
-        .collect::<Vec<_>>();
+    let mut result: Vec<u32> = Vec::from_fn((*v).len(), |_| 0_u32);
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*v).len())) {
@@ -7655,7 +7613,7 @@ pub unsafe fn RunLengthCodeZeros_201(
             'loop_: while ((i) < ((*v_in).len())) && (((&(*v_in))[(i)]) == (0_u32)) {
                 i.prefix_inc();
             }
-            max_reps = ({
+            max_reps = (({
                 let mut __tmp_2: u64 = ((i).wrapping_sub(i0) as u64);
                 let mut __tmp_3: u64 = (max_reps as u64);
                 (*{
@@ -7663,7 +7621,7 @@ pub unsafe fn RunLengthCodeZeros_201(
                     let __b: *const _ = &mut __tmp_3;
                     if *__a < *__b { __b } else { __a }
                 })
-            } as usize);
+            }) as usize);
         }
     }
     let mut max_prefix: u32 = (if ((max_reps) > (0_usize)) {
@@ -7752,14 +7710,13 @@ pub unsafe fn EncodeContextMap_164(
         )
     });
     let mut symbol_histogram: [u32; 272] = [0_u32; 272];
-    match ({ (symbol_histogram.as_mut_ptr() as *mut ::libc::c_void) },) {
-        (mut __tmp_4,) => {
-            let byte_0 = __tmp_4 as *mut u8;
-            for offset in 0..::std::mem::size_of::<[u32; 272]>() {
-                *byte_0.offset(offset as isize) = 0 as u8;
-            }
-            __tmp_4
+    {
+        let mut __tmp_4 = { (symbol_histogram.as_mut_ptr() as *mut ::libc::c_void) };
+        let byte_0 = __tmp_4 as *mut u8;
+        for offset in 0..::std::mem::size_of::<[u32; 272]>() {
+            *byte_0.offset(offset as isize) = 0 as u8;
         }
+        __tmp_4
     };
     {
         let mut i: usize = 0_usize;
@@ -7781,23 +7738,21 @@ pub unsafe fn EncodeContextMap_164(
     }
     let mut bit_depths: [u8; 272] = [0_u8; 272];
     let mut bit_codes: [u16; 272] = [0_u16; 272];
-    match ({ (bit_depths.as_mut_ptr() as *mut ::libc::c_void) },) {
-        (mut __tmp_5,) => {
-            let byte_0 = __tmp_5 as *mut u8;
-            for offset in 0..::std::mem::size_of::<[u8; 272]>() {
-                *byte_0.offset(offset as isize) = 0 as u8;
-            }
-            __tmp_5
+    {
+        let mut __tmp_5 = { (bit_depths.as_mut_ptr() as *mut ::libc::c_void) };
+        let byte_0 = __tmp_5 as *mut u8;
+        for offset in 0..::std::mem::size_of::<[u8; 272]>() {
+            *byte_0.offset(offset as isize) = 0 as u8;
         }
+        __tmp_5
     };
-    match ({ (bit_codes.as_mut_ptr() as *mut ::libc::c_void) },) {
-        (mut __tmp_6,) => {
-            let byte_0 = __tmp_6 as *mut u8;
-            for offset in 0..::std::mem::size_of::<[u16; 272]>() {
-                *byte_0.offset(offset as isize) = 0 as u8;
-            }
-            __tmp_6
+    {
+        let mut __tmp_6 = { (bit_codes.as_mut_ptr() as *mut ::libc::c_void) };
+        let byte_0 = __tmp_6 as *mut u8;
+        for offset in 0..::std::mem::size_of::<[u16; 272]>() {
+            *byte_0.offset(offset as isize) = 0 as u8;
         }
+        __tmp_6
     };
     (unsafe {
         BuildAndStoreHuffmanTree_202(
@@ -8842,12 +8797,11 @@ pub unsafe fn CreateHuffmanTree_220(
         let mut count_limit: u32 = 1_u32;
         'loop_: while true {
             let mut tree: Vec<brunsli_HuffmanTree> = Vec::new();
-            match ({ ((2_usize).wrapping_mul(length)).wrapping_add(1_usize) },) {
-                (mut __tmp_0,) => {
-                    if __tmp_0 > tree.capacity() as usize {
-                        let len_0 = tree.len();
-                        tree.reserve_exact(__tmp_0 - len_0 as usize);
-                    }
+            {
+                let mut __tmp_0 = { ((2_usize).wrapping_mul(length)).wrapping_add(1_usize) };
+                if __tmp_0 > tree.capacity() as usize {
+                    let len_0 = tree.len();
+                    tree.reserve_exact(__tmp_0 - len_0 as usize);
                 }
             };
             {
@@ -8877,40 +8831,39 @@ pub unsafe fn CreateHuffmanTree_220(
                 (*depth.offset((tree[(0_usize)].index_right_or_value) as isize)) = 1_u8;
                 break;
             }
-            match ({ tree.begin() },) {
-                (mut __tmp_2,) => {
-                    let __n = tree.end().iter_distance(&__tmp_2);
-                    let mut __order: Vec<isize> = (0..__n).collect();
-                    __order.sort_by(|&__x, &__y| {
-                        let __a = __tmp_2.iter_at(__x) as *const _;
-                        let __b = __tmp_2.iter_at(__y) as *const _;
-                        if (Compare_223
-                            as unsafe fn(
-                                *const brunsli_HuffmanTree,
-                                *const brunsli_HuffmanTree,
-                            ) -> bool)
-                            .call(__a, __b)
-                        {
-                            std::cmp::Ordering::Less
-                        } else if (Compare_223
-                            as unsafe fn(
-                                *const brunsli_HuffmanTree,
-                                *const brunsli_HuffmanTree,
-                            ) -> bool)
-                            .call(__b, __a)
-                        {
-                            std::cmp::Ordering::Greater
-                        } else {
-                            std::cmp::Ordering::Equal
-                        }
-                    });
-                    let __values: Vec<_> = __order
-                        .iter()
-                        .map(|&__i| std::ptr::read(__tmp_2.iter_at(__i)))
-                        .collect();
-                    for (__i, __v) in (0..__n).zip(__values) {
-                        std::ptr::write(__tmp_2.iter_at(__i), __v);
+            {
+                let mut __tmp_2 = { tree.begin() };
+                let __n = tree.end().iter_distance(&__tmp_2);
+                let mut __order: Vec<isize> = (0..__n).collect();
+                __order.sort_by(|&__x, &__y| {
+                    let __a = __tmp_2.iter_at(__x) as *const _;
+                    let __b = __tmp_2.iter_at(__y) as *const _;
+                    if (Compare_223
+                        as unsafe fn(
+                            *const brunsli_HuffmanTree,
+                            *const brunsli_HuffmanTree,
+                        ) -> bool)
+                        .call(__a, __b)
+                    {
+                        std::cmp::Ordering::Less
+                    } else if (Compare_223
+                        as unsafe fn(
+                            *const brunsli_HuffmanTree,
+                            *const brunsli_HuffmanTree,
+                        ) -> bool)
+                        .call(__b, __a)
+                    {
+                        std::cmp::Ordering::Greater
+                    } else {
+                        std::cmp::Ordering::Equal
                     }
+                });
+                let __values: Vec<_> = __order
+                    .iter()
+                    .map(|&__i| std::ptr::read(__tmp_2.iter_at(__i)))
+                    .collect();
+                for (__i, __v) in (0..__n).zip(__values) {
+                    std::ptr::write(__tmp_2.iter_at(__i), __v);
                 }
             };
             let sentinel: brunsli_HuffmanTree =
@@ -8974,23 +8927,21 @@ pub unsafe fn CreateHuffmanTree_220(
                 let _depth: *mut u8 = depth;
                 SetDepth_222(_p, _pool, _depth, 0_u8)
             });
-            if (((*match ({ (&mut (*depth.offset((0) as isize)) as *mut u8) }, {
-                (&mut (*depth.offset((length) as isize)) as *mut u8)
-            }) {
-                (mut __tmp_3, mut __tmp_4) => {
-                    let mut __best = __tmp_3.clone();
-                    if __tmp_3 != __tmp_4 {
-                        let mut __it = __tmp_3;
-                        __it.iter_inc();
-                        while __it != __tmp_4 {
-                            if *__best.iter_deref() < *__it.iter_deref() {
-                                __best = __it.clone();
-                            }
-                            __it.iter_inc();
+            if (((*{
+                let mut __tmp_3 = { (&mut (*depth.offset((0) as isize)) as *mut u8) };
+                let mut __tmp_4 = { (&mut (*depth.offset((length) as isize)) as *mut u8) };
+                let mut __best = __tmp_3.clone();
+                if __tmp_3 != __tmp_4 {
+                    let mut __it = __tmp_3;
+                    __it.iter_inc();
+                    while __it != __tmp_4 {
+                        if *__best.iter_deref() < *__it.iter_deref() {
+                            __best = __it.clone();
                         }
+                        __it.iter_inc();
                     }
-                    __best
                 }
+                __best
             }) as i32)
                 <= (tree_limit))
             {
@@ -9436,9 +9387,7 @@ pub unsafe fn ProcessSOF_235(
         .resize_with((num_components as usize), || {
             <brunsli_JPEGComponent>::default()
         });
-    let mut ids_seen: Vec<bool> = (0..(256_usize) as usize)
-        .map(|_| false)
-        .collect::<Vec<bool>>();
+    let mut ids_seen: Vec<bool> = Vec::from_fn(256_usize, |_| false);
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).components.len())) {
@@ -9602,9 +9551,7 @@ pub unsafe fn ProcessSOS_236(
         (*jpg).error = brunsli_JPEGReadError_UNEXPECTED_EOF;
         return false;
     };
-    let mut ids_seen: Vec<bool> = (0..(256_usize) as usize)
-        .map(|_| false)
-        .collect::<Vec<bool>>();
+    let mut ids_seen: Vec<bool> = Vec::from_fn(256_usize, |_| false);
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (comps_in_scan)) {
@@ -9907,9 +9854,7 @@ pub unsafe fn ProcessDHT_237(
             (*jpg).error = brunsli_JPEGReadError_UNEXPECTED_EOF;
             return false;
         };
-        let mut values_seen: Vec<bool> = (0..(256_usize) as usize)
-            .map(|_| false)
-            .collect::<Vec<bool>>();
+        let mut values_seen: Vec<bool> = Vec::from_fn(256_usize, |_| false);
         {
             let mut i: i32 = 0;
             'loop_: while ((i) < (total_count)) {
@@ -9922,9 +9867,8 @@ pub unsafe fn ProcessDHT_237(
                             )) - (1)))
                     {
                         write!((*libcc2rs::cerr_unsafe()), "Invalid value: ",);
-                        (*libcc2rs::cerr_unsafe()).write_all(
-                            &([(&[value as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()),
-                        );
+                        (*libcc2rs::cerr_unsafe())
+                            .write_all(&([(&[value as u8] as &[u8]), (b"\n" as &[u8])].concat()));
                         (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
                         return false;
                     };
@@ -9932,7 +9876,7 @@ pub unsafe fn ProcessDHT_237(
                 if *(&mut (values_seen)[(value as usize)] as *mut bool) {
                     write!((*libcc2rs::cerr_unsafe()), "Duplicate Huffman code value ",);
                     (*libcc2rs::cerr_unsafe())
-                        .write_all(&([(&[value as u8] as &[u8]), (&[b'\n'] as &[u8])].concat()));
+                        .write_all(&([(&[value as u8] as &[u8]), (b"\n" as &[u8])].concat()));
                     (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
                     return false;
                 }
@@ -10200,21 +10144,19 @@ pub unsafe fn ProcessAPP_241(
         return false;
     };
     let mut app_str_start: *const u8 = data.offset((*pos) as isize).offset(-((3) as isize));
-    let mut app_str: Vec<u8> = match ({
-        app_str_start
-            .offset((marker_len) as isize)
-            .offset((1) as isize)
-    },)
-    {
-        (mut __tmp_3,) => {
-            let mut __v = Vec::new();
-            let mut __it = app_str_start;
-            while __it != __tmp_3 {
-                __v.push((*__it.iter_deref()));
-                __it.iter_inc();
-            }
-            __v
+    let mut app_str: Vec<u8> = {
+        let mut __tmp_3 = {
+            app_str_start
+                .offset((marker_len) as isize)
+                .offset((1) as isize)
+        };
+        let mut __v = Vec::new();
+        let mut __it = app_str_start;
+        while __it != __tmp_3 {
+            __v.push((*__it.iter_deref()));
+            __it.iter_inc();
         }
+        __v
     };
     (*pos) = (*pos).wrapping_add((marker_len).wrapping_sub(2_usize));
     {
@@ -10262,21 +10204,19 @@ pub unsafe fn ProcessCOM_242(
         return false;
     };
     let mut com_str_start: *const u8 = data.offset((*pos) as isize).offset(-((3) as isize));
-    let mut com_str: Vec<u8> = match ({
-        com_str_start
-            .offset((marker_len) as isize)
-            .offset((1) as isize)
-    },)
-    {
-        (mut __tmp_4,) => {
-            let mut __v = Vec::new();
-            let mut __it = com_str_start;
-            while __it != __tmp_4 {
-                __v.push((*__it.iter_deref()));
-                __it.iter_inc();
-            }
-            __v
+    let mut com_str: Vec<u8> = {
+        let mut __tmp_4 = {
+            com_str_start
+                .offset((marker_len) as isize)
+                .offset((1) as isize)
+        };
+        let mut __v = Vec::new();
+        let mut __it = com_str_start;
+        while __it != __tmp_4 {
+            __v.push((*__it.iter_deref()));
+            __it.iter_inc();
         }
+        __v
     };
     (*pos) = (*pos).wrapping_add((marker_len).wrapping_sub(2_usize));
     {
@@ -10915,14 +10855,14 @@ pub unsafe fn ProcessScan_249(
                                 )
                             }) {
                                 restarts_to_go = (*jpg).restart_interval;
-                                match ({ (last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void) },) {
-                                    (mut __tmp_5,) => {
-                                        let byte_0 = __tmp_5 as *mut u8;
-                                        for offset in 0..::std::mem::size_of::<[i16; 4]>() {
-                                            *byte_0.offset(offset as isize) = 0 as u8;
-                                        }
-                                        __tmp_5
+                                {
+                                    let mut __tmp_5 =
+                                        { (last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void) };
+                                    let byte_0 = __tmp_5 as *mut u8;
+                                    for offset in 0..::std::mem::size_of::<[i16; 4]>() {
+                                        *byte_0.offset(offset as isize) = 0 as u8;
                                     }
+                                    __tmp_5
                                 };
                                 if ((eobrun) > (0)) {
                                     write!(
@@ -11035,10 +10975,7 @@ pub unsafe fn ProcessScan_249(
                                                 }
                                             }
                                             if reset_state {
-                                                {
-                                                    let __init = block_scan_index;
-                                                    (*scan_info).reset_points.push(__init)
-                                                };
+                                                (*scan_info).reset_points.push(block_scan_index);
                                             }
                                             if ((num_zero_runs) > (0)) {
                                                 let mut info : brunsli_JPEGScanInfo_ExtraZeroRunInfo = <brunsli_JPEGScanInfo_ExtraZeroRunInfo >::default() ;
@@ -11110,7 +11047,7 @@ pub unsafe fn FixupIndexes_250(mut jpg: *mut brunsli_JPEGData) -> bool {
                     &([
                         (&[(*c).quant_idx as u8] as &[u8]),
                         (b" not found." as &[u8]),
-                        (&[b'\n'] as &[u8]),
+                        (b"\n" as &[u8]),
                     ]
                     .concat()),
                 );
@@ -11175,12 +11112,12 @@ pub unsafe fn ReadJpeg_196(
     }
     let mut lut_size: i32 = ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxHuffmanTables_6))
         * (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanLutSize_231)));
-    let mut dc_huff_lut: Vec<brunsli_HuffmanTableEntry> = (0..(lut_size as usize) as usize)
-        .map(|_| <brunsli_HuffmanTableEntry>::default())
-        .collect::<Vec<_>>();
-    let mut ac_huff_lut: Vec<brunsli_HuffmanTableEntry> = (0..(lut_size as usize) as usize)
-        .map(|_| <brunsli_HuffmanTableEntry>::default())
-        .collect::<Vec<_>>();
+    let mut dc_huff_lut: Vec<brunsli_HuffmanTableEntry> = Vec::from_fn((lut_size as usize), |_| {
+        <brunsli_HuffmanTableEntry>::default()
+    });
+    let mut ac_huff_lut: Vec<brunsli_HuffmanTableEntry> = Vec::from_fn((lut_size as usize), |_| {
+        <brunsli_HuffmanTableEntry>::default()
+    });
     let mut found_sof: bool = false;
     let mut found_dri: bool = false;
     let mut scan_progression: [[u16; 64]; 4] = [[0_u16; 64], [0; 64], [0; 64], [0; 64]];
@@ -11196,16 +11133,16 @@ pub unsafe fn ReadJpeg_196(
                 (*jpg).marker_order.push(__a1)
             };
             {
-                let __a1 = match ({ data.offset((pos) as isize).offset((num_skipped) as isize) },) {
-                    (mut __tmp_6,) => {
-                        let mut __v = Vec::new();
-                        let mut __it = data.offset((pos) as isize);
-                        while __it != __tmp_6 {
-                            __v.push((*__it.iter_deref()));
-                            __it.iter_inc();
-                        }
-                        __v
+                let __a1 = {
+                    let mut __tmp_6 =
+                        { data.offset((pos) as isize).offset((num_skipped) as isize) };
+                    let mut __v = Vec::new();
+                    let mut __it = data.offset((pos) as isize);
+                    while __it != __tmp_6 {
+                        __v.push((*__it.iter_deref()));
+                        __it.iter_inc();
                     }
+                    __v
                 };
                 (*jpg).inter_marker_data.push(__a1)
             };
@@ -11362,16 +11299,15 @@ pub unsafe fn ReadJpeg_196(
     if ((mode as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
         if ((pos) < (len)) {
             {
-                (*jpg).tail_data = match ({ data.offset((len) as isize) },) {
-                    (mut __tmp_7,) => {
-                        let mut __v = Vec::new();
-                        let mut __it = data.offset((pos) as isize);
-                        while __it != __tmp_7 {
-                            __v.push((*__it.iter_deref()));
-                            __it.iter_inc();
-                        }
-                        __v
+                (*jpg).tail_data = {
+                    let mut __tmp_7 = { data.offset((len) as isize) };
+                    let mut __v = Vec::new();
+                    let mut __it = data.offset((pos) as isize);
+                    while __it != __tmp_7 {
+                        __v.push((*__it.iter_deref()));
+                        __it.iter_inc();
                     }
+                    __v
                 };
             };
         }
@@ -11548,16 +11484,14 @@ impl brunsli_Storage {
             });
             'loop_: while true {}
         };
-        match (
-            { (self.data.offset(((self.pos) >> (3)) as isize) as *mut ::libc::c_void) },
-            { (src as *const ::libc::c_void) },
-        ) {
-            (mut __tmp_0, mut __tmp_1) => {
-                if len != 0 {
-                    ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len)
-                }
-                __tmp_0
+        {
+            let mut __tmp_0 =
+                { (self.data.offset(((self.pos) >> (3)) as isize) as *mut ::libc::c_void) };
+            let mut __tmp_1 = { (src as *const ::libc::c_void) };
+            if len != 0 {
+                ::std::ptr::copy_nonoverlapping(__tmp_1, __tmp_0, len)
             }
+            __tmp_0
         };
         self.pos = (self.pos).wrapping_add((8_usize).wrapping_mul(len));
     }
@@ -11585,7 +11519,7 @@ pub unsafe fn ReadFileInternal_254(
         });
         return false;
     }
-    let mut input_size: i32 = (libc::ftell(file) as i64 as i32);
+    let mut input_size: i32 = ((libc::ftell(file) as i64) as i32);
     if ((input_size) == (0)) {
         (unsafe {
             libc::fprintf(
@@ -11737,7 +11671,7 @@ pub unsafe fn ProcessFile_258(
     let mut output: Vec<libc::c_char> = vec![0];
     {
         let mut jpg: brunsli_JPEGData = brunsli_JPEGData::new();
-        let mut input_data: *const u8 = (input.as_ptr() as *const u8);
+        let mut input_data: *const u8 = ((input.as_ptr()) as *const u8);
         ok = (unsafe {
             ReadJpeg_196(
                 input_data,
@@ -11818,12 +11752,13 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
         });
         return 1;
     }
-    let file_name: Vec<libc::c_char> = match ({ (*argv.offset((1) as isize)).cast_const() },) {
-        (mut __tmp_0,) => std::slice::from_raw_parts(
+    let file_name: Vec<libc::c_char> = {
+        let mut __tmp_0 = { (*argv.offset((1) as isize)).cast_const() };
+        std::slice::from_raw_parts(
             __tmp_0,
             (0..).take_while(|&i| *__tmp_0.add(i) != 0).count() + 1,
         )
-        .to_vec(),
+        .to_vec()
     };
     if file_name.len() <= 1 {
         (unsafe {
@@ -11846,12 +11781,13 @@ unsafe fn main_0(mut argc: i32, mut argv: *mut *mut libc::c_char) -> i32 {
             __tmp2
         }
     } else {
-        match ({ (*argv.offset((2) as isize)).cast_const() },) {
-            (mut __tmp_1,) => std::slice::from_raw_parts(
+        {
+            let mut __tmp_1 = { (*argv.offset((2) as isize)).cast_const() };
+            std::slice::from_raw_parts(
                 __tmp_1,
                 (0..).take_while(|&i| *__tmp_1.add(i) != 0).count() + 1,
             )
-            .to_vec(),
+            .to_vec()
         }
     };
     let mut ok: bool = (unsafe { ProcessFile_258(&file_name, &outfile_name) });
