@@ -343,20 +343,22 @@ pub fn ReadBase128_17(mut buf: Ptr<woff2_Buffer>, mut value: Ptr<u32>) -> bool {
     {
         let mut i: usize = 0_usize;
         'loop_: while (i < 5_usize) {
-            let code: Value<u8> = Rc::new(RefCell::new(0_u8));
-            if !({ woff2_BufferImpl::ReadU8(&buf, (code.as_pointer())) }) {
-                return false;
-            }
-            if (i == 0_usize) && (((*code.borrow()) as i32) == 128) {
-                return false;
-            }
-            if ((result & 4261412864_u32) != 0) {
-                return false;
-            }
-            result = { ((result << 7) | ((((*code.borrow()) as i32) & 127) as u32)) };
-            if ((((*code.borrow()) as i32) & 128) == 0) {
-                value.write({ result });
-                return true;
+            'for_body: {
+                let code: Value<u8> = Rc::new(RefCell::new(0_u8));
+                if !({ woff2_BufferImpl::ReadU8(&buf, (code.as_pointer())) }) {
+                    return false;
+                }
+                if (i == 0_usize) && (((*code.borrow()) as i32) == 128) {
+                    return false;
+                }
+                if ((result & 4261412864_u32) != 0) {
+                    return false;
+                }
+                result = { ((result << 7) | ((((*code.borrow()) as i32) & 127) as u32)) };
+                if ((((*code.borrow()) as i32) & 128) == 0) {
+                    value.write({ result });
+                    return true;
+                }
             }
             i.prefix_inc();
         }
@@ -366,7 +368,9 @@ pub fn ReadBase128_17(mut buf: Ptr<woff2_Buffer>, mut value: Ptr<u32>) -> bool {
 pub fn Base128Size_18(mut n: usize) -> usize {
     let mut size: usize = 1_usize;
     'loop_: while (n >= 128_usize) {
-        size.prefix_inc();
+        'for_body: {
+            size.prefix_inc();
+        }
         n >>= 7;
     }
     return size;
@@ -376,14 +380,16 @@ pub fn StoreBase128_19(mut len: usize, mut offset: Ptr<usize>, mut dst: Ptr<u8>)
     {
         let mut i: usize = 0_usize;
         'loop_: while (i < size) {
-            let mut b: i32 = (((len
-                >> ((7_usize).wrapping_mul((((size).wrapping_sub(i)).wrapping_sub(1_usize)))))
-                & 127_usize) as i32);
-            if (i < (size).wrapping_sub(1_usize)) {
-                b |= 128;
+            'for_body: {
+                let mut b: i32 = (((len
+                    >> ((7_usize).wrapping_mul((((size).wrapping_sub(i)).wrapping_sub(1_usize)))))
+                    & 127_usize) as i32);
+                if (i < (size).wrapping_sub(1_usize)) {
+                    b |= 128;
+                }
+                let __rhs = (b as u8);
+                elem!(dst, offset.with_mut(|__v| __v.postfix_inc())).write(__rhs);
             }
-            let __rhs = (b as u8);
-            elem!(dst, offset.with_mut(|__v| __v.postfix_inc())).write(__rhs);
             i.prefix_inc();
         }
     }
@@ -470,15 +476,17 @@ pub fn ComputeULongSum_26(mut buf: Ptr<u8>, mut size: usize) -> u32 {
     {
         let mut i: usize = 0_usize;
         'loop_: while (i < aligned_size) {
-            checksum = {
-                (checksum).wrapping_add(
-                    (((((((elem!(buf, i).read()) as i32) << 24)
-                        | (((elem!(buf, (i).wrapping_add(1_usize)).read()) as i32) << 16))
-                        | (((elem!(buf, (i).wrapping_add(2_usize)).read()) as i32) << 8))
-                        | ((elem!(buf, (i).wrapping_add(3_usize)).read()) as i32))
-                        as u32),
-                )
-            };
+            'for_body: {
+                checksum = {
+                    (checksum).wrapping_add(
+                        (((((((elem!(buf, i).read()) as i32) << 24)
+                            | (((elem!(buf, (i).wrapping_add(1_usize)).read()) as i32) << 16))
+                            | (((elem!(buf, (i).wrapping_add(2_usize)).read()) as i32) << 8))
+                            | ((elem!(buf, (i).wrapping_add(3_usize)).read()) as i32))
+                            as u32),
+                    )
+                };
+            }
             i = { (i).wrapping_add(4_usize) };
         }
     }
@@ -487,9 +495,11 @@ pub fn ComputeULongSum_26(mut buf: Ptr<u8>, mut size: usize) -> u32 {
         {
             let mut i: usize = aligned_size;
             'loop_: while (i < size) {
-                v |= (({ ((elem!(buf, i).read()) as i32) } << {
-                    ((24_usize).wrapping_sub((8_usize).wrapping_mul((i & 3_usize))))
-                }) as u32);
+                'for_body: {
+                    v |= (({ ((elem!(buf, i).read()) as i32) } << {
+                        ((24_usize).wrapping_sub((8_usize).wrapping_mul((i & 3_usize))))
+                    }) as u32);
+                }
                 i.prefix_inc();
             }
         }
@@ -647,54 +657,55 @@ pub fn ReadTrueTypeFont_33(
     {
         let mut i: u16 = 0_u16;
         'loop_: while ({ (i as i32) } < { (font.with(|__s| __s.num_tables) as i32) }) {
-            let table: Value<woff2_Font_Table> =
-                Rc::new(RefCell::new(<woff2_Font_Table>::default()));
-            (*table.borrow_mut()).flag_byte = 0_u8;
-            (*table.borrow_mut()).reuse_of = Ptr::<woff2_Font_Table>::null();
-            if (((!({ woff2_BufferImpl::ReadU32(&file, (field_ptr!(table.as_pointer(), tag))) }))
-                || (!({
+            'for_body: {
+                let table: Value<woff2_Font_Table> =
+                    Rc::new(RefCell::new(<woff2_Font_Table>::default()));
+                (*table.borrow_mut()).flag_byte = 0_u8;
+                (*table.borrow_mut()).reuse_of = Ptr::<woff2_Font_Table>::null();
+                if (((!({
+                    woff2_BufferImpl::ReadU32(&file, (field_ptr!(table.as_pointer(), tag)))
+                })) || (!({
                     woff2_BufferImpl::ReadU32(&file, (field_ptr!(table.as_pointer(), checksum)))
-                })))
-                || (!({
+                }))) || (!({
                     woff2_BufferImpl::ReadU32(&file, (field_ptr!(table.as_pointer(), offset)))
-                })))
-                || (!({
+                }))) || (!({
                     woff2_BufferImpl::ReadU32(&file, (field_ptr!(table.as_pointer(), length)))
-                }))
-            {
-                return false;
-            }
-            if ((({ (*table.borrow()).offset } & 3_u32) != 0_u32)
-                || (({ (*table.borrow()).length } as usize) > len))
-                || ((len).wrapping_sub(({ (*table.borrow()).length } as usize))
-                    < ({ (*table.borrow()).offset } as usize))
-            {
-                return false;
-            }
-            let __rhs = { (*table.borrow()).length };
-            match (field_ptr!(table.as_pointer(), offset),) {
-                (__tmp_9,) => ({ (*intervals.borrow_mut()).subscript(__tmp_9, || 0_u32) }),
-            }
-            .write(__rhs);
-            (*table.borrow_mut()).data = { data.offset(({ (*table.borrow()).offset }) as isize) };
-            if field_ptr!(font, tables).with(
-                |__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                    __m.find(&field_ptr!(table.as_pointer(), tag))
-                },
-            ) != field_ptr!(font, tables)
-                .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end())
-            {
-                return false;
-            }
-            let __rhs = (*table.borrow()).clone();
-            match (field_ptr!(table.as_pointer(), tag),) {
-                (__tmp_10,) => field!(font, tables).with_mut(
-                    |__v: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
-                        __v.subscript(__tmp_10, || <woff2_Font_Table>::default())
+                })) {
+                    return false;
+                }
+                if ((({ (*table.borrow()).offset } & 3_u32) != 0_u32)
+                    || (({ (*table.borrow()).length } as usize) > len))
+                    || ((len).wrapping_sub(({ (*table.borrow()).length } as usize))
+                        < ({ (*table.borrow()).offset } as usize))
+                {
+                    return false;
+                }
+                let __rhs = { (*table.borrow()).length };
+                match (field_ptr!(table.as_pointer(), offset),) {
+                    (__tmp_9,) => ({ (*intervals.borrow_mut()).subscript(__tmp_9, || 0_u32) }),
+                }
+                .write(__rhs);
+                (*table.borrow_mut()).data =
+                    { data.offset(({ (*table.borrow()).offset }) as isize) };
+                if field_ptr!(font, tables).with(
+                    |__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
+                        __m.find(&field_ptr!(table.as_pointer(), tag))
                     },
-                ),
+                ) != field_ptr!(font, tables)
+                    .with(|__m: &Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| __m.end())
+                {
+                    return false;
+                }
+                let __rhs = (*table.borrow()).clone();
+                match (field_ptr!(table.as_pointer(), tag),) {
+                    (__tmp_10,) => field!(font, tables).with_mut(
+                        |__v: &mut Map<u32, (Value<u32>, Value<woff2_Font_Table>)>| {
+                            __v.subscript(__tmp_10, || <woff2_Font_Table>::default())
+                        },
+                    ),
+                }
+                .write(__rhs);
             }
-            .write(__rhs);
             i.prefix_inc();
         }
     }
@@ -800,14 +811,16 @@ pub fn ReadTrueTypeCollection_35(
     {
         let mut i: usize = 0_usize;
         'loop_: while (i < ((*num_fonts.borrow()) as usize)) {
-            let offset: Value<u32> = Rc::new(RefCell::new(0_u32));
-            if !({ woff2_BufferImpl::ReadU32(&file, (offset.as_pointer())) }) {
-                return false;
+            'for_body: {
+                let offset: Value<u32> = Rc::new(RefCell::new(0_u32));
+                if !({ woff2_BufferImpl::ReadU32(&file, (offset.as_pointer())) }) {
+                    return false;
+                }
+                {
+                    let a0_clone = ({ (*offset.borrow()) }).clone();
+                    (*offsets.borrow_mut()).push(a0_clone)
+                };
             }
-            {
-                let a0_clone = ({ (*offset.borrow()) }).clone();
-                (*offsets.borrow_mut()).push(a0_clone)
-            };
             i.postfix_inc();
         }
     }
@@ -1132,7 +1145,9 @@ pub fn WriteFontCollection_44(
     {
         let mut i: usize = 0_usize;
         'loop_: while ({ i } < { (*font_collection.upgrade().deref()).fonts.len() }) {
-            ({ StoreU32_30(0_u32, (offset.as_pointer()), (dst).clone()) });
+            'for_body: {
+                ({ StoreU32_30(0_u32, (offset.as_pointer()), (dst).clone()) });
+            }
             i.postfix_inc();
         }
     }
@@ -1144,22 +1159,24 @@ pub fn WriteFontCollection_44(
     {
         let mut i: usize = 0_usize;
         'loop_: while ({ i } < { (*font_collection.upgrade().deref()).fonts.len() }) {
-            let font: Ptr<woff2_Font> = field_ref!(font_collection, fonts).decay().offset(i);
-            ({
-                StoreU32_30(
-                    ((*offset.borrow()) as u32),
-                    (offset_table.as_pointer()),
-                    (dst).clone(),
-                )
-            });
-            if !({
-                let _font: Ptr<woff2_Font> = (font).clone();
-                let _offset: Ptr<usize> = (offset.as_pointer());
-                let _dst: Ptr<u8> = (dst).clone();
-                let _dst_size: usize = dst_size;
-                WriteFont_41(_font, _offset, _dst, _dst_size)
-            }) {
-                return false;
+            'for_body: {
+                let font: Ptr<woff2_Font> = field_ref!(font_collection, fonts).decay().offset(i);
+                ({
+                    StoreU32_30(
+                        ((*offset.borrow()) as u32),
+                        (offset_table.as_pointer()),
+                        (dst).clone(),
+                    )
+                });
+                if !({
+                    let _font: Ptr<woff2_Font> = (font).clone();
+                    let _offset: Ptr<usize> = (offset.as_pointer());
+                    let _dst: Ptr<u8> = (dst).clone();
+                    let _dst_size: usize = dst_size;
+                    WriteFont_41(_font, _offset, _dst, _dst_size)
+                }) {
+                    return false;
+                }
             }
             i.postfix_inc();
         }
@@ -1494,21 +1511,25 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
         {
             let mut i: i32 = 0;
             'loop_: while (i < ((*num_contours.borrow()) as i32)) {
-                let point_index: Value<u16> = Rc::new(RefCell::new(0_u16));
-                if !({
-                    woff2_BufferImpl::ReadU16(&buffer.as_pointer(), (point_index.as_pointer()))
-                }) {
-                    return false;
+                'for_body: {
+                    let point_index: Value<u16> = Rc::new(RefCell::new(0_u16));
+                    if !({
+                        woff2_BufferImpl::ReadU16(&buffer.as_pointer(), (point_index.as_pointer()))
+                    }) {
+                        return false;
+                    }
+                    let mut num_points: u16 =
+                        (((((*point_index.borrow()) as i32) - (last_point_index as i32))
+                            + (if (i == 0) { 1 } else { 0 })) as u16);
+                    vec_elem!(glyph, contours, (i as usize)).with_mut(
+                        |__v: &mut Vec<woff2_Glyph_Point>| {
+                            __v.resize_with((num_points as usize), || {
+                                <woff2_Glyph_Point>::default()
+                            })
+                        },
+                    );
+                    last_point_index = (*point_index.borrow());
                 }
-                let mut num_points: u16 =
-                    (((((*point_index.borrow()) as i32) - (last_point_index as i32))
-                        + (if (i == 0) { 1 } else { 0 })) as u16);
-                vec_elem!(glyph, contours, (i as usize)).with_mut(
-                    |__v: &mut Vec<woff2_Glyph_Point>| {
-                        __v.resize_with((num_points as usize), || <woff2_Glyph_Point>::default())
-                    },
-                );
-                last_point_index = (*point_index.borrow());
                 i.prefix_inc();
             }
         }
@@ -1537,65 +1558,70 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
             {
                 let mut i: i32 = 0;
                 'loop_: while (i < ((*num_contours.borrow()) as i32)) {
-                    elem!(flags.decay(), (i as usize)).with_mut(|__v: &mut Vec<u8>| {
-                        __v.resize_with(
-                            ({
+                    'for_body: {
+                        elem!(flags.decay(), (i as usize)).with_mut(|__v: &mut Vec<u8>| {
+                            __v.resize_with(
+                                ({
+                                    (*field_ref!(glyph, contours)
+                                        .decay()
+                                        .offset((i as usize))
+                                        .upgrade()
+                                        .deref())
+                                    .len()
+                                }),
+                                || 0_u8,
+                            )
+                        });
+                        {
+                            let mut j: usize = 0_usize;
+                            'loop_: while ({ j } < {
                                 (*field_ref!(glyph, contours)
                                     .decay()
                                     .offset((i as usize))
                                     .upgrade()
                                     .deref())
                                 .len()
-                            }),
-                            || 0_u8,
-                        )
-                    });
-                    {
-                        let mut j: usize = 0_usize;
-                        'loop_: while ({ j } < {
-                            (*field_ref!(glyph, contours)
-                                .decay()
-                                .offset((i as usize))
-                                .upgrade()
-                                .deref())
-                            .len()
-                        }) {
-                            if (((*flag_repeat.borrow()) as i32) == 0) {
-                                if !({
-                                    woff2_BufferImpl::ReadU8(
-                                        &buffer.as_pointer(),
-                                        (flag.as_pointer()),
-                                    )
-                                }) {
-                                    return false;
-                                }
-                                if ((((*flag.borrow()) as i32)
-                                    & kFLAG_REPEAT_52.with(|rc| *rc.borrow()))
-                                    != 0)
-                                {
-                                    if !({
-                                        woff2_BufferImpl::ReadU8(
-                                            &buffer.as_pointer(),
-                                            (flag_repeat.as_pointer()),
-                                        )
-                                    }) {
-                                        return false;
+                            }) {
+                                'for_body: {
+                                    if (((*flag_repeat.borrow()) as i32) == 0) {
+                                        if !({
+                                            woff2_BufferImpl::ReadU8(
+                                                &buffer.as_pointer(),
+                                                (flag.as_pointer()),
+                                            )
+                                        }) {
+                                            return false;
+                                        }
+                                        if ((((*flag.borrow()) as i32)
+                                            & kFLAG_REPEAT_52.with(|rc| *rc.borrow()))
+                                            != 0)
+                                        {
+                                            if !({
+                                                woff2_BufferImpl::ReadU8(
+                                                    &buffer.as_pointer(),
+                                                    (flag_repeat.as_pointer()),
+                                                )
+                                            }) {
+                                                return false;
+                                            }
+                                        }
+                                    } else {
+                                        (*flag_repeat.borrow_mut()).postfix_dec();
                                     }
+                                    index!(elem!(flags.decay(), (i as usize)), j)
+                                        .write((*flag.borrow()));
+                                    field!(
+                                        index!(vec_elem!(glyph, contours, (i as usize)), j),
+                                        on_curve
+                                    )
+                                    .write(
+                                        ((((*flag.borrow()) as i32)
+                                            & kFLAG_ONCURVE_49.with(|rc| *rc.borrow()))
+                                            != 0),
+                                    );
                                 }
-                            } else {
-                                (*flag_repeat.borrow_mut()).postfix_dec();
+                                j.prefix_inc();
                             }
-                            index!(elem!(flags.decay(), (i as usize)), j).write((*flag.borrow()));
-                            field!(
-                                index!(vec_elem!(glyph, contours, (i as usize)), j),
-                                on_curve
-                            )
-                            .write(
-                                ((((*flag.borrow()) as i32)
-                                    & kFLAG_ONCURVE_49.with(|rc| *rc.borrow()))
-                                    != 0),
-                            );
-                            j.prefix_inc();
                         }
                     }
                     i.prefix_inc();
@@ -1614,57 +1640,64 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
         {
             let mut i: i32 = 0;
             'loop_: while (i < ((*num_contours.borrow()) as i32)) {
-                {
-                    let mut j: usize = 0_usize;
-                    'loop_: while ({ j } < {
-                        (*field_ref!(glyph, contours)
-                            .decay()
-                            .offset((i as usize))
-                            .upgrade()
-                            .deref())
-                        .len()
-                    }) {
-                        let mut flag: u8 = (index!(elem!(flags.decay(), (i as usize)), j).read());
-                        if (((flag as i32) & kFLAG_XSHORT_50.with(|rc| *rc.borrow())) != 0) {
-                            let x_delta: Value<u8> = Rc::new(RefCell::new(0_u8));
-                            if !({
-                                woff2_BufferImpl::ReadU8(
-                                    &buffer.as_pointer(),
-                                    (x_delta.as_pointer()),
-                                )
-                            }) {
-                                return false;
-                            }
-                            let mut sign: i32 = if (((flag as i32)
-                                & kFLAG_XREPEATSIGN_53.with(|rc| *rc.borrow()))
-                                != 0)
-                            {
-                                1
-                            } else {
-                                -1_i32
-                            };
-                            field!(index!(vec_elem!(glyph, contours, (i as usize)), j), x)
-                                .write((prev_x + (sign * ((*x_delta.borrow()) as i32))));
-                        } else {
-                            let x_delta: Value<i16> = Rc::new(RefCell::new(0_i16));
-                            if !(((flag as i32) & kFLAG_XREPEATSIGN_53.with(|rc| *rc.borrow()))
-                                != 0)
-                            {
-                                if !({
-                                    woff2_BufferImpl::ReadS16(
-                                        &buffer.as_pointer(),
-                                        (x_delta.as_pointer()),
-                                    )
-                                }) {
-                                    return false;
+                'for_body: {
+                    {
+                        let mut j: usize = 0_usize;
+                        'loop_: while ({ j } < {
+                            (*field_ref!(glyph, contours)
+                                .decay()
+                                .offset((i as usize))
+                                .upgrade()
+                                .deref())
+                            .len()
+                        }) {
+                            'for_body: {
+                                let mut flag: u8 =
+                                    (index!(elem!(flags.decay(), (i as usize)), j).read());
+                                if (((flag as i32) & kFLAG_XSHORT_50.with(|rc| *rc.borrow())) != 0)
+                                {
+                                    let x_delta: Value<u8> = Rc::new(RefCell::new(0_u8));
+                                    if !({
+                                        woff2_BufferImpl::ReadU8(
+                                            &buffer.as_pointer(),
+                                            (x_delta.as_pointer()),
+                                        )
+                                    }) {
+                                        return false;
+                                    }
+                                    let mut sign: i32 = if (((flag as i32)
+                                        & kFLAG_XREPEATSIGN_53.with(|rc| *rc.borrow()))
+                                        != 0)
+                                    {
+                                        1
+                                    } else {
+                                        -1_i32
+                                    };
+                                    field!(index!(vec_elem!(glyph, contours, (i as usize)), j), x)
+                                        .write((prev_x + (sign * ((*x_delta.borrow()) as i32))));
+                                } else {
+                                    let x_delta: Value<i16> = Rc::new(RefCell::new(0_i16));
+                                    if !(((flag as i32)
+                                        & kFLAG_XREPEATSIGN_53.with(|rc| *rc.borrow()))
+                                        != 0)
+                                    {
+                                        if !({
+                                            woff2_BufferImpl::ReadS16(
+                                                &buffer.as_pointer(),
+                                                (x_delta.as_pointer()),
+                                            )
+                                        }) {
+                                            return false;
+                                        }
+                                    }
+                                    field!(index!(vec_elem!(glyph, contours, (i as usize)), j), x)
+                                        .write((prev_x + ((*x_delta.borrow()) as i32)));
                                 }
+                                prev_x = index!(vec_elem!(glyph, contours, (i as usize)), j)
+                                    .with(|__s| __s.x);
                             }
-                            field!(index!(vec_elem!(glyph, contours, (i as usize)), j), x)
-                                .write((prev_x + ((*x_delta.borrow()) as i32)));
+                            j.prefix_inc();
                         }
-                        prev_x =
-                            index!(vec_elem!(glyph, contours, (i as usize)), j).with(|__s| __s.x);
-                        j.prefix_inc();
                     }
                 }
                 i.prefix_inc();
@@ -1674,57 +1707,64 @@ pub fn ReadGlyph_63(mut data: Ptr<u8>, mut len: usize, mut glyph: Ptr<woff2_Glyp
         {
             let mut i: i32 = 0;
             'loop_: while (i < ((*num_contours.borrow()) as i32)) {
-                {
-                    let mut j: usize = 0_usize;
-                    'loop_: while ({ j } < {
-                        (*field_ref!(glyph, contours)
-                            .decay()
-                            .offset((i as usize))
-                            .upgrade()
-                            .deref())
-                        .len()
-                    }) {
-                        let mut flag: u8 = (index!(elem!(flags.decay(), (i as usize)), j).read());
-                        if (((flag as i32) & kFLAG_YSHORT_51.with(|rc| *rc.borrow())) != 0) {
-                            let y_delta: Value<u8> = Rc::new(RefCell::new(0_u8));
-                            if !({
-                                woff2_BufferImpl::ReadU8(
-                                    &buffer.as_pointer(),
-                                    (y_delta.as_pointer()),
-                                )
-                            }) {
-                                return false;
-                            }
-                            let mut sign: i32 = if (((flag as i32)
-                                & kFLAG_YREPEATSIGN_54.with(|rc| *rc.borrow()))
-                                != 0)
-                            {
-                                1
-                            } else {
-                                -1_i32
-                            };
-                            field!(index!(vec_elem!(glyph, contours, (i as usize)), j), y)
-                                .write((prev_y + (sign * ((*y_delta.borrow()) as i32))));
-                        } else {
-                            let y_delta: Value<i16> = Rc::new(RefCell::new(0_i16));
-                            if !(((flag as i32) & kFLAG_YREPEATSIGN_54.with(|rc| *rc.borrow()))
-                                != 0)
-                            {
-                                if !({
-                                    woff2_BufferImpl::ReadS16(
-                                        &buffer.as_pointer(),
-                                        (y_delta.as_pointer()),
-                                    )
-                                }) {
-                                    return false;
+                'for_body: {
+                    {
+                        let mut j: usize = 0_usize;
+                        'loop_: while ({ j } < {
+                            (*field_ref!(glyph, contours)
+                                .decay()
+                                .offset((i as usize))
+                                .upgrade()
+                                .deref())
+                            .len()
+                        }) {
+                            'for_body: {
+                                let mut flag: u8 =
+                                    (index!(elem!(flags.decay(), (i as usize)), j).read());
+                                if (((flag as i32) & kFLAG_YSHORT_51.with(|rc| *rc.borrow())) != 0)
+                                {
+                                    let y_delta: Value<u8> = Rc::new(RefCell::new(0_u8));
+                                    if !({
+                                        woff2_BufferImpl::ReadU8(
+                                            &buffer.as_pointer(),
+                                            (y_delta.as_pointer()),
+                                        )
+                                    }) {
+                                        return false;
+                                    }
+                                    let mut sign: i32 = if (((flag as i32)
+                                        & kFLAG_YREPEATSIGN_54.with(|rc| *rc.borrow()))
+                                        != 0)
+                                    {
+                                        1
+                                    } else {
+                                        -1_i32
+                                    };
+                                    field!(index!(vec_elem!(glyph, contours, (i as usize)), j), y)
+                                        .write((prev_y + (sign * ((*y_delta.borrow()) as i32))));
+                                } else {
+                                    let y_delta: Value<i16> = Rc::new(RefCell::new(0_i16));
+                                    if !(((flag as i32)
+                                        & kFLAG_YREPEATSIGN_54.with(|rc| *rc.borrow()))
+                                        != 0)
+                                    {
+                                        if !({
+                                            woff2_BufferImpl::ReadS16(
+                                                &buffer.as_pointer(),
+                                                (y_delta.as_pointer()),
+                                            )
+                                        }) {
+                                            return false;
+                                        }
+                                    }
+                                    field!(index!(vec_elem!(glyph, contours, (i as usize)), j), y)
+                                        .write((prev_y + ((*y_delta.borrow()) as i32)));
                                 }
+                                prev_y = index!(vec_elem!(glyph, contours, (i as usize)), j)
+                                    .with(|__s| __s.y);
                             }
-                            field!(index!(vec_elem!(glyph, contours, (i as usize)), j), y)
-                                .write((prev_y + ((*y_delta.borrow()) as i32)));
+                            j.prefix_inc();
                         }
-                        prev_y =
-                            index!(vec_elem!(glyph, contours, (i as usize)), j).with(|__s| __s.y);
-                        j.prefix_inc();
                     }
                 }
                 i.prefix_inc();
@@ -2095,58 +2135,62 @@ pub fn WriteNormalizedLoca_73(
     {
         let mut i: i32 = 0;
         'loop_: while (i < num_glyphs) {
-            ({
-                StoreLoca_72(
-                    index_fmt,
-                    glyf_offset,
-                    (loca_offset.as_pointer()),
-                    (loca_dst).clone(),
-                )
-            });
-            let glyph: Value<woff2_Glyph> = Rc::new(RefCell::new(woff2_Glyph::new()));
-            let glyph_data: Value<Ptr<u8>> = Rc::new(RefCell::new(Ptr::<u8>::null()));
-            let glyph_size: Value<usize> = Rc::new(RefCell::new(0_usize));
-            if (!({
-                let _font: Ptr<woff2_Font> = (font).clone();
-                let _glyph_index: i32 = i;
-                let _glyph_data: Ptr<Ptr<u8>> = (glyph_data.as_pointer());
-                let _glyph_size: Ptr<usize> = (glyph_size.as_pointer());
-                GetGlyphData_47(_font, _glyph_index, _glyph_data, _glyph_size)
-            })) || (((*glyph_size.borrow()) > 0_usize)
-                && (!({
-                    ReadGlyph_63(
-                        (*glyph_data.borrow()).clone(),
-                        (*glyph_size.borrow()),
-                        (glyph.as_pointer()),
+            'for_body: {
+                ({
+                    StoreLoca_72(
+                        index_fmt,
+                        glyf_offset,
+                        (loca_offset.as_pointer()),
+                        (loca_dst).clone(),
                     )
-                })))
-            {
-                return false;
+                });
+                let glyph: Value<woff2_Glyph> = Rc::new(RefCell::new(woff2_Glyph::new()));
+                let glyph_data: Value<Ptr<u8>> = Rc::new(RefCell::new(Ptr::<u8>::null()));
+                let glyph_size: Value<usize> = Rc::new(RefCell::new(0_usize));
+                if (!({
+                    let _font: Ptr<woff2_Font> = (font).clone();
+                    let _glyph_index: i32 = i;
+                    let _glyph_data: Ptr<Ptr<u8>> = (glyph_data.as_pointer());
+                    let _glyph_size: Ptr<usize> = (glyph_size.as_pointer());
+                    GetGlyphData_47(_font, _glyph_index, _glyph_data, _glyph_size)
+                })) || (((*glyph_size.borrow()) > 0_usize)
+                    && (!({
+                        ReadGlyph_63(
+                            (*glyph_data.borrow()).clone(),
+                            (*glyph_size.borrow()),
+                            (glyph.as_pointer()),
+                        )
+                    })))
+                {
+                    return false;
+                }
+                let glyf_dst_size: Value<usize> = Rc::new(RefCell::new(
+                    ((*glyf_table.upgrade().deref()).buffer.len())
+                        .wrapping_sub((glyf_offset as usize)),
+                ));
+                if !({
+                    StoreGlyph_68(
+                        glyph.as_pointer(),
+                        glyf_dst.offset((glyf_offset) as isize),
+                        (glyf_dst_size.as_pointer()),
+                    )
+                }) {
+                    return false;
+                }
+                let __rhs = (({ Round4_70(((*glyf_dst_size.borrow()) as u64)) }) as usize);
+                (*glyf_dst_size.borrow_mut()) = __rhs;
+                if (((*glyf_dst_size.borrow()) > ((<u32>::MAX) as usize))
+                    || ((glyf_offset).wrapping_add(((*glyf_dst_size.borrow()) as u32))
+                        < glyf_offset))
+                    || ((index_fmt == 0)
+                        && ((glyf_offset as usize).wrapping_add((*glyf_dst_size.borrow()))
+                            >= ((1_u64 << 17) as usize)))
+                {
+                    return false;
+                }
+                glyf_offset =
+                    { ((glyf_offset as usize).wrapping_add((*glyf_dst_size.borrow()))) as u32 };
             }
-            let glyf_dst_size: Value<usize> = Rc::new(RefCell::new(
-                ((*glyf_table.upgrade().deref()).buffer.len()).wrapping_sub((glyf_offset as usize)),
-            ));
-            if !({
-                StoreGlyph_68(
-                    glyph.as_pointer(),
-                    glyf_dst.offset((glyf_offset) as isize),
-                    (glyf_dst_size.as_pointer()),
-                )
-            }) {
-                return false;
-            }
-            let __rhs = (({ Round4_70(((*glyf_dst_size.borrow()) as u64)) }) as usize);
-            (*glyf_dst_size.borrow_mut()) = __rhs;
-            if (((*glyf_dst_size.borrow()) > ((<u32>::MAX) as usize))
-                || ((glyf_offset).wrapping_add(((*glyf_dst_size.borrow()) as u32)) < glyf_offset))
-                || ((index_fmt == 0)
-                    && ((glyf_offset as usize).wrapping_add((*glyf_dst_size.borrow()))
-                        >= ((1_u64 << 17) as usize)))
-            {
-                return false;
-            }
-            glyf_offset =
-                { ((glyf_offset as usize).wrapping_add((*glyf_dst_size.borrow()))) as u32 };
             i.prefix_inc();
         }
     }
@@ -2492,10 +2536,12 @@ pub fn WriteBytes_87(mut out: Ptr<Vec<u8>>, in_: Ptr<Vec<u8>>) {
     {
         let mut i: usize = 0_usize;
         'loop_: while ({ i } < { (*in_.upgrade().deref()).len() }) {
-            {
-                let a0_clone = (index!(in_, i).read()).clone();
-                out.with_mut(|__v: &mut Vec<u8>| __v.push(a0_clone))
-            };
+            'for_body: {
+                {
+                    let a0_clone = (index!(in_, i).read()).clone();
+                    out.with_mut(|__v: &mut Vec<u8>| __v.push(a0_clone))
+                };
+            }
             i.prefix_inc();
         }
     }
@@ -2650,27 +2696,29 @@ pub fn TransformGlyfAndLocaTables_91(mut font: Ptr<woff2_Font>) -> bool {
     {
         let mut i: i32 = 0;
         'loop_: while (i < num_glyphs) {
-            let glyph: Value<woff2_Glyph> = Rc::new(RefCell::new(woff2_Glyph::new()));
-            let glyph_data: Value<Ptr<u8>> = Rc::new(RefCell::new(Ptr::<u8>::null()));
-            let glyph_size: Value<usize> = Rc::new(RefCell::new(0_usize));
-            if (!({
-                let _font: Ptr<woff2_Font> = (font).clone();
-                let _glyph_index: i32 = i;
-                let _glyph_data: Ptr<Ptr<u8>> = (glyph_data.as_pointer());
-                let _glyph_size: Ptr<usize> = (glyph_size.as_pointer());
-                GetGlyphData_47(_font, _glyph_index, _glyph_data, _glyph_size)
-            })) || (((*glyph_size.borrow()) > 0_usize)
-                && (!({
-                    ReadGlyph_63(
-                        (*glyph_data.borrow()).clone(),
-                        (*glyph_size.borrow()),
-                        (glyph.as_pointer()),
-                    )
-                })))
-            {
-                return false;
+            'for_body: {
+                let glyph: Value<woff2_Glyph> = Rc::new(RefCell::new(woff2_Glyph::new()));
+                let glyph_data: Value<Ptr<u8>> = Rc::new(RefCell::new(Ptr::<u8>::null()));
+                let glyph_size: Value<usize> = Rc::new(RefCell::new(0_usize));
+                if (!({
+                    let _font: Ptr<woff2_Font> = (font).clone();
+                    let _glyph_index: i32 = i;
+                    let _glyph_data: Ptr<Ptr<u8>> = (glyph_data.as_pointer());
+                    let _glyph_size: Ptr<usize> = (glyph_size.as_pointer());
+                    GetGlyphData_47(_font, _glyph_index, _glyph_data, _glyph_size)
+                })) || (((*glyph_size.borrow()) > 0_usize)
+                    && (!({
+                        ReadGlyph_63(
+                            (*glyph_data.borrow()).clone(),
+                            (*glyph_size.borrow()),
+                            (glyph.as_pointer()),
+                        )
+                    })))
+                {
+                    return false;
+                }
+                ({ GlyfEncoder_90Impl::Encode(&encoder.as_pointer(), i, glyph.as_pointer()) });
             }
-            ({ GlyfEncoder_90Impl::Encode(&encoder.as_pointer(), i, glyph.as_pointer()) });
             i.prefix_inc();
         }
     }
@@ -2736,66 +2784,73 @@ pub fn TransformHmtxTable_92(mut font: Ptr<woff2_Font>) -> bool {
     {
         let mut i: i32 = 0;
         'loop_: while (i < num_glyphs) {
-            let glyph: Value<woff2_Glyph> = Rc::new(RefCell::new(woff2_Glyph::new()));
-            let glyph_data: Value<Ptr<u8>> = Rc::new(RefCell::new(Ptr::<u8>::null()));
-            let glyph_size: Value<usize> = Rc::new(RefCell::new(0_usize));
-            if (!({
-                let _font: Ptr<woff2_Font> = (font).clone();
-                let _glyph_index: i32 = i;
-                let _glyph_data: Ptr<Ptr<u8>> = (glyph_data.as_pointer());
-                let _glyph_size: Ptr<usize> = (glyph_size.as_pointer());
-                GetGlyphData_47(_font, _glyph_index, _glyph_data, _glyph_size)
-            })) || (((*glyph_size.borrow()) > 0_usize)
-                && (!({
-                    ReadGlyph_63(
-                        (*glyph_data.borrow()).clone(),
-                        (*glyph_size.borrow()),
-                        (glyph.as_pointer()),
-                    )
-                })))
-            {
-                return false;
-            }
-            let advance_width: Value<u16> = Rc::new(RefCell::new(0_u16));
-            let lsb: Value<i16> = Rc::new(RefCell::new(0_i16));
-            if (i < ((*num_hmetrics.borrow()) as i32)) {
-                if !({
-                    woff2_BufferImpl::ReadU16(&hmtx_buf.as_pointer(), (advance_width.as_pointer()))
-                }) {
+            'for_body: {
+                let glyph: Value<woff2_Glyph> = Rc::new(RefCell::new(woff2_Glyph::new()));
+                let glyph_data: Value<Ptr<u8>> = Rc::new(RefCell::new(Ptr::<u8>::null()));
+                let glyph_size: Value<usize> = Rc::new(RefCell::new(0_usize));
+                if (!({
+                    let _font: Ptr<woff2_Font> = (font).clone();
+                    let _glyph_index: i32 = i;
+                    let _glyph_data: Ptr<Ptr<u8>> = (glyph_data.as_pointer());
+                    let _glyph_size: Ptr<usize> = (glyph_size.as_pointer());
+                    GetGlyphData_47(_font, _glyph_index, _glyph_data, _glyph_size)
+                })) || (((*glyph_size.borrow()) > 0_usize)
+                    && (!({
+                        ReadGlyph_63(
+                            (*glyph_data.borrow()).clone(),
+                            (*glyph_size.borrow()),
+                            (glyph.as_pointer()),
+                        )
+                    })))
+                {
                     return false;
                 }
-                if !({ woff2_BufferImpl::ReadS16(&hmtx_buf.as_pointer(), (lsb.as_pointer())) }) {
-                    return false;
+                let advance_width: Value<u16> = Rc::new(RefCell::new(0_u16));
+                let lsb: Value<i16> = Rc::new(RefCell::new(0_i16));
+                if (i < ((*num_hmetrics.borrow()) as i32)) {
+                    if !({
+                        woff2_BufferImpl::ReadU16(
+                            &hmtx_buf.as_pointer(),
+                            (advance_width.as_pointer()),
+                        )
+                    }) {
+                        return false;
+                    }
+                    if !({ woff2_BufferImpl::ReadS16(&hmtx_buf.as_pointer(), (lsb.as_pointer())) })
+                    {
+                        return false;
+                    }
+                    if ((*glyph_size.borrow()) > 0_usize)
+                        && (({ (*glyph.borrow()).x_min } as i32) != ((*lsb.borrow()) as i32))
+                    {
+                        remove_proportional_lsb = false;
+                    }
+                    {
+                        let a0_clone = ({ (*advance_width.borrow()) }).clone();
+                        (*advance_widths.borrow_mut()).push(a0_clone)
+                    };
+                    {
+                        let a0_clone = ({ (*lsb.borrow()) }).clone();
+                        (*proportional_lsbs.borrow_mut()).push(a0_clone)
+                    };
+                } else {
+                    if !({ woff2_BufferImpl::ReadS16(&hmtx_buf.as_pointer(), (lsb.as_pointer())) })
+                    {
+                        return false;
+                    }
+                    if ((*glyph_size.borrow()) > 0_usize)
+                        && (({ (*glyph.borrow()).x_min } as i32) != ((*lsb.borrow()) as i32))
+                    {
+                        remove_monospace_lsb = false;
+                    }
+                    {
+                        let a0_clone = ({ (*lsb.borrow()) }).clone();
+                        (*monospace_lsbs.borrow_mut()).push(a0_clone)
+                    };
                 }
-                if ((*glyph_size.borrow()) > 0_usize)
-                    && (({ (*glyph.borrow()).x_min } as i32) != ((*lsb.borrow()) as i32))
-                {
-                    remove_proportional_lsb = false;
+                if (!(remove_proportional_lsb)) && (!(remove_monospace_lsb)) {
+                    return true;
                 }
-                {
-                    let a0_clone = ({ (*advance_width.borrow()) }).clone();
-                    (*advance_widths.borrow_mut()).push(a0_clone)
-                };
-                {
-                    let a0_clone = ({ (*lsb.borrow()) }).clone();
-                    (*proportional_lsbs.borrow_mut()).push(a0_clone)
-                };
-            } else {
-                if !({ woff2_BufferImpl::ReadS16(&hmtx_buf.as_pointer(), (lsb.as_pointer())) }) {
-                    return false;
-                }
-                if ((*glyph_size.borrow()) > 0_usize)
-                    && (({ (*glyph.borrow()).x_min } as i32) != ((*lsb.borrow()) as i32))
-                {
-                    remove_monospace_lsb = false;
-                }
-                {
-                    let a0_clone = ({ (*lsb.borrow()) }).clone();
-                    (*monospace_lsbs.borrow_mut()).push(a0_clone)
-                };
-            }
-            if (!(remove_proportional_lsb)) && (!(remove_monospace_lsb)) {
-                return true;
             }
             i.postfix_inc();
         }
@@ -2984,13 +3039,15 @@ pub fn KnownTableIndex_98(mut tag: u32) -> i32 {
     {
         let mut i: i32 = 0;
         'loop_: while (i < 63) {
-            if (tag
-                == ({
-                    let __idx0 = (i) as usize;
-                    kKnownTags_8.with(|rc| rc.borrow()[__idx0])
-                }))
-            {
-                return i;
+            'for_body: {
+                if (tag
+                    == ({
+                        let __idx0 = (i) as usize;
+                        kKnownTags_8.with(|rc| rc.borrow()[__idx0])
+                    }))
+                {
+                    return i;
+                }
             }
             i.prefix_inc();
         }
@@ -4134,17 +4191,19 @@ impl GlyfEncoder_90Impl for Ptr<GlyfEncoder_90> {
         {
             let mut i: i32 = 0;
             'loop_: while (i < num_contours) {
-                ({
-                    Write255UShort_10(
-                        (field_ref!((*self), n_points_stream_).as_pointer()),
-                        (((*field_ref!(glyph, contours)
-                            .decay()
-                            .offset((i as usize))
-                            .upgrade()
-                            .deref())
-                        .len()) as i32),
-                    )
-                });
+                'for_body: {
+                    ({
+                        Write255UShort_10(
+                            (field_ref!((*self), n_points_stream_).as_pointer()),
+                            (((*field_ref!(glyph, contours)
+                                .decay()
+                                .offset((i as usize))
+                                .upgrade()
+                                .deref())
+                            .len()) as i32),
+                        )
+                    });
+                }
                 i.postfix_inc();
             }
         }
@@ -4153,35 +4212,42 @@ impl GlyfEncoder_90Impl for Ptr<GlyfEncoder_90> {
         {
             let mut i: i32 = 0;
             'loop_: while (i < num_contours) {
-                let mut num_points: i32 = (((*field_ref!(glyph, contours)
-                    .decay()
-                    .offset((i as usize))
-                    .upgrade()
-                    .deref())
-                .len()) as i32);
-                {
-                    let mut j: i32 = 0;
-                    'loop_: while (j < num_points) {
-                        let mut x: i32 =
-                            index!(vec_elem!(glyph, contours, (i as usize)), (j as usize))
-                                .with(|__s| __s.x);
-                        let mut y: i32 =
-                            index!(vec_elem!(glyph, contours, (i as usize)), (j as usize))
-                                .with(|__s| __s.y);
-                        let mut dx: i32 = (x - lastX);
-                        let mut dy: i32 = (y - lastY);
-                        ({
-                            GlyfEncoder_90Impl::WriteTriplet(
-                                self,
-                                index!(vec_elem!(glyph, contours, (i as usize)), (j as usize))
-                                    .with(|__s| __s.on_curve),
-                                dx,
-                                dy,
-                            )
-                        });
-                        lastX = x;
-                        lastY = y;
-                        j.postfix_inc();
+                'for_body: {
+                    let mut num_points: i32 = (((*field_ref!(glyph, contours)
+                        .decay()
+                        .offset((i as usize))
+                        .upgrade()
+                        .deref())
+                    .len()) as i32);
+                    {
+                        let mut j: i32 = 0;
+                        'loop_: while (j < num_points) {
+                            'for_body: {
+                                let mut x: i32 =
+                                    index!(vec_elem!(glyph, contours, (i as usize)), (j as usize))
+                                        .with(|__s| __s.x);
+                                let mut y: i32 =
+                                    index!(vec_elem!(glyph, contours, (i as usize)), (j as usize))
+                                        .with(|__s| __s.y);
+                                let mut dx: i32 = (x - lastX);
+                                let mut dy: i32 = (y - lastY);
+                                ({
+                                    GlyfEncoder_90Impl::WriteTriplet(
+                                        self,
+                                        index!(
+                                            vec_elem!(glyph, contours, (i as usize)),
+                                            (j as usize)
+                                        )
+                                        .with(|__s| __s.on_curve),
+                                        dx,
+                                        dy,
+                                    )
+                                });
+                                lastX = x;
+                                lastY = y;
+                            }
+                            j.postfix_inc();
+                        }
                     }
                 }
                 i.postfix_inc();

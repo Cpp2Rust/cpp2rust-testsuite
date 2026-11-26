@@ -10,7 +10,9 @@ pub fn smooth_0(mut p: Ptr<i32>, mut n: i32) {
     {
         let mut j: i32 = 1;
         'loop_: while (j < n) {
-            elem!(p, j).write({ (((elem!(p, j).read()) + (elem!(p, (j - 1)).read())) % 1000) });
+            'for_body: {
+                elem!(p, j).write({ (((elem!(p, j).read()) + (elem!(p, (j - 1)).read())) % 1000) });
+            }
             j.prefix_inc();
         }
     }
@@ -32,16 +34,20 @@ fn main_0() -> i32 {
     {
         let mut i: i32 = 0;
         'loop_: while (i < N) {
-            {
-                let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
-                (*grid.borrow_mut()).push(__a1)
-            };
-            {
-                let mut j: i32 = 0;
-                'loop_: while (j < N) {
-                    let __rhs = ((i * j) % 7);
-                    index!(elem!(grid.decay(), (i as usize)), (j as usize)).write(__rhs);
-                    j.prefix_inc();
+            'for_body: {
+                {
+                    let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
+                    (*grid.borrow_mut()).push(__a1)
+                };
+                {
+                    let mut j: i32 = 0;
+                    'loop_: while (j < N) {
+                        'for_body: {
+                            let __rhs = ((i * j) % 7);
+                            index!(elem!(grid.decay(), (i as usize)), (j as usize)).write(__rhs);
+                        }
+                        j.prefix_inc();
+                    }
                 }
             }
             i.prefix_inc();
@@ -51,22 +57,26 @@ fn main_0() -> i32 {
     {
         let mut r: i32 = 0;
         'loop_: while (r < 10) {
-            {
-                let mut i: i32 = 0;
-                'loop_: while (i < N) {
-                    let mut p: Ptr<i32> =
-                        (grid.decay().offset((i as usize)).decay().offset(0_usize));
-                    ({
-                        let _p: Ptr<i32> = (p).clone();
-                        let _n: i32 = N;
-                        smooth_0(_p, _n)
-                    });
-                    out += ({
-                        let _p: Ptr<i32> = (p).clone();
-                        let _end: Ptr<i32> = p.offset((N) as isize);
-                        sum_1(_p, _end)
-                    });
-                    i.prefix_inc();
+            'for_body: {
+                {
+                    let mut i: i32 = 0;
+                    'loop_: while (i < N) {
+                        'for_body: {
+                            let mut p: Ptr<i32> =
+                                (grid.decay().offset((i as usize)).decay().offset(0_usize));
+                            ({
+                                let _p: Ptr<i32> = (p).clone();
+                                let _n: i32 = N;
+                                smooth_0(_p, _n)
+                            });
+                            out += ({
+                                let _p: Ptr<i32> = (p).clone();
+                                let _end: Ptr<i32> = p.offset((N) as isize);
+                                sum_1(_p, _end)
+                            });
+                        }
+                        i.prefix_inc();
+                    }
                 }
             }
             r.prefix_inc();

@@ -15,19 +15,25 @@ pub unsafe fn matmul_0(
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (n)) {
-            {
-                let mut k: i32 = 0;
-                'loop_: while ((k) < (n)) {
-                    {
-                        let mut j: i32 = 0;
-                        'loop_: while ((j) < (n)) {
-                            (&mut (*c))[(i as usize)][(j as usize)] += (((&(*a))[(i as usize)]
-                                [(k as usize)])
-                                * ((&(*b))[(k as usize)][(j as usize)]));
-                            j.prefix_inc();
+            'for_body: {
+                {
+                    let mut k: i32 = 0;
+                    'loop_: while ((k) < (n)) {
+                        'for_body: {
+                            {
+                                let mut j: i32 = 0;
+                                'loop_: while ((j) < (n)) {
+                                    'for_body: {
+                                        (&mut (*c))[(i as usize)][(j as usize)] +=
+                                            (((&(*a))[(i as usize)][(k as usize)])
+                                                * ((&(*b))[(k as usize)][(j as usize)]));
+                                    }
+                                    j.prefix_inc();
+                                }
+                            }
                         }
+                        k.prefix_inc();
                     }
-                    k.prefix_inc();
                 }
             }
             i.prefix_inc();
@@ -47,20 +53,24 @@ unsafe fn main_0() -> i32 {
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (N)) {
-            {
-                let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
-                a.push(__a1)
-            };
-            {
-                let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
-                b.push(__a1)
-            };
-            {
-                let mut j: i32 = 0;
-                'loop_: while ((j) < (N)) {
-                    a[(i as usize)][(j as usize)] = (((i) + (j)) % (7));
-                    b[(i as usize)][(j as usize)] = (((i) * (j)) % (5));
-                    j.prefix_inc();
+            'for_body: {
+                {
+                    let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
+                    a.push(__a1)
+                };
+                {
+                    let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
+                    b.push(__a1)
+                };
+                {
+                    let mut j: i32 = 0;
+                    'loop_: while ((j) < (N)) {
+                        'for_body: {
+                            a[(i as usize)][(j as usize)] = (((i) + (j)) % (7));
+                            b[(i as usize)][(j as usize)] = (((i) * (j)) % (5));
+                        }
+                        j.prefix_inc();
+                    }
                 }
             }
             i.prefix_inc();
@@ -70,29 +80,37 @@ unsafe fn main_0() -> i32 {
     {
         let mut r: i32 = 0;
         'loop_: while ((r) < (5)) {
-            let mut c: Vec<Vec<i32>> = Vec::new();
-            {
-                let mut i: i32 = 0;
-                'loop_: while ((i) < (N)) {
-                    {
-                        let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
-                        c.push(__a1)
-                    };
-                    i.prefix_inc();
-                }
-            }
-            (unsafe { matmul_0(&a, &b, &mut c, N) });
-            {
-                let mut i: i32 = 0;
-                'loop_: while ((i) < (N)) {
-                    {
-                        let mut j: i32 = 0;
-                        'loop_: while ((j) < (N)) {
-                            sum += (c[(i as usize)][(j as usize)] as i64);
-                            j.prefix_inc();
+            'for_body: {
+                let mut c: Vec<Vec<i32>> = Vec::new();
+                {
+                    let mut i: i32 = 0;
+                    'loop_: while ((i) < (N)) {
+                        'for_body: {
+                            {
+                                let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
+                                c.push(__a1)
+                            };
                         }
+                        i.prefix_inc();
                     }
-                    i.prefix_inc();
+                }
+                (unsafe { matmul_0(&a, &b, &mut c, N) });
+                {
+                    let mut i: i32 = 0;
+                    'loop_: while ((i) < (N)) {
+                        'for_body: {
+                            {
+                                let mut j: i32 = 0;
+                                'loop_: while ((j) < (N)) {
+                                    'for_body: {
+                                        sum += (c[(i as usize)][(j as usize)] as i64);
+                                    }
+                                    j.prefix_inc();
+                                }
+                            }
+                        }
+                        i.prefix_inc();
+                    }
                 }
             }
             r.prefix_inc();

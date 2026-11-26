@@ -82,8 +82,10 @@ pub unsafe fn BFS_0(graph: *const Graph, mut start_vertex: u32) -> *mut u32 {
     {
         let mut i: u32 = 0_u32;
         'loop_: while ((i) < ((*graph).V)) {
-            (*visited.offset((i) as isize)) = false;
-            (*pred.offset((i) as isize)) = i;
+            'for_body: {
+                (*visited.offset((i) as isize)) = false;
+                (*pred.offset((i) as isize)) = i;
+            }
             i.prefix_inc();
         }
     }
@@ -94,11 +96,13 @@ pub unsafe fn BFS_0(graph: *const Graph, mut start_vertex: u32) -> *mut u32 {
         {
             let mut head: *mut GraphNode = (*(*graph).adj.offset((current_vertex) as isize));
             'loop_: while !((head).is_null()) {
-                let mut adj_vertex: i32 = ((*head).vertex as i32);
-                if !(*visited.offset((adj_vertex) as isize)) {
-                    (*visited.offset((adj_vertex) as isize)) = true;
-                    (unsafe { Queue::enqueue(&mut Q, adj_vertex) });
-                    (*pred.offset((adj_vertex) as isize)) = (current_vertex as u32);
+                'for_body: {
+                    let mut adj_vertex: i32 = ((*head).vertex as i32);
+                    if !(*visited.offset((adj_vertex) as isize)) {
+                        (*visited.offset((adj_vertex) as isize)) = true;
+                        (unsafe { Queue::enqueue(&mut Q, adj_vertex) });
+                        (*pred.offset((adj_vertex) as isize)) = (current_vertex as u32);
+                    }
                 }
                 head = (*head).next;
             }
@@ -147,53 +151,66 @@ unsafe fn main_0() -> i32 {
     {
         let mut i: u32 = 0_u32;
         'loop_: while ((i as usize) < (V)) {
-            (*graph.adj.offset((i) as isize)) = std::ptr::null_mut();
+            'for_body: {
+                (*graph.adj.offset((i) as isize)) = std::ptr::null_mut();
+            }
             i.prefix_inc();
         }
     }
     {
         let mut r: u32 = 0_u32;
         'loop_: while ((r as usize) < (N)) {
-            {
-                let mut c: u32 = 0_u32;
-                'loop_: while ((c as usize) < (N)) {
-                    let mut current: u32 =
-                        ((((r as usize).wrapping_mul(N)).wrapping_add((c as usize))) as u32);
-                    {
-                        let mut step: u32 = 1_u32;
-                        'loop_: while ((step) <= (80_u32)) {
-                            if ((((c).wrapping_add(step)) as usize) < (N)) {
-                                (unsafe {
-                                    Graph::push(
-                                        &mut graph,
-                                        current,
-                                        ((((r as usize).wrapping_mul(N))
-                                            .wrapping_add((((c).wrapping_add(step)) as usize)))
-                                            as u32),
-                                    )
-                                });
+            'for_body: {
+                {
+                    let mut c: u32 = 0_u32;
+                    'loop_: while ((c as usize) < (N)) {
+                        'for_body: {
+                            let mut current: u32 = ((((r as usize).wrapping_mul(N))
+                                .wrapping_add((c as usize)))
+                                as u32);
+                            {
+                                let mut step: u32 = 1_u32;
+                                'loop_: while ((step) <= (80_u32)) {
+                                    'for_body: {
+                                        if ((((c).wrapping_add(step)) as usize) < (N)) {
+                                            (unsafe {
+                                                Graph::push(
+                                                    &mut graph,
+                                                    current,
+                                                    ((((r as usize).wrapping_mul(N)).wrapping_add(
+                                                        (((c).wrapping_add(step)) as usize),
+                                                    ))
+                                                        as u32),
+                                                )
+                                            });
+                                        }
+                                    }
+                                    step.prefix_inc();
+                                }
                             }
-                            step.prefix_inc();
-                        }
-                    }
-                    {
-                        let mut step: u32 = 1_u32;
-                        'loop_: while ((step) <= (80_u32)) {
-                            if ((((r).wrapping_add(step)) as usize) < (N)) {
-                                (unsafe {
-                                    Graph::push(
-                                        &mut graph,
-                                        current,
-                                        ((((((r).wrapping_add(step)) as usize).wrapping_mul(N))
-                                            .wrapping_add((c as usize)))
-                                            as u32),
-                                    )
-                                });
+                            {
+                                let mut step: u32 = 1_u32;
+                                'loop_: while ((step) <= (80_u32)) {
+                                    'for_body: {
+                                        if ((((r).wrapping_add(step)) as usize) < (N)) {
+                                            (unsafe {
+                                                Graph::push(
+                                                    &mut graph,
+                                                    current,
+                                                    ((((((r).wrapping_add(step)) as usize)
+                                                        .wrapping_mul(N))
+                                                    .wrapping_add((c as usize)))
+                                                        as u32),
+                                                )
+                                            });
+                                        }
+                                    }
+                                    step.prefix_inc();
+                                }
                             }
-                            step.prefix_inc();
                         }
+                        c.prefix_inc();
                     }
-                    c.prefix_inc();
                 }
             }
             r.prefix_inc();
@@ -203,16 +220,18 @@ unsafe fn main_0() -> i32 {
     {
         let mut i: u32 = 0_u32;
         'loop_: while ((i as usize) < (V)) {
-            let mut head: *mut GraphNode = (*graph.adj.offset((i) as isize));
-            'loop_: while !((head).is_null()) {
-                let mut next: *mut GraphNode = (*head).next;
-                {
-                    let __p = head;
-                    if !__p.is_null() {
-                        ::std::mem::drop(Box::from_raw(__p))
-                    }
-                };
-                head = next;
+            'for_body: {
+                let mut head: *mut GraphNode = (*graph.adj.offset((i) as isize));
+                'loop_: while !((head).is_null()) {
+                    let mut next: *mut GraphNode = (*head).next;
+                    {
+                        let __p = head;
+                        if !__p.is_null() {
+                            ::std::mem::drop(Box::from_raw(__p))
+                        }
+                    };
+                    head = next;
+                }
             }
             i.prefix_inc();
         }
@@ -220,12 +239,14 @@ unsafe fn main_0() -> i32 {
     {
         let mut i: u32 = 0_u32;
         'loop_: while ((i as usize) < (V)) {
-            write!(
-                (*libcc2rs::cout_unsafe()),
-                "{:} -> {:}\n",
-                i,
-                (*pred.offset((i) as isize)),
-            );
+            'for_body: {
+                write!(
+                    (*libcc2rs::cout_unsafe()),
+                    "{:} -> {:}\n",
+                    i,
+                    (*pred.offset((i) as isize)),
+                );
+            }
             i.prefix_inc();
         }
     }

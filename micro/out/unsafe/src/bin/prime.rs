@@ -10,8 +10,10 @@ pub unsafe fn is_prime_0(mut x: i32) -> bool {
     {
         let mut i: i32 = 2;
         'loop_: while ((i) < (x)) {
-            if (((x) % (i)) == (0)) {
-                return false;
+            'for_body: {
+                if (((x) % (i)) == (0)) {
+                    return false;
+                }
             }
             i.prefix_inc();
         }
@@ -23,8 +25,10 @@ pub unsafe fn largest_prime_1(mut n: i32) -> i32 {
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (n)) {
-            if (unsafe { is_prime_0(i) }) {
-                max = i;
+            'for_body: {
+                if (unsafe { is_prime_0(i) }) {
+                    max = i;
+                }
             }
             i.prefix_inc();
         }

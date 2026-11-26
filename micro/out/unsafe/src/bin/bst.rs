@@ -50,28 +50,32 @@ unsafe fn main_0() -> i32 {
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (N)) {
-            (unsafe {
-                insert_1(
-                    tree,
-                    (Box::leak(Box::new(node_t {
-                        left: std::ptr::null_mut(),
-                        right: std::ptr::null_mut(),
-                        value: i,
-                    })) as *mut node_t),
-                )
-            });
+            'for_body: {
+                (unsafe {
+                    insert_1(
+                        tree,
+                        (Box::leak(Box::new(node_t {
+                            left: std::ptr::null_mut(),
+                            right: std::ptr::null_mut(),
+                            value: i,
+                        })) as *mut node_t),
+                    )
+                });
+            }
             i.prefix_inc();
         }
     }
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (N)) {
-            write!(
-                (*libcc2rs::cout_unsafe()),
-                "Value: {:}, Found: {:}\n",
-                i,
-                (*(unsafe { find_0(tree, i,) })).value,
-            );
+            'for_body: {
+                write!(
+                    (*libcc2rs::cout_unsafe()),
+                    "Value: {:}, Found: {:}\n",
+                    i,
+                    (*(unsafe { find_0(tree, i,) })).value,
+                );
+            }
             i.prefix_inc();
         }
     }

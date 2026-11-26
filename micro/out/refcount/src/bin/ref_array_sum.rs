@@ -10,8 +10,10 @@ pub fn initialize_0(array: Ptr<Option<Value<Box<[i32]>>>>, mut N: i32) {
     {
         let mut i: i32 = 0;
         'loop_: while (i < N) {
-            let __rhs = i;
-            ({ (*array.upgrade().deref()).decay().offset((i as usize)) }).write(__rhs);
+            'for_body: {
+                let __rhs = i;
+                ({ (*array.upgrade().deref()).decay().offset((i as usize)) }).write(__rhs);
+            }
             i.prefix_inc();
         }
     }
@@ -21,7 +23,10 @@ pub fn sum_1(mut array: Ptr<Option<Value<Box<[i32]>>>>, mut N: i32) -> i64 {
     {
         let mut i: i32 = 0;
         'loop_: while (i < N) {
-            sum += ((({ (*array.upgrade().deref()).decay().offset((i as usize)) }).read()) as i64);
+            'for_body: {
+                sum +=
+                    ((({ (*array.upgrade().deref()).decay().offset((i as usize)) }).read()) as i64);
+            }
             i.prefix_inc();
         }
     }
@@ -37,11 +42,13 @@ fn main_0() -> i32 {
     {
         let mut k: i32 = 0;
         'loop_: while (k < 35) {
-            let array: Value<Option<Value<Box<[i32]>>>> = Rc::new(RefCell::new(Some(Rc::new(
-                RefCell::new((0..(N as usize)).map(|_| 0_i32).collect::<Box<[_]>>()),
-            ))));
-            ({ initialize_0(array.as_pointer(), N) });
-            out += ({ sum_1((array.as_pointer()), N) });
+            'for_body: {
+                let array: Value<Option<Value<Box<[i32]>>>> = Rc::new(RefCell::new(Some(Rc::new(
+                    RefCell::new((0..(N as usize)).map(|_| 0_i32).collect::<Box<[_]>>()),
+                ))));
+                ({ initialize_0(array.as_pointer(), N) });
+                out += ({ sum_1((array.as_pointer()), N) });
+            }
             k.prefix_inc();
         }
     }

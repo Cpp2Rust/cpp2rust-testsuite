@@ -11,20 +11,27 @@ pub unsafe fn matmul_1(mut a: *const [i32; 400], mut b: *const [i32; 400], mut c
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0))) {
-            {
-                let mut k: i32 = 0;
-                'loop_: while ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0))) {
-                    {
-                        let mut j: i32 = 0;
-                        'loop_: while ((j) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0)))
-                        {
-                            (*c.offset((i) as isize))[(j) as usize] += (((*a
-                                .offset((i) as isize))[(k) as usize])
-                                * ((*b.offset((k) as isize))[(j) as usize]));
-                            j.prefix_inc();
+            'for_body: {
+                {
+                    let mut k: i32 = 0;
+                    'loop_: while ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0))) {
+                        'for_body: {
+                            {
+                                let mut j: i32 = 0;
+                                'loop_: while ((j)
+                                    < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0)))
+                                {
+                                    'for_body: {
+                                        (*c.offset((i) as isize))[(j) as usize] +=
+                                            (((*a.offset((i) as isize))[(k) as usize])
+                                                * ((*b.offset((k) as isize))[(j) as usize]));
+                                    }
+                                    j.prefix_inc();
+                                }
+                            }
                         }
+                        k.prefix_inc();
                     }
-                    k.prefix_inc();
                 }
             }
             i.prefix_inc();
@@ -44,12 +51,16 @@ unsafe fn main_0() -> i32 {
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0))) {
-            {
-                let mut j: i32 = 0;
-                'loop_: while ((j) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0))) {
-                    a[(i) as usize][(j) as usize] = (((i) + (j)) % (7));
-                    b[(i) as usize][(j) as usize] = (((i) * (j)) % (5));
-                    j.prefix_inc();
+            'for_body: {
+                {
+                    let mut j: i32 = 0;
+                    'loop_: while ((j) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0))) {
+                        'for_body: {
+                            a[(i) as usize][(j) as usize] = (((i) + (j)) % (7));
+                            b[(i) as usize][(j) as usize] = (((i) * (j)) % (5));
+                        }
+                        j.prefix_inc();
+                    }
                 }
             }
             i.prefix_inc();
@@ -59,39 +70,51 @@ unsafe fn main_0() -> i32 {
     {
         let mut r: i32 = 0;
         'loop_: while ((r) < (5)) {
-            {
-                let mut i: i32 = 0;
-                'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0))) {
-                    {
-                        let mut j: i32 = 0;
-                        'loop_: while ((j) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0)))
-                        {
-                            c[(i) as usize][(j) as usize] = 0;
-                            j.prefix_inc();
+            'for_body: {
+                {
+                    let mut i: i32 = 0;
+                    'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0))) {
+                        'for_body: {
+                            {
+                                let mut j: i32 = 0;
+                                'loop_: while ((j)
+                                    < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0)))
+                                {
+                                    'for_body: {
+                                        c[(i) as usize][(j) as usize] = 0;
+                                    }
+                                    j.prefix_inc();
+                                }
+                            }
                         }
+                        i.prefix_inc();
                     }
-                    i.prefix_inc();
                 }
-            }
-            (unsafe {
-                matmul_1(
-                    (a.as_mut_ptr()).cast_const(),
-                    (b.as_mut_ptr()).cast_const(),
-                    c.as_mut_ptr(),
-                )
-            });
-            {
-                let mut i: i32 = 0;
-                'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0))) {
-                    {
-                        let mut j: i32 = 0;
-                        'loop_: while ((j) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0)))
-                        {
-                            sum += (c[(i) as usize][(j) as usize] as i64);
-                            j.prefix_inc();
+                (unsafe {
+                    matmul_1(
+                        (a.as_mut_ptr()).cast_const(),
+                        (b.as_mut_ptr()).cast_const(),
+                        c.as_mut_ptr(),
+                    )
+                });
+                {
+                    let mut i: i32 = 0;
+                    'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0))) {
+                        'for_body: {
+                            {
+                                let mut j: i32 = 0;
+                                'loop_: while ((j)
+                                    < (*std::cell::LazyCell::force_mut(&mut *&raw mut N_0)))
+                                {
+                                    'for_body: {
+                                        sum += (c[(i) as usize][(j) as usize] as i64);
+                                    }
+                                    j.prefix_inc();
+                                }
+                            }
                         }
+                        i.prefix_inc();
                     }
-                    i.prefix_inc();
                 }
             }
             r.prefix_inc();

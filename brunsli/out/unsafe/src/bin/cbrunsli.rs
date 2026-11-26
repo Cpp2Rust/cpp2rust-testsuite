@@ -1982,22 +1982,28 @@ pub unsafe fn ComputeACPredictMultipliers_109(
     {
         let mut y: usize = 0_usize;
         'loop_: while ((y) < (8_usize)) {
-            {
-                let mut x: usize = 0_usize;
-                'loop_: while ((x) < (8_usize)) {
-                    (*mult_row.offset(((x).wrapping_add((8_usize).wrapping_mul(y))) as isize)) =
-                        (((*quant.offset(((x).wrapping_add((8_usize).wrapping_mul(y))) as isize))
-                            * (*std::cell::LazyCell::force_mut(
-                                &mut *&raw mut kSqrt2FixedPoint_108,
-                            )))
-                            / (*quant.offset(((y).wrapping_mul(8_usize)) as isize)));
-                    (*mult_col.offset((((x).wrapping_mul(8_usize)).wrapping_add(y)) as isize)) =
-                        (((*quant.offset(((x).wrapping_add((8_usize).wrapping_mul(y))) as isize))
-                            * (*std::cell::LazyCell::force_mut(
-                                &mut *&raw mut kSqrt2FixedPoint_108,
-                            )))
-                            / (*quant.offset((x) as isize)));
-                    x.prefix_inc();
+            'for_body: {
+                {
+                    let mut x: usize = 0_usize;
+                    'loop_: while ((x) < (8_usize)) {
+                        'for_body: {
+                            (*mult_row
+                                .offset(((x).wrapping_add((8_usize).wrapping_mul(y))) as isize)) =
+                                (((*quant.offset(
+                                    ((x).wrapping_add((8_usize).wrapping_mul(y))) as isize,
+                                )) * (*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kSqrt2FixedPoint_108,
+                                ))) / (*quant.offset(((y).wrapping_mul(8_usize)) as isize)));
+                            (*mult_col
+                                .offset((((x).wrapping_mul(8_usize)).wrapping_add(y)) as isize)) =
+                                (((*quant.offset(
+                                    ((x).wrapping_add((8_usize).wrapping_mul(y))) as isize,
+                                )) * (*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kSqrt2FixedPoint_108,
+                                ))) / (*quant.offset((x) as isize)));
+                        }
+                        x.prefix_inc();
+                    }
                 }
             }
             y.prefix_inc();
@@ -2010,21 +2016,27 @@ impl brunsli_ComponentStateDC {
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (self.sign_prob.len())) {
-                (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 128_u8) });
+                'for_body: {
+                    (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 128_u8) });
+                }
                 i.prefix_inc();
             }
         }
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (self.is_empty_block_prob.len())) {
-                (unsafe { brunsli_Prob::Init(&mut self.is_empty_block_prob[(i)], 74_u8) });
+                'for_body: {
+                    (unsafe { brunsli_Prob::Init(&mut self.is_empty_block_prob[(i)], 74_u8) });
+                }
                 i.prefix_inc();
             }
         }
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (self.first_extra_bit_prob.len())) {
-                (unsafe { brunsli_Prob::Init(&mut self.first_extra_bit_prob[(i)], 150_u8) });
+                'for_body: {
+                    (unsafe { brunsli_Prob::Init(&mut self.first_extra_bit_prob[(i)], 150_u8) });
+                }
                 i.prefix_inc();
             }
         }
@@ -2332,37 +2344,42 @@ impl brunsli_ComponentState {
             'loop_: while ((i)
                 < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonzeroBuckets_90)) as i32))
             {
-                {
-                    let mut k: i32 = 0;
-                    'loop_: while ((k)
-                        < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                'for_body: {
                     {
-                        let v: i32 =
-                            (((*std::cell::LazyCell::force_mut(&mut *&raw mut kInitProb_110))
-                                [(k) as usize] as i32)
-                                + ((9) * ((i) - (7))));
-                        if !((v) <= (255)) {
-                            (unsafe {
-                                BrunsliDumpAndAbort_79(
-                                    c"context.cc".as_ptr(),
-                                    227,
-                                    c"InitAll".as_ptr(),
-                                )
-                            });
-                            'loop_: while true {}
-                        };
-                        (unsafe {
-                            brunsli_Prob::Init(
-                                &mut self.is_zero_prob[((((i)
-                                    * (*std::cell::LazyCell::force_mut(
-                                        &mut *&raw mut kDCTBlockSize_3,
-                                    )))
-                                    + (k))
-                                    as usize)],
-                                (v as u8),
-                            )
-                        });
-                        k.prefix_inc();
+                        let mut k: i32 = 0;
+                        'loop_: while ((k)
+                            < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                        {
+                            'for_body: {
+                                let v: i32 = (((*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kInitProb_110,
+                                ))[(k) as usize]
+                                    as i32)
+                                    + ((9) * ((i) - (7))));
+                                if !((v) <= (255)) {
+                                    (unsafe {
+                                        BrunsliDumpAndAbort_79(
+                                            c"context.cc".as_ptr(),
+                                            227,
+                                            c"InitAll".as_ptr(),
+                                        )
+                                    });
+                                    'loop_: while true {}
+                                };
+                                (unsafe {
+                                    brunsli_Prob::Init(
+                                        &mut self.is_zero_prob[((((i)
+                                            * (*std::cell::LazyCell::force_mut(
+                                                &mut *&raw mut kDCTBlockSize_3,
+                                            )))
+                                            + (k))
+                                            as usize)],
+                                        (v as u8),
+                                    )
+                                });
+                            }
+                            k.prefix_inc();
+                        }
                     }
                 }
                 i.prefix_inc();
@@ -2371,25 +2388,29 @@ impl brunsli_ComponentState {
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (self.sign_prob.len())) {
-                if ((i)
-                    < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82))
-                        .wrapping_mul(
-                            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
-                                as usize),
-                        )))
-                {
-                    (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 108_u8) });
-                } else if ((i)
-                    < ((((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82))
+                'for_body: {
+                    if ((i)
+                        < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82))
+                            .wrapping_mul(
+                                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                                    as usize),
+                            )))
+                    {
+                        (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 108_u8) });
+                    } else if ((i)
+                        < ((((*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kMaxAverageContext_82,
+                        ))
                         .wrapping_add(1_usize)) as usize)
-                        .wrapping_mul(
-                            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
-                                as usize),
-                        )))
-                {
-                    (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 128_u8) });
-                } else {
-                    (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 148_u8) });
+                            .wrapping_mul(
+                                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                                    as usize),
+                            )))
+                    {
+                        (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 128_u8) });
+                    } else {
+                        (unsafe { brunsli_Prob::Init(&mut self.sign_prob[(i)], 148_u8) });
+                    }
                 }
                 i.prefix_inc();
             }
@@ -2397,7 +2418,9 @@ impl brunsli_ComponentState {
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (self.first_extra_bit_prob.len())) {
-                (unsafe { brunsli_Prob::Init(&mut self.first_extra_bit_prob[(i)], 158_u8) });
+                'for_body: {
+                    (unsafe { brunsli_Prob::Init(&mut self.first_extra_bit_prob[(i)], 158_u8) });
+                }
                 i.prefix_inc();
             }
         }
@@ -2406,29 +2429,35 @@ impl brunsli_ComponentState {
             'loop_: while ((i)
                 < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroContextCount_88)))
             {
-                let mut non_zero_probs: *mut brunsli_Prob =
-                    self.num_nonzero_prob.as_mut_ptr().offset(
-                        ((i).wrapping_mul(
-                            (*std::cell::LazyCell::force_mut(
-                                &mut *&raw mut kNumNonZeroTreeSize_85,
-                            )),
-                        )) as isize,
-                    );
-                {
-                    let mut j: usize = 0_usize;
-                    'loop_: while ((j)
-                        < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroTreeSize_85)))
+                'for_body: {
+                    let mut non_zero_probs: *mut brunsli_Prob =
+                        self.num_nonzero_prob.as_mut_ptr().offset(
+                            ((i).wrapping_mul(
+                                (*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kNumNonZeroTreeSize_85,
+                                )),
+                            )) as isize,
+                        );
                     {
-                        (unsafe {
-                            let _probability: u8 = (*std::cell::LazyCell::force_mut(
-                                &mut *&raw mut kInitProbNonzero_111,
-                            ))[(i)][(j)];
-                            brunsli_Prob::Init(
-                                &mut (*non_zero_probs.offset((j) as isize)),
-                                _probability,
-                            )
-                        });
-                        j.prefix_inc();
+                        let mut j: usize = 0_usize;
+                        'loop_: while ((j)
+                            < (*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kNumNonZeroTreeSize_85,
+                            )))
+                        {
+                            'for_body: {
+                                (unsafe {
+                                    let _probability: u8 = (*std::cell::LazyCell::force_mut(
+                                        &mut *&raw mut kInitProbNonzero_111,
+                                    ))[(i)][(j)];
+                                    brunsli_Prob::Init(
+                                        &mut (*non_zero_probs.offset((j) as isize)),
+                                        _probability,
+                                    )
+                                });
+                            }
+                            j.prefix_inc();
+                        }
                     }
                 }
                 i.prefix_inc();
@@ -2544,41 +2573,45 @@ pub unsafe fn ComputeLehmerCode_112(mut sigma: *const u32, len: usize, mut code:
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (len)) {
-            items[(i)] = (i as u32);
+            'for_body: {
+                items[(i)] = (i as u32);
+            }
             i.prefix_inc();
         }
     }
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (len)) {
-            let mut it: UnsafeRandomAccessIterator<u32> = {
-                let mut __tmp_4 = { items.begin() };
-                let mut __tmp_5 = { items.end() };
-                let mut __it = (__tmp_4).clone();
-                while __it != __tmp_5 && *__it.iter_deref() != (*sigma.offset((i) as isize)) {
-                    __it.iter_inc();
-                }
-                __it
-            };
-            if !(it != items.end()) {
-                (unsafe {
-                    BrunsliDumpAndAbort_79(
-                        c"lehmer_code.cc".as_ptr(),
-                        21,
-                        c"ComputeLehmerCode".as_ptr(),
-                    )
-                });
-                'loop_: while true {}
-            };
-            (*code.offset((i) as isize)) = ((it.iter_distance(&items.begin())) as u32);
-            {
-                let mut __tmp_6 = { <UnsafeRandomAccessIterator<u32>>::from((it).clone()) };
-                let pos = __tmp_6
-                    .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
-                    as usize;
-                items.remove(pos);
-                (__tmp_6).clone()
-            };
+            'for_body: {
+                let mut it: UnsafeRandomAccessIterator<u32> = {
+                    let mut __tmp_4 = { items.begin() };
+                    let mut __tmp_5 = { items.end() };
+                    let mut __it = (__tmp_4).clone();
+                    while __it != __tmp_5 && *__it.iter_deref() != (*sigma.offset((i) as isize)) {
+                        __it.iter_inc();
+                    }
+                    __it
+                };
+                if !(it != items.end()) {
+                    (unsafe {
+                        BrunsliDumpAndAbort_79(
+                            c"lehmer_code.cc".as_ptr(),
+                            21,
+                            c"ComputeLehmerCode".as_ptr(),
+                        )
+                    });
+                    'loop_: while true {}
+                };
+                (*code.offset((i) as isize)) = ((it.iter_distance(&items.begin())) as u32);
+                {
+                    let mut __tmp_6 = { <UnsafeRandomAccessIterator<u32>>::from((it).clone()) };
+                    let pos = __tmp_6
+                        .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
+                        as usize;
+                    items.remove(pos);
+                    (__tmp_6).clone()
+                };
+            }
             i.prefix_inc();
         }
     }
@@ -2592,31 +2625,35 @@ pub unsafe fn DecodeLehmerCode_113(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (len)) {
-            items[(i)] = (i as u32);
+            'for_body: {
+                items[(i)] = (i as u32);
+            }
             i.prefix_inc();
         }
     }
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (len)) {
-            let mut index: u32 = (*code.offset((i) as isize));
-            if ((index as usize) >= (items.len())) {
-                return false;
-            }
-            let value: u32 = items[(index as usize)];
-            {
-                let mut __tmp_7 = {
-                    <UnsafeRandomAccessIterator<u32>>::from(
-                        items.begin().iter_add((index as isize)),
-                    )
+            'for_body: {
+                let mut index: u32 = (*code.offset((i) as isize));
+                if ((index as usize) >= (items.len())) {
+                    return false;
+                }
+                let value: u32 = items[(index as usize)];
+                {
+                    let mut __tmp_7 = {
+                        <UnsafeRandomAccessIterator<u32>>::from(
+                            items.begin().iter_add((index as isize)),
+                        )
+                    };
+                    let pos = __tmp_7
+                        .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
+                        as usize;
+                    items.remove(pos);
+                    (__tmp_7).clone()
                 };
-                let pos = __tmp_7
-                    .iter_distance(&UnsafeRandomAccessIterator::Vec(items.as_mut_ptr()))
-                    as usize;
-                items.remove(pos);
-                (__tmp_7).clone()
-            };
-            (*sigma.offset((i) as isize)) = value;
+                (*sigma.offset((i) as isize)) = value;
+            }
             i.prefix_inc();
         }
     }
@@ -2701,14 +2738,16 @@ pub unsafe fn FillQuantMatrix_118(mut is_chroma: bool, mut q: u32, mut dst: *mut
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
-            let v: u32 = (((((*in_.offset((i) as isize)) as u32).wrapping_mul(q))
-                .wrapping_add(32_u32))
-                >> (6));
-            (*dst.offset((i) as isize)) = (if ((v) < (1_u32)) {
-                1_u32
-            } else {
-                if ((v) > (255_u32)) { 255_u32 } else { v }
-            } as u8);
+            'for_body: {
+                let v: u32 = (((((*in_.offset((i) as isize)) as u32).wrapping_mul(q))
+                    .wrapping_add(32_u32))
+                    >> (6));
+                (*dst.offset((i) as isize)) = (if ((v) < (1_u32)) {
+                    1_u32
+                } else {
+                    if ((v) > (255_u32)) { 255_u32 } else { v }
+                } as u8);
+            }
             i.prefix_inc();
         }
     }
@@ -2729,49 +2768,55 @@ pub unsafe fn FindBestMatrix_119(
         'loop_: while ((q as usize)
             < (*std::cell::LazyCell::force_mut(&mut *&raw mut kQFactorLimit_117)))
         {
-            (unsafe { FillQuantMatrix_118(is_chroma, q, dst) });
-            let mut last_diff: i32 = 0;
-            let mut len: usize = 0_usize;
-            {
-                let mut k: i32 = 0;
-                'loop_: while ((k)
-                    < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+            'for_body: {
+                (unsafe { FillQuantMatrix_118(is_chroma, q, dst) });
+                let mut last_diff: i32 = 0;
+                let mut len: usize = 0_usize;
                 {
-                    let j: i32 =
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
-                            [(k) as usize] as i32);
-                    let new_diff: i32 =
-                        ((*src.offset((j) as isize)) - ((*dst.offset((j) as isize)) as i32));
-                    let mut diff: i32 = ((new_diff) - (last_diff));
-                    last_diff = new_diff;
-                    if ((diff) != (0)) {
-                        len = (len).wrapping_add(1_usize);
-                        if ((diff) < (0)) {
-                            diff = -diff;
-                        }
-                        diff -= 1;
-                        if ((diff) == (0)) {
-                            len.postfix_inc();
-                        } else if ((diff) > (65535)) {
-                            len = kWorstLen;
-                            break;
-                        } else {
-                            let mut diff_len: u32 =
-                                (((unsafe { Log2FloorNonZero_74((diff as u32)) }) + (1)) as u32);
-                            if ((diff_len) == (16_u32)) {
-                                diff_len.postfix_dec();
+                    let mut k: i32 = 0;
+                    'loop_: while ((k)
+                        < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                    {
+                        'for_body: {
+                            let j: i32 = ((*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kJPEGNaturalOrder_13,
+                            ))[(k) as usize] as i32);
+                            let new_diff: i32 = ((*src.offset((j) as isize))
+                                - ((*dst.offset((j) as isize)) as i32));
+                            let mut diff: i32 = ((new_diff) - (last_diff));
+                            last_diff = new_diff;
+                            if ((diff) != (0)) {
+                                len = (len).wrapping_add(1_usize);
+                                if ((diff) < (0)) {
+                                    diff = -diff;
+                                }
+                                diff -= 1;
+                                if ((diff) == (0)) {
+                                    len.postfix_inc();
+                                } else if ((diff) > (65535)) {
+                                    len = kWorstLen;
+                                    break 'loop_;
+                                } else {
+                                    let mut diff_len: u32 =
+                                        (((unsafe { Log2FloorNonZero_74((diff as u32)) }) + (1))
+                                            as u32);
+                                    if ((diff_len) == (16_u32)) {
+                                        diff_len.postfix_dec();
+                                    }
+                                    len = (len).wrapping_add(
+                                        ((((2_u32).wrapping_mul(diff_len)).wrapping_add(1_u32))
+                                            as usize),
+                                    );
+                                }
                             }
-                            len = (len).wrapping_add(
-                                ((((2_u32).wrapping_mul(diff_len)).wrapping_add(1_u32)) as usize),
-                            );
                         }
+                        k.prefix_inc();
                     }
-                    k.prefix_inc();
                 }
-            }
-            if ((len) < (best_len)) {
-                best_len = len;
-                best_q = q;
+                if ((len) < (best_len)) {
+                    best_len = len;
+                    best_q = q;
+                }
             }
             q.prefix_inc();
         }
@@ -2874,10 +2919,12 @@ pub unsafe fn ANSBuildInfoTable_122(
     {
         let mut s: i32 = 0;
         'loop_: while ((s) < (alphabet_size)) {
-            let freq: u32 = ((*counts.offset((s) as isize)) as u32);
-            (*info.offset((s) as isize)).freq_ = ((*counts.offset((s) as isize)) as u16);
-            (*info.offset((s) as isize)).start_ = (total as u16);
-            total = ((total as u32).wrapping_add(freq)) as i32;
+            'for_body: {
+                let freq: u32 = ((*counts.offset((s) as isize)) as u32);
+                (*info.offset((s) as isize)).freq_ = ((*counts.offset((s) as isize)) as u16);
+                (*info.offset((s) as isize)).start_ = (total as u16);
+                total = ((total as u32).wrapping_add(freq)) as i32;
+            }
             s.prefix_inc();
         }
     }
@@ -3424,22 +3471,26 @@ pub unsafe fn HistogramCombine_133(
     {
         let mut idx1: usize = 0_usize;
         'loop_: while ((idx1) < (clusters.len())) {
-            {
-                let mut idx2: usize = (idx1).wrapping_add(1_usize);
-                'loop_: while ((idx2) < (clusters.len())) {
-                    (unsafe {
-                        let _cluster_size: *const i32 = (cluster_size).cast_const();
-                        let _idx1: i32 = (clusters[(idx1)] as i32);
-                        let _idx2: i32 = (clusters[(idx2)] as i32);
-                        CompareAndPushToQueue_132(
-                            (out).cast_const(),
-                            _cluster_size,
-                            _idx1,
-                            _idx2,
-                            (&mut pairs as *mut Vec<brunsli_HistogramPair>),
-                        )
-                    });
-                    idx2.prefix_inc();
+            'for_body: {
+                {
+                    let mut idx2: usize = (idx1).wrapping_add(1_usize);
+                    'loop_: while ((idx2) < (clusters.len())) {
+                        'for_body: {
+                            (unsafe {
+                                let _cluster_size: *const i32 = (cluster_size).cast_const();
+                                let _idx1: i32 = (clusters[(idx1)] as i32);
+                                let _idx2: i32 = (clusters[(idx2)] as i32);
+                                CompareAndPushToQueue_132(
+                                    (out).cast_const(),
+                                    _cluster_size,
+                                    _idx1,
+                                    _idx2,
+                                    (&mut pairs as *mut Vec<brunsli_HistogramPair>),
+                                )
+                            });
+                        }
+                        idx2.prefix_inc();
+                    }
                 }
             }
             idx1.prefix_inc();
@@ -3467,8 +3518,10 @@ pub unsafe fn HistogramCombine_133(
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (symbols_size)) {
-                if (((*symbols.offset((i) as isize)) as usize) == (best_idx2)) {
-                    (*symbols.offset((i) as isize)) = (best_idx1 as u32);
+                'for_body: {
+                    if (((*symbols.offset((i) as isize)) as usize) == (best_idx2)) {
+                        (*symbols.offset((i) as isize)) = (best_idx1 as u32);
+                    }
                 }
                 i.prefix_inc();
             }
@@ -3476,17 +3529,19 @@ pub unsafe fn HistogramCombine_133(
         {
             let mut cluster: UnsafeRandomAccessIterator<u64> = clusters.begin();
             'loop_: while cluster != clusters.end() {
-                if (((*cluster.iter_deref()) as usize) >= (best_idx2)) {
-                    {
-                        let mut __tmp_6 =
-                            { <UnsafeRandomAccessIterator<u64>>::from((cluster).clone()) };
-                        let pos = __tmp_6
-                            .iter_distance(&UnsafeRandomAccessIterator::Vec(clusters.as_mut_ptr()))
-                            as usize;
-                        clusters.remove(pos);
-                        (__tmp_6).clone()
-                    };
-                    break;
+                'for_body: {
+                    if (((*cluster.iter_deref()) as usize) >= (best_idx2)) {
+                        {
+                            let mut __tmp_6 =
+                                { <UnsafeRandomAccessIterator<u64>>::from((cluster).clone()) };
+                            let pos = __tmp_6.iter_distance(&UnsafeRandomAccessIterator::Vec(
+                                clusters.as_mut_ptr(),
+                            )) as usize;
+                            clusters.remove(pos);
+                            (__tmp_6).clone()
+                        };
+                        break 'loop_;
+                    }
                 }
                 {
                     cluster.iter_inc();
@@ -3523,18 +3578,20 @@ pub unsafe fn HistogramCombine_133(
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (clusters.len())) {
-                (unsafe {
-                    let _cluster_size: *const i32 = (cluster_size).cast_const();
-                    let _idx1: i32 = (best_idx1 as i32);
-                    let _idx2: i32 = (clusters[(i)] as i32);
-                    CompareAndPushToQueue_132(
-                        (out).cast_const(),
-                        _cluster_size,
-                        _idx1,
-                        _idx2,
-                        (&mut pairs as *mut Vec<brunsli_HistogramPair>),
-                    )
-                });
+                'for_body: {
+                    (unsafe {
+                        let _cluster_size: *const i32 = (cluster_size).cast_const();
+                        let _idx1: i32 = (best_idx1 as i32);
+                        let _idx2: i32 = (clusters[(i)] as i32);
+                        CompareAndPushToQueue_132(
+                            (out).cast_const(),
+                            _cluster_size,
+                            _idx1,
+                            _idx2,
+                            (&mut pairs as *mut Vec<brunsli_HistogramPair>),
+                        )
+                    });
+                }
                 i.prefix_inc();
             }
         }
@@ -3611,33 +3668,35 @@ pub unsafe fn HistogramRemap_135(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (in_size)) {
-            let mut best_out: i32 = (if ((i) == (0_usize)) {
-                (*symbols.offset((0) as isize))
-            } else {
-                (*symbols.offset(((i).wrapping_sub(1_usize)) as isize))
-            } as i32);
-            let mut best_bits: f64 = (unsafe {
-                let _histogram: *const brunsli_internal_enc_Histogram =
-                    &(*in_.offset((i) as isize));
-                let _candidate: *const brunsli_internal_enc_Histogram =
-                    &(*out.offset((best_out) as isize));
-                HistogramBitCostDistance_134(_histogram, _candidate)
-            });
-            'loop_: for k in IterRange::new(all_symbols.begin(), all_symbols.end()) {
-                let mut k: i32 = (*k.iter_deref());
-                let cur_bits: f64 = (unsafe {
+            'for_body: {
+                let mut best_out: i32 = (if ((i) == (0_usize)) {
+                    (*symbols.offset((0) as isize))
+                } else {
+                    (*symbols.offset(((i).wrapping_sub(1_usize)) as isize))
+                } as i32);
+                let mut best_bits: f64 = (unsafe {
                     let _histogram: *const brunsli_internal_enc_Histogram =
                         &(*in_.offset((i) as isize));
                     let _candidate: *const brunsli_internal_enc_Histogram =
-                        &(*out.offset((k) as isize));
+                        &(*out.offset((best_out) as isize));
                     HistogramBitCostDistance_134(_histogram, _candidate)
                 });
-                if ((cur_bits) < (best_bits)) {
-                    best_bits = cur_bits;
-                    best_out = k;
+                'loop_: for k in IterRange::new(all_symbols.begin(), all_symbols.end()) {
+                    let mut k: i32 = (*k.iter_deref());
+                    let cur_bits: f64 = (unsafe {
+                        let _histogram: *const brunsli_internal_enc_Histogram =
+                            &(*in_.offset((i) as isize));
+                        let _candidate: *const brunsli_internal_enc_Histogram =
+                            &(*out.offset((k) as isize));
+                        HistogramBitCostDistance_134(_histogram, _candidate)
+                    });
+                    if ((cur_bits) < (best_bits)) {
+                        best_bits = cur_bits;
+                        best_out = k;
+                    }
                 }
+                (*symbols.offset((i) as isize)) = (best_out as u32);
             }
-            (*symbols.offset((i) as isize)) = (best_out as u32);
             i.prefix_inc();
         }
     };
@@ -3648,13 +3707,16 @@ pub unsafe fn HistogramRemap_135(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (in_size)) {
-            (unsafe {
-                let _other: *const brunsli_internal_enc_Histogram = &(*in_.offset((i) as isize));
-                brunsli_internal_enc_Histogram::AddHistogram(
-                    &mut (*out.offset((*symbols.offset((i) as isize)) as isize)),
-                    _other,
-                )
-            });
+            'for_body: {
+                (unsafe {
+                    let _other: *const brunsli_internal_enc_Histogram =
+                        &(*in_.offset((i) as isize));
+                    brunsli_internal_enc_Histogram::AddHistogram(
+                        &mut (*out.offset((*symbols.offset((i) as isize)) as isize)),
+                        _other,
+                    )
+                });
+            }
             i.prefix_inc();
         }
     }
@@ -3669,14 +3731,16 @@ pub unsafe fn HistogramReindex_136(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*(symbols).cast_const()).len())) {
-            if new_index.find(&((&mut (*symbols))[(i)] as i32)) == new_index.end() {
-                (*new_index.subscript_move(
-                    &mut ((&mut (*symbols))[(i)] as i32),
-                    |__k| cpp_move_unsafe!(__k),
-                    || 0_i32,
-                )) = next_index;
-                (&mut (*out))[(next_index as usize)] = tmp[((&mut (*symbols))[(i)] as usize)];
-                next_index.prefix_inc();
+            'for_body: {
+                if new_index.find(&((&mut (*symbols))[(i)] as i32)) == new_index.end() {
+                    (*new_index.subscript_move(
+                        &mut ((&mut (*symbols))[(i)] as i32),
+                        |__k| cpp_move_unsafe!(__k),
+                        || 0_i32,
+                    )) = next_index;
+                    (&mut (*out))[(next_index as usize)] = tmp[((&mut (*symbols))[(i)] as usize)];
+                    next_index.prefix_inc();
+                }
             }
             i.prefix_inc();
         }
@@ -3687,11 +3751,13 @@ pub unsafe fn HistogramReindex_136(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*(symbols).cast_const()).len())) {
-            (&mut (*symbols))[(i)] = ((*new_index.subscript_move(
-                &mut ((&mut (*symbols))[(i)] as i32),
-                |__k| cpp_move_unsafe!(__k),
-                || 0_i32,
-            )) as u32);
+            'for_body: {
+                (&mut (*symbols))[(i)] = ((*new_index.subscript_move(
+                    &mut ((&mut (*symbols))[(i)] as i32),
+                    |__k| cpp_move_unsafe!(__k),
+                    || 0_i32,
+                )) as u32);
+            }
             i.prefix_inc();
         }
     }
@@ -3712,9 +3778,11 @@ pub unsafe fn ClusterHistograms_137(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (in_size)) {
-            (&mut (*out))[(i)] = (&(*in_))[(i)];
-            (&mut (*out))[(i)].bit_cost_ = (unsafe { PopulationCost_130(&(&(*in_))[(i)]) });
-            (&mut (*histogram_symbols))[(i)] = (i as u32);
+            'for_body: {
+                (&mut (*out))[(i)] = (&(*in_))[(i)];
+                (&mut (*out))[(i)].bit_cost_ = (unsafe { PopulationCost_130(&(&(*in_))[(i)]) });
+                (&mut (*histogram_symbols))[(i)] = (i as u32);
+            }
             i.prefix_inc();
         }
     }
@@ -3722,19 +3790,21 @@ pub unsafe fn ClusterHistograms_137(
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (num_blocks)) {
-                (unsafe {
-                    let _symbols: *mut u32 = (&mut (&mut (*histogram_symbols))
-                        [((i).wrapping_mul(num_contexts))]
-                        as *mut u32);
-                    let _symbols_size: usize = num_contexts;
-                    HistogramCombine_133(
-                        (&mut (&mut (*out))[(0_usize)] as *mut brunsli_internal_enc_Histogram),
-                        (&mut cluster_size[(0_usize)] as *mut i32),
-                        _symbols,
-                        _symbols_size,
-                        max_histograms,
-                    )
-                });
+                'for_body: {
+                    (unsafe {
+                        let _symbols: *mut u32 = (&mut (&mut (*histogram_symbols))
+                            [((i).wrapping_mul(num_contexts))]
+                            as *mut u32);
+                        let _symbols_size: usize = num_contexts;
+                        HistogramCombine_133(
+                            (&mut (&mut (*out))[(0_usize)] as *mut brunsli_internal_enc_Histogram),
+                            (&mut cluster_size[(0_usize)] as *mut i32),
+                            _symbols,
+                            _symbols_size,
+                            max_histograms,
+                        )
+                    });
+                }
                 i.prefix_inc();
             }
         }
@@ -3744,45 +3814,48 @@ pub unsafe fn ClusterHistograms_137(
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (block_group_offsets.len())) {
-                let mut offset: usize =
-                    ((block_group_offsets[(i)]).wrapping_mul((num_contexts as u64)) as usize);
-                let mut next_offset: usize =
-                    (if (((i).wrapping_add(1_usize)) < (block_group_offsets.len())) {
-                        (block_group_offsets[((i).wrapping_add(1_usize))])
-                            .wrapping_mul((num_contexts as u64))
-                    } else {
-                        (in_size as u64)
-                    } as usize);
-                let mut length: usize = (next_offset).wrapping_sub(offset);
-                let mut nclusters: usize = (unsafe {
-                    HistogramCombine_133(
-                        (&mut (&mut (*out))[(0_usize)] as *mut brunsli_internal_enc_Histogram),
-                        (&mut cluster_size[(0_usize)] as *mut i32),
-                        (&mut (&mut (*histogram_symbols))[(offset)] as *mut u32),
-                        length,
-                        max_histograms,
-                    )
-                });
-                if ((nclusters) >= (2_usize))
-                    && ((nclusters)
-                        < (*std::cell::LazyCell::force_mut(
-                            &mut *&raw mut kMinClustersForHistogramRemap_138,
-                        )))
-                {
-                    (unsafe {
-                        let _in_: *const brunsli_internal_enc_Histogram =
-                            (&(&(*in_))[(offset)] as *const brunsli_internal_enc_Histogram);
-                        let _symbols: *mut u32 =
-                            (&mut (&mut (*histogram_symbols))[(offset)] as *mut u32);
-                        HistogramRemap_135(
-                            _in_,
-                            length,
+                'for_body: {
+                    let mut offset: usize =
+                        ((block_group_offsets[(i)]).wrapping_mul((num_contexts as u64)) as usize);
+                    let mut next_offset: usize =
+                        (if (((i).wrapping_add(1_usize)) < (block_group_offsets.len())) {
+                            (block_group_offsets[((i).wrapping_add(1_usize))])
+                                .wrapping_mul((num_contexts as u64))
+                        } else {
+                            (in_size as u64)
+                        } as usize);
+                    let mut length: usize = (next_offset).wrapping_sub(offset);
+                    let mut nclusters: usize = (unsafe {
+                        HistogramCombine_133(
                             (&mut (&mut (*out))[(0_usize)] as *mut brunsli_internal_enc_Histogram),
-                            _symbols,
+                            (&mut cluster_size[(0_usize)] as *mut i32),
+                            (&mut (&mut (*histogram_symbols))[(offset)] as *mut u32),
+                            length,
+                            max_histograms,
                         )
                     });
+                    if ((nclusters) >= (2_usize))
+                        && ((nclusters)
+                            < (*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kMinClustersForHistogramRemap_138,
+                            )))
+                    {
+                        (unsafe {
+                            let _in_: *const brunsli_internal_enc_Histogram =
+                                (&(&(*in_))[(offset)] as *const brunsli_internal_enc_Histogram);
+                            let _symbols: *mut u32 =
+                                (&mut (&mut (*histogram_symbols))[(offset)] as *mut u32);
+                            HistogramRemap_135(
+                                _in_,
+                                length,
+                                (&mut (&mut (*out))[(0_usize)]
+                                    as *mut brunsli_internal_enc_Histogram),
+                                _symbols,
+                            )
+                        });
+                    }
+                    num_clusters = (num_clusters).wrapping_add(nclusters);
                 }
-                num_clusters = (num_clusters).wrapping_add(nclusters);
                 i.prefix_inc();
             }
         }
@@ -4165,12 +4238,14 @@ pub unsafe fn EstimateAuxDataSize_144(jpg: *const brunsli_JPEGData) -> usize {
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).scan_info.len())) {
-            size = ((size as u64).wrapping_add(
-                ((7_usize).wrapping_mul((&(*jpg)).scan_info[(i)].reset_points.len()) as u64),
-            )) as usize;
-            size = ((size as u64).wrapping_add(
-                ((7_usize).wrapping_mul((&(*jpg)).scan_info[(i)].extra_zero_runs.len()) as u64),
-            )) as usize;
+            'for_body: {
+                size = ((size as u64).wrapping_add(
+                    ((7_usize).wrapping_mul((&(*jpg)).scan_info[(i)].reset_points.len()) as u64),
+                )) as usize;
+                size = ((size as u64).wrapping_add(
+                    ((7_usize).wrapping_mul((&(*jpg)).scan_info[(i)].extra_zero_runs.len()) as u64),
+                )) as usize;
+            }
             i.prefix_inc();
         }
     }
@@ -4183,9 +4258,11 @@ pub unsafe fn EstimateAuxDataSize_144(jpg: *const brunsli_JPEGData) -> usize {
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).inter_marker_data.len())) {
-            size = ((size as u64).wrapping_add(
-                ((5_usize).wrapping_add((&(*jpg)).inter_marker_data[(i)].len()) as u64),
-            )) as usize;
+            'for_body: {
+                size = ((size as u64).wrapping_add(
+                    ((5_usize).wrapping_add((&(*jpg)).inter_marker_data[(i)].len()) as u64),
+                )) as usize;
+            }
             i.prefix_inc();
         }
     }
@@ -4210,7 +4287,9 @@ pub unsafe fn GetMaximumBrunsliEncodedSize_145(jpg: *const brunsli_JPEGData) -> 
 pub unsafe fn Base128Size_146(mut val: usize) -> usize {
     let mut size: usize = 1_usize;
     'loop_: while ((val) >= (128_usize)) {
-        size.prefix_inc();
+        'for_body: {
+            size.prefix_inc();
+        }
         val >>= 7;
     }
     return size;
@@ -4231,13 +4310,15 @@ pub unsafe fn EncodeBase128Fix_148(mut val: usize, mut len: usize, mut data: *mu
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (len)) {
-            (*(data.postfix_inc())) = ((((val) & (127_usize))
-                | ((if (((i).wrapping_add(1_usize)) < (len)) {
-                    128
-                } else {
-                    0
-                }) as usize)) as u8);
-            val >>= 7;
+            'for_body: {
+                (*(data.postfix_inc())) = ((((val) & (127_usize))
+                    | ((if (((i).wrapping_add(1_usize)) < (len)) {
+                        128
+                    } else {
+                        0
+                    }) as usize)) as u8);
+                val >>= 7;
+            }
             i.prefix_inc();
         }
     }
@@ -4285,12 +4366,14 @@ pub unsafe fn TransformApp0Marker_149(s: *const Vec<u8>, mut out: *mut Vec<u8>) 
             'loop_: while ((k)
                 < (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxApp0Densities_45)))
             {
-                if ((x_dens)
-                    == ((*std::cell::LazyCell::force_mut(&mut *&raw mut kApp0Densities_46))[(k)]
-                        as i32))
-                    && ((y_dens) == (x_dens))
-                {
-                    density_ix = (k as i32);
+                'for_body: {
+                    if ((x_dens)
+                        == ((*std::cell::LazyCell::force_mut(&mut *&raw mut kApp0Densities_46))[(k)]
+                            as i32))
+                        && ((y_dens) == (x_dens))
+                    {
+                        density_ix = (k as i32);
+                    }
                 }
                 k.prefix_inc();
             }
@@ -4513,25 +4596,29 @@ pub unsafe fn GetQuantTableId_154(
         'loop_: while ((j)
             < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockQuantTables_47)))
         {
-            let mut match_found: bool = true;
-            {
-                let mut k: i32 = 0;
-                'loop_: while (match_found)
-                    && ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+            'for_body: {
+                let mut match_found: bool = true;
                 {
-                    if (((&(*q)).values[(k as usize)])
-                        != ((*std::cell::LazyCell::force_mut(
-                            &mut *&raw mut kStockQuantizationTables_48,
-                        ))[(is_chroma) as usize][(j) as usize][(k) as usize]
-                            as i32))
+                    let mut k: i32 = 0;
+                    'loop_: while (match_found)
+                        && ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
                     {
-                        match_found = false;
+                        'for_body: {
+                            if (((&(*q)).values[(k as usize)])
+                                != ((*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kStockQuantizationTables_48,
+                                ))[(is_chroma) as usize][(j) as usize]
+                                    [(k) as usize] as i32))
+                            {
+                                match_found = false;
+                            }
+                        }
+                        k.prefix_inc();
                     }
-                    k.prefix_inc();
                 }
-            }
-            if match_found {
-                return j;
+                if match_found {
+                    return j;
+                }
             }
             j.prefix_inc();
         }
@@ -4553,11 +4640,13 @@ pub unsafe fn EncodeVarint_155(mut n: i32, mut max_bits: i32, mut storage: *mut 
     };
     b = 0;
     'loop_: while ((n) != (0)) && ((b) < (max_bits)) {
-        if (((b) + (1)) != (max_bits)) {
-            (unsafe { WriteBits_120(1_usize, 1_u64, storage) });
+        'for_body: {
+            if (((b) + (1)) != (max_bits)) {
+                (unsafe { WriteBits_120(1_usize, 1_u64, storage) });
+            }
+            (unsafe { WriteBits_120(1_usize, (((n) & (1)) as u64), storage) });
+            n >>= 1;
         }
-        (unsafe { WriteBits_120(1_usize, (((n) & (1)) as u64), storage) });
-        n >>= 1;
         b.prefix_inc();
     }
     if ((b) < (max_bits)) {
@@ -4574,12 +4663,14 @@ pub unsafe fn EncodeLimitedVarint_156(
     {
         let mut b: i32 = 0;
         'loop_: while ((b) < (max_symbols)) {
-            (unsafe { WriteBits_120(1_usize, (((bits) != (0_usize)) as u64), storage) });
-            if ((bits) == (0_usize)) {
-                break;
+            'for_body: {
+                (unsafe { WriteBits_120(1_usize, (((bits) != (0_usize)) as u64), storage) });
+                if ((bits) == (0_usize)) {
+                    break 'loop_;
+                }
+                (unsafe { WriteBits_120((nbits as usize), (((bits) & (mask)) as u64), storage) });
+                bits >>= nbits;
             }
-            (unsafe { WriteBits_120((nbits as usize), (((bits) & (mask)) as u64), storage) });
-            bits >>= nbits;
             b.prefix_inc();
         }
     }
@@ -4601,90 +4692,102 @@ pub unsafe fn EncodeQuantTables_157(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).quant.len())) {
-            let q: *const brunsli_JPEGQuantTable = &(&(*jpg)).quant[(i)];
-            {
-                let mut k: i32 = 0;
-                'loop_: while ((k)
-                    < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
-                {
-                    let j: i32 =
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
-                            [(k) as usize] as i32);
-                    if (((&(*q)).values[(j as usize)]) == (0)) {
-                        return false;
-                    }
-                    k.prefix_inc();
-                }
-            }
-            let mut quant_approx: [u8; 64] = [0_u8; 64];
-            let code: i32 = (unsafe {
-                let _q: *const brunsli_JPEGQuantTable = q;
-                let _is_chroma: bool = ((i) > (0_usize));
-                let _dst: *mut u8 = quant_approx.as_mut_ptr();
-                GetQuantTableId_154(_q, _is_chroma, _dst)
-            });
-            (unsafe {
-                WriteBits_120(
-                    1_usize,
-                    (((code)
-                        >= (*std::cell::LazyCell::force_mut(
-                            &mut *&raw mut kNumStockQuantTables_47,
-                        ))) as u64),
-                    storage,
-                )
-            });
-            if ((code) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockQuantTables_47)))
-            {
-                (unsafe { WriteBits_120(3_usize, (code as u64), storage) });
-            } else {
-                let mut q_factor: usize = (((code)
-                    - (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockQuantTables_47)))
-                    as usize);
-                if !((q_factor)
-                    < (*std::cell::LazyCell::force_mut(&mut *&raw mut kQFactorLimit_117)))
-                {
-                    (unsafe {
-                        BrunsliDumpAndAbort_79(
-                            c"brunsli_encode.cc".as_ptr(),
-                            264,
-                            c"EncodeQuantTables".as_ptr(),
-                        )
-                    });
-                    'loop_: while true {}
-                };
-                (unsafe {
-                    WriteBits_120(
-                        (*std::cell::LazyCell::force_mut(&mut *&raw mut kQFactorBits_116)),
-                        (q_factor as u64),
-                        storage,
-                    )
-                });
-                let mut last_diff: i32 = 0;
+            'for_body: {
+                let q: *const brunsli_JPEGQuantTable = &(&(*jpg)).quant[(i)];
                 {
                     let mut k: i32 = 0;
                     'loop_: while ((k)
                         < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
                     {
-                        let j: i32 =
-                            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
-                                [(k) as usize] as i32);
-                        let new_diff: i32 =
-                            (((&(*q)).values[(j as usize)]) - (quant_approx[(j) as usize] as i32));
-                        let mut diff: i32 = ((new_diff) - (last_diff));
-                        last_diff = new_diff;
-                        (unsafe { WriteBits_120(1_usize, (((diff) != (0)) as u64), storage) });
-                        if (diff != 0) {
-                            (unsafe { WriteBits_120(1_usize, (((diff) < (0)) as u64), storage) });
-                            if ((diff) < (0)) {
-                                diff = -diff;
-                            }
-                            diff -= 1;
-                            if ((diff) > (65535)) {
+                        'for_body: {
+                            let j: i32 = ((*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kJPEGNaturalOrder_13,
+                            ))[(k) as usize] as i32);
+                            if (((&(*q)).values[(j as usize)]) == (0)) {
                                 return false;
                             }
-                            (unsafe { EncodeVarint_155(diff, 16, storage) });
                         }
                         k.prefix_inc();
+                    }
+                }
+                let mut quant_approx: [u8; 64] = [0_u8; 64];
+                let code: i32 = (unsafe {
+                    let _q: *const brunsli_JPEGQuantTable = q;
+                    let _is_chroma: bool = ((i) > (0_usize));
+                    let _dst: *mut u8 = quant_approx.as_mut_ptr();
+                    GetQuantTableId_154(_q, _is_chroma, _dst)
+                });
+                (unsafe {
+                    WriteBits_120(
+                        1_usize,
+                        (((code)
+                            >= (*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kNumStockQuantTables_47,
+                            ))) as u64),
+                        storage,
+                    )
+                });
+                if ((code)
+                    < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockQuantTables_47)))
+                {
+                    (unsafe { WriteBits_120(3_usize, (code as u64), storage) });
+                } else {
+                    let mut q_factor: usize = (((code)
+                        - (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockQuantTables_47)))
+                        as usize);
+                    if !((q_factor)
+                        < (*std::cell::LazyCell::force_mut(&mut *&raw mut kQFactorLimit_117)))
+                    {
+                        (unsafe {
+                            BrunsliDumpAndAbort_79(
+                                c"brunsli_encode.cc".as_ptr(),
+                                264,
+                                c"EncodeQuantTables".as_ptr(),
+                            )
+                        });
+                        'loop_: while true {}
+                    };
+                    (unsafe {
+                        WriteBits_120(
+                            (*std::cell::LazyCell::force_mut(&mut *&raw mut kQFactorBits_116)),
+                            (q_factor as u64),
+                            storage,
+                        )
+                    });
+                    let mut last_diff: i32 = 0;
+                    {
+                        let mut k: i32 = 0;
+                        'loop_: while ((k)
+                            < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
+                        {
+                            'for_body: {
+                                let j: i32 = ((*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kJPEGNaturalOrder_13,
+                                ))[(k) as usize]
+                                    as i32);
+                                let new_diff: i32 = (((&(*q)).values[(j as usize)])
+                                    - (quant_approx[(j) as usize] as i32));
+                                let mut diff: i32 = ((new_diff) - (last_diff));
+                                last_diff = new_diff;
+                                (unsafe {
+                                    WriteBits_120(1_usize, (((diff) != (0)) as u64), storage)
+                                });
+                                if (diff != 0) {
+                                    (unsafe {
+                                        WriteBits_120(1_usize, (((diff) < (0)) as u64), storage)
+                                    });
+                                    if ((diff) < (0)) {
+                                        diff = -diff;
+                                    }
+                                    diff -= 1;
+                                    if ((diff) > (65535)) {
+                                        return false;
+                                    }
+                                    (unsafe { EncodeVarint_155(diff, 16, storage) });
+                                }
+                            }
+                            k.prefix_inc();
+                        }
                     }
                 }
             }
@@ -4694,13 +4797,15 @@ pub unsafe fn EncodeQuantTables_157(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).components.len())) {
-            (unsafe {
-                WriteBits_120(
-                    2_usize,
-                    ((&(*jpg)).components[(i)].quant_idx as u64),
-                    storage,
-                )
-            });
+            'for_body: {
+                (unsafe {
+                    WriteBits_120(
+                        2_usize,
+                        ((&(*jpg)).components[(i)].quant_idx as u64),
+                        storage,
+                    )
+                });
+            }
             i.prefix_inc();
         }
     }
@@ -4738,42 +4843,20 @@ pub unsafe fn EncodeHuffmanCode_158(
                 < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockDCHuffmanCodes_53)))
                 && (!(found_match != 0))
             {
-                if (({
-                    let sa = core::slice::from_raw_parts(
-                        ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const ::libc::c_void)
-                            as *const u8,
-                        ::std::mem::size_of::<[i32; 16]>(),
-                    );
-                    let sb = core::slice::from_raw_parts(
-                        ((*std::cell::LazyCell::force_mut(
-                            &mut *&raw mut kStockDCHuffmanCodeCounts_54,
-                        ))[(i) as usize]
-                            .as_ptr() as *const ::libc::c_void)
-                            as *const u8,
-                        ::std::mem::size_of::<[i32; 16]>(),
-                    );
-                    let mut diff = 0_i32;
-                    for (x, y) in sa.iter().zip(sb.iter()) {
-                        if x != y {
-                            diff = (*x as i32) - (*y as i32);
-                            break;
-                        }
-                    }
-                    diff
-                }) == (0))
-                    && (({
+                'for_body: {
+                    if (({
                         let sa = core::slice::from_raw_parts(
-                            ((&(&(*huff)).values[(0_usize)] as *const i32) as *const ::libc::c_void)
+                            ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const ::libc::c_void)
                                 as *const u8,
-                            ::std::mem::size_of::<[i32; 13]>(),
+                            ::std::mem::size_of::<[i32; 16]>(),
                         );
                         let sb = core::slice::from_raw_parts(
                             ((*std::cell::LazyCell::force_mut(
-                                &mut *&raw mut kStockDCHuffmanCodeValues_55,
+                                &mut *&raw mut kStockDCHuffmanCodeCounts_54,
                             ))[(i) as usize]
                                 .as_ptr() as *const ::libc::c_void)
                                 as *const u8,
-                            ::std::mem::size_of::<[i32; 13]>(),
+                            ::std::mem::size_of::<[i32; 16]>(),
                         );
                         let mut diff = 0_i32;
                         for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4784,9 +4867,35 @@ pub unsafe fn EncodeHuffmanCode_158(
                         }
                         diff
                     }) == (0))
-                {
-                    found_match = 1;
-                    stock_table_idx = i;
+                        && (({
+                            let sa = core::slice::from_raw_parts(
+                                ((&(&(*huff)).values[(0_usize)] as *const i32)
+                                    as *const ::libc::c_void)
+                                    as *const u8,
+                                ::std::mem::size_of::<[i32; 13]>(),
+                            );
+                            let sb = core::slice::from_raw_parts(
+                                ((*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kStockDCHuffmanCodeValues_55,
+                                ))[(i) as usize]
+                                    .as_ptr()
+                                    as *const ::libc::c_void)
+                                    as *const u8,
+                                ::std::mem::size_of::<[i32; 13]>(),
+                            );
+                            let mut diff = 0_i32;
+                            for (x, y) in sa.iter().zip(sb.iter()) {
+                                if x != y {
+                                    diff = (*x as i32) - (*y as i32);
+                                    break;
+                                }
+                            }
+                            diff
+                        }) == (0))
+                    {
+                        found_match = 1;
+                        stock_table_idx = i;
+                    }
                 }
                 i.prefix_inc();
             }
@@ -4798,42 +4907,20 @@ pub unsafe fn EncodeHuffmanCode_158(
                 < (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumStockACHuffmanCodes_56)))
                 && (!(found_match != 0))
             {
-                if (({
-                    let sa = core::slice::from_raw_parts(
-                        ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const ::libc::c_void)
-                            as *const u8,
-                        ::std::mem::size_of::<[i32; 16]>(),
-                    );
-                    let sb = core::slice::from_raw_parts(
-                        ((*std::cell::LazyCell::force_mut(
-                            &mut *&raw mut kStockACHuffmanCodeCounts_57,
-                        ))[(i) as usize]
-                            .as_ptr() as *const ::libc::c_void)
-                            as *const u8,
-                        ::std::mem::size_of::<[i32; 16]>(),
-                    );
-                    let mut diff = 0_i32;
-                    for (x, y) in sa.iter().zip(sb.iter()) {
-                        if x != y {
-                            diff = (*x as i32) - (*y as i32);
-                            break;
-                        }
-                    }
-                    diff
-                }) == (0))
-                    && (({
+                'for_body: {
+                    if (({
                         let sa = core::slice::from_raw_parts(
-                            ((&(&(*huff)).values[(0_usize)] as *const i32) as *const ::libc::c_void)
+                            ((&(&(*huff)).counts[(1_usize)] as *const i32) as *const ::libc::c_void)
                                 as *const u8,
-                            ::std::mem::size_of::<[i32; 163]>(),
+                            ::std::mem::size_of::<[i32; 16]>(),
                         );
                         let sb = core::slice::from_raw_parts(
                             ((*std::cell::LazyCell::force_mut(
-                                &mut *&raw mut kStockACHuffmanCodeValues_59,
+                                &mut *&raw mut kStockACHuffmanCodeCounts_57,
                             ))[(i) as usize]
                                 .as_ptr() as *const ::libc::c_void)
                                 as *const u8,
-                            ::std::mem::size_of::<[i32; 163]>(),
+                            ::std::mem::size_of::<[i32; 16]>(),
                         );
                         let mut diff = 0_i32;
                         for (x, y) in sa.iter().zip(sb.iter()) {
@@ -4844,9 +4931,35 @@ pub unsafe fn EncodeHuffmanCode_158(
                         }
                         diff
                     }) == (0))
-                {
-                    found_match = 1;
-                    stock_table_idx = i;
+                        && (({
+                            let sa = core::slice::from_raw_parts(
+                                ((&(&(*huff)).values[(0_usize)] as *const i32)
+                                    as *const ::libc::c_void)
+                                    as *const u8,
+                                ::std::mem::size_of::<[i32; 163]>(),
+                            );
+                            let sb = core::slice::from_raw_parts(
+                                ((*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kStockACHuffmanCodeValues_59,
+                                ))[(i) as usize]
+                                    .as_ptr()
+                                    as *const ::libc::c_void)
+                                    as *const u8,
+                                ::std::mem::size_of::<[i32; 163]>(),
+                            );
+                            let mut diff = 0_i32;
+                            for (x, y) in sa.iter().zip(sb.iter()) {
+                                if x != y {
+                                    diff = (*x as i32) - (*y as i32);
+                                    break;
+                                }
+                            }
+                            diff
+                        }) == (0))
+                    {
+                        found_match = 1;
+                        stock_table_idx = i;
+                    }
                 }
                 i.prefix_inc();
             }
@@ -4870,33 +4983,36 @@ pub unsafe fn EncodeHuffmanCode_158(
     {
         let mut i: i32 = 1;
         'loop_: while ((i) <= (max_len)) {
-            let mut count: i32 =
-                (((&(*huff)).counts[(i as usize)]) - (if ((i) == (max_len)) { 1 } else { 0 }));
-            let mut count_limit: i32 = {
-                let mut __tmp_11: i32 = ((max_count) - (total_count));
-                let mut __tmp_12: i32 = ((space)
-                    >> ((*std::cell::LazyCell::force_mut(
-                        &mut *&raw mut kJpegHuffmanMaxBitLength_7,
-                    )) - (i)));
-                (*{
-                    let __a: *const _ = &mut __tmp_11;
-                    let __b: *const _ = &mut __tmp_12;
-                    if *__b < *__a { __b } else { __a }
-                })
-            };
-            if ((count) > (count_limit)) {
-                {}
-                return false;
-            }
-            if ((count_limit) > (0)) {
-                let mut nbits: i32 = ((unsafe { Log2FloorNonZero_74((count_limit as u32)) }) + (1));
-                (unsafe { WriteBits_120((nbits as usize), (count as u64), storage) });
-                total_count += count;
-                space -= ((count)
-                    * ((1)
-                        << ((*std::cell::LazyCell::force_mut(
+            'for_body: {
+                let mut count: i32 =
+                    (((&(*huff)).counts[(i as usize)]) - (if ((i) == (max_len)) { 1 } else { 0 }));
+                let mut count_limit: i32 = {
+                    let mut __tmp_11: i32 = ((max_count) - (total_count));
+                    let mut __tmp_12: i32 = ((space)
+                        >> ((*std::cell::LazyCell::force_mut(
                             &mut *&raw mut kJpegHuffmanMaxBitLength_7,
-                        )) - (i))));
+                        )) - (i)));
+                    (*{
+                        let __a: *const _ = &mut __tmp_11;
+                        let __b: *const _ = &mut __tmp_12;
+                        if *__b < *__a { __b } else { __a }
+                    })
+                };
+                if ((count) > (count_limit)) {
+                    {}
+                    return false;
+                }
+                if ((count_limit) > (0)) {
+                    let mut nbits: i32 =
+                        ((unsafe { Log2FloorNonZero_74((count_limit as u32)) }) + (1));
+                    (unsafe { WriteBits_120((nbits as usize), (count as u64), storage) });
+                    total_count += count;
+                    space -= ((count)
+                        * ((1)
+                            << ((*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kJpegHuffmanMaxBitLength_7,
+                            )) - (i))));
+                }
             }
             i.prefix_inc();
         }
@@ -4960,22 +5076,24 @@ pub unsafe fn EncodeHuffmanCode_158(
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (total_count)) {
-            let val: i32 = (&(*huff)).values[(i as usize)];
-            let mut code: i32 = 0_i32;
-            let mut nbits: i32 = 0_i32;
-            if !(unsafe {
-                brunsli_PermutationCoder::RemoveValue(
-                    &mut p,
-                    (val as u8),
-                    (&mut code as *mut i32),
-                    (&mut nbits as *mut i32),
-                )
-            }) {
-                return false;
+            'for_body: {
+                let val: i32 = (&(*huff)).values[(i as usize)];
+                let mut code: i32 = 0_i32;
+                let mut nbits: i32 = 0_i32;
+                if !(unsafe {
+                    brunsli_PermutationCoder::RemoveValue(
+                        &mut p,
+                        (val as u8),
+                        (&mut code as *mut i32),
+                        (&mut nbits as *mut i32),
+                    )
+                }) {
+                    return false;
+                }
+                (unsafe {
+                    EncodeLimitedVarint_156((code as usize), 2, (((nbits) + (1)) >> (1)), storage)
+                });
             }
-            (unsafe {
-                EncodeLimitedVarint_156((code as usize), 2, (((nbits) + (1)) >> (1)), storage)
-            });
             i.prefix_inc();
         }
     }
@@ -4999,10 +5117,12 @@ pub unsafe fn EncodeScanInfo_159(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*si).num_components)) {
-            let csi: *const brunsli_JPEGComponentScanInfo = &(&(*si)).components[(i)];
-            (unsafe { WriteBits_120(2_usize, ((*csi).comp_idx as u64), storage) });
-            (unsafe { WriteBits_120(2_usize, ((*csi).dc_tbl_idx as u64), storage) });
-            (unsafe { WriteBits_120(2_usize, ((*csi).ac_tbl_idx as u64), storage) });
+            'for_body: {
+                let csi: *const brunsli_JPEGComponentScanInfo = &(&(*si)).components[(i)];
+                (unsafe { WriteBits_120(2_usize, ((*csi).comp_idx as u64), storage) });
+                (unsafe { WriteBits_120(2_usize, ((*csi).dc_tbl_idx as u64), storage) });
+                (unsafe { WriteBits_120(2_usize, ((*csi).ac_tbl_idx as u64), storage) });
+            }
             i.prefix_inc();
         }
     }
@@ -5032,25 +5152,31 @@ pub unsafe fn EncodeScanInfo_159(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*si).extra_zero_runs.len())) {
-            let mut block_idx: i32 = (&(*si)).extra_zero_runs[(i)].block_idx;
-            let mut num: i32 = (&(*si)).extra_zero_runs[(i)].num_extra_zero_runs;
-            if !((block_idx) >= (last_block_idx)) {
-                (unsafe {
-                    BrunsliDumpAndAbort_79(
-                        c"brunsli_encode.cc".as_ptr(),
-                        401,
-                        c"EncodeScanInfo".as_ptr(),
-                    )
-                });
-                'loop_: while true {}
-            };
-            {
-                let mut j: i32 = 0;
-                'loop_: while ((j) < (num)) {
-                    (unsafe { WriteBits_120(1_usize, 1_u64, storage) });
-                    (unsafe { EncodeVarint_155(((block_idx) - (last_block_idx)), 28, storage) });
-                    last_block_idx = block_idx;
-                    j.prefix_inc();
+            'for_body: {
+                let mut block_idx: i32 = (&(*si)).extra_zero_runs[(i)].block_idx;
+                let mut num: i32 = (&(*si)).extra_zero_runs[(i)].num_extra_zero_runs;
+                if !((block_idx) >= (last_block_idx)) {
+                    (unsafe {
+                        BrunsliDumpAndAbort_79(
+                            c"brunsli_encode.cc".as_ptr(),
+                            401,
+                            c"EncodeScanInfo".as_ptr(),
+                        )
+                    });
+                    'loop_: while true {}
+                };
+                {
+                    let mut j: i32 = 0;
+                    'loop_: while ((j) < (num)) {
+                        'for_body: {
+                            (unsafe { WriteBits_120(1_usize, 1_u64, storage) });
+                            (unsafe {
+                                EncodeVarint_155(((block_idx) - (last_block_idx)), 28, storage)
+                            });
+                            last_block_idx = block_idx;
+                        }
+                        j.prefix_inc();
+                    }
                 }
             }
             i.prefix_inc();
@@ -5101,16 +5227,18 @@ pub unsafe fn EncodeAuxData_162(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).marker_order.len())) {
-            let mut marker: u8 = (&(*jpg)).marker_order[(i)];
-            if ((marker as i32) < (192)) {
-                return false;
-            }
-            (unsafe { WriteBits_120(6_usize, (((marker as i32) - (192)) as u64), storage) });
-            if ((marker as i32) == (221)) {
-                have_dri = true;
-            }
-            if ((marker as i32) == (218)) {
-                num_scans.prefix_inc();
+            'for_body: {
+                let mut marker: u8 = (&(*jpg)).marker_order[(i)];
+                if ((marker as i32) < (192)) {
+                    return false;
+                }
+                (unsafe { WriteBits_120(6_usize, (((marker as i32) - (192)) as u64), storage) });
+                if ((marker as i32) == (221)) {
+                    have_dri = true;
+                }
+                if ((marker as i32) == (218)) {
+                    num_scans.prefix_inc();
+                }
             }
             i.prefix_inc();
         }
@@ -5133,12 +5261,15 @@ pub unsafe fn EncodeAuxData_162(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).huffman_code.len())) {
-            let is_known_last: bool = (((i).wrapping_add(1_usize)) == ((*jpg).huffman_code.len()));
-            (unsafe { WriteBits_120(1_usize, (is_known_last as u64), storage) });
-            if !(unsafe {
-                EncodeHuffmanCode_158(&(&(*jpg)).huffman_code[(i)], is_known_last, storage)
-            }) {
-                return false;
+            'for_body: {
+                let is_known_last: bool =
+                    (((i).wrapping_add(1_usize)) == ((*jpg).huffman_code.len()));
+                (unsafe { WriteBits_120(1_usize, (is_known_last as u64), storage) });
+                if !(unsafe {
+                    EncodeHuffmanCode_158(&(&(*jpg)).huffman_code[(i)], is_known_last, storage)
+                }) {
+                    return false;
+                }
             }
             i.prefix_inc();
         }
@@ -5149,8 +5280,10 @@ pub unsafe fn EncodeAuxData_162(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).scan_info.len())) {
-            if !(unsafe { EncodeScanInfo_159(&(&(*jpg)).scan_info[(i)], storage) }) {
-                return false;
+            'for_body: {
+                if !(unsafe { EncodeScanInfo_159(&(&(*jpg)).scan_info[(i)], storage) }) {
+                    return false;
+                }
             }
             i.prefix_inc();
         }
@@ -5165,13 +5298,19 @@ pub unsafe fn EncodeAuxData_162(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).quant.len())) {
-            (unsafe { WriteBits_120(2_usize, ((&(*jpg)).quant[(i)].index as u64), storage) });
-            if ((i) != (((*jpg).quant.len()).wrapping_sub(1_usize))) {
-                (unsafe { WriteBits_120(1_usize, ((&(*jpg)).quant[(i)].is_last as u64), storage) });
-            } else if !((&(*jpg)).quant[(i)].is_last) {
-                return false;
+            'for_body: {
+                (unsafe { WriteBits_120(2_usize, ((&(*jpg)).quant[(i)].index as u64), storage) });
+                if ((i) != (((*jpg).quant.len()).wrapping_sub(1_usize))) {
+                    (unsafe {
+                        WriteBits_120(1_usize, ((&(*jpg)).quant[(i)].is_last as u64), storage)
+                    });
+                } else if !((&(*jpg)).quant[(i)].is_last) {
+                    return false;
+                }
+                (unsafe {
+                    WriteBits_120(4_usize, ((&(*jpg)).quant[(i)].precision as u64), storage)
+                });
             }
-            (unsafe { WriteBits_120(4_usize, ((&(*jpg)).quant[(i)].precision as u64), storage) });
             i.prefix_inc();
         }
     }
@@ -5181,7 +5320,11 @@ pub unsafe fn EncodeAuxData_162(
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < ((*jpg).components.len())) {
-                (unsafe { WriteBits_120(8_usize, ((&(*jpg)).components[(i)].id as u64), storage) });
+                'for_body: {
+                    (unsafe {
+                        WriteBits_120(8_usize, ((&(*jpg)).components[(i)].id as u64), storage)
+                    });
+                }
                 i.prefix_inc();
             }
         }
@@ -5199,7 +5342,11 @@ pub unsafe fn EncodeAuxData_162(
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (nsize)) {
-                (unsafe { WriteBits_120(1_usize, ((&(*jpg)).padding_bits[(i)] as u64), storage) });
+                'for_body: {
+                    (unsafe {
+                        WriteBits_120(1_usize, ((&(*jpg)).padding_bits[(i)] as u64), storage)
+                    });
+                }
                 i.prefix_inc();
             }
         }
@@ -5208,21 +5355,24 @@ pub unsafe fn EncodeAuxData_162(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).inter_marker_data.len())) {
-            let s: *const Vec<u8> = &(&(*jpg)).inter_marker_data[(i)];
-            let mut buffer: [u8; 10] = [0_u8; 10];
-            let mut len: usize = (unsafe { EncodeBase128_147((*s).len(), buffer.as_mut_ptr()) });
-            (unsafe {
-                brunsli_Storage::AppendBytes(
-                    &mut (*storage),
-                    (buffer.as_mut_ptr()).cast_const(),
-                    len,
-                )
-            });
-            (unsafe {
-                let _src: *const u8 = (*s).as_ptr();
-                let _len: usize = (*s).len();
-                brunsli_Storage::AppendBytes(&mut (*storage), _src, _len)
-            });
+            'for_body: {
+                let s: *const Vec<u8> = &(&(*jpg)).inter_marker_data[(i)];
+                let mut buffer: [u8; 10] = [0_u8; 10];
+                let mut len: usize =
+                    (unsafe { EncodeBase128_147((*s).len(), buffer.as_mut_ptr()) });
+                (unsafe {
+                    brunsli_Storage::AppendBytes(
+                        &mut (*storage),
+                        (buffer.as_mut_ptr()).cast_const(),
+                        len,
+                    )
+                });
+                (unsafe {
+                    let _src: *const u8 = (*s).as_ptr();
+                    let _len: usize = (*s).len();
+                    brunsli_Storage::AppendBytes(&mut (*storage), _src, _len)
+                });
+            }
             i.prefix_inc();
         }
     }
@@ -5247,7 +5397,9 @@ impl brunsli_internal_enc_Histogram {
         {
             let mut i: i32 = 0;
             'loop_: while ((i) < (18)) {
-                self.data_[(i) as usize] += (*other).data_[(i) as usize];
+                'for_body: {
+                    self.data_[(i) as usize] += (*other).data_[(i) as usize];
+                }
                 i.prefix_inc();
             }
         }
@@ -5275,7 +5427,9 @@ impl brunsli_internal_enc_Histogram {
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (18_usize)) {
-                self.data_[(i)] += (*other).data_[(i)];
+                'for_body: {
+                    self.data_[(i)] += (*other).data_[(i)];
+                }
                 i.prefix_inc();
             }
         }
@@ -5289,10 +5443,13 @@ pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const [i32; 64], mut order: *mut
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
-            pos_and_val[(i as usize)].0 = i;
-            pos_and_val[(i as usize)].1 = (&(*num_zeros))[((*std::cell::LazyCell::force_mut(
-                &mut *&raw mut kJPEGNaturalOrder_13,
-            ))[(i) as usize] as usize)];
+            'for_body: {
+                pos_and_val[(i as usize)].0 = i;
+                pos_and_val[(i as usize)].1 = (&(*num_zeros))[((*std::cell::LazyCell::force_mut(
+                    &mut *&raw mut kJPEGNaturalOrder_13,
+                ))[(i) as usize]
+                    as usize)];
+            }
             i.prefix_inc();
         }
     }
@@ -5334,9 +5491,11 @@ pub unsafe fn ComputeCoeffOrder_163(num_zeros: *const [i32; 64], mut order: *mut
         'loop_: while ((i)
             < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize))
         {
-            (*order.offset((i) as isize)) =
-                (*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
-                    [(pos_and_val[(i)].0) as usize];
+            'for_body: {
+                (*order.offset((i) as isize)) =
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                        [(pos_and_val[(i)].0) as usize];
+            }
             i.prefix_inc();
         }
     }
@@ -5384,11 +5543,13 @@ impl brunsli_internal_enc_EntropySource {
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < ((*other).histograms_.len())) {
-                (unsafe {
-                    let _other: *const brunsli_internal_enc_Histogram =
-                        &(&(*other)).histograms_[(i)];
-                    brunsli_internal_enc_Histogram::Merge(&mut self.histograms_[(i)], _other)
-                });
+                'for_body: {
+                    (unsafe {
+                        let _other: *const brunsli_internal_enc_Histogram =
+                            &(&(*other)).histograms_[(i)];
+                        brunsli_internal_enc_Histogram::Merge(&mut self.histograms_[(i)], _other)
+                    });
+                }
                 i.prefix_inc();
             }
         }
@@ -5411,13 +5572,16 @@ impl brunsli_internal_enc_EntropyCodes {
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (self.clustered_.len())) {
-                (unsafe {
-                    let _histogram: *const i32 =
-                        (&mut self.clustered_[(i)].data_[(0) as usize] as *mut i32).cast_const();
-                    let _table: *mut brunsli_ANSTable =
-                        (&mut self.ans_tables_[(i)] as *mut brunsli_ANSTable);
-                    BuildAndStoreANSEncodingData_123(_histogram, _table, storage)
-                });
+                'for_body: {
+                    (unsafe {
+                        let _histogram: *const i32 = (&mut self.clustered_[(i)].data_[(0) as usize]
+                            as *mut i32)
+                            .cast_const();
+                        let _table: *mut brunsli_ANSTable =
+                            (&mut self.ans_tables_[(i)] as *mut brunsli_ANSTable);
+                        BuildAndStoreANSEncodingData_123(_histogram, _table, storage)
+                    });
+                }
                 i.prefix_inc();
             }
         }
@@ -5554,20 +5718,26 @@ impl brunsli_internal_enc_DataStream {
         {
             let mut i: i32 = ((self.pos_) - (1));
             'loop_: while ((i) >= (0)) {
-                let word: *mut brunsli_internal_enc_DataStream_CodeWord = (&mut self.code_words_
-                    [(i as usize)]
-                    as *mut brunsli_internal_enc_DataStream_CodeWord);
-                if (((*word).nbits as i32) == (0)) {
-                    let info: brunsli_ANSEncSymbolInfo = (*(unsafe {
-                        brunsli_internal_enc_EntropyCodes::GetANSTable(
-                            &(*(s).cast_const()),
-                            ((*word).context as i32),
-                        )
-                    }))
-                    .info_[((*word).code) as usize];
-                    (*word).value = ((unsafe {
-                        brunsli_ANSCoder::PutSymbol(&mut ans, info, (&mut (*word).nbits as *mut u8))
-                    }) as u16);
+                'for_body: {
+                    let word: *mut brunsli_internal_enc_DataStream_CodeWord = (&mut self.code_words_
+                        [(i as usize)]
+                        as *mut brunsli_internal_enc_DataStream_CodeWord);
+                    if (((*word).nbits as i32) == (0)) {
+                        let info: brunsli_ANSEncSymbolInfo = (*(unsafe {
+                            brunsli_internal_enc_EntropyCodes::GetANSTable(
+                                &(*(s).cast_const()),
+                                ((*word).context as i32),
+                            )
+                        }))
+                        .info_[((*word).code) as usize];
+                        (*word).value = ((unsafe {
+                            brunsli_ANSCoder::PutSymbol(
+                                &mut ans,
+                                info,
+                                (&mut (*word).nbits as *mut u8),
+                            )
+                        }) as u16);
+                    }
                 }
                 i.prefix_dec();
             }
@@ -5588,14 +5758,17 @@ impl brunsli_internal_enc_DataStream {
         {
             let mut i: i32 = 0;
             'loop_: while ((i) < (self.pos_)) {
-                let word: *const brunsli_internal_enc_DataStream_CodeWord =
-                    &self.code_words_[(i as usize)];
-                if ((*word).nbits != 0) {
-                    (unsafe {
-                        let _p: *mut ::libc::c_void = (out.postfix_inc() as *mut ::libc::c_void);
-                        let _v: u16 = (*word).value;
-                        BrunsliUnalignedWrite16_67(_p, _v)
-                    });
+                'for_body: {
+                    let word: *const brunsli_internal_enc_DataStream_CodeWord =
+                        &self.code_words_[(i as usize)];
+                    if ((*word).nbits != 0) {
+                        (unsafe {
+                            let _p: *mut ::libc::c_void =
+                                (out.postfix_inc() as *mut ::libc::c_void);
+                            let _v: u16 = (*word).value;
+                            BrunsliUnalignedWrite16_67(_p, _v)
+                        });
+                    }
                 }
                 i.prefix_inc();
             }
@@ -5631,15 +5804,17 @@ pub unsafe fn EncodeNumNonzeros_166(
             << ((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroBits_84))
                 .wrapping_sub(1_usize))) as usize);
         'loop_: while ((mask) != (0_usize)) {
-            let bit: i32 = ((((val) & (mask)) != (0_usize)) as i32);
-            (unsafe {
-                brunsli_internal_enc_DataStream::AddBit(
-                    &mut (*data_stream),
-                    bst.offset((ctx) as isize),
-                    bit,
-                )
-            });
-            ctx = ((2_usize).wrapping_mul(ctx)).wrapping_add((bit as usize));
+            'for_body: {
+                let bit: i32 = ((((val) & (mask)) != (0_usize)) as i32);
+                (unsafe {
+                    brunsli_internal_enc_DataStream::AddBit(
+                        &mut (*data_stream),
+                        bst.offset((ctx) as isize),
+                        bit,
+                    )
+                });
+                ctx = ((2_usize).wrapping_mul(ctx)).wrapping_add((bit as usize));
+            }
             mask >>= 1;
         }
     }
@@ -5651,7 +5826,9 @@ pub unsafe fn CollectAllCoeffs_167(mut coeffs: *const i16) -> i16 {
         'loop_: while ((all_coeffs as i32) == (0))
             && ((k) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
         {
-            all_coeffs = ((all_coeffs as i32) | ((*coeffs.offset((k) as isize)) as i32)) as i16;
+            'for_body: {
+                all_coeffs = ((all_coeffs as i32) | ((*coeffs.offset((k) as isize)) as i32)) as i16;
+            }
             k.prefix_inc();
         }
     }
@@ -5667,9 +5844,11 @@ pub unsafe fn EncodeCoeffOrder_168(
         'loop_: while ((i)
             < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize))
         {
-            order_zigzag[(i)] =
-                (*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGZigZagOrder_14))
-                    [(*order.offset((i) as isize)) as usize];
+            'for_body: {
+                order_zigzag[(i)] =
+                    (*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGZigZagOrder_14))
+                        [(*order.offset((i) as isize)) as usize];
+            }
             i.prefix_inc();
         }
     }
@@ -5688,58 +5867,76 @@ pub unsafe fn EncodeCoeffOrder_168(
     {
         let mut i: i32 = 1;
         'loop_: while ((i) <= (tail)) {
-            lehmer[(i) as usize].prefix_inc();
+            'for_body: {
+                lehmer[(i) as usize].prefix_inc();
+            }
             i.prefix_inc();
         }
     };
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))) {
-            let start: i32 = if ((i) > (0)) { i } else { 1 };
-            let end: i32 = ((i) + (*std::cell::LazyCell::force_mut(&mut *&raw mut kSpan_169)));
-            let mut has_non_zero: i32 = 0;
-            {
-                let mut j: i32 = start;
-                'loop_: while ((j) < (end)) {
-                    has_non_zero = ((has_non_zero as u32) | lehmer[(j) as usize]) as i32;
-                    j.prefix_inc();
-                }
-            }
-            if !(has_non_zero != 0) {
-                (unsafe { brunsli_internal_enc_DataStream::AddBits(&mut (*data_stream), 1, 0) });
-                i += (*std::cell::LazyCell::force_mut(&mut *&raw mut kSpan_169));
-                continue 'loop_;
-            } else {
-                (unsafe { brunsli_internal_enc_DataStream::AddBits(&mut (*data_stream), 1, 1) });
-            }
-            {
-                let mut j: i32 = start;
-                'loop_: while ((j) < (end)) {
-                    let mut v: i32 = 0_i32;
-                    if !((lehmer[(j) as usize])
-                        <= ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
-                            as u32))
-                    {
-                        (unsafe {
-                            BrunsliDumpAndAbort_79(
-                                c"brunsli_encode.cc".as_ptr(),
-                                769,
-                                c"EncodeCoeffOrder".as_ptr(),
-                            )
-                        });
-                        'loop_: while true {}
-                    };
-                    v = (lehmer[(j) as usize] as i32);
-                    'loop_: while ((v) >= (7)) {
-                        (unsafe {
-                            brunsli_internal_enc_DataStream::AddBits(&mut (*data_stream), 3, 7)
-                        });
-                        v -= 7;
+            'for_body: {
+                let start: i32 = if ((i) > (0)) { i } else { 1 };
+                let end: i32 = ((i) + (*std::cell::LazyCell::force_mut(&mut *&raw mut kSpan_169)));
+                let mut has_non_zero: i32 = 0;
+                {
+                    let mut j: i32 = start;
+                    'loop_: while ((j) < (end)) {
+                        'for_body: {
+                            has_non_zero = ((has_non_zero as u32) | lehmer[(j) as usize]) as i32;
+                        }
+                        j.prefix_inc();
                     }
+                }
+                if !(has_non_zero != 0) {
                     (unsafe {
-                        brunsli_internal_enc_DataStream::AddBits(&mut (*data_stream), 3, v)
+                        brunsli_internal_enc_DataStream::AddBits(&mut (*data_stream), 1, 0)
                     });
-                    j.prefix_inc();
+                    break 'for_body;
+                } else {
+                    (unsafe {
+                        brunsli_internal_enc_DataStream::AddBits(&mut (*data_stream), 1, 1)
+                    });
+                }
+                {
+                    let mut j: i32 = start;
+                    'loop_: while ((j) < (end)) {
+                        'for_body: {
+                            let mut v: i32 = 0_i32;
+                            if !((lehmer[(j) as usize])
+                                <= ((*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kDCTBlockSize_3,
+                                )) as u32))
+                            {
+                                (unsafe {
+                                    BrunsliDumpAndAbort_79(
+                                        c"brunsli_encode.cc".as_ptr(),
+                                        769,
+                                        c"EncodeCoeffOrder".as_ptr(),
+                                    )
+                                });
+                                'loop_: while true {}
+                            };
+                            v = (lehmer[(j) as usize] as i32);
+                            'loop_: while ((v) >= (7)) {
+                                'for_body: {
+                                    (unsafe {
+                                        brunsli_internal_enc_DataStream::AddBits(
+                                            &mut (*data_stream),
+                                            3,
+                                            7,
+                                        )
+                                    });
+                                }
+                                v -= 7;
+                            }
+                            (unsafe {
+                                brunsli_internal_enc_DataStream::AddBits(&mut (*data_stream), 3, v)
+                            });
+                        }
+                        j.prefix_inc();
+                    }
                 }
             }
             i += (*std::cell::LazyCell::force_mut(&mut *&raw mut kSpan_169));
@@ -5752,10 +5949,12 @@ pub unsafe fn FrameTypeCode_170(jpg: *const brunsli_JPEGData) -> u32 {
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).components.len())) && ((i) < (4_usize)) {
-            let mut h_samp: u32 = ((((&(*jpg)).components[(i)].h_samp_factor) - (1)) as u32);
-            let mut v_samp: u32 = ((((&(*jpg)).components[(i)].v_samp_factor) - (1)) as u32);
-            code |= (((h_samp) << ((shift) + (4))) | ((v_samp) << (shift)));
-            shift += 8;
+            'for_body: {
+                let mut h_samp: u32 = ((((&(*jpg)).components[(i)].h_samp_factor) - (1)) as u32);
+                let mut v_samp: u32 = ((((&(*jpg)).components[(i)].v_samp_factor) - (1)) as u32);
+                code |= (((h_samp) << ((shift) + (4))) | ((v_samp) << (shift)));
+                shift += 8;
+            }
             i.prefix_inc();
         }
     }
@@ -5877,17 +6076,19 @@ pub unsafe fn EncodeMetaData_174(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).app_data.len())) {
-            let s: *const Vec<u8> = &(&(*jpg)).app_data[(i)];
-            (unsafe {
-                let _dst: *mut Vec<u8> = (&mut metadata as *mut Vec<u8>);
-                let mut _src: Vec<u8> = (unsafe {
-                    let _s: *const Vec<u8> = s;
-                    let _transformed_marker_count: *mut usize =
-                        (&mut transformed_marker_count as *mut usize);
-                    TransformAppMarker_153(_s, _transformed_marker_count)
+            'for_body: {
+                let s: *const Vec<u8> = &(&(*jpg)).app_data[(i)];
+                (unsafe {
+                    let _dst: *mut Vec<u8> = (&mut metadata as *mut Vec<u8>);
+                    let mut _src: Vec<u8> = (unsafe {
+                        let _s: *const Vec<u8> = s;
+                        let _transformed_marker_count: *mut usize =
+                            (&mut transformed_marker_count as *mut usize);
+                        TransformAppMarker_153(_s, _transformed_marker_count)
+                    });
+                    Append_73(_dst, &mut _src)
                 });
-                Append_73(_dst, &mut _src)
-            });
+            }
             i.prefix_inc();
         }
     }
@@ -6016,13 +6217,15 @@ pub unsafe fn EncodeHistogramData_177(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).components.len())) {
-            (unsafe {
-                WriteBits_120(
-                    3_usize,
-                    ((&mut (*state)).meta[(i)].context_bits as u64),
-                    (&mut storage as *mut brunsli_Storage),
-                )
-            });
+            'for_body: {
+                (unsafe {
+                    WriteBits_120(
+                        3_usize,
+                        ((&mut (*state)).meta[(i)].context_bits as u64),
+                        (&mut storage as *mut brunsli_Storage),
+                    )
+                });
+            }
             i.prefix_inc();
         }
     }
@@ -6144,30 +6347,35 @@ pub unsafe fn SampleNumNonZeros_181(mut m: *mut brunsli_internal_enc_ComponentMe
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_blocks)) {
-            let mut x: usize = (i).wrapping_rem(width_in_blocks);
-            let mut y: usize = (i).wrapping_div(width_in_blocks);
-            let mut block: *const i16 = coeffs
-                .offset(
-                    ((x).wrapping_mul(
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
-                            as usize),
-                    )) as isize,
-                )
-                .offset(((y).wrapping_mul(stride)) as isize);
-            {
-                let mut k: usize = 0_usize;
-                'loop_: while ((k)
-                    < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize))
+            'for_body: {
+                let mut x: usize = (i).wrapping_rem(width_in_blocks);
+                let mut y: usize = (i).wrapping_div(width_in_blocks);
+                let mut block: *const i16 = coeffs
+                    .offset(
+                        ((x).wrapping_mul(
+                            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                                as usize),
+                        )) as isize,
+                    )
+                    .offset(((y).wrapping_mul(stride)) as isize);
                 {
-                    if (((*block.offset((k) as isize)) as i32) == (0)) {
-                        (&mut (*num_zeros))[(k)].prefix_inc();
+                    let mut k: usize = 0_usize;
+                    'loop_: while ((k)
+                        < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                            as usize))
+                    {
+                        'for_body: {
+                            if (((*block.offset((k) as isize)) as i32) == (0)) {
+                                (&mut (*num_zeros))[(k)].prefix_inc();
+                            }
+                        }
+                        k.prefix_inc();
                     }
-                    k.prefix_inc();
                 }
+                total_nonzeros = (total_nonzeros).wrapping_add(
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize),
+                );
             }
-            total_nonzeros = (total_nonzeros).wrapping_add(
-                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize),
-            );
             i = (i).wrapping_add(
                 ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStride_182)) as usize),
             );
@@ -6178,7 +6386,9 @@ pub unsafe fn SampleNumNonZeros_181(mut m: *mut brunsli_internal_enc_ComponentMe
         'loop_: while ((i)
             < ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize))
         {
-            total_nonzeros = (total_nonzeros).wrapping_sub(((&mut (*num_zeros))[(i)] as usize));
+            'for_body: {
+                total_nonzeros = (total_nonzeros).wrapping_sub(((&mut (*num_zeros))[(i)] as usize));
+            }
             i.prefix_inc();
         }
     }
@@ -6207,48 +6417,58 @@ pub unsafe fn PredictDCCoeffs_185(mut state: *mut brunsli_internal_enc_State) ->
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*meta).len())) {
-            let m: *mut brunsli_internal_enc_ComponentMeta = &mut (&mut (*meta))[(i)];
-            let width: i32 = (*m).width_in_blocks;
-            let height: i32 = (*m).height_in_blocks;
-            let ac_stride: i32 = (*m).ac_stride;
-            let dc_stride: i32 = (*m).dc_stride;
-            {
-                let mut y: i32 = 0;
-                'loop_: while ((y) < (height)) {
-                    let mut coeffs: *const i16 =
-                        (*m).ac_coeffs.offset(((ac_stride) * (y)) as isize);
-                    let mut pred_errors: *mut i16 = (*m)
-                        .dc_prediction_errors
-                        .offset(((dc_stride) * (y)) as isize);
-                    {
-                        let mut x: i32 = 0;
-                        'loop_: while ((x) < (width)) {
-                            let mut err: i32 = (((*coeffs.offset((0) as isize)) as i32)
-                                - (unsafe {
-                                    PredictWithAdaptiveMedian_115(coeffs, x, y, ac_stride)
-                                }));
-                            if ((err.abs())
-                                > (*std::cell::LazyCell::force_mut(
-                                    &mut *&raw mut kBrunsliMaxDCAbsVal_19,
-                                )))
+            'for_body: {
+                let m: *mut brunsli_internal_enc_ComponentMeta = &mut (&mut (*meta))[(i)];
+                let width: i32 = (*m).width_in_blocks;
+                let height: i32 = (*m).height_in_blocks;
+                let ac_stride: i32 = (*m).ac_stride;
+                let dc_stride: i32 = (*m).dc_stride;
+                {
+                    let mut y: i32 = 0;
+                    'loop_: while ((y) < (height)) {
+                        'for_body: {
+                            let mut coeffs: *const i16 =
+                                (*m).ac_coeffs.offset(((ac_stride) * (y)) as isize);
+                            let mut pred_errors: *mut i16 = (*m)
+                                .dc_prediction_errors
+                                .offset(((dc_stride) * (y)) as isize);
                             {
-                                write!(
-                                    (*libcc2rs::cerr_unsafe()),
-                                    "Invalid DC coefficient: {:} after prediction: {:}\n",
-                                    (*coeffs.offset((0) as isize)),
-                                    err,
-                                );
-                                return false;
+                                let mut x: i32 = 0;
+                                'loop_: while ((x) < (width)) {
+                                    'for_body: {
+                                        let mut err: i32 = (((*coeffs.offset((0) as isize))
+                                            as i32)
+                                            - (unsafe {
+                                                PredictWithAdaptiveMedian_115(
+                                                    coeffs, x, y, ac_stride,
+                                                )
+                                            }));
+                                        if ((err.abs())
+                                            > (*std::cell::LazyCell::force_mut(
+                                                &mut *&raw mut kBrunsliMaxDCAbsVal_19,
+                                            )))
+                                        {
+                                            write!(
+                                                (*libcc2rs::cerr_unsafe()),
+                                                "Invalid DC coefficient: {:} after prediction: {:}\n",
+                                                (*coeffs.offset((0) as isize)),
+                                                err,
+                                            );
+                                            return false;
+                                        }
+                                        coeffs = (coeffs).wrapping_add(
+                                            (*std::cell::LazyCell::force_mut(
+                                                &mut *&raw mut kDCTBlockSize_3,
+                                            )) as usize,
+                                        );
+                                        (*(pred_errors.postfix_inc())) = (err as i16);
+                                    }
+                                    x.prefix_inc();
+                                }
                             }
-                            coeffs = (coeffs).wrapping_add(
-                                (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
-                                    as usize,
-                            );
-                            (*(pred_errors.postfix_inc())) = (err as i16);
-                            x.prefix_inc();
                         }
+                        y.prefix_inc();
                     }
-                    y.prefix_inc();
                 }
             }
             i.prefix_inc();
@@ -6268,39 +6488,41 @@ pub unsafe fn CalculateMeta_186(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
-            let c: *const brunsli_JPEGComponent = &(&(*jpg)).components[(i)];
-            let m: *mut brunsli_internal_enc_ComponentMeta = &mut (&mut (*meta))[(i)];
-            if (((*c).quant_idx as usize) >= ((*jpg).quant.len())) {
-                return false;
-            }
-            let q: *const brunsli_JPEGQuantTable = &(&(*jpg)).quant[((*c).quant_idx as usize)];
-            (*m).h_samp = (*c).h_samp_factor;
-            (*m).v_samp = (*c).v_samp_factor;
-            (*m).width_in_blocks = (((*jpg).MCU_cols) * ((*m).h_samp));
-            (*m).height_in_blocks = (((*jpg).MCU_rows) * ((*m).v_samp));
-            (*m).ac_coeffs = (&(&(*c)).coeffs[(0_usize)] as *const i16);
-            (*m).ac_stride = (((*m).width_in_blocks)
-                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)));
-            (*m).dc_stride = (*m).width_in_blocks;
-            (*m).b_stride = (*m).width_in_blocks;
-            {
-                let mut __tmp_20 = { ((*m).quant.as_mut_ptr() as *mut ::libc::c_void) };
-                let mut __tmp_21 =
-                    { ((&(&(*q)).values[(0_usize)] as *const i32) as *const ::libc::c_void) };
-                if ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize)
-                    .wrapping_mul((::std::mem::size_of::<i32>() as usize))
-                    != 0
-                {
-                    ::std::ptr::copy_nonoverlapping(
-                        __tmp_21,
-                        __tmp_20,
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
-                            as usize)
-                            .wrapping_mul((::std::mem::size_of::<i32>() as usize)),
-                    )
+            'for_body: {
+                let c: *const brunsli_JPEGComponent = &(&(*jpg)).components[(i)];
+                let m: *mut brunsli_internal_enc_ComponentMeta = &mut (&mut (*meta))[(i)];
+                if (((*c).quant_idx as usize) >= ((*jpg).quant.len())) {
+                    return false;
                 }
-                __tmp_20
-            };
+                let q: *const brunsli_JPEGQuantTable = &(&(*jpg)).quant[((*c).quant_idx as usize)];
+                (*m).h_samp = (*c).h_samp_factor;
+                (*m).v_samp = (*c).v_samp_factor;
+                (*m).width_in_blocks = (((*jpg).MCU_cols) * ((*m).h_samp));
+                (*m).height_in_blocks = (((*jpg).MCU_rows) * ((*m).v_samp));
+                (*m).ac_coeffs = (&(&(*c)).coeffs[(0_usize)] as *const i16);
+                (*m).ac_stride = (((*m).width_in_blocks)
+                    * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)));
+                (*m).dc_stride = (*m).width_in_blocks;
+                (*m).b_stride = (*m).width_in_blocks;
+                {
+                    let mut __tmp_20 = { ((*m).quant.as_mut_ptr() as *mut ::libc::c_void) };
+                    let mut __tmp_21 =
+                        { ((&(&(*q)).values[(0_usize)] as *const i32) as *const ::libc::c_void) };
+                    if ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize)
+                        .wrapping_mul((::std::mem::size_of::<i32>() as usize))
+                        != 0
+                    {
+                        ::std::ptr::copy_nonoverlapping(
+                            __tmp_21,
+                            __tmp_20,
+                            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                                as usize)
+                                .wrapping_mul((::std::mem::size_of::<i32>() as usize)),
+                        )
+                    }
+                    __tmp_20
+                };
+            }
             i.prefix_inc();
         }
     }
@@ -6318,10 +6540,14 @@ pub unsafe fn EncodeDC_187(mut state: *mut brunsli_internal_enc_State) {
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
-            let m: *const brunsli_internal_enc_ComponentMeta = &(&(*meta))[(i)];
-            (unsafe { brunsli_ComponentStateDC::SetWidth(&mut comps[(i)], (*m).width_in_blocks) });
-            total_num_blocks = (total_num_blocks)
-                .wrapping_add(((((*m).width_in_blocks) * ((*m).height_in_blocks)) as usize));
+            'for_body: {
+                let m: *const brunsli_internal_enc_ComponentMeta = &(&(*meta))[(i)];
+                (unsafe {
+                    brunsli_ComponentStateDC::SetWidth(&mut comps[(i)], (*m).width_in_blocks)
+                });
+                total_num_blocks = (total_num_blocks)
+                    .wrapping_add(((((*m).width_in_blocks) * ((*m).height_in_blocks)) as usize));
+            }
             i.prefix_inc();
         }
     }
@@ -6337,212 +6563,165 @@ pub unsafe fn EncodeDC_187(mut state: *mut brunsli_internal_enc_State) {
     {
         let mut mcu_y: i32 = 0;
         'loop_: while ((mcu_y) < (mcu_rows)) {
-            {
-                let mut i: usize = 0_usize;
-                'loop_: while ((i) < (num_components)) {
-                    let mut c: *mut brunsli_ComponentStateDC =
-                        (&mut comps[(i)] as *mut brunsli_ComponentStateDC);
-                    let m: *const brunsli_internal_enc_ComponentMeta = &(&(*meta))[(i)];
-                    let width: i32 = (*c).width;
-                    let ac_stride: i32 = (*m).ac_stride;
-                    let dc_stride: i32 = (*m).dc_stride;
-                    let b_stride: i32 = (*m).b_stride;
-                    let mut y: i32 = ((mcu_y) * ((*m).v_samp));
-                    let mut prev_sgn: *mut i32 =
-                        (&mut (&mut (*c)).prev_sign[(1_usize)] as *mut i32);
-                    let mut prev_abs: *mut i32 =
-                        (&mut (&mut (*c)).prev_abs_coeff[(2_usize)] as *mut i32);
-                    {
-                        let mut iy: i32 = 0;
-                        'loop_: while ((iy) < ((*m).v_samp)) {
-                            let mut dc_coeffs_in: *const i16 = ((*m)
-                                .dc_prediction_errors
-                                .offset(((y) * (dc_stride)) as isize))
-                            .cast_const();
-                            let mut ac_coeffs_in: *const i16 =
-                                (*m).ac_coeffs.offset(((y) * (ac_stride)) as isize);
-                            let mut block_state: *mut u8 =
-                                (*m).block_state.offset(((y) * (b_stride)) as isize);
+            'for_body: {
+                {
+                    let mut i: usize = 0_usize;
+                    'loop_: while ((i) < (num_components)) {
+                        'for_body: {
+                            let mut c: *mut brunsli_ComponentStateDC =
+                                (&mut comps[(i)] as *mut brunsli_ComponentStateDC);
+                            let m: *const brunsli_internal_enc_ComponentMeta = &(&(*meta))[(i)];
+                            let width: i32 = (*c).width;
+                            let ac_stride: i32 = (*m).ac_stride;
+                            let dc_stride: i32 = (*m).dc_stride;
+                            let b_stride: i32 = (*m).b_stride;
+                            let mut y: i32 = ((mcu_y) * ((*m).v_samp));
+                            let mut prev_sgn: *mut i32 =
+                                (&mut (&mut (*c)).prev_sign[(1_usize)] as *mut i32);
+                            let mut prev_abs: *mut i32 =
+                                (&mut (&mut (*c)).prev_abs_coeff[(2_usize)] as *mut i32);
                             {
-                                let mut x: i32 = 0;
-                                'loop_: while ((x) < (width)) {
-                                    (unsafe {
-                                        brunsli_internal_enc_DataStream::ResizeForBlock(
-                                            &mut (*data_stream),
-                                        )
-                                    });
-                                    let coeff: i16 = (*dc_coeffs_in.offset((0) as isize));
-                                    let sign: i32 = if ((coeff as i32) > (0)) {
-                                        1
-                                    } else {
-                                        if ((coeff as i32) < (0)) { 2 } else { 0 }
-                                    };
-                                    let absval: i32 = if ((sign) == (2)) {
-                                        -(coeff as i32)
-                                    } else {
-                                        (coeff as i32)
-                                    };
-                                    let all_coeffs: i16 = (((coeff as i32)
-                                        | ((unsafe { CollectAllCoeffs_167(ac_coeffs_in) }) as i32))
-                                        as i16);
-                                    let is_empty_block: bool = ((all_coeffs as i32) == (0));
-                                    let is_empty_ctx: i32 = (unsafe {
-                                        IsEmptyBlockContext_106(
-                                            (&mut (&mut (*c)).prev_is_nonempty[(1_usize)]
-                                                as *mut i32)
-                                                .cast_const(),
-                                            x,
-                                        )
-                                    });
-                                    (unsafe {
-                                        let _p: *mut brunsli_Prob = (&mut (&mut (*c))
-                                            .is_empty_block_prob
-                                            [(is_empty_ctx as usize)]
-                                            as *mut brunsli_Prob);
-                                        let _bit: i32 = (!(is_empty_block) as i32);
-                                        brunsli_internal_enc_DataStream::AddBit(
-                                            &mut (*data_stream),
-                                            _p,
-                                            _bit,
-                                        )
-                                    });
-                                    (&mut (*c)).prev_is_nonempty[(((x) + (1)) as usize)] =
-                                        (!(is_empty_block) as i32);
-                                    (*block_state) = (is_empty_block as u8);
-                                    if !(is_empty_block) {
-                                        let is_zero: i32 = (((coeff as i32) == (0)) as i32);
-                                        (unsafe {
-                                            let _p: *mut brunsli_Prob =
-                                                (&mut (*c).is_zero_prob as *mut brunsli_Prob);
-                                            let _bit: i32 = is_zero;
-                                            brunsli_internal_enc_DataStream::AddBit(
-                                                &mut (*data_stream),
-                                                _p,
-                                                _bit,
-                                            )
-                                        });
-                                        if !(is_zero != 0) {
-                                            let avrg_ctx: i32 = (unsafe {
-                                                let _vals: *const i32 = (prev_abs).cast_const();
-                                                let _x: i32 = x;
-                                                WeightedAverageContextDC_97(_vals, _x)
-                                            });
-                                            let sign_ctx: i32 =
-                                                (((*prev_sgn.offset((x) as isize)) * (3))
-                                                    + (*prev_sgn.offset(((x) - (1)) as isize)));
-                                            (unsafe {
-                                                let _p: *mut brunsli_Prob = (&mut (&mut (*c))
-                                                    .sign_prob
-                                                    [(sign_ctx as usize)]
-                                                    as *mut brunsli_Prob);
-                                                let _bit: i32 = ((sign) - (1));
-                                                brunsli_internal_enc_DataStream::AddBit(
-                                                    &mut (*data_stream),
-                                                    _p,
-                                                    _bit,
-                                                )
-                                            });
-                                            let zdens_ctx: usize = i;
-                                            if ((absval)
-                                                <= (*std::cell::LazyCell::force_mut(
-                                                    &mut *&raw mut kNumDirectCodes_141,
-                                                )))
-                                            {
-                                                (unsafe {
-                                                    let _code: usize = (((absval) - (1)) as usize);
-                                                    let _band: usize = zdens_ctx;
-                                                    let _context: usize =
-                                                        ((avrg_ctx as u32) as usize);
-                                                    let _s: *mut brunsli_internal_enc_EntropySource  = ( entropy_source ) ;
-                                                    brunsli_internal_enc_DataStream::AddCode(
-                                                        &mut (*data_stream),
-                                                        _code,
-                                                        _band,
-                                                        _context,
-                                                        _s,
-                                                    )
-                                                });
-                                            } else {
-                                                let mut nbits: i32 = ((unsafe {
-                                                    Log2FloorNonZero_74(
-                                                        ((((absval)
-                                                            - (*std::cell::LazyCell::force_mut(
-                                                                &mut *&raw mut kNumDirectCodes_141,
-                                                            )))
-                                                            + (1))
-                                                            as u32),
-                                                    )
-                                                }) - (1));
-                                                (unsafe {
-                                                    let _code: usize =
-                                                        (((*std::cell::LazyCell::force_mut(
-                                                            &mut *&raw mut kNumDirectCodes_141,
-                                                        )) + (nbits))
-                                                            as usize);
-                                                    let _band: usize = zdens_ctx;
-                                                    let _context: usize = (avrg_ctx as usize);
-                                                    let _s: *mut brunsli_internal_enc_EntropySource  = ( entropy_source ) ;
-                                                    brunsli_internal_enc_DataStream::AddCode(
-                                                        &mut (*data_stream),
-                                                        _code,
-                                                        _band,
-                                                        _context,
-                                                        _s,
-                                                    )
-                                                });
-                                                let mut extra_bits: i32 = ((absval)
-                                                    - (((*std::cell::LazyCell::force_mut(
-                                                        &mut *&raw mut kNumDirectCodes_141,
-                                                    )) - (1))
-                                                        + ((2) << (nbits))));
-                                                let mut first_extra_bit: i32 =
-                                                    (((extra_bits) >> (nbits)) & (1));
-                                                (unsafe {
-                                                    let _p: *mut brunsli_Prob = (&mut (&mut (*c))
-                                                        .first_extra_bit_prob
-                                                        [(nbits as usize)]
-                                                        as *mut brunsli_Prob);
-                                                    let _bit: i32 = first_extra_bit;
-                                                    brunsli_internal_enc_DataStream::AddBit(
-                                                        &mut (*data_stream),
-                                                        _p,
-                                                        _bit,
-                                                    )
-                                                });
-                                                if ((nbits) > (0)) {
-                                                    extra_bits &= (((1) << (nbits)) - (1));
+                                let mut iy: i32 = 0;
+                                'loop_: while ((iy) < ((*m).v_samp)) {
+                                    'for_body: {
+                                        let mut dc_coeffs_in: *const i16 = ((*m)
+                                            .dc_prediction_errors
+                                            .offset(((y) * (dc_stride)) as isize))
+                                        .cast_const();
+                                        let mut ac_coeffs_in: *const i16 =
+                                            (*m).ac_coeffs.offset(((y) * (ac_stride)) as isize);
+                                        let mut block_state: *mut u8 =
+                                            (*m).block_state.offset(((y) * (b_stride)) as isize);
+                                        {
+                                            let mut x: i32 = 0;
+                                            'loop_: while ((x) < (width)) {
+                                                'for_body: {
                                                     (unsafe {
-                                                        let _nbits: i32 = nbits;
-                                                        let _bits: i32 = extra_bits;
-                                                        brunsli_internal_enc_DataStream::AddBits(
-                                                            &mut (*data_stream),
-                                                            _nbits,
-                                                            _bits,
+                                                        brunsli_internal_enc_DataStream :: ResizeForBlock ( &mut ( * data_stream )  , )
+                                                    });
+                                                    let coeff: i16 =
+                                                        (*dc_coeffs_in.offset((0) as isize));
+                                                    let sign: i32 = if ((coeff as i32) > (0)) {
+                                                        1
+                                                    } else {
+                                                        if ((coeff as i32) < (0)) { 2 } else { 0 }
+                                                    };
+                                                    let absval: i32 = if ((sign) == (2)) {
+                                                        -(coeff as i32)
+                                                    } else {
+                                                        (coeff as i32)
+                                                    };
+                                                    let all_coeffs: i16 = (((coeff as i32)
+                                                        | ((unsafe {
+                                                            CollectAllCoeffs_167(ac_coeffs_in)
+                                                        })
+                                                            as i32))
+                                                        as i16);
+                                                    let is_empty_block: bool =
+                                                        ((all_coeffs as i32) == (0));
+                                                    let is_empty_ctx: i32 = (unsafe {
+                                                        IsEmptyBlockContext_106(
+                                                            (&mut (&mut (*c)).prev_is_nonempty
+                                                                [(1_usize)]
+                                                                as *mut i32)
+                                                                .cast_const(),
+                                                            x,
                                                         )
                                                     });
+                                                    (unsafe {
+                                                        let _p: *mut brunsli_Prob =
+                                                            (&mut (&mut (*c)).is_empty_block_prob
+                                                                [(is_empty_ctx as usize)]
+                                                                as *mut brunsli_Prob);
+                                                        let _bit: i32 = (!(is_empty_block) as i32);
+                                                        brunsli_internal_enc_DataStream::AddBit(
+                                                            &mut (*data_stream),
+                                                            _p,
+                                                            _bit,
+                                                        )
+                                                    });
+                                                    (&mut (*c)).prev_is_nonempty
+                                                        [(((x) + (1)) as usize)] =
+                                                        (!(is_empty_block) as i32);
+                                                    (*block_state) = (is_empty_block as u8);
+                                                    if !(is_empty_block) {
+                                                        let is_zero: i32 =
+                                                            (((coeff as i32) == (0)) as i32);
+                                                        (unsafe {
+                                                            let _p: *mut brunsli_Prob = (&mut (*c)
+                                                                .is_zero_prob
+                                                                as *mut brunsli_Prob);
+                                                            let _bit: i32 = is_zero;
+                                                            brunsli_internal_enc_DataStream::AddBit(
+                                                                &mut (*data_stream),
+                                                                _p,
+                                                                _bit,
+                                                            )
+                                                        });
+                                                        if !(is_zero != 0) {
+                                                            let avrg_ctx: i32 = (unsafe {
+                                                                let _vals: *const i32 =
+                                                                    (prev_abs).cast_const();
+                                                                let _x: i32 = x;
+                                                                WeightedAverageContextDC_97(
+                                                                    _vals, _x,
+                                                                )
+                                                            });
+                                                            let sign_ctx: i32 = (((*prev_sgn
+                                                                .offset((x) as isize))
+                                                                * (3))
+                                                                + (*prev_sgn
+                                                                    .offset(((x) - (1)) as isize)));
+                                                            (unsafe {
+                                                                let _p: *mut brunsli_Prob =
+                                                                    (&mut (&mut (*c)).sign_prob
+                                                                        [(sign_ctx as usize)]
+                                                                        as *mut brunsli_Prob);
+                                                                let _bit: i32 = ((sign) - (1));
+                                                                brunsli_internal_enc_DataStream :: AddBit ( &mut ( * data_stream )  , _p , _bit , )
+                                                            });
+                                                            let zdens_ctx: usize = i;
+                                                            if ( ( absval ) <= ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumDirectCodes_141)) ) ) { ( unsafe { let _code: usize  = ( ( ( ( absval ) - ( 1 ) ) ) as usize ) ; let _band: usize  = zdens_ctx ; let _context: usize  = ( ( avrg_ctx as u32 ) as usize ) ; let _s: *mut brunsli_internal_enc_EntropySource  = ( entropy_source ) ; brunsli_internal_enc_DataStream :: AddCode ( &mut ( * data_stream )  , _code , _band , _context , _s , ) } )  ;
+ } else { let mut nbits : i32 = ( ( ( unsafe { Log2FloorNonZero_74 ( ( ( ( ( ( ( absval ) - ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumDirectCodes_141)) ) ) ) + ( 1 ) ) ) as u32 ) , ) } )  ) - ( 1 ) ) ;
+  ;
+ ;
+ ( unsafe { let _code: usize  = ( ( ( ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumDirectCodes_141)) ) + ( nbits ) ) ) as usize ) ; let _band: usize  = zdens_ctx ; let _context: usize  = ( avrg_ctx as usize ) ; let _s: *mut brunsli_internal_enc_EntropySource  = ( entropy_source ) ; brunsli_internal_enc_DataStream :: AddCode ( &mut ( * data_stream )  , _code , _band , _context , _s , ) } )  ;
+ let mut extra_bits : i32 = ( ( absval ) - ( ( ( ( ( ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumDirectCodes_141)) ) - ( 1 ) ) ) + ( ( ( ( 2 ) << ( nbits ) ) ) ) ) ) ) ) ;
+  ;
+ ;
+ let mut first_extra_bit : i32 = ( ( ( ( ( extra_bits ) >> ( nbits ) ) ) ) & ( 1 ) ) ;
+  ;
+ ;
+ ( unsafe { let _p: *mut brunsli_Prob  = ( & mut ( &mut ( * c  ) ) . first_extra_bit_prob  [ ( ( nbits as usize ) ) ] as *mut brunsli_Prob ) ; let _bit: i32  = first_extra_bit ; brunsli_internal_enc_DataStream :: AddBit ( &mut ( * data_stream )  , _p , _bit , ) } )  ;
+ if ( ( nbits ) > ( 0 ) ) { extra_bits  &= ( ( ( ( ( 1 ) << ( nbits ) ) ) ) - ( 1 ) )  ;
+ ( unsafe { let _nbits: i32  = nbits ; let _bits: i32  = extra_bits ; brunsli_internal_enc_DataStream :: AddBits ( &mut ( * data_stream )  , _nbits , _bits , ) } )  ;
+ } }
+                                                        }
+                                                    }
+                                                    (*prev_sgn.offset((x) as isize)) = sign;
+                                                    (*prev_abs.offset((x) as isize)) = absval;
+                                                    block_state.prefix_inc();
+                                                    dc_coeffs_in.prefix_inc();
+                                                    ac_coeffs_in = (ac_coeffs_in).wrapping_add(
+                                                        (*std::cell::LazyCell::force_mut(
+                                                            &mut *&raw mut kDCTBlockSize_3,
+                                                        ))
+                                                            as usize,
+                                                    );
                                                 }
+                                                x.prefix_inc();
                                             }
                                         }
                                     }
-                                    (*prev_sgn.offset((x) as isize)) = sign;
-                                    (*prev_abs.offset((x) as isize)) = absval;
-                                    block_state.prefix_inc();
-                                    dc_coeffs_in.prefix_inc();
-                                    ac_coeffs_in = (ac_coeffs_in).wrapping_add(
-                                        (*std::cell::LazyCell::force_mut(
-                                            &mut *&raw mut kDCTBlockSize_3,
-                                        )) as usize,
-                                    );
-                                    x.prefix_inc();
+                                    {
+                                        iy.prefix_inc();
+                                        y.prefix_inc()
+                                    };
                                 }
                             }
-                            {
-                                iy.prefix_inc();
-                                y.prefix_inc()
-                            };
                         }
+                        i.prefix_inc();
                     }
-                    i.prefix_inc();
                 }
             }
             mcu_y.prefix_inc();
@@ -6571,24 +6750,29 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
-            let m: *const brunsli_internal_enc_ComponentMeta = &(&(*meta))[(i)];
-            let num_blocks: usize = ((((*m).width_in_blocks) * ((*m).height_in_blocks)) as usize);
-            num_code_words = (num_code_words).wrapping_add(
-                (((2_usize).wrapping_mul((*m).approx_total_nonzeros)).wrapping_add(1024_usize))
-                    .wrapping_add((3_usize).wrapping_mul(num_blocks)),
-            );
-            (unsafe {
-                ComputeCoeffOrder_163(
-                    &(*m).num_zeros,
-                    (&mut comps[(i)].order[(0) as usize] as *mut u32),
-                )
-            });
-            (unsafe {
-                let _mult_row: *mut i32 = (&mut comps[(i)].mult_row[(0) as usize] as *mut i32);
-                let _mult_col: *mut i32 = (&mut comps[(i)].mult_col[(0) as usize] as *mut i32);
-                ComputeACPredictMultipliers_109((*m).quant.as_ptr(), _mult_row, _mult_col)
-            });
-            (unsafe { brunsli_ComponentState::SetWidth(&mut comps[(i)], (*m).width_in_blocks) });
+            'for_body: {
+                let m: *const brunsli_internal_enc_ComponentMeta = &(&(*meta))[(i)];
+                let num_blocks: usize =
+                    ((((*m).width_in_blocks) * ((*m).height_in_blocks)) as usize);
+                num_code_words = (num_code_words).wrapping_add(
+                    (((2_usize).wrapping_mul((*m).approx_total_nonzeros)).wrapping_add(1024_usize))
+                        .wrapping_add((3_usize).wrapping_mul(num_blocks)),
+                );
+                (unsafe {
+                    ComputeCoeffOrder_163(
+                        &(*m).num_zeros,
+                        (&mut comps[(i)].order[(0) as usize] as *mut u32),
+                    )
+                });
+                (unsafe {
+                    let _mult_row: *mut i32 = (&mut comps[(i)].mult_row[(0) as usize] as *mut i32);
+                    let _mult_col: *mut i32 = (&mut comps[(i)].mult_col[(0) as usize] as *mut i32);
+                    ComputeACPredictMultipliers_109((*m).quant.as_ptr(), _mult_row, _mult_col)
+                });
+                (unsafe {
+                    brunsli_ComponentState::SetWidth(&mut comps[(i)], (*m).width_in_blocks)
+                });
+            }
             i.prefix_inc();
         }
     }
@@ -6603,412 +6787,348 @@ pub unsafe fn EncodeAC_188(mut state: *mut brunsli_internal_enc_State) {
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
-            (unsafe {
-                EncodeCoeffOrder_168(
-                    (&mut comps[(i)].order[(0) as usize] as *mut u32).cast_const(),
-                    (data_stream),
-                )
-            });
+            'for_body: {
+                (unsafe {
+                    EncodeCoeffOrder_168(
+                        (&mut comps[(i)].order[(0) as usize] as *mut u32).cast_const(),
+                        (data_stream),
+                    )
+                });
+            }
             i.prefix_inc();
         }
     }
     {
         let mut mcu_y: i32 = 0;
         'loop_: while ((mcu_y) < (mcu_rows)) {
-            {
-                let mut i: usize = 0_usize;
-                'loop_: while ((i) < (num_components)) {
-                    let c: *mut brunsli_ComponentState =
-                        (&mut comps[(i)] as *mut brunsli_ComponentState);
-                    let m: *const brunsli_internal_enc_ComponentMeta = &(&(*meta))[(i)];
-                    let cur_ctx_bits: i32 = (*m).context_bits;
-                    let mut cur_order: *const u32 = ((*c).order.as_mut_ptr()).cast_const();
-                    let width: i32 = (*c).width;
-                    let mut y: i32 = ((mcu_y) * ((*m).v_samp));
-                    let ac_stride: i32 = (*m).ac_stride;
-                    let b_stride: i32 = (*m).b_stride;
-                    let mut prev_row_delta: i32 = ((((1) - ((2) * ((y) & (1)))) * ((width) + (3)))
-                        * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)));
-                    {
-                        let mut iy: i32 = 0;
-                        'loop_: while ((iy) < ((*m).v_samp)) {
-                            let mut coeffs_in: *const i16 =
-                                (*m).ac_coeffs.offset(((y) * (ac_stride)) as isize);
-                            let mut block_state: *const u8 =
-                                ((*m).block_state.offset(((y) * (b_stride)) as isize)).cast_const();
-                            let mut prev_row_coeffs: *const i16 =
-                                coeffs_in.offset(-((ac_stride) as isize));
-                            let mut prev_col_coeffs: *const i16 = coeffs_in.offset(
-                                -((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
-                                    as isize),
-                            );
-                            let mut prev_sgn: *mut i32 = (&mut (&mut (*c)).prev_sign
-                                [((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
-                                    as usize)]
-                                as *mut i32);
-                            let mut prev_abs: *mut i32 = (&mut (&mut (*c)).prev_abs_coeff[((((((y)
-                                & (1))
+            'for_body: {
+                {
+                    let mut i: usize = 0_usize;
+                    'loop_: while ((i) < (num_components)) {
+                        'for_body: {
+                            let c: *mut brunsli_ComponentState =
+                                (&mut comps[(i)] as *mut brunsli_ComponentState);
+                            let m: *const brunsli_internal_enc_ComponentMeta = &(&(*meta))[(i)];
+                            let cur_ctx_bits: i32 = (*m).context_bits;
+                            let mut cur_order: *const u32 = ((*c).order.as_mut_ptr()).cast_const();
+                            let width: i32 = (*c).width;
+                            let mut y: i32 = ((mcu_y) * ((*m).v_samp));
+                            let ac_stride: i32 = (*m).ac_stride;
+                            let b_stride: i32 = (*m).b_stride;
+                            let mut prev_row_delta: i32 = ((((1) - ((2) * ((y) & (1))))
                                 * ((width) + (3)))
-                                + (2))
-                                * (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
-                                as usize)]
-                                as *mut i32);
+                                * (*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kDCTBlockSize_3,
+                                )));
                             {
-                                let mut x: i32 = 0;
-                                'loop_: while ((x) < (width)) {
-                                    (unsafe {
-                                        brunsli_internal_enc_DataStream::ResizeForBlock(
-                                            &mut (*data_stream),
-                                        )
-                                    });
-                                    let mut coeffs: [i16; 64] = [0_i16; 64];
-                                    let mut last_nz: i32 = 0;
-                                    let is_empty_block: bool = ((*block_state) != 0);
-                                    if !(is_empty_block) {
-                                        {
-                                            let mut k: i32 = 1;
-                                            'loop_: while ((k)
-                                                < (*std::cell::LazyCell::force_mut(
+                                let mut iy: i32 = 0;
+                                'loop_: while ((iy) < ((*m).v_samp)) {
+                                    'for_body: {
+                                        let mut coeffs_in: *const i16 =
+                                            (*m).ac_coeffs.offset(((y) * (ac_stride)) as isize);
+                                        let mut block_state: *const u8 =
+                                            ((*m).block_state.offset(((y) * (b_stride)) as isize))
+                                                .cast_const();
+                                        let mut prev_row_coeffs: *const i16 =
+                                            coeffs_in.offset(-((ac_stride) as isize));
+                                        let mut prev_col_coeffs: *const i16 = coeffs_in.offset(
+                                            -((*std::cell::LazyCell::force_mut(
+                                                &mut *&raw mut kDCTBlockSize_3,
+                                            ))
+                                                as isize),
+                                        );
+                                        let mut prev_sgn: *mut i32 = (&mut (&mut (*c)).prev_sign
+                                            [((*std::cell::LazyCell::force_mut(
+                                                &mut *&raw mut kDCTBlockSize_3,
+                                            ))
+                                                as usize)]
+                                            as *mut i32);
+                                        let mut prev_abs: *mut i32 = (&mut (&mut (*c))
+                                            .prev_abs_coeff
+                                            [((((((y) & (1)) * ((width) + (3))) + (2))
+                                                * (*std::cell::LazyCell::force_mut(
                                                     &mut *&raw mut kDCTBlockSize_3,
                                                 )))
-                                            {
-                                                let k_nat: i32 =
-                                                    ((*cur_order.offset((k) as isize)) as i32);
-                                                coeffs[(k) as usize] =
-                                                    (*coeffs_in.offset((k_nat) as isize));
-                                                if (coeffs[(k) as usize] != 0) {
-                                                    last_nz = k;
-                                                }
-                                                k.prefix_inc();
-                                            }
-                                        }
-                                        let nzero_context: u8 = (unsafe {
-                                            NumNonzerosContext_104(
-                                                ((*c).prev_num_nonzeros.as_mut_ptr()).cast_const(),
-                                                x,
-                                                y,
-                                            )
-                                        });
-                                        (unsafe {
-                                            EncodeNumNonzeros_166(
-                                                (last_nz as usize),
-                                                (*c).num_nonzero_prob.as_mut_ptr().offset(
-                                                    ((*std::cell::LazyCell::force_mut(
-                                                        &mut *&raw mut kNumNonZeroTreeSize_85,
-                                                    ))
-                                                    .wrapping_mul((nzero_context as usize)))
-                                                        as isize,
-                                                ),
-                                                (data_stream),
-                                            )
-                                        });
-                                    }
-                                    {
-                                        let mut k: i32 = ((*std::cell::LazyCell::force_mut(
-                                            &mut *&raw mut kDCTBlockSize_3,
-                                        )) - (1));
-                                        'loop_: while ((k) > (last_nz)) {
-                                            (*prev_sgn.offset((k) as isize)) = 0;
-                                            (*prev_abs.offset((k) as isize)) = 0;
-                                            k.prefix_dec();
-                                        }
-                                    }
-                                    let mut num_nzeros: usize = 0_usize;
-                                    let mut encoded_coeffs: [i16; 64] = [0_i16; 64];
-                                    {
-                                        let mut k: i32 = last_nz;
-                                        'loop_: while ((k) >= (1)) {
-                                            let mut coeff: i16 = coeffs[(k) as usize];
-                                            let is_zero: i32 = (((coeff as i32) == (0)) as i32);
-                                            if ((k) < (last_nz)) {
-                                                let bucket: i32 = ((*std::cell::LazyCell::force_mut(
-                                                    &mut *&raw mut kNonzeroBuckets_89,
-                                                ))[((num_nzeros).wrapping_sub(1_usize))]
-                                                    as i32);
-                                                let is_zero_ctx: i32 = (((bucket)
-                                                    * (*std::cell::LazyCell::force_mut(
-                                                        &mut *&raw mut kDCTBlockSize_3,
-                                                    )))
-                                                    + (k));
-                                                let p: *mut brunsli_Prob = (&mut (&mut (*c))
-                                                    .is_zero_prob
-                                                    [(is_zero_ctx as usize)]
-                                                    as *mut brunsli_Prob);
-                                                (unsafe {
-                                                    let _p: *mut brunsli_Prob = p;
-                                                    let _bit: i32 = is_zero;
-                                                    brunsli_internal_enc_DataStream::AddBit(
-                                                        &mut (*data_stream),
-                                                        _p,
-                                                        _bit,
-                                                    )
-                                                });
-                                            }
-                                            if !(is_zero != 0) {
-                                                let sign: i32 =
-                                                    (if ((coeff as i32) > (0)) { 0 } else { 1 });
-                                                let absval: i32 = if (sign != 0) {
-                                                    -(coeff as i32)
-                                                } else {
-                                                    (coeff as i32)
-                                                };
-                                                let k_nat: i32 =
-                                                    ((*cur_order.offset((k) as isize)) as i32);
-                                                let mut context_type: usize = ((*context_modes
-                                                    .offset((k_nat) as isize))
-                                                    as usize);
-                                                let mut avg_ctx: usize = 0_usize;
-                                                let mut sign_ctx: usize =
-                                                    (*std::cell::LazyCell::force_mut(
-                                                        &mut *&raw mut kMaxAverageContext_82,
-                                                    ));
-                                                if (((context_type) & (1_usize)) != 0)
-                                                    && ((y) > (0))
-                                                {
-                                                    if ((y) > (0)) {
-                                                        let mut offset: usize =
-                                                            (((k_nat) & (7)) as usize);
-                                                        (unsafe {
-                                                            let _prev: *const i16 = prev_row_coeffs
-                                                                .offset((offset) as isize);
-                                                            let _cur: *const i16 = (encoded_coeffs
-                                                                .as_mut_ptr()
-                                                                .offset((offset) as isize))
-                                                            .cast_const();
-                                                            let _mult: *const i32 = (&mut (*c)
-                                                                .mult_col
-                                                                [((offset).wrapping_mul(8_usize))]
-                                                                as *mut i32)
-                                                                .cast_const();
-                                                            ACPredictContextRow_103(
-                                                                _prev,
-                                                                _cur,
-                                                                _mult,
-                                                                (&mut avg_ctx as *mut usize),
-                                                                (&mut sign_ctx as *mut usize),
-                                                            )
-                                                        });
-                                                    }
-                                                } else if (((context_type) & (2_usize)) != 0)
-                                                    && ((x) > (0))
-                                                {
-                                                    if ((x) > (0)) {
-                                                        let mut offset: usize =
-                                                            (((k_nat) & (!7)) as usize);
-                                                        (unsafe {
-                                                            let _prev: *const i16 = prev_col_coeffs
-                                                                .offset((offset) as isize);
-                                                            let _cur: *const i16 = (encoded_coeffs
-                                                                .as_mut_ptr()
-                                                                .offset((offset) as isize))
-                                                            .cast_const();
-                                                            let _mult: *const i32 = (&mut (*c)
-                                                                .mult_row[(offset)]
-                                                                as *mut i32)
-                                                                .cast_const();
-                                                            ACPredictContextCol_102(
-                                                                _prev,
-                                                                _cur,
-                                                                _mult,
-                                                                (&mut avg_ctx as *mut usize),
-                                                                (&mut sign_ctx as *mut usize),
-                                                            )
-                                                        });
-                                                    }
-                                                } else if !(context_type != 0) {
-                                                    avg_ctx = ((unsafe {
-                                                        let _vals: *const i32 = (prev_abs
-                                                            .offset((k) as isize))
-                                                        .cast_const();
-                                                        let _prev_row_delta: i32 = prev_row_delta;
-                                                        WeightedAverageContext_98(
-                                                            _vals,
-                                                            _prev_row_delta,
-                                                        )
-                                                    })
-                                                        as usize);
-                                                    sign_ctx = ((((*prev_sgn.offset((k) as isize))
-                                                        * (3))
-                                                        + (*prev_sgn.offset(
-                                                            ((k)
-                                                                - (*std::cell::LazyCell::force_mut(
+                                                as usize)]
+                                            as *mut i32);
+                                        {
+                                            let mut x: i32 = 0;
+                                            'loop_: while ((x) < (width)) {
+                                                'for_body: {
+                                                    (unsafe {
+                                                        brunsli_internal_enc_DataStream :: ResizeForBlock ( &mut ( * data_stream )  , )
+                                                    });
+                                                    let mut coeffs: [i16; 64] = [0_i16; 64];
+                                                    let mut last_nz: i32 = 0;
+                                                    let is_empty_block: bool =
+                                                        ((*block_state) != 0);
+                                                    if !(is_empty_block) {
+                                                        {
+                                                            let mut k: i32 = 1;
+                                                            'loop_: while ((k)
+                                                                < (*std::cell::LazyCell::force_mut(
                                                                     &mut *&raw mut kDCTBlockSize_3,
                                                                 )))
-                                                                as isize,
-                                                        )))
-                                                        as usize);
-                                                }
-                                                sign_ctx = ((sign_ctx).wrapping_mul(
-                                                    ((*std::cell::LazyCell::force_mut(
-                                                        &mut *&raw mut kDCTBlockSize_3,
-                                                    ))
-                                                        as usize),
-                                                ))
-                                                .wrapping_add((k as usize));
-                                                let sign_p: *mut brunsli_Prob = (&mut (&mut (*c))
-                                                    .sign_prob[(sign_ctx)]
-                                                    as *mut brunsli_Prob);
-                                                (unsafe {
-                                                    let _p: *mut brunsli_Prob = sign_p;
-                                                    let _bit: i32 = sign;
-                                                    brunsli_internal_enc_DataStream::AddBit(
-                                                        &mut (*data_stream),
-                                                        _p,
-                                                        _bit,
-                                                    )
-                                                });
-                                                (*prev_sgn.offset((k) as isize)) = ((sign) + (1));
-                                                let zdens_ctx: usize = ((*m).context_offset)
-                                                    .wrapping_add(
-                                                        ((unsafe {
-                                                            ZeroDensityContext_96(
-                                                                num_nzeros,
-                                                                (k as usize),
-                                                                (cur_ctx_bits as usize),
-                                                            )
-                                                        })
-                                                            as usize),
-                                                    );
-                                                if ((absval)
-                                                    <= (*std::cell::LazyCell::force_mut(
-                                                        &mut *&raw mut kNumDirectCodes_141,
-                                                    )))
-                                                {
-                                                    (unsafe {
-                                                        let _code: usize =
-                                                            (((absval) - (1)) as usize);
-                                                        let _band: usize = zdens_ctx;
-                                                        let _context: usize = avg_ctx;
-                                                        let _s: *mut brunsli_internal_enc_EntropySource  = ( entropy_source ) ;
-                                                        brunsli_internal_enc_DataStream::AddCode(
-                                                            &mut (*data_stream),
-                                                            _code,
-                                                            _band,
-                                                            _context,
-                                                            _s,
-                                                        )
-                                                    });
-                                                } else {
-                                                    let base_code: i32 = (((absval)
-                                                        - (*std::cell::LazyCell::force_mut(
-                                                            &mut *&raw mut kNumDirectCodes_141,
-                                                        )))
-                                                        + (1));
-                                                    let nbits: i32 = ((unsafe {
-                                                        Log2FloorNonZero_74((base_code as u32))
-                                                    }) - (1));
-                                                    (unsafe {
-                                                        let _code: usize =
-                                                            (((*std::cell::LazyCell::force_mut(
-                                                                &mut *&raw mut kNumDirectCodes_141,
-                                                            )) + (nbits))
-                                                                as usize);
-                                                        let _band: usize = zdens_ctx;
-                                                        let _context: usize =
-                                                            ((avg_ctx as u32) as usize);
-                                                        let _s: *mut brunsli_internal_enc_EntropySource  = ( entropy_source ) ;
-                                                        brunsli_internal_enc_DataStream::AddCode(
-                                                            &mut (*data_stream),
-                                                            _code,
-                                                            _band,
-                                                            _context,
-                                                            _s,
-                                                        )
-                                                    });
-                                                    let extra_bits: i32 =
-                                                        ((base_code) - ((2) << (nbits)));
-                                                    let first_extra_bit: i32 =
-                                                        (((extra_bits) >> (nbits)) & (1));
-                                                    let p: *mut brunsli_Prob = (&mut (&mut (*c))
-                                                        .first_extra_bit_prob
-                                                        [((((k) * (10)) + (nbits)) as usize)]
-                                                        as *mut brunsli_Prob);
-                                                    (unsafe {
-                                                        let _p: *mut brunsli_Prob = p;
-                                                        let _bit: i32 = first_extra_bit;
-                                                        brunsli_internal_enc_DataStream::AddBit(
-                                                            &mut (*data_stream),
-                                                            _p,
-                                                            _bit,
-                                                        )
-                                                    });
-                                                    if ((nbits) > (0)) {
-                                                        let left_over_bits: i32 = ((extra_bits)
-                                                            & (((1) << (nbits)) - (1)));
-                                                        (unsafe {
-                                                            let _nbits: i32 = nbits;
-                                                            let _bits: i32 = left_over_bits;
-                                                            brunsli_internal_enc_DataStream::AddBits(
-                                                                &mut (*data_stream),
-                                                                _nbits,
-                                                                _bits,
+                                                            {
+                                                                'for_body: {
+                                                                    let k_nat: i32 = ((*cur_order
+                                                                        .offset((k) as isize))
+                                                                        as i32);
+                                                                    coeffs[(k) as usize] =
+                                                                        (*coeffs_in.offset(
+                                                                            (k_nat) as isize,
+                                                                        ));
+                                                                    if (coeffs[(k) as usize] != 0) {
+                                                                        last_nz = k;
+                                                                    }
+                                                                }
+                                                                k.prefix_inc();
+                                                            }
+                                                        }
+                                                        let nzero_context: u8 = (unsafe {
+                                                            NumNonzerosContext_104(
+                                                                ((*c)
+                                                                    .prev_num_nonzeros
+                                                                    .as_mut_ptr())
+                                                                .cast_const(),
+                                                                x,
+                                                                y,
                                                             )
                                                         });
+                                                        (unsafe {
+                                                            EncodeNumNonzeros_166 ( ( last_nz as usize ) , ( * c  ) . num_nonzero_prob  .as_mut_ptr() . offset ( ( ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonZeroTreeSize_85)) ) . wrapping_mul ( ( nzero_context as usize ) ) ) as isize ) , ( data_stream ) , )
+                                                        });
                                                     }
+                                                    {
+                                                        let mut k: i32 =
+                                                            ((*std::cell::LazyCell::force_mut(
+                                                                &mut *&raw mut kDCTBlockSize_3,
+                                                            )) - (1));
+                                                        'loop_: while ((k) > (last_nz)) {
+                                                            'for_body: {
+                                                                (*prev_sgn.offset((k) as isize)) =
+                                                                    0;
+                                                                (*prev_abs.offset((k) as isize)) =
+                                                                    0;
+                                                            }
+                                                            k.prefix_dec();
+                                                        }
+                                                    }
+                                                    let mut num_nzeros: usize = 0_usize;
+                                                    let mut encoded_coeffs: [i16; 64] = [0_i16; 64];
+                                                    {
+                                                        let mut k: i32 = last_nz;
+                                                        'loop_: while ((k) >= (1)) {
+                                                            'for_body: {
+                                                                let mut coeff: i16 =
+                                                                    coeffs[(k) as usize];
+                                                                let is_zero: i32 = (((coeff as i32)
+                                                                    == (0))
+                                                                    as i32);
+                                                                if ((k) < (last_nz)) {
+                                                                    let bucket : i32 = ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kNonzeroBuckets_89)) [ ( ( num_nzeros ) . wrapping_sub ( 1_usize ) ) ] as i32 ) ;
+                                                                    let is_zero_ctx : i32 = ( ( ( ( bucket ) * ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) ) ) ) + ( k ) ) ;
+                                                                    let p: *mut brunsli_Prob =
+                                                                        (&mut (&mut (*c))
+                                                                            .is_zero_prob
+                                                                            [(is_zero_ctx as usize)]
+                                                                            as *mut brunsli_Prob);
+                                                                    (unsafe {
+                                                                        let _p: *mut brunsli_Prob =
+                                                                            p;
+                                                                        let _bit: i32 = is_zero;
+                                                                        brunsli_internal_enc_DataStream :: AddBit ( &mut ( * data_stream )  , _p , _bit , )
+                                                                    });
+                                                                }
+                                                                if !(is_zero != 0) {
+                                                                    let sign: i32 = (if ((coeff
+                                                                        as i32)
+                                                                        > (0))
+                                                                    {
+                                                                        0
+                                                                    } else {
+                                                                        1
+                                                                    });
+                                                                    let absval: i32 = if (sign != 0)
+                                                                    {
+                                                                        -(coeff as i32)
+                                                                    } else {
+                                                                        (coeff as i32)
+                                                                    };
+                                                                    let k_nat: i32 = ((*cur_order
+                                                                        .offset((k) as isize))
+                                                                        as i32);
+                                                                    let mut context_type: usize =
+                                                                        ((*context_modes.offset(
+                                                                            (k_nat) as isize,
+                                                                        ))
+                                                                            as usize);
+                                                                    let mut avg_ctx: usize =
+                                                                        0_usize;
+                                                                    let mut sign_ctx : usize = (*std::cell::LazyCell::force_mut(&mut *&raw mut kMaxAverageContext_82)) ;
+                                                                    if (((context_type)
+                                                                        & (1_usize))
+                                                                        != 0)
+                                                                        && ((y) > (0))
+                                                                    {
+                                                                        if ((y) > (0)) {
+                                                                            let mut offset: usize =
+                                                                                (((k_nat) & (7))
+                                                                                    as usize);
+                                                                            (unsafe {
+                                                                                let _prev: *const i16  = prev_row_coeffs . offset ( ( offset ) as isize ) ;
+                                                                                let _cur: *const i16  = ( encoded_coeffs .as_mut_ptr() . offset ( ( offset ) as isize ) ) .cast_const() ;
+                                                                                let _mult: *const i32  = ( ( & mut ( * c  ) . mult_col  [ ( ( offset ) . wrapping_mul ( 8_usize ) ) ] as *mut i32 ) ) .cast_const() ;
+                                                                                ACPredictContextRow_103 ( _prev , _cur , _mult , ( & mut avg_ctx as *mut usize ) , ( & mut sign_ctx as *mut usize ) , )
+                                                                            });
+                                                                        }
+                                                                    } else if (((context_type)
+                                                                        & (2_usize))
+                                                                        != 0)
+                                                                        && ((x) > (0))
+                                                                    {
+                                                                        if ((x) > (0)) {
+                                                                            let mut offset: usize =
+                                                                                (((k_nat) & (!7))
+                                                                                    as usize);
+                                                                            (unsafe {
+                                                                                let _prev: *const i16  = prev_col_coeffs . offset ( ( offset ) as isize ) ;
+                                                                                let _cur: *const i16  = ( encoded_coeffs .as_mut_ptr() . offset ( ( offset ) as isize ) ) .cast_const() ;
+                                                                                let _mult: *const i32  = ( ( & mut ( * c  ) . mult_row  [ ( offset ) ] as *mut i32 ) ) .cast_const() ;
+                                                                                ACPredictContextCol_102 ( _prev , _cur , _mult , ( & mut avg_ctx as *mut usize ) , ( & mut sign_ctx as *mut usize ) , )
+                                                                            });
+                                                                        }
+                                                                    } else if !(context_type != 0) {
+                                                                        avg_ctx = ((unsafe {
+                                                                            let _vals: *const i32 =
+                                                                                (prev_abs.offset(
+                                                                                    (k) as isize,
+                                                                                ))
+                                                                                .cast_const();
+                                                                            let _prev_row_delta: i32  = prev_row_delta ;
+                                                                            WeightedAverageContext_98 ( _vals , _prev_row_delta , )
+                                                                        })
+                                                                            as usize);
+                                                                        sign_ctx  = ( ( ( ( ( ( ( * prev_sgn . offset ( ( k ) as isize ) ) ) * ( 3 ) ) ) + ( ( * prev_sgn . offset ( ( ( ( k ) - ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) ) ) ) as isize ) ) ) ) ) as usize )  ;
+                                                                    }
+                                                                    sign_ctx  = ( ( sign_ctx ) . wrapping_mul ( ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as usize ) ) ) . wrapping_add ( ( k as usize ) )  ;
+                                                                    let sign_p: *mut brunsli_Prob =
+                                                                        (&mut (&mut (*c)).sign_prob
+                                                                            [(sign_ctx)]
+                                                                            as *mut brunsli_Prob);
+                                                                    (unsafe {
+                                                                        let _p: *mut brunsli_Prob =
+                                                                            sign_p;
+                                                                        let _bit: i32 = sign;
+                                                                        brunsli_internal_enc_DataStream :: AddBit ( &mut ( * data_stream )  , _p , _bit , )
+                                                                    });
+                                                                    (*prev_sgn
+                                                                        .offset((k) as isize)) =
+                                                                        ((sign) + (1));
+                                                                    let zdens_ctx : usize = ( ( * m ) . context_offset  ) . wrapping_add ( ( ( unsafe { ZeroDensityContext_96 ( num_nzeros , ( k as usize ) , ( cur_ctx_bits as usize ) , ) } )  as usize ) ) ;
+                                                                    if ( ( absval ) <= ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumDirectCodes_141)) ) ) { ( unsafe { let _code: usize  = ( ( ( ( absval ) - ( 1 ) ) ) as usize ) ; let _band: usize  = zdens_ctx ; let _context: usize  = avg_ctx ; let _s: *mut brunsli_internal_enc_EntropySource  = ( entropy_source ) ; brunsli_internal_enc_DataStream :: AddCode ( &mut ( * data_stream )  , _code , _band , _context , _s , ) } )  ;
+ } else { let base_code : i32 = ( ( ( ( absval ) - ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumDirectCodes_141)) ) ) ) + ( 1 ) ) ;
+  ;
+ ;
+ let nbits : i32 = ( ( ( unsafe { Log2FloorNonZero_74 ( ( base_code as u32 ) , ) } )  ) - ( 1 ) ) ;
+  ;
+ ;
+ ( unsafe { let _code: usize  = ( ( ( ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kNumDirectCodes_141)) ) + ( nbits ) ) ) as usize ) ; let _band: usize  = zdens_ctx ; let _context: usize  = ( ( avg_ctx as u32 ) as usize ) ; let _s: *mut brunsli_internal_enc_EntropySource  = ( entropy_source ) ; brunsli_internal_enc_DataStream :: AddCode ( &mut ( * data_stream )  , _code , _band , _context , _s , ) } )  ;
+ let extra_bits : i32 = ( ( base_code ) - ( ( ( ( 2 ) << ( nbits ) ) ) ) ) ;
+  ;
+ ;
+ let first_extra_bit : i32 = ( ( ( ( ( extra_bits ) >> ( nbits ) ) ) ) & ( 1 ) ) ;
+  ;
+ ;
+ let p : *mut brunsli_Prob = ( & mut ( &mut ( * c  ) ) . first_extra_bit_prob  [ ( ( ( ( ( ( ( k ) * ( 10 ) ) ) + ( nbits ) ) ) as usize ) ) ] as *mut brunsli_Prob ) ;
+  ;
+ ;
+ ( unsafe { let _p: *mut brunsli_Prob  = p ; let _bit: i32  = first_extra_bit ; brunsli_internal_enc_DataStream :: AddBit ( &mut ( * data_stream )  , _p , _bit , ) } )  ;
+ if ( ( nbits ) > ( 0 ) ) { let left_over_bits : i32 = ( ( extra_bits ) & ( ( ( ( ( ( ( 1 ) << ( nbits ) ) ) ) - ( 1 ) ) ) ) ) ;
+  ;
+ ;
+ ( unsafe { let _nbits: i32  = nbits ; let _bits: i32  = left_over_bits ; brunsli_internal_enc_DataStream :: AddBits ( &mut ( * data_stream )  , _nbits , _bits , ) } )  ;
+ } }
+                                                                    num_nzeros.prefix_inc();
+                                                                    encoded_coeffs
+                                                                        [(k_nat) as usize] = coeff;
+                                                                    (*prev_abs
+                                                                        .offset((k) as isize)) =
+                                                                        absval;
+                                                                } else {
+                                                                    (*prev_sgn
+                                                                        .offset((k) as isize)) = 0;
+                                                                    (*prev_abs
+                                                                        .offset((k) as isize)) = 0;
+                                                                }
+                                                            }
+                                                            k.prefix_dec();
+                                                        }
+                                                    }
+                                                    if !((num_nzeros)
+                                                        <= (*std::cell::LazyCell::force_mut(
+                                                            &mut *&raw mut kNumNonZeroTreeSize_85,
+                                                        )))
+                                                    {
+                                                        (unsafe {
+                                                            BrunsliDumpAndAbort_79(
+                                                                c"brunsli_encode.cc".as_ptr(),
+                                                                1329,
+                                                                c"EncodeAC".as_ptr(),
+                                                            )
+                                                        });
+                                                        'loop_: while true {}
+                                                    };
+                                                    (&mut (*c)).prev_num_nonzeros[(x as usize)] =
+                                                        (num_nzeros as u8);
+                                                    block_state.prefix_inc();
+                                                    coeffs_in = (coeffs_in).wrapping_add(
+                                                        (*std::cell::LazyCell::force_mut(
+                                                            &mut *&raw mut kDCTBlockSize_3,
+                                                        ))
+                                                            as usize,
+                                                    );
+                                                    prev_sgn = (prev_sgn).wrapping_add(
+                                                        (*std::cell::LazyCell::force_mut(
+                                                            &mut *&raw mut kDCTBlockSize_3,
+                                                        ))
+                                                            as usize,
+                                                    );
+                                                    prev_abs = (prev_abs).wrapping_add(
+                                                        (*std::cell::LazyCell::force_mut(
+                                                            &mut *&raw mut kDCTBlockSize_3,
+                                                        ))
+                                                            as usize,
+                                                    );
+                                                    prev_row_coeffs = (prev_row_coeffs)
+                                                        .wrapping_add(
+                                                            (*std::cell::LazyCell::force_mut(
+                                                                &mut *&raw mut kDCTBlockSize_3,
+                                                            ))
+                                                                as usize,
+                                                        );
+                                                    prev_col_coeffs = (prev_col_coeffs)
+                                                        .wrapping_add(
+                                                            (*std::cell::LazyCell::force_mut(
+                                                                &mut *&raw mut kDCTBlockSize_3,
+                                                            ))
+                                                                as usize,
+                                                        );
                                                 }
-                                                num_nzeros.prefix_inc();
-                                                encoded_coeffs[(k_nat) as usize] = coeff;
-                                                (*prev_abs.offset((k) as isize)) = absval;
-                                            } else {
-                                                (*prev_sgn.offset((k) as isize)) = 0;
-                                                (*prev_abs.offset((k) as isize)) = 0;
+                                                x.prefix_inc();
                                             }
-                                            k.prefix_dec();
                                         }
+                                        prev_row_delta *= -1_i32;
                                     }
-                                    if !((num_nzeros)
-                                        <= (*std::cell::LazyCell::force_mut(
-                                            &mut *&raw mut kNumNonZeroTreeSize_85,
-                                        )))
                                     {
-                                        (unsafe {
-                                            BrunsliDumpAndAbort_79(
-                                                c"brunsli_encode.cc".as_ptr(),
-                                                1329,
-                                                c"EncodeAC".as_ptr(),
-                                            )
-                                        });
-                                        'loop_: while true {}
+                                        iy.prefix_inc();
+                                        y.prefix_inc()
                                     };
-                                    (&mut (*c)).prev_num_nonzeros[(x as usize)] =
-                                        (num_nzeros as u8);
-                                    block_state.prefix_inc();
-                                    coeffs_in = (coeffs_in).wrapping_add(
-                                        (*std::cell::LazyCell::force_mut(
-                                            &mut *&raw mut kDCTBlockSize_3,
-                                        )) as usize,
-                                    );
-                                    prev_sgn = (prev_sgn).wrapping_add(
-                                        (*std::cell::LazyCell::force_mut(
-                                            &mut *&raw mut kDCTBlockSize_3,
-                                        )) as usize,
-                                    );
-                                    prev_abs = (prev_abs).wrapping_add(
-                                        (*std::cell::LazyCell::force_mut(
-                                            &mut *&raw mut kDCTBlockSize_3,
-                                        )) as usize,
-                                    );
-                                    prev_row_coeffs = (prev_row_coeffs).wrapping_add(
-                                        (*std::cell::LazyCell::force_mut(
-                                            &mut *&raw mut kDCTBlockSize_3,
-                                        )) as usize,
-                                    );
-                                    prev_col_coeffs = (prev_col_coeffs).wrapping_add(
-                                        (*std::cell::LazyCell::force_mut(
-                                            &mut *&raw mut kDCTBlockSize_3,
-                                        )) as usize,
-                                    );
-                                    x.prefix_inc();
                                 }
                             }
-                            prev_row_delta *= -1_i32;
-                            {
-                                iy.prefix_inc();
-                                y.prefix_inc()
-                            };
                         }
+                        i.prefix_inc();
                     }
-                    i.prefix_inc();
                 }
             }
             mcu_y.prefix_inc();
@@ -7025,8 +7145,10 @@ pub unsafe fn PrepareEntropyCodes_189(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
-            group_context_offsets[((i).wrapping_add(1_usize))] =
-                ((&mut (*meta))[(i)].context_offset as u64);
+            'for_body: {
+                group_context_offsets[((i).wrapping_add(1_usize))] =
+                    ((&mut (*meta))[(i)].context_offset as u64);
+            }
             i.prefix_inc();
         }
     }
@@ -7288,22 +7410,26 @@ pub unsafe fn BrunsliEncodeJpeg_191(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
-            (&mut (*meta))[(i)].approx_total_nonzeros = (unsafe {
-                SampleNumNonZeros_181(
-                    (&mut state.meta[(i)] as *mut brunsli_internal_enc_ComponentMeta),
-                )
-            });
+            'for_body: {
+                (&mut (*meta))[(i)].approx_total_nonzeros = (unsafe {
+                    SampleNumNonZeros_181(
+                        (&mut state.meta[(i)] as *mut brunsli_internal_enc_ComponentMeta),
+                    )
+                });
+            }
             i.prefix_inc();
         }
     }
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
-            (&mut (*meta))[(i)].context_bits = (unsafe {
-                SelectContextBits_183(
-                    ((&mut (*meta))[(i)].approx_total_nonzeros).wrapping_add(1_usize),
-                )
-            });
+            'for_body: {
+                (&mut (*meta))[(i)].context_bits = (unsafe {
+                    SelectContextBits_183(
+                        ((&mut (*meta))[(i)].approx_total_nonzeros).wrapping_add(1_usize),
+                    )
+                });
+            }
             i.prefix_inc();
         }
     }
@@ -7311,11 +7437,14 @@ pub unsafe fn BrunsliEncodeJpeg_191(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
-            (&mut (*meta))[(i)].context_offset = num_contexts;
-            num_contexts = (num_contexts).wrapping_add(
-                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonzeroContextSkip_94))
-                    [((&mut (*meta))[(i)].context_bits) as usize] as usize),
-            );
+            'for_body: {
+                (&mut (*meta))[(i)].context_offset = num_contexts;
+                num_contexts = (num_contexts).wrapping_add(
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kNumNonzeroContextSkip_94))
+                        [((&mut (*meta))[(i)].context_bits) as usize]
+                        as usize),
+                );
+            }
             i.prefix_inc();
         }
     }
@@ -7325,12 +7454,14 @@ pub unsafe fn BrunsliEncodeJpeg_191(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
-            dc_prediction_errors[(i)].resize_with(
-                ((((&mut (*meta))[(i)].width_in_blocks) * ((&mut (*meta))[(i)].height_in_blocks))
-                    as usize),
-                || 0_i16,
-            );
-            (&mut (*meta))[(i)].dc_prediction_errors = dc_prediction_errors[(i)].as_mut_ptr();
+            'for_body: {
+                dc_prediction_errors[(i)].resize_with(
+                    ((((&mut (*meta))[(i)].width_in_blocks)
+                        * ((&mut (*meta))[(i)].height_in_blocks)) as usize),
+                    || 0_i16,
+                );
+                (&mut (*meta))[(i)].dc_prediction_errors = dc_prediction_errors[(i)].as_mut_ptr();
+            }
             i.prefix_inc();
         }
     }
@@ -7341,12 +7472,14 @@ pub unsafe fn BrunsliEncodeJpeg_191(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_components)) {
-            block_state[(i)].resize_with(
-                ((((&mut (*meta))[(i)].width_in_blocks) * ((&mut (*meta))[(i)].height_in_blocks))
-                    as usize),
-                || 0_u8,
-            );
-            (&mut (*meta))[(i)].block_state = block_state[(i)].as_mut_ptr();
+            'for_body: {
+                block_state[(i)].resize_with(
+                    ((((&mut (*meta))[(i)].width_in_blocks)
+                        * ((&mut (*meta))[(i)].height_in_blocks)) as usize),
+                    || 0_u8,
+                );
+                (&mut (*meta))[(i)].block_state = block_state[(i)].as_mut_ptr();
+            }
             i.prefix_inc();
         }
     }
@@ -7526,8 +7659,10 @@ pub unsafe fn StoreVarLenUint8_197(mut n: usize, mut storage: *mut brunsli_Stora
 pub unsafe fn IndexOf_198(v: *const Vec<u32>, mut value: u32) -> usize {
     let mut i: usize = 0_usize;
     'loop_: while ((i) < ((*v).len())) {
-        if (((&(*v))[(i)]) == (value)) {
-            return i;
+        'for_body: {
+            if (((&(*v))[(i)]) == (value)) {
+                return i;
+            }
         }
         i.prefix_inc();
     }
@@ -7538,7 +7673,9 @@ pub unsafe fn MoveToFront_199(mut v: *mut Vec<u32>, mut index: usize) {
     {
         let mut i: usize = index;
         'loop_: while ((i) != (0_usize)) {
-            (&mut (*v))[(i)] = (&mut (*v))[((i).wrapping_sub(1_usize))];
+            'for_body: {
+                (&mut (*v))[(i)] = (&mut (*v))[((i).wrapping_sub(1_usize))];
+            }
             i.prefix_dec();
         }
     }
@@ -7569,7 +7706,9 @@ pub unsafe fn MoveToFrontTransform_200(v: *const Vec<u32>) -> Vec<u32> {
     {
         let mut i: u32 = 0_u32;
         'loop_: while ((i) <= (max_value)) {
-            mtf[(i as usize)] = i;
+            'for_body: {
+                mtf[(i as usize)] = i;
+            }
             i.prefix_inc();
         }
     }
@@ -7577,23 +7716,25 @@ pub unsafe fn MoveToFrontTransform_200(v: *const Vec<u32>) -> Vec<u32> {
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*v).len())) {
-            let mut index: usize = (unsafe {
-                let _v: *const Vec<u32> = &mtf;
-                let _value: u32 = (&(*v))[(i)];
-                IndexOf_198(_v, _value)
-            });
-            if !((index) < (mtf.len())) {
-                (unsafe {
-                    BrunsliDumpAndAbort_79(
-                        c"context_map_encode.cc".as_ptr(),
-                        60,
-                        c"MoveToFrontTransform".as_ptr(),
-                    )
+            'for_body: {
+                let mut index: usize = (unsafe {
+                    let _v: *const Vec<u32> = &mtf;
+                    let _value: u32 = (&(*v))[(i)];
+                    IndexOf_198(_v, _value)
                 });
-                'loop_: while true {}
-            };
-            result[(i)] = (index as u32);
-            (unsafe { MoveToFront_199((&mut mtf as *mut Vec<u32>), index) });
+                if !((index) < (mtf.len())) {
+                    (unsafe {
+                        BrunsliDumpAndAbort_79(
+                            c"context_map_encode.cc".as_ptr(),
+                            60,
+                            c"MoveToFrontTransform".as_ptr(),
+                        )
+                    });
+                    'loop_: while true {}
+                };
+                result[(i)] = (index as u32);
+                (unsafe { MoveToFront_199((&mut mtf as *mut Vec<u32>), index) });
+            }
             i.prefix_inc();
         }
     }
@@ -7656,7 +7797,9 @@ pub unsafe fn RunLengthCodeZeros_201(
                 {
                     let mut k: usize = (i).wrapping_add(1_usize);
                     'loop_: while ((k) < ((*v_in).len())) && (((&(*v_in))[(k)]) == (0_u32)) {
-                        reps.prefix_inc();
+                        'for_body: {
+                            reps.prefix_inc();
+                        }
                         k.prefix_inc();
                     }
                 }
@@ -7724,7 +7867,9 @@ pub unsafe fn EncodeContextMap_164(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (rle_symbols.len())) {
-            symbol_histogram[(rle_symbols[(i)]) as usize].prefix_inc();
+            'for_body: {
+                symbol_histogram[(rle_symbols[(i)]) as usize].prefix_inc();
+            }
             i.prefix_inc();
         }
     }
@@ -7769,17 +7914,20 @@ pub unsafe fn EncodeContextMap_164(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (rle_symbols.len())) {
-            (unsafe {
-                let _n_bits: usize = (bit_depths[(rle_symbols[(i)]) as usize] as usize);
-                let _bits: u64 = (bit_codes[(rle_symbols[(i)]) as usize] as u64);
-                WriteBits_120(_n_bits, _bits, storage)
-            });
-            if ((rle_symbols[(i)]) > (0_u32)) && ((rle_symbols[(i)]) <= (max_run_length_prefix)) {
+            'for_body: {
                 (unsafe {
-                    let _n_bits: usize = (rle_symbols[(i)] as usize);
-                    let _bits: u64 = (extra_bits[(i)] as u64);
+                    let _n_bits: usize = (bit_depths[(rle_symbols[(i)]) as usize] as usize);
+                    let _bits: u64 = (bit_codes[(rle_symbols[(i)]) as usize] as u64);
                     WriteBits_120(_n_bits, _bits, storage)
                 });
+                if ((rle_symbols[(i)]) > (0_u32)) && ((rle_symbols[(i)]) <= (max_run_length_prefix))
+                {
+                    (unsafe {
+                        let _n_bits: usize = (rle_symbols[(i)] as usize);
+                        let _bits: u64 = (extra_bits[(i)] as u64);
+                        WriteBits_120(_n_bits, _bits, storage)
+                    });
+                }
             }
             i.prefix_inc();
         }
@@ -7856,36 +8004,39 @@ pub unsafe fn RebalanceHistogram_209(
     {
         let mut n: i32 = 0;
         'loop_: while ((n) < (max_symbol)) {
-            if ((*targets.offset((n) as isize)) > (0_f32)) {
-                sum_nonrounded += (*targets.offset((n) as isize));
-                (*counts.offset((n) as isize)) =
-                    (((((*targets.offset((n) as isize)) as f64) + (0.5_f64)) as u32) as i32);
-                if ((*counts.offset((n) as isize)) == (0)) {
-                    (*counts.offset((n) as isize)) = 1;
-                }
-                if ((*counts.offset((n) as isize)) == (table_size)) {
-                    (*counts.offset((n) as isize)) = ((table_size) - (1));
-                }
-                let mut inc: i32 =
-                    (unsafe { SmallestIncrement_208((*counts.offset((n) as isize))) });
-                (*counts.offset((n) as isize)) -= ((*counts.offset((n) as isize)) & ((inc) - (1)));
-                let target: f32 = if false {
-                    ((sum_nonrounded) - (sum as f32))
-                } else {
-                    (*targets.offset((n) as isize))
-                };
-                if ((*counts.offset((n) as isize)) == (0))
-                    || (((target) > (((*counts.offset((n) as isize)) + ((inc) / (2))) as f32))
-                        && (((*counts.offset((n) as isize)) + (inc)) < (table_size)))
-                {
-                    (*counts.offset((n) as isize)) += inc;
-                }
-                sum += (*counts.offset((n) as isize));
-                let count_log: i32 =
-                    (unsafe { Log2FloorNonZero_74(((*counts.offset((n) as isize)) as u32)) });
-                if ((count_log) > (remainder_log)) {
-                    remainder_pos = n;
-                    remainder_log = count_log;
+            'for_body: {
+                if ((*targets.offset((n) as isize)) > (0_f32)) {
+                    sum_nonrounded += (*targets.offset((n) as isize));
+                    (*counts.offset((n) as isize)) =
+                        (((((*targets.offset((n) as isize)) as f64) + (0.5_f64)) as u32) as i32);
+                    if ((*counts.offset((n) as isize)) == (0)) {
+                        (*counts.offset((n) as isize)) = 1;
+                    }
+                    if ((*counts.offset((n) as isize)) == (table_size)) {
+                        (*counts.offset((n) as isize)) = ((table_size) - (1));
+                    }
+                    let mut inc: i32 =
+                        (unsafe { SmallestIncrement_208((*counts.offset((n) as isize))) });
+                    (*counts.offset((n) as isize)) -=
+                        ((*counts.offset((n) as isize)) & ((inc) - (1)));
+                    let target: f32 = if false {
+                        ((sum_nonrounded) - (sum as f32))
+                    } else {
+                        (*targets.offset((n) as isize))
+                    };
+                    if ((*counts.offset((n) as isize)) == (0))
+                        || (((target) > (((*counts.offset((n) as isize)) + ((inc) / (2))) as f32))
+                            && (((*counts.offset((n) as isize)) + (inc)) < (table_size)))
+                    {
+                        (*counts.offset((n) as isize)) += inc;
+                    }
+                    sum += (*counts.offset((n) as isize));
+                    let count_log: i32 =
+                        (unsafe { Log2FloorNonZero_74(((*counts.offset((n) as isize)) as u32)) });
+                    if ((count_log) > (remainder_log)) {
+                        remainder_pos = n;
+                        remainder_log = count_log;
+                    }
                 }
             }
             n.prefix_inc();
@@ -7929,36 +8080,39 @@ pub unsafe fn RebalanceHistogram_210(
     {
         let mut n: i32 = 0;
         'loop_: while ((n) < (max_symbol)) {
-            if ((*targets.offset((n) as isize)) > (0_f32)) {
-                sum_nonrounded += (*targets.offset((n) as isize));
-                (*counts.offset((n) as isize)) =
-                    (((((*targets.offset((n) as isize)) as f64) + (0.5_f64)) as u32) as i32);
-                if ((*counts.offset((n) as isize)) == (0)) {
-                    (*counts.offset((n) as isize)) = 1;
-                }
-                if ((*counts.offset((n) as isize)) == (table_size)) {
-                    (*counts.offset((n) as isize)) = ((table_size) - (1));
-                }
-                let mut inc: i32 =
-                    (unsafe { SmallestIncrement_208((*counts.offset((n) as isize))) });
-                (*counts.offset((n) as isize)) -= ((*counts.offset((n) as isize)) & ((inc) - (1)));
-                let target: f32 = if true {
-                    ((sum_nonrounded) - (sum as f32))
-                } else {
-                    (*targets.offset((n) as isize))
-                };
-                if ((*counts.offset((n) as isize)) == (0))
-                    || (((target) > (((*counts.offset((n) as isize)) + ((inc) / (2))) as f32))
-                        && (((*counts.offset((n) as isize)) + (inc)) < (table_size)))
-                {
-                    (*counts.offset((n) as isize)) += inc;
-                }
-                sum += (*counts.offset((n) as isize));
-                let count_log: i32 =
-                    (unsafe { Log2FloorNonZero_74(((*counts.offset((n) as isize)) as u32)) });
-                if ((count_log) > (remainder_log)) {
-                    remainder_pos = n;
-                    remainder_log = count_log;
+            'for_body: {
+                if ((*targets.offset((n) as isize)) > (0_f32)) {
+                    sum_nonrounded += (*targets.offset((n) as isize));
+                    (*counts.offset((n) as isize)) =
+                        (((((*targets.offset((n) as isize)) as f64) + (0.5_f64)) as u32) as i32);
+                    if ((*counts.offset((n) as isize)) == (0)) {
+                        (*counts.offset((n) as isize)) = 1;
+                    }
+                    if ((*counts.offset((n) as isize)) == (table_size)) {
+                        (*counts.offset((n) as isize)) = ((table_size) - (1));
+                    }
+                    let mut inc: i32 =
+                        (unsafe { SmallestIncrement_208((*counts.offset((n) as isize))) });
+                    (*counts.offset((n) as isize)) -=
+                        ((*counts.offset((n) as isize)) & ((inc) - (1)));
+                    let target: f32 = if true {
+                        ((sum_nonrounded) - (sum as f32))
+                    } else {
+                        (*targets.offset((n) as isize))
+                    };
+                    if ((*counts.offset((n) as isize)) == (0))
+                        || (((target) > (((*counts.offset((n) as isize)) + ((inc) / (2))) as f32))
+                            && (((*counts.offset((n) as isize)) + (inc)) < (table_size)))
+                    {
+                        (*counts.offset((n) as isize)) += inc;
+                    }
+                    sum += (*counts.offset((n) as isize));
+                    let count_log: i32 =
+                        (unsafe { Log2FloorNonZero_74(((*counts.offset((n) as isize)) as u32)) });
+                    if ((count_log) > (remainder_log)) {
+                        remainder_pos = n;
+                        remainder_log = count_log;
+                    }
                 }
             }
             n.prefix_inc();
@@ -8003,17 +8157,19 @@ pub unsafe fn NormalizeCounts_124(
     {
         let mut n: i32 = 0;
         'loop_: while ((n) < (length)) {
-            total = (total).wrapping_add(((*counts.offset((n) as isize)) as u64));
-            if ((*counts.offset((n) as isize)) > (0)) {
-                if ((symbol_count)
-                    < (*std::cell::LazyCell::force_mut(
-                        &mut *&raw mut kMaxNumSymbolsForSmallCode_121,
-                    )))
-                {
-                    (*symbols.offset((symbol_count) as isize)) = n;
+            'for_body: {
+                total = (total).wrapping_add(((*counts.offset((n) as isize)) as u64));
+                if ((*counts.offset((n) as isize)) > (0)) {
+                    if ((symbol_count)
+                        < (*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kMaxNumSymbolsForSmallCode_121,
+                        )))
+                    {
+                        (*symbols.offset((symbol_count) as isize)) = n;
+                    }
+                    symbol_count.prefix_inc();
+                    max_symbol = ((n) + (1));
                 }
-                symbol_count.prefix_inc();
-                max_symbol = ((n) + (1));
             }
             n.prefix_inc();
         }
@@ -8041,7 +8197,9 @@ pub unsafe fn NormalizeCounts_124(
     {
         let mut n: i32 = 0;
         'loop_: while ((n) < (max_symbol)) {
-            targets[(n) as usize] = ((norm) * ((*counts.offset((n) as isize)) as f32));
+            'for_body: {
+                targets[(n) as usize] = ((norm) * ((*counts.offset((n) as isize)) as f32));
+            }
             n.prefix_inc();
         }
     }
@@ -8099,13 +8257,15 @@ pub unsafe fn EncodeCounts_125(
             {
                 let mut i: i32 = 0;
                 'loop_: while ((i) < (num_symbols)) {
-                    (unsafe {
-                        WriteBits_120(
-                            (max_bits as usize),
-                            ((*symbols.offset((i) as isize)) as u64),
-                            storage,
-                        )
-                    });
+                    'for_body: {
+                        (unsafe {
+                            WriteBits_120(
+                                (max_bits as usize),
+                                ((*symbols.offset((i) as isize)) as u64),
+                                storage,
+                            )
+                        });
+                    }
                     i.prefix_inc();
                 }
             }
@@ -8128,50 +8288,52 @@ pub unsafe fn EncodeCounts_125(
         {
             let mut i: i32 = 0;
             'loop_: while ((i) < (18)) {
-                if !((*counts.offset((i) as isize))
-                    <= (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_TAB_SIZE_1)))
-                {
-                    (unsafe {
-                        BrunsliDumpAndAbort_79(
-                            c"histogram_encode.cc".as_ptr(),
-                            155,
-                            c"EncodeCounts".as_ptr(),
-                        )
-                    });
-                    'loop_: while true {}
-                };
-                if !((*counts.offset((i) as isize)) >= (0)) {
-                    (unsafe {
-                        BrunsliDumpAndAbort_79(
-                            c"histogram_encode.cc".as_ptr(),
-                            156,
-                            c"EncodeCounts".as_ptr(),
-                        )
-                    });
-                    'loop_: while true {}
-                };
-                if ((i) == (omit_pos)) {
-                    length = ((i) + (1));
-                } else if ((*counts.offset((i) as isize)) > (0)) {
-                    logcounts[(i) as usize] =
-                        ((unsafe { Log2FloorNonZero_74(((*counts.offset((i) as isize)) as u32)) })
-                            + (1));
-                    length = ((i) + (1));
-                    if ((i) < (omit_pos)) {
-                        omit_log = {
-                            let mut __tmp_0: i32 = ((logcounts[(i) as usize]) + (1));
-                            (*{
-                                let __a: *const _ = &mut omit_log;
-                                let __b: *const _ = &mut __tmp_0;
-                                if *__a < *__b { __b } else { __a }
-                            })
-                        };
-                    } else {
-                        omit_log = (*{
-                            let __a: *const _ = &mut omit_log;
-                            let __b: *const _ = &mut logcounts[(i) as usize];
-                            if *__a < *__b { __b } else { __a }
+                'for_body: {
+                    if !((*counts.offset((i) as isize))
+                        <= (*std::cell::LazyCell::force_mut(&mut *&raw mut BRUNSLI_ANS_TAB_SIZE_1)))
+                    {
+                        (unsafe {
+                            BrunsliDumpAndAbort_79(
+                                c"histogram_encode.cc".as_ptr(),
+                                155,
+                                c"EncodeCounts".as_ptr(),
+                            )
                         });
+                        'loop_: while true {}
+                    };
+                    if !((*counts.offset((i) as isize)) >= (0)) {
+                        (unsafe {
+                            BrunsliDumpAndAbort_79(
+                                c"histogram_encode.cc".as_ptr(),
+                                156,
+                                c"EncodeCounts".as_ptr(),
+                            )
+                        });
+                        'loop_: while true {}
+                    };
+                    if ((i) == (omit_pos)) {
+                        length = ((i) + (1));
+                    } else if ((*counts.offset((i) as isize)) > (0)) {
+                        logcounts[(i) as usize] = ((unsafe {
+                            Log2FloorNonZero_74(((*counts.offset((i) as isize)) as u32))
+                        }) + (1));
+                        length = ((i) + (1));
+                        if ((i) < (omit_pos)) {
+                            omit_log = {
+                                let mut __tmp_0: i32 = ((logcounts[(i) as usize]) + (1));
+                                (*{
+                                    let __a: *const _ = &mut omit_log;
+                                    let __b: *const _ = &mut __tmp_0;
+                                    if *__a < *__b { __b } else { __a }
+                                })
+                            };
+                        } else {
+                            omit_log = (*{
+                                let __a: *const _ = &mut omit_log;
+                                let __b: *const _ = &mut logcounts[(i) as usize];
+                                if *__a < *__b { __b } else { __a }
+                            });
+                        }
                     }
                 }
                 i.prefix_inc();
@@ -8190,43 +8352,52 @@ pub unsafe fn EncodeCounts_125(
         {
             let mut i: i32 = 0;
             'loop_: while ((i) < (length)) {
-                (unsafe {
-                    let _n_bits: usize =
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountBitLengths_206))
-                            [(logcounts[(i) as usize]) as usize] as usize);
-                    let _bits: u64 =
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountSymbols_207))
-                            [(logcounts[(i) as usize]) as usize] as u64);
-                    WriteBits_120(_n_bits, _bits, storage)
-                });
+                'for_body: {
+                    (unsafe {
+                        let _n_bits: usize = ((*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kLogCountBitLengths_206,
+                        ))[(logcounts[(i) as usize]) as usize]
+                            as usize);
+                        let _bits: u64 =
+                            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountSymbols_207))
+                                [(logcounts[(i) as usize]) as usize]
+                                as u64);
+                        WriteBits_120(_n_bits, _bits, storage)
+                    });
+                }
                 i.prefix_inc();
             }
         }
         {
             let mut i: i32 = 0;
             'loop_: while ((i) < (length)) {
-                if ((logcounts[(i) as usize]) > (1)) && ((i) != (omit_pos)) {
-                    let mut bitcount: i32 = ((unsafe {
-                        GetPopulationCountPrecision_203((((logcounts[(i) as usize]) - (1)) as u32))
-                    }) as i32);
-                    let mut drop_bits: i32 = (((logcounts[(i) as usize]) - (1)) - (bitcount));
-                    if !(((*counts.offset((i) as isize)) & (((1) << (drop_bits)) - (1))) == (0)) {
-                        (unsafe {
-                            BrunsliDumpAndAbort_79(
-                                c"histogram_encode.cc".as_ptr(),
-                                184,
-                                c"EncodeCounts".as_ptr(),
+                'for_body: {
+                    if ((logcounts[(i) as usize]) > (1)) && ((i) != (omit_pos)) {
+                        let mut bitcount: i32 = ((unsafe {
+                            GetPopulationCountPrecision_203(
+                                (((logcounts[(i) as usize]) - (1)) as u32),
                             )
+                        }) as i32);
+                        let mut drop_bits: i32 = (((logcounts[(i) as usize]) - (1)) - (bitcount));
+                        if !(((*counts.offset((i) as isize)) & (((1) << (drop_bits)) - (1))) == (0))
+                        {
+                            (unsafe {
+                                BrunsliDumpAndAbort_79(
+                                    c"histogram_encode.cc".as_ptr(),
+                                    184,
+                                    c"EncodeCounts".as_ptr(),
+                                )
+                            });
+                            'loop_: while true {}
+                        };
+                        (unsafe {
+                            let _n_bits: usize = (bitcount as usize);
+                            let _bits: u64 = ((((*counts.offset((i) as isize)) >> (drop_bits))
+                                - ((1) << (bitcount)))
+                                as u64);
+                            WriteBits_120(_n_bits, _bits, storage)
                         });
-                        'loop_: while true {}
-                    };
-                    (unsafe {
-                        let _n_bits: usize = (bitcount as usize);
-                        let _bits: u64 = ((((*counts.offset((i) as isize)) >> (drop_bits))
-                            - ((1) << (bitcount)))
-                            as u64);
-                        WriteBits_120(_n_bits, _bits, storage)
-                    });
+                    }
                 }
                 i.prefix_inc();
             }
@@ -8248,9 +8419,11 @@ pub unsafe fn PopulationCost_131(mut data: *const i32, mut total_count: i32) -> 
         {
             let mut i: i32 = 0;
             'loop_: while ((i) < (18)) {
-                if ((*data.offset((i) as isize)) > (0)) {
-                    count.prefix_inc();
-                    length = i;
+                'for_body: {
+                    if ((*data.offset((i) as isize)) > (0)) {
+                        count.prefix_inc();
+                        length = i;
+                    }
                 }
                 i.prefix_inc();
             }
@@ -8304,34 +8477,37 @@ pub unsafe fn PopulationCost_131(mut data: *const i32, mut total_count: i32) -> 
         {
             let mut i: i32 = 1;
             'loop_: while ((i) < (length)) {
-                if ((*data.offset((i) as isize)) > (0)) {
-                    let mut c: u64 = ((((*data.offset((i) as isize)) as u64)
-                        .wrapping_add(min_base))
-                    .wrapping_mul((mult as u64)))
-                    .wrapping_add((cumul as u64));
-                    let mut c_descaled: u64 = ((c) >> (kDescaleBits));
-                    if !((c_descaled) < ((1_u64) << (31))) {
-                        (unsafe {
-                            BrunsliDumpAndAbort_79(
-                                c"histogram_encode.cc".as_ptr(),
-                                245,
-                                c"PopulationCost".as_ptr(),
-                            )
-                        });
-                        'loop_: while true {}
-                    };
-                    let mut log2count: f64 = (unsafe { FastLog2_127((c_descaled as i32)) });
-                    let mut log2floor: i32 = (log2count as i32);
-                    entropy_bits -= (((*data.offset((i) as isize)) as f64) * (log2count));
-                    histogram_bits += log2floor;
-                    histogram_bits +=
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountBitLengths_206))
-                            [((log2floor) + (1)) as usize] as i32);
-                    cumul = (((c) & (kDescaleMask as u64)) as u32);
-                } else {
-                    histogram_bits +=
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountBitLengths_206))
-                            [(0) as usize] as i32);
+                'for_body: {
+                    if ((*data.offset((i) as isize)) > (0)) {
+                        let mut c: u64 = ((((*data.offset((i) as isize)) as u64)
+                            .wrapping_add(min_base))
+                        .wrapping_mul((mult as u64)))
+                        .wrapping_add((cumul as u64));
+                        let mut c_descaled: u64 = ((c) >> (kDescaleBits));
+                        if !((c_descaled) < ((1_u64) << (31))) {
+                            (unsafe {
+                                BrunsliDumpAndAbort_79(
+                                    c"histogram_encode.cc".as_ptr(),
+                                    245,
+                                    c"PopulationCost".as_ptr(),
+                                )
+                            });
+                            'loop_: while true {}
+                        };
+                        let mut log2count: f64 = (unsafe { FastLog2_127((c_descaled as i32)) });
+                        let mut log2floor: i32 = (log2count as i32);
+                        entropy_bits -= (((*data.offset((i) as isize)) as f64) * (log2count));
+                        histogram_bits += log2floor;
+                        histogram_bits += ((*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kLogCountBitLengths_206,
+                        ))[((log2floor) + (1)) as usize]
+                            as i32);
+                        cumul = (((c) & (kDescaleMask as u64)) as u32);
+                    } else {
+                        histogram_bits += ((*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kLogCountBitLengths_206,
+                        ))[(0) as usize] as i32);
+                    }
                 }
                 i.prefix_inc();
             }
@@ -8350,32 +8526,35 @@ pub unsafe fn PopulationCost_131(mut data: *const i32, mut total_count: i32) -> 
         {
             let mut i: i32 = 1;
             'loop_: while ((i) < (18)) {
-                if ((*data.offset((i) as isize)) > (0)) {
-                    let mut log2count: f64 =
-                        ((unsafe { FastLog2_127((*data.offset((i) as isize))) }) + (log2norm));
-                    let mut log2floor: i32 = (log2count as i32);
-                    entropy_bits -= (((*data.offset((i) as isize)) as f64) * (log2count));
-                    if ((log2floor)
-                        >= (*std::cell::LazyCell::force_mut(
-                            &mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0,
-                        )))
-                    {
-                        log2floor = ((*std::cell::LazyCell::force_mut(
-                            &mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0,
-                        )) - (1));
+                'for_body: {
+                    if ((*data.offset((i) as isize)) > (0)) {
+                        let mut log2count: f64 =
+                            ((unsafe { FastLog2_127((*data.offset((i) as isize))) }) + (log2norm));
+                        let mut log2floor: i32 = (log2count as i32);
+                        entropy_bits -= (((*data.offset((i) as isize)) as f64) * (log2count));
+                        if ((log2floor)
+                            >= (*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0,
+                            )))
+                        {
+                            log2floor = ((*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut BRUNSLI_ANS_LOG_TAB_SIZE_0,
+                            )) - (1));
+                        }
+                        histogram_bits = ((histogram_bits as u32).wrapping_add(
+                            (unsafe { GetPopulationCountPrecision_203((log2floor as u32)) }),
+                        )) as i32;
+                        histogram_bits += ((*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kLogCountBitLengths_206,
+                        ))[((log2floor) + (1)) as usize]
+                            as i32);
+                        length = i;
+                        count.prefix_inc();
+                    } else {
+                        histogram_bits += ((*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kLogCountBitLengths_206,
+                        ))[(0) as usize] as i32);
                     }
-                    histogram_bits = ((histogram_bits as u32).wrapping_add(
-                        (unsafe { GetPopulationCountPrecision_203((log2floor as u32)) }),
-                    )) as i32;
-                    histogram_bits +=
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountBitLengths_206))
-                            [((log2floor) + (1)) as usize] as i32);
-                    length = i;
-                    count.prefix_inc();
-                } else {
-                    histogram_bits +=
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kLogCountBitLengths_206))
-                            [(0) as usize] as i32);
                 }
                 i.prefix_inc();
             }
@@ -8406,13 +8585,15 @@ pub unsafe fn StoreHuffmanTreeOfHuffmanTreeToBitMask_212(
         ((*std::cell::LazyCell::force_mut(&mut *&raw mut kCodeLengthCodes_211)) as usize);
     if ((num_codes) > (1)) {
         'loop_: while ((codes_to_store) > (0_usize)) {
-            if (((*code_length_bitdepth.offset(
-                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStorageOrder_213))
-                    [((codes_to_store).wrapping_sub(1_usize))]) as isize,
-            )) as i32)
-                != (0))
-            {
-                break;
+            'for_body: {
+                if (((*code_length_bitdepth.offset(
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStorageOrder_213))
+                        [((codes_to_store).wrapping_sub(1_usize))]) as isize,
+                )) as i32)
+                    != (0))
+                {
+                    break 'loop_;
+                }
             }
             codes_to_store.prefix_dec();
         }
@@ -8443,18 +8624,21 @@ pub unsafe fn StoreHuffmanTreeOfHuffmanTreeToBitMask_212(
     {
         let mut i: usize = skip_some;
         'loop_: while ((i) < (codes_to_store)) {
-            let mut l: usize = ((*code_length_bitdepth.offset(
-                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStorageOrder_213))[(i)]) as isize,
-            )) as usize);
-            (unsafe {
-                let _n_bits: usize = ((*std::cell::LazyCell::force_mut(
-                    &mut *&raw mut kHuffmanBitLengthHuffmanCodeBitLengths_215,
-                ))[(l)] as usize);
-                let _bits: u64 = ((*std::cell::LazyCell::force_mut(
-                    &mut *&raw mut kHuffmanBitLengthHuffmanCodeSymbols_214,
-                ))[(l)] as u64);
-                WriteBits_120(_n_bits, _bits, storage)
-            });
+            'for_body: {
+                let mut l: usize = ((*code_length_bitdepth.offset(
+                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kStorageOrder_213))[(i)])
+                        as isize,
+                )) as usize);
+                (unsafe {
+                    let _n_bits: usize = ((*std::cell::LazyCell::force_mut(
+                        &mut *&raw mut kHuffmanBitLengthHuffmanCodeBitLengths_215,
+                    ))[(l)] as usize);
+                    let _bits: u64 = ((*std::cell::LazyCell::force_mut(
+                        &mut *&raw mut kHuffmanBitLengthHuffmanCodeSymbols_214,
+                    ))[(l)] as u64);
+                    WriteBits_120(_n_bits, _bits, storage)
+                });
+            }
             i.prefix_inc();
         }
     }
@@ -8470,37 +8654,39 @@ pub unsafe fn StoreHuffmanTreeToBitMask_216(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (huffman_tree_size)) {
-            let mut ix: usize = ((*huffman_tree.offset((i) as isize)) as usize);
-            (unsafe {
-                let _n_bits: usize = ((*code_length_bitdepth.offset((ix) as isize)) as usize);
-                let _bits: u64 = ((*code_length_bitdepth_symbols.offset((ix) as isize)) as u64);
-                WriteBits_120(_n_bits, _bits, storage)
-            });
-            'switch: {
-                match { ix } {
-                    __v if __v == 16_usize => {
-                        (unsafe {
-                            WriteBits_120(
-                                2_usize,
-                                ((*huffman_tree_extra_bits.offset((i) as isize)) as u64),
-                                storage,
-                            )
-                        });
-                        break 'switch;
+            'for_body: {
+                let mut ix: usize = ((*huffman_tree.offset((i) as isize)) as usize);
+                (unsafe {
+                    let _n_bits: usize = ((*code_length_bitdepth.offset((ix) as isize)) as usize);
+                    let _bits: u64 = ((*code_length_bitdepth_symbols.offset((ix) as isize)) as u64);
+                    WriteBits_120(_n_bits, _bits, storage)
+                });
+                'switch: {
+                    match { ix } {
+                        __v if __v == 16_usize => {
+                            (unsafe {
+                                WriteBits_120(
+                                    2_usize,
+                                    ((*huffman_tree_extra_bits.offset((i) as isize)) as u64),
+                                    storage,
+                                )
+                            });
+                            break 'switch;
+                        }
+                        __v if __v == 17_usize => {
+                            (unsafe {
+                                WriteBits_120(
+                                    3_usize,
+                                    ((*huffman_tree_extra_bits.offset((i) as isize)) as u64),
+                                    storage,
+                                )
+                            });
+                            break 'switch;
+                        }
+                        _ => {}
                     }
-                    __v if __v == 17_usize => {
-                        (unsafe {
-                            WriteBits_120(
-                                3_usize,
-                                ((*huffman_tree_extra_bits.offset((i) as isize)) as u64),
-                                storage,
-                            )
-                        });
-                        break 'switch;
-                    }
-                    _ => {}
-                }
-            };
+                };
+            }
             i.prefix_inc();
         }
     }
@@ -8523,18 +8709,23 @@ pub unsafe fn StoreSimpleHuffmanTree_217(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (num_symbols)) {
-            {
-                let mut j: usize = (i).wrapping_add(1_usize);
-                'loop_: while ((j) < (num_symbols)) {
-                    if (((*depths.offset((*symbols.offset((j) as isize)) as isize)) as i32)
-                        < ((*depths.offset((*symbols.offset((i) as isize)) as isize)) as i32))
-                    {
-                        cpp_swap_unsafe!(
-                            symbols.offset((j) as isize),
-                            symbols.offset((i) as isize)
-                        );
+            'for_body: {
+                {
+                    let mut j: usize = (i).wrapping_add(1_usize);
+                    'loop_: while ((j) < (num_symbols)) {
+                        'for_body: {
+                            if (((*depths.offset((*symbols.offset((j) as isize)) as isize)) as i32)
+                                < ((*depths.offset((*symbols.offset((i) as isize)) as isize))
+                                    as i32))
+                            {
+                                cpp_swap_unsafe!(
+                                    symbols.offset((j) as isize),
+                                    symbols.offset((i) as isize)
+                                );
+                            }
+                        }
+                        j.postfix_inc();
                     }
-                    j.postfix_inc();
                 }
             }
             i.postfix_inc();
@@ -8640,7 +8831,9 @@ pub unsafe fn StoreHuffmanTree_218(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (huffman_tree_size)) {
-            huffman_tree_histogram[(*huffman_tree.offset((i) as isize)) as usize].prefix_inc();
+            'for_body: {
+                huffman_tree_histogram[(*huffman_tree.offset((i) as isize)) as usize].prefix_inc();
+            }
             i.prefix_inc();
         }
     }
@@ -8650,13 +8843,15 @@ pub unsafe fn StoreHuffmanTree_218(
         let mut i: i32 = 0;
         'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kCodeLengthCodes_211)))
         {
-            if (huffman_tree_histogram[(i) as usize] != 0) {
-                if ((num_codes) == (0)) {
-                    code = i;
-                    num_codes = 1;
-                } else if ((num_codes) == (1)) {
-                    num_codes = 2;
-                    break;
+            'for_body: {
+                if (huffman_tree_histogram[(i) as usize] != 0) {
+                    if ((num_codes) == (0)) {
+                        code = i;
+                        num_codes = 1;
+                    } else if ((num_codes) == (1)) {
+                        num_codes = 2;
+                        break 'loop_;
+                    }
                 }
             }
             i.prefix_inc();
@@ -8712,13 +8907,15 @@ pub unsafe fn BuildAndStoreHuffmanTree_202(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (length)) {
-            if ((*histogram.offset((i) as isize)) != 0) {
-                if ((count) < (4_usize)) {
-                    s4[(count)] = i;
-                } else if ((count) > (4_usize)) {
-                    break;
+            'for_body: {
+                if ((*histogram.offset((i) as isize)) != 0) {
+                    if ((count) < (4_usize)) {
+                        s4[(count)] = i;
+                    } else if ((count) > (4_usize)) {
+                        break 'loop_;
+                    }
+                    count.postfix_inc();
                 }
-                count.postfix_inc();
             }
             i.postfix_inc();
         }
@@ -8799,156 +8996,163 @@ pub unsafe fn CreateHuffmanTree_220(
     {
         let mut count_limit: u32 = 1_u32;
         'loop_: while true {
-            let mut tree: Vec<brunsli_HuffmanTree> = Vec::new();
-            {
-                let mut __tmp_0 = { ((2_usize).wrapping_mul(length)).wrapping_add(1_usize) };
-                if __tmp_0 > tree.capacity() as usize {
-                    let len_0 = tree.len();
-                    tree.reserve_exact(__tmp_0 - len_0 as usize);
-                }
-            };
-            {
-                let mut i: usize = length;
-                'loop_: while ((i) != (0_usize)) {
-                    i.prefix_dec();
-                    if ((*data.offset((i) as isize)) != 0) {
-                        let count: u32 = {
-                            let mut __tmp_1: u32 = (count_limit).wrapping_sub(1_u32);
-                            (*{
-                                let __a: *const _ = data.offset((i) as isize);
-                                let __b: *const _ = &mut __tmp_1;
-                                if *__a < *__b { __b } else { __a }
-                            })
+            'for_body: {
+                let mut tree: Vec<brunsli_HuffmanTree> = Vec::new();
+                {
+                    let mut __tmp_0 = { ((2_usize).wrapping_mul(length)).wrapping_add(1_usize) };
+                    if __tmp_0 > tree.capacity() as usize {
+                        let len_0 = tree.len();
+                        tree.reserve_exact(__tmp_0 - len_0 as usize);
+                    }
+                };
+                {
+                    let mut i: usize = length;
+                    'loop_: while ((i) != (0_usize)) {
+                        i.prefix_dec();
+                        if ((*data.offset((i) as isize)) != 0) {
+                            let count: u32 = {
+                                let mut __tmp_1: u32 = (count_limit).wrapping_sub(1_u32);
+                                (*{
+                                    let __a: *const _ = data.offset((i) as isize);
+                                    let __b: *const _ = &mut __tmp_1;
+                                    if *__a < *__b { __b } else { __a }
+                                })
+                            };
+                            {
+                                let __a1 =
+                                    brunsli_HuffmanTree::new({ count }, { (-1_i32 as i16) }, {
+                                        (i as i16)
+                                    });
+                                tree.push(__a1)
+                            };
                         };
+                    }
+                }
+                let n: usize = tree.len();
+                if ((n) == (1_usize)) {
+                    (*depth.offset((tree[(0_usize)].index_right_or_value) as isize)) = 1_u8;
+                    break 'loop_;
+                }
+                {
+                    let mut __tmp_2 = { tree.begin() };
+                    let __n = tree.end().iter_distance(&__tmp_2);
+                    let mut __order: Vec<isize> = (0..__n).collect();
+                    __order.sort_by(|&__x, &__y| {
+                        let __a = __tmp_2.iter_at(__x) as *const _;
+                        let __b = __tmp_2.iter_at(__y) as *const _;
+                        if (Compare_223
+                            as unsafe fn(
+                                *const brunsli_HuffmanTree,
+                                *const brunsli_HuffmanTree,
+                            ) -> bool)
+                            .call(__a, __b)
                         {
-                            let __a1 = brunsli_HuffmanTree::new({ count }, { (-1_i32 as i16) }, {
-                                (i as i16)
-                            });
-                            tree.push(__a1)
-                        };
-                    };
-                }
-            }
-            let n: usize = tree.len();
-            if ((n) == (1_usize)) {
-                (*depth.offset((tree[(0_usize)].index_right_or_value) as isize)) = 1_u8;
-                break;
-            }
-            {
-                let mut __tmp_2 = { tree.begin() };
-                let __n = tree.end().iter_distance(&__tmp_2);
-                let mut __order: Vec<isize> = (0..__n).collect();
-                __order.sort_by(|&__x, &__y| {
-                    let __a = __tmp_2.iter_at(__x) as *const _;
-                    let __b = __tmp_2.iter_at(__y) as *const _;
-                    if (Compare_223
-                        as unsafe fn(
-                            *const brunsli_HuffmanTree,
-                            *const brunsli_HuffmanTree,
-                        ) -> bool)
-                        .call(__a, __b)
-                    {
-                        std::cmp::Ordering::Less
-                    } else if (Compare_223
-                        as unsafe fn(
-                            *const brunsli_HuffmanTree,
-                            *const brunsli_HuffmanTree,
-                        ) -> bool)
-                        .call(__b, __a)
-                    {
-                        std::cmp::Ordering::Greater
-                    } else {
-                        std::cmp::Ordering::Equal
-                    }
-                });
-                let __values: Vec<_> = __order
-                    .iter()
-                    .map(|&__i| std::ptr::read(__tmp_2.iter_at(__i)))
-                    .collect();
-                for (__i, __v) in (0..__n).zip(__values) {
-                    std::ptr::write(__tmp_2.iter_at(__i), __v);
-                }
-            };
-            let sentinel: brunsli_HuffmanTree =
-                brunsli_HuffmanTree::new({ <u32>::MAX }, { (-1_i32 as i16) }, { (-1_i32 as i16) });
-            {
-                let a0_clone = sentinel.clone();
-                tree.push(a0_clone)
-            };
-            {
-                let a0_clone = sentinel.clone();
-                tree.push(a0_clone)
-            };
-            let mut i: usize = 0_usize;
-            let mut j: usize = (n).wrapping_add(1_usize);
-            {
-                let mut k: usize = (n).wrapping_sub(1_usize);
-                'loop_: while ((k) != (0_usize)) {
-                    let mut left: usize = 0_usize;
-                    let mut right: usize = 0_usize;
-                    if ((tree[(i)].total_count) <= (tree[(j)].total_count)) {
-                        left = i;
-                        i.prefix_inc();
-                    } else {
-                        left = j;
-                        j.prefix_inc();
-                    }
-                    if ((tree[(i)].total_count) <= (tree[(j)].total_count)) {
-                        right = i;
-                        i.prefix_inc();
-                    } else {
-                        right = j;
-                        j.prefix_inc();
-                    }
-                    let mut j_end: usize = (tree.len()).wrapping_sub(1_usize);
-                    tree[(j_end)].total_count =
-                        (tree[(left)].total_count).wrapping_add(tree[(right)].total_count);
-                    tree[(j_end)].index_left = (left as i16);
-                    tree[(j_end)].index_right_or_value = (right as i16);
-                    {
-                        let a0_clone = sentinel.clone();
-                        tree.push(a0_clone)
-                    };
-                    k.prefix_dec();
-                }
-            }
-            if !((tree.len()) == (((2_usize).wrapping_mul(n)).wrapping_add(1_usize))) {
-                (unsafe {
-                    BrunsliDumpAndAbort_79(
-                        c"huffman_tree.cc".as_ptr(),
-                        121,
-                        c"CreateHuffmanTree".as_ptr(),
-                    )
-                });
-                'loop_: while true {}
-            };
-            (unsafe {
-                let _p: *const brunsli_HuffmanTree =
-                    &tree[(((2_usize).wrapping_mul(n)).wrapping_sub(1_usize))];
-                let _pool: *mut brunsli_HuffmanTree =
-                    (&mut tree[(0_usize)] as *mut brunsli_HuffmanTree);
-                let _depth: *mut u8 = depth;
-                SetDepth_222(_p, _pool, _depth, 0_u8)
-            });
-            if (((*{
-                let mut __tmp_3 = { (&mut (*depth.offset((0) as isize)) as *mut u8) };
-                let mut __tmp_4 = { (&mut (*depth.offset((length) as isize)) as *mut u8) };
-                let mut __best = __tmp_3.clone();
-                if __tmp_3 != __tmp_4 {
-                    let mut __it = __tmp_3;
-                    __it.iter_inc();
-                    while __it != __tmp_4 {
-                        if *__best.iter_deref() < *__it.iter_deref() {
-                            __best = __it.clone();
+                            std::cmp::Ordering::Less
+                        } else if (Compare_223
+                            as unsafe fn(
+                                *const brunsli_HuffmanTree,
+                                *const brunsli_HuffmanTree,
+                            ) -> bool)
+                            .call(__b, __a)
+                        {
+                            std::cmp::Ordering::Greater
+                        } else {
+                            std::cmp::Ordering::Equal
                         }
-                        __it.iter_inc();
+                    });
+                    let __values: Vec<_> = __order
+                        .iter()
+                        .map(|&__i| std::ptr::read(__tmp_2.iter_at(__i)))
+                        .collect();
+                    for (__i, __v) in (0..__n).zip(__values) {
+                        std::ptr::write(__tmp_2.iter_at(__i), __v);
+                    }
+                };
+                let sentinel: brunsli_HuffmanTree =
+                    brunsli_HuffmanTree::new({ <u32>::MAX }, { (-1_i32 as i16) }, {
+                        (-1_i32 as i16)
+                    });
+                {
+                    let a0_clone = sentinel.clone();
+                    tree.push(a0_clone)
+                };
+                {
+                    let a0_clone = sentinel.clone();
+                    tree.push(a0_clone)
+                };
+                let mut i: usize = 0_usize;
+                let mut j: usize = (n).wrapping_add(1_usize);
+                {
+                    let mut k: usize = (n).wrapping_sub(1_usize);
+                    'loop_: while ((k) != (0_usize)) {
+                        'for_body: {
+                            let mut left: usize = 0_usize;
+                            let mut right: usize = 0_usize;
+                            if ((tree[(i)].total_count) <= (tree[(j)].total_count)) {
+                                left = i;
+                                i.prefix_inc();
+                            } else {
+                                left = j;
+                                j.prefix_inc();
+                            }
+                            if ((tree[(i)].total_count) <= (tree[(j)].total_count)) {
+                                right = i;
+                                i.prefix_inc();
+                            } else {
+                                right = j;
+                                j.prefix_inc();
+                            }
+                            let mut j_end: usize = (tree.len()).wrapping_sub(1_usize);
+                            tree[(j_end)].total_count =
+                                (tree[(left)].total_count).wrapping_add(tree[(right)].total_count);
+                            tree[(j_end)].index_left = (left as i16);
+                            tree[(j_end)].index_right_or_value = (right as i16);
+                            {
+                                let a0_clone = sentinel.clone();
+                                tree.push(a0_clone)
+                            };
+                        }
+                        k.prefix_dec();
                     }
                 }
-                __best
-            }) as i32)
-                <= (tree_limit))
-            {
-                break;
+                if !((tree.len()) == (((2_usize).wrapping_mul(n)).wrapping_add(1_usize))) {
+                    (unsafe {
+                        BrunsliDumpAndAbort_79(
+                            c"huffman_tree.cc".as_ptr(),
+                            121,
+                            c"CreateHuffmanTree".as_ptr(),
+                        )
+                    });
+                    'loop_: while true {}
+                };
+                (unsafe {
+                    let _p: *const brunsli_HuffmanTree =
+                        &tree[(((2_usize).wrapping_mul(n)).wrapping_sub(1_usize))];
+                    let _pool: *mut brunsli_HuffmanTree =
+                        (&mut tree[(0_usize)] as *mut brunsli_HuffmanTree);
+                    let _depth: *mut u8 = depth;
+                    SetDepth_222(_p, _pool, _depth, 0_u8)
+                });
+                if (((*{
+                    let mut __tmp_3 = { (&mut (*depth.offset((0) as isize)) as *mut u8) };
+                    let mut __tmp_4 = { (&mut (*depth.offset((length) as isize)) as *mut u8) };
+                    let mut __best = __tmp_3.clone();
+                    if __tmp_3 != __tmp_4 {
+                        let mut __it = __tmp_3;
+                        __it.iter_inc();
+                        while __it != __tmp_4 {
+                            if *__best.iter_deref() < *__it.iter_deref() {
+                                __best = __it.clone();
+                            }
+                            __it.iter_inc();
+                        }
+                    }
+                    __best
+                }) as i32)
+                    <= (tree_limit))
+                {
+                    break 'loop_;
+                }
             }
             count_limit = (count_limit).wrapping_mul(2_u32);
         }
@@ -8998,9 +9202,11 @@ pub unsafe fn WriteHuffmanTreeRepetitions_225(
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (repetitions)) {
-                (*tree.offset((*tree_size) as isize)) = value;
-                (*extra_bits_data.offset((*tree_size) as isize)) = 0_u8;
-                (*tree_size).prefix_inc();
+                'for_body: {
+                    (*tree.offset((*tree_size) as isize)) = value;
+                    (*extra_bits_data.offset((*tree_size) as isize)) = 0_u8;
+                    (*tree_size).prefix_inc();
+                }
                 i.prefix_inc();
             }
         }
@@ -9047,9 +9253,11 @@ pub unsafe fn WriteHuffmanTreeRepetitionsZeros_226(
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (repetitions)) {
-                (*tree.offset((*tree_size) as isize)) = 0_u8;
-                (*extra_bits_data.offset((*tree_size) as isize)) = 0_u8;
-                (*tree_size).prefix_inc();
+                'for_body: {
+                    (*tree.offset((*tree_size) as isize)) = 0_u8;
+                    (*extra_bits_data.offset((*tree_size) as isize)) = 0_u8;
+                    (*tree_size).prefix_inc();
+                }
                 i.prefix_inc();
             }
         }
@@ -9100,7 +9308,9 @@ pub unsafe fn DecideOverRleUse_227(
                 'loop_: while ((k) < (length))
                     && (((*depth.offset((k) as isize)) as i32) == (value as i32))
                 {
-                    reps.prefix_inc();
+                    'for_body: {
+                        reps.prefix_inc();
+                    }
                     k.prefix_inc();
                 }
             }
@@ -9131,13 +9341,15 @@ pub unsafe fn WriteHuffmanTree_219(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (length)) {
-            if (((*depth.offset((((length).wrapping_sub(i)).wrapping_sub(1_usize)) as isize))
-                as i32)
-                == (0))
-            {
-                new_length.prefix_dec();
-            } else {
-                break;
+            'for_body: {
+                if (((*depth.offset((((length).wrapping_sub(i)).wrapping_sub(1_usize)) as isize))
+                    as i32)
+                    == (0))
+                {
+                    new_length.prefix_dec();
+                } else {
+                    break 'loop_;
+                }
             }
             i.prefix_inc();
         }
@@ -9167,7 +9379,9 @@ pub unsafe fn WriteHuffmanTree_219(
                     'loop_: while ((k) < (new_length))
                         && (((*depth.offset((k) as isize)) as i32) == (value as i32))
                     {
-                        reps.prefix_inc();
+                        'for_body: {
+                            reps.prefix_inc();
+                        }
                         k.prefix_inc();
                     }
                 }
@@ -9212,10 +9426,12 @@ pub unsafe fn ReverseBits_228(mut num_bits: i32, mut bits: u16) -> u16 {
     {
         let mut i: i32 = 4;
         'loop_: while ((i) < (num_bits)) {
-            retval <<= 4;
-            bits = (((bits as i32) >> (4)) as u16);
-            retval |= (*std::cell::LazyCell::force_mut(&mut *&raw mut kLut_229))
-                [((bits as i32) & (15)) as usize];
+            'for_body: {
+                retval <<= 4;
+                bits = (((bits as i32) >> (4)) as u16);
+                retval |= (*std::cell::LazyCell::force_mut(&mut *&raw mut kLut_229))
+                    [((bits as i32) & (15)) as usize];
+            }
             i += 4;
         }
     }
@@ -9233,7 +9449,9 @@ pub unsafe fn ConvertBitDepthsToSymbols_221(
         {
             let mut i: usize = 0_usize;
             'loop_: while ((i) < (len)) {
-                bl_count[(*depth.offset((i) as isize)) as usize].prefix_inc();
+                'for_body: {
+                    bl_count[(*depth.offset((i) as isize)) as usize].prefix_inc();
+                }
                 i.prefix_inc();
             }
         }
@@ -9246,8 +9464,10 @@ pub unsafe fn ConvertBitDepthsToSymbols_221(
         {
             let mut i: usize = 1_usize;
             'loop_: while ((i) < (kMaxBits as usize)) {
-                code = (((code) + (bl_count[((i).wrapping_sub(1_usize))] as i32)) << (1));
-                next_code[(i)] = (code as u16);
+                'for_body: {
+                    code = (((code) + (bl_count[((i).wrapping_sub(1_usize))] as i32)) << (1));
+                    next_code[(i)] = (code as u16);
+                }
                 i.prefix_inc();
             }
         }
@@ -9255,13 +9475,15 @@ pub unsafe fn ConvertBitDepthsToSymbols_221(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < (len)) {
-            if ((*depth.offset((i) as isize)) != 0) {
-                (*bits.offset((i) as isize)) = (unsafe {
-                    let _num_bits: i32 = ((*depth.offset((i) as isize)) as i32);
-                    let _bits: u16 =
-                        next_code[(*depth.offset((i) as isize)) as usize].postfix_inc();
-                    ReverseBits_228(_num_bits, _bits)
-                });
+            'for_body: {
+                if ((*depth.offset((i) as isize)) != 0) {
+                    (*bits.offset((i) as isize)) = (unsafe {
+                        let _num_bits: i32 = ((*depth.offset((i) as isize)) as i32);
+                        let _bits: u16 =
+                            next_code[(*depth.offset((i) as isize)) as usize].postfix_inc();
+                        ReverseBits_228(_num_bits, _bits)
+                    });
+                }
             }
             i.prefix_inc();
         }
@@ -9394,59 +9616,62 @@ pub unsafe fn ProcessSOF_235(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).components.len())) {
-            let id: i32 = (unsafe { ReadUint8_233(data, pos) });
-            if *(&mut (ids_seen)[(id as usize)] as *mut bool) {
-                write!((*libcc2rs::cerr_unsafe()), "Duplicate ID {:} in SOF.\n", id,);
-                (*jpg).error = brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID;
-                return false;
-            }
-            match ((&mut (&mut (ids_seen)[(id as usize)] as *mut bool) as *mut *mut bool),) {
-                (__tmp_0,) => {
-                    *(*__tmp_0) = true;
-                    (*__tmp_0)
+            'for_body: {
+                let id: i32 = (unsafe { ReadUint8_233(data, pos) });
+                if *(&mut (ids_seen)[(id as usize)] as *mut bool) {
+                    write!((*libcc2rs::cerr_unsafe()), "Duplicate ID {:} in SOF.\n", id,);
+                    (*jpg).error = brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID;
+                    return false;
                 }
-            };
-            (&mut (*jpg)).components[(i)].id = id;
-            let mut factor: i32 = (unsafe { ReadUint8_233(data, pos) });
-            let mut h_samp_factor: i32 = ((factor) >> (4));
-            let mut v_samp_factor: i32 = ((factor) & (15));
-            if ((h_samp_factor) < (1))
-                || ((h_samp_factor)
-                    > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxSampling_27)))
-            {
-                write!(
-                    (*libcc2rs::cerr_unsafe()),
-                    "Invalid h_samp_factor: {:}\n",
-                    h_samp_factor,
-                );
-                (*jpg).error = brunsli_JPEGReadError_INVALID_SAMP_FACTOR;
-                return false;
-            };
-            if ((v_samp_factor) < (1))
-                || ((v_samp_factor)
-                    > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxSampling_27)))
-            {
-                write!(
-                    (*libcc2rs::cerr_unsafe()),
-                    "Invalid v_samp_factor: {:}\n",
-                    v_samp_factor,
-                );
-                (*jpg).error = brunsli_JPEGReadError_INVALID_SAMP_FACTOR;
-                return false;
-            };
-            (&mut (*jpg)).components[(i)].h_samp_factor = h_samp_factor;
-            (&mut (*jpg)).components[(i)].v_samp_factor = v_samp_factor;
-            (&mut (*jpg)).components[(i)].quant_idx = ((unsafe { ReadUint8_233(data, pos) }) as u8);
-            (*jpg).max_h_samp_factor = (*{
-                let __a: *const _ = &mut (*jpg).max_h_samp_factor;
-                let __b: *const _ = &mut h_samp_factor;
-                if *__a < *__b { __b } else { __a }
-            });
-            (*jpg).max_v_samp_factor = (*{
-                let __a: *const _ = &mut (*jpg).max_v_samp_factor;
-                let __b: *const _ = &mut v_samp_factor;
-                if *__a < *__b { __b } else { __a }
-            });
+                match ((&mut (&mut (ids_seen)[(id as usize)] as *mut bool) as *mut *mut bool),) {
+                    (__tmp_0,) => {
+                        *(*__tmp_0) = true;
+                        (*__tmp_0)
+                    }
+                };
+                (&mut (*jpg)).components[(i)].id = id;
+                let mut factor: i32 = (unsafe { ReadUint8_233(data, pos) });
+                let mut h_samp_factor: i32 = ((factor) >> (4));
+                let mut v_samp_factor: i32 = ((factor) & (15));
+                if ((h_samp_factor) < (1))
+                    || ((h_samp_factor)
+                        > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxSampling_27)))
+                {
+                    write!(
+                        (*libcc2rs::cerr_unsafe()),
+                        "Invalid h_samp_factor: {:}\n",
+                        h_samp_factor,
+                    );
+                    (*jpg).error = brunsli_JPEGReadError_INVALID_SAMP_FACTOR;
+                    return false;
+                };
+                if ((v_samp_factor) < (1))
+                    || ((v_samp_factor)
+                        > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxSampling_27)))
+                {
+                    write!(
+                        (*libcc2rs::cerr_unsafe()),
+                        "Invalid v_samp_factor: {:}\n",
+                        v_samp_factor,
+                    );
+                    (*jpg).error = brunsli_JPEGReadError_INVALID_SAMP_FACTOR;
+                    return false;
+                };
+                (&mut (*jpg)).components[(i)].h_samp_factor = h_samp_factor;
+                (&mut (*jpg)).components[(i)].v_samp_factor = v_samp_factor;
+                (&mut (*jpg)).components[(i)].quant_idx =
+                    ((unsafe { ReadUint8_233(data, pos) }) as u8);
+                (*jpg).max_h_samp_factor = (*{
+                    let __a: *const _ = &mut (*jpg).max_h_samp_factor;
+                    let __b: *const _ = &mut h_samp_factor;
+                    if *__a < *__b { __b } else { __a }
+                });
+                (*jpg).max_v_samp_factor = (*{
+                    let __a: *const _ = &mut (*jpg).max_v_samp_factor;
+                    let __b: *const _ = &mut v_samp_factor;
+                    if *__a < *__b { __b } else { __a }
+                });
+            }
             i.prefix_inc();
         }
     }
@@ -9463,37 +9688,40 @@ pub unsafe fn ProcessSOF_235(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).components.len())) {
-            let mut c: *mut brunsli_JPEGComponent =
-                (&mut (&mut (*jpg)).components[(i)] as *mut brunsli_JPEGComponent);
-            if ((((*jpg).max_h_samp_factor) % ((*c).h_samp_factor)) != (0))
-                || ((((*jpg).max_v_samp_factor) % ((*c).v_samp_factor)) != (0))
-            {
-                write!(
-                    (*libcc2rs::cerr_unsafe()),
-                    "Non-integral subsampling ratios.\n",
-                );
-                (*jpg).error = brunsli_JPEGReadError_INVALID_SAMPLING_FACTORS;
-                return false;
-            }
-            (*c).width_in_blocks = ((((*jpg).MCU_cols) * ((*c).h_samp_factor)) as u32);
-            (*c).height_in_blocks = ((((*jpg).MCU_rows) * ((*c).v_samp_factor)) as u32);
-            let num_blocks: u64 =
-                ((*c).width_in_blocks as u64).wrapping_mul(((*c).height_in_blocks as u64));
-            if ((num_blocks as usize)
-                > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxNumBlocks_18)))
-            {
-                write!((*libcc2rs::cerr_unsafe()), "Image too large.\n",);
-                (*jpg).error = brunsli_JPEGReadError_IMAGE_TOO_LARGE;
-                return false;
-            }
-            (*c).num_blocks = ((num_blocks as i32) as u32);
-            if ((mode as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
-                (*c).coeffs.resize_with(
-                    ((((*c).num_blocks).wrapping_mul(
-                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) as u32),
-                    )) as usize),
-                    || 0_i16,
-                );
+            'for_body: {
+                let mut c: *mut brunsli_JPEGComponent =
+                    (&mut (&mut (*jpg)).components[(i)] as *mut brunsli_JPEGComponent);
+                if ((((*jpg).max_h_samp_factor) % ((*c).h_samp_factor)) != (0))
+                    || ((((*jpg).max_v_samp_factor) % ((*c).v_samp_factor)) != (0))
+                {
+                    write!(
+                        (*libcc2rs::cerr_unsafe()),
+                        "Non-integral subsampling ratios.\n",
+                    );
+                    (*jpg).error = brunsli_JPEGReadError_INVALID_SAMPLING_FACTORS;
+                    return false;
+                }
+                (*c).width_in_blocks = ((((*jpg).MCU_cols) * ((*c).h_samp_factor)) as u32);
+                (*c).height_in_blocks = ((((*jpg).MCU_rows) * ((*c).v_samp_factor)) as u32);
+                let num_blocks: u64 =
+                    ((*c).width_in_blocks as u64).wrapping_mul(((*c).height_in_blocks as u64));
+                if ((num_blocks as usize)
+                    > (*std::cell::LazyCell::force_mut(&mut *&raw mut kBrunsliMaxNumBlocks_18)))
+                {
+                    write!((*libcc2rs::cerr_unsafe()), "Image too large.\n",);
+                    (*jpg).error = brunsli_JPEGReadError_IMAGE_TOO_LARGE;
+                    return false;
+                }
+                (*c).num_blocks = ((num_blocks as i32) as u32);
+                if ((mode as i32) == (brunsli_JpegReadMode_JPEG_READ_ALL as i32)) {
+                    (*c).coeffs.resize_with(
+                        ((((*c).num_blocks).wrapping_mul(
+                            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3))
+                                as u32),
+                        )) as usize),
+                        || 0_i16,
+                    );
+                }
             }
             i.prefix_inc();
         }
@@ -9558,61 +9786,65 @@ pub unsafe fn ProcessSOS_236(
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (comps_in_scan)) {
-            let mut id: i32 = (unsafe { ReadUint8_233(data, pos) });
-            if *(&mut (ids_seen)[(id as usize)] as *mut bool) {
-                write!((*libcc2rs::cerr_unsafe()), "Duplicate ID {:} in SOS.\n", id,);
-                (*jpg).error = brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID;
-                return false;
-            }
-            match ((&mut (&mut (ids_seen)[(id as usize)] as *mut bool) as *mut *mut bool),) {
-                (__tmp_1,) => {
-                    *(*__tmp_1) = true;
-                    (*__tmp_1)
+            'for_body: {
+                let mut id: i32 = (unsafe { ReadUint8_233(data, pos) });
+                if *(&mut (ids_seen)[(id as usize)] as *mut bool) {
+                    write!((*libcc2rs::cerr_unsafe()), "Duplicate ID {:} in SOS.\n", id,);
+                    (*jpg).error = brunsli_JPEGReadError_DUPLICATE_COMPONENT_ID;
+                    return false;
                 }
-            };
-            let mut found_index: bool = false;
-            {
-                let mut j: usize = 0_usize;
-                'loop_: while ((j) < ((*jpg).components.len())) {
-                    if (((&mut (*jpg)).components[(j)].id) == (id)) {
-                        scan_info.components[(i as usize)].comp_idx = (j as u8);
-                        found_index = true;
+                match ((&mut (&mut (ids_seen)[(id as usize)] as *mut bool) as *mut *mut bool),) {
+                    (__tmp_1,) => {
+                        *(*__tmp_1) = true;
+                        (*__tmp_1)
                     }
-                    j.prefix_inc();
+                };
+                let mut found_index: bool = false;
+                {
+                    let mut j: usize = 0_usize;
+                    'loop_: while ((j) < ((*jpg).components.len())) {
+                        'for_body: {
+                            if (((&mut (*jpg)).components[(j)].id) == (id)) {
+                                scan_info.components[(i as usize)].comp_idx = (j as u8);
+                                found_index = true;
+                            }
+                        }
+                        j.prefix_inc();
+                    }
                 }
+                if !(found_index) {
+                    write!(
+                        (*libcc2rs::cerr_unsafe()),
+                        "SOS marker: Could not find component with id {:}\n",
+                        id,
+                    );
+                    (*jpg).error = brunsli_JPEGReadError_COMPONENT_NOT_FOUND;
+                    return false;
+                }
+                let mut c: i32 = (unsafe { ReadUint8_233(data, pos) });
+                let mut dc_tbl_idx: i32 = ((c) >> (4));
+                let mut ac_tbl_idx: i32 = ((c) & (15));
+                if ((dc_tbl_idx) < (0)) || ((dc_tbl_idx) > (3)) {
+                    write!(
+                        (*libcc2rs::cerr_unsafe()),
+                        "Invalid dc_tbl_idx: {:}\n",
+                        dc_tbl_idx,
+                    );
+                    (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX;
+                    return false;
+                };
+                if ((ac_tbl_idx) < (0)) || ((ac_tbl_idx) > (3)) {
+                    write!(
+                        (*libcc2rs::cerr_unsafe()),
+                        "Invalid ac_tbl_idx: {:}\n",
+                        ac_tbl_idx,
+                    );
+                    (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX;
+                    return false;
+                };
+                scan_info.components[(i as usize)].dc_tbl_idx = dc_tbl_idx;
+                scan_info.components[(i as usize)].ac_tbl_idx = ac_tbl_idx;
             }
-            if !(found_index) {
-                write!(
-                    (*libcc2rs::cerr_unsafe()),
-                    "SOS marker: Could not find component with id {:}\n",
-                    id,
-                );
-                (*jpg).error = brunsli_JPEGReadError_COMPONENT_NOT_FOUND;
-                return false;
-            }
-            let mut c: i32 = (unsafe { ReadUint8_233(data, pos) });
-            let mut dc_tbl_idx: i32 = ((c) >> (4));
-            let mut ac_tbl_idx: i32 = ((c) & (15));
-            if ((dc_tbl_idx) < (0)) || ((dc_tbl_idx) > (3)) {
-                write!(
-                    (*libcc2rs::cerr_unsafe()),
-                    "Invalid dc_tbl_idx: {:}\n",
-                    dc_tbl_idx,
-                );
-                (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX;
-                return false;
-            };
-            if ((ac_tbl_idx) < (0)) || ((ac_tbl_idx) > (3)) {
-                write!(
-                    (*libcc2rs::cerr_unsafe()),
-                    "Invalid ac_tbl_idx: {:}\n",
-                    ac_tbl_idx,
-                );
-                (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_INDEX;
-                return false;
-            };
-            scan_info.components[(i as usize)].dc_tbl_idx = dc_tbl_idx;
-            scan_info.components[(i as usize)].ac_tbl_idx = ac_tbl_idx;
             i.prefix_inc();
         }
     }
@@ -9661,39 +9893,43 @@ pub unsafe fn ProcessSOS_236(
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (comps_in_scan)) {
-            let mut found_dc_table: bool = false;
-            let mut found_ac_table: bool = false;
-            {
-                let mut j: usize = 0_usize;
-                'loop_: while ((j) < ((*jpg).huffman_code.len())) {
-                    let mut slot_id: i32 = (&mut (*jpg)).huffman_code[(j)].slot_id;
-                    if ((slot_id) == (scan_info.components[(i as usize)].dc_tbl_idx)) {
-                        found_dc_table = true;
-                    } else if ((slot_id)
-                        == ((scan_info.components[(i as usize)].ac_tbl_idx) + (16)))
-                    {
-                        found_ac_table = true;
+            'for_body: {
+                let mut found_dc_table: bool = false;
+                let mut found_ac_table: bool = false;
+                {
+                    let mut j: usize = 0_usize;
+                    'loop_: while ((j) < ((*jpg).huffman_code.len())) {
+                        'for_body: {
+                            let mut slot_id: i32 = (&mut (*jpg)).huffman_code[(j)].slot_id;
+                            if ((slot_id) == (scan_info.components[(i as usize)].dc_tbl_idx)) {
+                                found_dc_table = true;
+                            } else if ((slot_id)
+                                == ((scan_info.components[(i as usize)].ac_tbl_idx) + (16)))
+                            {
+                                found_ac_table = true;
+                            }
+                        }
+                        j.prefix_inc();
                     }
-                    j.prefix_inc();
                 }
-            }
-            if ((scan_info.Ss) == (0)) && (!(found_dc_table)) {
-                write!(
-                    (*libcc2rs::cerr_unsafe()),
-                    "SOS marker: Could not find DC Huffman table with index {:}\n",
-                    scan_info.components[(i as usize)].dc_tbl_idx,
-                );
-                (*jpg).error = brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND;
-                return false;
-            }
-            if ((scan_info.Se) > (0)) && (!(found_ac_table)) {
-                write!(
-                    (*libcc2rs::cerr_unsafe()),
-                    "SOS marker: Could not find AC Huffman table with index {:}\n",
-                    scan_info.components[(i as usize)].ac_tbl_idx,
-                );
-                (*jpg).error = brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND;
-                return false;
+                if ((scan_info.Ss) == (0)) && (!(found_dc_table)) {
+                    write!(
+                        (*libcc2rs::cerr_unsafe()),
+                        "SOS marker: Could not find DC Huffman table with index {:}\n",
+                        scan_info.components[(i as usize)].dc_tbl_idx,
+                    );
+                    (*jpg).error = brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND;
+                    return false;
+                }
+                if ((scan_info.Se) > (0)) && (!(found_ac_table)) {
+                    write!(
+                        (*libcc2rs::cerr_unsafe()),
+                        "SOS marker: Could not find AC Huffman table with index {:}\n",
+                        scan_info.components[(i as usize)].ac_tbl_idx,
+                    );
+                    (*jpg).error = brunsli_JPEGReadError_HUFFMAN_TABLE_NOT_FOUND;
+                    return false;
+                }
             }
             i.prefix_inc();
         }
@@ -9805,17 +10041,19 @@ pub unsafe fn ProcessDHT_237(
             'loop_: while ((i)
                 <= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)))
             {
-                let mut count: i32 = (unsafe { ReadUint8_233(data, pos) });
-                if ((count) != (0)) {
-                    max_depth = i;
+                'for_body: {
+                    let mut count: i32 = (unsafe { ReadUint8_233(data, pos) });
+                    if ((count) != (0)) {
+                        max_depth = i;
+                    }
+                    huff.counts[(i as usize)] = count;
+                    total_count += count;
+                    space -= ((count)
+                        * ((1)
+                            << ((*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kJpegHuffmanMaxBitLength_7,
+                            )) - (i))));
                 }
-                huff.counts[(i as usize)] = count;
-                total_count += count;
-                space -= ((count)
-                    * ((1)
-                        << ((*std::cell::LazyCell::force_mut(
-                            &mut *&raw mut kJpegHuffmanMaxBitLength_7,
-                        )) - (i))));
                 i.prefix_inc();
             }
         }
@@ -9861,36 +10099,40 @@ pub unsafe fn ProcessDHT_237(
         {
             let mut i: i32 = 0;
             'loop_: while ((i) < (total_count)) {
-                let mut value: u8 = ((unsafe { ReadUint8_233(data, pos) }) as u8);
-                if !(is_ac_table != 0) {
-                    if ((value as i32) < (0))
-                        || ((value as i32)
-                            > ((*std::cell::LazyCell::force_mut(
-                                &mut *&raw mut kJpegDCAlphabetSize_9,
-                            )) - (1)))
-                    {
-                        write!((*libcc2rs::cerr_unsafe()), "Invalid value: ",);
+                'for_body: {
+                    let mut value: u8 = ((unsafe { ReadUint8_233(data, pos) }) as u8);
+                    if !(is_ac_table != 0) {
+                        if ((value as i32) < (0))
+                            || ((value as i32)
+                                > ((*std::cell::LazyCell::force_mut(
+                                    &mut *&raw mut kJpegDCAlphabetSize_9,
+                                )) - (1)))
+                        {
+                            write!((*libcc2rs::cerr_unsafe()), "Invalid value: ",);
+                            (*libcc2rs::cerr_unsafe()).write_all(
+                                &([(&[value as u8] as &[u8]), (b"\n" as &[u8])].concat()),
+                            );
+                            (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
+                            return false;
+                        };
+                    }
+                    if *(&mut (values_seen)[(value as usize)] as *mut bool) {
+                        write!((*libcc2rs::cerr_unsafe()), "Duplicate Huffman code value ",);
                         (*libcc2rs::cerr_unsafe())
                             .write_all(&([(&[value as u8] as &[u8]), (b"\n" as &[u8])].concat()));
                         (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
                         return false;
-                    };
-                }
-                if *(&mut (values_seen)[(value as usize)] as *mut bool) {
-                    write!((*libcc2rs::cerr_unsafe()), "Duplicate Huffman code value ",);
-                    (*libcc2rs::cerr_unsafe())
-                        .write_all(&([(&[value as u8] as &[u8]), (b"\n" as &[u8])].concat()));
-                    (*jpg).error = brunsli_JPEGReadError_INVALID_HUFFMAN_CODE;
-                    return false;
-                }
-                match ((&mut (&mut (values_seen)[(value as usize)] as *mut bool) as *mut *mut bool),)
-                {
-                    (__tmp_2,) => {
-                        *(*__tmp_2) = true;
-                        (*__tmp_2)
                     }
-                };
-                huff.values[(i as usize)] = (value as i32);
+                    match ((&mut (&mut (values_seen)[(value as usize)] as *mut bool)
+                        as *mut *mut bool),)
+                    {
+                        (__tmp_2,) => {
+                            *(*__tmp_2) = true;
+                            (*__tmp_2)
+                        }
+                    };
+                    huff.values[(i as usize)] = (value as i32);
+                }
                 i.prefix_inc();
             }
         }
@@ -9913,8 +10155,10 @@ pub unsafe fn ProcessDHT_237(
                 'loop_: while ((i)
                     < (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanLutSize_231)))
                 {
-                    (*huff_lut.offset((i) as isize)).bits = 0_u8;
-                    (*huff_lut.offset((i) as isize)).value = 65535_u16;
+                    'for_body: {
+                        (*huff_lut.offset((i) as isize)).bits = 0_u8;
+                        (*huff_lut.offset((i) as isize)).value = 65535_u16;
+                    }
                     i.prefix_inc();
                 }
             }
@@ -10031,22 +10275,25 @@ pub unsafe fn ProcessDQT_239(
             let mut i: i32 = 0;
             'loop_: while ((i) < (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)))
             {
-                let mut quant_val: i32 = if (quant_table_precision != 0) {
-                    (unsafe { ReadUint16_234(data, pos) })
-                } else {
-                    (unsafe { ReadUint8_233(data, pos) })
-                };
-                if ((quant_val) < (1)) || ((quant_val) > (65535)) {
-                    write!(
-                        (*libcc2rs::cerr_unsafe()),
-                        "Invalid quant_val: {:}\n",
-                        quant_val,
-                    );
-                    (*jpg).error = brunsli_JPEGReadError_INVALID_QUANT_VAL;
-                    return false;
-                };
-                table.values[((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
-                    [(i) as usize] as usize)] = quant_val;
+                'for_body: {
+                    let mut quant_val: i32 = if (quant_table_precision != 0) {
+                        (unsafe { ReadUint16_234(data, pos) })
+                    } else {
+                        (unsafe { ReadUint8_233(data, pos) })
+                    };
+                    if ((quant_val) < (1)) || ((quant_val) > (65535)) {
+                        write!(
+                            (*libcc2rs::cerr_unsafe()),
+                            "Invalid quant_val: {:}\n",
+                            quant_val,
+                        );
+                        (*jpg).error = brunsli_JPEGReadError_INVALID_QUANT_VAL;
+                        return false;
+                    };
+                    table.values[((*std::cell::LazyCell::force_mut(
+                        &mut *&raw mut kJPEGNaturalOrder_13,
+                    ))[(i) as usize] as usize)] = quant_val;
+                }
                 i.prefix_inc();
             }
         }
@@ -10314,10 +10561,12 @@ impl BitReaderState_243 {
             {
                 let mut i: i32 = ((npadbits) - (1));
                 'loop_: while ((i) >= (0)) {
-                    {
-                        let __a1 = ((((padbits) >> (i)) & (1_u64)) as i32);
-                        (*jpg).padding_bits.push(__a1)
-                    };
+                    'for_body: {
+                        {
+                            let __a1 = ((((padbits) >> (i)) & (1_u64)) as i32);
+                            (*jpg).padding_bits.push(__a1)
+                        };
+                    }
                     i.prefix_dec();
                 }
             }
@@ -10442,74 +10691,76 @@ pub unsafe fn DecodeDCTBlock_246(
     {
         let mut k: i32 = Ss;
         'loop_: while ((k) <= (Se)) {
-            let mut sr: i32 = (unsafe { ReadSymbol_244(ac_huff, br) });
-            if ((sr)
-                >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8)))
-            {
-                write!(
-                    (*libcc2rs::cerr_unsafe()),
-                    "Invalid Huffman symbol {:} for AC coefficient {:}\n",
-                    sr,
-                    k,
-                );
-                (*jpg).error = brunsli_JPEGReadError_INVALID_SYMBOL;
-                return false;
-            }
-            let mut r: i32 = ((sr) >> (4));
-            let mut s: i32 = ((sr) & (15));
-            if ((s) > (0)) {
-                k += r;
-                if ((k) > (Se)) {
-                    write!(
-                        (*libcc2rs::cerr_unsafe()),
-                        "Out-of-band coefficient {:} band was {:}-{:}\n",
-                        k,
-                        Ss,
-                        Se,
-                    );
-                    (*jpg).error = brunsli_JPEGReadError_OUT_OF_BAND_COEFF;
-                    return false;
-                }
-                if (((s) + (Al))
-                    >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9)))
+            'for_body: {
+                let mut sr: i32 = (unsafe { ReadSymbol_244(ac_huff, br) });
+                if ((sr)
+                    >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8)))
                 {
                     write!(
                         (*libcc2rs::cerr_unsafe()),
-                        "Out of range AC coefficient value: s = {:} Al = {:} k = {:}\n",
-                        s,
-                        Al,
+                        "Invalid Huffman symbol {:} for AC coefficient {:}\n",
+                        sr,
                         k,
                     );
-                    (*jpg).error = brunsli_JPEGReadError_NON_REPRESENTABLE_AC_COEFF;
+                    (*jpg).error = brunsli_JPEGReadError_INVALID_SYMBOL;
                     return false;
                 }
-                let mut bits: i32 = (unsafe { BitReaderState_243::ReadBits(&mut (*br), s) });
-                let mut coeff: i32 = (unsafe { HuffExtend_245(bits, s) });
-                (*coeffs.offset(
-                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
-                        [(k) as usize]) as isize,
-                )) = (((coeff) * (Am)) as i16);
-                (*num_zero_runs) = 0;
-            } else if ((r) == (15)) {
-                k += 15;
-                (*num_zero_runs).prefix_inc();
-            } else {
-                if ((eobrun_allowed) && ((k) == (Ss))) && ((*eobrun) == (0)) {
-                    (*reset_state) = true;
-                }
-                (*eobrun) = ((1) << (r));
-                if ((r) > (0)) {
-                    if !(eobrun_allowed) {
+                let mut r: i32 = ((sr) >> (4));
+                let mut s: i32 = ((sr) & (15));
+                if ((s) > (0)) {
+                    k += r;
+                    if ((k) > (Se)) {
                         write!(
                             (*libcc2rs::cerr_unsafe()),
-                            "End-of-block run crossing DC coeff.\n",
+                            "Out-of-band coefficient {:} band was {:}-{:}\n",
+                            k,
+                            Ss,
+                            Se,
                         );
-                        (*jpg).error = brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
+                        (*jpg).error = brunsli_JPEGReadError_OUT_OF_BAND_COEFF;
                         return false;
                     }
-                    (*eobrun) += (unsafe { BitReaderState_243::ReadBits(&mut (*br), r) });
+                    if (((s) + (Al))
+                        >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegDCAlphabetSize_9)))
+                    {
+                        write!(
+                            (*libcc2rs::cerr_unsafe()),
+                            "Out of range AC coefficient value: s = {:} Al = {:} k = {:}\n",
+                            s,
+                            Al,
+                            k,
+                        );
+                        (*jpg).error = brunsli_JPEGReadError_NON_REPRESENTABLE_AC_COEFF;
+                        return false;
+                    }
+                    let mut bits: i32 = (unsafe { BitReaderState_243::ReadBits(&mut (*br), s) });
+                    let mut coeff: i32 = (unsafe { HuffExtend_245(bits, s) });
+                    (*coeffs.offset(
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                            [(k) as usize]) as isize,
+                    )) = (((coeff) * (Am)) as i16);
+                    (*num_zero_runs) = 0;
+                } else if ((r) == (15)) {
+                    k += 15;
+                    (*num_zero_runs).prefix_inc();
+                } else {
+                    if ((eobrun_allowed) && ((k) == (Ss))) && ((*eobrun) == (0)) {
+                        (*reset_state) = true;
+                    }
+                    (*eobrun) = ((1) << (r));
+                    if ((r) > (0)) {
+                        if !(eobrun_allowed) {
+                            write!(
+                                (*libcc2rs::cerr_unsafe()),
+                                "End-of-block run crossing DC coeff.\n",
+                            );
+                            (*jpg).error = brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
+                            return false;
+                        }
+                        (*eobrun) += (unsafe { BitReaderState_243::ReadBits(&mut (*br), r) });
+                    }
+                    break 'loop_;
                 }
-                break;
             }
             k.postfix_inc();
         }
@@ -10548,22 +10799,11 @@ pub unsafe fn RefineDCTBlock_247(
     let mut in_zero_run: bool = false;
     if ((*eobrun) <= (0)) {
         'loop_: while ((k) <= (Se)) {
-            s = (unsafe { ReadSymbol_244(ac_huff, br) });
-            if ((s) >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8)))
-            {
-                write!(
-                    (*libcc2rs::cerr_unsafe()),
-                    "Invalid Huffman symbol {:} for AC coefficient {:}\n",
-                    s,
-                    k,
-                );
-                (*jpg).error = brunsli_JPEGReadError_INVALID_SYMBOL;
-                return false;
-            }
-            r = ((s) >> (4));
-            s &= 15;
-            if (s != 0) {
-                if ((s) != (1)) {
+            'for_body: {
+                s = (unsafe { ReadSymbol_244(ac_huff, br) });
+                if ((s)
+                    >= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanAlphabetSize_8)))
+                {
                     write!(
                         (*libcc2rs::cerr_unsafe()),
                         "Invalid Huffman symbol {:} for AC coefficient {:}\n",
@@ -10573,36 +10813,106 @@ pub unsafe fn RefineDCTBlock_247(
                     (*jpg).error = brunsli_JPEGReadError_INVALID_SYMBOL;
                     return false;
                 }
-                s = if ((unsafe { BitReaderState_243::ReadBits(&mut (*br), 1) }) != 0) {
-                    p1
+                r = ((s) >> (4));
+                s &= 15;
+                if (s != 0) {
+                    if ((s) != (1)) {
+                        write!(
+                            (*libcc2rs::cerr_unsafe()),
+                            "Invalid Huffman symbol {:} for AC coefficient {:}\n",
+                            s,
+                            k,
+                        );
+                        (*jpg).error = brunsli_JPEGReadError_INVALID_SYMBOL;
+                        return false;
+                    }
+                    s = if ((unsafe { BitReaderState_243::ReadBits(&mut (*br), 1) }) != 0) {
+                        p1
+                    } else {
+                        m1
+                    };
+                    in_zero_run = false;
                 } else {
-                    m1
-                };
-                in_zero_run = false;
-            } else {
-                if ((r) != (15)) {
-                    if ((eobrun_allowed) && ((k) == (Ss))) && ((*eobrun) == (0)) {
-                        (*reset_state) = true;
-                    }
-                    (*eobrun) = ((1) << (r));
-                    if ((r) > (0)) {
-                        if !(eobrun_allowed) {
-                            write!(
-                                (*libcc2rs::cerr_unsafe()),
-                                "End-of-block run crossing DC coeff.\n",
-                            );
-                            (*jpg).error = brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
-                            return false;
+                    if ((r) != (15)) {
+                        if ((eobrun_allowed) && ((k) == (Ss))) && ((*eobrun) == (0)) {
+                            (*reset_state) = true;
                         }
-                        (*eobrun) += (unsafe { BitReaderState_243::ReadBits(&mut (*br), r) });
+                        (*eobrun) = ((1) << (r));
+                        if ((r) > (0)) {
+                            if !(eobrun_allowed) {
+                                write!(
+                                    (*libcc2rs::cerr_unsafe()),
+                                    "End-of-block run crossing DC coeff.\n",
+                                );
+                                (*jpg).error = brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
+                                return false;
+                            }
+                            (*eobrun) += (unsafe { BitReaderState_243::ReadBits(&mut (*br), r) });
+                        }
+                        break 'loop_;
                     }
-                    break;
+                    in_zero_run = true;
                 }
-                in_zero_run = true;
+                let mut __do_while = true;
+                'loop_: while __do_while || ((k) <= (Se)) {
+                    __do_while = false;
+                    let mut thiscoef: i16 = (*coeffs.offset(
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                            [(k) as usize]) as isize,
+                    ));
+                    if ((thiscoef as i32) != (0)) {
+                        if ((unsafe { BitReaderState_243::ReadBits(&mut (*br), 1) }) != 0) {
+                            if (((thiscoef as i32) & (p1)) == (0)) {
+                                if ((thiscoef as i32) >= (0)) {
+                                    thiscoef = ((thiscoef as i32) + p1) as i16;
+                                } else {
+                                    thiscoef = ((thiscoef as i32) + m1) as i16;
+                                }
+                            }
+                        }
+                        (*coeffs.offset(
+                            ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                                [(k) as usize]) as isize,
+                        )) = thiscoef;
+                    } else {
+                        if ((*r.prefix_dec()) < (0)) {
+                            break;
+                        }
+                    }
+                    k.postfix_inc();
+                }
+                if (s != 0) {
+                    if ((k) > (Se)) {
+                        write!(
+                            (*libcc2rs::cerr_unsafe()),
+                            "Out-of-band coefficient {:} band was {:}-{:}\n",
+                            k,
+                            Ss,
+                            Se,
+                        );
+                        (*jpg).error = brunsli_JPEGReadError_OUT_OF_BAND_COEFF;
+                        return false;
+                    }
+                    (*coeffs.offset(
+                        ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
+                            [(k) as usize]) as isize,
+                    )) = (s as i16);
+                }
             }
-            let mut __do_while = true;
-            'loop_: while __do_while || ((k) <= (Se)) {
-                __do_while = false;
+            k.postfix_inc();
+        }
+    }
+    if in_zero_run {
+        write!(
+            (*libcc2rs::cerr_unsafe()),
+            "Extra zero run before end-of-block.\n",
+        );
+        (*jpg).error = brunsli_JPEGReadError_EXTRA_ZERO_RUN;
+        return false;
+    }
+    if ((*eobrun) > (0)) {
+        'loop_: while ((k) <= (Se)) {
+            'for_body: {
                 let mut thiscoef: i16 = (*coeffs.offset(
                     ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
                         [(k) as usize]) as isize,
@@ -10621,61 +10931,7 @@ pub unsafe fn RefineDCTBlock_247(
                         ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
                             [(k) as usize]) as isize,
                     )) = thiscoef;
-                } else {
-                    if ((*r.prefix_dec()) < (0)) {
-                        break;
-                    }
                 }
-                k.postfix_inc();
-            }
-            if (s != 0) {
-                if ((k) > (Se)) {
-                    write!(
-                        (*libcc2rs::cerr_unsafe()),
-                        "Out-of-band coefficient {:} band was {:}-{:}\n",
-                        k,
-                        Ss,
-                        Se,
-                    );
-                    (*jpg).error = brunsli_JPEGReadError_OUT_OF_BAND_COEFF;
-                    return false;
-                }
-                (*coeffs.offset(
-                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
-                        [(k) as usize]) as isize,
-                )) = (s as i16);
-            }
-            k.postfix_inc();
-        }
-    }
-    if in_zero_run {
-        write!(
-            (*libcc2rs::cerr_unsafe()),
-            "Extra zero run before end-of-block.\n",
-        );
-        (*jpg).error = brunsli_JPEGReadError_EXTRA_ZERO_RUN;
-        return false;
-    }
-    if ((*eobrun) > (0)) {
-        'loop_: while ((k) <= (Se)) {
-            let mut thiscoef: i16 = (*coeffs.offset(
-                ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
-                    [(k) as usize]) as isize,
-            ));
-            if ((thiscoef as i32) != (0)) {
-                if ((unsafe { BitReaderState_243::ReadBits(&mut (*br), 1) }) != 0) {
-                    if (((thiscoef as i32) & (p1)) == (0)) {
-                        if ((thiscoef as i32) >= (0)) {
-                            thiscoef = ((thiscoef as i32) + p1) as i16;
-                        } else {
-                            thiscoef = ((thiscoef as i32) + m1) as i16;
-                        }
-                    }
-                }
-                (*coeffs.offset(
-                    ((*std::cell::LazyCell::force_mut(&mut *&raw mut kJPEGNaturalOrder_13))
-                        [(k) as usize]) as isize,
-                )) = thiscoef;
             }
             k.postfix_inc();
         }
@@ -10788,44 +11044,51 @@ pub unsafe fn ProcessScan_249(
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*scan_info).num_components)) {
-            let mut comp_idx: i32 = ((&mut (*scan_info)).components[(i)].comp_idx as i32);
-            {
-                let mut k: i32 = Ss;
-                'loop_: while ((k) <= (Se)) {
-                    if ((((*scan_progression.offset((comp_idx) as isize))[(k) as usize] as i32)
-                        & (scan_bitmask as i32))
-                        != 0)
-                    {
-                        write!(
-                            (*libcc2rs::cerr_unsafe()),
-                            "Overlapping scans: component = {:} k = {:} prev_mask: {:} cur_mask: {:}\n",
-                            comp_idx,
-                            k,
-                            (*scan_progression.offset((i) as isize))[(k) as usize],
-                            scan_bitmask,
-                        );
-                        (*jpg).error = brunsli_JPEGReadError_OVERLAPPING_SCANS;
-                        return false;
+            'for_body: {
+                let mut comp_idx: i32 = ((&mut (*scan_info)).components[(i)].comp_idx as i32);
+                {
+                    let mut k: i32 = Ss;
+                    'loop_: while ((k) <= (Se)) {
+                        'for_body: {
+                            if ((((*scan_progression.offset((comp_idx) as isize))[(k) as usize]
+                                as i32)
+                                & (scan_bitmask as i32))
+                                != 0)
+                            {
+                                write!(
+                                    (*libcc2rs::cerr_unsafe()),
+                                    "Overlapping scans: component = {:} k = {:} prev_mask: {:} cur_mask: {:}\n",
+                                    comp_idx,
+                                    k,
+                                    (*scan_progression.offset((i) as isize))[(k) as usize],
+                                    scan_bitmask,
+                                );
+                                (*jpg).error = brunsli_JPEGReadError_OVERLAPPING_SCANS;
+                                return false;
+                            }
+                            if ((((*scan_progression.offset((comp_idx) as isize))[(k) as usize]
+                                as i32)
+                                & (refinement_bitmask as i32))
+                                != 0)
+                            {
+                                write!(
+                                    (*libcc2rs::cerr_unsafe()),
+                                    "Invalid scan order, a more refined scan was already done: component = {:} k = {:} prev_mask: {:} cur_mask: {:}\n",
+                                    comp_idx,
+                                    k,
+                                    (*scan_progression.offset((i) as isize))[(k) as usize],
+                                    scan_bitmask,
+                                );
+                                (*jpg).error = brunsli_JPEGReadError_INVALID_SCAN_ORDER;
+                                return false;
+                            }
+                            (*scan_progression.offset((comp_idx) as isize))[(k) as usize] =
+                                (((*scan_progression.offset((comp_idx) as isize))[(k) as usize]
+                                    as i32)
+                                    | (scan_bitmask as i32)) as u16;
+                        }
+                        k.prefix_inc();
                     }
-                    if ((((*scan_progression.offset((comp_idx) as isize))[(k) as usize] as i32)
-                        & (refinement_bitmask as i32))
-                        != 0)
-                    {
-                        write!(
-                            (*libcc2rs::cerr_unsafe()),
-                            "Invalid scan order, a more refined scan was already done: component = {:} k = {:} prev_mask: {:} cur_mask: {:}\n",
-                            comp_idx,
-                            k,
-                            (*scan_progression.offset((i) as isize))[(k) as usize],
-                            scan_bitmask,
-                        );
-                        (*jpg).error = brunsli_JPEGReadError_INVALID_SCAN_ORDER;
-                        return false;
-                    }
-                    (*scan_progression.offset((comp_idx) as isize))[(k) as usize] =
-                        (((*scan_progression.offset((comp_idx) as isize))[(k) as usize] as i32)
-                            | (scan_bitmask as i32)) as u16;
-                    k.prefix_inc();
                 }
             }
             i.prefix_inc();
@@ -10843,163 +11106,159 @@ pub unsafe fn ProcessScan_249(
     {
         let mut mcu_y: i32 = 0;
         'loop_: while ((mcu_y) < (MCU_rows)) {
-            {
-                let mut mcu_x: i32 = 0;
-                'loop_: while ((mcu_x) < (MCUs_per_row)) {
-                    if (((*jpg).restart_interval) > (0)) {
-                        if ((restarts_to_go) == (0)) {
-                            if (unsafe {
-                                ProcessRestart_248(
-                                    data,
-                                    len,
-                                    (&mut next_restart_marker as *mut i32),
-                                    (&mut br as *mut BitReaderState_243),
-                                    jpg,
-                                )
-                            }) {
-                                restarts_to_go = (*jpg).restart_interval;
-                                {
-                                    let mut __tmp_5 =
-                                        { (last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void) };
-                                    let byte_0 = __tmp_5 as *mut u8;
-                                    for offset in 0..::std::mem::size_of::<[i16; 4]>() {
-                                        *byte_0.offset(offset as isize) = 0 as u8;
+            'for_body: {
+                {
+                    let mut mcu_x: i32 = 0;
+                    'loop_: while ((mcu_x) < (MCUs_per_row)) {
+                        'for_body: {
+                            if (((*jpg).restart_interval) > (0)) {
+                                if ((restarts_to_go) == (0)) {
+                                    if (unsafe {
+                                        ProcessRestart_248(
+                                            data,
+                                            len,
+                                            (&mut next_restart_marker as *mut i32),
+                                            (&mut br as *mut BitReaderState_243),
+                                            jpg,
+                                        )
+                                    }) {
+                                        restarts_to_go = (*jpg).restart_interval;
+                                        {
+                                            let mut __tmp_5 = {
+                                                (last_dc_coeff.as_mut_ptr() as *mut ::libc::c_void)
+                                            };
+                                            let byte_0 = __tmp_5 as *mut u8;
+                                            for offset in 0..::std::mem::size_of::<[i16; 4]>() {
+                                                *byte_0.offset(offset as isize) = 0 as u8;
+                                            }
+                                            __tmp_5
+                                        };
+                                        if ((eobrun) > (0)) {
+                                            write!(
+                                                (*libcc2rs::cerr_unsafe()),
+                                                "End-of-block run too long.\n",
+                                            );
+                                            (*jpg).error = brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
+                                            return false;
+                                        }
+                                        eobrun = -1_i32;
+                                    } else {
+                                        return false;
                                     }
-                                    __tmp_5
-                                };
-                                if ((eobrun) > (0)) {
-                                    write!(
-                                        (*libcc2rs::cerr_unsafe()),
-                                        "End-of-block run too long.\n",
-                                    );
-                                    (*jpg).error = brunsli_JPEGReadError_EOB_RUN_TOO_LONG;
-                                    return false;
                                 }
-                                eobrun = -1_i32;
-                            } else {
+                                restarts_to_go.prefix_dec();
+                            }
+                            if (unsafe { BitReaderState_243::IsUnhealthy(&mut br) }) {
+                                write!((*libcc2rs::cerr_unsafe()), "Unexpected end of scan.\n",);
+                                (*jpg).error = brunsli_JPEGReadError_INVALID_SCAN;
                                 return false;
                             }
-                        }
-                        restarts_to_go.prefix_dec();
-                    }
-                    if (unsafe { BitReaderState_243::IsUnhealthy(&mut br) }) {
-                        write!((*libcc2rs::cerr_unsafe()), "Unexpected end of scan.\n",);
-                        (*jpg).error = brunsli_JPEGReadError_INVALID_SCAN;
-                        return false;
-                    }
-                    {
-                        let mut i: usize = 0_usize;
-                        'loop_: while ((i) < ((*scan_info).num_components)) {
-                            let mut si: *mut brunsli_JPEGComponentScanInfo =
-                                (&mut (&mut (*scan_info)).components[(i)]
-                                    as *mut brunsli_JPEGComponentScanInfo);
-                            let mut c: *mut brunsli_JPEGComponent = (&mut (&mut (*jpg)).components
-                                [((*si).comp_idx as usize)]
-                                as *mut brunsli_JPEGComponent);
-                            let mut dc_lut: *const brunsli_HuffmanTableEntry = (&(&(*dc_huff_lut))
-                                [((((*si).dc_tbl_idx)
-                                    * (*std::cell::LazyCell::force_mut(
-                                        &mut *&raw mut kJpegHuffmanLutSize_231,
-                                    ))) as usize)]
-                                as *const brunsli_HuffmanTableEntry);
-                            let mut ac_lut: *const brunsli_HuffmanTableEntry = (&(&(*ac_huff_lut))
-                                [((((*si).ac_tbl_idx)
-                                    * (*std::cell::LazyCell::force_mut(
-                                        &mut *&raw mut kJpegHuffmanLutSize_231,
-                                    ))) as usize)]
-                                as *const brunsli_HuffmanTableEntry);
-                            let mut nblocks_y: i32 = if is_interleaved {
-                                (*c).v_samp_factor
-                            } else {
-                                1
-                            };
-                            let mut nblocks_x: i32 = if is_interleaved {
-                                (*c).h_samp_factor
-                            } else {
-                                1
-                            };
                             {
-                                let mut iy: i32 = 0;
-                                'loop_: while ((iy) < (nblocks_y)) {
-                                    {
-                                        let mut ix: i32 = 0;
-                                        'loop_: while ((ix) < (nblocks_x)) {
-                                            let mut block_y: i32 = (((mcu_y) * (nblocks_y)) + (iy));
-                                            let mut block_x: i32 = (((mcu_x) * (nblocks_x)) + (ix));
-                                            let mut block_idx: i32 = ((((block_y as u32)
-                                                .wrapping_mul((*c).width_in_blocks))
-                                            .wrapping_add((block_x as u32)))
-                                                as i32);
-                                            let mut reset_state: bool = false;
-                                            let mut num_zero_runs: i32 = 0;
-                                            let mut coeffs: *mut i16 = (&mut (&mut (*c)).coeffs
-                                                [(((block_idx)
-                                                    * (*std::cell::LazyCell::force_mut(
-                                                        &mut *&raw mut kDCTBlockSize_3,
-                                                    )))
-                                                    as usize)]
-                                                as *mut i16);
-                                            if ((Ah) == (0)) {
-                                                if !(unsafe {
-                                                    DecodeDCTBlock_246(
-                                                        dc_lut,
-                                                        ac_lut,
-                                                        Ss,
-                                                        Se,
-                                                        Al,
-                                                        (&mut eobrun as *mut i32),
-                                                        (&mut reset_state as *mut bool),
-                                                        (&mut num_zero_runs as *mut i32),
-                                                        (&mut br as *mut BitReaderState_243),
-                                                        jpg,
-                                                        (&mut last_dc_coeff
-                                                            [((*si).comp_idx) as usize]
-                                                            as *mut i16),
-                                                        coeffs,
-                                                    )
-                                                }) {
-                                                    return false;
+                                let mut i: usize = 0_usize;
+                                'loop_: while ((i) < ((*scan_info).num_components)) {
+                                    'for_body: {
+                                        let mut si: *mut brunsli_JPEGComponentScanInfo =
+                                            (&mut (&mut (*scan_info)).components[(i)]
+                                                as *mut brunsli_JPEGComponentScanInfo);
+                                        let mut c: *mut brunsli_JPEGComponent = (&mut (&mut (*jpg))
+                                            .components
+                                            [((*si).comp_idx as usize)]
+                                            as *mut brunsli_JPEGComponent);
+                                        let mut dc_lut: *const brunsli_HuffmanTableEntry =
+                                            (&(&(*dc_huff_lut))[((((*si).dc_tbl_idx)
+                                                * (*std::cell::LazyCell::force_mut(
+                                                    &mut *&raw mut kJpegHuffmanLutSize_231,
+                                                )))
+                                                as usize)]
+                                                as *const brunsli_HuffmanTableEntry);
+                                        let mut ac_lut: *const brunsli_HuffmanTableEntry =
+                                            (&(&(*ac_huff_lut))[((((*si).ac_tbl_idx)
+                                                * (*std::cell::LazyCell::force_mut(
+                                                    &mut *&raw mut kJpegHuffmanLutSize_231,
+                                                )))
+                                                as usize)]
+                                                as *const brunsli_HuffmanTableEntry);
+                                        let mut nblocks_y: i32 = if is_interleaved {
+                                            (*c).v_samp_factor
+                                        } else {
+                                            1
+                                        };
+                                        let mut nblocks_x: i32 = if is_interleaved {
+                                            (*c).h_samp_factor
+                                        } else {
+                                            1
+                                        };
+                                        {
+                                            let mut iy: i32 = 0;
+                                            'loop_: while ((iy) < (nblocks_y)) {
+                                                'for_body: {
+                                                    {
+                                                        let mut ix: i32 = 0;
+                                                        'loop_: while ((ix) < (nblocks_x)) {
+                                                            'for_body: {
+                                                                let mut block_y: i32 = (((mcu_y)
+                                                                    * (nblocks_y))
+                                                                    + (iy));
+                                                                let mut block_x: i32 = (((mcu_x)
+                                                                    * (nblocks_x))
+                                                                    + (ix));
+                                                                let mut block_idx: i32 =
+                                                                    ((((block_y as u32)
+                                                                        .wrapping_mul(
+                                                                            (*c).width_in_blocks,
+                                                                        ))
+                                                                    .wrapping_add((block_x as u32)))
+                                                                        as i32);
+                                                                let mut reset_state: bool = false;
+                                                                let mut num_zero_runs: i32 = 0;
+                                                                let mut coeffs : *mut i16 = ( & mut ( &mut ( * c  ) ) . coeffs  [ ( ( ( ( ( block_idx ) * ( (*std::cell::LazyCell::force_mut(&mut *&raw mut kDCTBlockSize_3)) ) ) ) as usize ) ) ] as *mut i16 ) ;
+                                                                if ((Ah) == (0)) {
+                                                                    if !(unsafe {
+                                                                        DecodeDCTBlock_246 ( dc_lut , ac_lut , Ss , Se , Al , ( & mut eobrun as *mut i32 ) , ( & mut reset_state as *mut bool ) , ( & mut num_zero_runs as *mut i32 ) , ( & mut br as *mut BitReaderState_243 ) , jpg , ( & mut last_dc_coeff [ ( ( * si  ) . comp_idx  ) as usize ] as *mut i16 ) , coeffs , )
+                                                                    }) {
+                                                                        return false;
+                                                                    }
+                                                                } else {
+                                                                    if !(unsafe {
+                                                                        RefineDCTBlock_247 ( ac_lut , Ss , Se , Al , ( & mut eobrun as *mut i32 ) , ( & mut reset_state as *mut bool ) , ( & mut br as *mut BitReaderState_243 ) , jpg , coeffs , )
+                                                                    }) {
+                                                                        return false;
+                                                                    }
+                                                                }
+                                                                if reset_state {
+                                                                    (*scan_info)
+                                                                        .reset_points
+                                                                        .push(block_scan_index);
+                                                                }
+                                                                if ((num_zero_runs) > (0)) {
+                                                                    let mut info : brunsli_JPEGScanInfo_ExtraZeroRunInfo = <brunsli_JPEGScanInfo_ExtraZeroRunInfo >::default() ;
+                                                                    info.block_idx =
+                                                                        block_scan_index;
+                                                                    info.num_extra_zero_runs =
+                                                                        num_zero_runs;
+                                                                    {
+                                                                        let a0_clone = info.clone();
+                                                                        (*scan_info)
+                                                                            .extra_zero_runs
+                                                                            .push(a0_clone)
+                                                                    };
+                                                                }
+                                                                block_scan_index.prefix_inc();
+                                                            }
+                                                            ix.prefix_inc();
+                                                        }
+                                                    }
                                                 }
-                                            } else {
-                                                if !(unsafe {
-                                                    RefineDCTBlock_247(
-                                                        ac_lut,
-                                                        Ss,
-                                                        Se,
-                                                        Al,
-                                                        (&mut eobrun as *mut i32),
-                                                        (&mut reset_state as *mut bool),
-                                                        (&mut br as *mut BitReaderState_243),
-                                                        jpg,
-                                                        coeffs,
-                                                    )
-                                                }) {
-                                                    return false;
-                                                }
+                                                iy.prefix_inc();
                                             }
-                                            if reset_state {
-                                                (*scan_info).reset_points.push(block_scan_index);
-                                            }
-                                            if ((num_zero_runs) > (0)) {
-                                                let mut info : brunsli_JPEGScanInfo_ExtraZeroRunInfo = <brunsli_JPEGScanInfo_ExtraZeroRunInfo >::default() ;
-                                                info.block_idx = block_scan_index;
-                                                info.num_extra_zero_runs = num_zero_runs;
-                                                {
-                                                    let a0_clone = info.clone();
-                                                    (*scan_info).extra_zero_runs.push(a0_clone)
-                                                };
-                                            }
-                                            block_scan_index.prefix_inc();
-                                            ix.prefix_inc();
                                         }
                                     }
-                                    iy.prefix_inc();
+                                    i.prefix_inc();
                                 }
                             }
-                            i.prefix_inc();
                         }
+                        mcu_x.prefix_inc();
                     }
-                    mcu_x.prefix_inc();
                 }
             }
             mcu_y.prefix_inc();
@@ -11030,32 +11289,36 @@ pub unsafe fn FixupIndexes_250(mut jpg: *mut brunsli_JPEGData) -> bool {
     {
         let mut i: usize = 0_usize;
         'loop_: while ((i) < ((*jpg).components.len())) {
-            let mut c: *mut brunsli_JPEGComponent =
-                (&mut (&mut (*jpg)).components[(i)] as *mut brunsli_JPEGComponent);
-            let mut found_index: bool = false;
-            {
-                let mut j: usize = 0_usize;
-                'loop_: while ((j) < ((*jpg).quant.len())) {
-                    if (((&mut (*jpg)).quant[(j)].index) == ((*c).quant_idx as i32)) {
-                        (*c).quant_idx = (j as u8);
-                        found_index = true;
-                        break;
+            'for_body: {
+                let mut c: *mut brunsli_JPEGComponent =
+                    (&mut (&mut (*jpg)).components[(i)] as *mut brunsli_JPEGComponent);
+                let mut found_index: bool = false;
+                {
+                    let mut j: usize = 0_usize;
+                    'loop_: while ((j) < ((*jpg).quant.len())) {
+                        'for_body: {
+                            if (((&mut (*jpg)).quant[(j)].index) == ((*c).quant_idx as i32)) {
+                                (*c).quant_idx = (j as u8);
+                                found_index = true;
+                                break 'loop_;
+                            }
+                        }
+                        j.prefix_inc();
                     }
-                    j.prefix_inc();
                 }
-            }
-            if !(found_index) {
-                write!((*libcc2rs::cerr_unsafe()), "Quantization table with index ",);
-                (*libcc2rs::cerr_unsafe()).write_all(
-                    &([
-                        (&[(*c).quant_idx as u8] as &[u8]),
-                        (b" not found." as &[u8]),
-                        (b"\n" as &[u8]),
-                    ]
-                    .concat()),
-                );
-                (*jpg).error = brunsli_JPEGReadError_QUANT_TABLE_NOT_FOUND;
-                return false;
+                if !(found_index) {
+                    write!((*libcc2rs::cerr_unsafe()), "Quantization table with index ",);
+                    (*libcc2rs::cerr_unsafe()).write_all(
+                        &([
+                            (&[(*c).quant_idx as u8] as &[u8]),
+                            (b" not found." as &[u8]),
+                            (b"\n" as &[u8]),
+                        ]
+                        .concat()),
+                    );
+                    (*jpg).error = brunsli_JPEGReadError_QUANT_TABLE_NOT_FOUND;
+                    return false;
+                }
             }
             i.prefix_inc();
         }
@@ -11382,8 +11645,10 @@ pub unsafe fn BuildJpegHuffmanTable_238(
     'loop_: while ((len)
         <= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)))
     {
-        tmp_count[(len) as usize] = (*count.offset((len) as isize));
-        total_count += tmp_count[(len) as usize];
+        'for_body: {
+            tmp_count[(len) as usize] = (*count.offset((len) as isize));
+            total_count += tmp_count[(len) as usize];
+        }
         len.prefix_inc();
     }
     table = lut;
@@ -11394,7 +11659,9 @@ pub unsafe fn BuildJpegHuffmanTable_238(
         code.value = ((*symbols.offset((0) as isize)) as u16);
         key = 0;
         'loop_: while ((key) < (table_size)) {
-            (*table.offset((key) as isize)) = code;
+            'for_body: {
+                (*table.offset((key) as isize)) = code;
+            }
             key.prefix_inc();
         }
         return;
@@ -11405,17 +11672,21 @@ pub unsafe fn BuildJpegHuffmanTable_238(
     'loop_: while ((len)
         <= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanRootTableBits_230)))
     {
-        'loop_: while ((tmp_count[(len) as usize]) > (0)) {
-            code.bits = (len as u8);
-            code.value = ((*symbols.offset((idx.postfix_inc()) as isize)) as u16);
-            reps = ((1)
-                << ((*std::cell::LazyCell::force_mut(
-                    &mut *&raw mut kJpegHuffmanRootTableBits_230,
-                )) - (len)));
-            'loop_: while (reps.postfix_dec() != 0) {
-                (*table.offset((key.postfix_inc()) as isize)) = code;
+        'for_body: {
+            'loop_: while ((tmp_count[(len) as usize]) > (0)) {
+                'for_body: {
+                    code.bits = (len as u8);
+                    code.value = ((*symbols.offset((idx.postfix_inc()) as isize)) as u16);
+                    reps = ((1)
+                        << ((*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kJpegHuffmanRootTableBits_230,
+                        )) - (len)));
+                    'loop_: while (reps.postfix_dec() != 0) {
+                        (*table.offset((key.postfix_inc()) as isize)) = code;
+                    }
+                }
+                tmp_count[(len) as usize].prefix_dec();
             }
-            tmp_count[(len) as usize].prefix_dec();
         }
         len.prefix_inc();
     }
@@ -11426,32 +11697,40 @@ pub unsafe fn BuildJpegHuffmanTable_238(
     'loop_: while ((len)
         <= (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanMaxBitLength_7)))
     {
-        'loop_: while ((tmp_count[(len) as usize]) > (0)) {
-            if ((low) >= (table_size)) {
-                table = (table).wrapping_add(table_size as usize);
-                table_bits =
-                    (unsafe { NextTableBitSize_253((tmp_count.as_mut_ptr()).cast_const(), len) });
-                table_size = ((1) << (table_bits));
-                low = 0;
-                (*lut.offset((key) as isize)).bits = (((table_bits)
-                    + (*std::cell::LazyCell::force_mut(
-                        &mut *&raw mut kJpegHuffmanRootTableBits_230,
-                    ))) as u8);
-                (*lut.offset((key) as isize)).value = (((((table as usize - lut as usize)
-                    / ::std::mem::size_of::<brunsli_HuffmanTableEntry>())
-                    as i64)
-                    - (key as i64)) as u16);
-                key.prefix_inc();
+        'for_body: {
+            'loop_: while ((tmp_count[(len) as usize]) > (0)) {
+                'for_body: {
+                    if ((low) >= (table_size)) {
+                        table = (table).wrapping_add(table_size as usize);
+                        table_bits = (unsafe {
+                            NextTableBitSize_253((tmp_count.as_mut_ptr()).cast_const(), len)
+                        });
+                        table_size = ((1) << (table_bits));
+                        low = 0;
+                        (*lut.offset((key) as isize)).bits = (((table_bits)
+                            + (*std::cell::LazyCell::force_mut(
+                                &mut *&raw mut kJpegHuffmanRootTableBits_230,
+                            )))
+                            as u8);
+                        (*lut.offset((key) as isize)).value = (((((table as usize - lut as usize)
+                            / ::std::mem::size_of::<brunsli_HuffmanTableEntry>())
+                            as i64)
+                            - (key as i64))
+                            as u16);
+                        key.prefix_inc();
+                    }
+                    code.bits = (((len)
+                        - (*std::cell::LazyCell::force_mut(
+                            &mut *&raw mut kJpegHuffmanRootTableBits_230,
+                        ))) as u8);
+                    code.value = ((*symbols.offset((idx.postfix_inc()) as isize)) as u16);
+                    reps = ((1) << ((table_bits) - (code.bits as i32)));
+                    'loop_: while (reps.postfix_dec() != 0) {
+                        (*table.offset((low.postfix_inc()) as isize)) = code;
+                    }
+                }
+                tmp_count[(len) as usize].prefix_dec();
             }
-            code.bits = (((len)
-                - (*std::cell::LazyCell::force_mut(&mut *&raw mut kJpegHuffmanRootTableBits_230)))
-                as u8);
-            code.value = ((*symbols.offset((idx.postfix_inc()) as isize)) as u16);
-            reps = ((1) << ((table_bits) - (code.bits as i32)));
-            'loop_: while (reps.postfix_dec() != 0) {
-                (*table.offset((low.postfix_inc()) as isize)) = code;
-            }
-            tmp_count[(len) as usize].prefix_dec();
         }
         len.prefix_inc();
     }

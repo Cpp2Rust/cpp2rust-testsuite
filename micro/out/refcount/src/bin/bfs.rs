@@ -61,8 +61,10 @@ pub fn BFS_0(graph: Ptr<Graph>, mut start_vertex: u32) -> Ptr<u32> {
     {
         let mut i: u32 = 0_u32;
         'loop_: while ({ i } < { graph.with(|__s| __s.V) }) {
-            elem!(visited, i).write(false);
-            elem!(pred, i).write({ i });
+            'for_body: {
+                elem!(visited, i).write(false);
+                elem!(pred, i).write({ i });
+            }
             i.prefix_inc();
         }
     }
@@ -74,11 +76,13 @@ pub fn BFS_0(graph: Ptr<Graph>, mut start_vertex: u32) -> Ptr<u32> {
             let mut head: Ptr<GraphNode> =
                 (elem!(graph.with(|__s| __s.adj.clone()), current_vertex).read());
             'loop_: while !((head).is_null()) {
-                let mut adj_vertex: i32 = (head.with(|__s| __s.vertex) as i32);
-                if !(elem!(visited, adj_vertex).read()) {
-                    elem!(visited, adj_vertex).write(true);
-                    ({ QueueImpl::enqueue(&Q.as_pointer(), adj_vertex) });
-                    elem!(pred, adj_vertex).write({ (current_vertex as u32) });
+                'for_body: {
+                    let mut adj_vertex: i32 = (head.with(|__s| __s.vertex) as i32);
+                    if !(elem!(visited, adj_vertex).read()) {
+                        elem!(visited, adj_vertex).write(true);
+                        ({ QueueImpl::enqueue(&Q.as_pointer(), adj_vertex) });
+                        elem!(pred, adj_vertex).write({ (current_vertex as u32) });
+                    }
                 }
                 head = { head.with(|__s| __s.next.clone()) };
             }
@@ -106,53 +110,66 @@ fn main_0() -> i32 {
     {
         let mut i: u32 = 0_u32;
         'loop_: while ((i as usize) < V) {
-            elem!({ (*graph.borrow()).adj.clone() }, i).write(Ptr::<GraphNode>::null());
+            'for_body: {
+                elem!({ (*graph.borrow()).adj.clone() }, i).write(Ptr::<GraphNode>::null());
+            }
             i.prefix_inc();
         }
     }
     {
         let mut r: u32 = 0_u32;
         'loop_: while ((r as usize) < N) {
-            {
-                let mut c: u32 = 0_u32;
-                'loop_: while ((c as usize) < N) {
-                    let mut current: u32 =
-                        ((((r as usize).wrapping_mul(N)).wrapping_add((c as usize))) as u32);
-                    {
-                        let mut step: u32 = 1_u32;
-                        'loop_: while (step <= 80_u32) {
-                            if ((((c).wrapping_add(step)) as usize) < N) {
-                                ({
-                                    GraphImpl::push(
-                                        &graph.as_pointer(),
-                                        current,
-                                        ((((r as usize).wrapping_mul(N))
-                                            .wrapping_add((((c).wrapping_add(step)) as usize)))
-                                            as u32),
-                                    )
-                                });
+            'for_body: {
+                {
+                    let mut c: u32 = 0_u32;
+                    'loop_: while ((c as usize) < N) {
+                        'for_body: {
+                            let mut current: u32 = ((((r as usize).wrapping_mul(N))
+                                .wrapping_add((c as usize)))
+                                as u32);
+                            {
+                                let mut step: u32 = 1_u32;
+                                'loop_: while (step <= 80_u32) {
+                                    'for_body: {
+                                        if ((((c).wrapping_add(step)) as usize) < N) {
+                                            ({
+                                                GraphImpl::push(
+                                                    &graph.as_pointer(),
+                                                    current,
+                                                    ((((r as usize).wrapping_mul(N)).wrapping_add(
+                                                        (((c).wrapping_add(step)) as usize),
+                                                    ))
+                                                        as u32),
+                                                )
+                                            });
+                                        }
+                                    }
+                                    step.prefix_inc();
+                                }
                             }
-                            step.prefix_inc();
-                        }
-                    }
-                    {
-                        let mut step: u32 = 1_u32;
-                        'loop_: while (step <= 80_u32) {
-                            if ((((r).wrapping_add(step)) as usize) < N) {
-                                ({
-                                    GraphImpl::push(
-                                        &graph.as_pointer(),
-                                        current,
-                                        ((((((r).wrapping_add(step)) as usize).wrapping_mul(N))
-                                            .wrapping_add((c as usize)))
-                                            as u32),
-                                    )
-                                });
+                            {
+                                let mut step: u32 = 1_u32;
+                                'loop_: while (step <= 80_u32) {
+                                    'for_body: {
+                                        if ((((r).wrapping_add(step)) as usize) < N) {
+                                            ({
+                                                GraphImpl::push(
+                                                    &graph.as_pointer(),
+                                                    current,
+                                                    ((((((r).wrapping_add(step)) as usize)
+                                                        .wrapping_mul(N))
+                                                    .wrapping_add((c as usize)))
+                                                        as u32),
+                                                )
+                                            });
+                                        }
+                                    }
+                                    step.prefix_inc();
+                                }
                             }
-                            step.prefix_inc();
                         }
+                        c.prefix_inc();
                     }
-                    c.prefix_inc();
                 }
             }
             r.prefix_inc();
@@ -162,11 +179,13 @@ fn main_0() -> i32 {
     {
         let mut i: u32 = 0_u32;
         'loop_: while ((i as usize) < V) {
-            let mut head: Ptr<GraphNode> = (elem!({ (*graph.borrow()).adj.clone() }, i).read());
-            'loop_: while !((head).is_null()) {
-                let mut next: Ptr<GraphNode> = head.with(|__s| __s.next.clone());
-                head.delete();
-                head = (next).clone();
+            'for_body: {
+                let mut head: Ptr<GraphNode> = (elem!({ (*graph.borrow()).adj.clone() }, i).read());
+                'loop_: while !((head).is_null()) {
+                    let mut next: Ptr<GraphNode> = head.with(|__s| __s.next.clone());
+                    head.delete();
+                    head = (next).clone();
+                }
             }
             i.prefix_inc();
         }
@@ -174,7 +193,9 @@ fn main_0() -> i32 {
     {
         let mut i: u32 = 0_u32;
         'loop_: while ((i as usize) < V) {
-            write!(libcc2rs::cout(), "{:} -> {:}\n", i, (elem!(pred, i).read()),);
+            'for_body: {
+                write!(libcc2rs::cout(), "{:} -> {:}\n", i, (elem!(pred, i).read()),);
+            }
             i.prefix_inc();
         }
     }

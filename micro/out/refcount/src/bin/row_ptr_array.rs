@@ -13,7 +13,9 @@ pub fn smooth_1(mut p: Ptr<i32>, mut n: i32) {
     {
         let mut j: i32 = 1;
         'loop_: while (j < n) {
-            elem!(p, j).write({ (((elem!(p, j).read()) + (elem!(p, (j - 1)).read())) % 1000) });
+            'for_body: {
+                elem!(p, j).write({ (((elem!(p, j).read()) + (elem!(p, (j - 1)).read())) % 1000) });
+            }
             j.prefix_inc();
         }
     }
@@ -38,11 +40,15 @@ fn main_0() -> i32 {
     {
         let mut i: i32 = 0;
         'loop_: while (i < N_0.with(|rc| *rc.borrow())) {
-            {
-                let mut j: i32 = 0;
-                'loop_: while (j < N_0.with(|rc| *rc.borrow())) {
-                    (*grid.borrow_mut())[(i) as usize][(j) as usize] = { ((i * j) % 7) };
-                    j.prefix_inc();
+            'for_body: {
+                {
+                    let mut j: i32 = 0;
+                    'loop_: while (j < N_0.with(|rc| *rc.borrow())) {
+                        'for_body: {
+                            (*grid.borrow_mut())[(i) as usize][(j) as usize] = { ((i * j) % 7) };
+                        }
+                        j.prefix_inc();
+                    }
                 }
             }
             i.prefix_inc();
@@ -52,25 +58,30 @@ fn main_0() -> i32 {
     {
         let mut r: i32 = 0;
         'loop_: while (r < 40) {
-            let mut row: Ptr<Box<[i32]>> = grid.decay();
-            {
-                let mut i: i32 = 0;
-                'loop_: while (i < N_0.with(|rc| *rc.borrow())) {
-                    let mut p: Ptr<i32> = row.decay();
-                    ({
-                        let _p: Ptr<i32> = (p).clone();
-                        let _n: i32 = N_0.with(|rc| *rc.borrow());
-                        smooth_1(_p, _n)
-                    });
-                    out += ({
-                        let _p: Ptr<i32> = (p).clone();
-                        let _end: Ptr<i32> = p.offset((N_0.with(|rc| *rc.borrow())) as isize);
-                        sum_2(_p, _end)
-                    });
-                    {
-                        i.prefix_inc();
-                        row.prefix_inc()
-                    };
+            'for_body: {
+                let mut row: Ptr<Box<[i32]>> = grid.decay();
+                {
+                    let mut i: i32 = 0;
+                    'loop_: while (i < N_0.with(|rc| *rc.borrow())) {
+                        'for_body: {
+                            let mut p: Ptr<i32> = row.decay();
+                            ({
+                                let _p: Ptr<i32> = (p).clone();
+                                let _n: i32 = N_0.with(|rc| *rc.borrow());
+                                smooth_1(_p, _n)
+                            });
+                            out += ({
+                                let _p: Ptr<i32> = (p).clone();
+                                let _end: Ptr<i32> =
+                                    p.offset((N_0.with(|rc| *rc.borrow())) as isize);
+                                sum_2(_p, _end)
+                            });
+                        }
+                        {
+                            i.prefix_inc();
+                            row.prefix_inc()
+                        };
+                    }
                 }
             }
             r.prefix_inc();

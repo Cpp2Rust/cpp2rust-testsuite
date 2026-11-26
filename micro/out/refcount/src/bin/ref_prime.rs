@@ -10,8 +10,10 @@ pub fn is_prime_0(x: Ptr<i32>) -> bool {
     {
         let mut i: i32 = 2;
         'loop_: while ({ i } < { (x.read()) }) {
-            if (({ (x.read()) } % { i }) == 0) {
-                return false;
+            'for_body: {
+                if (({ (x.read()) } % { i }) == 0) {
+                    return false;
+                }
             }
             i.prefix_inc();
         }
@@ -23,8 +25,10 @@ pub fn largest_prime_1(n: Ptr<i32>) -> i32 {
     {
         let i: Value<i32> = Rc::new(RefCell::new(0));
         'loop_: while ({ (*i.borrow()) } < { (n.read()) }) {
-            if ({ is_prime_0(i.as_pointer()) }) {
-                max = (*i.borrow());
+            'for_body: {
+                if ({ is_prime_0(i.as_pointer()) }) {
+                    max = (*i.borrow());
+                }
             }
             (*i.borrow_mut()).prefix_inc();
         }

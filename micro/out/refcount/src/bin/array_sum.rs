@@ -16,22 +16,28 @@ fn main_0() -> i32 {
     {
         let mut k: i32 = 0;
         'loop_: while (k < 35) {
-            let mut array: Option<Value<Box<[i32]>>> = Some(Rc::new(RefCell::new(
-                (0..(N as usize)).map(|_| 0_i32).collect::<Box<[_]>>(),
-            )));
-            {
-                let mut i: i32 = 0;
-                'loop_: while (i < N) {
-                    let __rhs = i;
-                    array.decay().offset((i as usize)).write(__rhs);
-                    i.prefix_inc();
+            'for_body: {
+                let mut array: Option<Value<Box<[i32]>>> = Some(Rc::new(RefCell::new(
+                    (0..(N as usize)).map(|_| 0_i32).collect::<Box<[_]>>(),
+                )));
+                {
+                    let mut i: i32 = 0;
+                    'loop_: while (i < N) {
+                        'for_body: {
+                            let __rhs = i;
+                            array.decay().offset((i as usize)).write(__rhs);
+                        }
+                        i.prefix_inc();
+                    }
                 }
-            }
-            {
-                let mut i: i32 = 0;
-                'loop_: while (i < N) {
-                    sum += ((array.decay().offset((i as usize)).read()) as i64);
-                    i.prefix_inc();
+                {
+                    let mut i: i32 = 0;
+                    'loop_: while (i < N) {
+                        'for_body: {
+                            sum += ((array.decay().offset((i as usize)).read()) as i64);
+                        }
+                        i.prefix_inc();
+                    }
                 }
             }
             k.prefix_inc();

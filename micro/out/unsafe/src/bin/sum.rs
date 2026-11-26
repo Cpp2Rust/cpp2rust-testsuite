@@ -19,7 +19,9 @@ unsafe fn main_0() -> i32 {
         let mut i: u64 = 0_u64;
         let mut j: u64 = N;
         'loop_: while ((i) < (j)) {
-            sum = (sum).wrapping_add((i).wrapping_add(j));
+            'for_body: {
+                sum = (sum).wrapping_add((i).wrapping_add(j));
+            }
             {
                 i.prefix_inc();
                 j.prefix_dec()

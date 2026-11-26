@@ -10,8 +10,10 @@ pub unsafe fn smooth_0(mut p: *mut i32, mut n: i32) {
     {
         let mut j: i32 = 1;
         'loop_: while ((j) < (n)) {
-            (*p.offset((j) as isize)) =
-                (((*p.offset((j) as isize)) + (*p.offset(((j) - (1)) as isize))) % (1000));
+            'for_body: {
+                (*p.offset((j) as isize)) =
+                    (((*p.offset((j) as isize)) + (*p.offset(((j) - (1)) as isize))) % (1000));
+            }
             j.prefix_inc();
         }
     }
@@ -35,15 +37,19 @@ unsafe fn main_0() -> i32 {
     {
         let mut i: i32 = 0;
         'loop_: while ((i) < (N)) {
-            {
-                let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
-                grid.push(__a1)
-            };
-            {
-                let mut j: i32 = 0;
-                'loop_: while ((j) < (N)) {
-                    grid[(i as usize)][(j as usize)] = (((i) * (j)) % (7));
-                    j.prefix_inc();
+            'for_body: {
+                {
+                    let __a1 = Vec::from_fn((N as usize), |_| 0_i32);
+                    grid.push(__a1)
+                };
+                {
+                    let mut j: i32 = 0;
+                    'loop_: while ((j) < (N)) {
+                        'for_body: {
+                            grid[(i as usize)][(j as usize)] = (((i) * (j)) % (7));
+                        }
+                        j.prefix_inc();
+                    }
                 }
             }
             i.prefix_inc();
@@ -53,21 +59,25 @@ unsafe fn main_0() -> i32 {
     {
         let mut r: i32 = 0;
         'loop_: while ((r) < (10)) {
-            {
-                let mut i: i32 = 0;
-                'loop_: while ((i) < (N)) {
-                    let mut p: *mut i32 = (&mut grid[(i as usize)][(0_usize)] as *mut i32);
-                    (unsafe {
-                        let _p: *mut i32 = p;
-                        let _n: i32 = N;
-                        smooth_0(_p, _n)
-                    });
-                    out += (unsafe {
-                        let _p: *const i32 = (p).cast_const();
-                        let _end: *const i32 = (p.offset((N) as isize)).cast_const();
-                        sum_1(_p, _end)
-                    });
-                    i.prefix_inc();
+            'for_body: {
+                {
+                    let mut i: i32 = 0;
+                    'loop_: while ((i) < (N)) {
+                        'for_body: {
+                            let mut p: *mut i32 = (&mut grid[(i as usize)][(0_usize)] as *mut i32);
+                            (unsafe {
+                                let _p: *mut i32 = p;
+                                let _n: i32 = N;
+                                smooth_0(_p, _n)
+                            });
+                            out += (unsafe {
+                                let _p: *const i32 = (p).cast_const();
+                                let _end: *const i32 = (p.offset((N) as isize)).cast_const();
+                                sum_1(_p, _end)
+                            });
+                        }
+                        i.prefix_inc();
+                    }
                 }
             }
             r.prefix_inc();
